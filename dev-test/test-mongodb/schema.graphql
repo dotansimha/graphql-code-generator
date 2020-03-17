@@ -1,7 +1,7 @@
 enum Role {
-    ADMIN
-    WRITER
-    READER
+  ADMIN
+  WRITER
+  READER
 }
 
 scalar Date
@@ -15,39 +15,39 @@ type Post @entity {
 }
 
 interface User @abstractEntity(discriminatorField: "role") {
-    id: ID @id
-    username: String @column
-    role: Role @column
-    likedPosts: [Post]
-    followerUsers(skip: Int, limit: Int): [User]
-    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+  id: ID @id
+  username: String @column
+  role: Role @column
+  likedPosts: [Post]
+  followerUsers(skip: Int, limit: Int): [User]
+  followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
 }
 
 type AdminUser implements User @entity {
-    id: ID @id
-    username: String @column
-    role: Role @column
-    likedPosts: [Post]
-    followerUsers(skip: Int, limit: Int): [User]
-    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
-    posts(skip: Int, limit: Int): [Post]
+  id: ID @id
+  username: String @column
+  role: Role @column
+  likedPosts: [Post]
+  followerUsers(skip: Int, limit: Int): [User]
+  followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+  posts(skip: Int, limit: Int): [Post]
 }
 
 type WriterUser @entity {
-    id: ID @id
-    username: String @column
-    role: Role @column
-    likedPosts(skip: Int, limit: Int): [Post]
-    followerUsers(skip: Int, limit: Int): [User]
-    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
-    posts(skip: Int, limit: Int): [Post]
+  id: ID @id
+  username: String @column
+  role: Role @column
+  likedPosts(skip: Int, limit: Int): [Post]
+  followerUsers(skip: Int, limit: Int): [User]
+  followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+  posts(skip: Int, limit: Int): [Post]
 }
 
 type ReaderUser @entity {
-    id: ID @id
-    username: String @column
-    role: Role @column
-    likedPosts(skip: Int, limit: Int): [Post]
-    followerUsers(skip: Int, limit: Int): [User]
-    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+  id: ID @id
+  username: String @column
+  role: Role @column
+  likedPosts(skip: Int, limit: Int): [Post]
+  followerUsers(skip: Int, limit: Int): [User]
+  followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
 }

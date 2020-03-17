@@ -1,5 +1,5 @@
-subscription onCommentAdded($repoFullName: String!){
-  commentAdded(repoFullName: $repoFullName){
+subscription onCommentAdded($repoFullName: String!) {
+  commentAdded(repoFullName: $repoFullName) {
     id
     postedBy {
       login
@@ -9,4 +9,3 @@ subscription onCommentAdded($repoFullName: String!){
     content
   }
 }
-

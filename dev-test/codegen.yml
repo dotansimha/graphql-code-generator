@@ -177,14 +177,14 @@ generates:
       - typescript-operations
       - typescript-apollo-angular
   ./dev-test/githunt/types.apolloAngular.sdk.ts:
-      schema: ./dev-test/githunt/schema.json
-      documents: ./dev-test/githunt/**/*.graphql
-      config:
-        sdkClass: true
-      plugins:
-        - typescript
-        - typescript-operations
-        - typescript-apollo-angular
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      sdkClass: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-apollo-angular
   ./dev-test/githunt/types.stencilApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -210,7 +210,7 @@ generates:
     plugins:
       - typescript-operations
       - typescript-stencil-apollo
-    config: 
+    config:
       componentType: class
       globalNamespace: true
   ./dev-test/star-wars/types.ts:
@@ -230,7 +230,7 @@ generates:
   ./dev-test/test-schema/types.preResolveTypes.ts:
     schema: ./dev-test/test-schema/schema.graphql
     documents:
-      - "query test { testArr1 testArr2 testArr3 }"
+      - 'query test { testArr1 testArr2 testArr3 }'
     config:
       preResolveTypes: true
     plugins:

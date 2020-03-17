@@ -9,7 +9,6 @@ on:
       - master
 
 jobs:
-
   test:
     name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
     runs-on: ${{matrix.os}}
