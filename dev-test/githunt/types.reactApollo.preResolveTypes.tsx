@@ -174,7 +174,7 @@ export type OnCommentAddedSubscriptionVariables = {
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded: Maybe<{
+  commentAdded?: Maybe<{
     __typename?: 'Comment';
     id: number;
     createdAt: number;
@@ -191,8 +191,8 @@ export type CommentQueryVariables = {
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser: Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
-  entry: Maybe<{
+  currentUser?: Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
+  entry?: Maybe<{
     __typename?: 'Entry';
     id: number;
     createdAt: number;
@@ -201,8 +201,8 @@ export type CommentQuery = {
     comments: Array<Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
     repository: {
       __typename?: 'Repository';
-      description: Maybe<string>;
-      open_issues_count: Maybe<number>;
+      description?: Maybe<string>;
+      open_issues_count?: Maybe<number>;
       stargazers_count: number;
       full_name: string;
       html_url: string;
@@ -222,7 +222,7 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
+  currentUser?: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
 };
 
 export type FeedEntryFragment = {
@@ -233,7 +233,7 @@ export type FeedEntryFragment = {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    owner: Maybe<{ __typename?: 'User'; avatar_url: string }>;
+    owner?: Maybe<{ __typename?: 'User'; avatar_url: string }>;
   };
 } & VoteButtonsFragment &
   RepoInfoFragment;
@@ -246,8 +246,8 @@ export type FeedQueryVariables = {
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser: Maybe<{ __typename?: 'User'; login: string }>;
-  feed: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
+  currentUser?: Maybe<{ __typename?: 'User'; login: string }>;
+  feed?: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
 export type SubmitRepositoryMutationVariables = {
@@ -256,7 +256,7 @@ export type SubmitRepositoryMutationVariables = {
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
+  submitRepository?: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
 };
 
 export type RepoInfoFragment = {
@@ -264,9 +264,9 @@ export type RepoInfoFragment = {
   createdAt: number;
   repository: {
     __typename?: 'Repository';
-    description: Maybe<string>;
+    description?: Maybe<string>;
     stargazers_count: number;
-    open_issues_count: Maybe<number>;
+    open_issues_count?: Maybe<number>;
   };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
 };
@@ -278,7 +278,7 @@ export type SubmitCommentMutationVariables = {
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+  submitComment?: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
 };
 
 export type VoteButtonsFragment = {
@@ -294,7 +294,7 @@ export type VoteMutationVariables = {
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
+  vote?: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
 };
 
 export const CommentsPageCommentFragmentDoc = gql`

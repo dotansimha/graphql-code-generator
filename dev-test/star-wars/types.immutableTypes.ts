@@ -240,7 +240,7 @@ export type CreateReviewForEpisodeMutationVariables = {
 };
 
 export type CreateReviewForEpisodeMutation = { readonly __typename?: 'Mutation' } & {
-  readonly createReview: Maybe<{ readonly __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>>;
+  readonly createReview?: Maybe<{ readonly __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>>;
 };
 
 export type HeroAndFriendsNamesQueryVariables = {
@@ -248,9 +248,9 @@ export type HeroAndFriendsNamesQueryVariables = {
 };
 
 export type HeroAndFriendsNamesQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & {
-          readonly friends: Maybe<
+          readonly friends?: Maybe<
             ReadonlyArray<
               Maybe<
                 | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
@@ -260,7 +260,7 @@ export type HeroAndFriendsNamesQuery = { readonly __typename?: 'Query' } & {
           >;
         })
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & {
-          readonly friends: Maybe<
+          readonly friends?: Maybe<
             ReadonlyArray<
               Maybe<
                 | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
@@ -275,7 +275,7 @@ export type HeroAndFriendsNamesQuery = { readonly __typename?: 'Query' } & {
 export type HeroAppearsInQueryVariables = {};
 
 export type HeroAppearsInQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'appearsIn'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name' | 'appearsIn'>)
   >;
@@ -286,7 +286,7 @@ export type HeroDetailsQueryVariables = {
 };
 
 export type HeroDetailsQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)
   >;
@@ -303,7 +303,7 @@ export type HeroDetailsWithFragmentQueryVariables = {
 };
 
 export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment)
     | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
   >;
@@ -314,7 +314,7 @@ export type HeroNameQueryVariables = {
 };
 
 export type HeroNameQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
   >;
@@ -326,7 +326,7 @@ export type HeroNameConditionalInclusionQueryVariables = {
 };
 
 export type HeroNameConditionalInclusionQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
   >;
@@ -338,7 +338,7 @@ export type HeroNameConditionalExclusionQueryVariables = {
 };
 
 export type HeroNameConditionalExclusionQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
   >;
@@ -349,9 +349,9 @@ export type HeroParentTypeDependentFieldQueryVariables = {
 };
 
 export type HeroParentTypeDependentFieldQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
+  readonly hero?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & {
-          readonly friends: Maybe<
+          readonly friends?: Maybe<
             ReadonlyArray<
               Maybe<
                 | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
@@ -361,7 +361,7 @@ export type HeroParentTypeDependentFieldQuery = { readonly __typename?: 'Query' 
           >;
         })
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & {
-          readonly friends: Maybe<
+          readonly friends?: Maybe<
             ReadonlyArray<
               Maybe<
                 | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
@@ -378,9 +378,9 @@ export type HeroTypeDependentAliasedFieldQueryVariables = {
 };
 
 export type HeroTypeDependentAliasedFieldQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<
-    | ({ readonly __typename?: 'Human' } & { readonly property: Human['homePlanet'] })
-    | ({ readonly __typename?: 'Droid' } & { readonly property: Droid['primaryFunction'] })
+  readonly hero?: Maybe<
+    | ({ readonly __typename?: 'Human' } & { property: Human['homePlanet'] })
+    | ({ readonly __typename?: 'Droid' } & { property: Droid['primaryFunction'] })
   >;
 };
 
@@ -389,17 +389,17 @@ export type HumanFieldsFragment = { readonly __typename?: 'Human' } & Pick<Human
 export type HumanWithNullHeightQueryVariables = {};
 
 export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & {
-  readonly human: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment>;
+  readonly human?: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment>;
 };
 
 export type TwoHeroesQueryVariables = {};
 
 export type TwoHeroesQuery = { readonly __typename?: 'Query' } & {
-  readonly r2: Maybe<
+  readonly r2?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
   >;
-  readonly luke: Maybe<
+  readonly luke?: Maybe<
     | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
     | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
   >;

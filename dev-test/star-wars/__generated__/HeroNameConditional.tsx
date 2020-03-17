@@ -13,7 +13,7 @@ export type HeroNameConditionalInclusionQueryVariables = {
 };
 
 export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
   >;
 };
@@ -24,7 +24,7 @@ export type HeroNameConditionalExclusionQueryVariables = {
 };
 
 export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
   >;
 };

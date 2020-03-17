@@ -12,9 +12,9 @@ export type HeroAndFriendsNamesQueryVariables = {
 };
 
 export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends: Types.Maybe<
+          friends?: Types.Maybe<
             Array<
               Types.Maybe<
                 | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
@@ -24,7 +24,7 @@ export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
           >;
         })
     | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
-          friends: Types.Maybe<
+          friends?: Types.Maybe<
             Array<
               Types.Maybe<
                 | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)

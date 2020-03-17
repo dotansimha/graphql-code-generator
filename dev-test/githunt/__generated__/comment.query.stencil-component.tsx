@@ -10,8 +10,8 @@ declare global {
   };
 
   export type CommentQuery = { __typename?: 'Query' } & {
-    currentUser: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
-    entry: Types.Maybe<
+    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
+    entry?: Types.Maybe<
       { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'createdAt' | 'commentCount'> & {
           postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
           comments: Array<Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;

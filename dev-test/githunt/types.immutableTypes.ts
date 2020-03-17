@@ -167,7 +167,7 @@ export type OnCommentAddedSubscriptionVariables = {
 };
 
 export type OnCommentAddedSubscription = { readonly __typename?: 'Subscription' } & {
-  readonly commentAdded: Maybe<
+  readonly commentAdded?: Maybe<
     { readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
         readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
       }
@@ -181,8 +181,8 @@ export type CommentQueryVariables = {
 };
 
 export type CommentQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
-  readonly entry: Maybe<
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
+  readonly entry?: Maybe<
     { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
         readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
         readonly comments: ReadonlyArray<Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>>;
@@ -202,12 +202,12 @@ export type CommentsPageCommentFragment = { readonly __typename?: 'Comment' } & 
 export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
 };
 
 export type FeedEntryFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
     readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
-        readonly owner: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>>;
+        readonly owner?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>>;
       };
   } & VoteButtonsFragment &
   RepoInfoFragment;
@@ -219,8 +219,8 @@ export type FeedQueryVariables = {
 };
 
 export type FeedQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>;
-  readonly feed: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>>;
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>;
+  readonly feed?: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
 export type SubmitRepositoryMutationVariables = {
@@ -228,7 +228,7 @@ export type SubmitRepositoryMutationVariables = {
 };
 
 export type SubmitRepositoryMutation = { readonly __typename?: 'Mutation' } & {
-  readonly submitRepository: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+  readonly submitRepository?: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
 };
 
 export type RepoInfoFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
@@ -245,7 +245,7 @@ export type SubmitCommentMutationVariables = {
 };
 
 export type SubmitCommentMutation = { readonly __typename?: 'Mutation' } & {
-  readonly submitComment: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>;
+  readonly submitComment?: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>;
 };
 
 export type VoteButtonsFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & {
@@ -258,7 +258,7 @@ export type VoteMutationVariables = {
 };
 
 export type VoteMutation = { readonly __typename?: 'Mutation' } & {
-  readonly vote: Maybe<
+  readonly vote?: Maybe<
     { readonly __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
         readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
       }

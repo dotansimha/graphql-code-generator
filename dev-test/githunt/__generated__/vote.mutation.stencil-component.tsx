@@ -9,7 +9,7 @@ declare global {
   };
 
   export type VoteMutation = { __typename?: 'Mutation' } & {
-    vote: Types.Maybe<
+    vote?: Types.Maybe<
       { __typename?: 'Entry' } & Pick<Types.Entry, 'score' | 'id'> & {
           vote: { __typename?: 'Vote' } & Pick<Types.Vote, 'vote_value'>;
         }

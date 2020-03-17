@@ -59,7 +59,7 @@ export type GetMessagesQueryVariables = {
 };
 
 export type GetMessagesQuery = { __typename?: 'Query' } & {
-  messages: Maybe<Array<Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>>>;
+  messages?: Maybe<Array<Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>>>;
 };
 
 export type CreateMessageMutationVariables = {
@@ -67,7 +67,7 @@ export type CreateMessageMutationVariables = {
 };
 
 export type CreateMessageMutation = { __typename?: 'Mutation' } & {
-  createMessage: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
+  createMessage?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
 export type DeclineMutationVariables = {
@@ -76,7 +76,7 @@ export type DeclineMutationVariables = {
 };
 
 export type DeclineMutation = { __typename?: 'Mutation' } & {
-  decline: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
+  decline?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
 export type ApproveMutationVariables = {
@@ -84,7 +84,7 @@ export type ApproveMutationVariables = {
 };
 
 export type ApproveMutation = { __typename?: 'Mutation' } & {
-  approve: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
+  approve?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
 export type EscalateMutationVariables = {
@@ -92,7 +92,7 @@ export type EscalateMutationVariables = {
 };
 
 export type EscalateMutation = { __typename?: 'Mutation' } & {
-  escalate: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
+  escalate?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
 /**
