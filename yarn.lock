@@ -2896,6 +2896,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/array.prototype.flatmap@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/@types/array.prototype.flatmap/-/array.prototype.flatmap-1.2.1.tgz#3f6cf350077c26f7acafc28cb404cf1814e6b8ae"
+  integrity sha512-AtzC715z/5InlwWFzlxzdoV3Wovzbd3+60uWgDHdI0N+S6XiHU+syXHMhJQIYH1sv/xrrGVsLvMTSEBxmm6qlA==
+
 "@types/babel__core@^7.1.0":
   version "7.1.6"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.6.tgz#16ff42a5ae203c9af1c6e190ed1f30f83207b610"
@@ -4263,6 +4268,15 @@ array.prototype.flat@^1.2.1:
   dependencies:
     define-properties "^1.1.3"
     es-abstract "^1.17.0-next.1"
+
+array.prototype.flatmap@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/array.prototype.flatmap/-/array.prototype.flatmap-1.2.3.tgz#1c13f84a178566042dd63de4414440db9222e443"
+  integrity sha512-OOEk+lkePcg+ODXIpvuU9PAryCikCJyo7GlDG1upleEpQRx6mzL9puEBkozQ5iAx20KV0l3DbyQwqciJtqe5Pg==
+  dependencies:
+    define-properties "^1.1.3"
+    es-abstract "^1.17.0-next.1"
+    function-bind "^1.1.1"
 
 arrify@^1.0.1:
   version "1.0.1"
