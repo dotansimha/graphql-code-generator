@@ -12,7 +12,7 @@ export type HeroTypeDependentAliasedFieldQueryVariables = {
 };
 
 export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     | ({ __typename?: 'Human' } & { property: Types.Human['homePlanet'] })
     | ({ __typename?: 'Droid' } & { property: Types.Droid['primaryFunction'] })
   >;

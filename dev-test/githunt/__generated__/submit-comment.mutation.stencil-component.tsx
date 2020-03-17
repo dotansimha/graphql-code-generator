@@ -9,7 +9,7 @@ declare global {
   };
 
   export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
-    submitComment: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+    submitComment?: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
   };
 }
 

@@ -1,13 +1,6 @@
+import { GraphQLSchema, GraphQLOutputType, isEnumType, isNonNullType } from 'graphql';
 import {
-  GraphQLSchema,
-  isListType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isEnumType,
-  isNonNullType,
-} from 'graphql';
-import {
+  wrapTypeWithModifiers,
   PreResolveTypesProcessor,
   ParsedDocumentsConfig,
   BaseDocumentsVisitor,
@@ -48,32 +41,18 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     autoBind(this);
 
-    const clearOptional = (str: string): string => {
+    const wrapOptional = (type: string) => {
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-      const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'is');
-
-      if (str.startsWith(`${this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''}Maybe`)) {
-        return str.replace(rgx, '$1');
-      }
-
-      return str;
+      return `${prefix}Maybe<${type}>`;
+    };
+    const wrapArray = (type: string) => {
+      const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+      return `${listModifier}<${type}>`;
     };
 
-    const wrapTypeWithModifiers = (
-      baseType: string,
-      type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-    ): string => {
-      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-
-      if (isNonNullType(type)) {
-        return clearOptional(wrapTypeWithModifiers(baseType, type.ofType));
-      } else if (isListType(type)) {
-        const innerType = wrapTypeWithModifiers(baseType, type.ofType);
-
-        return `${prefix}Maybe<${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
-      } else {
-        return `${prefix}Maybe<${baseType}>`;
-      }
+    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+      const optional = !this.config.avoidOptionals && !!type && !isNonNullType(type);
+      return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 
     const processorConfig: SelectionSetProcessorConfig = {
@@ -81,8 +60,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
       scalars: this.scalars,
-      formatNamedField: (name: string): string => (this.config.immutableTypes ? `readonly ${name}` : name),
-      wrapTypeWithModifiers,
+      formatNamedField,
+      wrapTypeWithModifiers(baseType, type) {
+        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+      },
     };
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig

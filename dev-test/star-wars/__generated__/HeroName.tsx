@@ -12,7 +12,7 @@ export type HeroNameQueryVariables = {
 };
 
 export type HeroNameQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
   >;
 };

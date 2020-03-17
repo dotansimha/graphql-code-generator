@@ -169,7 +169,7 @@ export enum VoteType {
 export type GetSomethingQueryVariables = {};
 
 
-export type GetSomethingQuery = { feed: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
+export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
 export const GetSomethingDocument = gql\`
     query GET_SOMETHING {

@@ -11,7 +11,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type HumanWithNullHeightQueryVariables = {};
 
 export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
-  human: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
+  human?: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
 };
 
 export const HumanWithNullHeightDocument = gql`

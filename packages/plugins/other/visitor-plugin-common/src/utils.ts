@@ -19,6 +19,7 @@ import {
   isObjectType,
   isListType,
   isAbstractType,
+  GraphQLOutputType,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
@@ -386,4 +387,33 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   }
 
   return [];
+}
+
+type WrapModifiersOptions = {
+  wrapOptional(type: string): string;
+  wrapArray(type: string): string;
+};
+export function wrapTypeWithModifiers(
+  baseType: string,
+  type: GraphQLOutputType,
+  options: WrapModifiersOptions
+): string {
+  let currentType = type;
+  const modifiers: Array<(type: string) => string> = [];
+  while (currentType) {
+    if (isNonNullType(currentType)) {
+      currentType = currentType.ofType;
+    } else {
+      modifiers.push(options.wrapOptional);
+    }
+
+    if (isListType(currentType)) {
+      modifiers.push(options.wrapArray);
+      currentType = currentType.ofType;
+    } else {
+      break;
+    }
+  }
+
+  return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
 }

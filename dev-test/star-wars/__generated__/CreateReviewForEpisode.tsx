@@ -13,7 +13,7 @@ export type CreateReviewForEpisodeMutationVariables = {
 };
 
 export type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
-  createReview: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;
+  createReview?: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;
 };
 
 export const CreateReviewForEpisodeDocument = gql`

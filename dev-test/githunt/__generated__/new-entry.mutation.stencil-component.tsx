@@ -8,7 +8,7 @@ declare global {
   };
 
   export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
-    submitRepository: Types.Maybe<{ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>>;
+    submitRepository?: Types.Maybe<{ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>>;
   };
 }
 

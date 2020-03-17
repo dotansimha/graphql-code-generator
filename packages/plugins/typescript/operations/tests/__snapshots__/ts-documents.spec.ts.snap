@@ -34,7 +34,7 @@ export type GetEntityBrandDataQuery = (
 
 type EntityBrandData_User_Fragment = (
   { __typename?: 'User' }
-  & { brandData: Maybe<(
+  & { brandData?: Maybe<(
     { __typename?: 'EntityBrandData' }
     & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
   )> }
@@ -42,7 +42,7 @@ type EntityBrandData_User_Fragment = (
 
 type EntityBrandData_Company_Fragment = (
   { __typename?: 'Company' }
-  & { brandData: Maybe<(
+  & { brandData?: Maybe<(
     { __typename?: 'EntityBrandData' }
     & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
   )> }
@@ -50,7 +50,7 @@ type EntityBrandData_Company_Fragment = (
 
 type EntityBrandData_Theater_Fragment = (
   { __typename?: 'Theater' }
-  & { brandData: Maybe<(
+  & { brandData?: Maybe<(
     { __typename?: 'EntityBrandData' }
     & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
   )> }
@@ -58,7 +58,7 @@ type EntityBrandData_Theater_Fragment = (
 
 type EntityBrandData_Movie_Fragment = (
   { __typename?: 'Movie' }
-  & { brandData: Maybe<(
+  & { brandData?: Maybe<(
     { __typename?: 'EntityBrandData' }
     & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
   )> }
@@ -69,10 +69,10 @@ export type EntityBrandDataFragment = EntityBrandData_User_Fragment | EntityBran
 type ElementMetadata_User_Fragment = (
   { __typename?: 'User' }
   & Pick<User, 'createdAt' | 'updatedAt'>
-  & { createdBy: Maybe<(
+  & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
-  )>, updatedBy: Maybe<(
+  )>, updatedBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -81,10 +81,10 @@ type ElementMetadata_User_Fragment = (
 type ElementMetadata_Company_Fragment = (
   { __typename?: 'Company' }
   & Pick<Company, 'createdAt' | 'updatedAt'>
-  & { createdBy: Maybe<(
+  & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
-  )>, updatedBy: Maybe<(
+  )>, updatedBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -93,10 +93,10 @@ type ElementMetadata_Company_Fragment = (
 type ElementMetadata_Theater_Fragment = (
   { __typename?: 'Theater' }
   & Pick<Theater, 'createdAt' | 'updatedAt'>
-  & { createdBy: Maybe<(
+  & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
-  )>, updatedBy: Maybe<(
+  )>, updatedBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -105,10 +105,10 @@ type ElementMetadata_Theater_Fragment = (
 type ElementMetadata_Movie_Fragment = (
   { __typename?: 'Movie' }
   & Pick<Movie, 'createdAt' | 'updatedAt'>
-  & { createdBy: Maybe<(
+  & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
-  )>, updatedBy: Maybe<(
+  )>, updatedBy?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }

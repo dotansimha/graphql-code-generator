@@ -10,10 +10,10 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type TwoHeroesQueryVariables = {};
 
 export type TwoHeroesQuery = { __typename?: 'Query' } & {
-  r2: Types.Maybe<
+  r2?: Types.Maybe<
     ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
   >;
-  luke: Types.Maybe<
+  luke?: Types.Maybe<
     ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
   >;
 };

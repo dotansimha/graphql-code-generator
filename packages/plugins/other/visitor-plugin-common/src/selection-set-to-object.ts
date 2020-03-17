@@ -362,15 +362,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
 
       linkFields.push({
-        alias: field.alias ? field.alias.value : undefined,
-        name: field.name.value,
+        alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
+        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet
             .transformSelectionSet()
             .split(`\n`)
             .join(`\n  `),
-          selectedFieldType as any
+          selectedFieldType
         ),
       });
     }
