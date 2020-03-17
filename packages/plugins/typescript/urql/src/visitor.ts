@@ -167,6 +167,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
 
     const fieldVisitor = node => {
       if (node.selectionSet) {
+        console.log(node);
         typenames.push(getTypename(typeInfo.getType()));
       }
     };
