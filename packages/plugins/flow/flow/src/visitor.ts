@@ -137,14 +137,14 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     importIdentifier: string | null,
     sourceIdentifier: string | null,
     sourceFile: string | null
-  ): string | null {
+  ): string[] {
     let identifier = sourceIdentifier;
 
     if (sourceIdentifier !== typeIdentifier && !sourceIdentifier.includes(' as ')) {
       identifier = `${sourceIdentifier} as ${typeIdentifier}`;
     }
 
-    return this._buildTypeImport(identifier, sourceFile);
+    return [this._buildTypeImport(identifier, sourceFile)];
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
