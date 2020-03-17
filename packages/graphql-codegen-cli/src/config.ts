@@ -149,7 +149,7 @@ export function setCommandOptions(commandInstance: Command) {
 }
 
 export function parseArgv(argv = process.argv): Command & YamlCliFlags {
-  return (setCommandOptions(new Command().usage('graphql-codegen [options]')).parse(argv) as any) as Command &
+  return (setCommandOptions(new Command().usage('graphql-codegen [options]') as any).parse(argv) as any) as Command &
     YamlCliFlags;
 }
 
@@ -157,9 +157,7 @@ export async function createContext(
   cliFlags: Command & YamlCliFlags = parseArgv(process.argv)
 ): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
-    for (const mod of cliFlags.require) {
-      await import(mod);
-    }
+    await Promise.all(cliFlags.require.map(mod => import(mod)));
   }
 
   const customConfigPath = getCustomConfigPath(cliFlags);
