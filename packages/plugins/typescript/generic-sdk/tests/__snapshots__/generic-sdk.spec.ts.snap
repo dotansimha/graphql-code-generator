@@ -178,12 +178,12 @@ export type FeedQueryVariables = {};
 
 export type FeedQuery = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id' | 'commentCount'>
     & { repository: (
       { __typename?: 'Repository' }
-      & { owner: Maybe<(
+      & { owner?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'avatar_url'>
       )> }
@@ -198,7 +198,7 @@ export type Feed2QueryVariables = {
 
 export type Feed2Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
@@ -211,7 +211,7 @@ export type Feed3QueryVariables = {
 
 export type Feed3Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
@@ -224,7 +224,7 @@ export type Feed4QueryVariables = {
 
 export type Feed4Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
@@ -475,12 +475,12 @@ export type FeedQueryVariables = {};
 
 export type FeedQuery = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id' | 'commentCount'>
     & { repository: (
       { __typename?: 'Repository' }
-      & { owner: Maybe<(
+      & { owner?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'avatar_url'>
       )> }
@@ -495,7 +495,7 @@ export type Feed2QueryVariables = {
 
 export type Feed2Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
@@ -508,7 +508,7 @@ export type Feed3QueryVariables = {
 
 export type Feed3Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
@@ -521,7 +521,7 @@ export type Feed4QueryVariables = {
 
 export type Feed4Query = (
   { __typename?: 'Query' }
-  & { feed: Maybe<Array<Maybe<(
+  & { feed?: Maybe<Array<Maybe<(
     { __typename?: 'Entry' }
     & Pick<Entry, 'id'>
   )>>> }
