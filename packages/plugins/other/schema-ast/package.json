@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.0",
-    "@graphql-toolkit/common": "0.9.7",
+    "@graphql-toolkit/common": "0.9.9",
     "tslib": "1.11.1"
   },
   "devDependencies": {
