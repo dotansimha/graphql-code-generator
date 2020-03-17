@@ -18,6 +18,7 @@ import {
   isEnumType,
   DirectiveNode,
 } from 'graphql';
+import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
@@ -346,30 +347,40 @@ export class BaseTypesVisitor<
     return `import { ${identifier} } from '${source}';`;
   }
 
+  protected handleEnumValueMapper(
+    typeIdentifier: string,
+    importIdentifier: string | null,
+    sourceIdentifier: string | null,
+    sourceFile: string | null
+  ): string[] {
+    const importStatement = this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile);
+
+    if (importIdentifier !== sourceIdentifier || sourceIdentifier !== typeIdentifier) {
+      return [importStatement, `import ${typeIdentifier} = ${sourceIdentifier};`];
+    }
+
+    return [importStatement];
+  }
+
   public getEnumsImports(): string[] {
-    return Object.keys(this.config.enumValues)
-      .map(enumName => {
-        const mappedValue = this.config.enumValues[enumName];
+    return flatMap(Object.keys(this.config.enumValues), enumName => {
+      const mappedValue = this.config.enumValues[enumName];
 
-        if (mappedValue.sourceFile) {
-          if (mappedValue.isDefault) {
-            return this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true);
-          }
-          let identifier = mappedValue.sourceIdentifier;
-
-          if (
-            mappedValue.sourceIdentifier !== mappedValue.typeIdentifier &&
-            !mappedValue.sourceIdentifier.includes(' as ')
-          ) {
-            identifier = `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}`;
-          }
-
-          return this._buildTypeImport(identifier, mappedValue.sourceFile);
+      if (mappedValue.sourceFile) {
+        if (mappedValue.isDefault) {
+          return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
         }
 
-        return null;
-      })
-      .filter(a => a);
+        return this.handleEnumValueMapper(
+          mappedValue.typeIdentifier,
+          mappedValue.importIdentifier,
+          mappedValue.sourceIdentifier,
+          mappedValue.sourceFile
+        );
+      }
+
+      return [];
+    }).filter(a => a);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

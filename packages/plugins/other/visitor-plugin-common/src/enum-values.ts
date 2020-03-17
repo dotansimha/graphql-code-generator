@@ -1,7 +1,7 @@
 import { EnumValuesMap, ParsedEnumValuesMap } from './types';
 import { GraphQLSchema, isEnumType, GraphQLEnumType } from 'graphql';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
-import { parseMapper, isExternalMapperType } from './mappers';
+import { parseMapper } from './mappers';
 
 export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap = {}): ParsedEnumValuesMap {
   const allTypes = schema.getTypeMap();
@@ -40,8 +40,9 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
           [gqlIdentifier]: {
             isDefault: mapper.isExternal && mapper.default,
             typeIdentifier: gqlIdentifier,
-            sourceFile: mapper.isExternal ? mapper.source : undefined,
-            sourceIdentifier: isExternalMapperType(mapper) ? mapper.import : mapper.type,
+            sourceFile: mapper.isExternal ? mapper.source : null,
+            sourceIdentifier: mapper.type,
+            importIdentifier: mapper.isExternal ? mapper.import : null,
             mappedValues: null,
           },
         };
@@ -53,6 +54,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
             typeIdentifier: gqlIdentifier,
             sourceFile: null,
             sourceIdentifier: null,
+            importIdentifier: null,
             mappedValues: pointer,
           },
         };
@@ -74,6 +76,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
             typeIdentifier: enumName,
             sourceFile: mapOrStr,
             sourceIdentifier: enumName,
+            importIdentifier: enumName,
             mappedValues: null,
           },
         };

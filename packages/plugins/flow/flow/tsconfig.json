@@ -5,7 +5,7 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "target": "es2018",
-    "lib": ["es6", "esnext", "es2015", "dom"],
+    "lib": ["es6", "esnext", "es2015", "dom", "es2019.array"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

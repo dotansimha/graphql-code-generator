@@ -132,6 +132,21 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     }}`;
   }
 
+  handleEnumValueMapper(
+    typeIdentifier: string,
+    importIdentifier: string | null,
+    sourceIdentifier: string | null,
+    sourceFile: string | null
+  ): string[] {
+    let identifier = sourceIdentifier;
+
+    if (sourceIdentifier !== typeIdentifier && !sourceIdentifier.includes(' as ')) {
+      identifier = `${sourceIdentifier} as ${typeIdentifier}`;
+    }
+
+    return [this._buildTypeImport(identifier, sourceFile)];
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const typeName = (node.name as any) as string;
 
