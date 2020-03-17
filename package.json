@@ -5,6 +5,8 @@
     "build": "lerna run build --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "lint": "eslint --ext .ts .",
+    "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
+    "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
     "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
@@ -84,7 +86,7 @@
       "eslint --fix",
       "git add"
     ],
-    "packages/**/*.{js,json,css,md,ts,tsx}": [
+    "**/*.{ts,tsx,graphql,yml}": [
       "prettier --write",
       "git add -f"
     ]
