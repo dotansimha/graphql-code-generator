@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  rootDir: process.cwd(),
+  rootDir: __dirname,
   globals: {
     'ts-jest': {
       diagnostics: false,
@@ -18,5 +18,7 @@ module.exports = {
       },
     ],
   ],
-  modulePathIgnorePatterns: ['<rootDir>/dist'],
+  roots: ['<rootDir>/packages'],
+  moduleDirectories: ['node_modules', '<rootDir>/packages'],
+  modulePathIgnorePatterns: ['<rootDir>/packages/.*/dist/'],
 };

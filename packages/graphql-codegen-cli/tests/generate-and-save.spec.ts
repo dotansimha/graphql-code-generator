@@ -1,12 +1,20 @@
 import { generate } from '../src/generate-and-save';
 import * as fs from '../src/utils/file-system';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { join } from 'path';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
 describe('generate-and-save', () => {
+  let spyProcessCwd: jest.SpyInstance;
   beforeEach(() => {
     jest.resetAllMocks();
+    spyProcessCwd = jest.spyOn(process, 'cwd');
+    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
+  });
+
+  afterEach(() => {
+    spyProcessCwd.mockRestore();
   });
 
   test('allow to specify overwrite for specific output (should write file)', async () => {

@@ -2,14 +2,18 @@ import { cliError } from '../src/utils/cli-error';
 
 describe('cliError', () => {
   let spyProcessExit: jest.SpyInstance;
+  let spyConsoleError: jest.SpyInstance;
 
   beforeEach(() => {
     spyProcessExit = jest.spyOn(process, 'exit');
     spyProcessExit.mockImplementation();
+    spyConsoleError = jest.spyOn(console, 'error');
+    spyConsoleError.mockImplementation();
   });
 
   afterEach(() => {
     spyProcessExit.mockRestore();
+    spyConsoleError.mockRestore();
   });
 
   it('should handle an Error', () => {

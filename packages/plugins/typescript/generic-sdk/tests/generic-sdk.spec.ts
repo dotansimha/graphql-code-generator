@@ -5,10 +5,9 @@ import { parse, buildClientSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
 
 describe('generic-sdk', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query feed {
       feed {
@@ -64,7 +63,7 @@ describe('generic-sdk', () => {
 
       const usage = `
 async function test() {
-  const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+  const requester = <R, V> (doc: DocumentNode, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
   
   await sdk.feed();

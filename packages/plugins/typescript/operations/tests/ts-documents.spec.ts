@@ -1,14 +1,11 @@
 import { compileTs, validateTs } from '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(
-    JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8'))
-  );
+  const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
   const schema = buildSchema(/* GraphQL */ `
     scalar DateTime

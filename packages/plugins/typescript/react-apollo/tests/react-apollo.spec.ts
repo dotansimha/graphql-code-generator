@@ -6,12 +6,11 @@ import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { readFileSync } from 'fs';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { extract } from 'jest-docblock';
 
 describe('React Apollo', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {

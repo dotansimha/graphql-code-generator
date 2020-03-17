@@ -5,10 +5,9 @@ import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } fr
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
-import { readFileSync } from 'fs';
 
 describe('Apollo Angular', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {

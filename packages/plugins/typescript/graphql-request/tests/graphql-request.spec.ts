@@ -5,7 +5,6 @@ import { parse, buildClientSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
 import * as ts from 'typescript';
 import { GraphQLClient } from 'graphql-request';
 import nock from 'nock';
@@ -17,7 +16,7 @@ describe('graphql-request', () => {
   afterAll(() => nock.enableNetConnect());
   afterEach(() => nock.cleanAll());
 
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query feed {
       feed {
