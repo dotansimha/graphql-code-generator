@@ -13,6 +13,7 @@ export type ParsedEnumValuesMap = {
     typeIdentifier: string;
     sourceIdentifier?: string;
     sourceFile?: string;
+    importIdentifier?: string;
     isDefault?: boolean;
   };
 };
