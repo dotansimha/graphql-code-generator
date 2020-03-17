@@ -72,6 +72,23 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     if (operationType === 'Subscription') {
       generics.unshift(operationResultType);
     }
+
+    if (this.config.withAdditionalTypenames) {
+      return `
+export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(
+        ', '
+      )}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => {
+        const context = useMemo(() => ({
+          ...(props.context || {}),
+          additionalTypenames: [${this.getTypenames(node)}],
+        }, [props.context]));
+        return (
+          <Urql.${operationType} {...props} query={${documentVariableName}} context={context} />
+        )
+      }
+`;
+    }
+
     return `
 export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(
       ', '
@@ -148,14 +165,17 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     const typenames = [];
     const typeInfo = new TypeInfo(this._schema);
 
+    const fieldVisitor = node => {
+      if (node.selectionSet) {
+        console.log('field', node.selectionSet);
+        typenames.push(getTypename(typeInfo.getType()));
+      }
+    };
+
     visit(
       node,
       visitWithTypeInfo(typeInfo, {
-        Field: node => {
-          if (node.selectionSet) {
-            typenames.push(getTypename(typeInfo.getType()));
-          }
-        },
+        Field: fieldVisitor,
       })
     );
 
@@ -164,16 +184,13 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
 }
 
 const unwrapType = (
-  type: null | undefined | GraphQLOutputType
-): GraphQLFlatType | null => {
+  type: GraphQLOutputType
+): GraphQLFlatType => {
   if (isWrappingType(type)) {
     return unwrapType(type.ofType);
   }
 
-  return type || null;
+  return type;
 };
 
-const getTypename = (type: GraphQLOutputType) => {
-  return unwrapType(type).toString();
-  
-}
+const getTypename = (type: GraphQLOutputType) => unwrapType(type).toString();

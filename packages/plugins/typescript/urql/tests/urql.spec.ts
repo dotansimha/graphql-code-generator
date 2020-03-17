@@ -668,7 +668,6 @@ export function useSubmitRepositoryMutation() {
 
         fragment MyEntry on Entry {
           id
-          commentCount
         }
       `);
 
