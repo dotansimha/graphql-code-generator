@@ -15,9 +15,8 @@ export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
 }
 
-const additionalSdkExports = `
+const additionalExportedTypes = `
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 `;
 
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
@@ -97,7 +96,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       })
       .map(s => indentMultiline(s, 2));
 
-    return `${additionalSdkExports}
+    return `${additionalExportedTypes}
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
 ${allPossibleActions.join(',\n')}

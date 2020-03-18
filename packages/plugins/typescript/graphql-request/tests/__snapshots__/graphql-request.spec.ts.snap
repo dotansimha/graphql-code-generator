@@ -265,8 +265,9 @@ export const Feed4Document = \`
     \`;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
@@ -585,8 +586,9 @@ export const Feed4Document = gql\`
     \`;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
@@ -886,8 +888,9 @@ export const Feed4Document = \`
     \`;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
