@@ -69,7 +69,7 @@
     "dependency-graph": "0.9.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.6",
-    "graphql-config": "3.0.0-alpha.19",
+    "graphql-config": "3.0.0-alpha.21",
     "indent-string": "4.0.0",
     "inquirer": "7.1.0",
     "is-glob": "4.0.1",
