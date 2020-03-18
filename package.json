@@ -67,7 +67,6 @@
     "eslint-plugin-standard": "4.0.1",
     "graphql": "14.6.0",
     "graphql-tag": "2.10.3",
-    "graphql-tools": "4.0.7",
     "husky": "4.2.3",
     "jest": "25.1.0",
     "jest-docblock": "25.1.0",
