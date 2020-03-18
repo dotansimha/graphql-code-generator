@@ -14,7 +14,7 @@
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.2.7",
+    "bob-the-bundler": "0.2.3",
     "graphql": "14.6.0",
     "graphql-tag": "2.10.3",
     "typescript": "3.8.3"
