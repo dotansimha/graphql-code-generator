@@ -15,6 +15,11 @@ export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
 }
 
+const additionalSdkExports = `
+export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
+`;
+
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   RawGraphQLRequestPluginConfig,
   GraphQLRequestPluginConfig
@@ -43,10 +48,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     if (this.config.rawRequest) {
       this._additionalImports.push(`import { GraphQLError } from 'graphql-request/dist/src/types';`);
     }
-
-    this._additionalImports.push(
-      `import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';`
-    );
   }
 
   protected buildOperation(
@@ -96,7 +97,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       })
       .map(s => indentMultiline(s, 2));
 
-    return `export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+    return `${additionalSdkExports}
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
 ${allPossibleActions.join(',\n')}
   };
