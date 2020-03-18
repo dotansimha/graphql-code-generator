@@ -3458,12 +3458,12 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@urql/core@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.10.2.tgz#6d3c80ab902ac79dbe85535a81b55dc608184d23"
-  integrity sha512-u/SyxaVQgDB+9KVWKp07N96PdLPJPzNUNRCw9cmjKw+IVWgwQMpuPum9/IE1XJLVvRi3kKefp/4OGvigqq+TjA==
+"@urql/core@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.10.3.tgz#7adbdb1294156307e105f8f877b7efd9cc3473e6"
+  integrity sha512-PaKUIr1cVw0OzDp8NwNIumO2eVNzen0ED0hTOXuViT3Zx70zJ60dR1Npr3zLyivjzDzGJsptNBdtYE97idmWng==
   dependencies:
-    wonka "^4.0.7"
+    wonka "^4.0.8"
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
@@ -17212,7 +17212,18 @@ ts-log@2.1.4:
   resolved "https://registry.npmjs.org/ts-log/-/ts-log-2.1.4.tgz#063c5ad1cbab5d49d258d18015963489fb6fb59a"
   integrity sha512-P1EJSoyV+N3bR/IWFeAqXzKPZwHpnLY6j7j58mAvewHRipo+BQM2Y1f9Y9BjEQznKwgqqZm7H8iuixmssU7tYQ==
 
-ts-node@8.6.2, ts-node@^8:
+ts-node@8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.7.0.tgz#266186947596bef9f3a034687595b30e31b20976"
+  integrity sha512-s659CsHrsxaRVDEleuOkGvbsA0rWHtszUNEt1r0CgAFN5ZZTQtDzpsluS7W5pOGJIa1xZE8R/zK4dEs+ldFezg==
+  dependencies:
+    arg "^4.1.0"
+    diff "^4.0.1"
+    make-error "^1.1.1"
+    source-map-support "^0.5.6"
+    yn "3.1.1"
+
+ts-node@^8:
   version "8.6.2"
   resolved "https://registry.npmjs.org/ts-node/-/ts-node-8.6.2.tgz#7419a01391a818fbafa6f826a33c1a13e9464e35"
   integrity sha512-4mZEbofxGqLL2RImpe3zMJukvEvcO1XP8bj8ozBPySdCUXEcU5cIRwR0aM3R+VoZq7iXc8N86NC0FspGRqP4gg==
@@ -17547,13 +17558,13 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.9.1.tgz#8fde3cd10df225cdfde0525f28ee1536e5815d3a"
-  integrity sha512-EbldoS6cnN/ecyDtqNDfBCYMQKT89AqM0tSPAn7TVINYUgxJnD9KBBW5L/xWN65MrLaAgmPdsrOiFTqPp6ybAA==
+urql@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.9.2.tgz#5b3187340d31aee59e1f58a18e2dd54a0e96ee99"
+  integrity sha512-alcWOrpUD41CMX/Dbb9pzPdQeJ1cGxzjU3wfC/WTryWv7k0R5jfHxyxVaH0wKTZa0keaX04nbQQUs6Ci4VllSg==
   dependencies:
-    "@urql/core" "^1.10.2"
-    wonka "^4.0.7"
+    "@urql/core" "^1.10.3"
+    wonka "^4.0.8"
 
 use@^3.1.0:
   version "3.1.1"
@@ -17986,10 +17997,10 @@ windows-release@^3.1.0:
   dependencies:
     execa "^1.0.0"
 
-wonka@^4.0.7:
-  version "4.0.7"
-  resolved "https://registry.npmjs.org/wonka/-/wonka-4.0.7.tgz#b4934685bd2449367bd72ce7770bfe3e6cc8a68b"
-  integrity sha512-Uhyl2cgWCUksYtU0Jt8MSzKUqK4BVUrewWxnn1YlKL3Zco4sDcCUDkbgH0i762HJs1rtsq03cfzsCWxJKaDgVg==
+wonka@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.8.tgz#edab5fb3bcb060242b7a47d2aaab57a45ef69c35"
+  integrity sha512-7JHs16U9/OxkkoytluIRfxRLML7erwWuDkE5Qgw+12ctIBjUwq+wIifzTvJXi9NDSO+Hr9I6t/huiLaeWg89vA==
 
 word-wrap@~1.2.3:
   version "1.2.3"
