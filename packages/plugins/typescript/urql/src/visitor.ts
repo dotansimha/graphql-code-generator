@@ -167,8 +167,8 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
 
     const fieldVisitor = node => {
       if (node.selectionSet) {
-        console.log(node);
-        typenames.push(getTypename(typeInfo.getType()));
+        const type = getTypename(typeInfo.getType());
+        if (typenames.indexOf(type) === -1) typenames.push(type);
       }
     };
 
@@ -176,6 +176,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
       node,
       visitWithTypeInfo(typeInfo, {
         Field: fieldVisitor,
+        FragmentDefinition: fieldVisitor,
       })
     );
 
