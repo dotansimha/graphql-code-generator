@@ -19,7 +19,6 @@ import { TypeScriptPluginConfig } from './config';
 
 export * from './typescript-variables-to-object';
 export * from './visitor';
-export * from './types';
 export * from './config';
 export * from './introspection-visitor';
 

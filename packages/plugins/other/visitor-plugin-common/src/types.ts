@@ -53,3 +53,9 @@ export interface DeclarationKindConfig {
   interface?: DeclarationKind;
   arguments?: DeclarationKind;
 }
+
+export interface AvoidOptionalsConfig {
+  field?: boolean;
+  object?: boolean;
+  inputValue?: boolean;
+}

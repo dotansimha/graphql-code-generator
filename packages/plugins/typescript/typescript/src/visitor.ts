@@ -7,9 +7,10 @@ import {
   ParsedTypesConfig,
   getConfigValue,
   DeclarationKind,
+  normalizeAvoidOptionals,
+  AvoidOptionalsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './config';
-import { AvoidOptionalsConfig } from './types';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,
@@ -23,7 +24,6 @@ import {
   GraphQLEnumType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
-import { normalizeAvoidOptionals } from './avoid-optionals';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
@@ -122,7 +122,7 @@ export class TsVisitor<
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
     const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
-    const addOptionalSign = !this.config.avoidOptionals.object && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);
     const { type } = this.config.declarationKind;
 
