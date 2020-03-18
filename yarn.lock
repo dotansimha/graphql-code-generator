@@ -8979,10 +8979,10 @@ graphql-config@2.2.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
-graphql-config@3.0.0-alpha.22:
-  version "3.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-alpha.22.tgz#67f1cbde1a57143b218d36b569e694a468ea7e2c"
-  integrity sha512-0rIBZFye040OC4XwsqGsz4yu3vsP4ayEPTNKXm90ygQ9RorVhpHSwgmJI22Be0q0KLHH7z3urLJzugd8EsVeIw==
+graphql-config@3.0.0-alpha.23:
+  version "3.0.0-alpha.23"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-alpha.23.tgz#ee62a533126d009043bea4366456239b4feacece"
+  integrity sha512-7dUQMEO0JJzyvcH7z+smave+prPcAVqa3rhki6M1YBLXbgcDnCBXqqzmgtyo7ucGZYEwZrY2RTAxhoVB35iiFQ==
   dependencies:
     "@graphql-toolkit/common" "0.9.10-alpha-b7764d5.0+b7764d5"
     "@graphql-toolkit/core" "0.9.10-alpha-b7764d5.0+b7764d5"
