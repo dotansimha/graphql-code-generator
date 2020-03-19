@@ -7,6 +7,16 @@ import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
 
 describe('urql', () => {
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {

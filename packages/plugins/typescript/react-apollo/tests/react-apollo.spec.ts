@@ -10,6 +10,16 @@ import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { extract } from 'jest-docblock';
 
 describe('React Apollo', () => {
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {

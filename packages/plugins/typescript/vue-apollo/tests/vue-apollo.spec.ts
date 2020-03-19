@@ -1,4 +1,4 @@
-import { compileTs, validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src';
 import { VueApolloRawPluginConfig } from '../src/config';
 import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
@@ -10,6 +10,16 @@ import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { extract } from 'jest-docblock';
 
 describe('Vue Apollo', () => {
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
@@ -53,23 +63,6 @@ describe('Vue Apollo', () => {
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     validateTs(merged, undefined, true, false, playground);
-
-    return merged;
-  };
-
-  const validateAndCompile = async (
-    content: Types.PluginOutput,
-    config: any = {},
-    pluginSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    usage = '',
-    playground = false
-  ) => {
-    const tsOutput = await tsPlugin(pluginSchema, documents, config, { outputFile: '' });
-    const tsDocumentsOutput = await tsDocumentsPlugin(pluginSchema, documents, config, { outputFile: '' });
-    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, content]);
-
-    await compileTs(merged, {}, true, playground);
 
     return merged;
   };
