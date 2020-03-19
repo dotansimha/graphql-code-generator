@@ -2,6 +2,7 @@
 .npmrc
 .yarnclean
 .DS_Store
+coverage
 lerna-debug.log
 yarn-error.log
 node_modules

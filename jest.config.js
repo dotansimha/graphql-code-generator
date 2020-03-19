@@ -1,4 +1,11 @@
 module.exports = {
+  collectCoverageFrom: [
+    'packages/**/src/**/*.ts',
+    '!packages/utils/**/*',
+    '!**/*.d.ts'
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['html', 'lcov', 'text'],
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: __dirname,
