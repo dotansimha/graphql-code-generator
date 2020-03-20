@@ -9,6 +9,7 @@
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
+    "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",

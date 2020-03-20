@@ -12,12 +12,10 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "resolveJsonModule": true,
     "paths": {
       "@graphql-codegen/cli": ["./packages/graphql-codegen-cli/src/index.ts"],
