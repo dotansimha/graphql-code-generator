@@ -36,7 +36,7 @@
     "@types/codemirror": "0.0.88",
     "@types/react": "16.9.23",
     "@types/react-dom": "16.9.5",
-    "codemirror": "5.52.0",
+    "codemirror": "5.52.2",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.13.1",
     "react": "16.13.1",
