@@ -1,4 +1,4 @@
-import { compileTs, validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { buildSchema, parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src';
@@ -11,7 +11,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 const validate = async (
   content: Types.PluginOutput,
   schema: GraphQLSchema,
-  operations,
+  operations: Types.DocumentFile[],
   config = {},
   tsx = false,
   strict = false
@@ -21,21 +21,6 @@ const validate = async (
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
 
   validateTs(mergedOutput, undefined, tsx, strict);
-};
-
-const validateAndCompile = async (
-  content: Types.PluginOutput,
-  schema: GraphQLSchema,
-  operations,
-  config = {},
-  tsx = false,
-  options = undefined
-) => {
-  const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
-  const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
-  const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
-
-  compileTs(mergedOutput, options, tsx);
 };
 
 describe('Compatibility Plugin', () => {
@@ -204,7 +189,8 @@ describe('Compatibility Plugin', () => {
       const config = { strict: true, noNamespaces: true };
       const result = await plugin(testSchema, operations, config);
 
-      await validateAndCompile(result, testSchema, operations, config, false);
+      await validate(result, testSchema, operations, config, false);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
     it('Issue #1686 - Inline fragments on a union', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
@@ -372,7 +358,8 @@ describe('Compatibility Plugin', () => {
       expect(result).toContain('ServerChangeImacInlineFragment');
       expect(result).toContain('ServerDecomImacInlineFragment');
       expect(result).toContain('ServerSetupImacInlineFragment');
-      await validateAndCompile(result, testSchema, ast, {});
+      await validate(result, testSchema, ast, {});
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Issue #1762 - __typename issues', async () => {
@@ -492,7 +479,8 @@ describe('Compatibility Plugin', () => {
 
       const ast = [{ location: '', document: testQuery }];
       const result = await plugin(testSchema, ast, {});
-      await validateAndCompile(result, testSchema, ast, {});
+      await validate(result, testSchema, ast, {});
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
   });
 
@@ -537,7 +525,8 @@ describe('Compatibility Plugin', () => {
 
     expect(result).toContain(`export type Query = Me4Query;`);
     expect(result).toContain(`export type Me = Me4Query['me'];`);
-    await validateAndCompile(result, testSchema, ast);
+    await validate(result, testSchema, ast);
+    expect(mergeOutputs([result])).toMatchSnapshot();
   });
 
   it('Should work with interfaces and inline fragments', async () => {
@@ -580,7 +569,8 @@ describe('Compatibility Plugin', () => {
       },
     ];
     const result = await plugin(testSchema, ast, {});
-    await validateAndCompile(result, testSchema, ast);
+    await validate(result, testSchema, ast);
+    expect(mergeOutputs([result])).toMatchSnapshot();
   });
 
   it('Should generate namepsace and the internal types correctly', async () => {
@@ -626,7 +616,8 @@ describe('Compatibility Plugin', () => {
     expect(result).toContain(`export type Friends = MeQuery['me']['friends'][0];`);
     expect(result).toContain(`export type _Friends = MeQuery['me']['friends'][0]['friends'][0];`);
     expect(result).toContain(`export type __Friends = MeQuery['me']['friends'][0]['friends'][0]['friends'][0];`);
-    await validateAndCompile(result, schema, ast);
+    await validate(result, schema, ast);
+    expect(mergeOutputs([result])).toMatchSnapshot();
   });
 
   it('Should work with fragment spread', async () => {
@@ -753,7 +744,8 @@ describe('Compatibility Plugin', () => {
       });
 
       const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
-      await validateAndCompile(mergeOutputs([raPluginResult, result]), schema, ast, config, true, { strict: true });
+      await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true, true);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should produce valid ts code with react-apollo', async () => {

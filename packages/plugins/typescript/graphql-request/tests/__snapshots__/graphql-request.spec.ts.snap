@@ -309,16 +309,6 @@ async function test() {
 }"
 `;
 
-exports[`graphql-request sdk Should execute middleware passed to getSdk 1`] = `
-Object {
-  "feed": Array [
-    Object {
-      "id": 1,
-    },
-  ],
-}
-`;
-
 exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
@@ -923,14 +913,4 @@ async function test() {
     }
   }
 }"
-`;
-
-exports[`graphql-request sdk should execute default no-op middleware when none passed to getSdk 1`] = `
-Object {
-  "feed": Array [
-    Object {
-      "id": 1,
-    },
-  ],
-}
 `;

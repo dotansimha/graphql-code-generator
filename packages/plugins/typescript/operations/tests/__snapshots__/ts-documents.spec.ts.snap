@@ -158,3 +158,533 @@ export type QQuery = (
 );
 "
 `;
+
+exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 2`] = `
+"export type Maybe<T> = T | null;
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
+
+export type GpsPosition = {
+   __typename?: 'GPSPosition';
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+};
+
+export type Hotel = VenueWithPosition & Venue & {
+   __typename?: 'Hotel';
+  id: Scalars['String'];
+  gpsPosition: GpsPosition;
+  name: Scalars['String'];
+};
+
+export type Query = {
+   __typename?: 'Query';
+  hotel: Hotel;
+  transport: Transport;
+};
+
+export type Transport = Venue & {
+   __typename?: 'Transport';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type Venue = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type VenueWithPosition = {
+  id: Scalars['String'];
+  gpsPosition: GpsPosition;
+};
+type Venue_Hotel_Fragment = (
+  { __typename?: 'Hotel' }
+  & Pick<Hotel, 'id'>
+  & { gpsPosition: (
+    { __typename?: 'GPSPosition' }
+    & Pick<GpsPosition, 'lat' | 'lng'>
+  ) }
+);
+
+type Venue_Transport_Fragment = (
+  { __typename?: 'Transport' }
+  & Pick<Transport, 'id'>
+);
+
+export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
+
+export type QQueryVariables = {};
+
+
+export type QQuery = (
+  { __typename?: 'Query' }
+  & { hotel: (
+    { __typename?: 'Hotel' }
+    & Venue_Hotel_Fragment
+  ), transport: (
+    { __typename?: 'Transport' }
+    & Venue_Transport_Fragment
+  ) }
+);
+function test(q: QQuery) {
+        if (q.hotel) {
+            const t1 = q.hotel.gpsPosition.lat
+        }
+        
+        if (q.transport) {
+            const t2 = q.transport.id;
+        }
+    }"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
+"export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )> }
+);
+
+export type UserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'name'>
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment over type 1`] = `
+"export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment spread over type 1`] = `
+"export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )> }
+);
+
+export type UserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'name'>
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment spread over union 1`] = `
+"export type UserFragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id'>
+);
+
+export type AaaQueryVariables = {};
+
+
+export type AaaQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & UserFragmentFragment
+  ) | { __typename?: 'Error' } }
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should generate the correct intersection for fragments when using with interfaces with same type 1`] = `
+"export type Unnamed_1_QueryVariables = {};
+
+
+export type Unnamed_1_Query = (
+  { __typename?: 'Query' }
+  & { b?: Maybe<(
+    { __typename?: 'A' }
+    & AFragment
+    & BFragment
+  ) | { __typename?: 'B' }> }
+);
+
+export type AFragment = (
+  { __typename?: 'A' }
+  & Pick<A, 'id'>
+);
+
+export type BFragment = (
+  { __typename?: 'A' }
+  & Pick<A, 'x'>
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should have valid __typename usage and split types according to that (with usage) 1`] = `
+"type NetRoute_Ipv4Route_Fragment = (
+  { __typename: 'IPV4Route' }
+  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
+);
+
+type NetRoute_Ipv6Route_Fragment = (
+  { __typename: 'IPV6Route' }
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
+);
+
+export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
+
+export type QqQueryVariables = {};
+
+
+export type QqQuery = (
+  { __typename?: 'Query' }
+  & { routes: Array<(
+    { __typename?: 'IPV4Route' }
+    & NetRoute_Ipv4Route_Fragment
+  ) | (
+    { __typename?: 'IPV6Route' }
+    & NetRoute_Ipv6Route_Fragment
+  )> }
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should have valid __typename usage and split types according to that (with usage) 2`] = `
+"type NetRoute_Ipv4Route_Fragment = (
+  { __typename: 'IPV4Route' }
+  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
+);
+
+type NetRoute_Ipv6Route_Fragment = (
+  { __typename: 'IPV6Route' }
+  & TestFragment
+);
+
+export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
+
+export type TestFragment = (
+  { __typename?: 'IPV6Route' }
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
+);
+
+export type QqQueryVariables = {};
+
+
+export type QqQuery = (
+  { __typename?: 'Query' }
+  & { routes: Array<(
+    { __typename?: 'IPV4Route' }
+    & NetRoute_Ipv4Route_Fragment
+  ) | (
+    { __typename?: 'IPV6Route' }
+    & NetRoute_Ipv6Route_Fragment
+  )> }
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Selection Set Should have valid fragments intersection on different types (with usage) #2498 1`] = `
+"export type TomFragment = (
+  { __typename?: 'Tom' }
+  & Pick<Tom, 'id' | 'foo'>
+);
+
+export type JerryFragment = (
+  { __typename?: 'Jerry' }
+  & Pick<Jerry, 'id' | 'bar'>
+);
+
+type User_Tom_Fragment = (
+  { __typename?: 'Tom' }
+  & TomFragment
+);
+
+type User_Jerry_Fragment = (
+  { __typename?: 'Jerry' }
+  & JerryFragment
+);
+
+export type UserFragment = User_Tom_Fragment | User_Jerry_Fragment;
+
+export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'Tom' }
+    & User_Tom_Fragment
+  ) | (
+    { __typename?: 'Jerry' }
+    & User_Jerry_Fragment
+  )> }
+);
+"
+`;
+
+exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments 1`] = `
+"export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'login'>
+    & UserResult_User_Fragment
+    & UserResult1_User_Fragment
+  ) | (
+    { __typename?: 'Error2' }
+    & UserResult_Error2_Fragment
+    & UserResult1_Error2_Fragment
+  ) | (
+    { __typename?: 'Error3' }
+    & Pick<Error3, 'message'>
+    & { info?: Maybe<(
+      { __typename?: 'AdditionalInfo' }
+      & AdditionalInfoFragment
+    )> }
+    & UserResult_Error3_Fragment
+    & UserResult1_Error3_Fragment
+  ) }
+);
+
+export type AdditionalInfoFragment = (
+  { __typename?: 'AdditionalInfo' }
+  & Pick<AdditionalInfo, 'message'>
+);
+
+type UserResult1_User_Fragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id'>
+);
+
+type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
+
+type UserResult1_Error3_Fragment = (
+  { __typename?: 'Error3' }
+  & { info?: Maybe<(
+    { __typename?: 'AdditionalInfo' }
+    & Pick<AdditionalInfo, 'message2'>
+  )> }
+);
+
+export type UserResult1Fragment = UserResult1_User_Fragment | UserResult1_Error2_Fragment | UserResult1_Error3_Fragment;
+
+type UserResult_User_Fragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id'>
+);
+
+type UserResult_Error2_Fragment = (
+  { __typename?: 'Error2' }
+  & Pick<Error2, 'message'>
+);
+
+type UserResult_Error3_Fragment = { __typename?: 'Error3' };
+
+export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fragment | UserResult_Error3_Fragment;
+"
+`;
+
+exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
+"export type Maybe<T> = T | null;
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
+
+export type AdditionalInfo = {
+   __typename?: 'AdditionalInfo';
+  message: Scalars['String'];
+  message2: Scalars['String'];
+};
+
+export type Error = {
+  message: Scalars['String'];
+};
+
+export type Error1 = Error & {
+   __typename?: 'Error1';
+  message: Scalars['String'];
+};
+
+export type Error2 = Error & {
+   __typename?: 'Error2';
+  message: Scalars['String'];
+};
+
+export type Error3 = Error & {
+   __typename?: 'Error3';
+  message: Scalars['String'];
+  info?: Maybe<AdditionalInfo>;
+};
+
+export type Query = {
+   __typename?: 'Query';
+  user: UserResult;
+};
+
+export type User = {
+   __typename?: 'User';
+  id: Scalars['ID'];
+  login: Scalars['String'];
+};
+
+export type UserResult = User | Error2 | Error3;
+export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'login'>
+  ) | (
+    { __typename?: 'Error2' }
+    & Pick<Error2, 'message'>
+  ) | (
+    { __typename?: 'Error3' }
+    & Pick<Error3, 'message'>
+    & { info?: Maybe<(
+      { __typename?: 'AdditionalInfo' }
+      & Pick<AdditionalInfo, 'message2' | 'message'>
+    )> }
+  ) }
+);
+
+        function t(q: UserQueryQuery) {
+            if (q.user) {
+                if (q.user.__typename === 'User') {
+                    if (q.user.id) {
+                        const u = q.user.login;
+                    }
+                }
+                if (q.user.__typename === 'Error2') {
+                    console.log(q.user.message);
+                }
+                if (q.user.__typename === 'Error3') {
+                    if (q.user.info) {
+                        console.log(q.user.info.__typename)
+                    }
+                }
+            }
+        }"
+`;
+
+exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
+"export type Maybe<T> = T | null;
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
+
+
+
+export type AdditionalInfo = {
+   __typename?: 'AdditionalInfo';
+  message: Scalars['String'];
+  message2: Scalars['String'];
+};
+
+export type Error = {
+  message: Scalars['String'];
+};
+
+export type Error1 = Error & {
+   __typename?: 'Error1';
+  message: Scalars['String'];
+};
+
+export type Error2 = Error & {
+   __typename?: 'Error2';
+  message: Scalars['String'];
+};
+
+export type Error3 = Error & {
+   __typename?: 'Error3';
+  message: Scalars['String'];
+  info?: Maybe<AdditionalInfo>;
+};
+
+export type Query = {
+   __typename?: 'Query';
+  user: UserResult;
+};
+
+export type User = {
+   __typename?: 'User';
+  id: Scalars['ID'];
+  login: Scalars['String'];
+  test?: Maybe<Scalars['String']>;
+  test2?: Maybe<Scalars['String']>;
+};
+
+export type UserResult = User | Error2 | Error3;
+export type UserQueryQueryVariables = {};
+
+
+export type UserQueryQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'test2' | 'login' | 'test'>
+  ) | (
+    { __typename?: 'Error2' }
+    & Pick<Error2, 'message'>
+  ) | (
+    { __typename?: 'Error3' }
+    & Pick<Error3, 'message'>
+    & { info?: Maybe<(
+      { __typename?: 'AdditionalInfo' }
+      & Pick<AdditionalInfo, 'message2' | 'message'>
+    )> }
+  ) }
+);
+
+        function t(q: UserQueryQuery) {
+            if (q.user) {
+                if (q.user.__typename === 'User') {
+                    if (q.user.id) {
+                        const u = q.user.login;
+                    }
+                }
+                if (q.user.__typename === 'Error2') {
+                    console.log(q.user.message);
+                }
+                if (q.user.__typename === 'Error3') {
+                    if (q.user.info) {
+                        console.log(q.user.info.__typename)
+                    }
+                }
+            }
+        }"
+`;
