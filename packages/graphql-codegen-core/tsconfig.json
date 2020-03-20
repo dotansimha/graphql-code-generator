@@ -1,5 +1,7 @@
 {
+  "extends": "../../tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "esModuleInterop": true,
     "importHelpers": true,
     "experimentalDecorators": true,
@@ -11,7 +13,6 @@
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
@@ -19,6 +20,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false
   },
-  "files": ["src/index.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

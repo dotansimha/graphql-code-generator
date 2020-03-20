@@ -1,5 +1,7 @@
 {
+  "extends": "../../../../tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "esModuleInterop": true,
     "importHelpers": true,
     "module": "esnext",
@@ -13,5 +15,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "exclude": ["node_modules", "tests", "dist", "example"]
+  "include": ["src"]
 }

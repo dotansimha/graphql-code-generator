@@ -1,5 +1,7 @@
 {
+  "extends": "../../../tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
@@ -13,7 +15,6 @@
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist/",
-    "rootDir": "./src/",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
@@ -22,6 +23,5 @@
     "noUnusedParameters": true,
     "resolveJsonModule": true
   },
-  "files": ["src/index.ts", "src/typings.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }
