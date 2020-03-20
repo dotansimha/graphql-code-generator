@@ -5,7 +5,6 @@ import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
 
 import { plugin, validate } from '../src';
-import { federationSpec } from '@graphql-codegen/plugin-helpers';
 
 const schema = buildASTSchema(gql`
   type Character {

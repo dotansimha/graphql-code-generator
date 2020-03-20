@@ -2,6 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateJava } from '../../common/tests/validate-java';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 const OUTPUT_FILE = 'com/java/generated/resolvers.java';
 
@@ -65,7 +66,7 @@ describe('Java', () => {
   it('Should produce valid Java code', async () => {
     const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
-    validateJava(result);
+    validateJava(mergeOutputs([result]));
   });
 
   describe('Config', () => {

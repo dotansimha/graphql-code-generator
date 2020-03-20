@@ -35,4 +35,4 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (
   };
 };
 
-export { TypeGraphQLVisitor, TsIntrospectionVisitor };
+export { TsIntrospectionVisitor };
