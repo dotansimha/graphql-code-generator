@@ -82,7 +82,7 @@
     "minimatch": "3.0.4",
     "mkdirp": "1.0.3",
     "pascal-case": "3.1.1",
-    "prettier": "1.19.1",
+    "prettier": "2.0.0",
     "request": "2.88.2",
     "ts-log": "2.1.4",
     "tslib": "1.11.1",
