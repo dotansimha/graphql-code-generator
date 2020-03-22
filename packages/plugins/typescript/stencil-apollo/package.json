@@ -24,7 +24,7 @@
     "stencil-apollo": "^0.1.3"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.3",
+    "bob-the-bundler": "0.3.4",
     "@graphql-codegen/testing": "1.13.1",
     "@types/node": "10.17.17",
     "graphql": "14.6.0",

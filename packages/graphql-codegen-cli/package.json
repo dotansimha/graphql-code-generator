@@ -90,7 +90,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.3",
+    "bob-the-bundler": "0.3.4",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",

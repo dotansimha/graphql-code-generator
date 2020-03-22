@@ -19,7 +19,7 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.3",
+    "bob-the-bundler": "0.3.4",
     "graphql": "14.6.0",
     "typescript": "3.8.3"
   },
