@@ -1,4 +1,4 @@
-import '@graphql-codegen/testing';
+import { useMonorepo } from '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { executeCodegen } from '../src';
@@ -9,15 +9,15 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
 jest.mock('some-fetch');
 
-describe('Codegen Executor', () => {
-  let spyProcessCwd: jest.SpyInstance;
-  beforeEach(() => {
-    spyProcessCwd = jest.spyOn(process, 'cwd');
-    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
-  });
+const monorepo = useMonorepo({
+  dirname: __dirname,
+});
 
-  afterEach(() => {
-    spyProcessCwd.mockRestore();
+describe('Codegen Executor', () => {
+  monorepo.correctCWD();
+
+  beforeEach(() => {
+    jest.useFakeTimers();
   });
 
   describe('Generator General Options', () => {

@@ -2,9 +2,9 @@ import { plugin } from '../src/index';
 import { parse, buildClientSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
-describe('oclif', () => {
-  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
+describe('oclif', () => {
   describe('cli', () => {
     it('builds from a read query with single string parameter', async () => {
       const document = parse(`

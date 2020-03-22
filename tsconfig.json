@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "incremental": true,
     "baseUrl": ".",
+    "outDir": "dist",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "experimentalDecorators": true,
     "module": "esnext",
@@ -58,9 +61,7 @@
       "@graphql-codegen/plugin-helpers": ["./packages/utils/plugins-helpers/src/index.ts"]
     }
   },
-  "include": [
-    "packages"
-  ],
+  "include": ["packages"],
   "exclude": [
     "**/tests/test-files",
     "**/tests/test-documents",
