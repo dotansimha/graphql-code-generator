@@ -3704,10 +3704,10 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@urql/core@^1.10.4":
-  version "1.10.4"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.10.4.tgz#ec2eb45b122ac4656fa0fca1aa8290428822bbcd"
-  integrity sha512-3Fai9YcDiys4UE5Bu1c4UFlnUBNQTpcHfvIYp3TdmeZo7SclvDzIKEgJEhkgnxTx0SKpn4zls1O1oZDd0Suwcw==
+"@urql/core@^1.10.5":
+  version "1.10.5"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.10.5.tgz#e3dba8bdec001be48c43cce37f1ee9392800705a"
+  integrity sha512-u1eZnmCuyGFfxIM7dTQ436PTCQQkheIwUwuPBibn83KZ/+yQYkCGID0645HyHJtyLsH8V/VsIDq+Fno4nbx9KA==
   dependencies:
     wonka "^4.0.9"
 
@@ -17964,12 +17964,12 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.9.4:
-  version "1.9.4"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.9.4.tgz#0f3e08d2d4f5ac5d1163e169d7b6b97cf0252a72"
-  integrity sha512-1A9d98KeECY898e4Rikr5/T46EfcdXGm8jKBRO5/hfmzesl0FyKxXC9LxzbLbd+ySsyrGE1R6mGP5em9NAfykw==
+urql@1.9.5:
+  version "1.9.5"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.9.5.tgz#6458738c029c4ed3692cb3ac9c1ba4d4260e37b9"
+  integrity sha512-CzkOSAaS5KuP+Sx2rPLOrfMiziGhKwj9syaoG6/fqoCtUeAZaXirKYKSJPUu5u9WDvjJzcTqtpICaCw++cHZsA==
   dependencies:
-    "@urql/core" "^1.10.4"
+    "@urql/core" "^1.10.5"
     wonka "^4.0.9"
 
 use@^3.1.0:
