@@ -1,23 +1,20 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { compileTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
-import { parse, buildClientSchema } from 'graphql';
+import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '@graphql-codegen/typescript';
+import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
-import * as ts from 'typescript';
-import { GraphQLClient } from 'graphql-request';
 import nock from 'nock';
-
-type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+import { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations/src/config';
+import { RawGraphQLRequestPluginConfig } from '../src/config';
 
 describe('graphql-request', () => {
   beforeAll(() => nock.disableNetConnect());
   afterAll(() => nock.enableNetConnect());
   afterEach(() => nock.cleanAll());
 
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query feed {
       feed {
@@ -50,7 +47,13 @@ describe('graphql-request', () => {
     }
   `);
 
-  const validateAndCompile = async (content: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
+  const validate = async (
+    content: Types.PluginOutput,
+    config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawGraphQLRequestPluginConfig,
+    docs: Types.DocumentFile[],
+    pluginSchema: GraphQLSchema,
+    usage: string
+  ) => {
     const m = mergeOutputs([
       await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
       await tsDocumentsPlugin(pluginSchema, docs, config),
@@ -58,7 +61,7 @@ describe('graphql-request', () => {
       usage,
     ]);
 
-    await compileTs(m);
+    await validateTs(m);
 
     return m;
   };
@@ -88,7 +91,7 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });
@@ -117,7 +120,7 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });
@@ -153,69 +156,9 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });
-
-    // lazy eval to save time
-    let getSdk;
-    const perpareTranspiledModule = async (middleware?: SdkFunctionWrapper) => {
-      const config = { documentMode: DocumentMode.string };
-      const docs = [{ location: '', document: basicDoc }];
-      const result = (await plugin(schema, docs, config, {
-        outputFile: 'graphql.ts',
-      })) as Types.ComplexPluginOutput;
-
-      const output = await validateAndCompile(result, config, docs, schema);
-      const moduleResult = ts.transpileModule(output, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
-      // ignore eslint no-eval check. should be fine for unit tests only
-      // eslint-disable-next-line no-eval
-      getSdk = getSdk || eval(moduleResult.outputText);
-
-      const fakeApiEndpoint = 'https://mockme.foo/';
-      const client = new GraphQLClient(fakeApiEndpoint);
-      const scope = nock(fakeApiEndpoint)
-        .post('/')
-        .reply(200, { data: { feed: [{ id: 1 }] } });
-
-      return {
-        sdk: middleware ? getSdk(client, middleware) : getSdk(client),
-        scope,
-      };
-    };
-
-    it.skip(
-      'should execute default no-op middleware when none passed to getSdk',
-      async () => {
-        const { sdk, scope } = await perpareTranspiledModule();
-
-        const result = await sdk.feed();
-
-        scope.done();
-        expect(result).toMatchSnapshot();
-      },
-      20 * 1000
-    );
-
-    it.skip(
-      'Should execute middleware passed to getSdk',
-      async () => {
-        let middlewareExecuted = false;
-        const middleware: SdkFunctionWrapper = (action: () => Promise<any>): Promise<any> => {
-          middlewareExecuted = true;
-          return action();
-        };
-
-        const { sdk, scope } = await perpareTranspiledModule(middleware);
-
-        const result = await sdk.feed();
-
-        scope.done();
-        expect(middlewareExecuted).toBe(true);
-        expect(result).toMatchSnapshot();
-      },
-      20 * 1000
-    );
   });
 });

@@ -3,12 +3,9 @@ import '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from '../../flow/tests/validate-flow';
-import { readFileSync } from 'fs';
 
 describe('Flow Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(
-    JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8'))
-  );
+  const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const schema = buildSchema(/* GraphQL */ `
     type User {
       id: ID!

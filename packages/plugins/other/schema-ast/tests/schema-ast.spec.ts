@@ -1,5 +1,5 @@
 import { validate, plugin } from '../src/index';
-import { buildSchema, buildASTSchema, parse } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 

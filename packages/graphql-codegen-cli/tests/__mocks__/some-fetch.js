@@ -1,8 +1,10 @@
 const { readFileSync } = require('fs');
+const { join } = require('path');
 const { buildSchema, graphql, introspectionQuery } = require('graphql');
+
 module.exports = {
   someFetchFn: async (url, options) => {
-    const schemaFile = readFileSync(__dirname + '/../test-documents/schema.graphql', 'utf8');
+    const schemaFile = readFileSync(join(__dirname, '../test-documents/schema.graphql'), 'utf8');
     const schema = buildSchema(schemaFile);
     return {
       json() {

@@ -1,18 +1,29 @@
 import { generate } from '../src/generate-and-save';
 import * as fs from '../src/utils/file-system';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { dirname, join } from 'path';
+import makeDir from 'make-dir';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
+const inputFile = join(__dirname, '../temp/input-graphql.tsx');
+const outputFile = join(__dirname, '../temp/output-graphql.tsx');
+
 describe('generate-and-save', () => {
+  let spyProcessCwd: jest.SpyInstance;
   beforeEach(() => {
     jest.resetAllMocks();
+    spyProcessCwd = jest.spyOn(process, 'cwd');
+    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
+  });
+
+  afterEach(() => {
+    spyProcessCwd.mockRestore();
   });
 
   test('allow to specify overwrite for specific output (should write file)', async () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
-    const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
 
     const output = await generate(
       {
@@ -154,14 +165,13 @@ describe('generate-and-save', () => {
   test('should override generated files', async () => {
     jest.unmock('fs');
     const fs = await import('fs');
-    if (!fs.existsSync('./temp')) {
-      fs.mkdirSync('./temp');
-    }
-    if (fs.existsSync('./temp/output-graphql.tsx')) {
-      fs.unlinkSync('./temp/output-graphql.tsx');
+
+    makeDir.sync(dirname(outputFile));
+    if (fs.existsSync(outputFile)) {
+      fs.unlinkSync(outputFile);
     }
     fs.writeFileSync(
-      './temp/input-graphql.tsx',
+      inputFile,
       `
     import gql from 'graphql-tag';
     const MyQuery = gql\`query MyQuery { f }\`;
@@ -172,9 +182,9 @@ describe('generate-and-save', () => {
       generate(
         {
           schema: SIMPLE_TEST_SCHEMA,
-          documents: './temp/input-graphql.tsx',
+          documents: inputFile,
           generates: {
-            './temp/output-graphql.tsx': {
+            [outputFile]: {
               plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
             },
           },

@@ -3,4 +3,3 @@ query HeroDetailsWithFragment($episode: Episode) {
     ...HeroDetails
   }
 }
-

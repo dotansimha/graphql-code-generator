@@ -1,5 +1,7 @@
 {
+  "extends": "../../../tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "esModuleInterop": true,
     "importHelpers": true,
     "experimentalDecorators": true,
@@ -11,7 +13,6 @@
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist/",
-    "rootDir": "./src",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
@@ -19,5 +20,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "exclude": ["node_modules", "tests", "dist"]
+  "include": ["src"]
 }

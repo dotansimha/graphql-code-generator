@@ -15,4 +15,3 @@ type Query {
   testArr2: [String]!
   testArr3: [String!]!
 }
-

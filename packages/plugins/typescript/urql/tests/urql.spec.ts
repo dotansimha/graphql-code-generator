@@ -1,14 +1,23 @@
-import { validateTs, compileTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
 
 describe('urql', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -35,18 +44,6 @@ describe('urql', () => {
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     await validateTs(merged, undefined, true);
-  };
-
-  const compileTypeScript = async (
-    output: Types.PluginOutput,
-    testSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    config: any
-  ) => {
-    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
-    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
-    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    await compileTs(merged, undefined, true);
   };
 
   describe('Imports', () => {
@@ -587,7 +584,8 @@ export function useSubmitRepositoryMutation() {
       export function useListenToCommentsSubscription<TData = any>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
         return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
       };`);
-      await compileTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
+      expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
     it('Should not add typesPrefix to hooks', async () => {

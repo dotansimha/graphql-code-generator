@@ -1,4 +1,4 @@
-import { compileTs, validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { ReactApolloRawPluginConfig } from '../src/config';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema, buildSchema } from 'graphql';
@@ -6,12 +6,21 @@ import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { readFileSync } from 'fs';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { extract } from 'jest-docblock';
 
 describe('React Apollo', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -54,23 +63,6 @@ describe('React Apollo', () => {
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     validateTs(merged, undefined, true, false, playground);
-
-    return merged;
-  };
-
-  const validateAndCompile = async (
-    content: Types.PluginOutput,
-    config: any = {},
-    pluginSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    usage = '',
-    playground = false
-  ) => {
-    const tsOutput = await tsPlugin(pluginSchema, documents, config, { outputFile: '' });
-    const tsDocumentsOutput = await tsDocumentsPlugin(pluginSchema, documents, config, { outputFile: '' });
-    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, content]);
-
-    await compileTs(merged, {}, true, playground);
 
     return merged;
   };
@@ -149,7 +141,9 @@ describe('React Apollo', () => {
         outputFile: 'graphql.tsx',
       })) as Types.ComplexPluginOutput;
 
-      const output = await validateAndCompile(content, config, schema, docs, '');
+      const output = await validateTypeScript(content, schema, docs, config);
+      expect(mergeOutputs([output])).toMatchSnapshot();
+
       expect(output).toContain(
         `export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;`
       );
@@ -181,7 +175,9 @@ describe('React Apollo', () => {
         outputFile: 'graphql.tsx',
       })) as Types.ComplexPluginOutput;
 
-      const output = await validateAndCompile(content, config, schema, docs, '');
+      const output = await validateTypeScript(content, schema, docs, config);
+      expect(mergeOutputs([output])).toMatchSnapshot();
+
       expect(output).toContain(
         `export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;`
       );
@@ -216,7 +212,8 @@ describe('React Apollo', () => {
         outputFile: 'graphql.tsx',
       })) as Types.ComplexPluginOutput;
 
-      const output = await validateAndCompile(content, config, schema, docs, '');
+      const output = await validateTypeScript(content, schema, docs, config);
+      expect(mergeOutputs([output])).toMatchSnapshot();
       expect(output).toMatchSnapshot();
     });
 

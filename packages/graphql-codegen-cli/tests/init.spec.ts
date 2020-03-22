@@ -424,6 +424,7 @@ describe('init', () => {
         [Tags.node]: targets.includes(Tags.node),
         [Tags.typescript]: targets.includes(Tags.typescript),
         [Tags.flow]: targets.includes(Tags.flow),
+        [Tags.vue]: targets.includes(Tags.vue),
       })
         .filter(c => c.checked)
         .reduce((all, choice) => all.concat(choice.value), []);

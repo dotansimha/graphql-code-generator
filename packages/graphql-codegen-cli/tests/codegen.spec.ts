@@ -10,8 +10,15 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 jest.mock('some-fetch');
 
 describe('Codegen Executor', () => {
+  let spyProcessCwd: jest.SpyInstance;
   beforeEach(() => {
     jest.useFakeTimers();
+    spyProcessCwd = jest.spyOn(process, 'cwd');
+    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
+  });
+
+  afterEach(() => {
+    spyProcessCwd.mockRestore();
   });
 
   describe('Generator General Options', () => {
@@ -126,7 +133,7 @@ describe('Codegen Executor', () => {
               plugins: ['typescript'],
             },
           },
-        } as any);
+        });
 
         expect(output.length).toBe(1);
       } catch (e) {
@@ -141,7 +148,7 @@ describe('Codegen Executor', () => {
           generates: {
             'out.ts': ['typescript'],
           },
-        } as any);
+        });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
@@ -156,7 +163,7 @@ describe('Codegen Executor', () => {
           generates: {
             'out.ts': [],
           },
-        } as any);
+        });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
@@ -794,7 +801,7 @@ describe('Codegen Executor', () => {
             documents: [
               {
                 './tests/test-documents/valid.graphql': {
-                  loader: './tests/custom-loaders/custom-documents-loader.js',
+                  loader: join(__dirname, './custom-loaders/custom-documents-loader.js'),
                 },
               },
             ],
@@ -885,7 +892,7 @@ describe('Codegen Executor', () => {
         'out1.ts': ['typescript'],
       },
     });
-    expect(global.CUSTOM_FETCH_FN_CALLED).toBeTruthy();
+    expect((global as any).CUSTOM_FETCH_FN_CALLED).toBeTruthy();
   });
 
   it('should evaluate glob expressions correctly', async () => {

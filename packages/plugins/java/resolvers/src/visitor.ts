@@ -32,7 +32,7 @@ export interface JavaResolverParsedConfig extends ParsedConfig {
 export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConfig, JavaResolverParsedConfig> {
   private _includeTypeResolverImport = false;
 
-  constructor(rawConfig: JavaResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
+  constructor(rawConfig: JavaResolversPluginRawConfig, _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
       mappers: transformMappers(rawConfig.mappers || {}),
       package: rawConfig.package || defaultPackageName,

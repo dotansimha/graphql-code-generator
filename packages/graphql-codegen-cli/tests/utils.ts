@@ -1,5 +1,5 @@
 import { join, parse, relative, resolve } from 'path';
-import del from 'del';
+import rimraf from 'rimraf';
 import makeDir from 'make-dir';
 import os from 'os';
 
@@ -30,17 +30,10 @@ export class TempDir {
 
   clean() {
     const cleanPattern = join(this.dir, '**/*');
-    const removed = del.sync(cleanPattern, {
-      dot: true,
-      force: true,
-    });
-
-    return removed;
+    rimraf.sync(cleanPattern);
   }
 
   deleteTempDir() {
-    const removed = del.sync(this.dir, { force: true, dot: true });
-
-    return removed;
+    rimraf.sync(this.dir);
   }
 }

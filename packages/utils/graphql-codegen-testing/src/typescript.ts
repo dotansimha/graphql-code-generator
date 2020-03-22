@@ -108,6 +108,7 @@ export function compileTs(
     noEmitOnError: true,
     noImplicitAny: true,
     moduleResolution: ModuleResolutionKind.NodeJs,
+    allowSyntheticDefaultImports: true,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
     target: ScriptTarget.ES5,

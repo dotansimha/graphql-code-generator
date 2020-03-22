@@ -807,6 +807,7 @@ describe('ResolversTypes', () => {
   });
 
   it('Should generate the correct resolvers when used with mappers with interfaces', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
     const result = (await plugin(
       schema,
       [],
@@ -880,6 +881,8 @@ describe('ResolversTypes', () => {
       };
     `);
     await validate(mergeOutputs([result, `type MyNodeType = {};`]));
+
+    spy.mockRestore();
   });
 
   it('Should generate basic type resolvers with defaultMapper set to any', async () => {

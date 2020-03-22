@@ -1,14 +1,14 @@
-import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { compileTs } from '@graphql-codegen/testing';
+import { DocumentMode, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
-import { parse, buildClientSchema } from 'graphql';
+import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '@graphql-codegen/typescript';
+import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
+import { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations/src/config';
 
 describe('generic-sdk', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query feed {
       feed {
@@ -41,7 +41,13 @@ describe('generic-sdk', () => {
     }
   `);
 
-  const validateAndCompile = async (content: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
+  const validate = async (
+    content: Types.PluginOutput,
+    config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawClientSideBasePluginConfig,
+    docs: Types.DocumentFile[],
+    pluginSchema: GraphQLSchema,
+    usage: string
+  ) => {
     const m = mergeOutputs([
       await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
       await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
@@ -49,7 +55,7 @@ describe('generic-sdk', () => {
       usage,
     ]);
 
-    await compileTs(m);
+    await validateTs(m);
 
     return m;
   };
@@ -64,7 +70,7 @@ describe('generic-sdk', () => {
 
       const usage = `
 async function test() {
-  const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+  const requester = <R, V> (doc: DocumentNode, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
   
   await sdk.feed();
@@ -79,7 +85,7 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });
@@ -108,7 +114,7 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });

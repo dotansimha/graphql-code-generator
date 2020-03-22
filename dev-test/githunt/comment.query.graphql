@@ -27,6 +27,5 @@ query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
         stargazers_count
       }
     }
-
   }
 }

@@ -1,14 +1,11 @@
-import { compileTs, validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(
-    JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8'))
-  );
+  const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
   const schema = buildSchema(/* GraphQL */ `
     scalar DateTime
@@ -97,19 +94,6 @@ describe('TypeScript Operations Plugin', () => {
   ) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
     await validateTs(m, null, null, null, openPlayground);
-
-    return m;
-  };
-
-  const validateAndCompile = async (
-    content: Types.PluginOutput,
-    config: any = {},
-    pluginSchema = schema,
-    usage = '',
-    openPlayground = false
-  ) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
-    await compileTs(m);
 
     return m;
   };
@@ -1173,7 +1157,8 @@ describe('TypeScript Operations Plugin', () => {
       }
       `;
 
-      await validateAndCompile(result, config, testSchema, usage);
+      await validate(result, config, testSchema, usage);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should generate the correct __typename when using fragment over type', async () => {
@@ -1201,7 +1186,8 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validateAndCompile(result, config, testSchema);
+      await validate(result, config, testSchema);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should generate the correct __typename when using both inline fragment and spread over type', async () => {
@@ -1233,7 +1219,8 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validateAndCompile(result, config, testSchema);
+      await validate(result, config, testSchema);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should generate the correct __typename when using fragment spread over type', async () => {
@@ -1263,7 +1250,8 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validateAndCompile(result, config, testSchema);
+      await validate(result, config, testSchema);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should generate the correct __typename when using fragment spread over union', async () => {
@@ -1296,7 +1284,7 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validateAndCompile(
+      await validate(
         result,
         config,
         testSchema,
@@ -1305,6 +1293,7 @@ describe('TypeScript Operations Plugin', () => {
         console.log(q.user.__typename === 'Error' ? q.user.__typename : null);
       }`
       );
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should have valid fragments intersection on different types (with usage) #2498', async () => {
@@ -1354,7 +1343,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      await validateAndCompile(
+      await validate(
         result,
         config,
         testSchema,
@@ -1367,28 +1356,7 @@ describe('TypeScript Operations Plugin', () => {
               }
           }`
       );
-
-      try {
-        await validateAndCompile(
-          result,
-          config,
-          testSchema,
-          `
-            function test(a: UserFragment) {
-                if (a.__typename === 'Tom') {
-                    console.log(a.foo);
-                    console.log(a.bar);
-                } else if (a.__typename === 'Jerry') {
-                    console.log(a.foo);
-                    console.log(a.bar);
-                }
-            }`
-        );
-        throw new Error('invalid');
-      } catch (e) {
-        // We expect to have a TS compilation error
-        expect(e.message).not.toBe('invalid');
-      }
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should have valid __typename usage and split types according to that (with usage)', async () => {
@@ -1450,7 +1418,8 @@ describe('TypeScript Operations Plugin', () => {
       }
       `;
 
-      await validateAndCompile(result, config, testSchema, usage);
+      await validate(result, config, testSchema, usage);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
@@ -1743,7 +1712,8 @@ describe('TypeScript Operations Plugin', () => {
           & Pick<A, 'x'>
         );
       `);
-      compileTs(mergeOutputs([result]), config);
+      validateTs(mergeOutputs([result]), config);
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('Should support interfaces correctly when used with inline fragments', async () => {
@@ -3192,7 +3162,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      const output = await validateAndCompile(
+      const output = await validate(
         content,
         {},
         testSchema,
@@ -3215,6 +3185,7 @@ describe('TypeScript Operations Plugin', () => {
             }
         }`
       );
+      expect(mergeOutputs([content])).toMatchSnapshot();
 
       expect(output).toBeSimilarStringTo(`
       export type UserQueryQuery = (
@@ -3359,7 +3330,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: 'graphql.ts',
       });
 
-      const output = await validateAndCompile(
+      const output = await validate(
         content,
         config,
         testSchema,
@@ -3382,6 +3353,7 @@ describe('TypeScript Operations Plugin', () => {
             }
         }`
       );
+      expect(mergeOutputs([output])).toMatchSnapshot();
 
       expect(output).toBeSimilarStringTo(`
       export type UserQueryQuery = (
@@ -3492,7 +3464,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: 'graphql.ts',
       });
 
-      const output = await validateAndCompile(
+      const output = await validate(
         content,
         config,
         testSchema,
@@ -3515,6 +3487,7 @@ describe('TypeScript Operations Plugin', () => {
             }
         }`
       );
+      expect(mergeOutputs([output])).toMatchSnapshot();
 
       expect(output).toBeSimilarStringTo(`
       export type UserQueryQuery = (
@@ -3602,7 +3575,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchSnapshot();
 
-      const o = await validateAndCompile(
+      const result = await validate(
         content,
         {},
         testSchema,
@@ -3616,6 +3589,7 @@ describe('TypeScript Operations Plugin', () => {
         }
     }`
       );
+      expect(mergeOutputs([result])).toMatchSnapshot();
     });
 
     it('#2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset', async () => {
@@ -3789,9 +3763,9 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(content).toMatchSnapshot();
+      expect(mergeOutputs([content])).toMatchSnapshot();
 
-      await validateAndCompile(
+      await validate(
         content,
         {},
         testSchema,

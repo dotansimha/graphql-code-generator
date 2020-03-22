@@ -1,5 +1,7 @@
 {
+  "extends": "../../../../tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "esModuleInterop": true,
     "importHelpers": true,
     "experimentalDecorators": true,
@@ -19,6 +21,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "tests", "dist", "example"]
+  "include": ["src"]
 }
