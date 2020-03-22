@@ -14,7 +14,7 @@
     "@graphql-codegen/plugin-helpers": "1.13.1"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.3",
+    "bob-the-bundler": "0.3.4",
     "graphql": "14.6.0",
     "graphql-tag": "2.10.3",
     "jest": "25.1.0",
