@@ -18,7 +18,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.2.7",
+    "bob-the-bundler": "0.2.3",
     "@graphql-codegen/testing": "1.13.1",
     "graphql": "14.6.0",
     "jest": "25.1.0",

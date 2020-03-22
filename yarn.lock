@@ -111,16 +111,6 @@
   resolved "https://registry.npmjs.org/@apollographql/graphql-playground-html/-/graphql-playground-html-1.6.24.tgz#3ce939cb127fb8aaa3ffc1e90dff9b8af9f2e3dc"
   integrity sha512-8GqG48m1XqyXh4mIZrtB5xOhUwSsh1WsrrsaZQOEYYql3YN9DEu9OOSg0ILzXHZo/h2Q74777YE4YzlArQzQEQ==
 
-"@ardatan/bob@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.npmjs.org/@ardatan/bob/-/bob-0.2.7.tgz#ce93a2da622e551587afdb4f1f0dfe8d119e42e7"
-  integrity sha512-cDtYTnXwDclUj/3qofLlufY0wE0eFYNotx4aFJdHWAgHwNtHbrcpCuZtc7qJ6B/Luuw7QWYT+QulQPZ0xg5fgw==
-  dependencies:
-    rollup "1.27.13"
-    rollup-plugin-auto-external "2.0.0"
-    rollup-plugin-generate-package-json "3.2.0"
-    rollup-plugin-typescript2 "0.25.3"
-
 "@babel/code-frame@7.5.5":
   version "7.5.5"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.5.5.tgz#bc0782f6d69f7b7d49531219699b988f669a8f9d"
@@ -5290,6 +5280,16 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
+
+bob-the-bundler@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-0.2.3.tgz#473be3b9ce764d6fec94b740b3c4bddf8d463465"
+  integrity sha512-sKkaqWFzMXsF9KRRM7NPQOb1OMJijl6mIzineOEZB6BdRcVFtmSB3/28ffS4ikeqT/9Tl+VRsCoT99CZQdtSqA==
+  dependencies:
+    rollup "1.27.13"
+    rollup-plugin-auto-external "2.0.0"
+    rollup-plugin-generate-package-json "3.2.0"
+    rollup-plugin-typescript2 "0.25.3"
 
 body-parser@1.19.0, body-parser@^1.18.3:
   version "1.19.0"
