@@ -12,7 +12,6 @@ jest.mock('some-fetch');
 describe('Codegen Executor', () => {
   let spyProcessCwd: jest.SpyInstance;
   beforeEach(() => {
-    jest.useFakeTimers();
     spyProcessCwd = jest.spyOn(process, 'cwd');
     spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
   });
@@ -32,7 +31,7 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(2);
-      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
+      expect(output.map((f) => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {
