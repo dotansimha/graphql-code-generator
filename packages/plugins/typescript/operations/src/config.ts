@@ -1,5 +1,4 @@
-import { RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
-import { AvoidOptionalsConfig } from '@graphql-codegen/typescript';
+import { RawDocumentsConfig, AvoidOptionalsConfig } from '@graphql-codegen/visitor-plugin-common';
 
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
@@ -29,6 +28,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    - typescript
    *  config:
    *    avoidOptionals:
+   *      field: true
    *      inputValue: true
    *      object: true
    * ```

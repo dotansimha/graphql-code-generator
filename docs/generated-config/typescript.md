@@ -24,6 +24,7 @@ path/to/file.ts:
    - typescript
  config:
    avoidOptionals:
+     field: true
      inputValue: true
      object: true
 ```

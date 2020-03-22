@@ -1,4 +1,9 @@
-import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
+import {
+  transformComment,
+  indent,
+  DeclarationBlock,
+  AvoidOptionalsConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import {
@@ -16,7 +21,6 @@ import {
   TypeScriptOperationVariablesToObject,
   TypeScriptPluginParsedConfig,
   TsVisitor,
-  AvoidOptionalsConfig,
 } from '@graphql-codegen/typescript';
 
 export type DecoratorConfig = {

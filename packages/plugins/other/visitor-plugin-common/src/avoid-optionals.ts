@@ -1,8 +1,9 @@
 import { AvoidOptionalsConfig } from './types';
 
-export const DEFAULT_AVIOD_OPTIONALS: AvoidOptionalsConfig = {
+export const DEFAULT_AVOID_OPTIONALS: AvoidOptionalsConfig = {
   object: false,
   inputValue: false,
+  field: false,
 };
 
 export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptionalsConfig): AvoidOptionalsConfig {
@@ -10,11 +11,12 @@ export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptional
     return {
       object: avoidOptionals,
       inputValue: avoidOptionals,
+      field: avoidOptionals,
     };
   }
 
   return {
-    ...DEFAULT_AVIOD_OPTIONALS,
+    ...DEFAULT_AVOID_OPTIONALS,
     ...avoidOptionals,
   };
 }
