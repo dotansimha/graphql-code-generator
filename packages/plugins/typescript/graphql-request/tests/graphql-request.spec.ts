@@ -1,6 +1,6 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { compileTs } from '@graphql-codegen/testing';
-import { plugin, defaultWrapper, SdkFunctionWrapper } from '../src/index';
+import { plugin } from '../src/index';
 import { parse, buildClientSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
@@ -9,6 +9,8 @@ import { readFileSync } from 'fs';
 import * as ts from 'typescript';
 import { GraphQLClient } from 'graphql-request';
 import nock from 'nock';
+
+type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 describe('graphql-request', () => {
   beforeAll(() => nock.disableNetConnect());

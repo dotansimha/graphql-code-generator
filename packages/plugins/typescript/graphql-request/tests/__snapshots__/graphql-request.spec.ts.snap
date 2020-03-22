@@ -3,7 +3,6 @@
 exports[`graphql-request sdk Should allow passing wrapper arg to generated getSdk 1`] = `
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
-import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -264,6 +263,11 @@ export const Feed4Document = \`
   }
 }
     \`;
+
+export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
@@ -319,7 +323,6 @@ exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
 import { print } from 'graphql';
-import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -581,6 +584,11 @@ export const Feed4Document = gql\`
   }
 }
     \`;
+
+export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
@@ -618,7 +626,6 @@ async function test() {
 exports[`graphql-request sdk Should generate a correct wrap method with documentMode=string 1`] = `
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
-import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -879,6 +886,11 @@ export const Feed4Document = \`
   }
 }
     \`;
+
+export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
