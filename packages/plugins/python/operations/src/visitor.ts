@@ -121,67 +121,82 @@ interface FieldDeclaration {
   type: ListOrNonNull<GraphQLLeafType>;
 }
 
-function isFieldDeclaration(v: FieldDeclaration | ObjectDeclaration): v is FieldDeclaration {
+function isFieldDeclaration(v: AnyDeclaration): v is FieldDeclaration {
   return v.kind === 'field';
+}
+
+interface FragmentDeclaration {
+  kind: 'fragment';
+  name: string;
+}
+
+function isFragmentDeclaration(v: AnyDeclaration): v is FragmentDeclaration {
+  return v.kind === 'fragment';
 }
 
 interface ObjectDeclaration {
   kind: 'object';
   name: string;
   type: ListOrNonNull<GraphQLCompositeType>;
-  selection: (FieldDeclaration | ObjectDeclaration)[];
+  selection: AnyDeclaration[];
 }
 
-function isObjectDeclaration(v: FieldDeclaration | ObjectDeclaration): v is ObjectDeclaration {
+function isObjectDeclaration(v: AnyDeclaration): v is ObjectDeclaration {
   return v.kind === 'object';
 }
+
+type AnyDeclaration = FieldDeclaration | ObjectDeclaration | FragmentDeclaration;
 
 interface Declaration {
   className?: string;
   type: GraphQLObjectType;
-  selection: (FieldDeclaration | ObjectDeclaration)[];
+  selection: AnyDeclaration[];
 }
 
 function parse(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): Declaration {
-  function helper(
-    parentType: GraphQLObjectType,
-    selectionSet: SelectionSetNode
-  ): (FieldDeclaration | ObjectDeclaration)[] {
+  function helper(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): AnyDeclaration[] {
     return selectionSet.selections
-      .map((s): FieldDeclaration | ObjectDeclaration => {
-        if (s.kind === 'Field') {
-          const type = parentType.getFields()[s.name.value]!.type;
-          const name = s.alias?.value ?? s.name.value;
-          if (type == null) {
-            throw new Error('type was null');
-          } else if (s.selectionSet) {
-            if (!isSelectionThatRequiresFields(type)) {
-              throw new Error('also wrong type');
+      .map(
+        (s): AnyDeclaration => {
+          if (s.kind === 'Field') {
+            const type = parentType.getFields()[s.name.value]!.type;
+            const name = s.alias?.value ?? s.name.value;
+            if (type == null) {
+              throw new Error('type was null');
+            } else if (s.selectionSet) {
+              if (!isSelectionThatRequiresFields(type)) {
+                throw new Error('also wrong type');
+              }
+              const unwrappedType = unwrapNullsAndLists(type);
+              if (!isObjectType(unwrappedType)) {
+                throw new Error('should be object type');
+              }
+              return {
+                kind: 'object',
+                name,
+                type,
+                selection: helper(unwrappedType, s.selectionSet),
+              };
+            } else {
+              if (!isSelectionThatDoesNotRequireFields(type)) {
+                throw new Error('wrong type');
+              }
+              return {
+                kind: 'field',
+                name,
+                type,
+              };
             }
-            const unwrappedType = unwrapNullsAndLists(type);
-            if (!isObjectType(unwrappedType)) {
-              throw new Error('should be object type');
-            }
+          } else if (s.kind === 'FragmentSpread') {
             return {
-              kind: 'object',
-              name,
-              type,
-              selection: helper(unwrappedType, s.selectionSet),
+              kind: 'fragment',
+              name: s.name.value,
             };
           } else {
-            if (!isSelectionThatDoesNotRequireFields(type)) {
-              throw new Error('wrong type');
-            }
-            return {
-              kind: 'field',
-              name,
-              type,
-            };
+            return null;
           }
-        } else {
-          return null;
         }
-      })
+      )
       .filter(Boolean);
   }
 
@@ -217,26 +232,40 @@ function print(declaration: Declaration) {
     }
   }
 
-  function formatSelectionBody(
-    type: ListOrNonNull<GraphQLCompositeType>,
-    selection: (FieldDeclaration | ObjectDeclaration)[]
-  ): string[] {
+  function formatSelectionBody(type: ListOrNonNull<GraphQLCompositeType>, selection: AnyDeclaration[]): string[] {
     const innerClasses = selection.filter(isObjectDeclaration);
+    const fragments = selection.filter(isFragmentDeclaration);
+    const parentClassNames = fragments.length > 0 ? fragments.map(({ name }) => name).join(', ') : undefined;
+    const body =
+      innerClasses.length > 0
+        ? // TODO: Is this the right place for parentClassNames?
+          innerClasses.flatMap((o) => [...formatObject(o, parentClassNames), ''])
+        : fragments.length > 0
+        ? formatFragmentOnly(parentClassNames)
+        : [];
+    // TODO: Type-safely pick out the fields that need to be printed.
     return [
-      ...innerClasses.flatMap((o) => [...helper(o), '']),
-      ...selection.map((o) => `${o.name}: ${printTypeName(o.type)}`),
-    ];
+      ...body,
+      ...selection.filter((o) => 'type' in o).map((o) => `${o.name}: ${printTypeName((o as any).type)}`),
+    ].filter((l) => l != null);
   }
 
-  function helper(v: FieldDeclaration | ObjectDeclaration): string[] {
-    if (v.kind === 'object') {
-      return [
-        `class ${unwrapNullsAndLists(v.type).name}(BaseModel):`,
-        ...formatSelectionBody(v.type, v.selection).map((l) => indent(l)),
-      ];
+  function formatFragmentOnly(parentClassNames: string): string[] {
+    return [`class Whatever(${parentClassNames}):`, indent('pass')];
+  }
+
+  function formatObject(o: ObjectDeclaration, parentClasses = 'BaseModel'): string[] {
+    const lines = formatSelectionBody(o.type, o.selection);
+    const header = `class ${unwrapNullsAndLists(o.type).name}(${parentClasses}):`;
+    if (lines.length) {
+      return [header, ...lines.map((l) => indent(l))];
     } else {
-      return [`${v.name}: ${printTypeName(v.type)}`];
+      return [header, indent('pass')];
     }
+  }
+
+  function formatField(f: FieldDeclaration): string[] {
+    return [`${f.name}: ${printTypeName(f.type)}`];
   }
 
   const bodyLines = formatSelectionBody(declaration.type, declaration.selection);
@@ -333,12 +362,16 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
       // assertNever
     }
 
-    const result = this.convertSelectionSet(rootType, node.name.value, node.selectionSet);
+    const declaration = parse(rootType, node.selectionSet);
+    declaration.className = node.name.value;
+    return print(declaration);
 
-    const variablesDeclaration = `class ${node.name.value}Variables(BaseModel):`;
-    const variablesBody = node.variableDefinitions.map(this.convertVariableDefinition).filter(Boolean).join(`\n`);
+    // const result = this.convertSelectionSet(rootType, node.name.value, node.selectionSet);
 
-    return (variablesBody ? `${variablesDeclaration}\n${indentMultiline(variablesBody)}\n\n` : '') + `${result}`;
+    // const variablesDeclaration = `class ${node.name.value}Variables(BaseModel):`;
+    // const variablesBody = node.variableDefinitions.map(this.convertVariableDefinition).filter(Boolean).join(`\n`);
+
+    // return (variablesBody ? `${variablesDeclaration}\n${indentMultiline(variablesBody)}\n\n` : '') + `${result}`;
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
