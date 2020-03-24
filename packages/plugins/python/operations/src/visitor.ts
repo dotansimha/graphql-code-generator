@@ -234,28 +234,17 @@ function print(declaration: Declaration) {
 
   function formatSelectionBody(type: ListOrNonNull<GraphQLCompositeType>, selection: AnyDeclaration[]): string[] {
     const innerClasses = selection.filter(isObjectDeclaration);
-    const fragments = selection.filter(isFragmentDeclaration);
-    const parentClassNames = fragments.length > 0 ? fragments.map(({ name }) => name).join(', ') : undefined;
-    const body =
-      innerClasses.length > 0
-        ? // TODO: Is this the right place for parentClassNames?
-          innerClasses.flatMap((o) => [...formatObject(o, parentClassNames), ''])
-        : fragments.length > 0
-        ? formatFragmentOnly(parentClassNames)
-        : [];
     // TODO: Type-safely pick out the fields that need to be printed.
     return [
-      ...body,
+      ...innerClasses.flatMap((o) => [...formatObject(o), '']),
       ...selection.filter((o) => 'type' in o).map((o) => `${o.name}: ${printTypeName((o as any).type)}`),
     ].filter((l) => l != null);
   }
 
-  function formatFragmentOnly(parentClassNames: string): string[] {
-    return [`class Whatever(${parentClassNames}):`, indent('pass')];
-  }
-
-  function formatObject(o: ObjectDeclaration, parentClasses = 'BaseModel'): string[] {
+  function formatObject(o: ObjectDeclaration): string[] {
     const lines = formatSelectionBody(o.type, o.selection);
+    const fragments = o.selection.filter(isFragmentDeclaration);
+    const parentClasses = fragments.length > 0 ? fragments.map(({ name }) => name).join(', ') : 'BaseModel';
     const header = `class ${unwrapNullsAndLists(o.type).name}(${parentClasses}):`;
     if (lines.length) {
       return [header, ...lines.map((l) => indent(l))];
@@ -270,7 +259,7 @@ function print(declaration: Declaration) {
 
   const bodyLines = formatSelectionBody(declaration.type, declaration.selection);
 
-  return `${header}\n${indentMultiline(bodyLines.join('\n'))}`;
+  return `${header}\n${indentMultiline(bodyLines.join('\n'))}\n`;
 }
 
 export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginConfig, PythonDocumentsParsedConfig> {
