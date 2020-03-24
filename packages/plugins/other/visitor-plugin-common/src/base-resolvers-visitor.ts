@@ -878,14 +878,16 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${this.convertName(parentName, {
-            useTypesPrefix: true,
-          }) +
+        ? `${
+            this.convertName(parentName, {
+              useTypesPrefix: true,
+            }) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
             }) +
-            'Args'}`
+            'Args'
+          }`
         : null;
 
       if (argsType !== null) {
