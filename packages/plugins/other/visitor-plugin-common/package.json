@@ -39,7 +39,8 @@
     "definition": "dist/index.d.ts"
   },
   "buildOptions": {
-    "input": "./src/index.ts"
+    "input": "./src/index.ts",
+    "sourcemap": true
   },
   "jest-junit": {
     "outputDirectory": "../../../../test-results/visitor-plugin-common"
