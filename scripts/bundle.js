@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { resolve, join, basename } = require('path');
 const rollup = require('rollup');
 const generatePackageJson = require('rollup-plugin-generate-package-json');

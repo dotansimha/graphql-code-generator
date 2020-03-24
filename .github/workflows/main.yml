@@ -20,7 +20,7 @@ jobs:
       - name: Checkout Master
         uses: actions/checkout@v2
       - name: Use Node ${{matrix.node_version}}
-        uses: actions/setup-node@1
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node_version }}
       - name: Get yarn cache
@@ -88,7 +88,7 @@ jobs:
                 export ALPHA_VERSION=`cat out.txt | sed -n 's/.*cli => //p' | sed -n 's/+.*//p'`
                 export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
                 export COMMENT_BODY="The latest changes of this PR are available as alpha in npm: \`$ALPHA_VERSION\`"
-                pr-comment
+                ./scripts/comment.js
               fi
           else    
               echo "Skipping canary publish due to a fork/PR..."
