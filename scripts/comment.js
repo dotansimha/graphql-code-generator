@@ -23,7 +23,10 @@ async function findComment() {
   if (comments && Array.isArray(comments)) {
     const found = comments.find(comment => comment.user.login === botName);
 
-    return found.id;
+    if (found) {
+      return found.id;
+    }
+
   }
 }
 
