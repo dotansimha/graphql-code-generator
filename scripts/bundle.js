@@ -6,13 +6,18 @@ const resolveNode = require('@rollup/plugin-node-resolve');
 const globby = require('globby');
 const pLimit = require('p-limit');
 const fs = require('fs-extra');
+const { get } = require('lodash');
+
+const distDir = 'dist';
 
 async function build(packagePath) {
   const cwd = packagePath.replace('/package.json', '');
   const pkg = await readPackageJson(cwd);
   const name = pkg.name.replace('@graphql-codegen/', '');
 
-  const distProjectDir = cwd.replace('packages', 'dist');
+  validatePackageJson(pkg);
+
+  const distProjectDir = cwd.replace('packages', distDir);
   const distProjectSrcDir = resolve(distProjectDir, 'src');
 
   const bobDir = resolve(process.cwd(), 'bob');
@@ -99,7 +104,7 @@ async function build(packagePath) {
           banner: `#!/usr/bin/env node`,
           preferConst: true,
           sourcemap: options.sourcemap,
-          file: join(bobProjectDir, pkg.bin[alias].replace('dist/', '')),
+          file: join(bobProjectDir, pkg.bin[alias].replace(`${distDir}/`, '')),
           format: 'cjs',
         });
       })
@@ -107,9 +112,9 @@ async function build(packagePath) {
   }
 
   // remove <project>/dist
-  await fs.remove(join(cwd, 'dist'));
+  await fs.remove(join(cwd, distDir));
   // move bob/<project-name> to <project>/dist
-  await fs.move(bobProjectDir, join(cwd, 'dist'));
+  await fs.move(bobProjectDir, join(cwd, distDir));
 }
 
 async function main() {
@@ -117,7 +122,7 @@ async function main() {
   const packages = await globby('packages/**/package.json', {
     cwd: process.cwd(),
     absolute: true,
-    ignore: ['**/node_modules/**', '**/dist/**'],
+    ignore: ['**/node_modules/**', `**/${distDir}/**`],
   });
 
   await Promise.all(packages.map(package => limit(() => build(package))));
@@ -175,9 +180,24 @@ function rewritePackageJson({ pkg, preserved }) {
     newPkg.bin = {};
 
     for (const alias in pkg.bin) {
-      newPkg.bin[alias] = pkg.bin[alias].replace('dist/', '');
+      newPkg.bin[alias] = pkg.bin[alias].replace(`${distDir}/`, '');
     }
   }
 
   return newPkg;
+}
+
+function validatePackageJson(pkg) {
+  function expect(key, expected) {
+    const received = get(pkg, key);
+
+    if (expected !== received) {
+      throw new Error(`${pkg.name}: "${key}" equals "${received}", should be "${expected}"`);
+    }
+  }
+
+  expect('main', `${distDir}/index.cjs.js`);
+  expect('module', `${distDir}/index.esm.js`);
+  expect('typings', `${distDir}/index.d.ts`);
+  expect('typescript.definition', `${distDir}/index.d.ts`);
 }
