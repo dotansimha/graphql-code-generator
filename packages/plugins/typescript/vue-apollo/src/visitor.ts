@@ -113,6 +113,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  * __use${operationName}__
  *${operationType === 'Mutation' ? mutationDescription : queryDescription}
  *
+ * ${['Query', 'Subscription'].includes(operationType) ? '@param variables Query variables' : ''}
  * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/${
       operationType === 'Mutation' ? 'mutation' : 'query'
     }.html#options;
@@ -195,11 +196,12 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     switch (operationType) {
       case 'Query': {
         const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;
-        return `type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}\nexport function use${operationName}(variables${
+        return `export function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
         }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
-        }`;
+        }
+        type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}`;
       }
       case 'Mutation': {
         return `export function use${operationName}(baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
