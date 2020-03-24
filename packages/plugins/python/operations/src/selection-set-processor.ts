@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
-export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
+export class PythonSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
@@ -17,13 +17,15 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       return [];
     }
 
-    const parentName =
-      (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
-      this.config.convertName(schemaType.name, {
-        useTypesPrefix: true,
-      });
+    return ['primitive'];
 
-    return [`Pick<${parentName}, ${fields.map((field) => `'${field}'`).join(' | ')}>`];
+    // const parentName =
+    //   (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+    //   this.config.convertName(schemaType.name, {
+    //     useTypesPrefix: true,
+    //   });
+
+    // return [`Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')}>`];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
