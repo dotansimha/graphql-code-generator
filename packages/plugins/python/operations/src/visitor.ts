@@ -29,7 +29,7 @@ import {
   SelectionSetProcessorConfig,
   SelectionSetToObject,
   DeclarationKind,
-  indent,
+  indentMultiline,
 } from '@graphql-codegen/visitor-plugin-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { PythonOperationVariablesToObject } from './ts-operation-variables-to-object';
@@ -132,7 +132,7 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
     const variablesDeclaration = `class ${node.name.value}Variables(BaseModel):`;
     const variablesBody = node.variableDefinitions.map(this.convertVariableDefinition).filter(Boolean).join(`\n`);
 
-    return (variablesBody ? `${variablesDeclaration}\n${indent(variablesBody)}\n\n` : '') + `${result}`;
+    return (variablesBody ? `${variablesDeclaration}\n${indentMultiline(variablesBody)}\n\n` : '') + `${result}`;
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
@@ -152,9 +152,9 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
     const things = node.selections.map((s) => this.convertSelection(rootType, name, s)).filter(Boolean);
 
     if (things.length > 0) {
-      return `${resultDeclaration}\n${indent(things.join(`\n`))}`;
+      return `${resultDeclaration}\n${indentMultiline(things.join(`\n`))}`;
     } else {
-      return `${resultDeclaration}\n${indent('pass')}`;
+      return `${resultDeclaration}\n${indentMultiline('pass')}`;
     }
   }
 
@@ -172,7 +172,7 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
         );
         return `${s}\n\n${name}: ${nestedName}`;
       } else {
-        return `${name}: ${fieldType.name}`;
+        return `${name}: ${fieldType.type}`;
       }
     } else if (node.kind === 'FragmentSpread') {
       const nestedName = `${parentName}_${node.name.value}`;
