@@ -12,7 +12,8 @@
     "input": "./src/index.ts"
   },
   "scripts": {
-    "lint": "eslint **/*.ts"
+    "lint": "eslint **/*.ts",
+    "prepack": "../../../scripts/prepack.js"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",

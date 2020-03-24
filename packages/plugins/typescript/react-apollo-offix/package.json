@@ -8,6 +8,9 @@
     "directory": "packages/plugins/typescript/react-apollo-offix"
   },
   "license": "MIT",
+  "scripts": {
+    "prepack": "../../../../scripts/prepack.js"
+  },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",
     "@graphql-codegen/visitor-plugin-common": "1.13.1",

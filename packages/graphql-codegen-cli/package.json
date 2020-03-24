@@ -14,7 +14,8 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman"
+    "test": "jest --no-watchman",
+    "prepack": "../../scripts/prepack.js"
   },
   "keywords": [
     "gql",

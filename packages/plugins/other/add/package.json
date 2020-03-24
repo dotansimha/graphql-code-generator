@@ -9,7 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint **/*.ts"
+    "lint": "eslint **/*.ts",
+    "prepack": "../../../../scripts/prepack.js"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",
