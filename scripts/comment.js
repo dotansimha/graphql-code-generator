@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/// @ts-check
+
 const axios = require('axios').default;
 
 const [owner, repo] = process.env.BUILD_REPOSITORY_NAME.split('/');
@@ -32,7 +34,7 @@ async function findComment() {
 
 async function createComment() {
   await axios.patch(
-    `${url}/issues/${prId}/${commentId}`,
+    `${url}/issues/${prId}/comments`,
     { body: commentBody },
     {
       responseType: 'json',
@@ -41,6 +43,10 @@ async function createComment() {
   );
 }
 
+/**
+ * 
+ * @param {string} commentId
+ */
 async function updateComment(commentId) {
   await axios.patch(
     `${url}/issues/comments/${commentId}`,
