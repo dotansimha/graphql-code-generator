@@ -2,8 +2,6 @@
 
 const axios = require('axios').default;
 
-const owner = 'dotansimha';
-const repo = 'graphql-code-generator';
 const [owner, repo] = process.env.BUILD_REPOSITORY_NAME.split('/');
 const prId = process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER;
 const botName = 'theguild-bot';
