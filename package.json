@@ -3,7 +3,7 @@
   "scripts": {
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
-    "build": "tsc --project tsconfig.json && ./scripts/bundle.js",
+    "build": "tsc --project tsconfig.json && node ./scripts/bundle.js",
     "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
