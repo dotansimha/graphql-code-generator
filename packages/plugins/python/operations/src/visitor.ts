@@ -6,6 +6,7 @@ import {
   isListType,
   isScalarType,
   GraphQLScalarType,
+  GraphQLObjectType,
   ObjectTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
   OperationDefinitionNode,
@@ -28,7 +29,9 @@ import {
   SelectionSetProcessorConfig,
   SelectionSetToObject,
   DeclarationKind,
+  indent,
 } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { PythonOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { PythonDocumentsPluginConfig } from './config';
 
@@ -40,7 +43,6 @@ export interface PythonDocumentsParsedConfig extends ParsedDocumentsConfig {
 }
 
 export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginConfig, PythonDocumentsParsedConfig> {
-  private indent = '    ';
   private schema: GraphQLSchema;
 
   constructor(schema: GraphQLSchema, config: PythonDocumentsPluginConfig, allFragments: LoadedFragment[]) {
@@ -103,47 +105,80 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    return node.kind;
+    return 'input object ' + node.kind;
     // return node.fields.map(f => f.name.value).join('\n');
     // const name = `${this.convertName(node)}Input`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    return node.kind;
+    return 'object ' + node.kind;
     // return node.fields.map(f => f.name.value).join('\n');
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
-    const result = this.convertSelectionSet(node.name.value, node.selectionSet);
+    let rootType;
+    if (node.operation === 'query') {
+      rootType = this.schema.getQueryType();
+    } else if (node.operation === 'mutation') {
+      rootType = this.schema.getMutationType();
+    } else if (node.operation === 'subscription') {
+      rootType = this.schema.getSubscriptionType();
+    } else {
+      // assertNever
+    }
+
+    const result = this.convertSelectionSet(rootType, node.name.value, node.selectionSet);
 
     const variablesDeclaration = `class ${node.name.value}Variables(BaseModel):`;
-    const variablesBody = node.variableDefinitions
-      .map(this.convertVariableDefinition)
-      .filter(Boolean)
-      .join(`\n${this.indent}`);
+    const variablesBody = node.variableDefinitions.map(this.convertVariableDefinition).filter(Boolean).join(`\n`);
 
-    return (variablesBody ? `${variablesDeclaration}\n${this.indent}${variablesBody}\n\n` : '') + `${result}`;
+    return (variablesBody ? `${variablesDeclaration}\n${indent(variablesBody)}\n\n` : '') + `${result}`;
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
-    return node.kind;
+    const fragmentRootType = this.schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
+
+    return this.convertSelectionSet(fragmentRootType, `${node.name.value}Fragment`, node.selectionSet);
   }
 
-  convertSelectionSet(name: string, node: SelectionSetNode): string {
-    const resultDeclaration = `class ${name}(BaseModel):`;
+  convertSelectionSet(
+    rootType: GraphQLObjectType,
+    name: string,
+    node: SelectionSetNode,
+    parentClass = 'BaseModel'
+  ): string {
+    const resultDeclaration = `class ${name}(${parentClass}):`;
 
-    const things = node.selections.map(this.convertSelection).filter(Boolean);
+    const things = node.selections.map((s) => this.convertSelection(rootType, name, s)).filter(Boolean);
 
     if (things.length > 0) {
-      return `${resultDeclaration}\n${this.indent + things.join(`\n${this.indent}`)}`;
+      return `${resultDeclaration}\n${indent(things.join(`\n`))}`;
     } else {
-      return `${resultDeclaration}\n${this.indent}pass`;
+      return `${resultDeclaration}\n${indent('pass')}`;
     }
   }
 
-  convertSelection(node: SelectionNode): string {
+  convertSelection(parentType: GraphQLObjectType, parentName: string, node: SelectionNode): string {
     if (node.kind === 'Field') {
-      return node.name.value;
+      const name = node.alias?.value ?? node.name.value;
+      const fieldType = parentType.getFields()[node.name.value];
+      if (node.selectionSet) {
+        const nestedName = `${parentName}_${name}`;
+        // TODO: This cast is probably illegal.
+        const s = this.convertSelectionSet(
+          getBaseType(fieldType.type) as GraphQLObjectType,
+          nestedName,
+          node.selectionSet
+        );
+        return `${s}\n\n${name}: ${nestedName}`;
+      } else {
+        return `${name}: ${fieldType.name}`;
+      }
+    } else if (node.kind === 'FragmentSpread') {
+      const nestedName = `${parentName}_${node.name.value}`;
+      return 'hello ' + this.schema.getType(node.kind)?.name ?? 'dunno';
+      // return 'hello' + this.schema.getTypeMap()[node.kind].name;
+      // node.name
     } else {
       return node.kind;
     }
