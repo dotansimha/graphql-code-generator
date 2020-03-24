@@ -175,7 +175,7 @@ function rewritePackageJson({ pkg, preserved }) {
     newPkg.bin = {};
 
     for (const alias in pkg.bin) {
-      newPkg.bin[alias] = pkg.bin[alias].replace('src/', '');
+      newPkg.bin[alias] = pkg.bin[alias].replace('dist/', '');
     }
   }
 
