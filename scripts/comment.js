@@ -33,7 +33,7 @@ async function findComment() {
 }
 
 async function createComment() {
-  await axios.patch(
+  await axios.post(
     `${url}/issues/${prId}/comments`,
     { body: commentBody },
     {
