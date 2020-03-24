@@ -1047,9 +1047,7 @@ ${indentMultiline(inner, 2)}
     cls.addClassMethod(
       'operationId',
       `String`,
-      `return "${createHash('md5')
-        .update(printed)
-        .digest('hex')}";`,
+      `return "${createHash('md5').update(printed).digest('hex')}";`,
       [],
       [],
       'public',

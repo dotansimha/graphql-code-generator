@@ -9,10 +9,7 @@ import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
 import { createHash } from 'crypto';
 
-const hash = (content: string): string =>
-  createHash('sha1')
-    .update(content)
-    .digest('base64');
+const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
 export async function generate(
   input: CodegenContext | Types.Config,

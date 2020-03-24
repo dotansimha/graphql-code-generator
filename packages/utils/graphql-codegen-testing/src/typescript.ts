@@ -149,17 +149,17 @@ export function compileTs(
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
       },
-      writeFile: function() {},
-      useCaseSensitiveFileNames: function() {
+      writeFile: function () {},
+      useCaseSensitiveFileNames: function () {
         return false;
       },
-      getCanonicalFileName: function(filename) {
+      getCanonicalFileName: function (filename) {
         return filename;
       },
-      getCurrentDirectory: function() {
+      getCurrentDirectory: function () {
         return '';
       },
-      getNewLine: function() {
+      getNewLine: function () {
         return '\n';
       },
     });

@@ -135,13 +135,7 @@ function extractExamples(docComment: tsdoc.DocComment): Example[] {
       if (content.trim() !== '') {
         const splitted = content.split('\n');
         title = splitted[0].trim();
-        description =
-          splitted.length > 1
-            ? splitted
-                .slice(1)
-                .join('\n')
-                .trim()
-            : null;
+        description = splitted.length > 1 ? splitted.slice(1).join('\n').trim() : null;
       }
       codeNodes = codeNodes.slice(1);
     }
