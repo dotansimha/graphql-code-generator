@@ -20,7 +20,7 @@ jobs:
       - name: Checkout Master
         uses: actions/checkout@v1
       - name: Use Node ${{matrix.node_version}}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
       - name: Get yarn cache
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout Master
         uses: actions/checkout@v1
       - name: Use Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: '13.x'
       - name: Install Dependencies using Yarn
