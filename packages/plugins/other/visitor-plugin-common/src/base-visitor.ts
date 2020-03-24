@@ -25,6 +25,7 @@ export interface ParsedConfig {
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
   immutableTypes: boolean;
+  useTypeImports: boolean;
 }
 
 export interface RawConfig {
@@ -120,6 +121,20 @@ export interface RawConfig {
    * ```
    */
   nonOptionalTypename?: boolean;
+  /**
+   * @name useTypeImports
+   * @type boolean
+   * @default false
+   * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
+   * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
+   *
+   * @example
+   * ```yml
+   * config:
+   *   useTypeImports: true
+   * ```
+   */
+  useTypeImports?: boolean;
 
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
   externalFragments?: LoadedFragment[];
@@ -138,6 +153,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       externalFragments: rawConfig.externalFragments || [],
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
+      useTypeImports: !!rawConfig.useTypeImports,
       ...((additionalConfig || {}) as any),
     };
 

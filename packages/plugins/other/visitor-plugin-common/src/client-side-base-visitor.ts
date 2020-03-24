@@ -343,10 +343,12 @@ export class ClientSideBaseVisitor<
   public getImports(): string[] {
     const imports = [...this._additionalImports];
 
+    const typeImport = this.config.useTypeImports ? 'import type' : 'import';
+
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
       case DocumentMode.documentNodeImportFragments: {
-        imports.push(`import { DocumentNode } from 'graphql';`);
+        imports.push(`${typeImport} { DocumentNode } from 'graphql';`);
         break;
       }
       case DocumentMode.graphQLTag: {

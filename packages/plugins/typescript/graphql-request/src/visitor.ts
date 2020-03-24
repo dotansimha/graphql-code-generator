@@ -38,14 +38,16 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     autoBind(this);
 
-    this._additionalImports.push(`import { GraphQLClient } from 'graphql-request';`);
+    const typeImport = this.config.useTypeImports ? 'import type' : 'import';
+
+    this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
 
     if (this.config.documentMode !== DocumentMode.string) {
       this._additionalImports.push(`import { print } from 'graphql';`);
     }
 
     if (this.config.rawRequest) {
-      this._additionalImports.push(`import { GraphQLError } from 'graphql-request/dist/src/types';`);
+      this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/src/types';`);
     }
   }
 
