@@ -73,6 +73,7 @@ export function getSdk<C>(requester: Requester<C>) {
   return {
 ${allPossibleActions.join(',\n')}
   };
-}`;
+}
+export type Sdk = ReturnType<typeof getSdk>;`;
   }
 }
