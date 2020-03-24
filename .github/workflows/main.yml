@@ -22,7 +22,26 @@ jobs:
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
-          version: ${{ matrix.node_version }}
+          node-version: ${{ matrix.node_version }}
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: matrix.os != 'macos-latest'
+      - name: Cache Yarn
+        uses: actions/cache@v1
+        if: matrix.os != 'macos-latest'
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cache Jest
+        uses: actions/cache@v1
+        with:
+          path: .cache/jest
+          key: ${{ runner.os }}-jest-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-jest-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Lint
@@ -30,7 +49,9 @@ jobs:
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test
+        run: yarn test --logHeapUsage
+        env:
+          CI: true
       - name: Test dev-tests
         run: |
           dev-test/generate-all.sh
@@ -43,7 +64,7 @@ jobs:
       - name: Checkout Master
         uses: actions/checkout@v1
       - name: Use Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: '13.x'
       - name: Install Dependencies using Yarn
@@ -62,12 +83,11 @@ jobs:
 
               if [ "$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" != "" ]
               then
-                npm install -g dfds-github-scripts
                 export BUILD_REPOSITORY_NAME="${{github.repository}}"
                 export ALPHA_VERSION=`cat out.txt | sed -n 's/.*cli => //p' | sed -n 's/+.*//p'`
                 export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
                 export COMMENT_BODY="The latest changes of this PR are available as alpha in npm: \`$ALPHA_VERSION\`"
-                pr-comment
+                ./scripts/comment.js
               fi
           else    
               echo "Skipping canary publish due to a fork/PR..."

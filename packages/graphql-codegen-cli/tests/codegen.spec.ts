@@ -1,4 +1,4 @@
-import '@graphql-codegen/testing';
+import { useMonorepo } from '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { executeCodegen } from '../src';
@@ -9,16 +9,15 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
 jest.mock('some-fetch');
 
+const monorepo = useMonorepo({
+  dirname: __dirname,
+});
+
 describe('Codegen Executor', () => {
-  let spyProcessCwd: jest.SpyInstance;
+  monorepo.correctCWD();
+
   beforeEach(() => {
     jest.useFakeTimers();
-    spyProcessCwd = jest.spyOn(process, 'cwd');
-    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
-  });
-
-  afterEach(() => {
-    spyProcessCwd.mockRestore();
   });
 
   describe('Generator General Options', () => {
@@ -32,7 +31,7 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(2);
-      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
+      expect(output.map((f) => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {

@@ -4,17 +4,19 @@ import { TypeScriptDocumentsVisitor } from './visitor';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config';
 
+export { TypeScriptDocumentsPluginConfig } from './config';
+
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
-  const allAst = concatAST(documents.map(v => v.document));
+  const allAst = concatAST(documents.map((v) => v.document));
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      fragmentDef => ({
+    ...(allAst.definitions.filter((d) => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      (fragmentDef) => ({
         node: fragmentDef,
         name: fragmentDef.name.value,
         onType: fragmentDef.typeCondition.name.value,

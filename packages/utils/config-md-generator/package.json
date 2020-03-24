@@ -5,15 +5,14 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
     "start": "ts-node src/index.ts",
-    "build": "bob"
+    "prepack": "../../../scripts/prepack.js"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
-  "typescript": {
-    "definition": "dist/index.d.ts"
+  "main": "dist/index.cjs.js",	
+  "module": "dist/index.esm.js",	
+  "typings": "dist/index.d.ts",	
+  "typescript": {	
+    "definition": "dist/index.d.ts"	
   },
   "buildOptions": {
     "input": "./src/index.ts"
@@ -24,7 +23,6 @@
     "typescript": "3.8.3"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.3.4",
     "ts-node": "8.8.1"
   }
 }

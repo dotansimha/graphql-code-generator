@@ -1,76 +1,76 @@
 import preset from '../src/index';
 import { parse } from 'graphql';
 
-describe('import-types preset', () => {
-  const schemaDocumentNode = parse(/* GraphQL */ `
-    type Query {
-      user: User!
-    }
+const schemaDocumentNode = parse(/* GraphQL */ `
+  type Query {
+    user: User!
+  }
 
-    type User {
-      id: ID!
-      profile: Profile!
-      email: String!
-      username: String!
-    }
+  type User {
+    id: ID!
+    profile: Profile!
+    email: String!
+    username: String!
+  }
 
-    type Profile {
-      name: String!
-      age: Int!
-    }
-  `);
-  const operationAst = parse(/* GraphQL */ `
-    query {
-      user {
-        id
-        ...UserFields
-      }
-    }
-  `);
-  const minimalOperationAst = parse(/* GraphQL */ `
-    query {
-      user {
-        ...UserFields
-      }
-    }
-  `);
-  const fragmentAst = parse(/* GraphQL */ `
-    fragment UserFields on User {
+  type Profile {
+    name: String!
+    age: Int!
+  }
+`);
+const operationAst = parse(/* GraphQL */ `
+  query {
+    user {
       id
-      username
+      ...UserFields
     }
-  `);
-  const testDocuments = [
-    {
-      location: '/some/deep/path/src/graphql/me-query.graphql',
-      document: operationAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/user-fragment.graphql',
-      document: fragmentAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/me.query.graphql',
-      document: operationAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/something-query.graphql',
-      document: operationAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
-      document: operationAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/nested/from-js.js',
-      document: operationAst,
-    },
-    {
-      location: '/some/deep/path/src/graphql/component.ts',
-      document: operationAst,
-    },
-  ];
+  }
+`);
+const minimalOperationAst = parse(/* GraphQL */ `
+  query {
+    user {
+      ...UserFields
+    }
+  }
+`);
+const fragmentAst = parse(/* GraphQL */ `
+  fragment UserFields on User {
+    id
+    username
+  }
+`);
+const testDocuments = [
+  {
+    location: '/some/deep/path/src/graphql/me-query.graphql',
+    document: operationAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/user-fragment.graphql',
+    document: fragmentAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/me.query.graphql',
+    document: operationAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/something-query.graphql',
+    document: operationAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
+    document: operationAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/nested/from-js.js',
+    document: operationAst,
+  },
+  {
+    location: '/some/deep/path/src/graphql/component.ts',
+    document: operationAst,
+  },
+];
 
+describe('import-types preset', () => {
   it('Should build the correct operation files paths', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/operation.ts',
@@ -84,7 +84,7 @@ describe('import-types preset', () => {
       pluginMap: {},
     });
 
-    expect(result.map(a => a.filename)).toEqual(['./src/operation.ts']);
+    expect(result.map((a) => a.filename)).toEqual(['./src/operation.ts']);
   });
 
   it('Should prepend the "add" plugin with the correct import', async () => {
@@ -100,7 +100,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(
+    expect(result.map((o) => o.plugins)[0]).toEqual(
       expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
     );
   });
@@ -121,7 +121,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(
+    expect(result.map((o) => o.plugins)[0]).toEqual(
       expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
     );
   });
@@ -151,7 +151,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).not.toEqual(
+    expect(result.map((o) => o.plugins)[0]).not.toEqual(
       expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
     );
   });
@@ -169,7 +169,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.pluginMap.add)[0]).toBeDefined();
+    expect(result.map((o) => o.pluginMap.add)[0]).toBeDefined();
   });
 
   it('Should add "namespacedImportName" to config', async () => {
@@ -185,6 +185,6 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.config.namespacedImportName)[0]).toBe('Types');
+    expect(result.map((o) => o.config.namespacedImportName)[0]).toBe('Types');
   });
 });

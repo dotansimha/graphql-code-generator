@@ -2,14 +2,17 @@
   "name": "@graphql-codegen/typescript-oclif",
   "version": "1.13.1",
   "description": "GraphQL Code Generator plugin for generating a CLI tool with oclif",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/oclif"
+  },
   "author": "Kalan Snyder <hello@kalan.io>",
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "../../../../scripts/prepack.js"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
@@ -22,25 +25,16 @@
     "tslib": "1.11.1"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.3.4",
-    "@graphql-codegen/testing": "1.13.1",
-    "@oclif/command": "1.5.19",
-    "jest": "25.1.0",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "@oclif/command": "1.5.19"
   },
-  "sideEffects": false,
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
-  "typescript": {
-    "definition": "dist/index.d.ts"
+  "main": "dist/index.cjs.js",	
+  "module": "dist/index.esm.js",	
+  "typings": "dist/index.d.ts",	
+  "typescript": {	
+    "definition": "dist/index.d.ts"	
   },
   "buildOptions": {
     "input": "./src/index.ts"
-  },
-  "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-operations"
   },
   "publishConfig": {
     "access": "public"

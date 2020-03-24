@@ -2,11 +2,14 @@
   "name": "@graphql-codegen/typescript-react-offix",
   "version": "1.13.1",
   "description": "GraphQL Code Generator plugin for generating useOffline mutations for offix use",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/react-apollo-offix"
+  },
   "license": "MIT",
   "scripts": {
-    "prepack": "bob-update-version",
-    "build": "bob"
+    "prepack": "../../../../scripts/prepack.js"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",
@@ -18,17 +21,11 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
     "graphql-tag": "^2.0.0"
   },
-  "devDependencies": {
-    "bob-the-bundler": "0.3.4",
-    "graphql": "14.6.0",
-    "typescript": "3.8.3"
-  },
-  "sideEffects": false,
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
-  "typescript": {
-    "definition": "dist/index.d.ts"
+  "main": "dist/index.cjs.js",	
+  "module": "dist/index.esm.js",	
+  "typings": "dist/index.d.ts",	
+  "typescript": {	
+    "definition": "dist/index.d.ts"	
   },
   "buildOptions": {
     "input": "./src/index.ts"

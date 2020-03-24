@@ -1,3 +1,4 @@
+import { useMonorepo } from '@graphql-codegen/testing';
 import { generate } from '../src/generate-and-save';
 import * as fs from '../src/utils/file-system';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -9,16 +10,13 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 const inputFile = join(__dirname, '../temp/input-graphql.tsx');
 const outputFile = join(__dirname, '../temp/output-graphql.tsx');
 
+const monorepo = useMonorepo({ dirname: __dirname });
+
 describe('generate-and-save', () => {
-  let spyProcessCwd: jest.SpyInstance;
-  beforeEach(() => {
-    jest.resetAllMocks();
-    spyProcessCwd = jest.spyOn(process, 'cwd');
-    spyProcessCwd.mockImplementation(() => join(__dirname, '..'));
-  });
+  monorepo.correctCWD();
 
   afterEach(() => {
-    spyProcessCwd.mockRestore();
+    jest.resetAllMocks();
   });
 
   test('allow to specify overwrite for specific output (should write file)', async () => {
@@ -52,7 +50,7 @@ describe('generate-and-save', () => {
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation((file) => file === filename);
 
     const output = await generate(
       {
@@ -108,7 +106,7 @@ describe('generate-and-save', () => {
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation((file) => file === filename);
 
     const output = await generate(
       {
@@ -137,10 +135,10 @@ describe('generate-and-save', () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
     const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
-    readSpy.mockImplementation(f => '');
+    readSpy.mockImplementation((f) => '');
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation((file) => file === filename);
 
     const output = await generate(
       {

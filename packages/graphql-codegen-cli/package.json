@@ -9,15 +9,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/graphql-codegen-cli"
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "clean": "rimraf ./dist",
-    "prebuild": "yarn clean",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../jest.config.js"
+    "test": "jest --no-watchman",
+    "prepack": "../../scripts/prepack.js"
   },
   "keywords": [
     "gql",
@@ -90,7 +88,6 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.3.4",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
@@ -100,30 +97,24 @@
     "@types/minimatch": "3.0.3",
     "bdd-stdin": "0.2.0",
     "dotenv": "8.2.0",
-    "graphql": "14.6.0",
     "js-yaml": "3.13.1",
-    "make-dir": "3.0.2",
-    "ts-jest": "25.2.1"
+    "make-dir": "3.0.2"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
-  "typescript": {
-    "definition": "dist/index.d.ts"
+  "main": "dist/index.cjs.js",	
+  "module": "dist/index.esm.js",	
+  "typings": "dist/index.d.ts",	
+  "typescript": {	
+    "definition": "dist/index.d.ts"	
   },
   "buildOptions": {
-    "input": "./src/index.ts",
     "bin": {
       "graphql-codegen": {
-        "input": "./src/bin.ts"
+        "input": "src/bin.ts"
       }
     }
-  },
-  "jest-junit": {
-    "outputDirectory": "../../test-results/cli"
   },
   "publishConfig": {
     "access": "public"

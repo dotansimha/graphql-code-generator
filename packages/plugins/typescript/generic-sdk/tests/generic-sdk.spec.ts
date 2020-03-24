@@ -4,62 +4,61 @@ import { plugin } from '../src/index';
 import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
-import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations/src/config';
+import { plugin as tsDocumentsPlugin, TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
-describe('generic-sdk', () => {
-  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
-  const basicDoc = parse(/* GraphQL */ `
-    query feed {
-      feed {
-        id
-        commentCount
-        repository {
-          owner {
-            avatar_url
-          }
+const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+const basicDoc = parse(/* GraphQL */ `
+  query feed {
+    feed {
+      id
+      commentCount
+      repository {
+        owner {
+          avatar_url
         }
       }
     }
+  }
 
-    query feed2($v: String!) {
-      feed {
-        id
-      }
+  query feed2($v: String!) {
+    feed {
+      id
     }
+  }
 
-    query feed3($v: String) {
-      feed {
-        id
-      }
+  query feed3($v: String) {
+    feed {
+      id
     }
+  }
 
-    query feed4($v: String! = "TEST") {
-      feed {
-        id
-      }
+  query feed4($v: String! = "TEST") {
+    feed {
+      id
     }
-  `);
+  }
+`);
 
-  const validate = async (
-    content: Types.PluginOutput,
-    config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawClientSideBasePluginConfig,
-    docs: Types.DocumentFile[],
-    pluginSchema: GraphQLSchema,
-    usage: string
-  ) => {
-    const m = mergeOutputs([
-      await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
-      await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
-      content,
-      usage,
-    ]);
+const validate = async (
+  content: Types.PluginOutput,
+  config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawClientSideBasePluginConfig,
+  docs: Types.DocumentFile[],
+  pluginSchema: GraphQLSchema,
+  usage: string
+) => {
+  const m = mergeOutputs([
+    await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+    await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+    content,
+    usage,
+  ]);
 
-    await validateTs(m);
+  await validateTs(m);
 
-    return m;
-  };
+  return m;
+};
 
+describe('generic-sdk', () => {
   describe('sdk', () => {
     it('Should generate a correct wrap method', async () => {
       const config = {};

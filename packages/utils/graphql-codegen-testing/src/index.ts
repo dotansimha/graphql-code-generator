@@ -1,4 +1,6 @@
 import { oneLine } from 'common-tags';
+import { resolve } from 'path';
+import { existsSync } from 'fs';
 
 declare global {
   // eslint-disable-next-line no-redeclare
@@ -44,5 +46,41 @@ function toBeSimilarStringTo(received: string, expected: string) {
 expect.extend({
   toBeSimilarStringTo,
 });
+
+function findProjectDir(dirname: string): string | never {
+  const originalDirname = dirname;
+  const cwd = process.cwd();
+  const stopDir = resolve(cwd, '..');
+
+  while (dirname !== stopDir) {
+    try {
+      if (existsSync(resolve(dirname, 'package.json'))) {
+        return dirname;
+      }
+
+      dirname = resolve(dirname, '..');
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  throw new Error(`Coudn't find project's root from: ${originalDirname}`);
+}
+
+export function useMonorepo({ dirname }: { dirname: string }) {
+  const cwd = findProjectDir(dirname);
+
+  return {
+    correctCWD() {
+      let spyProcessCwd: jest.SpyInstance;
+      beforeEach(() => {
+        spyProcessCwd = jest.spyOn(process, 'cwd').mockReturnValue(cwd);
+      });
+      afterEach(() => {
+        spyProcessCwd.mockRestore();
+      });
+    },
+  };
+}
 
 export * from './typescript';
