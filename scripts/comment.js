@@ -8,8 +8,16 @@ const [owner, repo] = process.env.BUILD_REPOSITORY_NAME.split('/');
 const prId = process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER;
 const botName = 'theguild-bot';
 const url = `https://api.github.com/repos/${owner}/${repo}`;
+const alphaVersion = process.env.ALPHA_VERSION;
 
-const commentBody = (process.env.COMMENT_BODY || '').replace('{PR_NUMBER}', prId);
+const commentBody = `
+The latest changes of this PR are available as alpha in npm: \`${alphaVersion}\`
+
+Quickly update your package.json by running:
+
+    npx match-version @graphql-codegen ${alphaVersion}
+
+`;
 
 const headers = {
   Authorization: `Bearer ${process.env.GH_API_TOKEN}`,
