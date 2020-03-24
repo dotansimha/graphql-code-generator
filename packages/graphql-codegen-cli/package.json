@@ -9,14 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/graphql-codegen-cli"
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "clean": "rimraf ./dist",
-    "prebuild": "yarn clean",
-    "build": "bob",
     "test": "jest --no-watchman"
   },
   "keywords": [

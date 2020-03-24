@@ -2,13 +2,15 @@
   "name": "@graphql-codegen/typescript-oclif",
   "version": "1.13.1",
   "description": "GraphQL Code Generator plugin for generating a CLI tool with oclif",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/oclif"
+  },
   "author": "Kalan Snyder <hello@kalan.io>",
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "peerDependencies": {

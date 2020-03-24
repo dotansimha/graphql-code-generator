@@ -12,9 +12,7 @@
     "input": "./src/index.ts"
   },
   "scripts": {
-    "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob"
+    "lint": "eslint **/*.ts"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",

@@ -5,9 +5,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "start": "ts-node src/index.ts",
-    "build": "bob"
+    "start": "ts-node src/index.ts"
   },
   "main": "dist/index.cjs.js",	
   "module": "dist/index.esm.js",	

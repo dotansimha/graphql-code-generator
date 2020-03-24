@@ -2,12 +2,14 @@
   "name": "@graphql-codegen/typescript",
   "version": "1.13.1",
   "description": "GraphQL Code Generator plugin for generating TypeScript types",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/typescript"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
