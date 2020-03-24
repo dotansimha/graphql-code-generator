@@ -86,7 +86,6 @@ jobs:
                 export BUILD_REPOSITORY_NAME="${{github.repository}}"
                 export ALPHA_VERSION=`cat out.txt | sed -n 's/.*cli => //p' | sed -n 's/+.*//p'`
                 export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
-                export COMMENT_BODY="The latest changes of this PR are available as alpha in npm: \`$ALPHA_VERSION\`"
                 ./scripts/comment.js
               fi
           else    
