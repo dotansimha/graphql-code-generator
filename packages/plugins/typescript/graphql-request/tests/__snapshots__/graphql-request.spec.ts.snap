@@ -284,6 +284,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     }
   };
 }
+export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
   const client = new GraphQLClient('');
   const functionWrapper: SdkFunctionWrapper = async <T>(action: () => Promise<T>): Promise<T> => {
@@ -595,6 +596,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     }
   };
 }
+export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
   const client = new GraphQLClient('');
   const sdk = getSdk(client);
@@ -897,6 +899,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     }
   };
 }
+export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
   const client = new GraphQLClient('');
   const sdk = getSdk(client);

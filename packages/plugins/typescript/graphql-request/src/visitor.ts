@@ -103,6 +103,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
 ${allPossibleActions.join(',\n')}
   };
-}`;
+}
+export type Sdk = ReturnType<typeof getSdk>;`;
   }
 }
