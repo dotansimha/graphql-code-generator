@@ -129,7 +129,7 @@ function collect<T = string>(val: T, memo: T[]): T[] {
   return memo;
 }
 
-export function setCommandOptions(commandInstance: Command) {
+function setCommandOptions(commandInstance: Command): Command {
   return commandInstance
     .allowUnknownOption(true)
     .option(
