@@ -12,6 +12,9 @@ import {
   DocumentNode,
   printIntrospectionSchema,
   isObjectType,
+  ASTNode,
+  Kind,
+  VisitFn,
 } from 'graphql';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
@@ -30,7 +33,15 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
+
+  const _enter = config.generateOnlyEnums ? enter : undefined;
+
+  const visitorResult = visit(astNode, { enter: _enter, leave: visitor });
+
+  if (config.generateOnlyEnums) {
+    return { content: visitorResult.definitions.join('\n') };
+  }
+
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
@@ -90,3 +101,20 @@ export function includeIntrospectionDefinitions(
 
   return result.definitions as any[];
 }
+
+const enter: VisitFn<ASTNode> = function (node, key, parent, path, ancestors) {
+  const isDescendantsOfEnumTypeDefinition = (ancestors as ASTNode[]).some(
+    ancestor => ancestor.kind === Kind.ENUM_TYPE_DEFINITION
+  );
+  if (
+    node.kind !== Kind.DOCUMENT &&
+    node.kind !== Kind.ENUM_TYPE_DEFINITION &&
+    node.kind !== Kind.NAME &&
+    !isDescendantsOfEnumTypeDefinition
+  ) {
+    // delete this node
+    return null;
+  }
+  // no action
+  return undefined;
+};

@@ -182,4 +182,23 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   wrapFieldDefinitions?: boolean;
+
+  /**
+   * @name generateOnlyEnums
+   * @type boolean
+   * @description Set the to `true` in order to generate only `enum` definitions
+   * @default false
+   *
+   * @example Generate only enums
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    generateOnlyEnums: true
+   * ```
+   *
+   */
+  generateOnlyEnums?: boolean;
 }
