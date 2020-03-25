@@ -101,3 +101,4 @@ jobs:
 
           bot-token: ${{ secrets.GH_API_TOKEN }}
           bot: 'theguild-bot'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
