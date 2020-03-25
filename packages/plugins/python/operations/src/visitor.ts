@@ -103,6 +103,16 @@ function isFragmentDeclaration(v: AnyDeclaration): v is FragmentDeclaration {
   return v.kind === 'fragment';
 }
 
+interface InlineFragmentDeclaration {
+  kind: 'inline-fragment';
+  typeCondition: GraphQLObjectType;
+  selection: AnyDeclaration[];
+}
+
+function isInlineFragmentDeclaration(v: AnyDeclaration): v is InlineFragmentDeclaration {
+  return v.kind === 'inline-fragment';
+}
+
 interface ObjectDeclaration {
   kind: 'object';
   name: string;
@@ -114,7 +124,7 @@ function isObjectDeclaration(v: AnyDeclaration): v is ObjectDeclaration {
   return v.kind === 'object';
 }
 
-type AnyDeclaration = FieldDeclaration | ObjectDeclaration | FragmentDeclaration;
+type AnyDeclaration = FieldDeclaration | ObjectDeclaration | FragmentDeclaration | InlineFragmentDeclaration;
 
 interface Declaration {
   className?: string;
@@ -181,55 +191,65 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
   // here be dragons
 
   parse(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): Declaration {
-    function helper(parentType: GraphQLCompositeType, selectionSet: SelectionSetNode): AnyDeclaration[] {
-      return selectionSet.selections
-        .map(
-          (s): AnyDeclaration => {
-            if (s.kind === 'Field') {
-              if (!isInterfaceType(parentType) && !isObjectType(parentType)) {
-                throw new Error(`should be interface/object type, but was ${parentType.name}`);
-              }
+    const helper = (parentType: GraphQLCompositeType, selectionSet: SelectionSetNode): AnyDeclaration[] => {
+      return selectionSet.selections.map(
+        (s): AnyDeclaration => {
+          if (s.kind === 'Field') {
+            if (!isInterfaceType(parentType) && !isObjectType(parentType)) {
+              throw new Error(`should be interface/object type, but was ${parentType.name}`);
+            }
 
-              const type = parentType.getFields()[s.name.value]!.type;
-              const name = s.alias?.value ?? s.name.value;
-              if (type == null) {
-                throw new Error('type was null');
-              } else if (s.selectionSet) {
-                if (!isSelectionThatRequiresFields(type)) {
-                  throw new Error('also wrong type');
-                }
-                const unwrappedType = unwrapNullsAndLists(type);
-                if (!isCompositeType(unwrappedType)) {
-                  throw new Error(`should be composite type, but was ${parentType.name}`);
-                }
-                return {
-                  kind: 'object',
-                  name,
-                  type,
-                  selection: helper(unwrappedType, s.selectionSet),
-                };
-              } else {
-                if (!isSelectionThatDoesNotRequireFields(type)) {
-                  throw new Error('wrong type');
-                }
-                return {
-                  kind: 'field',
-                  name,
-                  type,
-                };
+            const type = parentType.getFields()[s.name.value]!.type;
+            const name = s.alias?.value ?? s.name.value;
+            if (type == null) {
+              throw new Error('type was null');
+            } else if (s.selectionSet) {
+              if (!isSelectionThatRequiresFields(type)) {
+                throw new Error('also wrong type');
               }
-            } else if (s.kind === 'FragmentSpread') {
+              const unwrappedType = unwrapNullsAndLists(type);
+              if (!isCompositeType(unwrappedType)) {
+                throw new Error(`should be composite type, but was ${parentType.name}`);
+              }
               return {
-                kind: 'fragment',
-                name: s.name.value,
+                kind: 'object',
+                name,
+                type,
+                selection: helper(unwrappedType, s.selectionSet),
               };
             } else {
-              return null;
+              if (!isSelectionThatDoesNotRequireFields(type)) {
+                throw new Error('wrong type');
+              }
+              return {
+                kind: 'field',
+                name,
+                type,
+              };
             }
+          } else if (s.kind === 'FragmentSpread') {
+            return {
+              kind: 'fragment',
+              name: s.name.value,
+            };
+          } else if (s.kind === 'InlineFragment') {
+            const typeCondition = this.schema.getType(s.typeCondition.name.value);
+            if (!isObjectType(typeCondition)) {
+              throw new Error(`should be object type, but was ${typeCondition.name}`);
+            }
+
+            return {
+              kind: 'inline-fragment',
+              typeCondition,
+              selection: helper(typeCondition, s.selectionSet),
+            };
+          } else {
+            return null;
+            // assertNever
           }
-        )
-        .filter(Boolean);
-    }
+        }
+      );
+    };
 
     return {
       type: parentType,
@@ -238,8 +258,6 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
   }
 
   print(declaration: Declaration) {
-    const header = `class ${declaration.className ?? declaration.type.name}(BaseModel):`;
-
     // TODO: Is this function actually right?
     function printTypeName(t: GraphQLOutputType) {
       const UNWRAP_OPTIONAL_REGEX = /^Optional\[(.*)\]$/;
@@ -255,25 +273,52 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
       }
     }
 
-    function formatSelectionBody(type: ListOrNonNull<GraphQLCompositeType>, selection: AnyDeclaration[]): string[] {
+    function formatSelectionBody(selection: AnyDeclaration[]): string[] {
       const innerClasses = selection.filter(isObjectDeclaration);
       // TODO: Type-safely pick out the fields that need to be printed.
       return [
-        ...innerClasses.flatMap((o) => [...formatObject(o), '']),
-        ...selection.filter((o) => 'type' in o).map((o) => `${o.name}: ${printTypeName((o as any).type)}`),
+        ...innerClasses.flatMap((o) => [...formatObject(o.type, o.selection), '']),
+        ...selection
+          .filter((o) => 'type' in o && 'name' in o)
+          .map((o) => `${(o as any).name}: ${printTypeName((o as any).type)}`),
       ].filter((l) => l != null);
     }
 
-    function formatObject(o: ObjectDeclaration): string[] {
-      const lines = formatSelectionBody(o.type, o.selection);
-      const fragments = o.selection.filter(isFragmentDeclaration);
+    function formatObject(
+      type: ListOrNonNull<GraphQLCompositeType>,
+      selection: AnyDeclaration[],
+      className?: string
+    ): string[] {
+      const lines = formatSelectionBody(selection).map((l) => indent(l));
+      const fragments = selection.filter(isFragmentDeclaration);
+
       const parentClasses =
         fragments.length > 0 ? fragments.map(({ name }) => getFragmentName(name)).join(', ') : 'BaseModel';
-      const header = `class ${unwrapNullsAndLists(o.type).name}(${parentClasses}):`;
-      if (lines.length) {
-        return [header, ...lines.map((l) => indent(l))];
+      const resolvedClassName = className || unwrapNullsAndLists(type).name;
+
+      const inlineFragments = selection.filter(isInlineFragmentDeclaration);
+      if (inlineFragments.length > 0) {
+        const header = `class ${resolvedClassName}Base(${parentClasses}):`;
+        const superClassLines = [header, ...(lines.length > 0 ? lines : [indent('pass')])];
+
+        const inlineFragmentsDefinitions = inlineFragments.flatMap((f) => [
+          `class ${resolvedClassName}_${unwrapNullsAndLists(f.typeCondition).name}(${resolvedClassName}Base):`,
+          ...formatSelectionBody(f.selection).map((l) => indent(l)),
+          '',
+        ]);
+
+        return [
+          ...superClassLines,
+          '',
+          ...inlineFragmentsDefinitions,
+          `${resolvedClassName} = Union[${inlineFragments
+            .map((f) => `${resolvedClassName}_${unwrapNullsAndLists(f.typeCondition).name}`)
+            .join(', ')}]`,
+          '',
+        ];
       } else {
-        return [header, indent('pass')];
+        const header = `class ${resolvedClassName}(${parentClasses}):`;
+        return [header, ...(lines.length > 0 ? lines : [indent('pass')])];
       }
     }
 
@@ -281,8 +326,9 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
       return [`${f.name}: ${printTypeName(f.type)}`];
     }
 
-    const bodyLines = formatSelectionBody(declaration.type, declaration.selection);
-
-    return `${header}\n${indentMultiline(bodyLines.join('\n'))}\n`;
+    return (
+      formatObject(declaration.type, declaration.selection, declaration.className || declaration.type.name).join('\n') +
+      '\n'
+    );
   }
 }
