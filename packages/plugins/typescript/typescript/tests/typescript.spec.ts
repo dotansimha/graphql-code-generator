@@ -704,6 +704,47 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should add `%future added value` to enum when futureProofEnums is set and also enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true, futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyEnum = 'A' | 'B' | '%future added value';
+    `);
+      validateTs(result);
+    });
+
+    it('Should not add `%future added value` to enum when futureProofEnums is set, but not enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        B = 'B'
+      }
+    `);
+      validateTs(result);
+    });
+
     it('Should use custom namingConvention for enums (keep)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum Foo {

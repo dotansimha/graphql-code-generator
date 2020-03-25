@@ -29,6 +29,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  futureProofEnums: boolean;
   enumsAsConst: boolean;
   fieldWrapperValue: string;
   immutableTypes: boolean;
@@ -49,6 +50,7 @@ export class TsVisitor<
       fieldWrapperValue: getConfigValue(pluginConfig.fieldWrapperValue, 'T'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
@@ -185,6 +187,7 @@ export class TsVisitor<
 
                 return comment + indent(wrapWithSingleQuotes(enumValue));
               })
+              .concat(...[this.config.futureProofEnums ? [indent(wrapWithSingleQuotes('%future added value'))] : []])
               .join(' |\n')
         ).string;
     }

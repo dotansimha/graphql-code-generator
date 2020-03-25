@@ -69,6 +69,25 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsTypes?: boolean;
   /**
+   * @name futureProofEnums
+   * @type boolean
+   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    enumsAsTypes: true
+   *    futureProofEnums: true
+   * ```
+   */
+  futureProofEnums?: boolean;
+  /**
    * @name enumsAsConst
    * @type boolean
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
