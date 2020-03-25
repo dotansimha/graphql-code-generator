@@ -135,9 +135,6 @@ function getFragmentName(baseName: string) {
 }
 
 export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginConfig, PythonDocumentsParsedConfig> {
-  private referencedFragments: Record<string, true> = {};
-  private definedFragments: Record<string, true> = {};
-
   constructor(
     private schema: GraphQLSchema,
     config: PythonDocumentsPluginConfig,
@@ -175,8 +172,6 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
-    this.definedFragments[node.name.value] = true;
-
     const fragmentRootType = this.schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const declaration = this.parse(fragmentRootType, node.selectionSet);
     declaration.className = getFragmentName(node.name.value);
