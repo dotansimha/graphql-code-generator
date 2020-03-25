@@ -55,7 +55,7 @@
     "@types/debounce": "1.2.0",
     "@types/is-glob": "4.0.1",
     "@types/mkdirp": "1.0.0",
-    "@types/valid-url": "1.0.2",
+    "@types/valid-url": "1.0.3",
     "camel-case": "4.1.1",
     "chalk": "3.0.0",
     "chokidar": "3.3.1",
