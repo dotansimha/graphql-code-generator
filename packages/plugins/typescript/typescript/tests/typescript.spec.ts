@@ -2436,4 +2436,62 @@ describe('TypeScript', () => {
       }
     `);
   });
+
+  it.only('should print only enums', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: Int!
+        name: String!
+        email: String!
+      }
+      type QueryRoot {
+        allUsers: [User]!
+        userById(id: Int!): User
+        # Generates a new answer for the guessing game
+        answer: [Int!]!
+      }
+      type SubscriptionRoot {
+        newUser: User
+      }
+      enum Evaluation {
+        NEEDS_IMPROVEMENT
+        MEETS_EXPECTATIONS
+        EXCEEDS_EXPECTATIONS
+        SUPERB
+      }
+      schema {
+        query: QueryRoot
+        subscription: SubscriptionRoot
+      }
+      enum Status {
+        Todo
+        Doing
+        Done
+      }
+    `);
+
+    const result = (await plugin(
+      schema,
+      [],
+      { generateOnlyEnums: true },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      export enum Evaluation {
+        NeedsImprovement = 'NEEDS_IMPROVEMENT',
+        MeetsExpectations = 'MEETS_EXPECTATIONS',
+        ExceedsExpectations = 'EXCEEDS_EXPECTATIONS',
+        Superb = 'SUPERB'
+      }
+
+      export enum Status {
+        Todo = 'Todo',
+        Doing = 'Doing',
+        Done = 'Done'
+      }
+    `);
+
+    validateTs(result);
+  });
 });
