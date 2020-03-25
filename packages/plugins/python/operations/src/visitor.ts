@@ -84,6 +84,14 @@ function unwrapNullsAndLists(
 
 type ListOrNonNull<T extends GraphQLType> = T | GraphQLList<ListOrNonNull<T>> | GraphQLNonNull<ListOrNonNull<T>>;
 
+interface TypenameFieldDeclaration {
+  kind: 'typename';
+}
+
+function isTypenameFieldDeclaration(v: AnyDeclaration): v is TypenameFieldDeclaration {
+  return v.kind === 'typename';
+}
+
 interface FieldDeclaration {
   kind: 'field';
   name: string;
@@ -124,7 +132,12 @@ function isObjectDeclaration(v: AnyDeclaration): v is ObjectDeclaration {
   return v.kind === 'object';
 }
 
-type AnyDeclaration = FieldDeclaration | ObjectDeclaration | FragmentDeclaration | InlineFragmentDeclaration;
+type AnyDeclaration =
+  | TypenameFieldDeclaration
+  | FieldDeclaration
+  | ObjectDeclaration
+  | FragmentDeclaration
+  | InlineFragmentDeclaration;
 
 interface Declaration {
   className?: string;
@@ -195,6 +208,13 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
       return selectionSet.selections.map(
         (s): AnyDeclaration => {
           if (s.kind === 'Field') {
+            // Importantly, this must happen before the typecheck below, because this is legal on all types.
+            if (s.name.value === '__typename') {
+              return {
+                kind: 'typename',
+              };
+            }
+
             if (!isInterfaceType(parentType) && !isObjectType(parentType)) {
               throw new Error(`should be interface/object type, but was ${parentType.name}`);
             }
@@ -275,12 +295,14 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
 
     function formatSelectionBody(selection: AnyDeclaration[]): string[] {
       const innerClasses = selection.filter(isObjectDeclaration);
-      // TODO: Type-safely pick out the fields that need to be printed.
+      // TODO: Type-safely pick out the fields that need to be printed and handle __typename sanely.
       return [
         ...innerClasses.flatMap((o) => [...formatObject(o.type, o.selection), '']),
         ...selection
-          .filter((o) => 'type' in o && 'name' in o)
-          .map((o) => `${(o as any).name}: ${printTypeName((o as any).type)}`),
+          .filter((o) => ('type' in o && 'name' in o) || o.kind === 'typename')
+          .map((o) =>
+            o.kind === 'typename' ? '__typename: str' : `${(o as any).name}: ${printTypeName((o as any).type)}`
+          ),
       ].filter((l) => l != null);
     }
 
@@ -311,9 +333,11 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
           ...superClassLines,
           '',
           ...inlineFragmentsDefinitions,
+          // TODO: Do we know if ${resolvedClassName}Base is always present? Should we inspect and know if all variants of the union/interface are handled?
+          // TODO: Is Pydantic going to be ordering-sensitive about this?
           `${resolvedClassName} = Union[${inlineFragments
             .map((f) => `${resolvedClassName}_${unwrapNullsAndLists(f.typeCondition).name}`)
-            .join(', ')}]`,
+            .join(', ')}, ${resolvedClassName}Base]`,
           '',
         ];
       } else {
