@@ -185,10 +185,12 @@ export class TsVisitor<
                   enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 
-                return comment + indent(wrapWithSingleQuotes(enumValue));
+                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .concat(...[this.config.futureProofEnums ? [indent(wrapWithSingleQuotes('%future added value'))] : []])
-              .join(' |\n')
+              .concat(
+                ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
+              )
+              .join('\n')
         ).string;
     }
 
