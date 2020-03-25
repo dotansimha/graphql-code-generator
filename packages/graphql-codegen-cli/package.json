@@ -91,7 +91,7 @@
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
-    "@types/js-yaml": "3.12.2",
+    "@types/js-yaml": "3.12.3",
     "@types/listr": "0.14.2",
     "@types/log-symbols": "2.0.0",
     "@types/minimatch": "3.0.3",
