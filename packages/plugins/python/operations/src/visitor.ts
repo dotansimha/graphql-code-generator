@@ -28,6 +28,7 @@ import {
   GraphQLInterfaceType,
   GraphQLType,
   isObjectType,
+  isInterfaceType,
 } from 'graphql';
 import {
   wrapTypeWithModifiers,
@@ -142,11 +143,15 @@ interface Declaration {
 }
 
 function parse(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): Declaration {
-  function helper(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): AnyDeclaration[] {
+  function helper(parentType: GraphQLCompositeType, selectionSet: SelectionSetNode): AnyDeclaration[] {
     return selectionSet.selections
       .map(
         (s): AnyDeclaration => {
           if (s.kind === 'Field') {
+            if (!isInterfaceType(parentType) && !isObjectType(parentType)) {
+              throw new Error(`should be interface/object type, but was ${parentType.name}`);
+            }
+
             const type = parentType.getFields()[s.name.value]!.type;
             const name = s.alias?.value ?? s.name.value;
             if (type == null) {
@@ -156,8 +161,8 @@ function parse(parentType: GraphQLObjectType, selectionSet: SelectionSetNode): D
                 throw new Error('also wrong type');
               }
               const unwrappedType = unwrapNullsAndLists(type);
-              if (!isObjectType(unwrappedType)) {
-                throw new Error('should be object type');
+              if (!isCompositeType(unwrappedType)) {
+                throw new Error(`should be composite type, but was ${parentType.name}`);
               }
               return {
                 kind: 'object',
@@ -232,7 +237,8 @@ function print(declaration: Declaration) {
   function formatObject(o: ObjectDeclaration): string[] {
     const lines = formatSelectionBody(o.type, o.selection);
     const fragments = o.selection.filter(isFragmentDeclaration);
-    const parentClasses = fragments.length > 0 ? fragments.map(({ name }) => name).join(', ') : 'BaseModel';
+    const parentClasses =
+      fragments.length > 0 ? fragments.map(({ name }) => getFragmentName(name)).join(', ') : 'BaseModel';
     const header = `class ${unwrapNullsAndLists(o.type).name}(${parentClasses}):`;
     if (lines.length) {
       return [header, ...lines.map((l) => indent(l))];
@@ -250,10 +256,16 @@ function print(declaration: Declaration) {
   return `${header}\n${indentMultiline(bodyLines.join('\n'))}\n`;
 }
 
-export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginConfig, PythonDocumentsParsedConfig> {
-  private schema: GraphQLSchema;
+function getFragmentName(baseName: string) {
+  return `${baseName}Fragment`;
+}
 
-  constructor(schema: GraphQLSchema, config: PythonDocumentsPluginConfig, allFragments: LoadedFragment[]) {
+export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginConfig, PythonDocumentsParsedConfig> {
+  constructor(
+    private schema: GraphQLSchema,
+    config: PythonDocumentsPluginConfig,
+    private allFragments: LoadedFragment[]
+  ) {
     super(
       config,
       {
@@ -261,8 +273,6 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
       } as PythonDocumentsParsedConfig
       // schema
     );
-
-    this.schema = schema;
 
     autoBind(this);
 
@@ -329,6 +339,7 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
     }
 
     // TODO: Variables types.
+    // TODO: Fragments that are referred to here, but aren't defined here, must be imported!
 
     const declaration = parse(rootType, node.selectionSet);
     declaration.className = node.name.value;
@@ -338,7 +349,7 @@ export class PythonDocumentsVisitor extends BaseVisitor<PythonDocumentsPluginCon
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this.schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const declaration = parse(fragmentRootType, node.selectionSet);
-    declaration.className = `${node.name.value}Fragment`;
+    declaration.className = getFragmentName(node.name.value);
     return print(declaration);
   }
 }
