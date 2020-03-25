@@ -111,7 +111,7 @@ export type FragmentNameToFile = {
 };
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
-  buildGeneratesSection: options => {
+  buildGeneratesSection: (options) => {
     const schemaObject: GraphQLSchema = options.schemaAst
       ? options.schemaAst
       : buildASTSchema(options.schema, options.config as any);
@@ -153,10 +153,11 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       },
       generateImportStatement({ relativeOutputPath, importSource }) {
         const importPath = resolveImportPath(relativeOutputPath, importSource.path);
-        const importNames =
-          importSource.names && importSource.names.length ? `{ ${importSource.names.join(', ')} }` : '*';
-        const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-        return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+        const importPackage = importPath.replace(/\//g, '.').replace(/-/g, '_').replace(/^\.+/g, '');
+        const importNames = importSource.names && importSource.names.length ? importSource.names.join(', ') : '*';
+        // const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
+        return `from ${importPackage} import ${importNames}`;
+        // return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
       },
 
       schemaTypesSource: {
@@ -168,7 +169,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, ...source }) => {
       const plugins = [
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
-        ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({ add: importStatement }))),
+        ...(options.config.globalNamespace
+          ? []
+          : importStatements.map((importStatement) => ({ add: importStatement }))),
         ...options.plugins,
       ];
       const config = {
