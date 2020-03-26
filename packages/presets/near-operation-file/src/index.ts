@@ -110,6 +110,28 @@ export type FragmentNameToFile = {
   [fragmentName: string]: { location: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode };
 };
 
+enum Language {
+  TYPESCRIPT,
+  PYTHON,
+}
+
+function generatePythonImport(path: string) {
+  const upDirectories = /^(\.\.\/)+/.exec(path)?.[0] ?? '';
+  let prefix: string;
+  if (upDirectories) {
+    prefix = '.' + '.'.repeat(upDirectories.length / 3);
+    path = path.slice(upDirectories.length);
+  } else if (path.startsWith('./')) {
+    prefix = '.';
+    path = path.slice(2);
+  } else {
+    throw new Error(`absolute or implied-relative path not expected: ${path}`);
+  }
+
+  const packagePath = path.replace(/\//g, '.').replace(/-/g, '_');
+  return `${prefix}${packagePath}`;
+}
+
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: (options) => {
     const schemaObject: GraphQLSchema = options.schemaAst
@@ -117,7 +139,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       : buildASTSchema(options.schema, options.config as any);
     const baseDir = options.presetConfig.cwd || process.cwd();
     const extension = options.presetConfig.extension || '.generated.ts';
+    const language = extension.endsWith('.py') ? Language.PYTHON : Language.TYPESCRIPT;
     const folder = options.presetConfig.folder || '';
+    // TODO: Make this naming idiomatic.
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
 
     const baseTypesPath = options.presetConfig.baseTypesPath;
@@ -153,11 +177,15 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       },
       generateImportStatement({ relativeOutputPath, importSource }) {
         const importPath = resolveImportPath(relativeOutputPath, importSource.path);
-        const importPackage = importPath.replace(/\//g, '.').replace(/-/g, '_').replace(/^\.+/g, '');
         const importNames = importSource.names && importSource.names.length ? importSource.names.join(', ') : '*';
-        // const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-        return `from ${importPackage} import ${importNames}`;
-        // return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+        const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
+        if (language === Language.PYTHON) {
+          return `from ${generatePythonImport(importPath)} import ${importNames}${importAlias}${
+            importAlias ? '\n' : ''
+          }`;
+        } else {
+          return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+        }
       },
 
       schemaTypesSource: {
