@@ -894,7 +894,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: query }];
+      const ast = [{ location: '', document: query }];
       const result = await plugin(schema, ast, {});
 
       expect(result).toContain(`export type Me = MultipleSpreadsQuery['me'];`);
@@ -920,7 +920,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: query }];
+      const ast = [{ location: '', document: query }];
       const result = await plugin(schema, ast, {});
 
       expect(result).toBeSimilarStringTo(`
@@ -943,10 +943,12 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: query }];
+      const ast = [{ location: '', document: query }];
       const result = await plugin(schema, ast, {});
 
-      expect(result).toContain(`export type UserInlineFragment = ({ __typename: 'User' } & Pick<MultipleSpreadsQuery['me'], 'id' | keyof UserFieldsFragment | keyof UserFriendsFragment>);`);
+      expect(result).toContain(
+        `export type UserInlineFragment = ({ __typename: 'User' } & Pick<MultipleSpreadsQuery['me'], 'id' | keyof UserFieldsFragment | keyof UserFriendsFragment>);`
+      );
     });
 
     it('throws on nested inline fragments', async () => {
@@ -964,7 +966,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: query }];
+      const ast = [{ location: '', document: query }];
       await expect(plugin(schema, ast, {})).rejects.toThrow('Nested inline fragments');
     });
 
@@ -1026,7 +1028,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: query }];
+      const ast = [{ location: '', document: query }];
       const result = await plugin(schema, ast, {});
 
       expect(result).toBeSimilarStringTo(`
