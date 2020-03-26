@@ -21,7 +21,7 @@ import {
   Kind,
   InputValueDefinitionNode,
   GraphQLSchema,
-  GraphQLEnumType,
+  isEnumType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -59,8 +59,8 @@ export class TsVisitor<
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
-      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
-      .filter(t => t);
+      .filter(isEnumType)
+      .map(type => type.name);
     this.setArgumentsTransformer(
       new TypeScriptOperationVariablesToObject(
         this.scalars,
