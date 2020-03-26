@@ -5,7 +5,7 @@ import { ApolloDotNetRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
-const R_NAME = /name\:\s*"([^"]+)"/;
+const R_NAME = /name:\s*"([^"]+)"/;
 
 function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');
@@ -109,7 +109,7 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     }
     ${this._includeFragments(fragments)}`);
 
-    doc = doc.replace(/"/g, '\"\"');
+    doc = doc.replace(/"/g, '""');
 
     if (this.config.documentMode === DocumentMode.string) {
       return '@"' + doc + '"';
