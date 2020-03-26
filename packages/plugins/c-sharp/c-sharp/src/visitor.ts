@@ -30,8 +30,6 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  private _addHashMapImport = false;
-  private _addMapImport = false;
   private _addListImport = false;
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
@@ -78,8 +76,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    this._addHashMapImport = true;
-    this._addMapImport = true;
     const enumName = this.convertName(node.name);
     const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n');
     const enumBlock = [enumValues].join('\n');
@@ -136,7 +132,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   protected buildObject(name: string, inputValueArray: ReadonlyArray<FieldDefinitionNode>): string {
-    this._addMapImport = true;
 
     const classMembers = inputValueArray
       .map(arg => {
@@ -160,7 +155,6 @@ public class ${name} {
   }
 
   protected buildInputTransfomer(name: string, inputValueArray: ReadonlyArray<InputValueDefinitionNode>): string {
-    this._addMapImport = true;
 
     const classMembers = inputValueArray
       .map(arg => {

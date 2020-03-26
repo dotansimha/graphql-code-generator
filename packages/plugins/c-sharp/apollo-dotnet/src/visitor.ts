@@ -33,7 +33,7 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     serviceName: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloDotNetRawPluginConfig, documents?: Types.DocumentFile[]) {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: ApolloDotNetRawPluginConfig, documents?: Types.DocumentFile[]) {
     super(
       schema,
       fragments,
@@ -52,11 +52,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     );
 
     autoBind(this);
-  }
-
-  private _extractNgModule(operation: OperationDefinitionNode) {
-    const [, link] = print(operation).match(R_MOD);
-    return this._parseNgModule(link);
   }
 
   private _parseNgModule(link: string) {

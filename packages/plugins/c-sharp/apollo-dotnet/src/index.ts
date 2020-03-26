@@ -10,13 +10,12 @@ export const plugin: PluginFunction<ApolloDotNetRawPluginConfig> = (schema: Grap
   // yes i know it is the same namespace as used in c-sharp plugin but it works, and it works independent
   const openNameSpace = 'namespace GraphQLCodeGen {';
   const allAst = concatAST(documents.map(v => v.document));
-  const operations = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ApolloDotNetVisitor(schema, allFragments, operations, config, documents);
+  const visitor = new ApolloDotNetVisitor(schema, allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
   return {
     prepend: [],
