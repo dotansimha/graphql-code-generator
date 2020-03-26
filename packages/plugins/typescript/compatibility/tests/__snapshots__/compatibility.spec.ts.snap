@@ -65,7 +65,7 @@ export type AliasTestVariables = AliasTestQueryVariables;
 export type AliasTestCurrentUser = AliasTestQuery['currentUser'];
 export const useAliasTest = useAliasTestQuery;
 export type Me2Variables = Me2QueryVariables;
-export type Me2Me = UserFieldsFragment;
+export type Me2Me = Me2Query['me'];
 export const useMe2 = useMe2Query;
 export type Me3Variables = Me3QueryVariables;
 export type Me3Me = Me3Query['me'];
@@ -106,7 +106,7 @@ export namespace AliasTest {
 export namespace Me2 {
   export type Variables = Me2QueryVariables;
   export type Query = Me2Query;
-  export type Me = UserFieldsFragment;
+  export type Me = Me2Query['me'];
 }
 
 export namespace UserFields {
@@ -165,7 +165,7 @@ export namespace AliasTest {
 export namespace Me2 {
   export type Variables = Me2QueryVariables;
   export type Query = Me2Query;
-  export type Me = UserFieldsFragment;
+  export type Me = Me2Query['me'];
 }
 
 export namespace UserFields {
