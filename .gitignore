@@ -3,6 +3,7 @@
 .yarnclean
 .DS_Store
 coverage
+npm-debug.log
 lerna-debug.log
 yarn-error.log
 node_modules
