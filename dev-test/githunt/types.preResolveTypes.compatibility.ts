@@ -304,7 +304,7 @@ export namespace Comment {
   export type CurrentUser = NonNullable<CommentQuery['currentUser']>;
   export type Entry = NonNullable<CommentQuery['entry']>;
   export type PostedBy = NonNullable<CommentQuery['entry']>['postedBy'];
-  export type Comments = CommentsPageCommentFragment;
+  export type Comments = NonNullable<NonNullable<CommentQuery['entry']>['comments'][0]>;
   export type Repository = NonNullable<CommentQuery['entry']>['repository'];
   export type RepositoryInlineFragment = { __typename: 'Repository' } & Pick<
     NonNullable<CommentQuery['entry']>['repository'],
@@ -324,7 +324,7 @@ export namespace CurrentUserForProfile {
 }
 
 export namespace FeedEntry {
-  export type Fragment = RepoInfoFragment;
+  export type Fragment = FeedEntryFragment;
   export type Repository = FeedEntryFragment['repository'];
   export type Owner = NonNullable<FeedEntryFragment['repository']['owner']>;
 }
@@ -333,7 +333,7 @@ export namespace Feed {
   export type Variables = FeedQueryVariables;
   export type Query = FeedQuery;
   export type CurrentUser = NonNullable<FeedQuery['currentUser']>;
-  export type Feed = FeedEntryFragment;
+  export type Feed = NonNullable<NonNullable<FeedQuery['feed']>[0]>;
 }
 
 export namespace SubmitRepository {
@@ -351,7 +351,7 @@ export namespace RepoInfo {
 export namespace SubmitComment {
   export type Variables = SubmitCommentMutationVariables;
   export type Mutation = SubmitCommentMutation;
-  export type SubmitComment = CommentsPageCommentFragment;
+  export type SubmitComment = NonNullable<SubmitCommentMutation['submitComment']>;
 }
 
 export namespace VoteButtons {
