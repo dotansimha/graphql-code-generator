@@ -105,7 +105,7 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     ${
       print(node)
         .split('\\')
-        .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
+        .join('\\\\')
     }
     ${this._includeFragments(fragments)}`);
 
