@@ -5,7 +5,7 @@ import { ApolloDotNetRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
-const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
+const R_NAME = /name\:\s*"([^"]+)"/;
 
 function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');
@@ -93,7 +93,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     return name ? `client = '${name}';` : '';
   }
 
-  // tries to find namedClient directive and extract {name}
   private _extractNamedClient(operation: OperationDefinitionNode): string {
     const [, name] = this._extractDirective(operation, 'namedClient').match(R_NAME);
 
@@ -201,7 +200,6 @@ ${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: $
       })
       .map(s => indentMultiline(s, 2));
 
-    // Inject the generated services in the constructor
     const injectString = (service: string) => `private ${camelCase(service)}: ${service}`;
     const injections = this._operationsToInclude
       .map(op => injectString(op.serviceName))
@@ -284,9 +282,6 @@ ${injections}
       ${documentString}
     }
     `;
-
-    // const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
-
     return [content].filter(a => a).join('\n');
   }
 }

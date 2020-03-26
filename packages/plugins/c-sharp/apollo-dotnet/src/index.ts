@@ -7,7 +7,6 @@ import gql from 'graphql-tag';
 import { ApolloDotNetRawPluginConfig } from './config';
 
 export const plugin: PluginFunction<ApolloDotNetRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
-  // yes i know it is the same namespace as used in c-sharp plugin but it works, and it works independent
   const openNameSpace = 'namespace GraphQLCodeGen {';
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
