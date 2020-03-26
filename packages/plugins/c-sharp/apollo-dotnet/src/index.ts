@@ -1,5 +1,5 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { ApolloDotNetVisitor } from './visitor';
 import { extname } from 'path';

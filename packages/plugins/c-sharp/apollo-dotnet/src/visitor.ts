@@ -5,7 +5,6 @@ import { ApolloDotNetRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
-const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
 
 function R_DEF(directive: string) {
@@ -52,15 +51,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     );
 
     autoBind(this);
-  }
-
-  private _parseNgModule(link: string) {
-    const [path, module] = link.split('#');
-    return {
-      path,
-      module,
-      link,
-    };
   }
 
   private _operationHasDirective(operation: string | OperationDefinitionNode, directive: string) {

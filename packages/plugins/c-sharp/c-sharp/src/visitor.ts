@@ -13,14 +13,8 @@ import {
   Kind,
   isScalarType,
   isInputObjectType,
-  isEnumType
-} from 'graphql';
+  isEnumType } from 'graphql';
 import { C_SHARP_SCALARS, CSharpDeclarationBlock, wrapTypeWithModifiers } from './common/common';
-
-
-// Json Property Mark
-// Data Class for Each Types
-
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   package: string;
@@ -30,7 +24,6 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  private _addListImport = false;
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
@@ -71,7 +64,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
       return indent(`${this.getEnumValue(enumName, node.name.value)}`);
-      // return indent(`${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })} = "${this.getEnumValue(enumName, node.name.value)}"`);
     };
   }
 
@@ -89,7 +81,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
-    // console.log('resolveInputFieldType');
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
