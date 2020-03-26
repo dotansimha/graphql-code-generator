@@ -13,8 +13,7 @@ import {
   Kind,
   isScalarType,
   isInputObjectType,
-  isEnumType,
-  isInterfaceType
+  isEnumType
 } from 'graphql';
 import { C_SHARP_SCALARS, CSharpDeclarationBlock, wrapTypeWithModifiers } from './common/common';
 
