@@ -45,7 +45,7 @@ function isUsingDocVarPlugin(plugins: Types.PresetFnArgs<{}>['plugins']): boolea
   for (const pluginRecord of plugins) {
     const pluginKey = Object.keys(pluginRecord)[0].toLowerCase();
 
-    if (DOC_VAR_PLUGINS.find(t => pluginKey === t || `@graphql-codegen/${t}` === pluginKey)) {
+    if (DOC_VAR_PLUGINS.find((t) => pluginKey === t || `@graphql-codegen/${t}` === pluginKey)) {
       return true;
     }
   }
@@ -94,10 +94,13 @@ function buildFragmentRegistry(
         })
       );
     } else if (possbileTypes.length !== 0) {
-      possbileTypes.forEach(typeName => {
+      possbileTypes.forEach((typeName) => {
         subTypes.push(
           baseVisitor.convertName(name, {
             useTypesPrefix: true,
+            // FIXME: This is where fragment names in the near-operation-file import are coming from.
+            // This agrees by convention with similar code in visitor-plugin-common, specifically,
+            // buildFragmentTypeName.
             suffix: `_${typeName}_${fragmentSuffix}`,
           })
         );
@@ -110,7 +113,7 @@ function buildFragmentRegistry(
   const duplicateFragmentNames: string[] = [];
   const registry = documents.reduce((prev: FragmentRegistry, documentRecord) => {
     const fragments: FragmentDefinitionNode[] = documentRecord.document.definitions.filter(
-      d => d.kind === Kind.FRAGMENT_DEFINITION
+      (d) => d.kind === Kind.FRAGMENT_DEFINITION
     ) as FragmentDefinitionNode[];
 
     if (fragments.length > 0) {
@@ -126,7 +129,7 @@ function buildFragmentRegistry(
         const possibleTypes = getPossibleTypes(schemaObject, schemaType);
         const filePath = generateFilePath(documentRecord.location);
         const importNames = getAllFragmentSubTypes(
-          possibleTypes.map(t => t.name),
+          possibleTypes.map((t) => t.name),
           fragment.name.value
         );
 
@@ -180,7 +183,7 @@ export default function buildFragmentResolver<T>(
           if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
             fragmentFileImports[fragmentDetails.filePath] = new Set(fragmentDetails.importNames);
           } else {
-            fragmentDetails.importNames.forEach(f => fragmentFileImports[fragmentDetails.filePath].add(f));
+            fragmentDetails.importNames.forEach((f) => fragmentFileImports[fragmentDetails.filePath].add(f));
           }
         }
 
