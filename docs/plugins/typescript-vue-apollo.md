@@ -52,7 +52,8 @@ export default createComponent({
 ```
 
 ## Configuration
-
+```
 {@import: ../docs/generated-config/base-visitor.md}
 {@import: ../docs/generated-config/client-side-base-visitor.md}
 {@import: ../docs/generated-config/typescript-vue-apollo.md}
+```
