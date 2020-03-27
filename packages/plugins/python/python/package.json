@@ -1,0 +1,46 @@
+{
+  "name": "@graphql-codegen/typescript",
+  "version": "1.13.1",
+  "description": "GraphQL Code Generator plugin for generating TypeScript types",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "prepack": "bob-update-version",
+    "build": "bob",
+    "test": "jest --no-watchman --config ../../../../jest.config.js"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.13.1",
+    "@graphql-codegen/visitor-plugin-common": "1.13.1",
+    "auto-bind": "4.0.0",
+    "tslib": "1.11.1"
+  },
+  "devDependencies": {
+    "bob-the-bundler": "0.3.4",
+    "@graphql-codegen/testing": "1.13.1",
+    "graphql": "14.6.0",
+    "jest": "25.1.0",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
+  "sideEffects": false,
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
