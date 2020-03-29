@@ -85,7 +85,7 @@
     "jest-docblock": "25.2.3",
     "jest-junit": "10.0.0",
     "lerna": "3.20.2",
-    "lint-staged": "10.0.9",
+    "lint-staged": "10.0.10",
     "lodash": "4.17.15",
     "rimraf": "3.0.2",
     "ts-jest": "25.2.1",
