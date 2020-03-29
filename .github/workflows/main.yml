@@ -54,7 +54,7 @@ jobs:
           CI: true
       - name: Test dev-tests
         run: |
-          dev-test/generate-all.sh
+          yarn run generate:examples
           git diff --exit-code -- dev-test/
 
   publish-canary:
