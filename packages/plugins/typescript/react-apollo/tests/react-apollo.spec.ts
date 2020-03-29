@@ -923,7 +923,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(
         `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
-          [key in TDataName]: ApolloReactHoc.DataValue<TestQuery, TestQueryVariables>
+          [key in TDataName]: ApolloReactCommon.DataValue<TestQuery, TestQueryVariables>
         } & TChildProps;`
       );
 
@@ -954,7 +954,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(
         `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
-          [key in TDataName]: ApolloReactHoc.DataValue<TestQueryResponse, TestQueryVariables>
+          [key in TDataName]: ApolloReactCommon.DataValue<TestQueryResponse, TestQueryVariables>
         } & TChildProps;`
       );
 

@@ -123,9 +123,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const argType = operationType === 'mutation' ? 'MutationFunction' : 'DataValue';
 
     this.imports.add(this.getApolloReactCommonImport());
-    this.imports.add(this.getApolloReactHocImport());
 
-    return `ApolloReactHoc.${argType}<${typeVariableName}, ${variablesVarName}>`;
+    return `ApolloReactCommon.${argType}<${typeVariableName}, ${variablesVarName}>`;
   }
 
   private _buildMutationFn(
