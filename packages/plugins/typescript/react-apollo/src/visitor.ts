@@ -120,7 +120,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       this.convertName(operationName + pascalCase(operationType) + this._parsedConfig.operationResultSuffix);
     const variablesVarName =
       this._externalImportPrefix + this.convertName(operationName + pascalCase(operationType) + 'Variables');
-    const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
+    const argType = operationType === 'mutation' ? 'MutationFunction' : 'DataValue';
 
     this.imports.add(this.getApolloReactCommonImport());
     this.imports.add(this.getApolloReactHocImport());
@@ -152,20 +152,20 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHocImport());
     const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
     const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
+    const defaultDataName = node.operation === 'mutation' ? 'mutate' : 'data';
 
-    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(
-      node.name.value,
-      node.operation
-    )} & TChildProps;`;
+    const propsVar = `export type ${propsTypeName}<TChildProps = {}, TDataName extends string = '${defaultDataName}'> = {
+      [key in TDataName]: ${this._buildHocProps(node.name.value, node.operation)}
+    } & TChildProps;`;
 
-    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+    const hocString = `export function with${operationName}<TProps, TChildProps = {}, TDataName extends string = '${defaultDataName}'>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   ${operationResultType},
   ${operationVariablesTypes},
-  ${propsTypeName}<TChildProps>>) {
+  ${propsTypeName}<TChildProps, TDataName>>) {
     return ApolloReactHoc.with${pascalCase(
       node.operation
-    )}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${this.getDocumentNodeVariable(
+    )}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps, TDataName>>(${this.getDocumentNodeVariable(
       node,
       documentVariableName
     )}, {
@@ -229,7 +229,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const queryDescription = `
  * To run a query within a React component, call \`use${operationName}\` and pass it any options that fit your needs.
- * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.`;
 
     const queryExample = `
