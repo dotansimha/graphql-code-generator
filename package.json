@@ -57,7 +57,7 @@
     "react-dom": "16.13.1",
     "p-limit": "2.2.2",
     "fs-extra": "9.0.0",
-    "rollup": "2.2.0",
+    "rollup": "2.3.0",
     "@rollup/plugin-node-resolve": "7.1.1",
     "rollup-plugin-generate-package-json": "3.2.0",
     "rollup-plugin-auto-external": "2.0.0",
