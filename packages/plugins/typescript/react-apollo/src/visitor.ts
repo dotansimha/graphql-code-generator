@@ -120,11 +120,17 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       this.convertName(operationName + pascalCase(operationType) + this._parsedConfig.operationResultSuffix);
     const variablesVarName =
       this._externalImportPrefix + this.convertName(operationName + pascalCase(operationType) + 'Variables');
-    const argType = operationType === 'mutation' ? 'MutationFunction' : 'DataValue';
+    const typeArgs = `<${typeVariableName}, ${variablesVarName}>`;
 
-    this.imports.add(this.getApolloReactCommonImport());
+    if (operationType === 'mutation') {
+      this.imports.add(this.getApolloReactCommonImport());
 
-    return `ApolloReactCommon.${argType}<${typeVariableName}, ${variablesVarName}>`;
+      return `ApolloReactCommon.MutationFunction${typeArgs}`;
+    } else {
+      this.imports.add(this.getApolloReactHocImport());
+
+      return `ApolloReactHoc.DataValue${typeArgs}`;
+    }
   }
 
   private _buildMutationFn(
