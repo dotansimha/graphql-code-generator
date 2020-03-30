@@ -5,7 +5,7 @@
   "homepage": "/live-demo/",
   "devDependencies": {
     "aws-sdk": "2.648.0",
-    "source-map-explorer": "2.4.1",
+    "source-map-explorer": "2.4.2",
     "typescript": "3.8.3"
   },
   "dependencies": {
