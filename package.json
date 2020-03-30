@@ -50,7 +50,7 @@
     "@types/glob": "7.1.1",
     "@types/jest": "25.1.4",
     "@types/mkdirp": "1.0.0",
-    "@types/node": "10.17.17",
+    "@types/node": "10.17.18",
     "@types/react": "16.9.27",
     "@types/request": "2.48.4",
     "react": "16.13.1",
