@@ -151,8 +151,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHocImport());
     const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
     const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
-    const defaultDataName = node.operation === 'mutation' ? 'mutate' : 'data';
 
+    const defaultDataName = node.operation === 'mutation' ? 'mutate' : 'data';
     const propsVar = `export type ${propsTypeName}<TChildProps = {}, TDataName extends string = '${defaultDataName}'> = {
       [key in TDataName]: ${this._buildHocProps(node.name.value, node.operation)}
     } & TChildProps;`;
