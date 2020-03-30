@@ -41,7 +41,7 @@ export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
 );
 
 export type HeroDetailsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
 } &
   TChildProps;
 export function withHeroDetails<TProps, TChildProps = {}, TDataName extends string = 'data'>(

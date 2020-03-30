@@ -37,7 +37,7 @@ export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => (
 );
 
 export type HeroAppearsInProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
 } &
   TChildProps;
 export function withHeroAppearsIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(

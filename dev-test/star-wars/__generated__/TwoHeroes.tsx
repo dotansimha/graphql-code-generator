@@ -38,7 +38,7 @@ export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => (
 );
 
 export type TwoHeroesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
 } &
   TChildProps;
 export function withTwoHeroes<TProps, TChildProps = {}, TDataName extends string = 'data'>(

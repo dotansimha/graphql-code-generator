@@ -75,7 +75,7 @@ export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDepen
 );
 
 export type HeroParentTypeDependentFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
   >;

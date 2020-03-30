@@ -35,7 +35,7 @@ export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponent
 );
 
 export type HumanWithNullHeightProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
 } &
   TChildProps;
 export function withHumanWithNullHeight<TProps, TChildProps = {}, TDataName extends string = 'data'>(

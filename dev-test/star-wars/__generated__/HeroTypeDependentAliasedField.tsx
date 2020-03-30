@@ -46,7 +46,7 @@ export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentA
 );
 
 export type HeroTypeDependentAliasedFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables
   >;

@@ -39,7 +39,7 @@ export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentC
 );
 
 export type HeroDetailsWithFragmentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
 } &
   TChildProps;
 export function withHeroDetailsWithFragment<TProps, TChildProps = {}, TDataName extends string = 'data'>(

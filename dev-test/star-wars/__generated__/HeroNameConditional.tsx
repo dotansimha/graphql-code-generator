@@ -53,7 +53,7 @@ export const HeroNameConditionalInclusionComponent = (props: HeroNameConditional
 );
 
 export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables
   >;
@@ -105,7 +105,7 @@ export const HeroNameConditionalExclusionComponent = (props: HeroNameConditional
 );
 
 export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables
   >;

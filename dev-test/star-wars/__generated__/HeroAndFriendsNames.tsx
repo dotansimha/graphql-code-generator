@@ -59,7 +59,7 @@ export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponent
 );
 
 export type HeroAndFriendsNamesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
 } &
   TChildProps;
 export function withHeroAndFriendsNames<TProps, TChildProps = {}, TDataName extends string = 'data'>(

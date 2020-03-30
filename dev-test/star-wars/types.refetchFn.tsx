@@ -337,7 +337,7 @@ export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponent
 );
 
 export type HeroAndFriendsNamesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
 } &
   TChildProps;
 export function withHeroAndFriendsNames<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -386,7 +386,7 @@ export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => (
 );
 
 export type HeroAppearsInProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
 } &
   TChildProps;
 export function withHeroAppearsIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -434,7 +434,7 @@ export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
 );
 
 export type HeroDetailsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
 } &
   TChildProps;
 export function withHeroDetails<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -480,7 +480,7 @@ export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentC
 );
 
 export type HeroDetailsWithFragmentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
 } &
   TChildProps;
 export function withHeroDetailsWithFragment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -525,7 +525,7 @@ export const HeroNameComponent = (props: HeroNameComponentProps) => (
 );
 
 export type HeroNameProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HeroNameQuery, HeroNameQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroNameQuery, HeroNameQueryVariables>;
 } &
   TChildProps;
 export function withHeroName<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -572,7 +572,7 @@ export const HeroNameConditionalInclusionComponent = (props: HeroNameConditional
 );
 
 export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables
   >;
@@ -627,7 +627,7 @@ export const HeroNameConditionalExclusionComponent = (props: HeroNameConditional
 );
 
 export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables
   >;
@@ -697,7 +697,7 @@ export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDepen
 );
 
 export type HeroParentTypeDependentFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
   >;
@@ -756,7 +756,7 @@ export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentA
 );
 
 export type HeroTypeDependentAliasedFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables
   >;
@@ -808,7 +808,7 @@ export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponent
 );
 
 export type HumanWithNullHeightProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
 } &
   TChildProps;
 export function withHumanWithNullHeight<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -856,7 +856,7 @@ export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => (
 );
 
 export type TwoHeroesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
 } &
   TChildProps;
 export function withTwoHeroes<TProps, TChildProps = {}, TDataName extends string = 'data'>(

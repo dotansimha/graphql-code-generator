@@ -373,7 +373,7 @@ export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => 
 );
 
 export type OnCommentAddedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
 } &
   TChildProps;
 export function withOnCommentAdded<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -436,7 +436,7 @@ export const CommentComponent = (props: CommentComponentProps) => (
 );
 
 export type CommentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<CommentQuery, CommentQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<CommentQuery, CommentQueryVariables>;
 } &
   TChildProps;
 export function withComment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -477,7 +477,7 @@ export const CurrentUserForProfileComponent = (props: CurrentUserForProfileCompo
 );
 
 export type CurrentUserForProfileProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 } &
   TChildProps;
 export function withCurrentUserForProfile<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -524,7 +524,7 @@ export const FeedComponent = (props: FeedComponentProps) => (
 );
 
 export type FeedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<FeedQuery, FeedQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<FeedQuery, FeedQueryVariables>;
 } &
   TChildProps;
 export function withFeed<TProps, TChildProps = {}, TDataName extends string = 'data'>(

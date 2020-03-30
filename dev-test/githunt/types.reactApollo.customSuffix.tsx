@@ -349,7 +349,7 @@ export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => 
 );
 
 export type OnCommentAddedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     OnCommentAddedSubscriptionMyOperation,
     OnCommentAddedSubscriptionVariables
   >;
@@ -417,7 +417,7 @@ export const CommentComponent = (props: CommentComponentProps) => (
 );
 
 export type CommentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<CommentQueryMyOperation, CommentQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<CommentQueryMyOperation, CommentQueryVariables>;
 } &
   TChildProps;
 export function withComment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
@@ -463,7 +463,7 @@ export const CurrentUserForProfileComponent = (props: CurrentUserForProfileCompo
 );
 
 export type CurrentUserForProfileProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<
+  [key in TDataName]: ApolloReactHoc.DataValue<
     CurrentUserForProfileQueryMyOperation,
     CurrentUserForProfileQueryVariables
   >;
@@ -513,7 +513,7 @@ export const FeedComponent = (props: FeedComponentProps) => (
 );
 
 export type FeedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactCommon.DataValue<FeedQueryMyOperation, FeedQueryVariables>;
+  [key in TDataName]: ApolloReactHoc.DataValue<FeedQueryMyOperation, FeedQueryVariables>;
 } &
   TChildProps;
 export function withFeed<TProps, TChildProps = {}, TDataName extends string = 'data'>(
