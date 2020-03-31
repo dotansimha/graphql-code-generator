@@ -8,7 +8,7 @@ import {
   NormalizedScalarsMap,
   DeclarationKind,
 } from './types';
-import { DeclarationBlockConfig } from './utils';
+import { DeclarationBlockConfig, getConfigValue } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
@@ -25,6 +25,7 @@ export interface ParsedConfig {
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
   immutableTypes: boolean;
+  sortFields: boolean;
 }
 
 export interface RawConfig {
@@ -124,6 +125,20 @@ export interface RawConfig {
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
   externalFragments?: LoadedFragment[];
   globalNamespace?: boolean;
+  /**
+   * @name sortFields
+   * @type boolean
+   * @default false
+   * @description Allow you to sort the field definitions alphabetically.
+   *
+   * @example sort fields enabled
+   * ```yml
+   *   config:
+   *     typesPrefix: I
+   *     sortFields: true
+   * ```
+   */
+  sortFields?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -134,6 +149,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
+      sortFields: getConfigValue(rawConfig.sortFields, false),
       typesPrefix: rawConfig.typesPrefix || '',
       externalFragments: rawConfig.externalFragments || [],
       addTypename: !rawConfig.skipTypename,

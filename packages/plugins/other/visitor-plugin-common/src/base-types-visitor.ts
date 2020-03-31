@@ -47,7 +47,6 @@ export interface ParsedTypesConfig extends ParsedConfig {
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   enumPrefix: boolean;
-  sortFields: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -126,20 +125,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
-  /**
-   * @name sortFields
-   * @type boolean
-   * @default false
-   * @description Allow you to sort the field definitions alphabetically.
-   *
-   * @example sort fields enabled
-   * ```yml
-   *   config:
-   *     typesPrefix: I
-   *     sortFields: true
-   * ```
-   */
-  sortFields?: boolean;
 }
 
 export class BaseTypesVisitor<

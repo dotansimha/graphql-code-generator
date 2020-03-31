@@ -56,6 +56,12 @@ generates:
       imutableTypes: true
     plugins:
       - typescript
+  ./dev-test/test-schema/typings.sortFields.ts:
+    schema: ./dev-test/test-schema/schema.json
+    config:
+      sortFields: true
+    plugins:
+      - typescript
   ./dev-test/test-schema/typings.enum.ts:
     schema: ./dev-test/test-schema/schema-object.js
     plugins:

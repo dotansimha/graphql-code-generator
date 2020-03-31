@@ -14,6 +14,7 @@ import {
   OMIT_TYPE,
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
+  sortNodeFields,
 } from './utils';
 import {
   NameNode,
@@ -40,7 +41,7 @@ import {
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
-import { ApolloFederation, getBaseType, sortNodeFields } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -878,14 +879,16 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${this.convertName(parentName, {
-            useTypesPrefix: true,
-          }) +
+        ? `${
+            this.convertName(parentName, {
+              useTypesPrefix: true,
+            }) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
             }) +
-            'Args'}`
+            'Args'
+          }`
         : null;
 
       if (argsType !== null) {

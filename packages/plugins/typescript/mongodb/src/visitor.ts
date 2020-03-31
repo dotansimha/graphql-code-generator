@@ -82,7 +82,6 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _resolveDirectiveValue<T>(valueNode: ValueNode): T | undefined | null {
-    const nodeFields = this.config.sortFields ? sortNodeFields(valueNode.fields) : valueNode.fields;
     switch (valueNode.kind) {
       case Kind.INT:
       case Kind.STRING:
@@ -95,7 +94,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.NULL:
         return null;
       case Kind.OBJECT:
-        return nodeFields.reduce((prev, f) => {
+        return (this.config.sortFields ? sortNodeFields(valueNode.fields) : valueNode.fields).reduce((prev, f) => {
           return {
             ...prev,
             [f.name.value]: this._resolveDirectiveValue<T>(f.value),
