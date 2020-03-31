@@ -1,4 +1,4 @@
-import { getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseTypeNode, indent, indentMultiline, sortNodeFields } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import {
@@ -14,7 +14,6 @@ import {
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { VisitorConfig } from './visitor-config';
-import { sortNodeFields } from '@graphql-codegen/visitor-plugin-common';
 
 export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {

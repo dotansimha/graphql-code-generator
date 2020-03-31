@@ -6,6 +6,7 @@ import {
   indent,
   buildScalars,
   getBaseTypeNode,
+  sortNodeFields,
 } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './config';
 import {
@@ -23,7 +24,6 @@ import {
   isEnumType,
 } from 'graphql';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
-import { sortNodeFields } from '@graphql-codegen/visitor-plugin-common';
 
 export interface JavaResolverParsedConfig extends ParsedConfig {
   package: string;
