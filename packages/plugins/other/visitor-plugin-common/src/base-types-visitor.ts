@@ -46,6 +46,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyOperationTypes: boolean;
   enumPrefix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
@@ -159,10 +160,27 @@ export interface RawTypesConfig extends RawConfig {
    *  plugins:
    *    - typescript
    *  config:
-   *    wrapFieldDefinitions: false
+   *    wrapFieldDefinitions: true
    * ```
    */
   wrapFieldDefinitions?: boolean;
+    /**
+   * @name onlyOperationTypes
+   * @type boolean
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
+   * @default false
+   *
+   * @example Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    onlyOperationTypes: true
+   * ```
+   */
+  onlyOperationTypes?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -179,6 +197,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
@@ -260,6 +279,7 @@ export class BaseTypesVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (this.config.onlyOperationTypes) return '';
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
@@ -283,6 +303,7 @@ export class BaseTypesVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
@@ -360,6 +381,7 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -381,6 +403,7 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
