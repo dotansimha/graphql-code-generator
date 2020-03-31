@@ -9,6 +9,7 @@ import {
   getBaseTypeNode,
   buildScalars,
   ExternalParsedMapper,
+  sortNodeFields,
 } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './config';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
@@ -98,6 +99,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     this._includeTypeResolverImport = true;
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
 
     return new JavaDeclarationBlock()
       .access('public')
@@ -105,16 +107,17 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .withName(this.convertName(node.name))
       .extends(['TypeResolver'])
       .withComment(node.description)
-      .withBlock(node.fields.map(f => indent((f as any)(true))).join('\n')).string;
+      .withBlock(nodeFields.map(f => indent((f as any)(true))).join('\n')).string;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     return new JavaDeclarationBlock()
       .access('public')
       .asKind('interface')
       .withName(this.convertName(node.name))
       .withComment(node.description)
-      .withBlock(node.fields.map(f => indent((f as any)(false))).join('\n')).string;
+      .withBlock(nodeFields.map(f => indent((f as any)(false))).join('\n')).string;
   }
 
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {

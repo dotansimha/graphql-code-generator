@@ -7,6 +7,7 @@ import {
   BaseVisitor,
   buildScalars,
   DEFAULT_SCALARS,
+  sortNodeFields,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 import autoBind from 'auto-bind';
@@ -81,6 +82,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _resolveDirectiveValue<T>(valueNode: ValueNode): T | undefined | null {
+    const nodeFields = this.config.sortFields ? sortNodeFields(valueNode.fields) : valueNode.fields;
     switch (valueNode.kind) {
       case Kind.INT:
       case Kind.STRING:
@@ -93,7 +95,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.NULL:
         return null;
       case Kind.OBJECT:
-        return valueNode.fields.reduce((prev, f) => {
+        return nodeFields.reduce((prev, f) => {
           return {
             ...prev,
             [f.name.value]: this._resolveDirectiveValue<T>(f.value),
@@ -262,7 +264,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
 
     const discriminatorField = this._getDirectiveArgValue<string>(abstractEntityDirective, 'discriminatorField');
     const additionalFields = this._getDirectiveArgValue<AdditionalField[]>(abstractEntityDirective, 'additionalFields');
-    const fields = this._buildFieldsTree(node.fields);
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fields = this._buildFieldsTree(nodeFields);
     fields.addField(discriminatorField, this.scalars.String);
     this._addAdditionalFields(fields, additionalFields);
 
@@ -322,7 +325,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     }
 
     const implementingInterfaces = this._buildInterfaces(node.interfaces);
-    const fields = this._buildFieldsTree(node.fields);
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fields = this._buildFieldsTree(nodeFields);
     const additionalFields = this._getDirectiveArgValue<AdditionalField[]>(entityDirective, 'additionalFields');
     this._addAdditionalFields(fields, additionalFields);
 

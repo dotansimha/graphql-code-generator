@@ -37,6 +37,7 @@ import {
   indent,
   wrapWithSingleQuotes,
   getConfigValue,
+  sortNodeFields,
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
@@ -46,6 +47,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   enumPrefix: boolean;
+  sortFields: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -124,6 +126,20 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @name sortFields
+   * @type boolean
+   * @default false
+   * @description Allow you to sort the field definitions alphabetically.
+   *
+   * @example sort fields enabled
+   * ```yml
+   *   config:
+   *     typesPrefix: I
+   *     sortFields: true
+   * ```
+   */
+  sortFields?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -198,12 +214,13 @@ export class BaseTypesVisitor<
   }
 
   getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
-      .withBlock(node.fields.join('\n'));
+      .withBlock(nodeFields.join('\n'));
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
@@ -258,6 +275,7 @@ export class BaseTypesVisitor<
   ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     const allFields = [
       ...(this.config.addTypename
         ? [
@@ -268,7 +286,7 @@ export class BaseTypesVisitor<
             ),
           ]
         : []),
-      ...node.fields,
+      ...nodeFields,
     ] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
@@ -324,7 +342,8 @@ export class BaseTypesVisitor<
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    return declarationBlock.withBlock(node.fields.join('\n'));
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    return declarationBlock.withBlock(nodeFields.join('\n'));
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
@@ -455,7 +474,8 @@ export class BaseTypesVisitor<
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
-    const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fieldsWithArguments = nodeFields.filter(field => field.arguments && field.arguments.length > 0) || [];
     return fieldsWithArguments
       .map(field => {
         const name =

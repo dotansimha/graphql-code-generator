@@ -14,6 +14,7 @@ import {
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { VisitorConfig } from './visitor-config';
+import { sortNodeFields } from '@graphql-codegen/visitor-plugin-common';
 
 export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
@@ -226,6 +227,7 @@ ${nonNullFields.join('\n')}
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     const className = node.name.value;
     this._imports.add(Imports.InputType);
     this._imports.add(Imports.Generated);
@@ -238,11 +240,11 @@ ${nonNullFields.join('\n')}
       .withName(className)
       .implements(['InputType']);
 
-    this.addInputMembers(cls, node.fields);
-    this.addInputCtor(cls, className, node.fields);
+    this.addInputMembers(cls, nodeFields);
+    this.addInputCtor(cls, className, nodeFields);
     cls.addClassMethod('builder', 'Builder', 'return new Builder();', [], [], 'public', { static: true });
-    const marshallerOverride = this.buildMarshallerOverride(node.fields);
-    const builderClass = this.buildBuilderNestedClass(className, node.fields);
+    const marshallerOverride = this.buildMarshallerOverride(nodeFields);
+    const builderClass = this.buildBuilderNestedClass(className, nodeFields);
 
     const classBlock = [marshallerOverride, '', builderClass].join('\n');
 

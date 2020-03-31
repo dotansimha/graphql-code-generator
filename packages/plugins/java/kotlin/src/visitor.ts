@@ -7,6 +7,7 @@ import {
   ParsedConfig,
   transformComment,
   getBaseTypeNode,
+  sortNodeFields,
 } from '@graphql-codegen/visitor-plugin-common';
 import { KotlinResolversPluginRawConfig } from './config';
 import {
@@ -208,13 +209,15 @@ ${classMembers}
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     const name = `${this.convertName(node)}Input`;
 
-    return this.buildInputTransfomer(name, node.fields);
+    return this.buildInputTransfomer(name, nodeFields);
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const fieldsArguments = node.fields.map(f => (f as any)(node.name.value)).filter(r => r);
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fieldsArguments = nodeFields.map(f => (f as any)(node.name.value)).filter(r => r);
 
     return fieldsArguments.join('\n');
   }

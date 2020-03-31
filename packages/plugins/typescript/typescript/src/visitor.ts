@@ -50,6 +50,7 @@ export class TsVisitor<
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      sortFields: getConfigValue(pluginConfig.sortFields, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),

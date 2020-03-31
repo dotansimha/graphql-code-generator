@@ -1,27 +1,27 @@
 import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  GraphQLObjectType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType,
-  StringValueNode,
-  isEqualType,
-  SelectionSetNode,
   FieldNode,
-  SelectionNode,
   FragmentSpreadNode,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLOutputType,
+  GraphQLScalarType,
+  GraphQLSchema,
   InlineFragmentNode,
+  isAbstractType,
+  isEqualType,
+  isListType,
   isNonNullType,
   isObjectType,
-  isListType,
-  isAbstractType,
-  GraphQLOutputType,
+  isScalarType,
+  Kind,
+  NamedTypeNode,
+  NameNode,
+  SelectionNode,
+  SelectionSetNode,
+  StringValueNode,
+  TypeNode,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
 
@@ -416,4 +416,16 @@ export function wrapTypeWithModifiers(
   }
 
   return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
+}
+
+type WithNameField = { name: NameNode };
+
+function compareNodeFields(a: string | WithNameField, b: string | WithNameField): number {
+  const aValue = typeof a === 'string' ? a : a.name.value;
+  const bValue = typeof b === 'string' ? b : b.name.value;
+  return aValue.trim().localeCompare(bValue.trim());
+}
+
+export function sortNodeFields<T extends string | WithNameField>(fields: ReadonlyArray<T>): ReadonlyArray<T> {
+  return [...fields].sort(compareNodeFields);
 }

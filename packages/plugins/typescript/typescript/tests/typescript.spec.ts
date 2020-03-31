@@ -79,7 +79,7 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        /** 
+        /**
          * MyInput
          * multiline
          */
@@ -331,7 +331,7 @@ describe('TypeScript', () => {
       export type IUpdateFilterOptionInput = {
         newOption: FilterOption;
       };`);
-      expect(output).toBeSimilarStringTo(`   
+      expect(output).toBeSimilarStringTo(`
       export type IQueryExampleQueryArgs = {
         i?: Maybe<IUpdateFilterOptionInput>;
         t?: Maybe<FilterOption>;
@@ -505,7 +505,7 @@ describe('TypeScript', () => {
       type PullRequest {
         reviewThreads(first: Int!): Int
       }
-      
+
       type PullRequestReview {
           threads(first: Int!, last: Int!): Int
       }`);
@@ -1191,6 +1191,31 @@ describe('TypeScript', () => {
         }
       `);
       validateTs(result);
+    });
+
+    describe('sortFields: true', () => {
+      it('Should build type correctly, in alphabetical order', async () => {
+        const schema = buildSchema(`
+        type MyType {
+          foo: String
+          bar: String!
+        }`);
+        const result = (await plugin(
+          schema,
+          [],
+          { sortFields: true },
+          { outputFile: '' }
+        )) as Types.ComplexPluginOutput;
+
+        expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          bar: Scalars['String'];
+          foo?: Maybe<Scalars['String']>;
+        };
+      `);
+        validateTs(result);
+      });
     });
   });
 

@@ -23,6 +23,7 @@ import {
   isEnumType,
 } from 'graphql';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
+import { sortNodeFields } from '@graphql-codegen/visitor-plugin-common';
 
 export interface JavaResolverParsedConfig extends ParsedConfig {
   package: string;
@@ -107,13 +108,13 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';';
     const enumCtor = indentMultiline(`
 public final String label;
- 
+
 ${enumName}(String label) {
   this.label = label;
 }`);
     const valueOf = indentMultiline(`
 private static final Map<String, ${enumName}> BY_LABEL = new HashMap<>();
-  
+
 static {
     for (${enumName} e : values()) {
         BY_LABEL.put(e.label, e);
@@ -262,13 +263,15 @@ ${getters}
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
     const name = `${this.convertName(node)}Input`;
 
-    return this.buildInputTransfomer(name, node.fields);
+    return this.buildInputTransfomer(name, nodeFields);
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const fieldsArguments = node.fields.map(f => (f as any)(node.name.value)).filter(r => r);
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fieldsArguments = nodeFields.map(f => (f as any)(node.name.value)).filter(r => r);
 
     return fieldsArguments.join('\n');
   }

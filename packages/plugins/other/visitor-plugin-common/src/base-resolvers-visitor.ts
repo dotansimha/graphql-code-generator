@@ -40,7 +40,7 @@ import {
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
-import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, getBaseType, sortNodeFields } from '@graphql-codegen/plugin-helpers';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -878,16 +878,14 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${
-            this.convertName(parentName, {
-              useTypesPrefix: true,
-            }) +
+        ? `${this.convertName(parentName, {
+            useTypesPrefix: true,
+          }) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
             }) +
-            'Args'
-          }`
+            'Args'}`
         : null;
 
       if (argsType !== null) {
@@ -963,7 +961,8 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       this.schema.getSubscriptionType()?.name,
     ].includes(typeName);
 
-    const fieldsContent = node.fields.map((f: any) => f(node.name));
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
+    const fieldsContent = nodeFields.map((f: any) => f(node.name));
 
     if (!isRootType) {
       fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn<ParentType>,`));
@@ -1103,6 +1102,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const parentType = this.getParentTypeToUse((node.name as any) as string);
 
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+    const nodeFields = this.config.sortFields ? sortNodeFields(node.fields) : node.fields;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1115,7 +1115,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`
           ),
-          ...(node.fields || []).map((f: any) => f(node.name)),
+          ...(nodeFields || []).map((f: any) => f(node.name)),
         ].join('\n')
       ).string;
   }
