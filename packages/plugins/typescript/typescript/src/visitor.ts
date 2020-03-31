@@ -30,6 +30,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   constEnums: boolean;
   enumsAsTypes: boolean;
   enumsAsConst: boolean;
+  onlyOperationTypes: boolean;
   fieldWrapperValue: string;
   immutableTypes: boolean;
   maybeValue: string;
@@ -50,6 +51,7 @@ export class TsVisitor<
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),

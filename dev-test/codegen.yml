@@ -85,6 +85,15 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
   ./dev-test/githunt/types.flatten.preResolveTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -234,12 +243,31 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
   ./dev-test/test-schema/types.preResolveTypes.ts:
     schema: ./dev-test/test-schema/schema.graphql
     documents:
       - 'query test { testArr1 testArr2 testArr3 }'
     config:
       preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/test-schema/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/test-schema/schema.graphql
+    documents:
+      - 'query test { testArr1 testArr2 testArr3 }'
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
     plugins:
       - typescript
       - typescript-operations
