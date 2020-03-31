@@ -33,7 +33,7 @@
     "@graphql-codegen/typescript-vue-apollo": "1.13.1",
     "@graphql-codegen/website": "1.13.1",
     "@material-ui/core": "4.9.8",
-    "@types/codemirror": "0.0.88",
+    "@types/codemirror": "0.0.89",
     "@types/react": "16.9.31",
     "@types/react-dom": "16.9.5",
     "codemirror": "5.52.2",
