@@ -1,4 +1,6 @@
 import gql from 'graphql-tag';
+import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.stencil-component';
+import { RepoInfoFragmentDoc } from './repo-info.fragment.stencil-component';
 
 declare global {
   export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'commentCount'> & {

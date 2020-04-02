@@ -1,4 +1,5 @@
 import { isUsingTypes, Types } from '@graphql-codegen/plugin-helpers';
+import { generateImportStatement, ImportSource, resolveImportSource } from '@graphql-codegen/visitor-plugin-common';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
 import buildFragmentResolver from './fragment-resolver';
 
@@ -6,44 +7,16 @@ export type FragmentRegistry = {
   [fragmentName: string]: { location: string; importNames: string[]; onType: string; node: FragmentDefinitionNode };
 };
 
-export type ImportSourceDefinition = {
-  /**
-   * Source path, relative to the `baseOutputDir`
-   */
-  path: string;
-  /**
-   * Namespace to import source as
-   */
-  namespace?: string;
-  /**
-   * Entity names to import
-   */
-  names?: string[];
-};
-
-function resolveImportSource(source: string | ImportSourceDefinition): ImportSourceDefinition {
-  return typeof source === 'string' ? { path: source } : source;
-}
-
-type GenerateImportStatement = (paths: {
-  relativeOutputPath: string;
-  importSource: ImportSourceDefinition;
-  baseOutputDir: string;
-}) => string;
-
 export type DocumentImportResolverOptions = {
+  baseDir: string;
   /**
    * Generates a target file path from the source `document.location`
    */
   generateFilePath: (location: string) => string;
   /**
-   *
-   */
-  generateImportStatement: GenerateImportStatement;
-  /**
    *  Schema base types source
    */
-  schemaTypesSource: string | ImportSourceDefinition;
+  schemaTypesSource: string | ImportSource;
 };
 
 /**
@@ -52,21 +25,19 @@ export type DocumentImportResolverOptions = {
  * Resolves user provided imports and fragment imports using the `DocumentImportResolverOptions`.
  * Does not define specific plugins, but rather returns a string[] of `importStatements` for the calling plugin to make use of
  */
-export default function resolveDocumentImportStatements<T>(
+export function resolveDocumentImports<T>(
   presetOptions: Types.PresetFnArgs<T>,
   schemaObject: GraphQLSchema,
   importResolverOptions: DocumentImportResolverOptions
 ) {
   const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject);
   const { baseOutputDir, documents } = presetOptions;
-  const { generateFilePath, generateImportStatement, schemaTypesSource } = importResolverOptions;
+  const { generateFilePath, schemaTypesSource, baseDir } = importResolverOptions;
 
   return documents.map(documentFile => {
     const generatedFilePath = generateFilePath(documentFile.location);
-    const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(
-      generatedFilePath,
-      documentFile.document
-    );
+    const importStatements = [];
+    const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
 
     if (
       isUsingTypes(
@@ -76,9 +47,10 @@ export default function resolveDocumentImportStatements<T>(
       )
     ) {
       const schemaTypesImportStatement = generateImportStatement({
+        baseDir,
         importSource: resolveImportSource(schemaTypesSource),
         baseOutputDir,
-        relativeOutputPath: generatedFilePath,
+        outputPath: generatedFilePath,
       });
       importStatements.unshift(schemaTypesImportStatement);
     }
@@ -87,6 +59,7 @@ export default function resolveDocumentImportStatements<T>(
       filename: generatedFilePath,
       documents: [documentFile],
       importStatements,
+      fragmentImports,
       externalFragments,
     };
   });

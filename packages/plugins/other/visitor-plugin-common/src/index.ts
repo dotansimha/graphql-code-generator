@@ -6,6 +6,7 @@ export * from './scalars';
 export * from './enum-values';
 export * from './declaration-kinds';
 export * from './avoid-optionals';
+export * from './imports';
 
 export * from './base-visitor';
 export * from './base-types-visitor';
