@@ -26,10 +26,10 @@ jobs:
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
-        if: matrix.os != 'macos-latest'
+        if: matrix.os != 'ubuntu-latest'
       - name: Cache Yarn
         uses: actions/cache@v1
-        if: matrix.os != 'macos-latest'
+        if: matrix.os != 'ubuntu-latest'
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
