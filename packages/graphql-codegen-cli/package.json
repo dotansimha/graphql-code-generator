@@ -57,7 +57,7 @@
     "@types/mkdirp": "1.0.0",
     "@types/valid-url": "1.0.3",
     "camel-case": "4.1.1",
-    "chalk": "3.0.0",
+    "chalk": "4.0.0",
     "chokidar": "3.3.1",
     "commander": "5.0.0",
     "common-tags": "1.8.0",
