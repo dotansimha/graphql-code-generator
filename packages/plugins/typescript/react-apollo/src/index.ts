@@ -5,7 +5,7 @@ import { ReactApolloVisitor } from './visitor';
 import { extname } from 'path';
 import { ReactApolloRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
+export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: ReactApolloRawPluginConfig

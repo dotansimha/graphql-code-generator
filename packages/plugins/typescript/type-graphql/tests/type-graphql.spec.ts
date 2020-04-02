@@ -8,7 +8,7 @@ describe('type-graphql', () => {
     const schema = buildSchema(/* GraphQL */ `
       scalar A
     `);
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.prepend).toContainEqual(`import * as TypeGraphQL from 'type-graphql';`);
   });
@@ -23,7 +23,7 @@ describe('type-graphql', () => {
         B
       }
     `);
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       /** custom enum */
@@ -59,7 +59,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType()
@@ -108,7 +108,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType({ implements: ITest })
@@ -154,7 +154,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InputType()
@@ -231,7 +231,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ArgsType()

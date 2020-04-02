@@ -136,7 +136,7 @@ export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.Com
   return typeof obj === 'object' && obj.hasOwnProperty('content');
 }
 
-export type PluginFunction<T = any, TReturn extends Types.PluginOutput = Types.PluginOutput> = (
+export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.PluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
@@ -145,7 +145,7 @@ export type PluginFunction<T = any, TReturn extends Types.PluginOutput = Types.P
     allPlugins?: Types.ConfiguredPlugin[];
     [key: string]: any;
   }
-) => Types.Promisable<TReturn>;
+) => Types.Promisable<TOutput>;
 
 export type PluginValidateFn<T = any> = (
   schema: GraphQLSchema,

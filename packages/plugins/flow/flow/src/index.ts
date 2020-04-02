@@ -6,7 +6,7 @@ import { FlowPluginConfig } from './config';
 export * from './visitor';
 export * from './flow-variables-to-object';
 
-export const plugin: PluginFunction<FlowPluginConfig> = (
+export const plugin: PluginFunction<FlowPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: FlowPluginConfig

@@ -4,7 +4,7 @@ import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
-export const plugin: PluginFunction<RawResolversConfig> = (
+export const plugin: PluginFunction<RawResolversConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: RawResolversConfig

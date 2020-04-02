@@ -502,7 +502,7 @@ describe('React Apollo', () => {
           `),
         },
       ];
-      const result = (await plugin(schema, docs, {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, docs, {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export const MyFragmentFragmentDoc = gql\`

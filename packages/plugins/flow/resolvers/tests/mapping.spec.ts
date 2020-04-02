@@ -7,7 +7,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('ResolversTypes', () => {
   it('Should build ResolversTypes object when there are no mappers', async () => {
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {

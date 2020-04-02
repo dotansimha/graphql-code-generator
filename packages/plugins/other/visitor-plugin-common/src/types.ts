@@ -18,7 +18,7 @@ export type ParsedEnumValuesMap = {
   };
 };
 export type ConvertNameFn<T = {}> = ConvertFn<T>;
-export type GetFragmentSuffixFn = (node: FragmentDefinitionNode | string, suffix?: string) => string;
+export type GetFragmentSuffixFn = (node: FragmentDefinitionNode | string) => string;
 
 export interface ConvertOptions {
   prefix?: string;

@@ -35,13 +35,13 @@ describe('java-apollo-android', () => {
     ];
 
     it('Should produce valid Java code', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
       await validateJava(output);
     });
 
     it('Should create a basic input type signature correctly', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(result.prepend).toContain('import com.apollographql.apollo.api.InputType;');
@@ -52,7 +52,7 @@ describe('java-apollo-android', () => {
     });
 
     it('Should create private fields correctly', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(result.prepend).toContain('import com.apollographql.apollo.api.Input;');
@@ -70,7 +70,7 @@ describe('java-apollo-android', () => {
     });
 
     it('Should create ctor correctly', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(output)
@@ -85,7 +85,7 @@ describe('java-apollo-android', () => {
     });
 
     it('Should create getters correctly', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(result.prepend).toContain('import javax.annotation.Nullable;');
@@ -98,14 +98,14 @@ describe('java-apollo-android', () => {
     });
 
     it('Should have Builder static getter', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(output).toBeSimilarStringTo(`public static Builder builder() { return new Builder(); }`);
     });
 
     it('Should have Builder nested class ', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       expect(output).toBeSimilarStringTo(`public static final class Builder {`);
@@ -145,7 +145,7 @@ describe('java-apollo-android', () => {
     });
 
     it('Should have marshaller built for the fields', async () => {
-      const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, files, config);
       const output = mergeOutputs([result]);
 
       // Simple, non-null
