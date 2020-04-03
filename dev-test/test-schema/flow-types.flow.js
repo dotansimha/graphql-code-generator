@@ -90,20 +90,20 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>,
-  User: ResolverTypeWrapper<User>,
-  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
   String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
   Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
+  Query: ResolverTypeWrapper<{}>,
+  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  User: ResolverTypeWrapper<User>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {},
-  User: User,
-  Int: $ElementType<Scalars, 'Int'>,
   String: $ElementType<Scalars, 'String'>,
   Boolean: $ElementType<Scalars, 'Boolean'>,
+  Query: {},
+  Int: $ElementType<Scalars, 'Int'>,
+  User: User,
 };
 
 export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
