@@ -3,7 +3,7 @@
   "scripts": {
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
-    "build": "tsc --project tsconfig.json && node ./scripts/bundle.js",
+    "build": "tsc --project tsconfig.json && bob build",
     "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
@@ -16,7 +16,11 @@
     "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
     "ci:release:canary": "lerna publish --contents dist --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config dotenv_config_path=dev-test/.env --config ./dev-test/codegen.yml",
-    "build-website": "lerna run build"
+    "build-website": "lerna run build",
+    "affected:test": "bob affected test",
+    "affected:lint": "bob affected lint",
+    "affected:build": "bob affected build",
+    "affected:examples": "bob affected examples"
   },
   "husky": {
     "hooks": {
@@ -41,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "bob-the-bundler": "1.0.0-rc.3",
     "@apollo/react-common": "3.1.4",
     "@apollo/react-components": "3.1.4",
     "@apollo/react-hoc": "3.1.4",

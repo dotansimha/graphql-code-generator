@@ -23,11 +23,18 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
+
+      - name: Bob, check the repo
+        id: bob
+        uses: 'kamilkisiela/bob@master'
+
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: steps.bob.outputs.dirty == 'true'
       - name: Cache Yarn
         uses: actions/cache@v1
+        if: steps.bob.outputs.dirty == 'true'
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
@@ -35,6 +42,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Cache Jest
         uses: actions/cache@v1
+        if: steps.bob.outputs.dirty == 'true'
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ hashFiles('yarn.lock') }}
@@ -42,17 +50,22 @@ jobs:
             ${{ runner.os }}-jest-
       - name: Install Dependencies using Yarn
         run: yarn install
+        if: steps.bob.outputs.dirty == 'true'
       - name: Lint
-        run: yarn lint
+        run: yarn affected:lint
+        if: steps.bob.outputs.dirty == 'true'
       - name: Build
-        run: yarn build
+        run: yarn affected:build
+        if: steps.bob.outputs.dirty == 'true'
       - name: Test
-        run: yarn test --logHeapUsage
+        run: yarn affected:test
+        if: steps.bob.outputs.dirty == 'true'
         env:
           CI: true
       - name: Test dev-tests
+        if: steps.bob.outputs.dirty == 'true'
         run: |
-          yarn run generate:examples
+          yarn run affected:examples
           git diff --exit-code -- dev-test/
 
   publish-canary:
