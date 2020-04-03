@@ -13,7 +13,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "../../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",

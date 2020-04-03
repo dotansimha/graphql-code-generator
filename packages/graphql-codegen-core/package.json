@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../jest.config.js",
-    "prepack": "../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "keywords": [
     "gql",
