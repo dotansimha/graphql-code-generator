@@ -78,7 +78,7 @@
     "log-update": "4.0.0",
     "lower-case": "2.0.1",
     "minimatch": "3.0.4",
-    "mkdirp": "1.0.3",
+    "mkdirp": "1.0.4",
     "pascal-case": "3.1.1",
     "prettier": "2.0.2",
     "request": "2.88.2",
