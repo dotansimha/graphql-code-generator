@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         node_version: [10, 12, 13]
     steps:
       - name: Checkout Master
@@ -26,10 +26,8 @@ jobs:
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
-        if: matrix.os != 'macos-latest'
       - name: Cache Yarn
         uses: actions/cache@v1
-        if: matrix.os != 'macos-latest'
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
