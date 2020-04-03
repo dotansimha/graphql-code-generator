@@ -83,7 +83,7 @@ export const plugin: PluginFunction = async (
   const apolloClientVersion = parseInt(config.apolloClientVersion as any);
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
 
-  const introspection = await execute<IntrospectionResultData>({
+  const introspection = await execute({
     schema: cleanSchema,
     document: parse(`
       {

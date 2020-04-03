@@ -10,11 +10,6 @@ export type Scalars = {
   _FieldSet: any;
 };
 
-export type Book = {
-  __typename?: 'Book';
-  id: Scalars['ID'];
-};
-
 export type Query = {
   __typename?: 'Query';
   users?: Maybe<Array<Maybe<User>>>;
@@ -25,6 +20,11 @@ export type User = {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+};
+
+export type Book = {
+  __typename?: 'Book';
+  id: Scalars['ID'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -103,21 +103,21 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  String: ResolverTypeWrapper<Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Book: ResolverTypeWrapper<Book>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  String: Scalars['String'];
+  Boolean: Scalars['Boolean'];
   Query: {};
   User: User;
   ID: Scalars['ID'];
-  String: Scalars['String'];
-  Boolean: Scalars['Boolean'];
   Book: Book;
 };
 

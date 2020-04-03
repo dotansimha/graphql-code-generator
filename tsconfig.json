@@ -20,6 +20,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "paths": {
       "@graphql-codegen/cli": ["./packages/graphql-codegen-cli/src/index.ts"],
       "@graphql-codegen/core": ["./packages/graphql-codegen-core/src/index.ts"],

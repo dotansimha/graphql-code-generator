@@ -2497,7 +2497,7 @@ describe('TypeScript Operations Plugin', () => {
         Scalar = 'SCALAR',
         /** Indicates this type is an object. \`fields\` and \`interfaces\` are valid fields. */
         Object = 'OBJECT',
-        /** Indicates this type is an interface. \`fields\` and \`possibleTypes\` are valid fields. */
+        /** Indicates this type is an interface. \`fields\`, \`interfaces\`, and \`possibleTypes\` are valid fields. */
         Interface = 'INTERFACE',
         /** Indicates this type is a union. \`possibleTypes\` is a valid field. */
         Union = 'UNION',

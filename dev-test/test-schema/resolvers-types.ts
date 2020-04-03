@@ -11,14 +11,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   allUsers: Array<Maybe<User>>;
   userById?: Maybe<User>;
-  /**
-   * Generates a new answer for the
-   * guessing game
-   */
   answer: Array<Scalars['Int']>;
   testArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
   testArr2: Array<Maybe<Scalars['String']>>;
@@ -27,13 +30,6 @@ export type Query = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['Int'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  email: Scalars['String'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -106,20 +102,30 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  User: ResolverTypeWrapper<User>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Query: ResolverTypeWrapper<{}>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
-  User: User;
-  Int: Scalars['Int'];
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
+  User: User;
+  Int: Scalars['Int'];
+  Query: {};
+};
+
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
 
 export type QueryResolvers<
@@ -134,19 +140,9 @@ export type QueryResolvers<
   testArr3?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type UserResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
-> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-};
-
 export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
 };
 
 /**

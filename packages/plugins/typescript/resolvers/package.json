@@ -17,12 +17,12 @@
     "@graphql-codegen/plugin-helpers": "1.13.1",
     "@graphql-codegen/typescript": "1.13.1",
     "@graphql-codegen/visitor-plugin-common": "1.13.1",
-    "@graphql-toolkit/common": "0.9.10",
+    "@graphql-toolkit/common": "0.10.2",
     "auto-bind": "4.0.0",
     "tslib": "1.11.1"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
     "graphql-subscriptions": "1.1.0"
