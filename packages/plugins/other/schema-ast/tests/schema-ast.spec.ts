@@ -188,15 +188,15 @@ describe('Schema AST', () => {
           id: ID
           name: String
         }
+
+        type Jedi {
+          id: ID
+          side: String
+        }
         
         type Droid {
           id: ID
           model: String
-        }
-        
-        type Jedi {
-          id: ID
-          side: String
         }
         
         union People = Character | Jedi | Droid

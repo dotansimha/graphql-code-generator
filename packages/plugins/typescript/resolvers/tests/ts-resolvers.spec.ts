@@ -923,10 +923,10 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(content.content).toBeSimilarStringTo(`
       export type Resolvers<ContextType = any> = {
         Date?: GraphQLScalarType,
-        Node?: NodeResolvers,
-        Post?: PostResolvers<ContextType>,
-        PostOrUser?: PostOrUserResolvers,
         Query?: QueryResolvers<ContextType>,
+        Node?: NodeResolvers,
+        PostOrUser?: PostOrUserResolvers,
+        Post?: PostResolvers<ContextType>,
         User?: UserResolvers<ContextType>,
       };
     `);
@@ -1092,12 +1092,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: ResolverTypeWrapper<{}>,
-        Post: ResolverTypeWrapper<Post>,
         String: ResolverTypeWrapper<Scalars['String']>,
-        Mutation: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+        Subscription: ResolverTypeWrapper<{}>,
+        Query: ResolverTypeWrapper<{}>,
+        Mutation: ResolverTypeWrapper<{}>,
+        Post: ResolverTypeWrapper<Post>,
       };
     `);
   });
@@ -1125,12 +1125,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {},
-        Post: Post,
         String: Scalars['String'],
-        Mutation: {},
-        Subscription: {},
         Boolean: Scalars['Boolean'],
+        Subscription: {},
+        Query: {},
+        Mutation: {},
+        Post: Post,
       };
     `);
   });
@@ -1165,12 +1165,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: ResolverTypeWrapper<RootValueType>,
-        Post: ResolverTypeWrapper<Post>,
         String: ResolverTypeWrapper<Scalars['String']>,
-        Mutation: ResolverTypeWrapper<RootValueType>,
-        Subscription: ResolverTypeWrapper<RootValueType>,
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+        Subscription: ResolverTypeWrapper<RootValueType>,
+        Query: ResolverTypeWrapper<RootValueType>,
+        Mutation: ResolverTypeWrapper<RootValueType>,
+        Post: ResolverTypeWrapper<Post>,
       };
     `);
 
@@ -1213,12 +1213,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        MyQuery: ResolverTypeWrapper<MyRoot>,
-        Post: ResolverTypeWrapper<Post>,
         String: ResolverTypeWrapper<Scalars['String']>,
-        MyMutation: ResolverTypeWrapper<MyRoot>,
-        MySubscription: ResolverTypeWrapper<MyRoot>,
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+        MySubscription: ResolverTypeWrapper<MyRoot>,
+        MyQuery: ResolverTypeWrapper<MyRoot>,
+        MyMutation: ResolverTypeWrapper<MyRoot>,
+        Post: ResolverTypeWrapper<Post>,
       };
     `);
   });
@@ -1635,10 +1635,10 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       };`);
       expect(o).toBeSimilarStringTo(`
       export type IResolversParentTypes = {
-        Query: {},
-        Test: Test,
         String: Scalars['String'],
         Boolean: Scalars['Boolean'],
+        Query: {},
+        Test: Test,
       };`);
     });
 

@@ -34,7 +34,7 @@ expect.extend({
         pass: true,
       };
     } else {
-      const diffString = diff(stripIndent(expected), stripIndent(received), {
+      const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
         expand: this.expand,
       });
       const hasExpect = diffString && diffString.includes('- Expect');

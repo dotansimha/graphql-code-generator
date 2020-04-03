@@ -10,11 +10,6 @@ exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interf
 export type GetEntityBrandDataQuery = (
   { __typename?: 'Query' }
   & { node: (
-    { __typename: 'User' }
-    & Pick<User, 'id'>
-    & EntityBrandData_User_Fragment
-    & ElementMetadata_User_Fragment
-  ) | (
     { __typename: 'Company' }
     & Pick<Company, 'active' | 'id'>
     & EntityBrandData_Company_Fragment
@@ -29,15 +24,12 @@ export type GetEntityBrandDataQuery = (
     & Pick<Movie, 'id'>
     & EntityBrandData_Movie_Fragment
     & ElementMetadata_Movie_Fragment
+  ) | (
+    { __typename: 'User' }
+    & Pick<User, 'id'>
+    & EntityBrandData_User_Fragment
+    & ElementMetadata_User_Fragment
   ) }
-);
-
-type EntityBrandData_User_Fragment = (
-  { __typename?: 'User' }
-  & { brandData?: Maybe<(
-    { __typename?: 'EntityBrandData' }
-    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-  )> }
 );
 
 type EntityBrandData_Company_Fragment = (
@@ -64,19 +56,15 @@ type EntityBrandData_Movie_Fragment = (
   )> }
 );
 
-export type EntityBrandDataFragment = EntityBrandData_User_Fragment | EntityBrandData_Company_Fragment | EntityBrandData_Theater_Fragment | EntityBrandData_Movie_Fragment;
-
-type ElementMetadata_User_Fragment = (
+type EntityBrandData_User_Fragment = (
   { __typename?: 'User' }
-  & Pick<User, 'createdAt' | 'updatedAt'>
-  & { createdBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )>, updatedBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
+  & { brandData?: Maybe<(
+    { __typename?: 'EntityBrandData' }
+    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
   )> }
 );
+
+export type EntityBrandDataFragment = EntityBrandData_Company_Fragment | EntityBrandData_Theater_Fragment | EntityBrandData_Movie_Fragment | EntityBrandData_User_Fragment;
 
 type ElementMetadata_Company_Fragment = (
   { __typename?: 'Company' }
@@ -114,7 +102,19 @@ type ElementMetadata_Movie_Fragment = (
   )> }
 );
 
-export type ElementMetadataFragment = ElementMetadata_User_Fragment | ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment;
+type ElementMetadata_User_Fragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'createdAt' | 'updatedAt'>
+  & { createdBy?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )>, updatedBy?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+export type ElementMetadataFragment = ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment | ElementMetadata_User_Fragment;
 "
 `;
 
@@ -170,10 +170,20 @@ export type Scalars = {
   Float: number;
 };
 
+export type Venue = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type GpsPosition = {
    __typename?: 'GPSPosition';
   lat: Scalars['Float'];
   lng: Scalars['Float'];
+};
+
+export type VenueWithPosition = {
+  id: Scalars['String'];
+  gpsPosition: GpsPosition;
 };
 
 export type Hotel = VenueWithPosition & Venue & {
@@ -183,26 +193,16 @@ export type Hotel = VenueWithPosition & Venue & {
   name: Scalars['String'];
 };
 
-export type Query = {
-   __typename?: 'Query';
-  hotel: Hotel;
-  transport: Transport;
-};
-
 export type Transport = Venue & {
    __typename?: 'Transport';
   id: Scalars['String'];
   name: Scalars['String'];
 };
 
-export type Venue = {
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type VenueWithPosition = {
-  id: Scalars['String'];
-  gpsPosition: GpsPosition;
+export type Query = {
+   __typename?: 'Query';
+  hotel: Hotel;
+  transport: Transport;
 };
 type Venue_Hotel_Fragment = (
   { __typename?: 'Hotel' }
@@ -518,12 +518,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type AdditionalInfo = {
-   __typename?: 'AdditionalInfo';
-  message: Scalars['String'];
-  message2: Scalars['String'];
-};
-
 export type Error = {
   message: Scalars['String'];
 };
@@ -544,9 +538,10 @@ export type Error3 = Error & {
   info?: Maybe<AdditionalInfo>;
 };
 
-export type Query = {
-   __typename?: 'Query';
-  user: UserResult;
+export type AdditionalInfo = {
+   __typename?: 'AdditionalInfo';
+  message: Scalars['String'];
+  message2: Scalars['String'];
 };
 
 export type User = {
@@ -556,6 +551,11 @@ export type User = {
 };
 
 export type UserResult = User | Error2 | Error3;
+
+export type Query = {
+   __typename?: 'Query';
+  user: UserResult;
+};
 export type UserQueryQueryVariables = {};
 
 
@@ -609,12 +609,6 @@ export type Scalars = {
 
 
 
-export type AdditionalInfo = {
-   __typename?: 'AdditionalInfo';
-  message: Scalars['String'];
-  message2: Scalars['String'];
-};
-
 export type Error = {
   message: Scalars['String'];
 };
@@ -635,9 +629,10 @@ export type Error3 = Error & {
   info?: Maybe<AdditionalInfo>;
 };
 
-export type Query = {
-   __typename?: 'Query';
-  user: UserResult;
+export type AdditionalInfo = {
+   __typename?: 'AdditionalInfo';
+  message: Scalars['String'];
+  message2: Scalars['String'];
 };
 
 export type User = {
@@ -649,6 +644,11 @@ export type User = {
 };
 
 export type UserResult = User | Error2 | Error3;
+
+export type Query = {
+   __typename?: 'Query';
+  user: UserResult;
+};
 export type UserQueryQueryVariables = {};
 
 

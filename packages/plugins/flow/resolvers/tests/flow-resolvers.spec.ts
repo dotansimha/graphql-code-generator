@@ -35,12 +35,12 @@ describe('Flow Resolvers Plugin', () => {
     expect(result.content).toBeSimilarStringTo(`
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
-        Query: {},
-        MyType: MyType,
         String: $ElementType<Scalars, 'String'>,
-        MyOtherType: MyOtherType,
-        Subscription: {},
         Boolean: $ElementType<Scalars, 'Boolean'>,
+        MyType: MyType,
+        MyOtherType: MyOtherType,
+        Query: {},
+        Subscription: {},
         Node: $ElementType<ResolversParentTypes, 'SomeNode'>,
         ID: $ElementType<Scalars, 'ID'>,
         SomeNode: SomeNode,
