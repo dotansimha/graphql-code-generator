@@ -896,6 +896,7 @@ describe('Codegen Executor', () => {
       const isExpectedError = error.errors && error.errors.some(e => e.message.includes('Failed to load schema'));
 
       if (!isExpectedError) {
+        // eslint-disable-next-line no-console
         console.error(error);
         throw error;
       }
