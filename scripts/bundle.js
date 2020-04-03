@@ -115,6 +115,19 @@ async function build(packagePath) {
   await fs.remove(join(cwd, distDir));
   // move bob/<project-name> to <project>/dist
   await fs.move(bobProjectDir, join(cwd, distDir));
+
+  // move README.md and LICENSE
+  await copyToDist(cwd, ['README.md', 'LICENSE']);
+}
+
+function copyToDist(cwd, files) {
+  return Promise.all(
+    files.map(async file => {
+      if (await fs.exists(join(cwd, file))) {
+        await fs.copyFile(join(cwd, file), join(cwd, distDir, file));
+      }
+    })
+  );
 }
 
 async function main() {
