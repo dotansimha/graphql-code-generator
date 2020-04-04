@@ -26,20 +26,20 @@ jobs:
 
       - name: Bob, check the repo
         id: bob
-        uses: 'kamilkisiela/bob@feat/track-per-command'
+        uses: 'kamilkisiela/bob@master'
       - name: Bob, check Lint
         id: bob-lint
-        uses: 'kamilkisiela/bob@feat/track-per-command'
+        uses: 'kamilkisiela/bob@master'
         with:
           command: lint
       - name: Bob, check Test
         id: bob-test
-        uses: 'kamilkisiela/bob@feat/track-per-command'
+        uses: 'kamilkisiela/bob@master'
         with:
           command: test
       - name: Bob, check Build
         id: bob-build
-        uses: 'kamilkisiela/bob@feat/track-per-command'
+        uses: 'kamilkisiela/bob@master'
         with:
           command: build
 
