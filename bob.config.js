@@ -3,25 +3,30 @@ module.exports = {
   ignore: ['@graphql-codegen/website', '@graphql-codegen/live-demo'],
   track: [
     'bob.config.js',
-    'jest.config.js',
-    'jest-project.js',
     'package.json',
     'tsconfig.json',
-    '<project>/src/**',
-    '<project>/jest.config.js',
     '<project>/package.json',
     '<project>/tsconfig.json',
+    '<project>/src/**',
   ],
-  against: `origin/master`,
-  run: {
-    test(affected) {
-      return [`yarn`, ['test', ...affected.paths]];
+  base: `origin/master`,
+  commands: {
+    test: {
+      track: ['jest.config.js', 'jest-project.js', '<project>/jest.config.js', '<project>/tests/**'],
+      run(affected) {
+        return [`yarn`, ['test', ...affected.paths]];
+      },
     },
-    lint(affected) {
-      return [`yarn`, ['eslint', '--ext', '.ts', ...affected.paths.map(path => `${path}/**/*.ts`)]];
+    lint: {
+      track: ['.eslintrc.json', '<project>/tests/**'],
+      run(affected) {
+        return [`yarn`, ['eslint', '--ext', '.ts', ...affected.paths.map(path => `${path}/**/*.ts`)]];
+      },
     },
-    build() {
-      return [`yarn`, ['build']];
+    build: {
+      run() {
+        return [`yarn`, ['build']];
+      },
     },
     examples() {
       return [`yarn`, ['generate:examples']];

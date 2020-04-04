@@ -26,7 +26,22 @@ jobs:
 
       - name: Bob, check the repo
         id: bob
-        uses: 'kamilkisiela/bob@master'
+        uses: 'kamilkisiela/bob@feat/track-per-command'
+      - name: Bob, check Lint
+        id: bob-lint
+        uses: 'kamilkisiela/bob@feat/track-per-command'
+        with:
+          command: lint
+      - name: Bob, check Test
+        id: bob-test
+        uses: 'kamilkisiela/bob@feat/track-per-command'
+        with:
+          command: test
+      - name: Bob, check Build
+        id: bob-build
+        uses: 'kamilkisiela/bob@feat/track-per-command'
+        with:
+          command: build
 
       - name: Get yarn cache
         id: yarn-cache
@@ -53,17 +68,17 @@ jobs:
         if: steps.bob.outputs.dirty == 'true'
       - name: Lint
         run: yarn affected:lint
-        if: steps.bob.outputs.dirty == 'true'
+        if: steps.bob-lint.outputs.dirty == 'true'
       - name: Build
         run: yarn affected:build
-        if: steps.bob.outputs.dirty == 'true'
+        if: steps.bob-build.outputs.dirty == 'true'
       - name: Test
         run: yarn affected:test
-        if: steps.bob.outputs.dirty == 'true'
+        if: steps.bob-test.outputs.dirty == 'true'
         env:
           CI: true
       - name: Test dev-tests
-        if: steps.bob.outputs.dirty == 'true'
+        if: steps.bob-build.outputs.dirty == 'true'
         run: |
           yarn run affected:examples
           git diff --exit-code -- dev-test/

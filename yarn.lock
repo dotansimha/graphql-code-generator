@@ -5222,10 +5222,10 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
-bob-the-bundler@1.0.0-rc.4:
-  version "1.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.0.0-rc.4.tgz#277968ae4b5c8aa2353cc7ab24749074b3ac9465"
-  integrity sha512-JpCwIXp+HWjtctslpz9YLjfDMzRdUX5I7LItXz+37TNVZoeGf7ip8teRdWVy8rVKNBqOS/i3g2j6jVldS9RiNA==
+bob-the-bundler@1.0.0-rc.5:
+  version "1.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.0.0-rc.5.tgz#a717e272f50368c4fd437074795d53a6dbdb6bbc"
+  integrity sha512-i4poCnZGvgsFqvUaD+nUNRLN/I3GH1TIkMcbCA21lhfta74vmjEyb8Xs3B8P7Kz8ey4ihoiE86UIjPr1JMbg+w==
   dependencies:
     "@rollup/plugin-node-resolve" "7.1.1"
     consola "2.11.3"
