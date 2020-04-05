@@ -19,7 +19,7 @@ describe('Flow Resolvers Plugin', () => {
     `);
 
     const config: any = { noSchemaStitching: true };
-    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
 
     expect(result.prepend).toContain(
       `export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`
@@ -88,7 +88,7 @@ describe('Flow Resolvers Plugin', () => {
       skipTypename: true,
       addUnderscoreToArgsType: true,
     };
-    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
     const o = mergeOutputs([result]);
     expect(o).toContain(`$RequireFields<Mutation_RandomArgs, { byteLength: * }>>,`);
     expect(o).toContain(

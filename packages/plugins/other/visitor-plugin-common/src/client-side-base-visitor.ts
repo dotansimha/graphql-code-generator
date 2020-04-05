@@ -17,6 +17,7 @@ import { LoadedFragment } from './types';
 import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
 import { pascalCase } from 'pascal-case';
+import { generateFragmentImportStatement } from './imports';
 
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
@@ -129,6 +130,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
 
   // The following are internal, and used by presets
   importOperationTypesFrom?: string;
+  globalNamespace?: boolean;
 }
 
 export class ClientSideBaseVisitor<
@@ -340,7 +342,7 @@ export class ClientSideBaseVisitor<
     return path;
   }
 
-  public getImports(): string[] {
+  public getImports(options: { excludeFragments?: boolean } = {}): string[] {
     const imports = [...this._additionalImports];
 
     switch (this.config.documentMode) {
@@ -376,17 +378,17 @@ export class ClientSideBaseVisitor<
         break;
     }
 
-    if (
-      this.config.documentMode === DocumentMode.graphQLTag ||
-      this.config.documentMode === DocumentMode.documentNodeImportFragments
-    ) {
-      (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && !(f as any).level)
-        .forEach(externalFragment => {
-          const identifierName = this.getFragmentName(externalFragment.name);
-
-          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
-        });
+    if (!options.excludeFragments && !this.config.globalNamespace) {
+      const { documentMode, fragmentImports } = this.config;
+      if (
+        documentMode === DocumentMode.graphQLTag ||
+        documentMode === DocumentMode.string ||
+        documentMode === DocumentMode.documentNodeImportFragments
+      ) {
+        imports.push(
+          ...fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'document'))
+        );
+      }
     }
 
     return imports;

@@ -5,7 +5,7 @@ import { UrqlVisitor } from './visitor';
 import { extname } from 'path';
 import { UrqlRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<UrqlRawPluginConfig> = (
+export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: UrqlRawPluginConfig

@@ -8,7 +8,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
     it('Should generate IDirectiveResolvers by default', async () => {
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
       /**
        * @deprecated
@@ -20,7 +20,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
     it('Should not generate IDirectiveResolvers when prefix is overwritten', async () => {
       const config = { typesPrefix: 'PREFIX_' };
-      const result = (await plugin(schema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], config, { outputFile: '' });
       expect(result.content).not.toContain(`export type IDirectiveResolvers`);
       expect(result.content).not.toContain(`export type DirectiveResolvers`);
       expect(result.content).toContain(`export type PREFIX_DirectiveResolvers`);
@@ -28,7 +28,7 @@ describe('TypeScript Resolvers Plugin', () => {
     });
 
     it('Should generate IResolvers by default', async () => {
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
       /**
        * @deprecated
@@ -40,7 +40,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
     it('Should not generate IResolvers when prefix is overwritten', async () => {
       const config = { typesPrefix: 'PREFIX_' };
-      const result = (await plugin(schema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], config, { outputFile: '' });
       expect(result.content).not.toContain(`export type IResolvers`);
       expect(result.content).not.toContain(`export type Resolvers`);
       expect(result.content).toContain(`export type PREFIX_Resolvers`);
@@ -48,7 +48,7 @@ describe('TypeScript Resolvers Plugin', () => {
     });
 
     it('Should generate IResolvers by default with deprecated warning', async () => {
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
       /**
        * @deprecated
@@ -122,7 +122,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should use StitchingResolver by default', async () => {
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -187,7 +187,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
   it('Should not warn when noSchemaStitching is not defined', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation();
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(spy).not.toHaveBeenCalled();
 
@@ -234,7 +234,7 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
 
     const config: any = { noSchemaStitching: true };
-    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
     const mergedOutputs = mergeOutputs([
       result,
       {
@@ -282,7 +282,7 @@ describe('TypeScript Resolvers Plugin', () => {
       },
       typesPrefix: 'GQL_',
     };
-    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
     const tsContent = (await tsPlugin(testSchema, [], config, {
       outputFile: 'graphql.ts',
     })) as Types.ComplexPluginOutput;
@@ -318,7 +318,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should generate basic type resolvers', async () => {
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
@@ -721,7 +721,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
   it('Should generate the correct imports when schema has scalars', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
-    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.prepend).toContain(
       `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
@@ -731,7 +731,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
   it('Should generate the correct imports when schema has no scalars', async () => {
     const testSchema = buildSchema(`type MyType { f: String }`);
-    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.prepend).not.toContain(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
     await validate(result, {}, testSchema);
@@ -817,7 +817,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   context: TContext,
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;`;
-      const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
       expect(result.content).toContain(defaultResolverFn);
       await validate(result, {}, testSchema);
@@ -842,7 +842,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     const tsContent = (await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
-    const content = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(content.content).toBeSimilarStringTo(`CCCUnion: ResolversTypes['CCCFoo'] | ResolversTypes['CCCBar']`); // In ResolversTypes
     expect(content.content).toBeSimilarStringTo(`
@@ -857,7 +857,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   it('Should generate the correct resolver args type names when typesPrefix is specified', async () => {
     const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };
-    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(
       `f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, RequireFields<TMyTypeFArgs, never>>,`
@@ -868,7 +868,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   // dotansimha/graphql-code-generator#3322
   it('should make list of all-optional arguments include undefined types', async () => {
     const testSchema = buildSchema(`type MyType { f(a: String, b: Int): String }`);
-    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(
       `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeFArgs, never>>,`
@@ -879,7 +879,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   // dotansimha/graphql-code-generator#3322
   it('should include generic wrapper type only when necessary', async () => {
     const testSchema = buildSchema(`type MyType { f: String }`);
-    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(
       `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,`
@@ -1088,7 +1088,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         comment: String
       }
     `);
-    const content = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
@@ -1121,7 +1121,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         comment: String
       }
     `);
-    const content = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
@@ -1301,7 +1301,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       }
     `);
 
-    const result = (await plugin(schemaWithNoImplementors, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schemaWithNoImplementors, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
@@ -1624,7 +1624,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         namingConvention: 'keep',
         constEnums: true,
       };
-      const output = (await plugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+      const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
       const o = await validate(output, config, testSchema);
 
       expect(o).toBeSimilarStringTo(`
@@ -1722,7 +1722,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       const tsContent = (await tsPlugin(testSchema, [], config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
-      const output = (await plugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+      const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
 
       expect(output.prepend.length).toBe(2);
       expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);

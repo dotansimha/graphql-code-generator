@@ -1,10 +1,9 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import addPlugin from '@graphql-codegen/add';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder, resolveRelativeImport } from './utils';
-
-import resolveDocumentImports, { DocumentImportResolverOptions } from './resolve-document-imports';
+import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
+import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
@@ -135,37 +134,19 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
-    function resolveImportPath(relativeOutputPath: string, sourcePath: string) {
-      const shouldAbsolute = !sourcePath.startsWith('~');
-      if (shouldAbsolute) {
-        const absGeneratedFilePath = resolve(baseDir, relativeOutputPath);
-        const absImportFilePath = resolve(baseDir, sourcePath);
-        return resolveRelativeImport(absGeneratedFilePath, absImportFilePath);
-      } else {
-        return sourcePath.replace(`~`, '');
-      }
-    }
-
     const sources = resolveDocumentImports(options, schemaObject, {
+      baseDir,
       generateFilePath(location: string) {
         const newFilePath = defineFilepathSubfolder(location, folder);
         return appendExtensionToFilePath(newFilePath, extension);
       },
-      generateImportStatement({ relativeOutputPath, importSource }) {
-        const importPath = resolveImportPath(relativeOutputPath, importSource.path);
-        const importNames =
-          importSource.names && importSource.names.length ? `{ ${importSource.names.join(', ')} }` : '*';
-        const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-        return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
-      },
-
       schemaTypesSource: {
         path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
         namespace: importTypesNamespace,
       },
     });
 
-    return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, ...source }) => {
+    return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
       const plugins = [
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
         ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({ add: importStatement }))),
@@ -178,6 +159,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         exportFragmentSpreadSubTypes: true,
         namespacedImportName: importTypesNamespace,
         externalFragments,
+        fragmentImports,
       };
 
       return {

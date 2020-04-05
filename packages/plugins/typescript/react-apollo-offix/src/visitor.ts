@@ -39,7 +39,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
   }
 
   public getImports(): string[] {
-    const baseImports = super.getImports();
+    const baseImports = super.getImports({ excludeFragments: true });
     const hasOperations = this._collectedOperations.length > 0;
 
     if (!hasOperations) {

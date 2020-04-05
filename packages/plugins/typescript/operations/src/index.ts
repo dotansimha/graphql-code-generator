@@ -6,17 +6,17 @@ import { TypeScriptDocumentsPluginConfig } from './config';
 
 export { TypeScriptDocumentsPluginConfig } from './config';
 
-export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
-  const allAst = concatAST(documents.map((v) => v.document));
+  const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter((d) => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      (fragmentDef) => ({
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
         node: fragmentDef,
         name: fragmentDef.name.value,
         onType: fragmentDef.typeCondition.name.value,
@@ -26,21 +26,26 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+
   const visitorResult = visit(allAst, {
-    leave: new TypeScriptDocumentsVisitor(schema, config, allFragments),
+    leave: visitor,
   });
 
-  const result = visitorResult.definitions.join('\n');
+  let content = visitorResult.definitions.join('\n');
 
   if (config.globalNamespace) {
-    return `
+    content = `
     declare global { 
-      ${result} 
+      ${content} 
     }
           `;
-  } else {
-    return result;
   }
+
+  return {
+    prepend: visitor.getImports(),
+    content,
+  };
 };
 
 export { TypeScriptDocumentsVisitor };

@@ -1,7 +1,8 @@
 import * as Types from '../types.d';
 
-import { HeroDetailsFragmentDoc, HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
+import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
 import gql from 'graphql-tag';
+import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactComponents from '@apollo/react-components';
