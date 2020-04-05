@@ -37,22 +37,26 @@ export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => (
   <ApolloReactComponents.Query<TwoHeroesQuery, TwoHeroesQueryVariables> query={TwoHeroesDocument} {...props} />
 );
 
-export type TwoHeroesProps<TChildProps = {}> = ApolloReactHoc.DataProps<TwoHeroesQuery, TwoHeroesQueryVariables> &
+export type TwoHeroesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
+} &
   TChildProps;
-export function withTwoHeroes<TProps, TChildProps = {}>(
+export function withTwoHeroes<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     TwoHeroesQuery,
     TwoHeroesQueryVariables,
-    TwoHeroesProps<TChildProps>
+    TwoHeroesProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, TwoHeroesQuery, TwoHeroesQueryVariables, TwoHeroesProps<TChildProps>>(
-    TwoHeroesDocument,
-    {
-      alias: 'twoHeroes',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withQuery<
+    TProps,
+    TwoHeroesQuery,
+    TwoHeroesQueryVariables,
+    TwoHeroesProps<TChildProps, TDataName>
+  >(TwoHeroesDocument, {
+    alias: 'twoHeroes',
+    ...operationOptions,
+  });
 }
 export type TwoHeroesQueryResult = ApolloReactCommon.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;

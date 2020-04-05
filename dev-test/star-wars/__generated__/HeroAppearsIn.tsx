@@ -36,24 +36,23 @@ export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => (
   />
 );
 
-export type HeroAppearsInProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroAppearsInQuery,
-  HeroAppearsInQueryVariables
-> &
+export type HeroAppearsInProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+} &
   TChildProps;
-export function withHeroAppearsIn<TProps, TChildProps = {}>(
+export function withHeroAppearsIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroAppearsInQuery,
     HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps>
+    HeroAppearsInProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroAppearsInQuery,
     HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps>
+    HeroAppearsInProps<TChildProps, TDataName>
   >(HeroAppearsInDocument, {
     alias: 'heroAppearsIn',
     ...operationOptions,

@@ -52,24 +52,26 @@ export const HeroNameConditionalInclusionComponent = (props: HeroNameConditional
   />
 );
 
-export type HeroNameConditionalInclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroNameConditionalInclusionQuery,
-  HeroNameConditionalInclusionQueryVariables
-> &
+export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroNameConditionalInclusionQuery,
+    HeroNameConditionalInclusionQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroNameConditionalInclusion<TProps, TChildProps = {}>(
+export function withHeroNameConditionalInclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps>
+    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps>
+    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >(HeroNameConditionalInclusionDocument, {
     alias: 'heroNameConditionalInclusion',
     ...operationOptions,
@@ -102,24 +104,26 @@ export const HeroNameConditionalExclusionComponent = (props: HeroNameConditional
   />
 );
 
-export type HeroNameConditionalExclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroNameConditionalExclusionQuery,
-  HeroNameConditionalExclusionQueryVariables
-> &
+export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroNameConditionalExclusionQuery,
+    HeroNameConditionalExclusionQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroNameConditionalExclusion<TProps, TChildProps = {}>(
+export function withHeroNameConditionalExclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps>
+    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps>
+    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >(HeroNameConditionalExclusionDocument, {
     alias: 'heroNameConditionalExclusion',
     ...operationOptions,

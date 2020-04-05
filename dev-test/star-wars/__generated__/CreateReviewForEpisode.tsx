@@ -43,24 +43,26 @@ export const CreateReviewForEpisodeComponent = (props: CreateReviewForEpisodeCom
   />
 );
 
-export type CreateReviewForEpisodeProps<TChildProps = {}> = ApolloReactHoc.MutateProps<
-  CreateReviewForEpisodeMutation,
-  CreateReviewForEpisodeMutationVariables
-> &
+export type CreateReviewForEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: ApolloReactCommon.MutationFunction<
+    CreateReviewForEpisodeMutation,
+    CreateReviewForEpisodeMutationVariables
+  >;
+} &
   TChildProps;
-export function withCreateReviewForEpisode<TProps, TChildProps = {}>(
+export function withCreateReviewForEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     CreateReviewForEpisodeMutation,
     CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps>
+    CreateReviewForEpisodeProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withMutation<
     TProps,
     CreateReviewForEpisodeMutation,
     CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps>
+    CreateReviewForEpisodeProps<TChildProps, TDataName>
   >(CreateReviewForEpisodeDocument, {
     alias: 'createReviewForEpisode',
     ...operationOptions,

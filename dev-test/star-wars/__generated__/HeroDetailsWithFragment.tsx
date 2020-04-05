@@ -39,24 +39,23 @@ export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentC
   />
 );
 
-export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroDetailsWithFragmentQuery,
-  HeroDetailsWithFragmentQueryVariables
-> &
+export type HeroDetailsWithFragmentProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
+} &
   TChildProps;
-export function withHeroDetailsWithFragment<TProps, TChildProps = {}>(
+export function withHeroDetailsWithFragment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroDetailsWithFragmentQuery,
     HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps>
+    HeroDetailsWithFragmentProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroDetailsWithFragmentQuery,
     HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps>
+    HeroDetailsWithFragmentProps<TChildProps, TDataName>
   >(HeroDetailsWithFragmentDocument, {
     alias: 'heroDetailsWithFragment',
     ...operationOptions,

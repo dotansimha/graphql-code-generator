@@ -922,20 +922,22 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQuery, TestQueryVariables> & TChildProps;`
+        `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
+          [key in TDataName]: ApolloReactHoc.DataValue<TestQuery, TestQueryVariables>
+        } & TChildProps;`
       );
 
       expect(content.content)
-        .toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  TestQuery,
-  TestQueryVariables,
-  TestProps<TChildProps>>) {
-    return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
-      alias: 'test',
-      ...operationOptions
-    });
-}`);
+        .toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+      TProps,
+      TestQuery,
+      TestQueryVariables,
+      TestProps<TChildProps, TDataName>>) {
+        return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps, TDataName>>(TestDocument, {
+          alias: 'test',
+          ...operationOptions
+        });
+    }`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -951,7 +953,9 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables> & TChildProps;`
+        `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
+          [key in TDataName]: ApolloReactHoc.DataValue<TestQueryResponse, TestQueryVariables>
+        } & TChildProps;`
       );
 
       await validateTypeScript(content, schema, docs, {});
@@ -1218,7 +1222,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
  * __useFeedQuery__
  *
  * To run a query within a React component, call \`useFeedQuery\` and pass it any options that fit your needs.
- * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1933,16 +1937,16 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestQuery,
         TestQueryVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
-      }
+      };
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -2011,12 +2015,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestMutation,
         TestMutationVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
@@ -2089,12 +2093,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestSubscription,
         TestSubscriptionVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
@@ -2192,36 +2196,36 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestOne<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestOne<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestOneQuery,
         TestOneQueryVariables,
-        TestOneProps<TChildProps>>) {
-          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
+        TestOneProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps, TDataName>>(Operations.testOne, {
             alias: 'testOne',
             ...operationOptions
           });
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestTwo<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestTwoMutation,
         TestTwoMutationVariables,
-        TestTwoProps<TChildProps>>) {
-          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
+        TestTwoProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps, TDataName>>(Operations.testTwo, {
             alias: 'testTwo',
             ...operationOptions
           });
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestThree<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestThreeSubscription,
         TestThreeSubscriptionVariables,
-        TestThreeProps<TChildProps>>) {
-          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
+        TestThreeProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps, TDataName>>(Operations.testThree, {
             alias: 'testThree',
             ...operationOptions
           });
@@ -2299,12 +2303,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestQuery,
         TestQueryVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
@@ -2376,12 +2380,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestMutation,
         TestMutationVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
@@ -2453,16 +2457,17 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTest<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestSubscription,
         TestSubscriptionVariables,
-        TestProps<TChildProps>>) {
-          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
+        TestProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps, TDataName>>(Operations.test, {
             alias: 'test',
             ...operationOptions
           });
-      }`);
+      }
+      `);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -2554,36 +2559,36 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestOne<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestOne<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestOneQuery,
         TestOneQueryVariables,
-        TestOneProps<TChildProps>>) {
-          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
+        TestOneProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps, TDataName>>(Operations.testOne, {
             alias: 'testOne',
             ...operationOptions
           });
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestTwo<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestTwoMutation,
         TestTwoMutationVariables,
-        TestTwoProps<TChildProps>>) {
-          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
+        TestTwoProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps, TDataName>>(Operations.testTwo, {
             alias: 'testTwo',
             ...operationOptions
           });
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+      export function withTestThree<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
         TProps,
         TestThreeSubscription,
         TestThreeSubscriptionVariables,
-        TestThreeProps<TChildProps>>) {
-          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
+        TestThreeProps<TChildProps, TDataName>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps, TDataName>>(Operations.testThree, {
             alias: 'testThree',
             ...operationOptions
           });

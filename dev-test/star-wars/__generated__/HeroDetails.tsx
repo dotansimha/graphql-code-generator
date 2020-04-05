@@ -40,22 +40,26 @@ export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
   <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />
 );
 
-export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> &
+export type HeroDetailsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
+} &
   TChildProps;
-export function withHeroDetails<TProps, TChildProps = {}>(
+export function withHeroDetails<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroDetailsQuery,
     HeroDetailsQueryVariables,
-    HeroDetailsProps<TChildProps>
+    HeroDetailsProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>(
-    HeroDetailsDocument,
-    {
-      alias: 'heroDetails',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroDetailsQuery,
+    HeroDetailsQueryVariables,
+    HeroDetailsProps<TChildProps, TDataName>
+  >(HeroDetailsDocument, {
+    alias: 'heroDetails',
+    ...operationOptions,
+  });
 }
 export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
