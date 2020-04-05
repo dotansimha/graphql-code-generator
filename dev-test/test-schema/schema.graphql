@@ -8,8 +8,10 @@ type Query {
   allUsers: [User]!
   userById(id: Int!): User
 
-  # Generates a new answer for the
-  # guessing game
+  """
+   Generates a new answer for th
+  guessing game
+  """
   answer: [Int!]!
   testArr1: [String]
   testArr2: [String]!
