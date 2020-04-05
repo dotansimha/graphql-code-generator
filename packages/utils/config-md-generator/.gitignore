@@ -1,8 +1,0 @@
-.idea
-.npmrc
-.yarnclean
-lerna-debug.log
-yarn-error.log
-node_modules
-dist
-node_modules
