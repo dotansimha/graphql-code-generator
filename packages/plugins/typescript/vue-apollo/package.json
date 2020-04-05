@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../../../jest.config.js --forceExit",
-    "prepack": "../../../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",

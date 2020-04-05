@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../../../jest.config.js",
-    "prepack": "../../../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "peerDependenxcies": {
     "graphql-tag": "^2.0.0"

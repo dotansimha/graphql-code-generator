@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint **/*.ts",
     "start": "ts-node src/index.ts",
-    "prepack": "../../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "main": "dist/index.cjs.js",	
   "module": "dist/index.esm.js",	
