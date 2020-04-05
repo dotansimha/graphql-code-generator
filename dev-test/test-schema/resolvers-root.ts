@@ -22,7 +22,6 @@ export type QueryRoot = {
   __typename?: 'QueryRoot';
   allUsers: Array<Maybe<User>>;
   userById?: Maybe<User>;
-  /** Generates a new answer for the guessing game */
   answer: Array<Scalars['Int']>;
 };
 
