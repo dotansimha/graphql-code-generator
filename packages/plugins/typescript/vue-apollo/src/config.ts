@@ -43,7 +43,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    *    - typescript-vue-apollo
    *  config:
    *    addDocBlocks: true
-   *
+   * ```
    */
   addDocBlocks?: boolean;
 }
