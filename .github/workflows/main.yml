@@ -11,6 +11,7 @@ on:
 jobs:
   test:
     name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
+    timeout-minutes: 10
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -57,6 +58,7 @@ jobs:
 
   publish-canary:
     name: Publish Canary
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: contains(github.actor, 'renovate') == false
     steps:
