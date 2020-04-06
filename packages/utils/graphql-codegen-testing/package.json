@@ -31,7 +31,7 @@
     "common-tags": "1.8.0",
     "lz-string": "1.4.4",
     "open": "7.0.3",
-    "tslib": "1.11.1"
+    "tslib": "~1.11.1"
   },
   "publishConfig": {
     "access": "public"

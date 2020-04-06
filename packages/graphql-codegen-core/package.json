@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",
-    "@graphql-toolkit/common": "0.10.2",
-    "@graphql-toolkit/schema-merging": "0.10.2",
-    "tslib": "1.11.1"
+    "@graphql-toolkit/common": "~0.10.2",
+    "@graphql-toolkit/schema-merging": "~0.10.2",
+    "tslib": "~1.11.1"
   },
   "main": "dist/index.cjs.js",	
   "module": "dist/index.esm.js",	

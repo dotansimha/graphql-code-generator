@@ -14,13 +14,13 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.13.1",
-    "@graphql-toolkit/relay-operation-optimizer": "0.10.2",
+    "@graphql-toolkit/relay-operation-optimizer": "~0.10.2",
     "array.prototype.flatmap": "1.2.3",
-    "auto-bind": "4.0.0",
+    "auto-bind": "~4.0.0",
     "dependency-graph": "0.9.0",
     "graphql-tag": "2.10.3",
     "pascal-case": "3.1.1",
-    "tslib": "1.11.1"
+    "tslib": "~1.11.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
