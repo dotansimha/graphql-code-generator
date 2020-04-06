@@ -52,6 +52,7 @@
     "@graphql-toolkit/json-file-loader": "~0.10.2",
     "@graphql-toolkit/prisma-loader": "~0.10.2",
     "@graphql-toolkit/url-loader": "~0.10.2",
+    "ansi-escapes": "4.3.1",
     "camel-case": "4.1.1",
     "chalk": "4.0.0",
     "chokidar": "3.3.1",
@@ -71,7 +72,6 @@
     "listr": "0.14.3",
     "listr-update-renderer": "0.5.0",
     "log-symbols": "3.0.0",
-    "log-update": "4.0.0",
     "lower-case": "2.0.1",
     "minimatch": "3.0.4",
     "mkdirp": "1.0.4",
@@ -81,6 +81,7 @@
     "ts-log": "2.1.4",
     "tslib": "^1.11.1",
     "upper-case": "2.0.1",
+    "wrap-ansi": "6.2.0",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
