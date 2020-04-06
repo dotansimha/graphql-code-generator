@@ -200,7 +200,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-react-apollo
    *  config:
    *    addDocBlocks: true
-   *
+   * ```
    */
   addDocBlocks?: boolean;
 }
