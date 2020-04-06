@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@microsoft/tsdoc": "0.12.19",
-    "tslib": "~1.11.1",
+    "tslib": "1.11.1",
     "typescript": "3.8.3"
   },
   "devDependencies": {
