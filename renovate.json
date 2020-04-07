@@ -4,7 +4,7 @@
   "pathRules": [
     {
       "paths": ["website/package.json"],
-      "extends": ["config:base"]
+      "extends": ["config:base", ":preserveSemverRanges"]
     }
   ],
   "automerge": true,
