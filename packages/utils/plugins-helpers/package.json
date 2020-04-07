@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "GraphQL Code Generator common utils and types",
   "repository": {
     "type": "git",
@@ -28,11 +28,11 @@
     "tslib": "~1.11.1",
     "upper-case": "2.0.1"
   },
-  "main": "dist/index.cjs.js",	
-  "module": "dist/index.esm.js",	
-  "typings": "dist/index.d.ts",	
-  "typescript": {	
-    "definition": "dist/index.d.ts"	
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
   },
   "buildOptions": {
     "input": "./src/index.ts"
