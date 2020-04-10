@@ -32,7 +32,7 @@ Install using `yarn`:
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ graphql-codegen init
+    $ yarn graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 
@@ -81,35 +81,35 @@ export type Maybe<T> = T | null;
 
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
 };
 
 export type Author = {
-  __typename?: 'Author',
-  id: Scalars['Int'],
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
-  posts?: Maybe<Array<Maybe<Post>>>,
+  __typename?: 'Author';
+  id: Scalars['Int'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  posts?: Maybe<Array<Maybe<Post>>>;
 };
 
 export type AuthorPostsArgs = {
-  findTitle?: Maybe<Scalars['String']>
+  findTitle?: Maybe<Scalars['String']>;
 };
 
 export type Post = {
-  __typename?: 'Post',
-  id: Scalars['Int'],
-  title: Scalars['String'],
-  author: Author,
+  __typename?: 'Post';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  author: Author;
 };
 
 export type Query = {
-  __typename?: 'Query',
-  posts?: Maybe<Array<Maybe<Post>>>,
+  __typename?: 'Query';
+  posts?: Maybe<Array<Maybe<Post>>>;
 };
 ```
 
