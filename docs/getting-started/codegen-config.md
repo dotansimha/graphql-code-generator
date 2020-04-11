@@ -59,11 +59,11 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`pluckConfig`** - Allows you to override the configuration for `graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.
 
-  - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` that will be used to track down your `gql` usages and imports. Use this if your code files imports `gql` from another library or you have a custom `gql` tag.
+  - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` that will be used to track down your `gql` usages and imports. Use this if your code files imports `gql` from another library or you have a custom `gql` tag. `identifier` is the named export, so don't provide it if the tag function is imported as default.
 
-  - **`pluckConfig.magicComment`** - Configures the magic GraphQL comments to look for. The default is `/* GraphQL */`).
+  - **`pluckConfig.gqlMagicComment`** - Configures the magic GraphQL comments to look for. The default is `/* GraphQL */`).
 
-  - **`pluckConfig.globalIdentifier`** - Overrides the name of the default GraphQL name identifier.
+  - **`pluckConfig.globalGqlIdentifierName`** - Overrides the name of the default GraphQL name identifier.
 
 ## Environment Variables
 
