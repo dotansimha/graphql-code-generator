@@ -2985,10 +2985,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/codemirror@0.0.90":
-  version "0.0.90"
-  resolved "https://registry.npmjs.org/@types/codemirror/-/codemirror-0.0.90.tgz#9c5edafce2a780b4f8bc5e3b699fe1f4727c8f17"
-  integrity sha512-8Z9+tSg27NPRGubbUPUCrt5DDG/OWzLph5BvcDykwR5D7RyZh5mhHG0uS1ePKV1YFCA+/cwc4Ey2AJAEFfV3IA==
+"@types/codemirror@0.0.91":
+  version "0.0.91"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.91.tgz#4cb9832388726e57e747f0e3a8ab69105ad02a66"
+  integrity sha512-FZcfBNjhVc6slo6RbtbCqYa+KTQa9sykV5OdRLqd3FeMPddVLFuqSR3KNZUbzU9qoEBudBZX0nbItJ52ml37KA==
   dependencies:
     "@types/tern" "*"
 
