@@ -9105,10 +9105,10 @@ graphql-config@2.2.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
-graphql-config@3.0.0-rc.2:
-  version "3.0.0-rc.2"
-  resolved "https://registry.npmjs.org/graphql-config/-/graphql-config-3.0.0-rc.2.tgz#760a1d7bcf8b114b7c1675c5a6ac624976d62e09"
-  integrity sha512-fb14mSDRatKsz2XXWgQjupbRsur/5vfQqHFFKo+N7hZNzRdT4hm+52HG8gn57mHQNZsN18q4aROwRQQRICMqZA==
+graphql-config@3.0.0-rc.3:
+  version "3.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-rc.3.tgz#0770cde0628c1b0931b079fbe0172fcf4c6cc708"
+  integrity sha512-WWKAqhe+pakHh3WlTnY71Zx/wFNWovnXgPcv9S7sLMtfRVrdkX4clXRdKeLhz6Z+RVwyPihqHvCEJyAvrIsw+w==
   dependencies:
     "@graphql-toolkit/common" "~0.10.2"
     "@graphql-toolkit/core" "~0.10.2"
@@ -9117,7 +9117,6 @@ graphql-config@3.0.0-rc.2:
     "@graphql-toolkit/schema-merging" "~0.10.2"
     "@graphql-toolkit/url-loader" "~0.10.2"
     cosmiconfig "6.0.0"
-    globby "11.0.0"
     minimatch "3.0.4"
     tslib "^1.11.1"
 
