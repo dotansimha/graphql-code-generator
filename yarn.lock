@@ -39,32 +39,32 @@
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 
-"@apollo/react-components@3.1.4", "@apollo/react-components@^3.1.4":
-  version "3.1.4"
-  resolved "https://registry.npmjs.org/@apollo/react-components/-/react-components-3.1.4.tgz#29936a4862aee1c8fe5f25549509fecd45d2f40f"
-  integrity sha512-dLZFeJ+x48nPuo2BjFjfbl8afQyazoqU8xBTidMnYy99w9DcTHtnURTw18o2dT5jkfuIJEWjbTfxyjJnHk+clw==
+"@apollo/react-components@3.1.5", "@apollo/react-components@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@apollo/react-components/-/react-components-3.1.5.tgz#040d2f35ce4947747efe16f76d59dcbd797ffdaf"
+  integrity sha512-c82VyUuE9VBnJB7bnX+3dmwpIPMhyjMwyoSLyQWPHxz8jK4ak30XszJtqFf4eC4hwvvLYa+Ou6X73Q8V8e2/jg==
   dependencies:
     "@apollo/react-common" "^3.1.4"
-    "@apollo/react-hooks" "^3.1.4"
+    "@apollo/react-hooks" "^3.1.5"
     prop-types "^15.7.2"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 
-"@apollo/react-hoc@3.1.4":
-  version "3.1.4"
-  resolved "https://registry.npmjs.org/@apollo/react-hoc/-/react-hoc-3.1.4.tgz#11accab356e15308f4721c670c7014aaeec7b3c0"
-  integrity sha512-dCzVM2/JzEWqwTocwozb9/msOgVY5EG7gh593IIXYcBfHcthSK21nIsbH/uDgwCcLSIZE2EOC3n0aKgDuoMtjA==
+"@apollo/react-hoc@3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@apollo/react-hoc/-/react-hoc-3.1.5.tgz#6552d2fb4aafc59fdc8f4e353358b98b89cfab6f"
+  integrity sha512-jlZ2pvEnRevLa54H563BU0/xrYSgWQ72GksarxUzCHQW85nmn9wQln0kLBX7Ua7SBt9WgiuYQXQVechaaCulfQ==
   dependencies:
     "@apollo/react-common" "^3.1.4"
-    "@apollo/react-components" "^3.1.4"
+    "@apollo/react-components" "^3.1.5"
     hoist-non-react-statics "^3.3.0"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 
-"@apollo/react-hooks@3.1.4", "@apollo/react-hooks@^3.1.4":
-  version "3.1.4"
-  resolved "https://registry.npmjs.org/@apollo/react-hooks/-/react-hooks-3.1.4.tgz#2d966ed4fdf01729113850a72698faee490fd429"
-  integrity sha512-yamD5a1Gu9fGQjZYEQn2nSG+BRyde4dy055agtYOvP/5/njJBSJ25tRFbjxKf7+YW9fsu2Xguib3anoQTuesNg==
+"@apollo/react-hooks@3.1.5", "@apollo/react-hooks@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@apollo/react-hooks/-/react-hooks-3.1.5.tgz#7e710be52461255ae7fc0b3b9c2ece64299c10e6"
+  integrity sha512-y0CJ393DLxIIkksRup4nt+vSjxalbZBXnnXxYbviq/woj+zKa431zy0yT4LqyRKpFy9ahMIwxBnBwfwIoupqLQ==
   dependencies:
     "@apollo/react-common" "^3.1.4"
     "@wry/equality" "^0.1.9"
