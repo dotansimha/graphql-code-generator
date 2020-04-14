@@ -9105,10 +9105,10 @@ graphql-config@2.2.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
-graphql-config@3.0.0-rc.3:
-  version "3.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-rc.3.tgz#0770cde0628c1b0931b079fbe0172fcf4c6cc708"
-  integrity sha512-WWKAqhe+pakHh3WlTnY71Zx/wFNWovnXgPcv9S7sLMtfRVrdkX4clXRdKeLhz6Z+RVwyPihqHvCEJyAvrIsw+w==
+graphql-config@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0.tgz#e73ce334fd765f985d6b25691e2770b871bb06b8"
+  integrity sha512-lBdun77NMZIuo8KLZDeZ1jb9DbWg977KXuzpJPJIk+/jqX96ZPxsdRZl9GgK+qgDEliumDTJqRoHtHp+CVilLg==
   dependencies:
     "@graphql-toolkit/common" "~0.10.2"
     "@graphql-toolkit/core" "~0.10.2"
