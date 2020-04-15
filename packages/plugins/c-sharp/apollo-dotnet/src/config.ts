@@ -1,18 +1,6 @@
 import { RawClientSideBasePluginConfig, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 export interface ApolloDotNetRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name ngModule
-   * @type string
-   * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
-   *
-   * @example graphql.macro
-   * ```yml
-   * config:
-   *   ngModule: ./path/to/module#MyModule
-   * ```
-   */
-  ngModule?: string;
-  /**
    * @name namedClient
    * @type string
    * @description Defined the global value of `namedClient`.
@@ -48,14 +36,6 @@ export interface ApolloDotNetRawPluginConfig extends RawClientSideBasePluginConf
    * ```
    */
   serviceProvidedInRoot?: boolean;
-  /**
-   * @name sdkClass
-   * @type boolean
-   * @description Set to `true` in order to generate a SDK service class that uses all generated services.
-   * @default false
-   *
-   */
-  sdkClass?: boolean;
   /**
    * @name querySuffix
    * @type string

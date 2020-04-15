@@ -36,7 +36,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   public getImports(): string {
-    const allImports = ['System', 'Optional', 'System.Collections.Generic', 'Newtonsoft.Json', 'Newtonsoft.Json.Converters', 'Agoda.CodeGen.GraphQL', 'System.Linq', 'GraphQL.Client.Serializer.Newtonsoft', 'System.Collections.Generic', 'GraphQL.Client.Http'];
+    const allImports = ['System', 'System.Collections.Generic', 'Newtonsoft.Json', 'GraphQL'];
     return allImports.map(i => `using ${i};`).join('\n') + '\n';
   }
 

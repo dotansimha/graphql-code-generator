@@ -38,8 +38,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
       fragments,
       rawConfig,
       {
-        sdkClass: rawConfig.sdkClass,
-        ngModule: rawConfig.ngModule,
         namedClient: rawConfig.namedClient,
         serviceName: rawConfig.serviceName,
         serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,

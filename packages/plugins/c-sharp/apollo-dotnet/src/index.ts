@@ -18,7 +18,7 @@ export const plugin: PluginFunction<ApolloDotNetRawPluginConfig> = (schema: Grap
   const visitorResult = visit(allAst, { leave: visitor });
   return {
     prepend: [],
-    content: [openNameSpace, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), config.sdkClass ? visitor.sdkClass : null, '}'].filter(a => a).join('\n'),
+    content: [openNameSpace, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), '}'].filter(a => a).join('\n'),
   };
 };
 
