@@ -1,4 +1,4 @@
-export const pluginLoaderMap: { [name: string]: () => any } = {
+export const pluginLoaderMap = {
   java: () => import('@graphql-codegen/java'),
   'java-resolvers': () => import('@graphql-codegen/java-resolvers'),
   'fragment-matcher': () => import('@graphql-codegen/fragment-matcher'),

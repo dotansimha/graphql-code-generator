@@ -1,6 +1,4 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
-
-export const EXT_TO_FORMATTER: { [extension: string]: string } = {
+export const EXT_TO_FORMATTER = {
   ts: 'typescript',
   'd.ts': 'typescript',
   tsx: 'typescript',
@@ -11,7 +9,7 @@ export const EXT_TO_FORMATTER: { [extension: string]: string } = {
   jsx: 'javascript',
 };
 
-export function getMode(config: Types.Config): string {
+export function getMode(config) {
   const out = Object.keys(config.generates)[0].split('.');
   const ext = out[out.length - 1];
 

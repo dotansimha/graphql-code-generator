@@ -1,3 +1,8 @@
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/addon/lint/lint.css';
+@import '~codemirror/theme/nord.css';
+@import '~codemirror/theme/neo.css';
+
 :root {
   --ifm-color-primary: #e15799;
   --ifm-color-primary-dark: #dc3d89;
@@ -7,6 +12,19 @@
   --ifm-color-primary-lighter: #e87fb1;
   --ifm-color-primary-lightest: #efa6c9;
   --ifm-code-font-size: 95%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.CodeMirror {
+  height: 70vh;
+  border-left: 1px solid #e5e5e5;
+}
+
+button {
+  outline: none;
 }
 
 .docusaurus-highlight-code-line {
@@ -140,5 +158,9 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
+}
+
+.navbar {
+  font-size: 12px;
 }
 

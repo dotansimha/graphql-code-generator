@@ -17,18 +17,18 @@
   width: 100%;
 }
 
+.features h3 {
+  text-align: center;
+}
+
 .featureImage {
-  height: 200px;
-  width: 200px;
+  height: 100px;
+  width: 100px;
 }
 
 .headerCover {
   align-content: center;
   max-width: 512px;
-}
-
-.homeContainer {
-  background-color: #f6f8f9;
 }
 
 .cover {
@@ -53,4 +53,15 @@
   .desktopOnly {
     display: none;
   }
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.projectTitle {
+  margin-top: 25px;
+  color: #e15799;
 }

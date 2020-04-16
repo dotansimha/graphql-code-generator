@@ -1,49 +1,68 @@
+
+const global = process || window;
+
+console.log(process);
+if (!global.hrtime) {
+  global.hrtime = () => null;
+}
+
 import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
+import { Button } from '../components/ui/Button';
+import { LiveDemo } from '../components/live-demo/LiveDemo';
 
 const features = [
-  // {
-  //   title: <>GraphQL as a Query Language</>,
-  //   imageUrl: 'img/GraphQL_Logo.svg',
-  //   description: (
-  //     <>
-  //       Use GraphQL as a query language to fetch data from your data-sources
-  //       directly, without the need for a running gateway server, or any other
-  //       bottleneck.
-  //     </>
-  //   )
-  // },
-  // {
-  //   title: <>Any Data Source</>,
-  //   imageUrl: 'img/mesh-example.png',
-  //   description: (
-  //     <>
-  //       With GraphQL Mesh, you can use GraphQL query language to fetch from
-  //       (almost) any data source, without changing the source or modify it's
-  //       code.
-  //     </>
-  //   )
-  // },
-  // {
-  //   title: <>Open Source</>,
-  //   imageUrl: 'img/open-source.svg',
-  //   description: (
-  //     <>
-  //       GraphQL Mesh is free and open-source, and been built with the community.
-  //       You can contribute, extend and have your custom logic easily.
-  //     </>
-  //   )
-  // }
+  {
+    title: <>Generate Code Instantly</>,
+    imageUrl: 'img/gear.svg',
+    description: (
+      <>
+        Generate code from of your GraphQL schema and GraphQL operations with a single function call regardless of your
+        environment or code format.
+      </>
+    ),
+  },
+  {
+    title: <>Watch For Changes</>,
+    imageUrl: 'img/eye.svg',
+    description: (
+      <>
+        Watch for changes in your GraphQL schema and operations, and automatically generate code as you go. Codegen
+        easily integrates into your development workflow.
+      </>
+    ),
+  },
+  {
+    title: <>Customize Easily</>,
+    imageUrl: 'img/puzzle.svg',
+    description: (
+      <>
+        One of the goals of GraphQL Codegen is to allow you to easily customize the output, and add custom behaviour
+        according to your needs.
+      </>
+    ),
+  },
+  {
+    title: <>And more!</>,
+    imageUrl: 'img/more-options.svg',
+    description: (
+      <>
+        You can generate you resolvers signature, dump schemas, types models, query builders, React Hooks, Angular
+        Services, and much more!
+      </>
+    ),
+  },
 ];
 
 function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl);
+
   return (
-    <div className={classnames('col col--4', styles.feature)}>
+    <div className={classnames('col col--3', styles.feature)}>
       {imgUrl && (
         <div className="text--center">
           <img className={styles.featureImage} src={imgUrl} alt={title} />
@@ -90,13 +109,11 @@ function SplashContainer(props) {
   );
 }
 
-console.log(styles);
-
 function ProjectTitle() {
   return (
     <div className={styles.coverContainer}>
       <img src="img/gql-codegen-cover.png" className={styles.cover} />
-      <h2 className={styles.projectTitle}>Generate code from your GraphQL schema with a single function call</h2>
+      <h3 className={styles.projectTitle}>Generate code from your GraphQL schema and operations with a simple CLI</h3>
     </div>
   );
 }
@@ -108,13 +125,21 @@ function Home() {
         <SplashContainer>
           <div className={styles.inner}>
             <ProjectTitle />
-            <div>
-              <Link to={'#live-demo'}>Try It Out</Link>
-              <Link to={`/docs/getting-started/index`}>View Docs</Link>
+            <div className={styles.buttonsWrapper}>
+              <Button>
+                <Link to={'#live-demo'}>Try It Out Live</Link>
+              </Button>
+              <Button>
+                <Link to={`/docs/getting-started/index`}>View Docs</Link>
+              </Button>
             </div>
           </div>
         </SplashContainer>
       </header>
+      <div className={styles.liveDemo}>
+        <a id="live-demo" />
+        <LiveDemo />
+      </div>
       <main>
         {features && features.length && (
           <section className={styles.features}>

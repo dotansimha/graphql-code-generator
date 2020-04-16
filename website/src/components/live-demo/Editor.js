@@ -21,33 +21,19 @@ import 'codemirror-graphql/info';
 import 'codemirror-graphql/jump';
 import 'codemirror-graphql/mode';
 import React from 'react';
-import { makeStyles, createStyles } from '@material-ui/styles';
+import classes from './styles.module.css';
+import useThemeContext from '@theme/hooks/useThemeContext';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    queryEditor: {
-      flex: 1,
-      position: 'relative',
-      overflow: 'scroll',
-    },
-  })
-);
-
-export interface EditorProps {
-  value: string;
-  lang: string | null;
-  readOnly?: boolean;
-  onEdit: (value: string) => void;
-}
-
-export const Editor: React.FC<EditorProps> = ({ value, lang, readOnly, onEdit }) => {
-  const classes = useStyles();
-  const elementRef = React.useRef<HTMLDivElement>(null);
-  const [editorRef, setEditorRef] = React.useState<CodeMirror.Editor | null>(null);
+export const Editor = ({ value, lang, readOnly, onEdit }) => {
+  const elementRef = React.useRef(null);
+  const [editorRef, setEditorRef] = React.useState(null);
+  const { isDarkTheme } = useThemeContext();
+  const theme = isDarkTheme ? 'nord' : 'neo';
 
   if (editorRef === null && elementRef.current !== null) {
     const instance = CodeMirror(elementRef.current, {
       value: value || '',
+      theme,
       lineNumbers: true,
       tabSize: 2,
       mode: lang,
@@ -65,6 +51,10 @@ export const Editor: React.FC<EditorProps> = ({ value, lang, readOnly, onEdit })
     instance.on('change', editorInstance => {
       onEdit(editorInstance.getValue());
     });
+  }
+
+  if (editorRef) {
+    editorRef.setOption('theme', theme);
   }
 
   if (editorRef !== null && editorRef.getValue() !== value) {

@@ -1,10 +1,3 @@
-export interface Example {
-  name: string;
-  config: string;
-  schema: string;
-  documents: string;
-}
-
 const TS_SCHEMA = `scalar Date
 
 schema {
@@ -63,7 +56,7 @@ fragment UserFields on User {
   role
 }`;
 
-export const EXAMPLES: { [name: string]: Example } = {
+export const EXAMPLES = {
   typescript: {
     name: 'TypeScript',
     config: `generates:

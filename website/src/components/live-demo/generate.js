@@ -1,7 +1,7 @@
 import { normalizeConfig } from './utils';
 import { pluginLoaderMap } from './plugins';
 
-export async function generate(config: string, schema: string, documents?: string): Promise<string> {
+export async function generate(config, schema, documents) {
   try {
     const [{ safeLoad }, { codegen }, { parse }] = await Promise.all([
       import('js-yaml').then(m => ('default' in m ? m.default : m)),
@@ -15,7 +15,7 @@ export async function generate(config: string, schema: string, documents?: strin
     const filename = Object.keys(generates)[0];
     const plugins = normalizeConfig(generates[filename].plugins || generates[filename]);
     const outputConfig = generates[filename].config;
-    const pluginMap: any = {};
+    const pluginMap = {};
 
     await Promise.all(
       plugins.map(async pluginElement => {
@@ -58,7 +58,7 @@ export async function generate(config: string, schema: string, documents?: strin
     } else if (e.errors) {
       return e.errors
         .map(
-          (subError: any) => `${subError.message}: 
+          (subError) => `${subError.message}: 
 ${subError.details}`
         )
         .join('\n');
