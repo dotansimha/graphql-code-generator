@@ -9,6 +9,7 @@
     "generate:config-docs": "node generate-config.js"
   },
   "devDependencies": {
+    "vscode-languageserver-types": "3.15.1",
     "@docusaurus/core": "2.0.0-alpha.50",
     "@docusaurus/preset-classic": "2.0.0-alpha.50",
     "classnames": "2.2.6",
