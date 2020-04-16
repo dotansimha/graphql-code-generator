@@ -5,13 +5,15 @@ on:
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     branches:
-      - wip-docusaurus-v2
+      - master
+      - test-gh-actions
 
 jobs:
   test:
     name: Deploy Website
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.ref, 'refs/tags/')
     steps:
       - name: Checkout
         uses: actions/checkout@v1
