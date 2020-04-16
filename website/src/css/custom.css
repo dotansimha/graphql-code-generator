@@ -34,6 +34,10 @@ button {
   padding: 0 var(--ifm-pre-padding);
 }
 
+button[class^="copyButton"] {
+  color: white;
+}
+
 /* source: https://fonts.googleapis.com/css?family=Montserrat:400,600,700 */
 /* cyrillic-ext */
 @font-face {

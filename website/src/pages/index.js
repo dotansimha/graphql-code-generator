@@ -112,6 +112,10 @@ function ProjectTitle() {
     <div className={styles.coverContainer}>
       <img src="img/gql-codegen-cover.png" className={styles.cover} />
       <h3 className={styles.projectTitle}>Generate code from your GraphQL schema and operations with a simple CLI</h3>
+      <img
+        alt="npm"
+        src="https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=stable&style=for-the-badge"
+      />
     </div>
   );
 }
@@ -124,7 +128,7 @@ function Home() {
           <div className={styles.inner}>
             <ProjectTitle />
             <div className={styles.buttonsWrapper}>
-              <Button>
+              <Button mobileHide="true">
                 <Link to={'#live-demo'}>Try It Out Live</Link>
               </Button>
               <Button>
@@ -134,7 +138,7 @@ function Home() {
           </div>
         </SplashContainer>
       </header>
-      <div className={styles.liveDemo}>
+      <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
         <a id="live-demo" />
         <LiveDemo />
       </div>
