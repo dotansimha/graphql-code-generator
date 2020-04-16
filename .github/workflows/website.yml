@@ -1,0 +1,33 @@
+name: Website
+
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    branches:
+      - wip-docusaurus-v2
+
+jobs:
+  test:
+    name: Deploy Website
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Use Node 13
+        uses: actions/setup-node@master
+        with:
+          node-version: 13
+      - name: Install Dependencies
+        run: yarn install
+      - name: Build Plugins
+        run: yarn build
+      - name: Build Website
+        run: cd website && yarn build:website
+      - name: Deploy Website 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: website/build # The folder the action should deploy.
