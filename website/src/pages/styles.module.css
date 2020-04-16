@@ -21,3 +21,26 @@
   height: 200px;
   width: 200px;
 }
+
+.headerCover {
+  align-content: center;
+  max-width: 512px;
+}
+
+.homeContainer {
+  background-color: #f6f8f9;
+}
+
+.homeContainer .projectTitle img {
+  width: 100%;
+  max-width: 512px;
+}
+
+.homeContainer .projectTitle small {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}

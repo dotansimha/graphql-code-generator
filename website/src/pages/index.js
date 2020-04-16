@@ -1,9 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
+import Link from '@docusaurus/Link';
 
 const features = [
   // {
@@ -28,7 +28,6 @@ const features = [
   //     </>
   //   )
   // },
-
   // {
   //   title: <>Open Source</>,
   //   imageUrl: 'img/open-source.svg',
@@ -56,14 +55,63 @@ function Feature({ imageUrl, title, description }) {
   );
 }
 
+function SplashContainer(props) {
+  return (
+    <div className={styles.homeContainer}>
+      <img
+        className="desktop-only"
+        src={`/img/hexagons/blue.svg`}
+        style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }}
+      />
+      <img
+        className="desktop-only"
+        src={`/img/hexagons/pink.svg`}
+        style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }}
+      />
+      <img
+        className="desktop-only"
+        src={`/img/hexagons/blue.svg`}
+        style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }}
+      />
+      <img
+        className="desktop-only"
+        src={`/img/hexagons/pink.svg`}
+        style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }}
+      />
+      <img
+        className="desktop-only"
+        src={`/img/hexagons/blue.svg`}
+        style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }}
+      />
+      <div className={styles.homeSplashFade}>
+        <div className="wrapper homeWrapper">{props.children}</div>
+      </div>
+    </div>
+  );
+}
+
+function ProjectTitle() {
+  return (
+    <h2 className={styles.projectTitle}>
+      <img src="img/gql-codegen-cover.png" />
+      <small>Generate code from your GraphQL schema with a single function call</small>
+    </h2>
+  );
+}
+
 function Home() {
-  const context = useDocusaurusContext();
   return (
     <Layout title={`GraphQL Code Generator`} description="">
       <header>
-        <div>
-          cover here
-        </div>
+        <SplashContainer>
+          <div className={styles.inner}>
+            <ProjectTitle />
+            <div>
+              <Link to={'#live-demo'}>Try It Out</Link>
+              <Link to={`/docs/getting-started/index`}>View Docs</Link>
+            </div>
+          </div>
+        </SplashContainer>
       </header>
       <main>
         {features && features.length && (

@@ -74,6 +74,14 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} GraphQL Code Generator, The Guild, Inc. Built with Docusaurus.`
     }
   },
+  scripts: [
+    {
+      src: '/js/drift.js',
+      async: true,
+      defer: true,
+    },
+  ],
+  stylesheets: ['https://fonts.googleapis.com/css?family=Lato:300,400,700,900'],
   presets: [
     [
       '@docusaurus/preset-classic',
