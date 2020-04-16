@@ -5,7 +5,8 @@ title: TypeScript Urql
 
 This plugin generates [`urql`](https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
 
-{@import: ../docs/plugins/client-note.md}
+
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -47,6 +48,9 @@ Or if you prefer:
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/client-side-base-visitor.md}
-{@import: ../docs/generated-config/typescript-urql.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/client-side-base-visitor.md}
+
+{@import ../generated-config/typescript-urql.md}

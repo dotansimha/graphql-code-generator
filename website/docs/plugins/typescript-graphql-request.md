@@ -5,7 +5,8 @@ title: TypeScript GraphQL-Request
 
 This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.
 
-{@import: ../docs/plugins/client-note.md}
+
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -62,9 +63,12 @@ async function main() {
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/client-side-base-visitor.md}
-{@import: ../docs/generated-config/typescript-graphql-request.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/client-side-base-visitor.md}
+
+{@import ../generated-config/typescript-graphql-request.md}
 
 ## Simple Request Middleware
 

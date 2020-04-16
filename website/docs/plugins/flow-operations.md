@@ -9,7 +9,7 @@ It generates types for your GraphQL documents: Query, Mutation, Subscription and
 
 This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
 
-{@import: ../docs/plugins/client-note.md}
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -17,6 +17,8 @@ This plugin requires you to use `@graphql-codegen/flow` as well, because it depe
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-documents-visitor.md}
-{@import: ../docs/generated-config/flow-operations.md}
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/base-documents-visitor.md}
+
+{@import ../generated-config/flow-operations.md}

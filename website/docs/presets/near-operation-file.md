@@ -44,4 +44,5 @@ The `presetConfig` section contains a key for setting the output files extension
 
 ## Configuration
 
-{@import: ../docs/generated-config/near-operation-file.md}
+
+{@import ../generated-config/near-operation-file.md}

@@ -19,6 +19,8 @@ This plugin requires you to use `@graphql-codegen/flow` as well, because it depe
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-types-visitor.md}
-{@import: ../docs/generated-config/flow-resolvers.md}
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/base-types-visitor.md}
+
+{@import ../generated-config/flow-resolvers.md}

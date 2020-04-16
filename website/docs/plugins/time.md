@@ -13,4 +13,5 @@ title: Time
 
 You can either specify a `string` containting the moment format, or specify an object with the following:
 
-{@import: ../docs/generated-config/time.md}
+
+{@import ../generated-config/time.md}

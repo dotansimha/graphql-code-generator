@@ -46,5 +46,7 @@ export const viewerQuery: DocumentNode = gql`
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/typescript-document-nodes.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/typescript-document-nodes.md}

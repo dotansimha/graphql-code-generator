@@ -40,9 +40,12 @@ Generated resolvers can be passed directly into [graphql-tools](https://www.npmj
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-resolvers-visitor.md}
-{@import: ../docs/generated-config/typescript-resolvers.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/base-resolvers-visitor.md}
+
+{@import ../generated-config/typescript-resolvers.md}
 
 ## How It Works
 

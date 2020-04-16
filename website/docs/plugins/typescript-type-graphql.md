@@ -18,6 +18,9 @@ Install using `yarn`:
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-types-visitor.md}
-{@import: ../docs/generated-config/typescript.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/base-types-visitor.md}
+
+{@import ../generated-config/typescript.md}

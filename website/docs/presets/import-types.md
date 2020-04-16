@@ -11,4 +11,5 @@ This preset generates a file per each operation file, and allow to import types 
 
 ## Configuration
 
-{@import: ../docs/generated-config/import-types.md}
+
+{@import ../generated-config/import-types.md}

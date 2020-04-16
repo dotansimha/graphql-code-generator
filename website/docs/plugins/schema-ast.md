@@ -25,4 +25,5 @@ generates:
 
 ## Configuration
 
-{@import: ../docs/generated-config/schema-ast.md}
+
+{@import ../generated-config/schema-ast.md}
