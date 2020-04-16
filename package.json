@@ -16,7 +16,7 @@
     "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
     "ci:release:canary": "lerna publish --contents dist --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config dotenv_config_path=dev-test/.env --config ./dev-test/codegen.yml",
-    "build-website": "lerna run build"
+    "build-website": "cd website && yarn build"
   },
   "husky": {
     "hooks": {
