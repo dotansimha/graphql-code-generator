@@ -32,7 +32,7 @@ Install using `yarn`:
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ graphql-codegen init
+    $ yarn graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 
