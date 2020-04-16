@@ -1,18 +1,17 @@
 {
   "name": "@graphql-codegen/c-sharp",
-  "version": "1.12.2",
+  "version": "1.13.2",
   "description": "GraphQL Code Generator plugin for generating CSharp code based on a GraphQL schema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "lint": "tslint src/**/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman",
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.2",
-    "@graphql-codegen/visitor-plugin-common": "1.12.2",
+    "@graphql-codegen/plugin-helpers": "1.13.2",
+    "@graphql-codegen/visitor-plugin-common": "1.13.2",
     "tslib": "1.11.1",
     "strip-indent": "3.0.0",
     "unixify": "1.0.0"
@@ -20,23 +19,12 @@
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.12.2",
-    "graphql": "15.0.0",
-    "jest": "25.3.0",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
-  },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
   },
   "jest-junit": {
     "outputDirectory": "../../../../test-results/c-sharp"

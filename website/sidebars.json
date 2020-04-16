@@ -27,6 +27,8 @@
       "plugins/typescript-stencil-apollo",
       "plugins/typescript-urql",
       "plugins/typescript-graphql-request",
+      "plugins/typescript-c-sharp",
+      "plugins/typescript-c-sharp-apollo",
       "plugins/flow",
       "plugins/flow-resolvers",
       "plugins/flow-operations",
