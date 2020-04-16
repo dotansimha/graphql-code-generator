@@ -1,6 +1,6 @@
 ---
 id: presets-index
-title: Available Presets
+title: All Presets
 ---
 
 GraphQL Code Generator also support presets - which is a way to manipulate and effect the execution of plugins.

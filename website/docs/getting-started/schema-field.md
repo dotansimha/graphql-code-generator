@@ -1,6 +1,6 @@
 ---
 id: schema-field
-title: `schema` field
+title: "`schema` field"
 ---
 
 The `schema` field should point to your `GraphQLSchema` - there are multiple ways you can specify it and load your `GraphQLSchema`.

@@ -1,0 +1,17 @@
+:root {
+  --ifm-color-primary: #e15799;
+  --ifm-color-primary-dark: #dc3d89;
+  --ifm-color-primary-darker: #da2f81;
+  --ifm-color-primary-darkest: #b9216a;
+  --ifm-color-primary-light: #e671a9;
+  --ifm-color-primary-lighter: #e87fb1;
+  --ifm-color-primary-lightest: #efa6c9;
+  --ifm-code-font-size: 95%;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}

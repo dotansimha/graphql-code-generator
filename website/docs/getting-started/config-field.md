@@ -1,6 +1,6 @@
 ---
 id: config-field
-title: `config` field
+title: "`config` field"
 ---
 
 The `config` field is used to pass configuration to Plugins. You can specify it in multiple levels of your `.yml` file.

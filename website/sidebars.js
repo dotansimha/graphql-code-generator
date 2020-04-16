@@ -1,0 +1,87 @@
+module.exports = {
+  sidebar: {
+    'Getting Started': [
+      'getting-started/index',
+      {
+        type: 'category',
+        label: 'Config Reference',
+        items: [
+          'getting-started/codegen-config',
+          'getting-started/schema-field',
+          'getting-started/documents-field',
+          'getting-started/config-field',
+          'getting-started/require-field',
+          'getting-started/lifecycle-hooks',
+        ],
+      },
+      'getting-started/development-workflow',
+      'getting-started/programmatic-usage',
+      'getting-started/further-reading',
+    ],
+    Plugins: [
+      'plugins/index',
+      {
+        type: 'category',
+        label: 'TypeScript',
+        items: [
+          'plugins/typescript',
+          'plugins/typescript-operations',
+          'plugins/typescript-compatibility',
+          'plugins/typescript-resolvers',
+          'plugins/typescript-graphql-files-modules',
+          'plugins/typescript-document-nodes',
+          'plugins/typescript-mongodb',
+          'plugins/typescript-react-apollo',
+          'plugins/typescript-vue-apollo',
+          'plugins/typescript-apollo-angular',
+          'plugins/typescript-stencil-apollo',
+          'plugins/typescript-urql',
+          'plugins/typescript-graphql-request',
+        ],
+      },
+      {
+        type: 'category',
+        label: 'Flow',
+        items: ['plugins/flow', 'plugins/flow-resolvers', 'plugins/flow-operations'],
+      },
+      {
+        type: 'category',
+        label: 'Reason',
+        items: ['plugins/reason-client'],
+      },
+      {
+        type: 'category',
+        label: 'Java',
+        items: ['plugins/kotlin', 'plugins/java', 'plugins/java-resolvers', 'plugins/java-apollo-android'],
+      },
+      {
+        type: 'category',
+        label: 'Utilities',
+        items: [
+          'plugins/fragment-matcher',
+          'plugins/introspection',
+          'plugins/add',
+          'plugins/time',
+          'plugins/schema-ast',
+          'plugins/relay-operation-optimizer',
+        ],
+      },
+    ],
+    Presets: ['presets/presets-index', 'presets/near-operation-file', 'presets/import-types'],
+    Integrations: [
+      'integrations/apollo-local-state',
+      'integrations/create-react-app',
+      'integrations/gatsby',
+      'integrations/prettier',
+      'integrations/federation',
+    ],
+    'Custom Plugins': [
+      'custom-codegen/index',
+      'custom-codegen/write-your-plugin',
+      'custom-codegen/validate-configuration',
+      'custom-codegen/extend-schema',
+      'custom-codegen/using-visitor',
+    ],
+    'Migration Guides': ['migration/from-0-18', 'migration/from-0-13'],
+  },
+};

@@ -3,18 +3,32 @@
   "version": "1.13.2",
   "private": true,
   "scripts": {
-    "dev": "docusaurus-start",
-    "start": "docusaurus-start",
-    "generate-config": "node generate-config.js",
-    "build": "yarn build:app",
-    "build:app": "docusaurus-build",
-    "publish-gh-pages": "docusaurus-publish",
-    "write-translations": "docusaurus-write-translations"
+    "dev": "docusaurus start",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "deploy": "docusaurus deploy",
+    "generate-config": "node generate-config.js"
   },
   "devDependencies": {
-    "@graphql-codegen/config-markdown-generator": "1.13.2",
-    "babel-preset-minify": "0.5.1",
-    "docusaurus": "1.14.4",
-    "remarkable-embed": "0.4.1"
+    "@docusaurus/core": "2.0.0-alpha.50",
+    "@docusaurus/preset-classic": "2.0.0-alpha.50",
+    "classnames": "2.2.6",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "remark-code-import": "0.1.3",
+    "remark-import-partial": "0.0.2",
+    "babel-preset-minify": "0.5.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

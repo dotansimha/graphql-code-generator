@@ -1,6 +1,6 @@
 ---
 id: require-field
-title: `require` field
+title: "`require` field"
 ---
 
 The `require` field allows you to load any external files without the need to transpile them before.

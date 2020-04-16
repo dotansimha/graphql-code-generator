@@ -1,6 +1,6 @@
 ---
 id: index
-title: Available Plugins
+title: All Plugins
 ---
 
 The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transform it into an AST and then output it into desired formats which can vary. Since there can potentially be an infinite number of formats, we can't predict them all. However, some formats are more likely to be used, thus, we've prepared pre-defined code generation plugins which are built for these formats.
