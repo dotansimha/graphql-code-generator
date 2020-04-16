@@ -237,5 +237,7 @@ export interface ProfileDbObject {
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/typescript-mongodb.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/typescript-mongodb.md}

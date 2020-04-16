@@ -37,5 +37,7 @@ generates:
 
 ## Configuration
 
-{@import: ../docs/generated-config/kotlin.md}
-{@import: ../docs/generated-config/base-visitor.md}
+
+{@import ../generated-config/kotlin.md}
+
+{@import ../generated-config/base-visitor.md}

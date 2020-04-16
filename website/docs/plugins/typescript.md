@@ -11,10 +11,12 @@ It generates types for your entire schema: types, input types, enums, interfaces
 
 Install using `yarn`:
 
-    $ yarn add -D @graphql-codegen/typescript
+    $ yarn add -D @graphql-codegen/typescript 
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-types-visitor.md}
-{@import: ../docs/generated-config/typescript.md}
+{@import ../generated-config/base-visitor.md} 
+
+{@import ../generated-config/base-types-visitor.md}
+
+{@import ../generated-config/typescript.md}

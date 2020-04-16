@@ -42,9 +42,12 @@ export class QueryResolvers {
 
 ## Installation
 
-{@import: ../docs/plugins/java-installation.md|java|Types}
+
+{@import ../plugins/java-installation.md}
 
 ## Configuration
 
-{@import: ../docs/generated-config/java.md}
-{@import: ../docs/generated-config/base-visitor.md}
+
+{@import ../generated-config/java.md}
+
+{@import ../generated-config/base-visitor.md}

@@ -9,7 +9,8 @@ It will generate a strongly typed Angular service for every defined query, mutat
 
 To shed some more light regards this template, it's recommended to go through the ["Query, Mutation, Subscription services"](http://apollographql.com/docs/angular/basics/services.html) chapter of Apollo Angular docs and to read the ["Code Generation with Apollo Angular"](https://medium.com/the-guild/apollo-angular-code-generation-7903da1f8559) article.
 
-{@import: ../docs/plugins/client-note.md}
+
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -95,6 +96,9 @@ query feed {
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/client-side-base-visitor.md}
-{@import: ../docs/generated-config/typescript-apollo-angular.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/client-side-base-visitor.md}
+
+{@import ../generated-config/typescript-apollo-angular.md}

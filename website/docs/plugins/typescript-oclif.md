@@ -5,7 +5,8 @@ title: TypeScript oclif
 
 This plugin generates [`oclif`](https://www.npmjs.com/package/oclif) CLI commands.
 
-{@import: ../docs/plugins/client-note.md}
+
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -187,5 +188,7 @@ as you **don't** _also_ create a `fix.graphql` file next to it (in which case, i
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/client-side-base-visitor.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/client-side-base-visitor.md}

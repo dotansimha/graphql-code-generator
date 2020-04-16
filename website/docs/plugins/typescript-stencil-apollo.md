@@ -5,7 +5,8 @@ title: TypeScript Stencil Apollo
 
 This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
 
-{@import: ../docs/plugins/client-note.md}
+
+{@import ../plugins/client-note.md}
 
 ## Installation
 
@@ -41,6 +42,9 @@ We can use the generated code like this:
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/client-side-base-visitor.md}
-{@import: ../docs/generated-config/typescript-stencil-apollo.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/client-side-base-visitor.md}
+
+{@import ../generated-config/typescript-stencil-apollo.md}

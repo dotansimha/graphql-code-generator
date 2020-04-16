@@ -25,5 +25,7 @@ Then, add it to your codegen configuration:
 
 ## Configuration
 
-{@import: ../docs/generated-config/typescript-compatibility.md}
-{@import: ../docs/generated-config/base-visitor.md}
+
+{@import ../generated-config/typescript-compatibility.md}
+
+{@import ../generated-config/base-visitor.md}

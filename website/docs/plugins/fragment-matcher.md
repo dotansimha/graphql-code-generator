@@ -28,7 +28,8 @@ generates:
       - fragment-matcher
 ```
 
-{@import: ../docs/generated-config/fragment-matcher.md}
+
+{@import ../generated-config/fragment-matcher.md}
 
 ## Usage with Apollo Client 3 
 

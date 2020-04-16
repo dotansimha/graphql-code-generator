@@ -15,6 +15,9 @@ Install using `npm` (or `yarn`):
 
 ## Configuration
 
-{@import: ../docs/generated-config/base-visitor.md}
-{@import: ../docs/generated-config/base-types-visitor.md}
-{@import: ../docs/generated-config/flow.md}
+
+{@import ../generated-config/base-visitor.md}
+
+{@import ../generated-config/base-types-visitor.md}
+
+{@import ../generated-config/flow.md}

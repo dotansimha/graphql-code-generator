@@ -56,5 +56,7 @@ You can find a [repository with a working example using AppSync](https://github.
 
 ## Configuration
 
-{@import: ../docs/generated-config/java-apollo-android.md}
-{@import: ../docs/generated-config/base-visitor.md}
+
+{@import ../generated-config/java-apollo-android.md}
+
+{@import ../generated-config/base-visitor.md}

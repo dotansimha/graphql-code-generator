@@ -11,4 +11,5 @@ The `@graphql-codegen/introspection` generates an introspection file based on yo
 
 ## Configuration
 
-{@import: ../docs/generated-config/introspection.md}
+
+{@import ../generated-config/introspection.md}
