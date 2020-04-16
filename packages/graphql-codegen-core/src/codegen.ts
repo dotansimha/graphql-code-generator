@@ -134,7 +134,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     })
   );
 
-  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...append.values()].join('\n');
+  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...Array.from(append.values())].join('\n');
 }
 
 function resolveCompareValue(a: string) {
