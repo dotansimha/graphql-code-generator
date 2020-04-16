@@ -8129,14 +8129,15 @@ graphql-import@^0.7.1:
     lodash "^4.17.4"
     resolve-from "^4.0.0"
 
-graphql-language-service-interface@2.4.0-alpha.6, graphql-language-service-interface@^2.3.3:
-  version "2.4.0-alpha.6"
-  resolved "https://registry.npmjs.org/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.6.tgz#de78630c58bb54d17586a37c0c9cc17aa064b88e"
-  integrity sha512-ELweHDZDU/VVl9YNNTmz/dZP5rFDfVJUDUYSX98pWi2tZ1edeWInzpHq5sSQuZqPsKMyN1o8kCTXozfP9rZe7g==
+graphql-language-service-interface@2.4.0-alpha.7, graphql-language-service-interface@^2.3.3:
+  version "2.4.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.7.tgz#5458f1f17a79dde5b51dab0d21eda63dff48a918"
+  integrity sha512-X5jwTI4AlcKB/t9/hZBn9O69uG9WPbkFnZivhNfztzeudKV+cXHYR6behsR47bR2nzF3YEu7Nv+3HExXKQAlWg==
   dependencies:
     graphql-language-service-parser "^1.6.0-alpha.3"
     graphql-language-service-types "^1.6.0-alpha.5"
     graphql-language-service-utils "^2.4.0-alpha.6"
+    vscode-languageserver-types "^3.15.1"
 
 graphql-language-service-parser@^1.5.2:
   version "1.5.2"
@@ -15822,9 +15823,9 @@ vm-browserify@^1.0.1:
   resolved "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vscode-languageserver-types@3.15.1:
+vscode-languageserver-types@3.15.1, vscode-languageserver-types@^3.15.1:
   version "3.15.1"
-  resolved "https://registry.npmjs.org/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
   integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
 
 vue-template-compiler@^2.6.11:
