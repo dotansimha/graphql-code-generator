@@ -9,10 +9,16 @@ on:
 
 jobs:
   test:
-    name: Build And Deploy Website
+    name: Deploy Website
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
+      - name: Use Node 13
+        uses: actions/setup-node@master
+        with:
+          node-version: 13
+      - name: Install Dependencies
+        run: yarn install
       - name: Build Plugins
         run: yarn build
       - name: Build Website
