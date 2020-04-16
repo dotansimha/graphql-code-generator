@@ -20,6 +20,6 @@ jobs:
       - name: Deploy Website 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          ACCESS_TOKEN: ${{ secrets.PAGES_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: website/build # The folder the action should deploy.
