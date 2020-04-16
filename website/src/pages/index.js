@@ -59,43 +59,45 @@ function SplashContainer(props) {
   return (
     <div className={styles.homeContainer}>
       <img
-        className="desktop-only"
+        className={styles.desktopOnly}
         src={`/img/hexagons/blue.svg`}
         style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }}
       />
       <img
-        className="desktop-only"
+        className={styles.desktopOnly}
         src={`/img/hexagons/pink.svg`}
         style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }}
       />
       <img
-        className="desktop-only"
+        className={styles.desktopOnly}
         src={`/img/hexagons/blue.svg`}
         style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }}
       />
       <img
-        className="desktop-only"
+        className={styles.desktopOnly}
         src={`/img/hexagons/pink.svg`}
         style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }}
       />
       <img
-        className="desktop-only"
+        className={styles.desktopOnly}
         src={`/img/hexagons/blue.svg`}
         style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }}
       />
       <div className={styles.homeSplashFade}>
-        <div className="wrapper homeWrapper">{props.children}</div>
+        <div className={[styles.wrapper, styles.homeWrapper]}>{props.children}</div>
       </div>
     </div>
   );
 }
 
+console.log(styles);
+
 function ProjectTitle() {
   return (
-    <h2 className={styles.projectTitle}>
-      <img src="img/gql-codegen-cover.png" />
-      <small>Generate code from your GraphQL schema with a single function call</small>
-    </h2>
+    <div className={styles.coverContainer}>
+      <img src="img/gql-codegen-cover.png" className={styles.cover} />
+      <h2 className={styles.projectTitle}>Generate code from your GraphQL schema with a single function call</h2>
+    </div>
   );
 }
 

@@ -31,9 +31,13 @@
   background-color: #f6f8f9;
 }
 
-.homeContainer .projectTitle img {
+.cover {
   width: 100%;
   max-width: 512px;
+}
+
+.coverContainer {
+  text-align: center;
 }
 
 .homeContainer .projectTitle small {
@@ -43,4 +47,10 @@
   margin-top: 14px;
   margin-bottom: 14px;
   line-height: 1.4;
+}
+
+@media only screen and (max-width: 1023px) {
+  .desktopOnly {
+    display: none;
+  }
 }
