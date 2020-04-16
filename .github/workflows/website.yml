@@ -5,14 +5,23 @@ on:
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     branches:
-      - wip-docusaurus-v2
+      - master
 
 jobs:
   test:
     name: Deploy Website
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    # if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[deploy_website]')
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v1
       - name: Use Node 13
