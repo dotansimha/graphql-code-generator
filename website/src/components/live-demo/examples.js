@@ -125,7 +125,7 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
     {
-      name: 'urql',
+      name: 'Urql',
       config: `generates:
   components.tsx:
     plugins:
@@ -150,6 +150,19 @@ export const EXAMPLES = {
       name: 'Resolvers Signature',
       config: `generates:
   resolvers.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+    },
+    {
+      name: 'Resolvers Signature (with custom models)',
+      config: `generates:
+  resolvers.ts:
+    config:
+      mappers:
+        User: ./models#UserDbObject
     plugins:
       - typescript
       - typescript-resolvers`,
@@ -215,7 +228,7 @@ export const EXAMPLES = {
   ],
   Flow: [
     {
-      name: 'Types',
+      name: 'Schema types',
       config: `generates:
   types.flow.js:
     - flow
