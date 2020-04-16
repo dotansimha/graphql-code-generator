@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "docusaurus start",
-    "build-website": "docusaurus build",
-    "prebuild-website": "yarn generate-config-docs",
-    "generate-config-docs": "node generate-config.js"
+    "build:website": "docusaurus build",
+    "prebuild:website": "yarn generate:config-docs",
+    "generate:config-docs": "node generate-config.js"
   },
   "devDependencies": {
     "@docusaurus/core": "2.0.0-alpha.50",
