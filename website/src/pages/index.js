@@ -1,9 +1,7 @@
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
-const global = process || window;
-
-console.log(process);
-if (!global.hrtime) {
-  global.hrtime = () => null;
+if (ExecutionEnvironment.canUseDOM) {
+  process.hrtime = () => null;
 }
 
 import React from 'react';

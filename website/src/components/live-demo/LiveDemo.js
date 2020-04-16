@@ -43,16 +43,13 @@ export const LiveDemo = () => {
   return (
     <div>
       <div className={classes.picker}>
-        {/* <FormControl>
-          <InputLabel htmlFor={'example'}>Choose Example</InputLabel>
-          <Select value={template} onChange={e => changeTemplate(e.target.value)}>
-            {Object.keys(EXAMPLES).map(name => (
-              <MenuItem key={name} value={name}>
-                {EXAMPLES[name].name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
+        Choose Example: <select value={template} onChange={e => changeTemplate(e.target.value)}>
+          {Object.keys(EXAMPLES).map(name => (
+            <option key={name} value={name}>
+              {EXAMPLES[name].name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className={classes.container}>
         <div className={classes.column}>

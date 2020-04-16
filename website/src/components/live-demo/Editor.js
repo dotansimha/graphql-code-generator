@@ -1,30 +1,41 @@
-import CodeMirror from 'codemirror';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/addon/lint/yaml-lint';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/comment/comment';
-import 'codemirror/addon/edit/matchbrackets';
-import 'codemirror/addon/edit/closebrackets';
-import 'codemirror/addon/fold/foldgutter';
-import 'codemirror/addon/fold/brace-fold';
-import 'codemirror/addon/search/search';
-import 'codemirror/addon/search/searchcursor';
-import 'codemirror/addon/search/jump-to-line';
-import 'codemirror/addon/dialog/dialog';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/mode/yaml/yaml';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/keymap/sublime';
-import 'codemirror-graphql/hint';
-import 'codemirror-graphql/lint';
-import 'codemirror-graphql/info';
-import 'codemirror-graphql/jump';
-import 'codemirror-graphql/mode';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+
+let CodeMirror = null;
+
+if (ExecutionEnvironment.canUseDOM) {
+  CodeMirror = require('codemirror');
+  require('codemirror/addon/lint/lint');
+  require('codemirror/addon/lint/yaml-lint');
+  require('codemirror/addon/hint/show-hint');
+  require('codemirror/addon/comment/comment');
+  require('codemirror/addon/edit/matchbrackets');
+  require('codemirror/addon/edit/closebrackets');
+  require('codemirror/addon/fold/foldgutter');
+  require('codemirror/addon/fold/brace-fold');
+  require('codemirror/addon/search/search');
+  require('codemirror/addon/search/searchcursor');
+  require('codemirror/addon/search/jump-to-line');
+  require('codemirror/addon/dialog/dialog');
+  require('codemirror/addon/lint/lint');
+  require('codemirror/mode/yaml/yaml');
+  require('codemirror/mode/javascript/javascript');
+  require('codemirror/keymap/sublime');
+  require('codemirror-graphql/hint');
+  require('codemirror-graphql/lint');
+  require('codemirror-graphql/info');
+  require('codemirror-graphql/jump');
+  require('codemirror-graphql/mode');
+}
+
 import React from 'react';
 import classes from './styles.module.css';
 import useThemeContext from '@theme/hooks/useThemeContext';
 
 export const Editor = ({ value, lang, readOnly, onEdit }) => {
+  if (CodeMirror === null) {
+    return null;
+  }
+
   const elementRef = React.useRef(null);
   const [editorRef, setEditorRef] = React.useState(null);
   const { isDarkTheme } = useThemeContext();
