@@ -20,6 +20,7 @@
     "babel-preset-minify": "0.5.1"
   },
   "dependencies": {
+    "react-codemirror": "git://github.com/skidding/react-codemirror.git#106-fix-update",
     "@graphql-codegen/add": "1.13.2",
     "@graphql-codegen/cli": "1.13.2",
     "@graphql-codegen/flow": "1.13.2",
@@ -42,6 +43,14 @@
     "@graphql-codegen/typescript-stencil-apollo": "1.13.2",
     "@graphql-codegen/typescript-urql": "1.13.2",
     "@graphql-codegen/typescript-vue-apollo": "1.13.2",
+    "@graphql-codegen/typescript-graphql-request": "1.13.2",
+    "@graphql-codegen/typescript-generic-sdk": "1.13.2",
+    "@graphql-codegen/typescript-type-graphql": "1.13.2",
+    "@graphql-codegen/java-apollo-android": "1.13.2",
+    "@graphql-codegen/near-operation-file-preset": "1.13.2",
+    "@graphql-codegen/import-types-preset": "1.13.2",
+    "@graphql-codegen/c-sharp-operations": "1.13.2",
+    "@graphql-codegen/c-sharp": "1.13.2",
     "@graphql-codegen/website": "1.13.2",
     "codemirror": "5.52.2",
     "codemirror-graphql": "0.11.6",

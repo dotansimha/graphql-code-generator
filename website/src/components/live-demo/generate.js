@@ -1,8 +1,10 @@
+import React from 'react';
 import { normalizeConfig } from './utils';
-import { pluginLoaderMap } from './plugins';
+import { pluginLoaderMap, presetLoaderMap } from './plugins';
 
 export async function generate(config, schema, documents) {
   try {
+    const outputs = [];
     const [{ safeLoad }, { codegen }, { parse }] = await Promise.all([
       import('js-yaml').then(m => ('default' in m ? m.default : m)),
       import('@graphql-codegen/core').then(m => ('default' in m ? m.default : m)),
@@ -12,40 +14,79 @@ export async function generate(config, schema, documents) {
     const cleanTabs = config.replace(/\t/g, '  ');
     const { generates, ...otherFields } = safeLoad(cleanTabs);
     const rootConfig = otherFields.config || {};
-    const filename = Object.keys(generates)[0];
-    const plugins = normalizeConfig(generates[filename].plugins || generates[filename]);
-    const outputConfig = generates[filename].config;
-    const pluginMap = {};
+    const runConfigurations = [];
 
-    await Promise.all(
-      plugins.map(async pluginElement => {
-        const pluginName = Object.keys(pluginElement)[0];
-        pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
-      })
-    );
+    for (const [filename, outputOptions] of Object.entries(generates)) {
+      const hasPreset = !!outputOptions.preset;
+      const plugins = normalizeConfig(outputOptions.plugins || outputOptions);
+      const outputConfig = outputOptions.config;
+      const pluginMap = {};
+  
+      await Promise.all(
+        plugins.map(async pluginElement => {
+          const pluginName = Object.keys(pluginElement)[0];
+          try {
+            pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
+          } catch (e) {
+            console.error(`Unable to find codegen plugin named "${pluginName}"...`)
+          }
+        })
+      );
+  
+      const mergedConfig = {
+        ...rootConfig,
+        ...outputConfig,
+      };
+    
+      if (!hasPreset) {
+        runConfigurations.push({
+          filename,
+          plugins,
+          schema: parse(schema),
+          documents: documents
+            ? [
+                {
+                  location: 'operation.graphql',
+                  document: parse(documents),
+                },
+              ]
+            : [],
+          config: mergedConfig,
+          pluginMap,
+        });
+      } else {
+        const presetExport = await presetLoaderMap[outputOptions.preset]();
+        const presetFn = typeof presetExport === 'function' ? presetExport : presetExport.preset;
+  
+        runConfigurations.push(
+          ...(await presetFn.buildGeneratesSection({
+            baseOutputDir: filename,
+            presetConfig: outputOptions.presetConfig || {},
+            plugins,
+            schema: parse(schema),
+            documents: documents
+              ? [
+                  {
+                    location: 'operation.graphql',
+                    document: parse(documents),
+                  },
+                ]
+              : [],
+            config: mergedConfig,
+            pluginMap,
+          }))
+        );
+      }
+    }
 
-    const mergedConfig = {
-      ...rootConfig,
-      ...outputConfig,
-    };
+    for (const execConfig of runConfigurations) {
+      outputs.push({
+        filename: execConfig.filename,
+        content: await codegen(execConfig),
+      });
+    }
 
-    const result = await codegen({
-      filename,
-      plugins,
-      schema: parse(schema),
-      documents: documents
-        ? [
-            {
-              location: 'document.graphql',
-              document: parse(documents),
-            },
-          ]
-        : [],
-      config: mergedConfig,
-      pluginMap,
-    });
-
-    return result;
+    return outputs;
   } catch (e) {
     // tslint:disable-next-line: no-console
     console.error(e);
@@ -58,7 +99,7 @@ export async function generate(config, schema, documents) {
     } else if (e.errors) {
       return e.errors
         .map(
-          (subError) => `${subError.message}: 
+          subError => `${subError.message}: 
 ${subError.details}`
         )
         .join('\n');

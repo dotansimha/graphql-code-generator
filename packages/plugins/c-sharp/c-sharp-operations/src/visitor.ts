@@ -1,7 +1,13 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, DocumentMode, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  DocumentMode,
+  LoadedFragment,
+  indentMultiline,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
-import { ApolloDotNetRawPluginConfig } from './config';
+import { CSharpOperationsRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -11,18 +17,18 @@ function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');
 }
 
-export interface ApolloDotNetPluginConfig extends ClientSideBasePluginConfig {
-  ngModule?: string;
-  namedClient?: string;
-  serviceName?: string;
-  serviceProvidedInRoot?: boolean;
-  sdkClass?: boolean;
-  querySuffix?: string;
-  mutationSuffix?: string;
-  subscriptionSuffix?: string;
+export interface CSharpOperationsPluginConfig extends ClientSideBasePluginConfig {
+  namedClient: string;
+  serviceName: string;
+  querySuffix: string;
+  mutationSuffix: string;
+  subscriptionSuffix: string;
 }
 
-export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPluginConfig, ApolloDotNetPluginConfig> {
+export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
+  CSharpOperationsRawPluginConfig,
+  CSharpOperationsPluginConfig
+> {
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -32,7 +38,12 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     serviceName: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: ApolloDotNetRawPluginConfig, documents?: Types.DocumentFile[]) {
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: CSharpOperationsRawPluginConfig,
+    documents?: Types.DocumentFile[]
+  ) {
     super(
       schema,
       fragments,
@@ -40,7 +51,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
       {
         namedClient: rawConfig.namedClient,
         serviceName: rawConfig.serviceName,
-        serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
@@ -100,11 +110,7 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
   protected _gql(node: OperationDefinitionNode): string {
     const fragments = this._transformFragments(node);
     let doc = this._prepareDocument(`
-    ${
-      print(node)
-        .split('\\')
-        .join('\\\\')
-    }
+    ${print(node).split('\\').join('\\\\')}
     ${this._includeFragments(fragments)}`);
 
     doc = doc.replace(/"/g, '""');
@@ -115,7 +121,6 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
 
     return '@"' + doc + '"';
   }
-
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
     return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
@@ -135,7 +140,13 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
     }
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     const serviceName = `${this.convertName(node)}${this._operationSuffix(operationType)}`;
     this._operationsToInclude.push({
       node,
@@ -176,12 +187,20 @@ export class ApolloDotNetVisitor extends ClientSideBaseVisitor<ApolloDotNetRawPl
 
     const allPossibleActions = this._operationsToInclude
       .map(o => {
-        const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || !!v.defaultValue);
+        const optionalVariables =
+          !o.node.variableDefinitions ||
+          o.node.variableDefinitions.length === 0 ||
+          o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || !!v.defaultValue);
 
-        const options = o.operationType === 'Mutation' ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>` : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
+        const options =
+          o.operationType === 'Mutation'
+            ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>`
+            : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
 
         const method = `
-${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}, options?: ${options}) {
+${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
+          o.operationVariablesTypes
+        }, options?: ${options}) {
   return this.${camelCase(o.serviceName)}.${actionType(o.operationType)}(variables, options)
 }`;
 
@@ -190,7 +209,9 @@ ${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${o.op
         if (o.operationType === 'Query') {
           watchMethod = `
 
-${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
+${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
   return this.${camelCase(o.serviceName)}.watch(variables, options)
 }`;
         }
@@ -204,7 +225,7 @@ ${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: $
       .map(s => indentMultiline(s, 3))
       .join(',\n');
 
-    const serviceName = this.config.serviceName || 'ApolloDotNetSDK';
+    const serviceName = this.config.serviceName || 'GraphQLSDK';
 
     return `
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -244,11 +265,18 @@ ${injections}
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
       const isDocumentNode = this.config.documentMode === DocumentMode.documentNode;
-      documentString = `${this.config.noExport ? '' : 'public'} static string ${documentVariableName}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+      documentString = `${this.config.noExport ? '' : 'public'} static string ${documentVariableName}${
+        isDocumentNode ? ': DocumentNode' : ''
+      } = ${this._gql(node)};`;
     }
 
     const operationType: string = node.operation;
-    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : !operationType ? '' : operationType;
+    const operationTypeSuffix: string =
+      this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation)
+        ? ''
+        : !operationType
+        ? ''
+        : operationType;
 
     const operationResultType: string = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,

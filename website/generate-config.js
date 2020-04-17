@@ -9,6 +9,8 @@ const mapping = {
   '../packages/presets/near-operation-file/src/index.ts': BASE_DIR + '/near-operation-file.md',
   '../packages/presets/import-types/src/index.ts': BASE_DIR + '/import-types.md',
   // Plugins
+  '../packages/plugins/c-sharp/c-sharp/src/config.ts': BASE_DIR + '/c-sharp.md',
+  '../packages/plugins/c-sharp/c-sharp-operations/src/config.ts': BASE_DIR + '/c-sharp-operations.md',
   '../packages/plugins/other/schema-ast/src/index.ts': BASE_DIR + '/schema-ast.md',
   '../packages/plugins/other/time/src/index.ts': BASE_DIR + '/time.md',
   '../packages/plugins/typescript/graphql-request/src/config.ts': BASE_DIR + '/typescript-graphql-request.md',

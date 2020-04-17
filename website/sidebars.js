@@ -56,6 +56,11 @@ module.exports = {
       },
       {
         type: 'category',
+        label: '.NET',
+        items: ['plugins/c-sharp', 'plugins/c-sharp-operations'],
+      },
+      {
+        type: 'category',
         label: 'Utilities',
         items: [
           'plugins/fragment-matcher',

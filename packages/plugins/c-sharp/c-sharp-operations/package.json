@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-codegen/c-sharp-apollo",
+  "name": "@graphql-codegen/c-sharp-operations",
   "version": "1.13.2",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -28,7 +28,7 @@
     "definition": "dist/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/apollo-dotnet"
+    "outputDirectory": "../../../../test-results/c-sharp-operations"
   },
   "publishConfig": {
     "access": "public"

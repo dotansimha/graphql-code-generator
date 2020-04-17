@@ -1,3 +1,9 @@
+export const presetLoaderMap = {
+  'near-operation-file': () => import('@graphql-codegen/near-operation-file-preset'),
+  'import-types': () => import('@graphql-codegen/import-types-preset'),
+  'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
+};
+
 export const pluginLoaderMap = {
   java: () => import('@graphql-codegen/java'),
   'java-resolvers': () => import('@graphql-codegen/java-resolvers'),
@@ -14,7 +20,13 @@ export const pluginLoaderMap = {
   'typescript-vue-apollo': () => import('@graphql-codegen/typescript-vue-apollo'),
   'typescript-stencil-apollo': () => import('@graphql-codegen/typescript-stencil-apollo'),
   'typescript-graphql-files-modules': () => import('@graphql-codegen/typescript-graphql-files-modules'),
+  'typescript-graphql-request': () => import('@graphql-codegen/typescript-graphql-request'),
+  'typescript-generic-sdk': () => import('@graphql-codegen/typescript-generic-sdk'),
+  'typescript-type-graphql': () => import('@graphql-codegen/typescript-type-graphql'),
   'typescript-mongodb': () => import('@graphql-codegen/typescript-mongodb'),
+  'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
+  'c-sharp-operations': () => import('@graphql-codegen/c-sharp-operations'),
+  'c-sharp': () => import('@graphql-codegen/c-sharp'),
   'typescript-urql': () => import('@graphql-codegen/typescript-urql'),
   add: () => import('@graphql-codegen/add'),
   time: () => import('@graphql-codegen/time'),

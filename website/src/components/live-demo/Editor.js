@@ -1,9 +1,8 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-
-let CodeMirror = null;
+import ReactCodeMirror from 'react-codemirror';
 
 if (ExecutionEnvironment.canUseDOM) {
-  CodeMirror = require('codemirror');
+  require('codemirror');
   require('codemirror/addon/lint/lint');
   require('codemirror/addon/lint/yaml-lint');
   require('codemirror/addon/hint/show-hint');
@@ -28,49 +27,23 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 import React from 'react';
-import classes from './styles.module.css';
 import useThemeContext from '@theme/hooks/useThemeContext';
 
 export const Editor = ({ value, lang, readOnly, onEdit }) => {
-  if (CodeMirror === null) {
-    return null;
-  }
-
-  const elementRef = React.useRef(null);
-  const [editorRef, setEditorRef] = React.useState(null);
   const { isDarkTheme } = useThemeContext();
-  const theme = isDarkTheme ? 'nord' : 'neo';
+  const options = {
+    theme: isDarkTheme ? 'nord' : 'neo',
+    lineNumbers: true,
+    tabSize: 2,
+    mode: lang,
+    keyMap: 'sublime',
+    matchBrackets: true,
+    indentWithTabs: false,
+    indentUnit: 2,
+    showCursorWhenSelecting: true,
+    readOnly: readOnly,
+    gutters: ['CodeMirror-lint-markers'],
+  };
 
-  if (editorRef === null && elementRef.current !== null) {
-    const instance = CodeMirror(elementRef.current, {
-      value: value || '',
-      theme,
-      lineNumbers: true,
-      tabSize: 2,
-      mode: lang,
-      keyMap: 'sublime',
-      matchBrackets: true,
-      indentWithTabs: false,
-      indentUnit: 2,
-      showCursorWhenSelecting: true,
-      readOnly: readOnly ? 'nocursor' : false,
-      gutters: ['CodeMirror-lint-markers'],
-    });
-
-    setEditorRef(instance);
-
-    instance.on('change', editorInstance => {
-      onEdit(editorInstance.getValue());
-    });
-  }
-
-  if (editorRef) {
-    editorRef.setOption('theme', theme);
-  }
-
-  if (editorRef !== null && editorRef.getValue() !== value) {
-    editorRef.setValue(value);
-  }
-
-  return <div className={classes.queryEditor} ref={elementRef} />;
+  return <ReactCodeMirror value={value} onChange={readOnly ? null : onEdit} options={options} />;
 };

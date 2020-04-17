@@ -13,7 +13,11 @@
     "test": "jest --no-watchman --config ../../../jest.config.js",
     "prepack": "bob prepack"
   },
+  "devDependencies": {
+    "@types/parse-filepath": "1.0.0"
+  },
   "dependencies": {
+    "parse-filepath": "1.0.2",
     "@graphql-codegen/add": "1.13.2",
     "@graphql-codegen/plugin-helpers": "1.13.2",
     "@graphql-codegen/visitor-plugin-common": "1.13.2",

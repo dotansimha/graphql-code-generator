@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+
 .picker {
   padding-left: 30px;
   padding-bottom: 5px;
@@ -15,9 +17,14 @@
 }
 
 .column {
+  align-self: stretch;
+  flex-flow: column;
   flex: 1;
   min-width: 22vw;
   max-width: 22vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .title {
@@ -34,8 +41,40 @@
   border-bottom: 1px solid #e5e5e5;
 }
 
+.tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-self: flex-end;
+}
+
+.tabs .tab {
+  border-radius: 5px 5px 0px 0px;
+  flex: 1;
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 5px 3px 5px 3px;
+  margin-right: 5px;
+  margin-top: 5px;
+  font-family: 'Inconsolata', monospace;
+  text-align: center;
+  max-width: 30%;
+}
+
+.tabs .activeTab {
+  background-color: var(--ifm-color-emphasis-600);
+  color: white;
+}
+
+html[data-theme='dark'] .tabs .activeTab {
+  background-color: var(--ifm-color-emphasis-600);
+  color: black;
+}
+
 .iconText {
-  flex: 0;
+  text-align: center;
+  font-family: 'Inconsolata', monospace;
 }
 
 .queryEditor {
@@ -60,4 +99,16 @@
 
 .generateButton:hover img {
   filter: invert(51%) sepia(21%) saturate(3977%) hue-rotate(301deg) brightness(94%) contrast(87%);
+}
+
+.multipleViewContainer {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.multipleViewContainer div {
+  flex: 1;
+  align-self: stretch;
 }
