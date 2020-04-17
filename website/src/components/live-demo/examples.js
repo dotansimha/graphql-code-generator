@@ -62,7 +62,8 @@ export const EXAMPLES = {
       name: 'Schema types',
       config: `generates:
     server-types.ts:
-      - typescript`,
+      plugins:
+        - typescript`,
       schema: TS_SCHEMA,
       documents: '',
     },
@@ -70,8 +71,9 @@ export const EXAMPLES = {
       name: 'Operations types',
       config: `generates:
   client-types.ts:
-    - typescript
-    - typescript-operations`,
+    plugins:
+      - typescript
+      - typescript-operations`,
       schema: TS_SCHEMA,
       documents: TS_QUERY,
     },
@@ -154,7 +156,7 @@ export const EXAMPLES = {
       - typescript
       - typescript-resolvers`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY,
+      documents:'',
     },
     {
       name: 'Resolvers Signature (with custom models)',
@@ -163,17 +165,48 @@ export const EXAMPLES = {
     config:
       mappers:
         User: ./models#UserDbObject
+        Chat: ./models#ChatModel
     plugins:
       - typescript
       - typescript-resolvers`,
       schema: TS_SCHEMA,
+      documents: '',
+    },
+    {
+      name: 'graphql-request typed SDK',
+      config: `generates:
+  sdk.ts:
+    plugins:
+      - typescript
+      - typescript-graphql-request`,
+      schema: TS_SCHEMA,
       documents: TS_QUERY,
+    },
+    {
+      name: 'Generic SDK',
+      config: `generates:
+  sdk.ts:
+    plugins:
+      - typescript
+      - typescript-generic-sdk`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+    },
+    {
+      name: 'type-graphql',
+      config: `generates:
+  types.ts:
+    plugins:
+      - typescript-type-graphql`,
+      schema: TS_SCHEMA,
+      documents: '',
     },
     {
       name: 'MongoDB Models',
       config: `generates:
     models.ts:
-      - typescript-mongodb`,
+      plugins:
+        - typescript-mongodb`,
       schema: `type User @entity {
     id: ID! @id
     username: String! @column
@@ -213,7 +246,8 @@ export const EXAMPLES = {
       name: 'Types (Enum & Input)',
       config: `generates:
   src/main/java/my/app/generated/Types.java:
-    - java`,
+    plugins:
+      - java`,
       schema: TS_SCHEMA,
       documents: '',
     },
@@ -221,9 +255,24 @@ export const EXAMPLES = {
       name: 'Resolvers Signature',
       config: `generates:
   src/main/java/my/app/generated/Resolvers.java:
-    - java-resolvers`,
+    plugins:
+      - java-resolvers`,
       schema: TS_SCHEMA,
       documents: '',
+    },
+    {
+      name: 'Apollo Android',
+      config: `generates:
+  ./app/src/main/java/:
+    preset: java-apollo-android
+    config:
+      package: "com.my.paackage.generated.graphql"
+      typePackage: "com.my.paackage.generated.Types"
+      fragmentPackage: "com.my.paackage.generated.Fragment"
+    plugins:
+      - java-apollo-android`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
     },
   ],
   Flow: [
@@ -231,7 +280,8 @@ export const EXAMPLES = {
       name: 'Schema types',
       config: `generates:
   types.flow.js:
-    - flow
+    plugins:
+      - flow
     `,
       schema: TS_SCHEMA,
       documents: '',
@@ -240,8 +290,9 @@ export const EXAMPLES = {
       name: 'Resolvers Signature',
       config: `generates:
   resolvers.flow.js:
-    - flow
-    - flow-resolvers
+    plugins:
+      - flow
+      - flow-resolvers
     `,
       schema: TS_SCHEMA,
       documents: '',
@@ -250,8 +301,9 @@ export const EXAMPLES = {
       name: 'Operations types',
       config: `generates:
   types.flow.js:
-    - flow
-    - flow-operations
+    plugins:
+      - flow
+      - flow-operations
     `,
       schema: TS_SCHEMA,
       documents: TS_QUERY,
@@ -262,7 +314,8 @@ export const EXAMPLES = {
       name: 'Introspection JSON',
       config: `generates:
   schema.json:
-    - introspection`,
+    plugins:
+      - introspection`,
       schema: TS_SCHEMA,
       documents: '',
     },
@@ -270,7 +323,8 @@ export const EXAMPLES = {
       name: 'Schema AST',
       config: `generates:
   schema.graphql:
-    - schema-ast`,
+    plugins:
+      - schema-ast`,
       schema: TS_SCHEMA,
       documents: '',
     },
@@ -278,7 +332,8 @@ export const EXAMPLES = {
       name: 'Fragment Matcher',
       config: `generates:
   fragment-matcher.json:
-    - fragment-matcher`,
+    plugins:
+      - fragment-matcher`,
       schema: TS_SCHEMA,
       documents: '',
     },

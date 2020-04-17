@@ -5,7 +5,35 @@ import { EXAMPLES } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
 import classes from './styles.module.css';
-import { Button } from '../ui/Button';
+import { CodegenOutput } from './CodegenOutput';
+
+function useCodegen(config, schema, documents, templateName) {
+  const [error, setError] = React.useState(null);
+  const [output, setOutput] = React.useState(null);
+  const runCodegen = React.useCallback(() => run());
+
+  async function run() {
+    const result = await generate(config, schema, documents);
+
+    if (typeof result === 'string') {
+      setOutput(null);
+      setError(result);
+    } else {
+      setOutput(result);
+      setError(null);
+    }
+  }
+
+  React.useEffect(() => {
+    run();
+  }, [config, schema, documents, templateName]);
+
+  return {
+    runCodegen,
+    error,
+    output,
+  };
+}
 
 const DEFAULT_EXAMPLE = {
   catName: 'TypeScript',
@@ -17,27 +45,17 @@ export const LiveDemo = () => {
   const [schema, setSchema] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
   const [config, setConfig] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
-  const [output, setOutput] = React.useState(null);
-  const exec = async (eConfig, eSchema, eDocuments) => {
-    const result = await generate(eConfig, eSchema, eDocuments);
-    setOutput(result);
-  };
+  const { output, error, runCodegen } = useCodegen(config, schema, documents, template);
+
+  console.log(error);
+
   const changeTemplate = value => {
     const [catName, index] = value.split('__');
-    setTemplate(value);
     setSchema(EXAMPLES[catName][index].schema);
     setDocuments(EXAMPLES[catName][index].documents);
     setConfig(EXAMPLES[catName][index].config);
-    exec(
-      EXAMPLES[catName][index].config,
-      EXAMPLES[catName][index].schema,
-      EXAMPLES[catName][index].documents
-    );
+    setTemplate(value);
   };
-
-  if (output === null) {
-    exec(config, schema, documents);
-  }
 
   let mode = null;
 
@@ -86,13 +104,14 @@ export const LiveDemo = () => {
           <Editor lang={'yaml'} onEdit={setConfig} value={config} />
         </div>
         <div className={classes.column} style={{ minWidth: '34vw', maxWidth: '34vw' }}>
-          <div className={classes.title}>
-            <Button contained="true" className={classes.generateButton} onClick={() => exec(config, schema, documents)}>
-              <img src="/img/magic.svg" alt={'Generate'} />
-              <div className={classes.generateText}>Generate</div>
-            </Button>
-          </div>
-          <Editor lang={mode} onEdit={() => null} value={output || ''} />
+          <CodegenOutput
+            editorProps={{
+              lang: mode,
+              readOnly: true,
+            }}
+            error={error}
+            outputArray={output}
+          />
         </div>
       </div>
     </div>
