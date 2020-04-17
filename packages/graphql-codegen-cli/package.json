@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/bin.js",
@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman",
-    "prepack": "../../scripts/prepack.js"
+    "prepack": "bob prepack"
   },
   "keywords": [
     "gql",
@@ -40,24 +40,21 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@graphql-codegen/core": "1.13.1",
-    "@graphql-codegen/plugin-helpers": "1.13.1",
-    "@graphql-toolkit/apollo-engine-loader": "0.9.10",
-    "@graphql-toolkit/code-file-loader": "0.9.10",
-    "@graphql-toolkit/common": "0.9.10",
-    "@graphql-toolkit/core": "0.9.10",
-    "@graphql-toolkit/git-loader": "0.9.10",
-    "@graphql-toolkit/github-loader": "0.9.10",
-    "@graphql-toolkit/graphql-file-loader": "0.9.10",
-    "@graphql-toolkit/json-file-loader": "0.9.10",
-    "@graphql-toolkit/prisma-loader": "0.9.10",
-    "@graphql-toolkit/url-loader": "0.9.10",
-    "@types/debounce": "1.2.0",
-    "@types/is-glob": "4.0.1",
-    "@types/mkdirp": "1.0.0",
-    "@types/valid-url": "1.0.3",
+    "@graphql-codegen/core": "1.13.2",
+    "@graphql-codegen/plugin-helpers": "1.13.2",
+    "@graphql-toolkit/apollo-engine-loader": "~0.10.4",
+    "@graphql-toolkit/code-file-loader": "~0.10.4",
+    "@graphql-toolkit/common": "~0.10.4",
+    "@graphql-toolkit/core": "~0.10.4",
+    "@graphql-toolkit/git-loader": "~0.10.4",
+    "@graphql-toolkit/github-loader": "~0.10.4",
+    "@graphql-toolkit/graphql-file-loader": "~0.10.4",
+    "@graphql-toolkit/json-file-loader": "~0.10.4",
+    "@graphql-toolkit/prisma-loader": "~0.10.4",
+    "@graphql-toolkit/url-loader": "~0.10.4",
+    "ansi-escapes": "4.3.1",
     "camel-case": "4.1.1",
-    "chalk": "3.0.0",
+    "chalk": "4.0.0",
     "chokidar": "3.3.1",
     "commander": "5.0.0",
     "common-tags": "1.8.0",
@@ -67,7 +64,7 @@
     "dependency-graph": "0.9.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.6",
-    "graphql-config": "3.0.0-alpha.23",
+    "graphql-config": "3.0.0",
     "indent-string": "4.0.0",
     "inquirer": "7.1.0",
     "is-glob": "4.0.1",
@@ -75,39 +72,43 @@
     "listr": "0.14.3",
     "listr-update-renderer": "0.5.0",
     "log-symbols": "3.0.0",
-    "log-update": "4.0.0",
     "lower-case": "2.0.1",
     "minimatch": "3.0.4",
-    "mkdirp": "1.0.3",
+    "mkdirp": "1.0.4",
     "pascal-case": "3.1.1",
-    "prettier": "2.0.2",
     "request": "2.88.2",
     "ts-log": "2.1.4",
-    "tslib": "1.11.1",
+    "tslib": "^1.11.1",
     "upper-case": "2.0.1",
-    "valid-url": "1.0.9"
+    "valid-url": "1.0.9",
+    "wrap-ansi": "6.2.0"
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
+    "@types/debounce": "1.2.0",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
+    "@types/is-glob": "4.0.1",
     "@types/js-yaml": "3.12.3",
     "@types/listr": "0.14.2",
     "@types/log-symbols": "2.0.0",
     "@types/minimatch": "3.0.3",
+    "@types/mkdirp": "1.0.0",
+    "@types/valid-url": "1.0.3",
     "bdd-stdin": "0.2.0",
     "dotenv": "8.2.0",
     "js-yaml": "3.13.1",
-    "make-dir": "3.0.2"
+    "make-dir": "3.0.2",
+    "prettier": "2.0.4"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "main": "dist/index.cjs.js",	
-  "module": "dist/index.esm.js",	
-  "typings": "dist/index.d.ts",	
-  "typescript": {	
-    "definition": "dist/index.d.ts"	
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
   },
   "buildOptions": {
     "bin": {

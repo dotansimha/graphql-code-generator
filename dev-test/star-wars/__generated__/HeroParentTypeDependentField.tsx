@@ -74,24 +74,26 @@ export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDepen
   />
 );
 
-export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroParentTypeDependentFieldQuery,
-  HeroParentTypeDependentFieldQueryVariables
-> &
+export type HeroParentTypeDependentFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroParentTypeDependentFieldQuery,
+    HeroParentTypeDependentFieldQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroParentTypeDependentField<TProps, TChildProps = {}>(
+export function withHeroParentTypeDependentField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
+    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
+    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
   >(HeroParentTypeDependentFieldDocument, {
     alias: 'heroParentTypeDependentField',
     ...operationOptions,

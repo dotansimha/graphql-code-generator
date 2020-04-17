@@ -5,7 +5,7 @@ import { parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
-export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptResolversPluginConfig

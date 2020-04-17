@@ -33,17 +33,19 @@ export const HeroNameComponent = (props: HeroNameComponentProps) => (
   <ApolloReactComponents.Query<HeroNameQuery, HeroNameQueryVariables> query={HeroNameDocument} {...props} />
 );
 
-export type HeroNameProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroNameQuery, HeroNameQueryVariables> &
+export type HeroNameProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroNameQuery, HeroNameQueryVariables>;
+} &
   TChildProps;
-export function withHeroName<TProps, TChildProps = {}>(
+export function withHeroName<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameQuery,
     HeroNameQueryVariables,
-    HeroNameProps<TChildProps>
+    HeroNameProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps>>(
+  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps, TDataName>>(
     HeroNameDocument,
     {
       alias: 'heroName',

@@ -180,7 +180,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-react-apollo
    *  config:
    *    withMutationOptionsType: true
-   *
+   * ```
    */
   withMutationOptionsType?: boolean;
   /**
@@ -200,7 +200,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-react-apollo
    *  config:
    *    addDocBlocks: true
-   *
+   * ```
    */
   addDocBlocks?: boolean;
 }

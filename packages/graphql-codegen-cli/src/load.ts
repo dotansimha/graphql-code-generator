@@ -36,7 +36,6 @@ export const loadSchema = async (
       loaders,
       sort: true,
       convertExtensions: true,
-      commentDescriptions: true,
       ...config,
     });
     return schema;

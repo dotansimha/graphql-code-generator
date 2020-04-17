@@ -64,11 +64,11 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
   fileType: FileType;
 }
 
-export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (
+export const plugin: PluginFunction<JavaApolloAndroidPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: JavaApolloAndroidPluginConfig
-): Types.PluginOutput => {
+) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
@@ -100,7 +100,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (
   }
 
   if (!visitor) {
-    return '';
+    return { content: '' };
   }
 
   const visitResult = visit(allAst, visitor as any);

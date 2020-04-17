@@ -14,20 +14,35 @@ export type Scalars = {
   Float: number;
 };
 
-/** A comment about an entry, submitted by a user */
-export type Comment = {
-  __typename?: 'Comment';
-  /** The SQL ID of this entry */
-  id: Scalars['Int'];
-  /** The GitHub user who posted the comment */
-  postedBy: User;
-  /** A timestamp of when the comment was posted */
-  createdAt: Scalars['Float'];
-  /** The text of the comment */
-  content: Scalars['String'];
-  /** The repository which this comment is about */
-  repoName: Scalars['String'];
+export type Query = {
+  __typename?: 'Query';
+  /** A feed of repository submissions */
+  feed?: Maybe<Array<Maybe<Entry>>>;
+  /** A single entry */
+  entry?: Maybe<Entry>;
+  /** Return the currently logged in user, or null if nobody is logged in */
+  currentUser?: Maybe<User>;
 };
+
+export type QueryFeedArgs = {
+  type: FeedType;
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+export type QueryEntryArgs = {
+  repoFullName: Scalars['String'];
+};
+
+/** A list of options for the sort order of the feed */
+export enum FeedType {
+  /** Sort by a combination of freshness and score, using Reddit's algorithm */
+  Hot = 'HOT',
+  /** Newest entries first */
+  New = 'NEW',
+  /** Highest score entries first */
+  Top = 'TOP',
+}
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
@@ -58,15 +73,59 @@ export type EntryCommentsArgs = {
   offset?: Maybe<Scalars['Int']>;
 };
 
-/** A list of options for the sort order of the feed */
-export enum FeedType {
-  /** Sort by a combination of freshness and score, using Reddit's algorithm */
-  Hot = 'HOT',
-  /** Newest entries first */
-  New = 'NEW',
-  /** Highest score entries first */
-  Top = 'TOP',
-}
+/**
+ * A repository object from the GitHub API. This uses the exact field names returned by the
+ * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
+ */
+export type Repository = {
+  __typename?: 'Repository';
+  /** Just the name of the repository, e.g. GitHunt-API */
+  name: Scalars['String'];
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  full_name: Scalars['String'];
+  /** The description of the repository */
+  description?: Maybe<Scalars['String']>;
+  /** The link to the repository on GitHub */
+  html_url: Scalars['String'];
+  /** The number of people who have starred this repository on GitHub */
+  stargazers_count: Scalars['Int'];
+  /** The number of open issues on this repository on GitHub */
+  open_issues_count?: Maybe<Scalars['Int']>;
+  /** The owner of this repository on GitHub, e.g. apollostack */
+  owner?: Maybe<User>;
+};
+
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export type User = {
+  __typename?: 'User';
+  /** The name of the user, e.g. apollostack */
+  login: Scalars['String'];
+  /** The URL to a directly embeddable image for this user's avatar */
+  avatar_url: Scalars['String'];
+  /** The URL of this user's GitHub page */
+  html_url: Scalars['String'];
+};
+
+/** A comment about an entry, submitted by a user */
+export type Comment = {
+  __typename?: 'Comment';
+  /** The SQL ID of this entry */
+  id: Scalars['Int'];
+  /** The GitHub user who posted the comment */
+  postedBy: User;
+  /** A timestamp of when the comment was posted */
+  createdAt: Scalars['Float'];
+  /** The text of the comment */
+  content: Scalars['String'];
+  /** The repository which this comment is about */
+  repoName: Scalars['String'];
+};
+
+/** XXX to be removed */
+export type Vote = {
+  __typename?: 'Vote';
+  vote_value: Scalars['Int'];
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -92,47 +151,12 @@ export type MutationSubmitCommentArgs = {
   commentContent: Scalars['String'];
 };
 
-export type Query = {
-  __typename?: 'Query';
-  /** A feed of repository submissions */
-  feed?: Maybe<Array<Maybe<Entry>>>;
-  /** A single entry */
-  entry?: Maybe<Entry>;
-  /** Return the currently logged in user, or null if nobody is logged in */
-  currentUser?: Maybe<User>;
-};
-
-export type QueryFeedArgs = {
-  type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-export type QueryEntryArgs = {
-  repoFullName: Scalars['String'];
-};
-
-/**
- * A repository object from the GitHub API. This uses the exact field names returned by the
- * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
-export type Repository = {
-  __typename?: 'Repository';
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: Scalars['String'];
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: Scalars['String'];
-  /** The description of the repository */
-  description?: Maybe<Scalars['String']>;
-  /** The link to the repository on GitHub */
-  html_url: Scalars['String'];
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: Scalars['Int'];
-  /** The number of open issues on this repository on GitHub */
-  open_issues_count?: Maybe<Scalars['Int']>;
-  /** The owner of this repository on GitHub, e.g. apollostack */
-  owner?: Maybe<User>;
-};
+/** The type of vote to record, when submitting a vote */
+export enum VoteType {
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL',
+}
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -143,30 +167,6 @@ export type Subscription = {
 export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
-
-/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
-export type User = {
-  __typename?: 'User';
-  /** The name of the user, e.g. apollostack */
-  login: Scalars['String'];
-  /** The URL to a directly embeddable image for this user's avatar */
-  avatar_url: Scalars['String'];
-  /** The URL of this user's GitHub page */
-  html_url: Scalars['String'];
-};
-
-/** XXX to be removed */
-export type Vote = {
-  __typename?: 'Vote';
-  vote_value: Scalars['Int'];
-};
-
-/** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
-  Cancel = 'CANCEL',
-}
 
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
@@ -348,24 +348,26 @@ export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => 
   />
 );
 
-export type OnCommentAddedProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  OnCommentAddedSubscriptionMyOperation,
-  OnCommentAddedSubscriptionVariables
-> &
+export type OnCommentAddedProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    OnCommentAddedSubscriptionMyOperation,
+    OnCommentAddedSubscriptionVariables
+  >;
+} &
   TChildProps;
-export function withOnCommentAdded<TProps, TChildProps = {}>(
+export function withOnCommentAdded<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     OnCommentAddedSubscriptionMyOperation,
     OnCommentAddedSubscriptionVariables,
-    OnCommentAddedProps<TChildProps>
+    OnCommentAddedProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withSubscription<
     TProps,
     OnCommentAddedSubscriptionMyOperation,
     OnCommentAddedSubscriptionVariables,
-    OnCommentAddedProps<TChildProps>
+    OnCommentAddedProps<TChildProps, TDataName>
   >(OnCommentAddedDocument, {
     alias: 'onCommentAdded',
     ...operationOptions,
@@ -414,23 +416,27 @@ export const CommentComponent = (props: CommentComponentProps) => (
   <ApolloReactComponents.Query<CommentQueryMyOperation, CommentQueryVariables> query={CommentDocument} {...props} />
 );
 
-export type CommentProps<TChildProps = {}> = ApolloReactHoc.DataProps<CommentQueryMyOperation, CommentQueryVariables> &
+export type CommentProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<CommentQueryMyOperation, CommentQueryVariables>;
+} &
   TChildProps;
-export function withComment<TProps, TChildProps = {}>(
+export function withComment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     CommentQueryMyOperation,
     CommentQueryVariables,
-    CommentProps<TChildProps>
+    CommentProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, CommentQueryMyOperation, CommentQueryVariables, CommentProps<TChildProps>>(
-    CommentDocument,
-    {
-      alias: 'comment',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CommentQueryMyOperation,
+    CommentQueryVariables,
+    CommentProps<TChildProps, TDataName>
+  >(CommentDocument, {
+    alias: 'comment',
+    ...operationOptions,
+  });
 }
 export type CommentQueryResult = ApolloReactCommon.QueryResult<CommentQueryMyOperation, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = gql`
@@ -456,24 +462,26 @@ export const CurrentUserForProfileComponent = (props: CurrentUserForProfileCompo
   />
 );
 
-export type CurrentUserForProfileProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  CurrentUserForProfileQueryMyOperation,
-  CurrentUserForProfileQueryVariables
-> &
+export type CurrentUserForProfileProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CurrentUserForProfileQueryMyOperation,
+    CurrentUserForProfileQueryVariables
+  >;
+} &
   TChildProps;
-export function withCurrentUserForProfile<TProps, TChildProps = {}>(
+export function withCurrentUserForProfile<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     CurrentUserForProfileQueryMyOperation,
     CurrentUserForProfileQueryVariables,
-    CurrentUserForProfileProps<TChildProps>
+    CurrentUserForProfileProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     CurrentUserForProfileQueryMyOperation,
     CurrentUserForProfileQueryVariables,
-    CurrentUserForProfileProps<TChildProps>
+    CurrentUserForProfileProps<TChildProps, TDataName>
   >(CurrentUserForProfileDocument, {
     alias: 'currentUserForProfile',
     ...operationOptions,
@@ -504,17 +512,19 @@ export const FeedComponent = (props: FeedComponentProps) => (
   <ApolloReactComponents.Query<FeedQueryMyOperation, FeedQueryVariables> query={FeedDocument} {...props} />
 );
 
-export type FeedProps<TChildProps = {}> = ApolloReactHoc.DataProps<FeedQueryMyOperation, FeedQueryVariables> &
+export type FeedProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<FeedQueryMyOperation, FeedQueryVariables>;
+} &
   TChildProps;
-export function withFeed<TProps, TChildProps = {}>(
+export function withFeed<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     FeedQueryMyOperation,
     FeedQueryVariables,
-    FeedProps<TChildProps>
+    FeedProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, FeedQueryMyOperation, FeedQueryVariables, FeedProps<TChildProps>>(
+  return ApolloReactHoc.withQuery<TProps, FeedQueryMyOperation, FeedQueryVariables, FeedProps<TChildProps, TDataName>>(
     FeedDocument,
     {
       alias: 'feed',
@@ -549,24 +559,26 @@ export const SubmitRepositoryComponent = (props: SubmitRepositoryComponentProps)
   />
 );
 
-export type SubmitRepositoryProps<TChildProps = {}> = ApolloReactHoc.MutateProps<
-  SubmitRepositoryMutationMyOperation,
-  SubmitRepositoryMutationVariables
-> &
+export type SubmitRepositoryProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: ApolloReactCommon.MutationFunction<
+    SubmitRepositoryMutationMyOperation,
+    SubmitRepositoryMutationVariables
+  >;
+} &
   TChildProps;
-export function withSubmitRepository<TProps, TChildProps = {}>(
+export function withSubmitRepository<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     SubmitRepositoryMutationMyOperation,
     SubmitRepositoryMutationVariables,
-    SubmitRepositoryProps<TChildProps>
+    SubmitRepositoryProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withMutation<
     TProps,
     SubmitRepositoryMutationMyOperation,
     SubmitRepositoryMutationVariables,
-    SubmitRepositoryProps<TChildProps>
+    SubmitRepositoryProps<TChildProps, TDataName>
   >(SubmitRepositoryDocument, {
     alias: 'submitRepository',
     ...operationOptions,
@@ -601,24 +613,26 @@ export const SubmitCommentComponent = (props: SubmitCommentComponentProps) => (
   />
 );
 
-export type SubmitCommentProps<TChildProps = {}> = ApolloReactHoc.MutateProps<
-  SubmitCommentMutationMyOperation,
-  SubmitCommentMutationVariables
-> &
+export type SubmitCommentProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: ApolloReactCommon.MutationFunction<
+    SubmitCommentMutationMyOperation,
+    SubmitCommentMutationVariables
+  >;
+} &
   TChildProps;
-export function withSubmitComment<TProps, TChildProps = {}>(
+export function withSubmitComment<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     SubmitCommentMutationMyOperation,
     SubmitCommentMutationVariables,
-    SubmitCommentProps<TChildProps>
+    SubmitCommentProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withMutation<
     TProps,
     SubmitCommentMutationMyOperation,
     SubmitCommentMutationVariables,
-    SubmitCommentProps<TChildProps>
+    SubmitCommentProps<TChildProps, TDataName>
   >(SubmitCommentDocument, {
     alias: 'submitComment',
     ...operationOptions,
@@ -650,23 +664,27 @@ export const VoteComponent = (props: VoteComponentProps) => (
   <ApolloReactComponents.Mutation<VoteMutationMyOperation, VoteMutationVariables> mutation={VoteDocument} {...props} />
 );
 
-export type VoteProps<TChildProps = {}> = ApolloReactHoc.MutateProps<VoteMutationMyOperation, VoteMutationVariables> &
+export type VoteProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: ApolloReactCommon.MutationFunction<VoteMutationMyOperation, VoteMutationVariables>;
+} &
   TChildProps;
-export function withVote<TProps, TChildProps = {}>(
+export function withVote<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     VoteMutationMyOperation,
     VoteMutationVariables,
-    VoteProps<TChildProps>
+    VoteProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withMutation<TProps, VoteMutationMyOperation, VoteMutationVariables, VoteProps<TChildProps>>(
-    VoteDocument,
-    {
-      alias: 'vote',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withMutation<
+    TProps,
+    VoteMutationMyOperation,
+    VoteMutationVariables,
+    VoteProps<TChildProps, TDataName>
+  >(VoteDocument, {
+    alias: 'vote',
+    ...operationOptions,
+  });
 }
 export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutationMyOperation>;
 export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutationMyOperation, VoteMutationVariables>;

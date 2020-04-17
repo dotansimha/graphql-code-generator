@@ -1,22 +1,22 @@
-import { GraphQLSchema, GraphQLOutputType, isEnumType, isNonNullType } from 'graphql';
 import {
-  wrapTypeWithModifiers,
-  PreResolveTypesProcessor,
-  ParsedDocumentsConfig,
+  AvoidOptionalsConfig,
   BaseDocumentsVisitor,
-  LoadedFragment,
+  DeclarationKind,
+  generateFragmentImportStatement,
   getConfigValue,
+  LoadedFragment,
+  normalizeAvoidOptionals,
+  ParsedDocumentsConfig,
+  PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
-  DeclarationKind,
-  normalizeAvoidOptionals,
-  AvoidOptionalsConfig,
+  wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
-import { TypeScriptDocumentsPluginConfig } from './config';
-
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 import autoBind from 'auto-bind';
+import { GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
+import { TypeScriptDocumentsPluginConfig } from './config';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
+import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: AvoidOptionalsConfig;
@@ -96,6 +96,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
     };
+  }
+
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {

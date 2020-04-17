@@ -12,6 +12,7 @@ import { DeclarationBlockConfig } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { ImportDecleration, FragmentImport } from './imports';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -24,6 +25,7 @@ export interface ParsedConfig {
   addTypename: boolean;
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
+  fragmentImports: ImportDecleration<FragmentImport>[];
   immutableTypes: boolean;
 }
 
@@ -123,6 +125,7 @@ export interface RawConfig {
 
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
   externalFragments?: LoadedFragment[];
+  fragmentImports?: ImportDecleration<FragmentImport>[];
   globalNamespace?: boolean;
 }
 
@@ -136,6 +139,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       externalFragments: rawConfig.externalFragments || [],
+      fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       ...((additionalConfig || {}) as any),

@@ -14,150 +14,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** A character from the Star Wars universe */
-export type Character = {
-  /** The ID of the character */
-  id: Scalars['ID'];
-  /** The name of the character */
-  name: Scalars['String'];
-  /** The friends of the character, or an empty list if they have none */
-  friends?: Maybe<Array<Maybe<Character>>>;
-  /** The friends of the character exposed as a connection with edges */
-  friendsConnection: FriendsConnection;
-  /** The movies this character appears in */
-  appearsIn: Array<Maybe<Episode>>;
-};
-
-/** A character from the Star Wars universe */
-export type CharacterFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['ID']>;
-};
-
-/** The input object sent when passing a color */
-export type ColorInput = {
-  red: Scalars['Int'];
-  green: Scalars['Int'];
-  blue: Scalars['Int'];
-};
-
-/** An autonomous mechanical character in the Star Wars universe */
-export type Droid = Character & {
-  __typename?: 'Droid';
-  /** The ID of the droid */
-  id: Scalars['ID'];
-  /** What others call this droid */
-  name: Scalars['String'];
-  /** This droid's friends, or an empty list if they have none */
-  friends?: Maybe<Array<Maybe<Character>>>;
-  /** The friends of the droid exposed as a connection with edges */
-  friendsConnection: FriendsConnection;
-  /** The movies this droid appears in */
-  appearsIn: Array<Maybe<Episode>>;
-  /** This droid's primary function */
-  primaryFunction?: Maybe<Scalars['String']>;
-};
-
-/** An autonomous mechanical character in the Star Wars universe */
-export type DroidFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['ID']>;
-};
-
-/** The episodes in the Star Wars trilogy */
-export enum Episode {
-  /** Star Wars Episode IV: A New Hope, released in 1977. */
-  Newhope = 'NEWHOPE',
-  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
-  Empire = 'EMPIRE',
-  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  Jedi = 'JEDI',
-}
-
-/** A connection object for a character's friends */
-export type FriendsConnection = {
-  __typename?: 'FriendsConnection';
-  /** The total number of friends */
-  totalCount?: Maybe<Scalars['Int']>;
-  /** The edges for each of the character's friends. */
-  edges?: Maybe<Array<Maybe<FriendsEdge>>>;
-  /** A list of the friends, as a convenience when edges are not needed. */
-  friends?: Maybe<Array<Maybe<Character>>>;
-  /** Information for paginating this connection */
-  pageInfo: PageInfo;
-};
-
-/** An edge object for a character's friends */
-export type FriendsEdge = {
-  __typename?: 'FriendsEdge';
-  /** A cursor used for pagination */
-  cursor: Scalars['ID'];
-  /** The character represented by this friendship edge */
-  node?: Maybe<Character>;
-};
-
-/** A humanoid creature from the Star Wars universe */
-export type Human = Character & {
-  __typename?: 'Human';
-  /** The ID of the human */
-  id: Scalars['ID'];
-  /** What this human calls themselves */
-  name: Scalars['String'];
-  /** The home planet of the human, or null if unknown */
-  homePlanet?: Maybe<Scalars['String']>;
-  /** Height in the preferred unit, default is meters */
-  height?: Maybe<Scalars['Float']>;
-  /** Mass in kilograms, or null if unknown */
-  mass?: Maybe<Scalars['Float']>;
-  /** This human's friends, or an empty list if they have none */
-  friends?: Maybe<Array<Maybe<Character>>>;
-  /** The friends of the human exposed as a connection with edges */
-  friendsConnection: FriendsConnection;
-  /** The movies this human appears in */
-  appearsIn: Array<Maybe<Episode>>;
-  /** A list of starships this person has piloted, or an empty list if none */
-  starships?: Maybe<Array<Maybe<Starship>>>;
-};
-
-/** A humanoid creature from the Star Wars universe */
-export type HumanHeightArgs = {
-  unit?: Maybe<LengthUnit>;
-};
-
-/** A humanoid creature from the Star Wars universe */
-export type HumanFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['ID']>;
-};
-
-/** Units of height */
-export enum LengthUnit {
-  /** The standard unit around the world */
-  Meter = 'METER',
-  /** Primarily used in the United States */
-  Foot = 'FOOT',
-}
-
-/** The mutation type, represents all updates we can make to our data */
-export type Mutation = {
-  __typename?: 'Mutation';
-  createReview?: Maybe<Review>;
-};
-
-/** The mutation type, represents all updates we can make to our data */
-export type MutationCreateReviewArgs = {
-  episode?: Maybe<Episode>;
-  review: ReviewInput;
-};
-
-/** Information for paginating this connection */
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  startCursor?: Maybe<Scalars['ID']>;
-  endCursor?: Maybe<Scalars['ID']>;
-  hasNextPage: Scalars['Boolean'];
-};
-
 /** The query type, represents all of the entry points into our object graph */
 export type Query = {
   __typename?: 'Query';
@@ -205,6 +61,66 @@ export type QueryStarshipArgs = {
   id: Scalars['ID'];
 };
 
+/** The episodes in the Star Wars trilogy */
+export enum Episode {
+  /** Star Wars Episode IV: A New Hope, released in 1977. */
+  Newhope = 'NEWHOPE',
+  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
+  Empire = 'EMPIRE',
+  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
+  Jedi = 'JEDI',
+}
+
+/** A character from the Star Wars universe */
+export type Character = {
+  /** The ID of the character */
+  id: Scalars['ID'];
+  /** The name of the character */
+  name: Scalars['String'];
+  /** The friends of the character, or an empty list if they have none */
+  friends?: Maybe<Array<Maybe<Character>>>;
+  /** The friends of the character exposed as a connection with edges */
+  friendsConnection: FriendsConnection;
+  /** The movies this character appears in */
+  appearsIn: Array<Maybe<Episode>>;
+};
+
+/** A character from the Star Wars universe */
+export type CharacterFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['ID']>;
+};
+
+/** A connection object for a character's friends */
+export type FriendsConnection = {
+  __typename?: 'FriendsConnection';
+  /** The total number of friends */
+  totalCount?: Maybe<Scalars['Int']>;
+  /** The edges for each of the character's friends. */
+  edges?: Maybe<Array<Maybe<FriendsEdge>>>;
+  /** A list of the friends, as a convenience when edges are not needed. */
+  friends?: Maybe<Array<Maybe<Character>>>;
+  /** Information for paginating this connection */
+  pageInfo: PageInfo;
+};
+
+/** An edge object for a character's friends */
+export type FriendsEdge = {
+  __typename?: 'FriendsEdge';
+  /** A cursor used for pagination */
+  cursor: Scalars['ID'];
+  /** The character represented by this friendship edge */
+  node?: Maybe<Character>;
+};
+
+/** Information for paginating this connection */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  startCursor?: Maybe<Scalars['ID']>;
+  endCursor?: Maybe<Scalars['ID']>;
+  hasNextPage: Scalars['Boolean'];
+};
+
 /** Represents a review for a movie */
 export type Review = {
   __typename?: 'Review';
@@ -214,17 +130,49 @@ export type Review = {
   commentary?: Maybe<Scalars['String']>;
 };
 
-/** The input object sent when someone is creating a new review */
-export type ReviewInput = {
-  /** 0-5 stars */
-  stars: Scalars['Int'];
-  /** Comment about the movie, optional */
-  commentary?: Maybe<Scalars['String']>;
-  /** Favorite color, optional */
-  favoriteColor?: Maybe<ColorInput>;
+export type SearchResult = Human | Droid | Starship;
+
+/** A humanoid creature from the Star Wars universe */
+export type Human = Character & {
+  __typename?: 'Human';
+  /** The ID of the human */
+  id: Scalars['ID'];
+  /** What this human calls themselves */
+  name: Scalars['String'];
+  /** The home planet of the human, or null if unknown */
+  homePlanet?: Maybe<Scalars['String']>;
+  /** Height in the preferred unit, default is meters */
+  height?: Maybe<Scalars['Float']>;
+  /** Mass in kilograms, or null if unknown */
+  mass?: Maybe<Scalars['Float']>;
+  /** This human's friends, or an empty list if they have none */
+  friends?: Maybe<Array<Maybe<Character>>>;
+  /** The friends of the human exposed as a connection with edges */
+  friendsConnection: FriendsConnection;
+  /** The movies this human appears in */
+  appearsIn: Array<Maybe<Episode>>;
+  /** A list of starships this person has piloted, or an empty list if none */
+  starships?: Maybe<Array<Maybe<Starship>>>;
 };
 
-export type SearchResult = Human | Droid | Starship;
+/** A humanoid creature from the Star Wars universe */
+export type HumanHeightArgs = {
+  unit?: Maybe<LengthUnit>;
+};
+
+/** A humanoid creature from the Star Wars universe */
+export type HumanFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['ID']>;
+};
+
+/** Units of height */
+export enum LengthUnit {
+  /** The standard unit around the world */
+  Meter = 'METER',
+  /** Primarily used in the United States */
+  Foot = 'FOOT',
+}
 
 export type Starship = {
   __typename?: 'Starship';
@@ -238,6 +186,58 @@ export type Starship = {
 
 export type StarshipLengthArgs = {
   unit?: Maybe<LengthUnit>;
+};
+
+/** An autonomous mechanical character in the Star Wars universe */
+export type Droid = Character & {
+  __typename?: 'Droid';
+  /** The ID of the droid */
+  id: Scalars['ID'];
+  /** What others call this droid */
+  name: Scalars['String'];
+  /** This droid's friends, or an empty list if they have none */
+  friends?: Maybe<Array<Maybe<Character>>>;
+  /** The friends of the droid exposed as a connection with edges */
+  friendsConnection: FriendsConnection;
+  /** The movies this droid appears in */
+  appearsIn: Array<Maybe<Episode>>;
+  /** This droid's primary function */
+  primaryFunction?: Maybe<Scalars['String']>;
+};
+
+/** An autonomous mechanical character in the Star Wars universe */
+export type DroidFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['ID']>;
+};
+
+/** The mutation type, represents all updates we can make to our data */
+export type Mutation = {
+  __typename?: 'Mutation';
+  createReview?: Maybe<Review>;
+};
+
+/** The mutation type, represents all updates we can make to our data */
+export type MutationCreateReviewArgs = {
+  episode?: Maybe<Episode>;
+  review: ReviewInput;
+};
+
+/** The input object sent when someone is creating a new review */
+export type ReviewInput = {
+  /** 0-5 stars */
+  stars: Scalars['Int'];
+  /** Comment about the movie, optional */
+  commentary?: Maybe<Scalars['String']>;
+  /** Favorite color, optional */
+  favoriteColor?: Maybe<ColorInput>;
+};
+
+/** The input object sent when passing a color */
+export type ColorInput = {
+  red: Scalars['Int'];
+  green: Scalars['Int'];
+  blue: Scalars['Int'];
 };
 
 export const HeroDetailsFragmentDoc = gql`
@@ -284,24 +284,26 @@ export const CreateReviewForEpisodeComponent = (props: CreateReviewForEpisodeCom
   />
 );
 
-export type CreateReviewForEpisodeProps<TChildProps = {}> = ApolloReactHoc.MutateProps<
-  CreateReviewForEpisodeMutation,
-  CreateReviewForEpisodeMutationVariables
-> &
+export type CreateReviewForEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: ApolloReactCommon.MutationFunction<
+    CreateReviewForEpisodeMutation,
+    CreateReviewForEpisodeMutationVariables
+  >;
+} &
   TChildProps;
-export function withCreateReviewForEpisode<TProps, TChildProps = {}>(
+export function withCreateReviewForEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     CreateReviewForEpisodeMutation,
     CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps>
+    CreateReviewForEpisodeProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withMutation<
     TProps,
     CreateReviewForEpisodeMutation,
     CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps>
+    CreateReviewForEpisodeProps<TChildProps, TDataName>
   >(CreateReviewForEpisodeDocument, {
     alias: 'createReviewForEpisode',
     ...operationOptions,
@@ -334,24 +336,23 @@ export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponent
   />
 );
 
-export type HeroAndFriendsNamesProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroAndFriendsNamesQuery,
-  HeroAndFriendsNamesQueryVariables
-> &
+export type HeroAndFriendsNamesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
+} &
   TChildProps;
-export function withHeroAndFriendsNames<TProps, TChildProps = {}>(
+export function withHeroAndFriendsNames<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroAndFriendsNamesQuery,
     HeroAndFriendsNamesQueryVariables,
-    HeroAndFriendsNamesProps<TChildProps>
+    HeroAndFriendsNamesProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroAndFriendsNamesQuery,
     HeroAndFriendsNamesQueryVariables,
-    HeroAndFriendsNamesProps<TChildProps>
+    HeroAndFriendsNamesProps<TChildProps, TDataName>
   >(HeroAndFriendsNamesDocument, {
     alias: 'heroAndFriendsNames',
     ...operationOptions,
@@ -384,24 +385,23 @@ export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => (
   />
 );
 
-export type HeroAppearsInProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroAppearsInQuery,
-  HeroAppearsInQueryVariables
-> &
+export type HeroAppearsInProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+} &
   TChildProps;
-export function withHeroAppearsIn<TProps, TChildProps = {}>(
+export function withHeroAppearsIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroAppearsInQuery,
     HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps>
+    HeroAppearsInProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroAppearsInQuery,
     HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps>
+    HeroAppearsInProps<TChildProps, TDataName>
   >(HeroAppearsInDocument, {
     alias: 'heroAppearsIn',
     ...operationOptions,
@@ -433,23 +433,27 @@ export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
   <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />
 );
 
-export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> &
+export type HeroDetailsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
+} &
   TChildProps;
-export function withHeroDetails<TProps, TChildProps = {}>(
+export function withHeroDetails<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroDetailsQuery,
     HeroDetailsQueryVariables,
-    HeroDetailsProps<TChildProps>
+    HeroDetailsProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>(
-    HeroDetailsDocument,
-    {
-      alias: 'heroDetails',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroDetailsQuery,
+    HeroDetailsQueryVariables,
+    HeroDetailsProps<TChildProps, TDataName>
+  >(HeroDetailsDocument, {
+    alias: 'heroDetails',
+    ...operationOptions,
+  });
 }
 export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
 export function refetchHeroDetailsQuery(variables?: HeroDetailsQueryVariables) {
@@ -475,24 +479,23 @@ export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentC
   />
 );
 
-export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroDetailsWithFragmentQuery,
-  HeroDetailsWithFragmentQueryVariables
-> &
+export type HeroDetailsWithFragmentProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
+} &
   TChildProps;
-export function withHeroDetailsWithFragment<TProps, TChildProps = {}>(
+export function withHeroDetailsWithFragment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroDetailsWithFragmentQuery,
     HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps>
+    HeroDetailsWithFragmentProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroDetailsWithFragmentQuery,
     HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps>
+    HeroDetailsWithFragmentProps<TChildProps, TDataName>
   >(HeroDetailsWithFragmentDocument, {
     alias: 'heroDetailsWithFragment',
     ...operationOptions,
@@ -521,17 +524,19 @@ export const HeroNameComponent = (props: HeroNameComponentProps) => (
   <ApolloReactComponents.Query<HeroNameQuery, HeroNameQueryVariables> query={HeroNameDocument} {...props} />
 );
 
-export type HeroNameProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroNameQuery, HeroNameQueryVariables> &
+export type HeroNameProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HeroNameQuery, HeroNameQueryVariables>;
+} &
   TChildProps;
-export function withHeroName<TProps, TChildProps = {}>(
+export function withHeroName<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameQuery,
     HeroNameQueryVariables,
-    HeroNameProps<TChildProps>
+    HeroNameProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps>>(
+  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps, TDataName>>(
     HeroNameDocument,
     {
       alias: 'heroName',
@@ -566,24 +571,26 @@ export const HeroNameConditionalInclusionComponent = (props: HeroNameConditional
   />
 );
 
-export type HeroNameConditionalInclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroNameConditionalInclusionQuery,
-  HeroNameConditionalInclusionQueryVariables
-> &
+export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroNameConditionalInclusionQuery,
+    HeroNameConditionalInclusionQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroNameConditionalInclusion<TProps, TChildProps = {}>(
+export function withHeroNameConditionalInclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps>
+    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps>
+    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >(HeroNameConditionalInclusionDocument, {
     alias: 'heroNameConditionalInclusion',
     ...operationOptions,
@@ -619,24 +626,26 @@ export const HeroNameConditionalExclusionComponent = (props: HeroNameConditional
   />
 );
 
-export type HeroNameConditionalExclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroNameConditionalExclusionQuery,
-  HeroNameConditionalExclusionQueryVariables
-> &
+export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroNameConditionalExclusionQuery,
+    HeroNameConditionalExclusionQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroNameConditionalExclusion<TProps, TChildProps = {}>(
+export function withHeroNameConditionalExclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps>
+    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps>
+    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >(HeroNameConditionalExclusionDocument, {
     alias: 'heroNameConditionalExclusion',
     ...operationOptions,
@@ -687,24 +696,26 @@ export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDepen
   />
 );
 
-export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroParentTypeDependentFieldQuery,
-  HeroParentTypeDependentFieldQueryVariables
-> &
+export type HeroParentTypeDependentFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroParentTypeDependentFieldQuery,
+    HeroParentTypeDependentFieldQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroParentTypeDependentField<TProps, TChildProps = {}>(
+export function withHeroParentTypeDependentField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
+    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
+    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
   >(HeroParentTypeDependentFieldDocument, {
     alias: 'heroParentTypeDependentField',
     ...operationOptions,
@@ -744,24 +755,26 @@ export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentA
   />
 );
 
-export type HeroTypeDependentAliasedFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroTypeDependentAliasedFieldQuery,
-  HeroTypeDependentAliasedFieldQueryVariables
-> &
+export type HeroTypeDependentAliasedFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    HeroTypeDependentAliasedFieldQuery,
+    HeroTypeDependentAliasedFieldQueryVariables
+  >;
+} &
   TChildProps;
-export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}>(
+export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps>
+    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps>
+    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
   >(HeroTypeDependentAliasedFieldDocument, {
     alias: 'heroTypeDependentAliasedField',
     ...operationOptions,
@@ -794,24 +807,23 @@ export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponent
   />
 );
 
-export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HumanWithNullHeightQuery,
-  HumanWithNullHeightQueryVariables
-> &
+export type HumanWithNullHeightProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
+} &
   TChildProps;
-export function withHumanWithNullHeight<TProps, TChildProps = {}>(
+export function withHumanWithNullHeight<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     HumanWithNullHeightQuery,
     HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps>
+    HumanWithNullHeightProps<TChildProps, TDataName>
   >
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
     HumanWithNullHeightQuery,
     HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps>
+    HumanWithNullHeightProps<TChildProps, TDataName>
   >(HumanWithNullHeightDocument, {
     alias: 'humanWithNullHeight',
     ...operationOptions,
@@ -843,23 +855,27 @@ export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => (
   <ApolloReactComponents.Query<TwoHeroesQuery, TwoHeroesQueryVariables> query={TwoHeroesDocument} {...props} />
 );
 
-export type TwoHeroesProps<TChildProps = {}> = ApolloReactHoc.DataProps<TwoHeroesQuery, TwoHeroesQueryVariables> &
+export type TwoHeroesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
+} &
   TChildProps;
-export function withTwoHeroes<TProps, TChildProps = {}>(
+export function withTwoHeroes<TProps, TChildProps = {}, TDataName extends string = 'data'>(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     TwoHeroesQuery,
     TwoHeroesQueryVariables,
-    TwoHeroesProps<TChildProps>
+    TwoHeroesProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<TProps, TwoHeroesQuery, TwoHeroesQueryVariables, TwoHeroesProps<TChildProps>>(
-    TwoHeroesDocument,
-    {
-      alias: 'twoHeroes',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHoc.withQuery<
+    TProps,
+    TwoHeroesQuery,
+    TwoHeroesQueryVariables,
+    TwoHeroesProps<TChildProps, TDataName>
+  >(TwoHeroesDocument, {
+    alias: 'twoHeroes',
+    ...operationOptions,
+  });
 }
 export type TwoHeroesQueryResult = ApolloReactCommon.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
 export function refetchTwoHeroesQuery(variables?: TwoHeroesQueryVariables) {

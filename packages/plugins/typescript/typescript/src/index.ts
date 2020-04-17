@@ -22,7 +22,7 @@ export * from './visitor';
 export * from './config';
 export * from './introspection-visitor';
 
-export const plugin: PluginFunction<TypeScriptPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig

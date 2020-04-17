@@ -140,7 +140,9 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null): DeclarationBlock {
-    if (comment) {
+    const nonEmptyComment = isStringValueNode(comment) ? !!comment.value : !!comment;
+
+    if (nonEmptyComment) {
       this._comment = transformComment(comment, 0);
     }
 
@@ -306,7 +308,7 @@ export function buildScalars(
 }
 
 function isStringValueNode(node: any): node is StringValueNode {
-  return node && typeof node === 'object' && node.kind === 'StringValue';
+  return node && typeof node === 'object' && node.kind === Kind.STRING;
 }
 
 export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {

@@ -31,7 +31,7 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(2);
-      expect(output.map((f) => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
+      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {
@@ -883,14 +883,24 @@ describe('Codegen Executor', () => {
   });
 
   it('should load schema with custom fetch', async () => {
-    await executeCodegen({
-      schema: ['http://www.dummyschema.com/graphql'],
-      customFetch: 'some-fetch#someFetchFn',
-      documents: ['./tests/test-documents/valid.graphql'],
-      generates: {
-        'out1.ts': ['typescript'],
-      },
-    });
+    try {
+      await executeCodegen({
+        schema: ['http://www.dummyschema.com/graphql'],
+        customFetch: 'some-fetch#someFetchFn',
+        documents: ['./tests/test-documents/valid.graphql'],
+        generates: {
+          'out1.ts': ['typescript'],
+        },
+      });
+    } catch (error) {
+      const isExpectedError = error.errors && error.errors.some(e => e.message.includes('Failed to load schema'));
+
+      if (!isExpectedError) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        throw error;
+      }
+    }
     expect((global as any).CUSTOM_FETCH_FN_CALLED).toBeTruthy();
   });
 

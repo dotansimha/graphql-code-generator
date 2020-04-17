@@ -8,12 +8,19 @@ export type Scalars = {
   Float: number;
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   allUsers: Array<Maybe<User>>;
   userById?: Maybe<User>;
   /**
-   * Generates a new answer for the
+   *  Generates a new answer for th
    * guessing game
    */
   answer: Array<Scalars['Int']>;
@@ -24,13 +31,6 @@ export type Query = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['Int'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  email: Scalars['String'];
 };
 
 export type TestQueryVariables = {};

@@ -1,4 +1,4 @@
-import { parse, dirname, relative, join, isAbsolute } from 'path';
+import { parse, join } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentRegistry } from './fragment-resolver';
 
@@ -11,12 +11,6 @@ export function appendExtensionToFilePath(baseFilePath: string, extension: strin
   const parsedPath = parse(baseFilePath);
 
   return join(parsedPath.dir, parsedPath.name + extension).replace(/\\/g, '/');
-}
-
-export function clearExtension(path: string): string {
-  const parsedPath = parse(path);
-
-  return join(parsedPath.dir, parsedPath.name).replace(/\\/g, '/');
 }
 
 export function extractExternalFragmentsInUse(
@@ -62,22 +56,4 @@ export function extractExternalFragmentsInUse(
   });
 
   return result;
-}
-
-export function fixLocalFile(path: string): string {
-  if (!path.startsWith('..')) {
-    return `./${path}`;
-  }
-
-  return path;
-}
-
-export function resolveRelativeImport(from: string, to: string): string {
-  if (!isAbsolute(from)) {
-    throw new Error(`Argument 'from' must be an absolute path, '${from}' given.`);
-  }
-  if (!isAbsolute(to)) {
-    throw new Error(`Argument 'to' must be an absolute path, '${to}' given.`);
-  }
-  return fixLocalFile(clearExtension(relative(dirname(from), to)));
 }

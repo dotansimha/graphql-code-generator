@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { FeedEntryFragmentDoc } from './feed-entry.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 

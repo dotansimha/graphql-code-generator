@@ -1,6 +1,7 @@
-import { oneLine } from 'common-tags';
+import { oneLine, stripIndent } from 'common-tags';
 import { resolve } from 'path';
 import { existsSync } from 'fs';
+import diff from 'jest-diff';
 
 declare global {
   // eslint-disable-next-line no-redeclare
@@ -18,33 +19,39 @@ function compareStrings(a: string, b: string): boolean {
   return a.includes(b);
 }
 
-function toBeSimilarStringTo(received: string, expected: string) {
-  const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ');
-  const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ');
-
-  if (compareStrings(strippedReceived, strippedExpected)) {
-    return {
-      message: () =>
-        `expected 
- ${received}
- not to be a string containing (ignoring indents)
- ${expected}`,
-      pass: true,
-    };
-  } else {
-    return {
-      message: () =>
-        `expected 
- ${received}
- to be a string containing (ignoring indents)
- ${expected}`,
-      pass: false,
-    };
-  }
-}
-
 expect.extend({
-  toBeSimilarStringTo,
+  toBeSimilarStringTo(received: string, expected: string) {
+    const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ');
+    const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ');
+
+    if (compareStrings(strippedReceived, strippedExpected)) {
+      return {
+        message: () =>
+          `expected 
+   ${received}
+   not to be a string containing (ignoring indents)
+   ${expected}`,
+        pass: true,
+      };
+    } else {
+      const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
+        expand: this.expand,
+      });
+      const hasExpect = diffString && diffString.includes('- Expect');
+
+      const message = hasExpect
+        ? `Difference:\n\n${diffString}`
+        : `expected 
+      ${received}
+      to be a string containing (ignoring indents)
+      ${expected}`;
+
+      return {
+        message: () => message,
+        pass: false,
+      };
+    }
+  },
 });
 
 function findProjectDir(dirname: string): string | never {

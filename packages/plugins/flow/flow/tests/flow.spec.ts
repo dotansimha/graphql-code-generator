@@ -58,7 +58,7 @@ describe('Flow Plugin', () => {
           captcha: String
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -90,7 +90,7 @@ describe('Flow Plugin', () => {
         "My custom scalar"
         scalar A
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -114,7 +114,7 @@ describe('Flow Plugin', () => {
           f: String
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
@@ -131,7 +131,7 @@ describe('Flow Plugin', () => {
           f: String!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
@@ -153,7 +153,7 @@ describe('Flow Plugin', () => {
           f: String!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** 
@@ -177,7 +177,7 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** my union */
@@ -197,7 +197,7 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** this is b */
@@ -217,7 +217,7 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type B = {|
@@ -236,7 +236,7 @@ describe('Flow Plugin', () => {
           id: ID!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {|
@@ -258,7 +258,7 @@ describe('Flow Plugin', () => {
           B
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
@@ -383,7 +383,7 @@ describe('Flow Plugin', () => {
           _MyOtherValue
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -481,7 +481,7 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default)', async () => {
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -546,7 +546,7 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default) with custom prefix', async () => {
-      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
 
@@ -614,7 +614,7 @@ describe('Flow Plugin', () => {
   describe('Arguments', () => {
     it('Should generate correctly types for field arguments - with basic fields', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -624,7 +624,7 @@ describe('Flow Plugin', () => {
       const schema = buildSchema(
         `type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`
       );
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -634,7 +634,7 @@ describe('Flow Plugin', () => {
       const schema = buildSchema(
         `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
       );
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -644,7 +644,7 @@ describe('Flow Plugin', () => {
       const schema = buildSchema(
         `input Input { name: String } type Mutation { foo(id: String, input: Input): String }`
       );
-      const result = (await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -654,7 +654,7 @@ describe('Flow Plugin', () => {
   describe('Enum', () => {
     it('Should build basic enum correctly', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
@@ -725,7 +725,7 @@ describe('Flow Plugin', () => {
   describe('Scalars', () => {
     it('Should build basic scalar correctly as any', async () => {
       const schema = buildSchema(`scalar A`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result).not.toContain('export type A = any;');
@@ -769,7 +769,7 @@ describe('Flow Plugin', () => {
           k: [[String]]!
           l: [[String!]!]!
         }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
 
@@ -784,7 +784,7 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -800,7 +800,7 @@ describe('Flow Plugin', () => {
           foo: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -821,7 +821,7 @@ describe('Flow Plugin', () => {
           bar: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -837,7 +837,7 @@ describe('Flow Plugin', () => {
           bar: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -857,7 +857,7 @@ describe('Flow Plugin', () => {
       
       union MyUnion = MyType | MyOtherType
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -875,7 +875,7 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -891,7 +891,7 @@ describe('Flow Plugin', () => {
         directive @universal on OBJECT | FIELD_DEFINITION | ENUM_VALUE
       `);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       validateFlow(result);
     });
@@ -920,7 +920,7 @@ describe('Flow Plugin', () => {
         }
       `);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -949,7 +949,7 @@ describe('Flow Plugin', () => {
       }
     `);
 
-    const content = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const content = await plugin(schema, [], { skipTypename: true }, { outputFile: '' });
     expect(content).not.toContain('__typename');
 
     validateFlow(content);

@@ -2,7 +2,7 @@ const { generateConfig } = require('@graphql-codegen/config-markdown-generator')
 const { writeFileSync } = require('fs');
 const { resolve } = require('path');
 
-const BASE_DIR = '../docs/generated-config';
+const BASE_DIR = './docs/generated-config';
 
 const mapping = {
   // Presets
