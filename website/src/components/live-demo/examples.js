@@ -78,6 +78,23 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
     {
+      name: 'Operations types (near-operation-file)',
+      config: `generates:
+  ./types.ts:
+    plugins:
+      - typescript
+  ./:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.tsx
+      baseTypesPath: types.ts
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+    },
+    {
       name: 'Operations types (without Pick)',
       config: `generates:
   client-types.ts:

@@ -1,4 +1,5 @@
-import { dirname, isAbsolute, join, parse, relative, resolve } from 'path';
+import { dirname, isAbsolute, join, relative, resolve } from 'path';
+import parse from 'parse-filepath';
 
 export type ImportDecleration<T = string> = {
   outputPath: string;

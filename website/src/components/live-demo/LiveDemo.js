@@ -10,7 +10,6 @@ import { CodegenOutput } from './CodegenOutput';
 function useCodegen(config, schema, documents, templateName) {
   const [error, setError] = React.useState(null);
   const [output, setOutput] = React.useState(null);
-  const runCodegen = React.useCallback(() => run());
 
   async function run() {
     const result = await generate(config, schema, documents);
@@ -29,7 +28,6 @@ function useCodegen(config, schema, documents, templateName) {
   }, [config, schema, documents, templateName]);
 
   return {
-    runCodegen,
     error,
     output,
   };
@@ -45,9 +43,7 @@ export const LiveDemo = () => {
   const [schema, setSchema] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
   const [config, setConfig] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
-  const { output, error, runCodegen } = useCodegen(config, schema, documents, template);
-
-  console.log(error);
+  const { output, error } = useCodegen(config, schema, documents, template);
 
   const changeTemplate = value => {
     const [catName, index] = value.split('__');
@@ -85,14 +81,14 @@ export const LiveDemo = () => {
         <div className={classes.column}>
           <div className={classes.title}>
             <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
-            <span className={classes.iconText}>Schema</span>
+            <span className={classes.iconText}>schema.graphql</span>
           </div>
           <Editor lang={'graphql'} onEdit={setSchema} value={schema} />
         </div>
         <div className={classes.column}>
           <div className={classes.title}>
             <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
-            <span className={classes.iconText}>Operations</span>
+            <span className={classes.iconText}>operation.graphql</span>
           </div>
           <Editor lang={'graphql'} onEdit={setDocuments} value={documents} />
         </div>

@@ -45,11 +45,13 @@
   flex: 1;
   display: flex;
   flex-direction: row;
+  align-self: flex-end;
 }
 
 .tabs .tab {
+  border-radius: 5px 5px 0px 0px;
   flex: 1;
-  color: gray;
+  color: var(--ifm-color-emphasis-600);
   cursor: pointer;
   font-size: 11px;
   padding: 5px 3px 5px 3px;
@@ -57,25 +59,22 @@
   margin-top: 5px;
   font-family: 'Inconsolata', monospace;
   text-align: center;
+  max-width: 30%;
 }
 
 .tabs .activeTab {
-  background-color: gray;
+  background-color: var(--ifm-color-emphasis-600);
   color: white;
 }
 
-html[data-theme="dark"] .tabs .activeTab {
-  background-color: gray;
-  color: white;
+html[data-theme='dark'] .tabs .activeTab {
+  background-color: var(--ifm-color-emphasis-600);
+  color: black;
 }
 
 .iconText {
-  flex: 1;
   text-align: center;
-}
-
-.tabsParent {
-  flex: 1;
+  font-family: 'Inconsolata', monospace;
 }
 
 .queryEditor {
