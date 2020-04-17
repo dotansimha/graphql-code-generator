@@ -173,7 +173,7 @@ export const EXAMPLES = {
       - typescript
       - typescript-resolvers`,
       schema: TS_SCHEMA,
-      documents:'',
+      documents: '',
     },
     {
       name: 'Resolvers Signature (with custom models)',
@@ -256,6 +256,26 @@ export const EXAMPLES = {
   }
   `,
       documents: '',
+    },
+  ],
+  '.NET': [
+    {
+      name: 'C# Schema types',
+      config: `generates:
+  src/main/c-sharp/my-org/my-app/Types.cs:
+    plugins:
+      - c-sharp`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+    {
+      name: 'C# Operations',
+      config: `generates:
+  src/main/c-sharp/my-org/my-app/Operations.cs:
+    plugins:
+      - c-sharp-operations`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
     },
   ],
   Java: [

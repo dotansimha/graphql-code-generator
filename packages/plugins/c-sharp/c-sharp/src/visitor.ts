@@ -1,4 +1,12 @@
-import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ParsedConfig,
+  BaseVisitor,
+  EnumValuesMap,
+  indentMultiline,
+  indent,
+  buildScalars,
+  getBaseTypeNode,
+} from '@graphql-codegen/visitor-plugin-common';
 import { CSharpResolversPluginRawConfig } from './config';
 import {
   GraphQLSchema,
@@ -13,24 +21,22 @@ import {
   Kind,
   isScalarType,
   isInputObjectType,
-  isEnumType } from 'graphql';
+  isEnumType,
+} from 'graphql';
 import { C_SHARP_SCALARS, CSharpDeclarationBlock, wrapTypeWithModifiers } from './common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
-  package: string;
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'List',
       className: rawConfig.className || 'Types',
-      package: rawConfig.package || defaultPackageName,
       scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
     });
   }
@@ -48,18 +54,17 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .withBlock(indentMultiline(content)).string;
   }
 
-  public getPackageName(): string {
-    return '';
-  }
-
   protected getEnumValue(enumName: string, enumOption: string): string {
-    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumOption]) {
+    if (
+      this.config.enumValues[enumName] &&
+      typeof this.config.enumValues[enumName] === 'object' &&
+      this.config.enumValues[enumName][enumOption]
+    ) {
       return this.config.enumValues[enumName][enumOption];
     }
 
     return enumOption;
   }
-
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
@@ -80,10 +85,14 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
+  protected resolveInputFieldType(
+    typeNode: TypeNode
+  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
-    const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
+    const isArray =
+      typeNode.kind === Kind.LIST_TYPE ||
+      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } = null;
 
     if (isScalarType(schemaType)) {
@@ -105,9 +114,14 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
         isArray,
       };
     } else if (isEnumType(schemaType)) {
-      result = { isArray, baseType: this.convertName(schemaType.name), typeName: this.convertName(schemaType.name), isScalar: true };
+      result = {
+        isArray,
+        baseType: this.convertName(schemaType.name),
+        typeName: this.convertName(schemaType.name),
+        isScalar: true,
+      };
     } else {
-      result =  {
+      result = {
         baseType: `${schemaType.name}`,
         typeName: `${schemaType.name}`,
         isScalar: false,
@@ -123,7 +137,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   protected buildObject(name: string, inputValueArray: ReadonlyArray<FieldDefinitionNode>): string {
-
     const classMembers = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
@@ -134,7 +147,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       })
       .join('\n');
 
-      return `
+    return `
 #region ${name}
 public class ${name} {
   #region members
@@ -146,7 +159,6 @@ public class ${name} {
   }
 
   protected buildInputTransfomer(name: string, inputValueArray: ReadonlyArray<InputValueDefinitionNode>): string {
-
     const classMembers = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
@@ -180,7 +192,7 @@ public class ${name} {
       })
       .join('\n');
 
-      return `
+    return `
 #region ${name}
 public class ${name} {
   #region members
