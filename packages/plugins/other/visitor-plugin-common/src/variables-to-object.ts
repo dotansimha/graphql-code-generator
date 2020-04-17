@@ -1,4 +1,4 @@
-import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
+import { Kind, TypeNode, VariableNode, NameNode, ValueNode, SelectionSetNode, SelectionNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, ParsedEnumValuesMap } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -37,15 +37,41 @@ export class OperationVariablesToObject {
     return null;
   }
 
-  transform<TDefinitionType extends InterfaceOrVariable>(variablesNode: ReadonlyArray<TDefinitionType>): string {
+  transform<TDefinitionType extends InterfaceOrVariable>(
+    variablesNode: ReadonlyArray<TDefinitionType>,
+    selectionSet?: SelectionSetNode
+  ): string {
     if (!variablesNode || variablesNode.length === 0) {
       return null;
     }
+    const exportedArgs = new Set<string>([]);
 
-    return (
-      variablesNode.map(variable => indent(this.transformVariable(variable))).join(`${this.getPunctuation()}\n`) +
-      this.getPunctuation()
-    );
+    const visitSelections = (selections: ReadonlyArray<SelectionNode>) => {
+      selections.forEach(s => {
+        const exportDirective = s.directives?.find(d => d.name?.value === 'export');
+        if (exportDirective) {
+          const arg = exportDirective?.arguments.find(a => a.name?.value === 'as');
+          if (arg?.value?.kind === 'StringValue') {
+            exportedArgs.add(arg.value.value);
+          }
+        }
+        if ('selectionSet' in s && s.selectionSet?.selections) {
+          visitSelections(s.selectionSet.selections);
+        }
+      });
+    };
+
+    if (selectionSet?.selections) {
+      visitSelections(selectionSet.selections);
+    }
+
+    const ret =
+      variablesNode
+        .filter(variable => !exportedArgs.has(variable?.variable?.name?.value))
+        .map(variable => indent(this.transformVariable(variable)))
+        .join(`${this.getPunctuation()}\n`) + this.getPunctuation();
+
+    return ret;
   }
 
   protected getScalar(name: string): string {

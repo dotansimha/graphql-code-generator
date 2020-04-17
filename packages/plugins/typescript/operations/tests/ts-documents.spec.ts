@@ -2299,6 +2299,73 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config);
     });
 
+    it('Should remove operation variables from generated types when using @export directive', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Post {
+          id: String!
+          title: String!
+          text: String!
+          topic: String!
+        }
+
+        type Query {
+          getPostsByUser(id: String!, topic: String!): Post
+          getPostsByUser2(id: String!, topic: String!): Post
+        }
+
+        schema {
+          query: Query
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query getCurrentUserPosts($userId: ID!, $topic: String!) {
+          currentUser @client {
+            id @export(as: "userId")
+          }
+          getPostsByUser(id: $userId, topic: $topic) {
+            id
+            title
+            text
+          }
+        }
+
+        query getCurrentUserPosts2($userId: ID!, $topic: String!) {
+          currentUserId @client @export(as: "userId")
+
+          getPostsByUser2(id: $userId, topic: $topic) {
+            id
+            title
+            text
+          }
+        }
+      `);
+      const config = { skipTypename: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type GetCurrentUserPostsQueryVariables = {
+          topic: Scalars['String'];
+        };
+        
+        
+        export type GetCurrentUserPostsQuery = { getPostsByUser?: Maybe<Pick<Post, 'id' | 'title' | 'text'>> };
+        
+        export type GetCurrentUserPosts2QueryVariables = {
+          topic: Scalars['String'];
+        };
+        
+        
+        export type GetCurrentUserPosts2Query = (
+          Pick<Query, 'currentUserId'>
+          & { getPostsByUser2?: Maybe<Pick<Post, 'id' | 'title' | 'text'>> }
+        );`
+      );
+      await validate(content, config);
+    });
+
     it('Should handle operation variables correctly', async () => {
       const ast = parse(/* GraphQL */ `
         query testQuery(

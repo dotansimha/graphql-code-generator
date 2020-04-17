@@ -194,7 +194,8 @@ export class BaseDocumentsVisitor<
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
-      node.variableDefinitions
+      node.variableDefinitions,
+      node.selectionSet
     );
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
