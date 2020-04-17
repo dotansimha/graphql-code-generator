@@ -29,7 +29,7 @@ export const addToSchema = gql`
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config, outputFile: string) => {
   if (extname(outputFile) !== '.cs') {
-    throw new Error(`Plugin "apollo-DotNet" requires extension to be ".cs"!`);
+    throw new Error(`Plugin "c-sharp-operations" requires extension to be ".cs"!`);
   }
 };
 
