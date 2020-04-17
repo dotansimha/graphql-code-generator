@@ -1,7 +1,7 @@
 {
-  "name": "@graphql-codegen/c-sharp-operations",
+  "name": "@graphql-codegen/c-sharp-apollo",
   "version": "1.12.2",
-  "description": "GraphQL Code Generator plugin for generating ready-to-use C# Classes based on GraphQL operations",
+  "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -40,7 +40,7 @@
     "input": "./src/index.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/c-sharp-operations"
+    "outputDirectory": "../../../../test-results/apollo-dotnet"
   },
   "publishConfig": {
     "access": "public"
