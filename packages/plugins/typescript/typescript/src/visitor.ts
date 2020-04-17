@@ -120,8 +120,22 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
+    let typeString;
+    const originalFieldNode = parent[key];
+
+    if (!this.config.wrapFieldDefinitions) {
+      typeString = node.type;
+    } else {
+      // if field is a list - we should add field resolver in list item
+      if (node.type.toString().startsWith('Array')) {
+        typeString = node.type.toString().replace('Array', 'Array<FieldWrapper') + '>';
+      } else if (node.type.toString().startsWith('Maybe<Array')) {
+        typeString = node.type.toString().replace('Maybe<Array', 'Maybe<Array<FieldWrapper') + '>';
+      } else {
+        typeString = `FieldWrapper<${node.type}>`;
+      }
+    }
+
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);
     const { type } = this.config.declarationKind;
