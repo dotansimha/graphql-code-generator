@@ -225,7 +225,7 @@ ${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: $
       .map(s => indentMultiline(s, 3))
       .join(',\n');
 
-    const serviceName = this.config.serviceName || 'ApolloDotNetSDK';
+    const serviceName = this.config.serviceName || 'GraphQLSDK';
 
     return `
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

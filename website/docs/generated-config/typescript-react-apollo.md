@@ -161,7 +161,9 @@ path/to/file.ts:
 Customized the output by enabling/disabling the generated mutation option type.
 
 
-#### Usage Example: yml
+#### Usage Example
+
+```yml
 generates:
 path/to/file.ts:
  plugins:
@@ -170,15 +172,16 @@ path/to/file.ts:
    - typescript-react-apollo
  config:
    withMutationOptionsType: true
-
-
+```
 
 ### addDocBlocks (`boolean`, default value: `true`)
 
 Allows you to enable/disable the generation of docblocks in generated code. Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
 
 
-#### Usage Example: yml
+#### Usage Example
+
+```yml
 generates:
 path/to/file.ts:
  plugins:
@@ -187,4 +190,4 @@ path/to/file.ts:
    - typescript-react-apollo
  config:
    addDocBlocks: true
-
+```

@@ -28,7 +28,7 @@
     "definition": "dist/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/apollo-dotnet"
+    "outputDirectory": "../../../../test-results/c-sharp-operations"
   },
   "publishConfig": {
     "access": "public"
