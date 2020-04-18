@@ -368,7 +368,10 @@ export function useOnCommentAddedSubscription(
     options
   );
 }
-export type OnCommentAddedSubscriptionCompositionFunctionResult = ReturnType<typeof useOnCommentAddedSubscription>;
+export type OnCommentAddedSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<
+  OnCommentAddedSubscription,
+  OnCommentAddedSubscriptionVariables
+>;
 export const CommentDocument = gql`
   query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
     currentUser {
@@ -430,7 +433,10 @@ export function useCommentQuery(
 ) {
   return VueApolloComposable.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, variables, options);
 }
-export type CommentQueryCompositionFunctionResult = ReturnType<typeof useCommentQuery>;
+export type CommentQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  CommentQuery,
+  CommentQueryVariables
+>;
 export const CurrentUserForProfileDocument = gql`
   query CurrentUserForProfile {
     currentUser {
@@ -471,7 +477,10 @@ export function useCurrentUserForProfileQuery(
     options
   );
 }
-export type CurrentUserForProfileQueryCompositionFunctionResult = ReturnType<typeof useCurrentUserForProfileQuery>;
+export type CurrentUserForProfileQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  CurrentUserForProfileQuery,
+  CurrentUserForProfileQueryVariables
+>;
 export const FeedDocument = gql`
   query Feed($type: FeedType!, $offset: Int, $limit: Int) {
     currentUser {
@@ -511,7 +520,7 @@ export function useFeedQuery(
 ) {
   return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
 }
-export type FeedQueryCompositionFunctionResult = ReturnType<typeof useFeedQuery>;
+export type FeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
   mutation submitRepository($repoFullName: String!) {
     submitRepository(repoFullName: $repoFullName) {
@@ -545,7 +554,10 @@ export function useSubmitRepositoryMutation(
     options
   );
 }
-export type SubmitRepositoryMutationCompositionFunctionResult = ReturnType<typeof useSubmitRepositoryMutation>;
+export type SubmitRepositoryMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  SubmitRepositoryMutation,
+  SubmitRepositoryMutationVariables
+>;
 export const SubmitCommentDocument = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
     submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -581,7 +593,10 @@ export function useSubmitCommentMutation(
     options
   );
 }
-export type SubmitCommentMutationCompositionFunctionResult = ReturnType<typeof useSubmitCommentMutation>;
+export type SubmitCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  SubmitCommentMutation,
+  SubmitCommentMutationVariables
+>;
 export const VoteDocument = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {
     vote(repoFullName: $repoFullName, type: $type) {
@@ -615,4 +630,7 @@ export const VoteDocument = gql`
 export function useVoteMutation(options?: VueApolloComposable.UseMutationOptions<VoteMutation, VoteMutationVariables>) {
   return VueApolloComposable.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, options);
 }
-export type VoteMutationCompositionFunctionResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  VoteMutation,
+  VoteMutationVariables
+>;
