@@ -208,16 +208,17 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   }: BuildCompositionFunctions): string {
     switch (operationType) {
       case 'Query': {
-        if (operationHasVariables) {
-          return `export function use${operationName}(variables${
-            operationHasNonNullableVariable ? '' : '?'
-          }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
-            return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, options);
+        return `export function use${operationName}(${
+          operationHasVariables
+            ? `variables${
+                operationHasNonNullableVariable ? '' : '?'
+              }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, `
+            : ''
+        }options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
+            return VueApolloComposable.use${operationType}<${operationResultType}, ${
+          operationHasVariables ? operationVariablesTypes : 'undefined'
+        }>(${documentNodeVariable}, ${operationHasVariables ? 'variables' : 'undefined'}, options);
           }`;
-        }
-        return `export function use${operationName}(options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
-          return VueApolloComposable.use${operationType}<${operationResultType}, undefined>(${documentNodeVariable}, undefined, options);
-        }`;
       }
       case 'Mutation': {
         return `export function use${operationName}(options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
@@ -225,15 +226,16 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
           }`;
       }
       case 'Subscription': {
-        if (operationHasVariables) {
-          return `export function use${operationName}(variables${
-            operationHasNonNullableVariable ? '' : '?'
-          }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
-          return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, options);
-        }`;
-        }
-        return `export function use${operationName}(options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
-          return VueApolloComposable.use${operationType}<${operationResultType}, undefined>(${documentNodeVariable}, undefined, options);
+        return `export function use${operationName}(${
+          operationHasVariables
+            ? `variables${
+                operationHasNonNullableVariable ? '' : '?'
+              }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, `
+            : ''
+        }options?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>>) {
+          return VueApolloComposable.use${operationType}<${operationResultType}, ${
+          operationHasVariables ? operationVariablesTypes : 'undefined'
+        }>(${documentNodeVariable}, ${operationHasVariables ? 'variables' : 'undefined'}, options);
         }`;
       }
     }
