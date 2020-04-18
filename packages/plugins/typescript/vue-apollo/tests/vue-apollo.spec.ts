@@ -136,7 +136,7 @@ describe('Vue Apollo', () => {
 
       expect(
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
-      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
         ((await plugin(
           schema,
@@ -144,7 +144,7 @@ describe('Vue Apollo', () => {
           { dedupeOperationSuffix: false },
           { outputFile: '' }
         )) as any).content
-      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
         ((await plugin(
           schema,
@@ -152,7 +152,7 @@ describe('Vue Apollo', () => {
           { dedupeOperationSuffix: true },
           { outputFile: '' }
         )) as any).content
-      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
         ((await plugin(
           schema,
@@ -160,7 +160,7 @@ describe('Vue Apollo', () => {
           { dedupeOperationSuffix: true },
           { outputFile: '' }
         )) as any).content
-      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
         ((await plugin(
           schema,
@@ -168,7 +168,7 @@ describe('Vue Apollo', () => {
           { dedupeOperationSuffix: false },
           { outputFile: '' }
         )) as any).content
-      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
     });
 
     it('should import VueApolloComposable from VueApolloComposableImportFrom config option', async () => {
@@ -543,6 +543,12 @@ query MyFeed {
             id
           }
         }
+
+        subscription test($name: String!) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
+        }
       `);
       const docs = [{ location: '', document: documents }];
 
@@ -556,11 +562,14 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type FeedQueryCompositionFunctionResult = ReturnType<typeof useFeedQuery>;
+      export type FeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FeedQuery, FeedQueryVariables>;
       `);
 
       expect(content.content).toBeSimilarStringTo(`
-      export type SubmitRepositoryMutationCompositionFunctionResult = ReturnType<typeof useSubmitRepositoryMutation>;
+      export type SubmitRepositoryMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+      `);
+      expect(content.content).toBeSimilarStringTo(`
+      export type TestSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<TestSubscription, TestSubscriptionVariables>;
       `);
       await validateTypeScript(content, schema, docs, {});
     });
