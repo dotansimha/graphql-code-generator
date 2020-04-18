@@ -65,13 +65,12 @@ export class OperationVariablesToObject {
       visitSelections(selectionSet.selections);
     }
 
-    const ret =
-      variablesNode
-        .filter(variable => !exportedArgs.has(variable?.variable?.name?.value))
-        .map(variable => indent(this.transformVariable(variable)))
-        .join(`${this.getPunctuation()}\n`) + this.getPunctuation();
+    const variableDefinitions = variablesNode
+      .filter(variable => !exportedArgs.has(variable?.variable?.name?.value))
+      .map(variable => indent(this.transformVariable(variable)))
+      .join(`${this.getPunctuation()}\n`);
 
-    return ret;
+    return variableDefinitions ? variableDefinitions + this.getPunctuation() : '';
   }
 
   protected getScalar(name: string): string {

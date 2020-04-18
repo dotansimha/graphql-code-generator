@@ -2339,6 +2339,16 @@ describe('TypeScript Operations Plugin', () => {
             text
           }
         }
+
+        query getCurrentUserPosts3($userId: ID!) {
+          currentUserId @client @export(as: "userId")
+
+          getPostsByUser2(id: $userId, topic: "hello") {
+            id
+            title
+            text
+          }
+        }
       `);
       const config = { skipTypename: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
@@ -2349,16 +2359,18 @@ describe('TypeScript Operations Plugin', () => {
         `export type GetCurrentUserPostsQueryVariables = {
           topic: Scalars['String'];
         };
-        
-        
         export type GetCurrentUserPostsQuery = { getPostsByUser?: Maybe<Pick<Post, 'id' | 'title' | 'text'>> };
         
         export type GetCurrentUserPosts2QueryVariables = {
           topic: Scalars['String'];
         };
-        
-        
         export type GetCurrentUserPosts2Query = (
+          Pick<Query, 'currentUserId'>
+          & { getPostsByUser2?: Maybe<Pick<Post, 'id' | 'title' | 'text'>> }
+        );
+        
+        export type GetCurrentUserPosts3QueryVariables = {};
+        export type GetCurrentUserPosts3Query = (
           Pick<Query, 'currentUserId'>
           & { getPostsByUser2?: Maybe<Pick<Post, 'id' | 'title' | 'text'>> }
         );`
