@@ -8,7 +8,7 @@ import { loadSchema, loadDocuments } from './load';
 
 export type YamlCliFlags = {
   config: string;
-  watch: boolean;
+  watch: boolean | string | string[];
   require: string[];
   overwrite: boolean;
   project: string;
@@ -136,7 +136,10 @@ export function setCommandOptions(commandInstance: Command): Command {
       '-c, --config <path>',
       'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
     )
-    .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option(
+      '-w, --watch [value]',
+      'Watch for changes and execute generation automatically. You can also specify a glob expreession for custom watch list.'
+    )
     .option('-s, --silent', 'A flag to not print errors in case they occur')
     .option(
       '-r, --require [value]',
@@ -171,7 +174,7 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Com
     configFilePath: context.filepath,
   };
 
-  if (cliFlags.watch === true) {
+  if (cliFlags.watch) {
     config.watch = cliFlags.watch;
   }
 
