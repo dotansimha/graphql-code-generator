@@ -11,8 +11,7 @@ This plugin generates @vue/apollo-composable composition functions with TypeScri
 ## Installation
 
 ```bash
-$ yarn add @graphql-codegen/typescript-vue-apollo
-$ yarn add @vue/apollo-composable@4.0.0-alpha.4
+$ yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable@4.0.0-alpha.8 @vue/composition-api
 ```
 
 ## Usage
