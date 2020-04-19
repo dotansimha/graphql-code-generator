@@ -86,6 +86,7 @@ module.exports = {
       'custom-codegen/validate-configuration',
       'custom-codegen/extend-schema',
       'custom-codegen/using-visitor',
+      'custom-codegen/contributing'
     ],
     'Migration Guides': ['migration/from-0-18', 'migration/from-0-13'],
   },

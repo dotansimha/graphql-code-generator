@@ -61,16 +61,16 @@ export const EXAMPLES = {
     {
       name: 'Schema types',
       config: `generates:
-    server-types.ts:
-      plugins:
-        - typescript`,
+  types.ts:
+    plugins:
+      - typescript`,
       schema: TS_SCHEMA,
       documents: '',
     },
     {
       name: 'Operations types',
       config: `generates:
-  client-types.ts:
+  operations-types.ts:
     plugins:
       - typescript
       - typescript-operations`,
@@ -97,7 +97,7 @@ export const EXAMPLES = {
     {
       name: 'Operations types (without Pick)',
       config: `generates:
-  client-types.ts:
+  operations-types.ts:
     config:
       preResolveTypes: true
     plugins:
@@ -109,7 +109,7 @@ export const EXAMPLES = {
     {
       name: 'React-Apollo Hooks',
       config: `generates:
-  components.tsx:
+  types-and-hooks.tsx:
     config:
       withHooks: true
       withComponent: false
