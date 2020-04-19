@@ -93,7 +93,7 @@ The Codegen also supports several CLI flags that allow you to override the defau
 
 - **`--config` (`-c`)** - Specifies the codegen config file to use.
 
-- **`--watch` (`-w`)** - Overrides the `watch` config to true.
+- **`--watch` (`-w`)** - Overrides the `watch` config to true. You can also specify a glob expression to create a custom watch list.
 
 - **`--silent` (`-s`)** - Overrides the `silent` config to true.
 
