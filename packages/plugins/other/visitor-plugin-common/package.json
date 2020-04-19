@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,13 +13,13 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "parse-filepath": "1.0.2",
-    "@graphql-codegen/plugin-helpers": "1.13.2",
+    "@graphql-codegen/plugin-helpers": "1.13.3",
     "@graphql-toolkit/relay-operation-optimizer": "~0.10.4",
     "array.prototype.flatmap": "1.2.3",
     "auto-bind": "~4.0.0",
     "dependency-graph": "0.9.0",
     "graphql-tag": "2.10.3",
+    "parse-filepath": "1.0.2",
     "pascal-case": "3.1.1",
     "tslib": "~1.11.1"
   },
@@ -27,8 +27,8 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
-    "@types/parse-filepath": "1.0.0",
-    "@types/array.prototype.flatmap": "1.2.1"
+    "@types/array.prototype.flatmap": "1.2.1",
+    "@types/parse-filepath": "1.0.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
