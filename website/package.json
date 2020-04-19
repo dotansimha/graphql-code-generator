@@ -50,7 +50,6 @@
     "@graphql-codegen/typescript-type-graphql": "1.13.3",
     "@graphql-codegen/typescript-urql": "1.13.3",
     "@graphql-codegen/typescript-vue-apollo": "1.13.3",
-    "@graphql-codegen/website": "1.13.3",
     "codemirror": "5.52.2",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.13.1",
