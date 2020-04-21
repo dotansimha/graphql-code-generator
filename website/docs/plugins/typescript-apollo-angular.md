@@ -44,7 +44,7 @@ generates:
 Then, use it:
 
 ```ts
-import { MyFeedGQL, Feed } from './graphql';
+import { MyFeedGQL, MyFeedQuery } from './graphql';
 
 @Component({
   selector: 'feed',
@@ -56,7 +56,7 @@ import { MyFeedGQL, Feed } from './graphql';
   `,
 })
 export class FeedComponent {
-  feed: Observable<Feed[]>;
+  feed: Observable<MyFeedQuery['feed']>;
 
   constructor(feedGQL: MyFeedGQL) {
     this.feed = feedGQL.watch().valueChanges.pipe(map(result => result.data.feed));
