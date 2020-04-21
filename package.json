@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
     "build": "tsc --project tsconfig.json && bob build",
@@ -97,6 +98,7 @@
     "lerna": "3.20.2",
     "lint-staged": "10.1.7",
     "lodash": "4.17.15",
+    "patch-package": "6.2.2",
     "rimraf": "3.0.2",
     "ts-jest": "25.4.0",
     "stencil-apollo": "0.1.5",
