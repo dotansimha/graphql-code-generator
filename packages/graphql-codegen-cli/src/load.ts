@@ -15,10 +15,10 @@ import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { join } from 'path';
 
-export const loadSchema = async (
+export async function loadSchema(
   schemaPointers: UnnormalizedTypeDefPointer,
   config: Types.Config
-): Promise<GraphQLSchema> => {
+): Promise<GraphQLSchema> {
   try {
     const loaders = [
       new CodeFileLoader(),
@@ -36,6 +36,7 @@ export const loadSchema = async (
       loaders,
       sort: true,
       convertExtensions: true,
+      includeSources: true,
       ...config,
     });
     return schema;
@@ -60,12 +61,12 @@ export const loadSchema = async (
       `
     );
   }
-};
+}
 
-export const loadDocuments = async (
+export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
   config: Types.Config
-): Promise<Types.DocumentFile[]> => {
+): Promise<Types.DocumentFile[]> {
   const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()];
 
   const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
@@ -77,4 +78,4 @@ export const loadDocuments = async (
   });
 
   return loadedFromToolkit;
-};
+}
