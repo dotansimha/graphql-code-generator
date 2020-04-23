@@ -7666,10 +7666,10 @@ flatten@^1.0.2:
   resolved "https://registry.npmjs.org/flatten/-/flatten-1.0.3.tgz#c1283ac9f27b368abc1e36d1ff7b04501a30356b"
   integrity sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==
 
-flow-bin@0.122.0:
-  version "0.122.0"
-  resolved "https://registry.npmjs.org/flow-bin/-/flow-bin-0.122.0.tgz#c723a2b33b1a70bd10204704ae1dc776d5d89d79"
-  integrity sha512-my8N5jgl/A+UVby9E7NDppHdhLgRbWgKbmFZSx2MSYMRh3d9YGnM2MM+wexpUpl0ftY1IM6ZcUwaAhrypLyvlA==
+flow-bin@0.123.0:
+  version "0.123.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.123.0.tgz#7ba61a0b8775928cf4943ccf78eed2b1b05f7b3a"
+  integrity sha512-Ylcf8YDIM/KrqtxkPuq+f8O+6sdYA2Nuz5f+sWHlp539DatZz3YMcsO1EiXaf1C11HJgpT/3YGYe7xZ9/UZmvQ==
 
 flow-parser@0.123.0:
   version "0.123.0"
@@ -13763,11 +13763,12 @@ remark-admonitions@^1.2.1:
     unified "^8.4.2"
     unist-util-visit "^2.0.1"
 
-remark-code-import@0.1.3:
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/remark-code-import/-/remark-code-import-0.1.3.tgz#d31d7c8d162779c33341e47b74b25499adb83da0"
-  integrity sha512-56lMI+EIW0zRSumjukAQkhm8D0ndbFE207Gr1R8Z8gCaMhJ7A8njfQxyGpTV2GxvfdSLAwo19qaoXYnTVSrkew==
+remark-code-import@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/remark-code-import/-/remark-code-import-0.2.0.tgz#938cb78f10387d41427f39c8c30145215f5eec70"
+  integrity sha512-tWlRYTbHwctFbL9WbmftmoxC7dnDTLRVt+EXB3NE3zrMnShpKW8yP8ZupVbC+GtzSZntIreWdS9C3VQllC2HLw==
   dependencies:
+    to-gatsby-remark-plugin "^0.1.0"
     unist-util-visit "^2.0.1"
 
 remark-emoji@^2.1.0:
@@ -15333,6 +15334,13 @@ to-fast-properties@^2.0.0:
   resolved "https://registry.npmjs.org/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
   integrity sha1-3F5pjL0HkmW8c+A3doGk5Og/YW4=
 
+to-gatsby-remark-plugin@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/to-gatsby-remark-plugin/-/to-gatsby-remark-plugin-0.1.0.tgz#34167b2c3cf3209745cf97e5a488042586f9990d"
+  integrity sha512-blmhJ/gIrytWnWLgPSRCkhCPeki6UBK2daa3k9mGahN7GjwHu8KrS7F70MvwlsG7IE794JLgwAdCbi4hU4faFQ==
+  dependencies:
+    to-vfile "^6.1.0"
+
 to-object-path@^0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/to-object-path/-/to-object-path-0.3.0.tgz#297588b7b0e7e0ac08e04e672f85c1f4999e17af"
@@ -15364,6 +15372,14 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     extend-shallow "^3.0.2"
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
+
+to-vfile@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/to-vfile/-/to-vfile-6.1.0.tgz#5f7a3f65813c2c4e34ee1f7643a5646344627699"
+  integrity sha512-BxX8EkCxOAZe+D/ToHdDsJcVI4HqQfmw0tCkp31zf3dNP/XWIAjU4CmeuSwsSoOzOTqHPOL0KUzyZqJplkD0Qw==
+  dependencies:
+    is-buffer "^2.0.0"
+    vfile "^4.0.0"
 
 toidentifier@1.0.0:
   version "1.0.0"
