@@ -82,15 +82,16 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
 
     const useFlowExactObject = this.config.useFlowExactObjects;
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = this.config.formatNamedField;
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
         useTypesPrefix: true,
       });
-
+    const fieldObj = schemaType.getFields();
     return [
       `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`)
+        .map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`)
         .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
     ];
   }

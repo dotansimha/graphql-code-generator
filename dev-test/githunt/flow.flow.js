@@ -176,7 +176,7 @@ export type OnCommentAddedSubscriptionVariables = {
 export type OnCommentAddedSubscription = {
   ...{ __typename?: 'Subscription' },
   ...{|
-    commentAdded: ?{
+    commentAdded?: ?{
       ...{ __typename?: 'Comment' },
       ...$Pick<Comment, {| id: *, createdAt: *, content: * |}>,
       ...{|
@@ -198,11 +198,11 @@ export type CommentQueryVariables = {
 export type CommentQuery = {
   ...{ __typename?: 'Query' },
   ...{|
-    currentUser: ?{
+    currentUser?: ?{
       ...{ __typename?: 'User' },
       ...$Pick<User, {| login: *, html_url: * |}>,
     },
-    entry: ?{
+    entry?: ?{
       ...{ __typename?: 'Entry' },
       ...$Pick<Entry, {| id: *, createdAt: *, commentCount: * |}>,
       ...{|
@@ -218,7 +218,7 @@ export type CommentQuery = {
           ...{ __typename?: 'Repository' },
           ...$Pick<
             Repository,
-            {| description: *, open_issues_count: *, stargazers_count: *, full_name: *, html_url: * |}
+            {| description?: *, open_issues_count?: *, stargazers_count: *, full_name: *, html_url: * |}
           >,
         },
       |},
@@ -242,7 +242,7 @@ export type CurrentUserForProfileQueryVariables = {};
 export type CurrentUserForProfileQuery = {
   ...{ __typename?: 'Query' },
   ...{|
-    currentUser: ?{
+    currentUser?: ?{
       ...{ __typename?: 'User' },
       ...$Pick<User, {| login: *, avatar_url: * |}>,
     },
@@ -257,7 +257,7 @@ export type FeedEntryFragment = {
       ...{ __typename?: 'Repository' },
       ...$Pick<Repository, {| full_name: *, html_url: * |}>,
       ...{|
-        owner: ?{
+        owner?: ?{
           ...{ __typename?: 'User' },
           ...$Pick<User, {| avatar_url: * |}>,
         },
@@ -277,11 +277,11 @@ export type FeedQueryVariables = {
 export type FeedQuery = {
   ...{ __typename?: 'Query' },
   ...{|
-    currentUser: ?{
+    currentUser?: ?{
       ...{ __typename?: 'User' },
       ...$Pick<User, {| login: * |}>,
     },
-    feed: ?Array<?{
+    feed?: ?Array<?{
       ...{ __typename?: 'Entry' },
       ...FeedEntryFragment,
     }>,
@@ -295,7 +295,7 @@ export type SubmitRepositoryMutationVariables = {
 export type SubmitRepositoryMutation = {
   ...{ __typename?: 'Mutation' },
   ...{|
-    submitRepository: ?{
+    submitRepository?: ?{
       ...{ __typename?: 'Entry' },
       ...$Pick<Entry, {| createdAt: * |}>,
     },
@@ -308,7 +308,7 @@ export type RepoInfoFragment = {
   ...{|
     repository: {
       ...{ __typename?: 'Repository' },
-      ...$Pick<Repository, {| description: *, stargazers_count: *, open_issues_count: * |}>,
+      ...$Pick<Repository, {| description?: *, stargazers_count: *, open_issues_count?: * |}>,
     },
     postedBy: {
       ...{ __typename?: 'User' },
@@ -325,7 +325,7 @@ export type SubmitCommentMutationVariables = {
 export type SubmitCommentMutation = {
   ...{ __typename?: 'Mutation' },
   ...{|
-    submitComment: ?{
+    submitComment?: ?{
       ...{ __typename?: 'Comment' },
       ...CommentsPageCommentFragment,
     },
@@ -351,7 +351,7 @@ export type VoteMutationVariables = {
 export type VoteMutation = {
   ...{ __typename?: 'Mutation' },
   ...{|
-    vote: ?{
+    vote?: ?{
       ...{ __typename?: 'Entry' },
       ...$Pick<Entry, {| score: *, id: * |}>,
       ...{|
