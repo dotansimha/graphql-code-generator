@@ -7,6 +7,8 @@ const OUTPUT_FILE = 'com/java/generated/resolvers.java';
 
 describe('Java Resolvers', () => {
   const schema = buildSchema(/* GraphQL */ `
+    scalar DateTime
+
     type Query {
       me: User!
     }
@@ -20,6 +22,7 @@ describe('Java Resolvers', () => {
       username: String!
       email: String!
       name: String
+      dateOfBirth: DateTime
     }
 
     type Chat implements Node {
@@ -44,6 +47,7 @@ describe('Java Resolvers', () => {
       public DataFetcher<String> username();
       public DataFetcher<String> email();
       public DataFetcher<String> name();
+      public DataFetcher<Object> dateOfBirth();
     }`);
 
     validateJava(result as any);
@@ -109,6 +113,7 @@ describe('Java Resolvers', () => {
       public DataFetcher<String> username();
       public DataFetcher<String> email();
       public DataFetcher<String> name();
+      public DataFetcher<Object> dateOfBirth();
     }`);
   });
 });
