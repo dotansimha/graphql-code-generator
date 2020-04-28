@@ -21,7 +21,7 @@ import {
   Kind,
   InputValueDefinitionNode,
   GraphQLSchema,
-  GraphQLEnumType,
+  isEnumType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -29,6 +29,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  futureProofEnums: boolean;
   enumsAsConst: boolean;
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
@@ -47,6 +48,7 @@ export class TsVisitor<
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
@@ -55,8 +57,8 @@ export class TsVisitor<
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
-      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
-      .filter(t => t);
+      .filter(isEnumType)
+      .map(type => type.name);
     this.setArgumentsTransformer(
       new TypeScriptOperationVariablesToObject(
         this.scalars,
@@ -187,9 +189,12 @@ export class TsVisitor<
                   enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 
-                return comment + indent(wrapWithSingleQuotes(enumValue));
+                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .join(' |\n')
+              .concat(
+                ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
+              )
+              .join('\n')
         ).string;
     }
 
