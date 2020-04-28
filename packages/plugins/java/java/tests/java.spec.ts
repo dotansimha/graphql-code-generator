@@ -34,6 +34,10 @@ describe('Java', () => {
       something: Int
     }
 
+    input CustomInput {
+      id: ID!
+    }
+
     enum ResultSort {
       ASC
       DESC
@@ -180,6 +184,22 @@ describe('Java', () => {
       
         public Integer getSkip() { return this._skip; }
         public Integer getLimit() { return this._limit; }
+      }`);
+    });
+
+    it('Should omit extra Input suffix from input class name if schema name already includes the "Input" suffix', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class CustomInput {
+        private Object _id;
+      
+        public CustomInput(Map<String, Object> args) {
+          if (args != null) {
+            this._id = (Object) args.get("id");
+          }
+        }
+      
+        public Object getId() { return this._id; }
       }`);
     });
 
