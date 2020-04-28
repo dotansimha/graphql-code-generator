@@ -26,9 +26,18 @@ We currently support and maintain [these plugins](https://graphql-code-generator
 
 ### Quick Start
 
+Start by installing the basic deps of GraphQL Codegen;
+
+    $ yarn add graphql
+    $ yarn add -D @graphql-codegen/cli
+
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ npx @graphql-codegen/cli init
+    $ yarn graphql-codegen init
+
+Or, with `npx`:
+
+    $ npx graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 
@@ -49,7 +58,7 @@ generates:
 
 Then, run the code-generator using `graphql-codegen` command:
 
-    $ graphql-codegen
+    $ yarn graphql-codegen
 
 The command above may fetch (for example) the following GraphQL schema:
 
