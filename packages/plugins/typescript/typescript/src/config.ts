@@ -86,6 +86,24 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsConst?: boolean;
   /**
+   * @name onlyOperationTypes
+   * @type boolean
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
+   * Interacts well with `preResolveTypes: true`
+   * @default false
+   *
+   * @example Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    onlyOperationTypes: true
+   * ```
+   */
+  onlyOperationTypes?: boolean;
+  /**
    * @name immutableTypes
    * @type boolean
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
