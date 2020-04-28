@@ -9,7 +9,7 @@
     "generate:config-docs": "node generate-config.js"
   },
   "devDependencies": {
-    "@docusaurus/core": "2.0.0-alpha.50",
+    "@docusaurus/core": "2.0.0-alpha.54",
     "@docusaurus/preset-classic": "2.0.0-alpha.50",
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
