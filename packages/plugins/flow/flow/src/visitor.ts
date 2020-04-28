@@ -60,8 +60,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return comment + indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return `?${super.NamedType(node)}`;
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `?${super.NamedType(node, key, parent, path, ancestors)}`;
   }
 
   ListType(node: ListTypeNode): string {

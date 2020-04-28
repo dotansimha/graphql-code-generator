@@ -153,6 +153,14 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     autoBind(this);
   }
 
+  protected getVisitorKindContextFromAncestors(ancestors: ASTNode[]): string[] {
+    if (!ancestors) {
+      return [];
+    }
+
+    return ancestors.map(t => t.kind).filter(Boolean);
+  }
+
   get config(): TPluginConfig {
     return this._parsedConfig;
   }

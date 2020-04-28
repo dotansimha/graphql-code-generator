@@ -1,0 +1,34 @@
+name: Website
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Deploy Website
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Use Node 13
+        uses: actions/setup-node@master
+        with:
+          node-version: 13
+      - name: Install Dependencies
+        run: yarn install
+      - name: Build Plugins
+        run: yarn build
+      - name: Build Website
+        run: cd website && yarn build:website
+      - name: Deploy Website 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: website/build

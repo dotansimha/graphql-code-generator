@@ -18,25 +18,36 @@ GraphQL Code Generator is a tool that generates code out of your GraphQL schema.
 
 By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphQL Code Generator got you covered.
 
-GraphQL Code Generator let you choose the output that you need, based on _plugins_, which are very flexible and customizable. You can also write your own _plugins_ to generate custom outputs that matches your needs.
+GraphQL Code Generator lets you choose the output that you need, based on _plugins_, which are very flexible and customizable. You can also write your _plugins_ to generate custom outputs that match your needs.
 
 You can try this tool live on your browser and see some useful examples. Check out [GraphQL Code Generator Live Examples](https://graphql-code-generator.com/#live-demo).
 
-We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason and some more), and there is an active community that writes and maintains custom plugins.
+We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason, and some more), and there is an active community that writes and maintains custom plugins.
 
 ### Quick Start
 
-Install using `yarn`:
+Start by installing the basic deps of GraphQL Codegen;
 
-    $ yarn add -D graphql @graphql-codegen/cli
+    $ yarn add graphql
+    $ yarn add -D @graphql-codegen/cli
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ graphql-codegen init
+    $ yarn graphql-codegen init
 
-Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file and a lot more.
+Or, with `npx`:
 
-If you don't want to use the wizard, create a basic `codegen.yml` configuration file, point to your schema, and pick the plugins you wish to use. For example:
+    $ npx graphql-codegen init
+
+Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
+
+If you don't want to use the wizard, install it by yourself and create a basic `codegen.yml` configuration file, point to your schema, and pick the plugins you wish to use. 
+
+Install CLI using `yarn`:
+
+    $ yarn add -D @graphql-codegen/cli
+
+And create a config like below:
 
 ```yml
 schema: http://localhost:3000/graphql
@@ -47,7 +58,7 @@ generates:
 
 Then, run the code-generator using `graphql-codegen` command:
 
-    $ graphql-codegen
+    $ yarn graphql-codegen
 
 The command above may fetch (for example) the following GraphQL schema:
 
@@ -129,14 +140,7 @@ Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-To run this project locally:
-
-- Use Node >= 10
-- Make sure that you have the latest Yarn version (https://yarnpkg.com/lang/en/docs/install/)
-- Clone this repo using `git clone`
-- Run `yarn` on the root dir (it has a Yarn workspace defined, so all the packages dependencies will be installed)
-- Run `yarn build` to build all core packages and plugins
-- Run `yarn test` to make sure everything works
+For a contribution guide, please refer to: http://graphql-code-generator.com/docs/custom-codegen/contributing
 
 ### License
 

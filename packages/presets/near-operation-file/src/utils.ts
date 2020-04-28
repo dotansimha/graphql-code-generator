@@ -1,14 +1,15 @@
-import { parse, join } from 'path';
+import { join } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentRegistry } from './fragment-resolver';
+import parsePath from 'parse-filepath';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
-  const parsedPath = parse(baseFilePath);
+  const parsedPath = parsePath(baseFilePath);
   return join(parsedPath.dir, folder, parsedPath.base).replace(/\\/g, '/');
 }
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
-  const parsedPath = parse(baseFilePath);
+  const parsedPath = parsePath(baseFilePath);
 
   return join(parsedPath.dir, parsedPath.name + extension).replace(/\\/g, '/');
 }

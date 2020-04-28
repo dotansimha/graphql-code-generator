@@ -8,6 +8,8 @@ const OUTPUT_FILE = 'com/java/generated/resolvers.java';
 
 describe('Java', () => {
   const schema = buildSchema(/* GraphQL */ `
+    scalar DateTime
+
     type Query {
       me: User!
       user(id: ID!): User!
@@ -23,12 +25,17 @@ describe('Java', () => {
       username: String
       email: String
       name: String
+      dateOfBirth: DateTime
       sort: ResultSort
       metadata: MetadataSearch
     }
 
     input MetadataSearch {
       something: Int
+    }
+
+    input CustomInput {
+      id: ID!
     }
 
     enum ResultSort {
@@ -45,6 +52,7 @@ describe('Java', () => {
       username: String!
       email: String!
       name: String
+      dateOfBirth: DateTime
       friends(skip: Int, limit: Int): [User!]!
     }
 
@@ -179,6 +187,22 @@ describe('Java', () => {
       }`);
     });
 
+    it('Should omit extra Input suffix from input class name if schema name already includes the "Input" suffix', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class CustomInput {
+        private Object _id;
+      
+        public CustomInput(Map<String, Object> args) {
+          if (args != null) {
+            this._id = (Object) args.get("id");
+          }
+        }
+      
+        public Object getId() { return this._id; }
+      }`);
+    });
+
     it('Should generate input class per each query with arguments', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
@@ -235,6 +259,7 @@ describe('Java', () => {
         private String _username;
         private String _email;
         private String _name;
+        private Object _dateOfBirth;
         private ResultSort _sort;
         private MetadataSearchInput _metadata;
       
@@ -243,6 +268,7 @@ describe('Java', () => {
             this._username = (String) args.get("username");
             this._email = (String) args.get("email");
             this._name = (String) args.get("name");
+            this._dateOfBirth = (Object) args.get("dateOfBirth");
             if (args.get("sort") instanceof ResultSort) {
               this._sort = (ResultSort) args.get("sort");
             } else {
@@ -255,6 +281,7 @@ describe('Java', () => {
         public String getUsername() { return this._username; }
         public String getEmail() { return this._email; }
         public String getName() { return this._name; }
+        public Object getDateOfBirth() { return this._dateOfBirth; }
         public ResultSort getSort() { return this._sort; }
         public MetadataSearchInput getMetadata() { return this._metadata; }
       }`);

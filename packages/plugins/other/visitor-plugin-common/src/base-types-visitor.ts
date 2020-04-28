@@ -17,6 +17,7 @@ import {
   StringValueNode,
   isEnumType,
   DirectiveNode,
+  Kind,
 } from 'graphql';
 import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
@@ -45,7 +46,10 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyOperationTypes: boolean;
   enumPrefix: boolean;
+  fieldWrapperValue: string;
+  wrapFieldDefinitions: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -124,6 +128,59 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @name fieldWrapperValue
+   * @type string
+   * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
+   * @default T
+   *
+   * @example Allow Promise
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   *    fieldWrapperValue: T | Promise<T>
+   * ```
+   */
+  fieldWrapperValue?: string;
+  /**
+   * @name wrapFieldDefinitions
+   * @type boolean
+   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
+   * This is useful to allow return types such as Promises and functions.
+   * @default false
+   *
+   * @example Enable wrapping fields
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   * ```
+   */
+  wrapFieldDefinitions?: boolean;
+    /**
+   * @name onlyOperationTypes
+   * @type boolean
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
+   * @default false
+   *
+   * @example Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    onlyOperationTypes: true
+   * ```
+   */
+  onlyOperationTypes?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -140,14 +197,29 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
+      wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
       ...additionalConfig,
     });
 
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
+  }
+
+  protected getExportPrefix(): string {
+    return 'export ';
+  }
+
+  public getFieldWrapperValue(): string {
+    if (this.config.fieldWrapperValue) {
+      return `${this.getExportPrefix()}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+    }
+
+    return '';
   }
 
   public getScalarsImports(): string[] {
@@ -207,6 +279,7 @@ export class BaseTypesVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (this.config.onlyOperationTypes) return '';
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
@@ -230,6 +303,7 @@ export class BaseTypesVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
@@ -307,6 +381,7 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -328,6 +403,7 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -493,8 +569,16 @@ export class BaseTypesVisitor<
     return this.convertName(node);
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return this._getTypeForNode(node);
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const typeToUse = this._getTypeForNode(node);
+
+    if (!isVisitingInputType && this.config.fieldWrapperValue && this.config.wrapFieldDefinitions) {
+      return `FieldWrapper<${typeToUse}>`;
+    }
+
+    return typeToUse;
   }
 
   ListType(node: ListTypeNode): string {

@@ -129,7 +129,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-apollo-angular');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use react related plugins when react is found', async () => {
@@ -172,7 +172,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-react-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use stencil related plugins when @stencil/core is found', async () => {
@@ -215,7 +215,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-stencil-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use typescript related plugins when typescript is found (node)', async () => {
@@ -255,7 +255,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-resolvers');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3); // 3 - because we have typescript package in devDeps
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4); // 3 - because we have typescript package in devDeps
   });
 
   it('should have few default values', async () => {

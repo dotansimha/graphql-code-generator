@@ -39,7 +39,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const commonListrOptions = {
     exitOnError: true,
   };
-  const Listr = await import('listr').then((m) => ('default' in m ? m.default : m));
+  const Listr = await import('listr').then(m => ('default' in m ? m.default : m));
   let listr: import('listr');
 
   if (process.env.VERBOSE) {
@@ -70,6 +70,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   async function normalize() {
+    /* Load Require extensions */
+    const requireExtensions = normalizeInstanceOrArray<string>(config.require);
+    for (const mod of requireExtensions) {
+      await import(mod);
+    }
+
     /* Root templates-config */
     rootConfig = config.config || {};
 
@@ -126,7 +132,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
     if (
       rootSchemas.length === 0 &&
-      Object.keys(generates).some((filename) => !generates[filename].schema || generates[filename].schema.length === 0)
+      Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)
     ) {
       throw new DetailedError(
         'Invalid Codegen Configuration!',
@@ -156,7 +162,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     title: 'Generate outputs',
     task: () => {
       return new Listr(
-        Object.keys(generates).map<import('listr').ListrTask>((filename) => {
+        Object.keys(generates).map<import('listr').ListrTask>(filename => {
           const outputConfig = generates[filename];
           const hasPreset = !!outputConfig.preset;
 
@@ -213,7 +219,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                       const pluginLoader = config.pluginLoader || defaultLoader;
                       const pluginPackages = await Promise.all(
-                        normalizedPluginsArray.map((plugin) => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                        normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
                       );
                       const pluginMap: { [name: string]: CodegenPlugin } = {};
                       const preset: Types.OutputPreset = hasPreset

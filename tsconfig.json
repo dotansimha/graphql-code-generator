@@ -55,6 +55,8 @@
       "@graphql-codegen/typescript": ["packages/plugins/typescript/typescript/src/index.ts"],
       "@graphql-codegen/typescript-urql": ["packages/plugins/typescript/urql/src/index.ts"],
       "@graphql-codegen/typescript-vue-apollo": ["packages/plugins/typescript/vue-apollo/src/index.ts"],
+      "@graphql-codegen/c-sharp": ["packages/plugins/c-sharp/c-sharp/src/index.ts"],
+      "@graphql-codegen/c-sharp-apollo": ["packages/plugins/c-sharp/apollo-dot-net/src/index.ts"],
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],
       "@graphql-codegen/near-operation-file-preset": ["packages/presets/near-operation-file/src/index.ts"],
       "@graphql-codegen/config-markdown-generator": ["packages/utils/config-md-generator/src/index.ts"],

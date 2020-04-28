@@ -69,6 +69,25 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsTypes?: boolean;
   /**
+   * @name futureProofEnums
+   * @type boolean
+   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    enumsAsTypes: true
+   *    futureProofEnums: true
+   * ```
+   */
+  futureProofEnums?: boolean;
+  /**
    * @name enumsAsConst
    * @type boolean
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
@@ -86,22 +105,23 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsConst?: boolean;
   /**
-   * @name fieldWrapperValue
-   * @type string
-   * @description Allow to override the type value of `FieldWrapper`.
-   * @default T | Promise<T> | (() => T | Promise<T>)
+   * @name onlyOperationTypes
+   * @type boolean
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
+   * Interacts well with `preResolveTypes: true`
+   * @default false
    *
-   * @example Only allow values
+   * @example Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
    *  plugins:
    *    - typescript
    *  config:
-   *    fieldWrapperValue: T
+   *    onlyOperationTypes: true
    * ```
    */
-  fieldWrapperValue?: string;
+  onlyOperationTypes?: boolean;
   /**
    * @name immutableTypes
    * @type boolean
@@ -164,22 +184,4 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   noExport?: boolean;
-  /**
-   * @name wrapFieldDefinitions
-   * @type boolean
-   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
-   * This is useful to allow return types such as Promises and functions.
-   * @default true
-   *
-   * @example Enable wrapping fields
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: false
-   * ```
-   */
-  wrapFieldDefinitions?: boolean;
 }

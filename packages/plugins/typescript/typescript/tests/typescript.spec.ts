@@ -249,9 +249,9 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        'A' |
+        | 'A' 
         /** this is b */
-        'B';`);
+        | 'B';`);
     });
   });
 
@@ -680,8 +680,10 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 'A' | 'B';
-    `);
+        export type MyEnum = 
+          | 'A' 
+          | 'B';
+      `);
       validateTs(result);
     });
 
@@ -699,7 +701,53 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 'BOOP' | 'B';
+        export type MyEnum = 
+          | 'BOOP' 
+          | 'B';
+      `);
+      validateTs(result);
+    });
+
+    it('Should add `%future added value` to enum when futureProofEnums is set and also enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true, futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyEnum = 
+        | 'A' 
+        | 'B' 
+        | '%future added value'
+    `);
+      validateTs(result);
+    });
+
+    it('Should not add `%future added value` to enum when futureProofEnums is set, but not enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        B = 'B'
+      }
     `);
       validateTs(result);
     });
@@ -1564,6 +1612,40 @@ describe('TypeScript', () => {
           foo: FieldWrapper<Scalars['String']>;
         };
       `);
+      validateTs(result);
+    });
+
+    it('Should build list type correctly when wrapping field definitions', async () => {
+      const schema = buildSchema(`
+        type ListOfStrings {
+          foo: [String!]!
+        }
+
+        type ListOfMaybeStrings {
+          foo: [String]!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { wrapFieldDefinitions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfStrings = {
+          __typename?: 'ListOfStrings';
+          foo: Array<FieldWrapper<Scalars['String']>>;
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfMaybeStrings = {
+          __typename?: 'ListOfMaybeStrings';
+          foo: Array<Maybe<FieldWrapper<Scalars['String']>>>;
+        };
+      `);
+
       validateTs(result);
     });
 

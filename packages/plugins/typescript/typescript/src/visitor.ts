@@ -21,7 +21,7 @@ import {
   Kind,
   InputValueDefinitionNode,
   GraphQLSchema,
-  GraphQLEnumType,
+  isEnumType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -29,12 +29,12 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  futureProofEnums: boolean;
   enumsAsConst: boolean;
-  fieldWrapperValue: string;
+  onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
   noExport: boolean;
-  wrapFieldDefinitions: boolean;
 }
 
 export class TsVisitor<
@@ -46,19 +46,19 @@ export class TsVisitor<
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
-      fieldWrapperValue: getConfigValue(pluginConfig.fieldWrapperValue, 'T'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
-      wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
-      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
-      .filter(t => t);
+      .filter(isEnumType)
+      .map(type => type.name);
     this.setArgumentsTransformer(
       new TypeScriptOperationVariablesToObject(
         this.scalars,
@@ -79,18 +79,16 @@ export class TsVisitor<
 
   public getWrapperDefinitions(): string[] {
     const definitions: string[] = [this.getMaybeValue()];
+
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
     }
+
     return definitions;
   }
 
   public getMaybeValue(): string {
-    return `${this.config.noExport ? '' : 'export '}type Maybe<T> = ${this.config.maybeValue};`;
-  }
-
-  public getFieldWrapperValue(): string {
-    return `${this.config.noExport ? '' : 'export '}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+    return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
   }
 
   protected clearOptional(str: string): string {
@@ -101,8 +99,16 @@ export class TsVisitor<
     return str;
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return `Maybe<${super.NamedType(node)}>`;
+  protected getExportPrefix(): string {
+    if (this.config.noExport) {
+      return '';
+    }
+
+    return super.getExportPrefix();
+  }
+
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `Maybe<${super.NamedType(node, key, parent, path, ancestors)}>`;
   }
 
   ListType(node: ListTypeNode): string {
@@ -120,7 +126,7 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
+    const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);
@@ -183,9 +189,12 @@ export class TsVisitor<
                   enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 
-                return comment + indent(wrapWithSingleQuotes(enumValue));
+                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .join(' |\n')
+              .concat(
+                ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
+              )
+              .join('\n')
         ).string;
     }
 

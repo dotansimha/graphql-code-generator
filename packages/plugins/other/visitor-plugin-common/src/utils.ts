@@ -253,7 +253,8 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
 export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
-  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
+  defaultScalarType = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -283,7 +284,7 @@ export function buildScalars(
         } else if (!defaultScalarsMapping[name]) {
           result[name] = {
             isExternal: false,
-            type: 'any',
+            type: defaultScalarType,
           };
         }
       });
