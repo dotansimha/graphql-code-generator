@@ -86,23 +86,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsConst?: boolean;
   /**
-   * @name fieldWrapperValue
-   * @type string
-   * @description Allow to override the type value of `FieldWrapper`.
-   * @default T | Promise<T> | (() => T | Promise<T>)
-   *
-   * @example Only allow values
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    fieldWrapperValue: T
-   * ```
-   */
-  fieldWrapperValue?: string;
-  /**
    * @name immutableTypes
    * @type boolean
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
@@ -164,22 +147,4 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   noExport?: boolean;
-  /**
-   * @name wrapFieldDefinitions
-   * @type boolean
-   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
-   * This is useful to allow return types such as Promises and functions.
-   * @default true
-   *
-   * @example Enable wrapping fields
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: false
-   * ```
-   */
-  wrapFieldDefinitions?: boolean;
 }
