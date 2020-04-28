@@ -42,7 +42,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       listType: rawConfig.listType || 'Iterable',
       className: rawConfig.className || 'Types',
       package: rawConfig.package || defaultPackageName,
-      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS),
+      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
     });
   }
 
