@@ -1,4 +1,4 @@
-import { buildSchema, parse } from 'graphql';
+import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('JSDoc Operations Plugin', () => {

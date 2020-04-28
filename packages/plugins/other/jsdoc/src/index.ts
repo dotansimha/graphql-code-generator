@@ -1,6 +1,6 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { printSchema, parse, visit, ListTypeNode, FieldDefinitionNode, concatAST, SelectionNode, FieldNode, FragmentSpreadNode } from 'graphql';
-import { DEFAULT_SCALARS, RawDocumentsConfig, SelectionSetToObject } from '@graphql-codegen/visitor-plugin-common';
+import { printSchema, parse, visit, ListTypeNode, DocumentNode, FieldDefinitionNode, concatAST } from 'graphql';
+import { DEFAULT_SCALARS, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
 
 const transformScalar = (scalar: string) => {
   if (DEFAULT_SCALARS[scalar] === undefined) {
@@ -17,50 +17,15 @@ const createDocBlock = (lines: Array<string>) => {
   return block;
 };
 
-const generateSelectionSetTypes = (node: FieldNode, operationName: string, path = ['Query']): string => {
-  const fieldName = (node.name as unknown) as string;
-  if (node.selectionSet) {
-    const selections = node.selectionSet.selections.map(selection => {
-      if (selection.kind === 'Field') {
-        return generateSelectionSetTypes(selection, operationName, [...path, fieldName]);
-      }
-
-      return '';
-    });
-
-    return [`@typedef {Object} ${operationName}${path.join('')}${fieldName}`, ...selections].join('\n');
-  } else {
-    return `@property {${path.join('.')}.${fieldName}} ${fieldName}`;
-  }
-};
-
 export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) => {
   const parsedSchema = parse(printSchema(schema));
-  const mappedDocuments = documents.map(document => document.content);
-  const ast = concatAST([parsedSchema, ...mappedDocuments]);
+  const mappedDocuments = documents.map(document => document.document).filter(document => document !== undefined);
+  const ast = concatAST([parsedSchema, ...(mappedDocuments as Array<DocumentNode>)]);
 
   const schemaTypes: Array<string> = visit(ast, {
     Document: {
       leave(node) {
         return node.definitions;
-      },
-    },
-    OperationDefinition: {
-      leave(node) {
-        const operationName = `${node.name}${node.operation}`;
-        const docblock = createDocBlock([`@typedef {Object} ${operationName}`]);
-
-        const selections = node.selectionSet.selections
-          .map(selection => {
-            if (selection.kind === 'Field') {
-              return generateSelectionSetTypes(selection, (node.name as unknown) as string);
-            } else {
-              return '';
-            }
-          })
-          .join('\n');
-
-        return `${docblock}${selections}`;
       },
     },
     ObjectTypeDefinition: {
