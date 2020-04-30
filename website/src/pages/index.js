@@ -128,7 +128,7 @@ function Home() {
           <div className={styles.inner}>
             <ProjectTitle />
             <div className={styles.buttonsWrapper}>
-              <Button mobileHide="true">
+              <Button mobileHide={true}>
                 <Link to={'#live-demo'}>Try It Out Live</Link>
               </Button>
               <Button>

@@ -1,8 +1,11 @@
+import React from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import ReactCodeMirror from 'react-codemirror';
+import { Controlled as ReactCodeMirror } from 'react-codemirror2';
+import useThemeContext from '@theme/hooks/useThemeContext';
 
 if (ExecutionEnvironment.canUseDOM) {
   require('codemirror');
+  require('codemirror/keymap/sublime');
   require('codemirror/addon/lint/lint');
   require('codemirror/addon/lint/yaml-lint');
   require('codemirror/addon/hint/show-hint');
@@ -18,16 +21,12 @@ if (ExecutionEnvironment.canUseDOM) {
   require('codemirror/addon/lint/lint');
   require('codemirror/mode/yaml/yaml');
   require('codemirror/mode/javascript/javascript');
-  require('codemirror/keymap/sublime');
   require('codemirror-graphql/hint');
   require('codemirror-graphql/lint');
   require('codemirror-graphql/info');
   require('codemirror-graphql/jump');
   require('codemirror-graphql/mode');
 }
-
-import React from 'react';
-import useThemeContext from '@theme/hooks/useThemeContext';
 
 export const Editor = ({ value, lang, readOnly, onEdit }) => {
   const { isDarkTheme } = useThemeContext();
@@ -45,5 +44,5 @@ export const Editor = ({ value, lang, readOnly, onEdit }) => {
     gutters: ['CodeMirror-lint-markers'],
   };
 
-  return <ReactCodeMirror value={value} onChange={readOnly ? null : onEdit} options={options} />;
+  return <ReactCodeMirror value={value} onBeforeChange={(editor, data, value) => onEdit(value)} options={options} />;
 };
