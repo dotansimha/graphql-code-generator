@@ -27,6 +27,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   querySuffix?: string;
   mutationSuffix?: string;
   subscriptionSuffix?: string;
+  apolloAngularPackage: string;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
@@ -62,6 +63,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
+        apolloAngularPackage: rawConfig.apolloAngularPackage || 'apollo-angular',
       },
       documents
     );
@@ -77,7 +79,10 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       return baseImports;
     }
 
-    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
+    const imports = [
+      `import { Injectable } from '@angular/core';`,
+      `import * as Apollo from '${this.config.apolloAngularPackage}';`,
+    ];
 
     if (this.config.sdkClass) {
       imports.push(`import * as ApolloCore from 'apollo-client';`);

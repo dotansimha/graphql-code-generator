@@ -86,6 +86,24 @@ describe('Apollo Angular', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`should add the correct angular imports with override`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          apolloAngularPackage: 'my-custom-apollo-angular',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Apollo from 'my-custom-apollo-angular';`);
+      expect(content.prepend).toContain(`import { Injectable } from '@angular/core';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('Should import NgModules and remove NgModule directive', async () => {
       const modifiedSchema = extendSchema(schema, addToSchema);
       expect(modifiedSchema.getDirective('NgModule').name).toBe('NgModule');
