@@ -153,7 +153,7 @@ export type Resolvers<ContextType = any> = {
 /**
  * @deprecated
  * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
-*/
+ */
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = {
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>,
@@ -161,9 +161,9 @@ export type DirectiveResolvers<ContextType = any> = {
 
 
 /**
-* @deprecated
-* Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
-*/
+ * @deprecated
+ * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
+ */
 export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;",
   "prepend": Array [
     "import { type GraphQLResolveInfo } from 'graphql';",

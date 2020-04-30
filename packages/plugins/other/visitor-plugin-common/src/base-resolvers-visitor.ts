@@ -743,7 +743,7 @@ export class BaseResolversVisitor<
 /**
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
-*/
+ */
 export type IResolvers${contextType} = ${name}<ContextType>;`
       : '';
 
@@ -779,9 +779,9 @@ export type IResolvers${contextType} = ${name}<ContextType>;`
       const deprecatedIResolvers = !this.config.typesPrefix
         ? `
 /**
-* @deprecated
-* Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
-*/
+ * @deprecated
+ * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
+ */
 export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         : '';
 
