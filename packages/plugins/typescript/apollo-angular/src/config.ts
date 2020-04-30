@@ -95,4 +95,12 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   subscriptionSuffix?: string;
+  /**
+   * @name apolloAngularPackage
+   * @type string
+   * @description Allows to define a custom Apollo-Angular package to import types from.
+   * @default 'apollo-angular'
+   *
+   */
+  apolloAngularPackage?: string;
 }
