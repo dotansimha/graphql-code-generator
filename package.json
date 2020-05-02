@@ -91,7 +91,7 @@
     "graphql-tag": "2.10.3",
     "husky": "4.2.5",
     "java-ast": "0.1.0",
-    "jest": "25.5.3",
+    "jest": "25.5.4",
     "jest-docblock": "25.3.0",
     "jest-junit": "10.0.0",
     "lerna": "3.20.2",
