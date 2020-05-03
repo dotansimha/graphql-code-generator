@@ -15,7 +15,7 @@
     "release": "lerna publish --contents dist --exact --force-publish=\"*\"",
     "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact",
     "ci:release:canary": "lerna publish --contents dist --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
-    "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
+    "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config dotenv_config_path=dev-test/.env --config ./dev-test/codegen.yml"
   },
   "husky": {
     "hooks": {
