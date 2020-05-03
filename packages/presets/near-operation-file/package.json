@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/near-operation-file-preset",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "GraphQL Code Generator preset for generating operation code near the operation file",
   "repository": {
     "type": "git",
@@ -17,9 +17,9 @@
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "1.13.4",
-    "@graphql-codegen/plugin-helpers": "1.13.4",
-    "@graphql-codegen/visitor-plugin-common": "1.13.4",
+    "@graphql-codegen/add": "1.13.5",
+    "@graphql-codegen/plugin-helpers": "1.13.5",
+    "@graphql-codegen/visitor-plugin-common": "1.13.5",
     "parse-filepath": "1.0.2",
     "tslib": "~1.11.1"
   },

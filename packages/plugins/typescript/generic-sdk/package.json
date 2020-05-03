@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-generic-sdk",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use client-agnostic SDK based on GraphQL operations",
   "repository": {
     "type": "git",
@@ -18,8 +18,8 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.4",
-    "@graphql-codegen/visitor-plugin-common": "1.13.4",
+    "@graphql-codegen/plugin-helpers": "1.13.5",
+    "@graphql-codegen/visitor-plugin-common": "1.13.5",
     "auto-bind": "~4.0.0",
     "tslib": "~1.11.1"
   },

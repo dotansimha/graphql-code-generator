@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java-resolvers",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "GraphQL Code Generator plugin for generating resolvers signature for Java backends",
   "repository": {
     "type": "git",
@@ -14,9 +14,9 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/java-common": "1.13.4",
-    "@graphql-codegen/plugin-helpers": "1.13.4",
-    "@graphql-codegen/visitor-plugin-common": "1.13.4",
+    "@graphql-codegen/java-common": "1.13.5",
+    "@graphql-codegen/plugin-helpers": "1.13.5",
+    "@graphql-codegen/visitor-plugin-common": "1.13.5",
     "tslib": "~1.11.1"
   },
   "peerDependencies": {

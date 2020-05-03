@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/c-sharp-operations",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -14,8 +14,8 @@
     "graphql-tag": "2.10.3"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.4",
-    "@graphql-codegen/visitor-plugin-common": "1.13.4",
+    "@graphql-codegen/plugin-helpers": "1.13.5",
+    "@graphql-codegen/visitor-plugin-common": "1.13.5",
     "auto-bind": "4.0.0",
     "camel-case": "4.1.1",
     "tslib": "1.11.1"
