@@ -164,7 +164,7 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   wrapFieldDefinitions?: boolean;
-    /**
+  /**
    * @name onlyOperationTypes
    * @type boolean
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
@@ -279,7 +279,6 @@ export class BaseTypesVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    if (this.config.onlyOperationTypes) return '';
     return this.getInputObjectDeclarationBlock(node).string;
   }
 

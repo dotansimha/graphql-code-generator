@@ -26,6 +26,23 @@ export enum LengthUnit {
   Foot = 'FOOT',
 }
 
+/** The input object sent when someone is creating a new review */
+export type ReviewInput = {
+  /** 0-5 stars */
+  stars: Scalars['Int'];
+  /** Comment about the movie, optional */
+  commentary?: Maybe<Scalars['String']>;
+  /** Favorite color, optional */
+  favoriteColor?: Maybe<ColorInput>;
+};
+
+/** The input object sent when passing a color */
+export type ColorInput = {
+  red: Scalars['Int'];
+  green: Scalars['Int'];
+  blue: Scalars['Int'];
+};
+
 export type CreateReviewForEpisodeMutationVariables = {
   episode: Episode;
   review: ReviewInput;
