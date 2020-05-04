@@ -76,6 +76,12 @@ module.exports = {
   },
   scripts: [
     {
+      src: 'https://the-guild.dev/static/banner.js',
+      // we may want to load it ASAP
+      async: true,
+      defer: true,
+    },
+    {
       src: '/js/drift.js',
       async: true,
       defer: true,
