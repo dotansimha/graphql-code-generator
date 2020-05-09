@@ -47,4 +47,21 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * ```
    */
   listType?: string;
+  /**
+   * @name withTypes
+   * @type boolean
+   * @default false
+   * @description Allow you to enable generation for the types
+   *
+   * @example
+   * ```yml
+   * generates:
+   *   src/main/kotlin/my-org/my-app/Types.kt:
+   *     plugins:
+   *       - kotlin
+   *     config:
+   *       withTypes: true
+   * ```
+   */
+  withTypes?: boolean;
 }

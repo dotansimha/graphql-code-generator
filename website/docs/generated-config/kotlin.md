@@ -44,3 +44,19 @@ generates:
     config:
       listType: Map
 ```
+
+### withTypes (`boolean`, default value: `false`)
+
+Allow you to enable generation for the types
+
+
+#### Usage Example
+
+```yml
+generates:
+  src/main/kotlin/my-org/my-app/Types.kt:
+    plugins:
+      - kotlin
+    config:
+      withTypes: true
+```
