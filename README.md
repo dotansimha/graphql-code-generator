@@ -43,9 +43,10 @@ Question by question, it will guide you through the whole process of setting up 
 
 If you don't want to use the wizard, install it by yourself and create a basic `codegen.yml` configuration file, point to your schema, and pick the plugins you wish to use. 
 
-Install CLI using `yarn`:
+Install CLI and typescript plugin using `yarn`:
 
     $ yarn add -D @graphql-codegen/cli
+    $ yarn add -D @graphql-codegen/typescript
 
 And create a config like below:
 
