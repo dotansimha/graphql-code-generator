@@ -14,6 +14,7 @@ describe('Java', () => {
       me: User!
       user(id: ID!): User!
       searchUser(searchFields: SearchUser!): [User!]!
+      updateUser(input: UpdateUserMetadataInput!): [User!]!
     }
 
     input InputWithArray {
@@ -31,6 +32,16 @@ describe('Java', () => {
     }
 
     input MetadataSearch {
+      something: Int
+    }
+
+    input UpdateUserInput {
+      id: ID!
+      username: String
+      metadata: UpdateUserMetadataInput
+    }
+
+    input UpdateUserMetadataInput {
       something: Int
     }
 
@@ -284,6 +295,40 @@ describe('Java', () => {
         public Object getDateOfBirth() { return this._dateOfBirth; }
         public ResultSort getSort() { return this._sort; }
         public MetadataSearchInput getMetadata() { return this._metadata; }
+      }`);
+    });
+
+    it('Should generate nested inputs with out duplicated `Input` suffix', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class UpdateUserMetadataInput {
+        private Integer _something;
+      
+        public UpdateUserMetadataInput(Map<String, Object> args) {
+          if (args != null) {
+            this._something = (Integer) args.get("something");
+          }
+        }
+      
+        public Integer getSomething() { return this._something; }
+      }`);
+
+      expect(result).toBeSimilarStringTo(`public static class UpdateUserInput {
+        private Object _id;
+        private String _username;
+        private UpdateUserMetadataInput _metadata;
+      
+        public UpdateUserInput(Map<String, Object> args) {
+          if (args != null) {
+            this._id = (Object) args.get("id");
+            this._username = (String) args.get("username");
+            this._metadata = new UpdateUserMetadataInput((Map<String, Object>) args.get("metadata"));
+          }
+        }
+      
+        public Object getId() { return this._id; }
+        public String getUsername() { return this._username; }
+        public UpdateUserMetadataInput getMetadata() { return this._metadata; }
       }`);
     });
   });
