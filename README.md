@@ -130,11 +130,11 @@ Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/
 
 - [All available plugins](https://graphql-code-generator.com/docs/plugins/)
 
-- [**GraphQL Code-Generator** - The True GraphQL-First platform](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)
+- [**GraphQL Code-Generator** - The True GraphQL-First platform](https://the-guild.dev/blog/graphql-code-generator)
 
-- [**GraphQL Code-Generator v0.9** - What's new?](https://medium.com/@dotansimha/whats-new-in-graphql-code-generator-0-9-0-dba6c9e365d)
+- [**GraphQL Code-Generator v0.9** - What's new?](https://the-guild.dev/blog/graphql-code-generator-090)
 
-- [**GraphQL Code Generator v0.11** - Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)
+- [**GraphQL Code Generator v0.11** - Generate React and Angular Apollo Components, Resolver signatures and much more!](https://the-guild.dev/blog/graphql-code-generator-011)
 
 ### Contributing
 
