@@ -36,7 +36,7 @@ module.exports = {
           position: 'right'
         },
         {
-          href: 'https://the-guild.dev/connected-build?utm_source=github&utm_medium=release-note&utm_campaign=mesh#section-contact',
+          href: 'https://the-guild.dev/contact',
           label: 'Contact Us',
           position: 'right'
         }
