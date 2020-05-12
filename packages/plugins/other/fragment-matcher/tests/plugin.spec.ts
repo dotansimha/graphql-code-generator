@@ -272,6 +272,70 @@ describe('Fragment Matcher Plugin', () => {
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
     });
+
+    it('should support exportAsConst for apolloClientVersion 2', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          exportAsConst: true,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          exportAsConst: true,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+        export type IntrospectionResultData = ${introspection};
+        const result: IntrospectionResultData = ${introspection};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should support exportAsConst for apolloClientVersion 3', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+          exportAsConst: true,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+          exportAsConst: true,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+        export type PossibleTypesResultData = ${apolloClient3Result};
+        const result: PossibleTypesResultData = ${apolloClient3Result};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
   });
 
   it('should support Apollo Federation', async () => {
