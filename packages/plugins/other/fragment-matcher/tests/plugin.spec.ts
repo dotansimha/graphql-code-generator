@@ -278,7 +278,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          exportAsConst: true,
+          useExplicitTyping: true,
         },
         {
           outputFile: 'foo.ts',
@@ -288,7 +288,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          exportAsConst: true,
+          useExplicitTyping: true,
         },
         {
           outputFile: 'foo.tsx',
@@ -304,13 +304,13 @@ describe('Fragment Matcher Plugin', () => {
       expect(tsxContent).toBeSimilarStringTo(output);
     });
 
-    it('should support exportAsConst for apolloClientVersion 3', async () => {
+    it('should support useExplicitTyping for apolloClientVersion 3', async () => {
       const tsContent = await plugin(
         schema,
         [],
         {
           apolloClientVersion: 3,
-          exportAsConst: true,
+          useExplicitTyping: true,
         },
         {
           outputFile: 'foo.ts',
@@ -321,7 +321,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {
           apolloClientVersion: 3,
-          exportAsConst: true,
+          useExplicitTyping: true,
         },
         {
           outputFile: 'foo.tsx',
