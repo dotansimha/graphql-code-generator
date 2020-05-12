@@ -237,7 +237,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
       };
     `);
 
@@ -315,7 +315,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
       };
     `);
 
@@ -392,7 +392,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
       };
     `);
 
@@ -468,7 +468,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
       };
     `);
 
@@ -544,7 +544,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
       };
     `);
 
