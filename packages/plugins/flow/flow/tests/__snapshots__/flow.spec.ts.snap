@@ -15,7 +15,7 @@ export type TInput = {|
 |};
 
 export type TMutation = {|
-   __typename?: 'Mutation',
+  __typename?: 'Mutation',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -38,7 +38,7 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -63,7 +63,7 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -91,7 +91,7 @@ export type MyInput = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -117,7 +117,7 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -166,7 +166,7 @@ export type Scalars = {|
 |};
 
 export type Mutation = {|
-   __typename?: 'Mutation',
+  __typename?: 'Mutation',
   updateUser: User,
 |};
 
@@ -177,7 +177,7 @@ export type MutationUpdateUserArgs = {|
 |};
 
 export type User = {|
-   __typename?: 'User',
+  __typename?: 'User',
   id: $ElementType<Scalars, 'ID'>,
   username: $ElementType<Scalars, 'String'>,
   email: $ElementType<Scalars, 'String'>,
@@ -210,7 +210,7 @@ export const myenumvalues = Object.freeze({
 export type myenum = $Values<typeof myenumvalues>;
 
 export type mytype = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   f?: ?$ElementType<Scalars, 'String'>,
   bar?: ?myenum,
   b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -218,7 +218,7 @@ export type mytype = {|
 |};
 
 export type my_type = {|
-   __typename?: 'My_Type',
+  __typename?: 'My_Type',
   linkTest?: ?mytype,
 |};
 
@@ -231,7 +231,7 @@ export type some_interface = {|
 export type impl1 = {|
   ...some_interface,
   ...{|
-     __typename?: 'Impl1',
+    __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -239,7 +239,7 @@ export type impl1 = {|
 export type impl_2 = {|
   ...some_interface,
   ...{|
-     __typename?: 'Impl_2',
+    __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -247,13 +247,13 @@ export type impl_2 = {|
 export type impl_3 = {|
   ...some_interface,
   ...{|
-     __typename?: 'impl_3',
+    __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
 
 export type query = {|
-   __typename?: 'Query',
+  __typename?: 'Query',
   something?: ?myunion,
   use_interface?: ?some_interface,
 |};
@@ -280,7 +280,7 @@ export const MyEnumValues = Object.freeze({
 export type MyEnum = $Values<typeof MyEnumValues>;
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   f?: ?$ElementType<Scalars, 'String'>,
   bar?: ?MyEnum,
   b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -288,7 +288,7 @@ export type MyType = {|
 |};
 
 export type My_Type = {|
-   __typename?: 'My_Type',
+  __typename?: 'My_Type',
   linkTest?: ?MyType,
 |};
 
@@ -301,7 +301,7 @@ export type Some_Interface = {|
 export type Impl1 = {|
   ...Some_Interface,
   ...{|
-     __typename?: 'Impl1',
+    __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -309,7 +309,7 @@ export type Impl1 = {|
 export type Impl_2 = {|
   ...Some_Interface,
   ...{|
-     __typename?: 'Impl_2',
+    __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -317,13 +317,13 @@ export type Impl_2 = {|
 export type Impl_3 = {|
   ...Some_Interface,
   ...{|
-     __typename?: 'impl_3',
+    __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
 
 export type Query = {|
-   __typename?: 'Query',
+  __typename?: 'Query',
   something?: ?MyUnion,
   use_interface?: ?Some_Interface,
 |};
@@ -350,7 +350,7 @@ export const IMyEnumValues = Object.freeze({
 export type IMyEnum = $Values<typeof IMyEnumValues>;
 
 export type IMyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   f?: ?$ElementType<Scalars, 'String'>,
   bar?: ?IMyEnum,
   b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -358,7 +358,7 @@ export type IMyType = {|
 |};
 
 export type IMy_Type = {|
-   __typename?: 'My_Type',
+  __typename?: 'My_Type',
   linkTest?: ?IMyType,
 |};
 
@@ -371,7 +371,7 @@ export type ISome_Interface = {|
 export type IImpl1 = {|
   ...ISome_Interface,
   ...{|
-     __typename?: 'Impl1',
+    __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -379,7 +379,7 @@ export type IImpl1 = {|
 export type IImpl_2 = {|
   ...ISome_Interface,
   ...{|
-     __typename?: 'Impl_2',
+    __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -387,13 +387,13 @@ export type IImpl_2 = {|
 export type IImpl_3 = {|
   ...ISome_Interface,
   ...{|
-     __typename?: 'impl_3',
+    __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
 
 export type IQuery = {|
-   __typename?: 'Query',
+  __typename?: 'Query',
   something?: ?IMyUnion,
   use_interface?: ?ISome_Interface,
 |};
@@ -431,7 +431,7 @@ export type Scalars = {|
 |};
 
 export type Imytype = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -456,7 +456,7 @@ export type Scalars = {|
 |};
 
 export type mytype = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -481,7 +481,7 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo?: ?$ElementType<Scalars, 'String'>,
   bar: $ElementType<Scalars, 'String'>,
 |};
@@ -505,7 +505,7 @@ export type MyInterface = {|
 export type MyType = {|
   ...MyInterface,
   ...{|
-     __typename?: 'MyType',
+    __typename?: 'MyType',
     foo: $ElementType<Scalars, 'String'>,
   |}
 |};
@@ -534,7 +534,7 @@ export type MyType = {|
   ...MyInterface,
   ...MyOtherInterface,
   ...{|
-     __typename?: 'MyType',
+    __typename?: 'MyType',
     foo: $ElementType<Scalars, 'String'>,
     bar: $ElementType<Scalars, 'String'>,
   |}
@@ -553,12 +553,12 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo: MyOtherType,
 |};
 
 export type MyOtherType = {|
-   __typename?: 'MyOtherType',
+  __typename?: 'MyOtherType',
   bar: $ElementType<Scalars, 'String'>,
 |};
 "
@@ -629,12 +629,12 @@ export type Scalars = {|
 |};
 
 export type MyType = {|
-   __typename?: 'MyType',
+  __typename?: 'MyType',
   foo: $ElementType<Scalars, 'String'>,
 |};
 
 export type MyOtherType = {|
-   __typename?: 'MyOtherType',
+  __typename?: 'MyOtherType',
   bar: $ElementType<Scalars, 'String'>,
 |};
 

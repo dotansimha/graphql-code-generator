@@ -176,7 +176,7 @@ export type Venue = {
 };
 
 export type GpsPosition = {
-   __typename?: 'GPSPosition';
+  __typename?: 'GPSPosition';
   lat: Scalars['Float'];
   lng: Scalars['Float'];
 };
@@ -187,20 +187,20 @@ export type VenueWithPosition = {
 };
 
 export type Hotel = VenueWithPosition & Venue & {
-   __typename?: 'Hotel';
+  __typename?: 'Hotel';
   id: Scalars['String'];
   gpsPosition: GpsPosition;
   name: Scalars['String'];
 };
 
 export type Transport = Venue & {
-   __typename?: 'Transport';
+  __typename?: 'Transport';
   id: Scalars['String'];
   name: Scalars['String'];
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   hotel: Hotel;
   transport: Transport;
 };
@@ -523,29 +523,29 @@ export type Error = {
 };
 
 export type Error1 = Error & {
-   __typename?: 'Error1';
+  __typename?: 'Error1';
   message: Scalars['String'];
 };
 
 export type Error2 = Error & {
-   __typename?: 'Error2';
+  __typename?: 'Error2';
   message: Scalars['String'];
 };
 
 export type Error3 = Error & {
-   __typename?: 'Error3';
+  __typename?: 'Error3';
   message: Scalars['String'];
   info?: Maybe<AdditionalInfo>;
 };
 
 export type AdditionalInfo = {
-   __typename?: 'AdditionalInfo';
+  __typename?: 'AdditionalInfo';
   message: Scalars['String'];
   message2: Scalars['String'];
 };
 
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   id: Scalars['ID'];
   login: Scalars['String'];
 };
@@ -553,7 +553,7 @@ export type User = {
 export type UserResult = User | Error2 | Error3;
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   user: UserResult;
 };
 export type UserQueryQueryVariables = {};
@@ -614,29 +614,29 @@ export type Error = {
 };
 
 export type Error1 = Error & {
-   __typename?: 'Error1';
+  __typename?: 'Error1';
   message: Scalars['String'];
 };
 
 export type Error2 = Error & {
-   __typename?: 'Error2';
+  __typename?: 'Error2';
   message: Scalars['String'];
 };
 
 export type Error3 = Error & {
-   __typename?: 'Error3';
+  __typename?: 'Error3';
   message: Scalars['String'];
   info?: Maybe<AdditionalInfo>;
 };
 
 export type AdditionalInfo = {
-   __typename?: 'AdditionalInfo';
+  __typename?: 'AdditionalInfo';
   message: Scalars['String'];
   message2: Scalars['String'];
 };
 
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   id: Scalars['ID'];
   login: Scalars['String'];
   test?: Maybe<Scalars['String']>;
@@ -646,7 +646,7 @@ export type User = {
 export type UserResult = User | Error2 | Error3;
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   user: UserResult;
 };
 export type UserQueryQueryVariables = {};
