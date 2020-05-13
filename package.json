@@ -52,7 +52,7 @@
     "@graphql-toolkit/json-file-loader": "0.10.6",
     "@graphql-toolkit/prisma-loader": "0.10.6",
     "@graphql-toolkit/url-loader": "0.10.6",
-    "tslib": "1.11.1",
+    "tslib": "2.0.0",
     "@apollo/react-common": "3.1.4",
     "@apollo/react-components": "3.1.5",
     "@apollo/react-hoc": "3.1.5",

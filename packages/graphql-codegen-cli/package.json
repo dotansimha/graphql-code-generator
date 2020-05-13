@@ -78,7 +78,7 @@
     "pascal-case": "3.1.1",
     "request": "2.88.2",
     "ts-log": "2.1.4",
-    "tslib": "^1.11.1",
+    "tslib": "^2.0.0",
     "upper-case": "2.0.1",
     "valid-url": "1.0.9",
     "wrap-ansi": "7.0.0"
