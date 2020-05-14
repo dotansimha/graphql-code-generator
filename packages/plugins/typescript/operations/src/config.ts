@@ -89,4 +89,23 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
   noExport?: boolean;
   globalNamespace?: boolean;
+    /**
+   * @name addOperationExport
+   * @type boolean
+   * @description Add const export of the operation name to output file. It will allow you to get everything with one import: ```import { GetClient, GetClientQuery, GetClientQueryVariables, } from "./GetClient.gql";```.
+   * @default false
+   * @see https://github.com/dotansimha/graphql-code-generator/issues/3949
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *  config:
+   *    addOperationExport: true
+   * ```
+   */
+  addOperationExport?: boolean;
 }
