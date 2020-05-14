@@ -39,7 +39,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
     allAst.definitions.forEach(d => {
       if ('name' in d) {
-        exportConsts.push(`export const ${d.name.value}: import("graphql").DocumentNode`)
+        exportConsts.push(`export const ${d.name.value}: import("graphql").DocumentNode;`)
       }
     })
 
