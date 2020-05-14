@@ -9,7 +9,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
 import buildFragmentResolver from './fragment-resolver';
-import { Source } from '@graphql-toolkit/common';
+import { Source } from '@graphql-tools/utils';
 
 export type FragmentRegistry = {
   [fragmentName: string]: { location: string; importNames: string[]; onType: string; node: FragmentDefinitionNode };

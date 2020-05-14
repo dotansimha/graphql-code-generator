@@ -10,7 +10,7 @@ import { join } from 'path';
 import { FSWatcher } from 'chokidar';
 import { lifecycleHooks } from '../hooks';
 import { loadContext, CodegenContext } from '../config';
-import { isValidPath } from '@graphql-toolkit/common';
+import { isValidPath } from '@graphql-tools/utils';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr

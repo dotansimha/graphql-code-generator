@@ -1,5 +1,5 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { Source } from '@graphql-toolkit/common';
+import { Source } from '@graphql-tools/utils';
 
 export namespace Types {
   export interface GenerateOptions {
