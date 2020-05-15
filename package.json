@@ -64,7 +64,7 @@
     "@types/mkdirp": "1.0.0",
     "@types/node": "10.17.21",
     "@types/react": "16.9.35",
-    "@types/request": "2.48.4",
+    "@types/request": "2.48.5",
     "@vue/apollo-composable": "4.0.0-alpha.8",
     "@vue/composition-api": "0.5.0",
     "bob-the-bundler": "1.0.0-rc.14",
