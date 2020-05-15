@@ -86,7 +86,7 @@
     "eslint-plugin-react-hooks": "4.0.0",
     "eslint-plugin-standard": "4.0.1",
     "flow-bin": "0.125.0",
-    "flow-parser": "0.125.0",
+    "flow-parser": "0.125.1",
     "graphql": "15.0.0",
     "graphql-tag": "2.10.3",
     "husky": "4.2.5",
