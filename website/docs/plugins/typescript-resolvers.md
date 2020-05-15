@@ -27,9 +27,9 @@ generates:
 Import the types from the generated file and use in the resolver:
 
 ```typescript
-import { QueryResolvers } from './resolvers-types';
+import { Resolvers } from './resolvers-types';
 
-export const resolvers: QueryResolvers = {
+export const resolvers: Resolvers = {
   myQuery: (root, args, context) => {},
 };
 ```
