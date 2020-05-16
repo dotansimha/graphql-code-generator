@@ -128,7 +128,7 @@ export type Query = {
 
 Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/index), feel free to go through our published Medium articles to get a better grasp of what GraphQL Code Generator is all about:
 
-- [All available plugins](https://graphql-code-generator.com/docs/plugins/)
+- [All available plugins](https://graphql-code-generator.com/docs/plugins/index)
 
 - [**GraphQL Code-Generator** - The True GraphQL-First platform](https://the-guild.dev/blog/graphql-code-generator)
 
