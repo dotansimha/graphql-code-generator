@@ -20,7 +20,7 @@
   "dependencies": {
     "@microsoft/tsdoc": "0.12.19",
     "tslib": "2.0.0",
-    "typescript": "3.8.3"
+    "typescript": "3.9.2"
   },
   "devDependencies": {
     "ts-node": "8.10.1"
