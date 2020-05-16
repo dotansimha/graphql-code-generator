@@ -22,7 +22,7 @@ GraphQL Code Generator lets you choose the output that you need, based on _plugi
 
 You can try this tool live on your browser and see some useful examples. Check out [GraphQL Code Generator Live Examples](https://graphql-code-generator.com/#live-demo).
 
-We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason, and some more), and there is an active community that writes and maintains custom plugins.
+We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/index) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason, and some more), and there is an active community that writes and maintains custom plugins.
 
 ### Quick Start
 
