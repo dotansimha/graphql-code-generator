@@ -48,8 +48,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `import { ${types.map(t => `type ${t.identifier}`).join(', ')} } from '${source}';`;
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   protected transformParentGenericType(parentType: string): string {
