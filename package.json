@@ -60,7 +60,7 @@
     "@babel/preset-typescript": "7.9.0",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
-    "@types/jest": "25.2.1",
+    "@types/jest": "25.2.2",
     "@types/mkdirp": "1.0.0",
     "@types/node": "10.17.21",
     "@types/react": "16.9.35",
