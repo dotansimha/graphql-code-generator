@@ -52,8 +52,10 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     }
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType},`;
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   private clearOptional(str: string): string {

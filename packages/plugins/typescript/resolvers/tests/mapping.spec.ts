@@ -10,18 +10,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<MyType>,
-      MyOtherType: ResolverTypeWrapper<MyOtherType>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<MyType>;
+      MyOtherType: ResolverTypeWrapper<MyOtherType>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
   });
 
@@ -40,18 +40,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<number>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        MyType: ResolverTypeWrapper<MyTypeDb>,
-        MyOtherType: ResolverTypeWrapper<Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] }>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        SomeNode: ResolverTypeWrapper<SomeNode>,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-        Int: ResolverTypeWrapper<Scalars['Int']>,
+        String: ResolverTypeWrapper<number>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyType: ResolverTypeWrapper<MyTypeDb>;
+        MyOtherType: ResolverTypeWrapper<Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] }>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        SomeNode: ResolverTypeWrapper<SomeNode>;
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+        Int: ResolverTypeWrapper<Scalars['Int']>;
       };
     `);
   });
@@ -89,13 +89,13 @@ describe('ResolversTypes', () => {
     const content = mergeOutputs([result]);
     expect(content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        Movie: ResolverTypeWrapper<MovieEntity>,
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        Book: ResolverTypeWrapper<Book>,
-        MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
-        NonInterfaceHasNarrative: ResolverTypeWrapper<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>,
+        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        Movie: ResolverTypeWrapper<MovieEntity>;
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        Book: ResolverTypeWrapper<Book>;
+        MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'];
+        NonInterfaceHasNarrative: ResolverTypeWrapper<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>;
       };
     `);
   });
@@ -141,15 +141,15 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
     expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      Movie: ResolverTypeWrapper<MovieEntity>,
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      Book: ResolverTypeWrapper<Book>,
-      MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
-      NonInterfaceHasNarrative: ResolverTypeWrapper<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>,
-      LayerOfIndirection: ResolverTypeWrapper<Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversTypes['NonInterfaceHasNarrative']> }>,
-      AnotherLayerOfIndirection: ResolverTypeWrapper<Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversTypes['LayerOfIndirection'] }>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      Movie: ResolverTypeWrapper<MovieEntity>;
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      Book: ResolverTypeWrapper<Book>;
+      MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'];
+      NonInterfaceHasNarrative: ResolverTypeWrapper<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>;
+      LayerOfIndirection: ResolverTypeWrapper<Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversTypes['NonInterfaceHasNarrative']> }>;
+      AnotherLayerOfIndirection: ResolverTypeWrapper<Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversTypes['LayerOfIndirection'] }>;
     };`);
   });
 
@@ -184,11 +184,11 @@ describe('ResolversTypes', () => {
     const content = mergeOutputs([result]);
 
     expect(content).toBeSimilarStringTo(`export type GqlResolversTypes = {
-      String: ResolverTypeWrapper<Partial<Scalars['String']>>,
-      Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
-      Account: ResolverTypeWrapper<Partial<GqlAccount>>,
-      ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
-      Program: ResolverTypeWrapper<Partial<GqlProgram>>,
+      String: ResolverTypeWrapper<Partial<Scalars['String']>>;
+      Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+      Account: ResolverTypeWrapper<Partial<GqlAccount>>;
+      ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
+      Program: ResolverTypeWrapper<Partial<GqlProgram>>;
     };`);
   });
 
@@ -267,18 +267,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Partial<Scalars['String']>>,
-      Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
-      MyType: ResolverTypeWrapper<Partial<MyType>>,
-      MyOtherType: ResolverTypeWrapper<Partial<MyOtherType>>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
-      SomeNode: ResolverTypeWrapper<Partial<SomeNode>>,
-      MyUnion: Partial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-      MyScalar: ResolverTypeWrapper<Partial<Scalars['MyScalar']>>,
-      Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
+      String: ResolverTypeWrapper<Partial<Scalars['String']>>;
+      Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+      MyType: ResolverTypeWrapper<Partial<MyType>>;
+      MyOtherType: ResolverTypeWrapper<Partial<MyOtherType>>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
+      SomeNode: ResolverTypeWrapper<Partial<SomeNode>>;
+      MyUnion: Partial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>;
+      MyScalar: ResolverTypeWrapper<Partial<Scalars['MyScalar']>>;
+      Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
     };`);
   });
 
@@ -296,18 +296,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<CustomPartial<Scalars['String']>>,
-      Boolean: ResolverTypeWrapper<CustomPartial<Scalars['Boolean']>>,
-      MyType: ResolverTypeWrapper<CustomPartial<MyType>>,
-      MyOtherType: ResolverTypeWrapper<CustomPartial<MyOtherType>>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<CustomPartial<Scalars['ID']>>,
-      SomeNode: ResolverTypeWrapper<CustomPartial<SomeNode>>,
-      MyUnion: CustomPartial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-      MyScalar: ResolverTypeWrapper<CustomPartial<Scalars['MyScalar']>>,
-      Int: ResolverTypeWrapper<CustomPartial<Scalars['Int']>>,
+      String: ResolverTypeWrapper<CustomPartial<Scalars['String']>>;
+      Boolean: ResolverTypeWrapper<CustomPartial<Scalars['Boolean']>>;
+      MyType: ResolverTypeWrapper<CustomPartial<MyType>>;
+      MyOtherType: ResolverTypeWrapper<CustomPartial<MyOtherType>>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<CustomPartial<Scalars['ID']>>;
+      SomeNode: ResolverTypeWrapper<CustomPartial<SomeNode>>;
+      MyUnion: CustomPartial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>;
+      MyScalar: ResolverTypeWrapper<CustomPartial<Scalars['MyScalar']>>;
+      Int: ResolverTypeWrapper<CustomPartial<Scalars['Int']>>;
     };`);
   });
 
@@ -327,18 +327,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<CustomPartial<MyType>>,
-      MyOtherType: ResolverTypeWrapper<MyOtherType>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<CustomPartial<MyType>>;
+      MyOtherType: ResolverTypeWrapper<MyOtherType>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
   });
 
@@ -374,12 +374,12 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Partial<Scalars['String']>>,
-        Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
-        User: ResolverTypeWrapper<number>,
-        ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
-        Chat: ResolverTypeWrapper<Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>>,
-        Query: ResolverTypeWrapper<{}>,
+        String: ResolverTypeWrapper<Partial<Scalars['String']>>;
+        Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+        User: ResolverTypeWrapper<number>;
+        ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
+        Chat: ResolverTypeWrapper<Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>>;
+        Query: ResolverTypeWrapper<{}>;
       };
     `);
 
@@ -431,18 +431,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<DatabaseMyType>,
-      MyOtherType: ResolverTypeWrapper<MyOtherType>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<DatabaseMyType>;
+      MyOtherType: ResolverTypeWrapper<MyOtherType>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
   });
 
@@ -463,18 +463,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<DatabaseMyType>,
-      MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<DatabaseMyType>;
+      MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
   });
 
@@ -495,18 +495,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<string>,
-      Boolean: ResolverTypeWrapper<any>,
-      MyType: ResolverTypeWrapper<MyTypeDb>,
-      MyOtherType: ResolverTypeWrapper<any>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<any>,
-      SomeNode: ResolverTypeWrapper<any>,
-      MyUnion: ResolverTypeWrapper<any>,
-      MyScalar: ResolverTypeWrapper<any>,
-      Int: ResolverTypeWrapper<any>,
+      String: ResolverTypeWrapper<string>;
+      Boolean: ResolverTypeWrapper<any>;
+      MyType: ResolverTypeWrapper<MyTypeDb>;
+      MyOtherType: ResolverTypeWrapper<any>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<any>;
+      SomeNode: ResolverTypeWrapper<any>;
+      MyUnion: ResolverTypeWrapper<any>;
+      MyScalar: ResolverTypeWrapper<any>;
+      Int: ResolverTypeWrapper<any>;
     };`);
   });
 
@@ -526,18 +526,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<MyTypeDb>,
-      MyOtherType: ResolverTypeWrapper<CustomMyOtherType>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<MyTypeDb>;
+      MyOtherType: ResolverTypeWrapper<CustomMyOtherType>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
   });
 
@@ -556,18 +556,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        MyType: ResolverTypeWrapper<Partial<MyType>>,
-        MyOtherType: ResolverTypeWrapper<MyOtherType>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        SomeNode: ResolverTypeWrapper<SomeNode>,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-        Int: ResolverTypeWrapper<Scalars['Int']>,
+        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyType: ResolverTypeWrapper<Partial<MyType>>;
+        MyOtherType: ResolverTypeWrapper<MyOtherType>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        SomeNode: ResolverTypeWrapper<SomeNode>;
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+        Int: ResolverTypeWrapper<Scalars['Int']>;
       };
     `);
   });
@@ -673,55 +673,55 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
         export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
-          bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-          __isTypeOf?: isTypeOfResolverFn<ParentType>,
+          bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+          __isTypeOf?: isTypeOfResolverFn<ParentType>;
         };
       `);
 
     expect(result.content)
       .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
-      name: 'MyScalar'
+      name: 'MyScalar';
         }
       `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
     await validate(result);
@@ -752,55 +752,55 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
         export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
-          bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-          __isTypeOf?: isTypeOfResolverFn<ParentType>,
+          bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+          __isTypeOf?: isTypeOfResolverFn<ParentType>;
         };
       `);
 
     expect(result.content)
       .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
-      name: 'MyScalar'
+      name: 'MyScalar';
         }
       `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
     await validate(result);
@@ -829,55 +829,55 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
-        name: 'MyScalar'
+        name: 'MyScalar';
       }
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
     await validate(mergeOutputs([result, `type MyNodeType = {};`]));
@@ -898,55 +898,55 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
-        name: 'MyScalar'
+        name: 'MyScalar';
       }
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
     await validate(result);
@@ -967,55 +967,55 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
-        name: 'MyScalar'
+        name: 'MyScalar';
       }
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: isTypeOfResolverFn<ParentType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
     await validate(result);
@@ -1036,18 +1036,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> }>,
-      MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> }>;
+      MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
     await validate(mergeOutputs([result, 'type MyOtherTypeCustom = {};']));
   });
@@ -1068,18 +1068,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      String: ResolverTypeWrapper<Scalars['String']>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      MyType: ResolverTypeWrapper<MyTypeCustom>,
-      MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>,
-      Query: ResolverTypeWrapper<{}>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+      String: ResolverTypeWrapper<Scalars['String']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      MyType: ResolverTypeWrapper<MyTypeCustom>;
+      MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>;
+      Query: ResolverTypeWrapper<{}>;
+      Subscription: ResolverTypeWrapper<{}>;
+      Node: ResolversTypes['SomeNode'];
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      SomeNode: ResolverTypeWrapper<SomeNode>;
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+      Int: ResolverTypeWrapper<Scalars['Int']>;
     };`);
     await validate(mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]));
   });
@@ -1089,18 +1089,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        MyType: ResolverTypeWrapper<MyType>,
-        MyOtherType: ResolverTypeWrapper<MyOtherType>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        SomeNode: ResolverTypeWrapper<SomeNode>,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-        Int: ResolverTypeWrapper<Scalars['Int']>,
+        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyType: ResolverTypeWrapper<MyType>;
+        MyOtherType: ResolverTypeWrapper<MyOtherType>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        SomeNode: ResolverTypeWrapper<SomeNode>;
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+        Int: ResolverTypeWrapper<Scalars['Int']>;
       };
     `);
   });
@@ -1122,35 +1122,35 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        MyType: ResolverTypeWrapper<Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> }>,
-        MyOtherType: ResolverTypeWrapper<MyNamespace.MyCustomOtherType>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        SomeNode: ResolverTypeWrapper<SomeNode>,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-        Int: ResolverTypeWrapper<Scalars['Int']>,
+        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyType: ResolverTypeWrapper<Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> }>;
+        MyOtherType: ResolverTypeWrapper<MyNamespace.MyCustomOtherType>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        SomeNode: ResolverTypeWrapper<SomeNode>;
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+        Int: ResolverTypeWrapper<Scalars['Int']>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversParentTypes = {
-      String: Scalars['String'],
-      Boolean: Scalars['Boolean'],
-      MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversParentTypes['MyOtherType']> },
-      MyOtherType: MyNamespace.MyCustomOtherType,
-      Query: {},
-      Subscription: {},
-      Node: ResolversParentTypes['SomeNode'],
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
-      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      String: Scalars['String'];
+      Boolean: Scalars['Boolean'];
+      MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversParentTypes['MyOtherType']> };
+      MyOtherType: MyNamespace.MyCustomOtherType;
+      Query: {};
+      Subscription: {};
+      Node: ResolversParentTypes['SomeNode'];
+      ID: Scalars['ID'];
+      SomeNode: SomeNode;
+      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+      MyScalar: Scalars['MyScalar'];
+      Int: Scalars['Int'];
     };
     `);
   });
@@ -1187,35 +1187,35 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        Boolean: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        MyType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        MyUnion: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
-        Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>,
+        String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        Boolean: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        MyType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        MyUnion: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        String: MyNamespace.MyDefaultMapper,
-        Boolean: MyNamespace.MyDefaultMapper,
-        MyType: MyNamespace.MyDefaultMapper,
-        MyOtherType: MyNamespace.MyDefaultMapper,
-        Query: {},
-        Subscription: {},
-        Node: ResolversParentTypes['SomeNode'],
-        ID: MyNamespace.MyDefaultMapper,
-        SomeNode: MyNamespace.MyDefaultMapper,
-        MyUnion: MyNamespace.MyDefaultMapper,
-        MyScalar: MyNamespace.MyDefaultMapper,
-        Int: MyNamespace.MyDefaultMapper,
+        String: MyNamespace.MyDefaultMapper;
+        Boolean: MyNamespace.MyDefaultMapper;
+        MyType: MyNamespace.MyDefaultMapper;
+        MyOtherType: MyNamespace.MyDefaultMapper;
+        Query: {};
+        Subscription: {};
+        Node: ResolversParentTypes['SomeNode'];
+        ID: MyNamespace.MyDefaultMapper;
+        SomeNode: MyNamespace.MyDefaultMapper;
+        MyUnion: MyNamespace.MyDefaultMapper;
+        MyScalar: MyNamespace.MyDefaultMapper;
+        Int: MyNamespace.MyDefaultMapper;
       };
     `);
   });
@@ -1235,35 +1235,35 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>,
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-        MyType: ResolverTypeWrapper<MyType>,
-        MyOtherType: ResolverTypeWrapper<MyOtherType>,
-        Query: ResolverTypeWrapper<MyNamespace.MyRootType>,
-        Subscription: ResolverTypeWrapper<MyNamespace.MyRootType>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<Scalars['ID']>,
-        SomeNode: ResolverTypeWrapper<SomeNode>,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-        Int: ResolverTypeWrapper<Scalars['Int']>,
+        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyType: ResolverTypeWrapper<MyType>;
+        MyOtherType: ResolverTypeWrapper<MyOtherType>;
+        Query: ResolverTypeWrapper<MyNamespace.MyRootType>;
+        Subscription: ResolverTypeWrapper<MyNamespace.MyRootType>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        SomeNode: ResolverTypeWrapper<SomeNode>;
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+        Int: ResolverTypeWrapper<Scalars['Int']>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversParentTypes = {
-      String: Scalars['String'],
-      Boolean: Scalars['Boolean'],
-      MyType: MyType,
-      MyOtherType: MyOtherType,
-      Query: MyNamespace.MyRootType,
-      Subscription: MyNamespace.MyRootType,
-      Node: ResolversParentTypes['SomeNode'],
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
-      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      String: Scalars['String'];
+      Boolean: Scalars['Boolean'];
+      MyType: MyType;
+      MyOtherType: MyOtherType;
+      Query: MyNamespace.MyRootType;
+      Subscription: MyNamespace.MyRootType;
+      Node: ResolversParentTypes['SomeNode'];
+      ID: Scalars['ID'];
+      SomeNode: SomeNode;
+      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+      MyScalar: Scalars['MyScalar'];
+      Int: Scalars['Int'];
     };
     `);
   });
@@ -1285,35 +1285,35 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['String']>>,
-        Boolean: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Boolean']>>,
-        MyType: ResolverTypeWrapper<MyNamespace.MyType<MyType>>,
-        MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<MyOtherType>>,
-        Query: ResolverTypeWrapper<{}>,
-        Subscription: ResolverTypeWrapper<{}>,
-        Node: ResolversTypes['SomeNode'],
-        ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['ID']>>,
-        SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<SomeNode>>,
-        MyUnion: MyNamespace.MyDefaultMapper<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-        MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['MyScalar']>>,
-        Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Int']>>,
+        String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['String']>>;
+        Boolean: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Boolean']>>;
+        MyType: ResolverTypeWrapper<MyNamespace.MyType<MyType>>;
+        MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<MyOtherType>>;
+        Query: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<{}>;
+        Node: ResolversTypes['SomeNode'];
+        ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['ID']>>;
+        SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<SomeNode>>;
+        MyUnion: MyNamespace.MyDefaultMapper<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>;
+        MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['MyScalar']>>;
+        Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Int']>>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversParentTypes = {
-      String: MyNamespace.MyDefaultMapper<Scalars['String']>,
-      Boolean: MyNamespace.MyDefaultMapper<Scalars['Boolean']>,
-      MyType: MyNamespace.MyType<MyType>,
-      MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>,
-      Query: {},
-      Subscription: {},
-      Node: ResolversParentTypes['SomeNode'],
-      ID: MyNamespace.MyDefaultMapper<Scalars['ID']>,
-      SomeNode: MyNamespace.MyDefaultMapper<SomeNode>,
-      MyUnion: MyNamespace.MyDefaultMapper<ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType']>,
-      MyScalar: MyNamespace.MyDefaultMapper<Scalars['MyScalar']>,
-      Int: MyNamespace.MyDefaultMapper<Scalars['Int']>,
+      String: MyNamespace.MyDefaultMapper<Scalars['String']>;
+      Boolean: MyNamespace.MyDefaultMapper<Scalars['Boolean']>;
+      MyType: MyNamespace.MyType<MyType>;
+      MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>;
+      Query: {};
+      Subscription: {};
+      Node: ResolversParentTypes['SomeNode'];
+      ID: MyNamespace.MyDefaultMapper<Scalars['ID']>;
+      SomeNode: MyNamespace.MyDefaultMapper<SomeNode>;
+      MyUnion: MyNamespace.MyDefaultMapper<ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType']>;
+      MyScalar: MyNamespace.MyDefaultMapper<Scalars['MyScalar']>;
+      Int: MyNamespace.MyDefaultMapper<Scalars['Int']>;
     };
     `);
   });

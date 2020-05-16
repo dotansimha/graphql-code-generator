@@ -130,7 +130,7 @@ export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<Resol
 };
 
 export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-  __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+  __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
 };
 
 export type MyScalarScalarConfig = {

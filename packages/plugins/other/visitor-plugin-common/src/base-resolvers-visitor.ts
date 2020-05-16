@@ -1,7 +1,7 @@
 import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
+import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap, DeclarationKind } from './types';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
@@ -603,27 +603,33 @@ export class BaseResolversVisitor<
   }
 
   public buildResolversTypes(): string {
+    const declarationKind = 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(declarationKind)
       .withName(this.convertName('ResolversTypes'))
       .withComment('Mapping between all available schema types and the resolvers types')
       .withBlock(
         Object.keys(this._resolversTypes)
-          .map(typeName => indent(`${typeName}: ${this._resolversTypes[typeName]},`))
+          .map(typeName =>
+            indent(`${typeName}: ${this._resolversTypes[typeName]}${this.getPunctuation(declarationKind)}`)
+          )
           .join('\n')
       ).string;
   }
 
   public buildResolversParentTypes(): string {
+    const declarationKind = 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(declarationKind)
       .withName(this.convertName('ResolversParentTypes'))
       .withComment('Mapping between all available schema types and the resolvers parents')
       .withBlock(
         Object.keys(this._resolversParentTypes)
-          .map(typeName => indent(`${typeName}: ${this._resolversParentTypes[typeName]},`))
+          .map(typeName =>
+            indent(`${typeName}: ${this._resolversParentTypes[typeName]}${this.getPunctuation(declarationKind)}`)
+          )
           .join('\n')
       ).string;
   }
@@ -734,6 +740,7 @@ export class BaseResolversVisitor<
 
   public getRootResolver(): string {
     const name = this.convertName('Resolvers');
+    const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
     // This is here because we don't want to break IResolvers, so there is a mapping by default,
@@ -750,14 +757,14 @@ export type IResolvers${contextType} = ${name}<ContextType>;`
     return [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
-        .asKind('type')
+        .asKind(declarationKind)
         .withName(name, contextType)
         .withBlock(
           Object.keys(this._collectedResolvers)
             .map(schemaTypeName => {
               const resolverType = this._collectedResolvers[schemaTypeName];
 
-              return indent(this.formatRootResolver(schemaTypeName, resolverType));
+              return indent(this.formatRootResolver(schemaTypeName, resolverType, declarationKind));
             })
             .join('\n')
         ).string,
@@ -765,12 +772,15 @@ export type IResolvers${contextType} = ${name}<ContextType>;`
     ].join('\n');
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType},`;
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   public getAllDirectiveResolvers(): string {
     if (Object.keys(this._collectedDirectiveResolvers).length) {
+      const declarationKind = 'type';
       const name = this.convertName('DirectiveResolvers');
       const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
@@ -788,14 +798,14 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       return [
         new DeclarationBlock(this._declarationBlockConfig)
           .export()
-          .asKind('type')
+          .asKind(declarationKind)
           .withName(name, contextType)
           .withBlock(
             Object.keys(this._collectedDirectiveResolvers)
               .map(schemaTypeName => {
                 const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
 
-                return indent(this.formatRootResolver(schemaTypeName, resolverType));
+                return indent(this.formatRootResolver(schemaTypeName, resolverType, declarationKind));
               })
               .join('\n')
           ).string,
@@ -862,6 +872,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
     const hasArguments = node.arguments && node.arguments.length > 0;
+    const declarationKind = 'type';
 
     return (parentName: string) => {
       const original: FieldDefinitionNode = parent[key];
@@ -937,7 +948,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      return indent(`${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(', ')}>,`);
+      return indent(
+        `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
+          ', '
+        )}>${this.getPunctuation(declarationKind)}`
+      );
     };
   }
 
@@ -952,6 +967,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
+    const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
@@ -966,12 +982,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const fieldsContent = node.fields.map((f: any) => f(node.name));
 
     if (!isRootType) {
-      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn<ParentType>,`));
+      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn<ParentType>${this.getPunctuation(declarationKind)}`));
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(declarationKind)
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(fieldsContent.join('\n'));
 
@@ -981,6 +997,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
+    const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
@@ -995,13 +1012,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(declarationKind)
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(
         indent(
           `__resolveType${
             this.config.optionalResolveType ? '?' : ''
-          }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`
+          }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
       ).string;
   }
@@ -1031,7 +1048,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }),
         ` extends GraphQLScalarTypeConfig<${baseName}, any>`
       )
-      .withBlock(indent(`name: '${node.name}'`)).string;
+      .withBlock(indent(`name: '${node.name}'${this.getPunctuation('interface')}`)).string;
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode, key, parent): string {
@@ -1086,6 +1103,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
+    const declarationKind = 'type';
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 
@@ -1106,14 +1124,14 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(declarationKind)
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(
         [
           indent(
             `__resolveType${
               this.config.optionalResolveType ? '?' : ''
-            }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`
+            }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
           ...(node.fields || []).map((f: any) => f(node.name)),
         ].join('\n')
