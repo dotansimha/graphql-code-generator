@@ -3538,8 +3538,8 @@ describe('TypeScript Operations Plugin', () => {
         ) }
       );
       
-      export const UserIdQuery: import("graphql").DocumentNode;
-      export const UserLoginQuery: import("graphql").DocumentNode;
+      export declare const UserIdQuery: import("graphql").DocumentNode;
+      export declare const UserLoginQuery: import("graphql").DocumentNode;
       `);
     });
 
