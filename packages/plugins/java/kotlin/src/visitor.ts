@@ -27,7 +27,7 @@ import {
 import { wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 
 export const KOTLIN_SCALARS = {
-  ID: 'String',
+  ID: 'Any',
   String: 'String',
   Boolean: 'Boolean',
   Int: 'Int',
@@ -121,9 +121,11 @@ ${enumValues}
         result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable: nullable };
       }
     } else if (isInputObjectType(schemaType)) {
+      const convertedName = this.convertName(schemaType.name);
+      const typeName = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
       result = {
-        baseType: `${this.convertName(schemaType.name)}Input`,
-        typeName: `${this.convertName(schemaType.name)}Input`,
+        baseType: typeName,
+        typeName: typeName,
         isScalar: false,
         isArray,
         nullable: nullable,
@@ -208,7 +210,8 @@ ${classMembers}
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    const name = `${this.convertName(node)}Input`;
+    const convertedName = this.convertName(node);
+    const name = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
 
     return this.buildInputTransfomer(name, node.fields);
   }

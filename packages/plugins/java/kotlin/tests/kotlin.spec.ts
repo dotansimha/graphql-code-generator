@@ -11,6 +11,7 @@ describe('Kotlin', () => {
       me: User!
       user(id: ID!): User!
       searchUser(searchFields: SearchUser!): [User!]!
+      updateUser(input: UpdateUserMetadataInput!): [User!]!
     }
 
     input InputWithArray {
@@ -29,7 +30,17 @@ describe('Kotlin', () => {
     input MetadataSearch {
       something: Int
     }
-
+    
+    input UpdateUserInput {
+      id: ID!
+      username: String
+      metadata: UpdateUserMetadataInput
+    }
+    
+    input UpdateUserMetadataInput {
+      something: Int
+    }
+    
     enum ResultSort {
       ASC
       DESC
@@ -158,7 +169,7 @@ describe('Kotlin', () => {
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class QueryUserArgs(
-        val id: String
+        val id: Any
       )`);
 
       // language=kotlin
@@ -182,6 +193,22 @@ describe('Kotlin', () => {
           val name: String? = null,
           val sort: ResultSort? = null,
           val metadata: MetadataSearchInput? = null
+        )`);
+    });
+
+    it('Should generate nested inputs with out duplicated `Input` suffix', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`data class UpdateUserMetadataInput(
+          val something: Int? = null
+        )`);
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`data class UpdateUserInput(
+          val id: Any,
+          val username: String? = null,
+          val metadata: UpdateUserMetadataInput? = null
         )`);
     });
   });
