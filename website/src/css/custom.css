@@ -18,6 +18,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.menu button {
+  margin-bottom: 40px;
+  right: 0.1rem !important;
+}
+
 .CodeMirror {
   height: 70vh;
   border-left: 1px solid #e5e5e5;
