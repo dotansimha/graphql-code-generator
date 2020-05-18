@@ -1,7 +1,30 @@
-import { visit, DocumentNode, ObjectTypeDefinitionNode, ObjectTypeExtensionNode } from 'graphql';
-import { collectUsedTypes, unique, withQuotes, indent } from './utils';
+import {
+  visit,
+  DocumentNode,
+  ObjectTypeDefinitionNode,
+  ObjectTypeExtensionNode,
+  Kind,
+  TypeDefinitionNode,
+  TypeExtensionNode,
+  EnumTypeDefinitionNode,
+  EnumTypeExtensionNode,
+} from 'graphql';
+import {
+  collectUsedTypes,
+  unique,
+  withQuotes,
+  indent,
+  pushUnique,
+  concatByKey,
+  uniqueByKey,
+  createObject,
+} from './utils';
 
 // TODO: consider options of other plugins (naming convention etc)
+
+type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
+type Registry = Record<RegistryKeys, string[]>;
+const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 
 // Unfortunately it's static... for now
 const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
@@ -16,58 +39,82 @@ export function buildModule(
     importPath: string;
   }
 ) {
-  const definedFields: Record<string, string[]> = {};
+  const definedObjectFields: Record<string, string[]> = {};
+  const definedEnumValues: Record<string, string[]> = {};
+
+  const defined: Registry = createObject(registryKeys, () => []);
+  const extended: Registry = createObject(registryKeys, () => []);
+
   // List of types used in objects, fields, arguments etc
   const usedTypes = collectUsedTypes(doc);
-  // Types defined in a module
-  const definedTypes: string[] = [];
-  // Types extended in a module
-  const extendedTypes: string[] = [];
 
-  // TODO: Support Interfaces, Scalars and Enums
   visit(doc, {
     ObjectTypeDefinition(node) {
-      collectDefinedType(node);
-      collectFieldsFromObject(node);
+      collectTypeDefinition(node);
     },
     ObjectTypeExtension(node) {
       collectTypeExtension(node);
-      collectFieldsFromObject(node);
+    },
+    // InputObjectTypeDefinition(node) {
+    //   collectTypeDefinition(node);
+    // },
+    // InputObjectTypeExtension(node) {
+    //   collectTypeExtension(node);
+    // },
+    // InterfaceTypeDefinition(node) {
+    //   collectTypeDefinition(node);
+    // },
+    // InterfaceTypeExtension(node) {
+    //   collectTypeExtension(node);
+    // },
+    // ScalarTypeDefinition(node) {
+    //   collectTypeDefinition(node);
+    // },
+    // UnionTypeDefinition(node) {
+    //   collectTypeDefinition(node);
+    // },
+    // UnionTypeExtension(node) {
+    //   collectTypeExtension(node);
+    // },
+    EnumTypeDefinition(node) {
+      collectTypeDefinition(node);
+    },
+    EnumTypeExtension(node) {
+      collectTypeExtension(node);
     },
   });
 
-  // Types defined or extended in a module
-  const touchedTypes = definedTypes.concat(extendedTypes);
-  // Types that are not defined or extended in a module, they come from other modules
-  const externalTypes: string[] = extendedTypes.filter(name => !definedTypes.includes(name));
+  // Defined and Extended types
+  const visited: Registry = createObject(registryKeys, key => concatByKey(defined, extended, key));
 
-  const importBlock = [
-    `import * as ${importNamespace} from "${importPath}";`,
-    `import * as gm from "graphql-modules";`,
-  ];
-  // A dictionary of fields to pick from an object
-  const definedFieldsBlock = createDefinedFields(touchedTypes);
-  // A block that exports all used schema types
-  const exportedTypesBlock = usedTypes.map(createExportType).join('\n');
-  // A block with resolver signatures
-  const resolverTypesBlock = touchedTypes.map(createResolverType).join('\n');
-  // Aggregation of type resolver signatures
-  const resolversBlock = createResolversType(touchedTypes);
-  // Signature for a map of resolve middlewares
-  const resolveMiddlewares = createResolveMiddlewareMap(touchedTypes);
+  // Types that are not defined or extended in a module, they come from other modules
+  const external: Registry = createObject(registryKeys, key => uniqueByKey(extended, defined, key));
+
+  //
+  //
+  //
+  // Prints
+  //
+  //
+  //
 
   // An actuall output
   return [
-    importBlock,
-    definedFieldsBlock,
-    exportedTypesBlock,
-    resolverTypesBlock,
-    resolversBlock,
-    resolveMiddlewares,
+    `import * as ${importNamespace} from "${importPath}";`,
+    `import * as gm from "graphql-modules";`,
+    printDefinedFields(visited.objects),
+    printDefinedEnumValues(visited.enums),
+    printSchemaTypes(usedTypes),
+    printResolveSignaturesPerType(visited),
+    printResolversType(visited),
+    printResolveMiddlewareMap(visited.objects),
   ].join('\n\n');
 
-  function createDefinedFields(types: string[]) {
-    const records = types.map(typeName => `${typeName}: ${createPicks(typeName)};`);
+  /**
+   * A dictionary of fields to pick from an object
+   */
+  function printDefinedFields(types: string[]) {
+    const records = types.map(typeName => `${typeName}: ${printPicks(typeName, definedObjectFields)};`);
 
     return [
       'type DefinedFields = {',
@@ -78,8 +125,49 @@ export function buildModule(
     ].join('\n');
   }
 
-  function createResolversType(types: string[]) {
-    const records = types.map(typeName => `${typeName}: ${typeName}Resolvers;`);
+  /**
+   * A dictionary of values to pick from an enum
+   */
+  function printDefinedEnumValues(types: string[]) {
+    const records = types.map(typeName => `${typeName}: ${printPicks(typeName, definedEnumValues)};`);
+
+    return [
+      'type DefinedEnumValues = {',
+      // Enum: 'kind' | 'kind' | 'kind';
+      ...records.map(indent(2)),
+      '};',
+    ].join('\n');
+  }
+
+  /**
+   * Prints signatures of schema types with picks
+   */
+  function printSchemaTypes(types: string[]) {
+    return types.map(printExportType).join('\n');
+  }
+
+  function printResolveSignaturesPerType(registry: Registry) {
+    return [
+      registry.objects.map(printResolverType('DefinedFields')).join('\n'),
+      registry.enums.map(printResolverType('DefinedEnumValues')).join('\n'),
+    ].join('\n');
+  }
+
+  /**
+   * Aggregation of type resolver signatures
+   */
+  function printResolversType(registry: Registry) {
+    const records: string[] = [];
+
+    for (const kind in registry) {
+      if (registry.hasOwnProperty(kind)) {
+        const types: string[] = registry[kind];
+
+        types.forEach(typeName => {
+          records.push(`${typeName}: ${typeName}Resolvers;`);
+        });
+      }
+    }
 
     return [
       'export type Resolvers = {',
@@ -90,18 +178,21 @@ export function buildModule(
     ].join('\n');
   }
 
-  function createResolveMiddlewareMap(types: string[]) {
-    const records: string[] = [createResolveMiddlewareRecord('*')];
+  /**
+   * Signature for a map of resolve middlewares
+   */
+  function printResolveMiddlewareMap(types: string[]) {
+    const records: string[] = [printResolveMiddlewareRecord('*')];
 
     // Type.*
-    records.push(...types.map(type => createResolveMiddlewareRecord(`${type}.*`)));
+    records.push(...types.map(type => printResolveMiddlewareRecord(`${type}.*`)));
 
     // Type.Field
-    for (const typeName in definedFields) {
-      if (definedFields.hasOwnProperty(typeName)) {
-        const fields = definedFields[typeName];
+    for (const typeName in definedObjectFields) {
+      if (definedObjectFields.hasOwnProperty(typeName)) {
+        const fields = definedObjectFields[typeName];
 
-        records.push(...fields.map(field => createResolveMiddlewareRecord(`${typeName}.${field}`)));
+        records.push(...fields.map(field => printResolveMiddlewareRecord(`${typeName}.${field}`)));
       }
     }
 
@@ -115,65 +206,119 @@ export function buildModule(
     ].join('\n');
   }
 
-  function createResolveMiddlewareRecord(path: string): string {
+  function printResolveMiddlewareRecord(path: string): string {
     return `'${path}'?: gm.ResolveMiddleware[];`;
   }
 
-  function createResolverType(typeName: string) {
-    return `export type ${typeName}Resolvers = Pick<${importNamespace}.${typeName}Resolvers, DefinedFields['${typeName}']>;`;
+  function printResolverType(picksTypeName: string) {
+    return (typeName: string) => {
+      return `export type ${typeName}Resolvers = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']>;`;
+    };
   }
 
-  function createPicks(typeName: string): string {
-    return definedFields[typeName].filter(unique).map(withQuotes).join(' | ');
+  function printPicks(typeName: string, records: Record<string, string[]>): string {
+    return records[typeName].filter(unique).map(withQuotes).join(' | ');
   }
 
-  function createTypeBody(typeName: string): string {
+  function printTypeBody(typeName: string): string {
     const coreType = `${importNamespace}.${typeName}`;
 
-    if (externalTypes.includes(typeName) || !definedFields[typeName]) {
+    if (external.enums.includes(typeName) || external.objects.includes(typeName)) {
       return coreType;
     }
 
-    return `Pick<${coreType}, DefinedFields['${typeName}']>`;
+    if (defined.enums.includes(typeName) && definedEnumValues[typeName]) {
+      return `Pick<${coreType}, DefinedEnumValues['${typeName}']>`;
+    }
+
+    if (defined.objects.includes(typeName) && definedObjectFields[typeName]) {
+      return `Pick<${coreType}, DefinedFields['${typeName}']>`;
+    }
+
+    return coreType;
   }
 
-  function createExportType(typeName: string): string {
-    return `export type ${typeName} = ${createTypeBody(typeName)};`;
+  function printExportType(typeName: string): string {
+    return `export type ${typeName} = ${printTypeBody(typeName)};`;
   }
+
+  //
+  //
+  //
+  // Utils
+  //
+  //
+  //
 
   function collectFieldsFromObject(node: ObjectTypeDefinitionNode | ObjectTypeExtensionNode) {
     const name = node.name.value;
 
     if (node.fields) {
-      if (!definedFields[name]) {
-        definedFields[name] = [];
+      if (!definedObjectFields[name]) {
+        definedObjectFields[name] = [];
       }
 
       node.fields.forEach(field => {
-        definedFields[name].push(field.name.value);
+        definedObjectFields[name].push(field.name.value);
       });
     }
   }
 
-  function collectDefinedType(node: ObjectTypeDefinitionNode) {
-    definedTypes.push(node.name.value);
-  }
-
-  function collectTypeExtension(node: ObjectTypeExtensionNode) {
+  function collectValuesFromEnum(node: EnumTypeDefinitionNode | EnumTypeExtensionNode) {
     const name = node.name.value;
 
-    // Do not include root types as extensions
-    // so we can use them in DefinedFields
-    if (ROOT_TYPES.includes(name)) {
-      if (!definedTypes.includes(name)) {
-        definedTypes.push(name);
+    if (node.values) {
+      if (!definedEnumValues[name]) {
+        definedEnumValues[name] = [];
       }
 
-      return;
+      node.values.forEach(field => {
+        definedEnumValues[name].push(field.name.value);
+      });
     }
+  }
 
-    if (!extendedTypes.includes(name)) {
-      extendedTypes.push(name);
+  function collectTypeDefinition(node: TypeDefinitionNode) {
+    const name = node.name.value;
+
+    switch (node.kind) {
+      case Kind.OBJECT_TYPE_DEFINITION: {
+        defined.objects.push(name);
+        collectFieldsFromObject(node);
+        break;
+      }
+
+      case Kind.ENUM_TYPE_DEFINITION: {
+        defined.enums.push(name);
+        collectValuesFromEnum(node);
+        break;
+      }
+    }
+  }
+
+  function collectTypeExtension(node: TypeExtensionNode) {
+    const name = node.name.value;
+
+    switch (node.kind) {
+      case Kind.OBJECT_TYPE_EXTENSION: {
+        collectFieldsFromObject(node);
+        // Do not include root types as extensions
+        // so we can use them in DefinedFields
+        if (ROOT_TYPES.includes(name)) {
+          pushUnique(defined.objects, name);
+          return;
+        }
+
+        pushUnique(extended.objects, name);
+
+        break;
+      }
+      case Kind.ENUM_TYPE_EXTENSION: {
+        collectValuesFromEnum(node);
+        pushUnique(extended.enums, name);
+
+        break;
+      }
     }
   }
 }

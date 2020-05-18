@@ -21,9 +21,7 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
   doc.definitions.forEach(findRelated);
 
   function markAsUsed(type: string) {
-    if (!used.includes(type)) {
-      used.push(type);
-    }
+    pushUnique(used, type);
   }
 
   function findRelated(node: DefinitionNode | FieldDefinitionNode | InputValueDefinitionNode | NamedTypeNode) {
@@ -163,4 +161,31 @@ function ensureEndsWithSeparator(path: string) {
 
 function ensureStartsWithSeparator(path: string) {
   return path.startsWith('.') ? path.replace(/^(..\/)|(.\/)/, '/') : path.startsWith('/') ? path : '/' + path;
+}
+
+/**
+ * Pushes an item to a list only if the list doesn't include the item
+ */
+export function pushUnique<T extends any>(list: T[], item: T): void {
+  if (!list.includes(item)) {
+    list.push(item);
+  }
+}
+
+export function concatByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
+  return left[key].concat(right[key]);
+}
+
+export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
+  return left[key].filter(item => !right[key].includes(item));
+}
+
+export function createObject<K extends string, T>(keys: K[], valueFn: (key: K) => T) {
+  const obj: Record<K, T> = {} as any;
+
+  keys.forEach(key => {
+    obj[key] = valueFn(key);
+  });
+
+  return obj;
 }

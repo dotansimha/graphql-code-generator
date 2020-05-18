@@ -20,6 +20,12 @@ const testDoc = parse(/* GraphQL */ `
     articleById(id: ID!): Article
     articlesByUser(userId: ID!): [Article!]
   }
+
+  enum UserKind {
+    ADMIN
+    WRITER
+    REGULAR
+  }
 `);
 
 test('should include import statement', () => {
@@ -44,6 +50,19 @@ test('should pick fields from defined and extended objects', () => {
       Article: 'id' | 'title' | 'text' | 'author' | 'comments';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
+    };
+  `);
+});
+
+test('should pick values from defined and extended enums', () => {
+  const output = buildModule(testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+  });
+
+  expect(output).toBeSimilarStringTo(`
+    type DefinedEnumValues = {
+      UserKind: 'ADMIN' | 'WRITER' | 'REGULAR';
     };
   `);
 });
@@ -74,6 +93,9 @@ test('should export partial types, only those defined in module or root types', 
   expect(output).toBeSimilarStringTo(`
     export type Query = Pick<core.Query, DefinedFields['Query']>;
   `);
+  expect(output).toBeSimilarStringTo(`
+    export type UserKind = Pick<core.UserKind, DefinedEnumValues['UserKind']>;
+  `);
 });
 
 test('should use and export resolver signatures of types defined or extended in a module', () => {
@@ -90,6 +112,9 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
   expect(output).toBeSimilarStringTo(`
     export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+  `);
+  expect(output).toBeSimilarStringTo(`
+    export type UserKindResolvers = Pick<core.UserKindResolvers, DefinedEnumValues['UserKind']>;
   `);
 });
 
@@ -113,6 +138,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
       Article: ArticleResolvers;
       Query: QueryResolvers;
       User: UserResolvers;
+      UserKind: UserKindResolvers;
     };
   `);
 });
