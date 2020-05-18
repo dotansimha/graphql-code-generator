@@ -89,3 +89,9 @@ Allows to define a custom suffix for Subscription operations.
 config:
   subscriptionSuffix: 'SubscriptionService'
 ```
+
+### apolloAngularPackage (`string`, default value: `'apollo-angular'`)
+
+Allows to define a custom Apollo-Angular package to import types from.
+
+

@@ -74,3 +74,52 @@ Allow you to disable prefixing for generated enums, works in combination with `t
     typesPrefix: I
     enumPrefix: false
 ```
+
+### fieldWrapperValue (`string`, default value: `T`)
+
+Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
+
+
+#### Usage Example: Allow Promise
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   wrapFieldDefinitions: true
+   fieldWrapperValue: T | Promise<T>
+```
+
+### wrapFieldDefinitions (`boolean`, default value: `false`)
+
+Set the to `true` in order to wrap field definitions with `FieldWrapper`. This is useful to allow return types such as Promises and functions.
+
+
+#### Usage Example: Enable wrapping fields
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   wrapFieldDefinitions: true
+```
+
+### onlyOperationTypes (`boolean`, default value: `false`)
+
+This will cause the generator to emit types for operations only (basically only enums and scalars)
+
+
+#### Usage Example: Override all definition types
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   onlyOperationTypes: true
+```

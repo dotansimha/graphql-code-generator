@@ -37,6 +37,7 @@ module.exports = {
           'plugins/typescript-stencil-apollo',
           'plugins/typescript-urql',
           'plugins/typescript-graphql-request',
+          'plugins/named-operations-object'
         ],
       },
       {
