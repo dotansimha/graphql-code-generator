@@ -13,7 +13,7 @@ export type Scalars = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
   /** A single entry */
@@ -46,7 +46,7 @@ export enum FeedType {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
-   __typename?: 'Entry';
+  __typename?: 'Entry';
   /** Information about the repository from GitHub */
   repository: Repository;
   /** The GitHub user who submitted this entry */
@@ -79,7 +79,7 @@ export type EntryCommentsArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  */
 export type Repository = {
-   __typename?: 'Repository';
+  __typename?: 'Repository';
   /** Just the name of the repository, e.g. GitHunt-API */
   name: Scalars['String'];
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -98,7 +98,7 @@ export type Repository = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   /** The name of the user, e.g. apollostack */
   login: Scalars['String'];
   /** The URL to a directly embeddable image for this user's avatar */
@@ -109,7 +109,7 @@ export type User = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
-   __typename?: 'Comment';
+  __typename?: 'Comment';
   /** The SQL ID of this entry */
   id: Scalars['Int'];
   /** The GitHub user who posted the comment */
@@ -124,12 +124,12 @@ export type Comment = {
 
 /** XXX to be removed */
 export type Vote = {
-   __typename?: 'Vote';
+  __typename?: 'Vote';
   vote_value: Scalars['Int'];
 };
 
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   /** Submit a new repository, returns the new submission */
   submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -163,7 +163,7 @@ export enum VoteType {
 }
 
 export type Subscription = {
-   __typename?: 'Subscription';
+  __typename?: 'Subscription';
   /** Subscription fires on every comment added */
   commentAdded?: Maybe<Comment>;
 };
@@ -325,7 +325,7 @@ export type Scalars = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
   /** A single entry */
@@ -358,7 +358,7 @@ export enum FeedType {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
-   __typename?: 'Entry';
+  __typename?: 'Entry';
   /** Information about the repository from GitHub */
   repository: Repository;
   /** The GitHub user who submitted this entry */
@@ -391,7 +391,7 @@ export type EntryCommentsArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  */
 export type Repository = {
-   __typename?: 'Repository';
+  __typename?: 'Repository';
   /** Just the name of the repository, e.g. GitHunt-API */
   name: Scalars['String'];
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -410,7 +410,7 @@ export type Repository = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   /** The name of the user, e.g. apollostack */
   login: Scalars['String'];
   /** The URL to a directly embeddable image for this user's avatar */
@@ -421,7 +421,7 @@ export type User = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
-   __typename?: 'Comment';
+  __typename?: 'Comment';
   /** The SQL ID of this entry */
   id: Scalars['Int'];
   /** The GitHub user who posted the comment */
@@ -436,12 +436,12 @@ export type Comment = {
 
 /** XXX to be removed */
 export type Vote = {
-   __typename?: 'Vote';
+  __typename?: 'Vote';
   vote_value: Scalars['Int'];
 };
 
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   /** Submit a new repository, returns the new submission */
   submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -475,7 +475,7 @@ export enum VoteType {
 }
 
 export type Subscription = {
-   __typename?: 'Subscription';
+  __typename?: 'Subscription';
   /** Subscription fires on every comment added */
   commentAdded?: Maybe<Comment>;
 };
@@ -628,7 +628,7 @@ export type Scalars = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
   /** A single entry */
@@ -661,7 +661,7 @@ export enum FeedType {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
-   __typename?: 'Entry';
+  __typename?: 'Entry';
   /** Information about the repository from GitHub */
   repository: Repository;
   /** The GitHub user who submitted this entry */
@@ -694,7 +694,7 @@ export type EntryCommentsArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  */
 export type Repository = {
-   __typename?: 'Repository';
+  __typename?: 'Repository';
   /** Just the name of the repository, e.g. GitHunt-API */
   name: Scalars['String'];
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -713,7 +713,7 @@ export type Repository = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   /** The name of the user, e.g. apollostack */
   login: Scalars['String'];
   /** The URL to a directly embeddable image for this user's avatar */
@@ -724,7 +724,7 @@ export type User = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
-   __typename?: 'Comment';
+  __typename?: 'Comment';
   /** The SQL ID of this entry */
   id: Scalars['Int'];
   /** The GitHub user who posted the comment */
@@ -739,12 +739,12 @@ export type Comment = {
 
 /** XXX to be removed */
 export type Vote = {
-   __typename?: 'Vote';
+  __typename?: 'Vote';
   vote_value: Scalars['Int'];
 };
 
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   /** Submit a new repository, returns the new submission */
   submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -778,7 +778,7 @@ export enum VoteType {
 }
 
 export type Subscription = {
-   __typename?: 'Subscription';
+  __typename?: 'Subscription';
   /** Subscription fires on every comment added */
   commentAdded?: Maybe<Comment>;
 };
