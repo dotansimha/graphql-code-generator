@@ -116,3 +116,30 @@ test('should generate an aggregation of individual resolver signatures', () => {
     };
   `);
 });
+
+test('should generate a signature for ResolveMiddleware (with widlcards)', () => {
+  const output = buildModule(testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+  });
+
+  expect(output).toContain(`import * as gm from "graphql-modules";`);
+
+  expect(output).toBeSimilarStringTo(`
+    export interface ResolveMiddlewareMap {
+      '*'?: gm.ResolveMiddleware[];
+      'Article.*'?: gm.ResolveMiddleware[];
+      'Query.*'?: gm.ResolveMiddleware[];
+      'User.*'?: gm.ResolveMiddleware[];
+      'Article.id'?: gm.ResolveMiddleware[];
+      'Article.title'?: gm.ResolveMiddleware[];
+      'Article.text'?: gm.ResolveMiddleware[];
+      'Article.author'?: gm.ResolveMiddleware[];
+      'Article.comments'?: gm.ResolveMiddleware[];
+      'User.articles'?: gm.ResolveMiddleware[];
+      'Query.articles'?: gm.ResolveMiddleware[];
+      'Query.articleById'?: gm.ResolveMiddleware[];
+      'Query.articlesByUser'?: gm.ResolveMiddleware[];
+    };
+  `);
+});

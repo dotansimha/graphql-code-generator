@@ -24,6 +24,7 @@ export function buildModule(
   // Types extended in a module
   const extendedTypes: string[] = [];
 
+  // TODO: Support Interfaces, Scalars and Enums
   visit(doc, {
     ObjectTypeDefinition(node) {
       collectDefinedType(node);
@@ -40,7 +41,10 @@ export function buildModule(
   // Types that are not defined or extended in a module, they come from other modules
   const externalTypes: string[] = extendedTypes.filter(name => !definedTypes.includes(name));
 
-  const importBlock = `import * as ${importNamespace} from "${importPath}";`;
+  const importBlock = [
+    `import * as ${importNamespace} from "${importPath}";`,
+    `import * as gm from "graphql-modules";`,
+  ];
   // A dictionary of fields to pick from an object
   const definedFieldsBlock = createDefinedFields(touchedTypes);
   // A block that exports all used schema types
@@ -49,9 +53,18 @@ export function buildModule(
   const resolverTypesBlock = touchedTypes.map(createResolverType).join('\n');
   // Aggregation of type resolver signatures
   const resolversBlock = createResolversType(touchedTypes);
+  // Signature for a map of resolve middlewares
+  const resolveMiddlewares = createResolveMiddlewareMap(touchedTypes);
 
   // An actuall output
-  return [importBlock, definedFieldsBlock, exportedTypesBlock, resolverTypesBlock, resolversBlock].join('\n\n');
+  return [
+    importBlock,
+    definedFieldsBlock,
+    exportedTypesBlock,
+    resolverTypesBlock,
+    resolversBlock,
+    resolveMiddlewares,
+  ].join('\n\n');
 
   function createDefinedFields(types: string[]) {
     const records = types.map(typeName => `${typeName}: ${createPicks(typeName)};`);
@@ -75,6 +88,35 @@ export function buildModule(
       // Article: ArticleResolvers;
       '};',
     ].join('\n');
+  }
+
+  function createResolveMiddlewareMap(types: string[]) {
+    const records: string[] = [createResolveMiddlewareRecord('*')];
+
+    // Type.*
+    records.push(...types.map(type => createResolveMiddlewareRecord(`${type}.*`)));
+
+    // Type.Field
+    for (const typeName in definedFields) {
+      if (definedFields.hasOwnProperty(typeName)) {
+        const fields = definedFields[typeName];
+
+        records.push(...fields.map(field => createResolveMiddlewareRecord(`${typeName}.${field}`)));
+      }
+    }
+
+    return [
+      'export interface ResolveMiddlewareMap {',
+      ...records.map(indent(2)),
+      // '*'?: ResolveMiddleware[];
+      // 'Article.*'?: ResolveMiddleware[];
+      // 'Article.user'?: ResolveMiddleware[];
+      '};',
+    ].join('\n');
+  }
+
+  function createResolveMiddlewareRecord(path: string): string {
+    return `'${path}'?: gm.ResolveMiddleware[];`;
   }
 
   function createResolverType(typeName: string) {
