@@ -8,6 +8,8 @@ import {
   TypeExtensionNode,
   EnumTypeDefinitionNode,
   EnumTypeExtensionNode,
+  InputObjectTypeDefinitionNode,
+  InputObjectTypeExtensionNode,
 } from 'graphql';
 import {
   collectUsedTypes,
@@ -25,6 +27,12 @@ import {
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
 type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
+const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars' | 'unions'>> = [
+  'objects',
+  'enums',
+  'scalars',
+  'unions',
+];
 
 // Unfortunately it's static... for now
 const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
@@ -39,9 +47,7 @@ export function buildModule(
     importPath: string;
   }
 ) {
-  const definedObjectFields: Record<string, string[]> = {};
-  const definedEnumValues: Record<string, string[]> = {};
-
+  const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
   const defined: Registry = createObject(registryKeys, () => []);
   const extended: Registry = createObject(registryKeys, () => []);
 
@@ -55,12 +61,12 @@ export function buildModule(
     ObjectTypeExtension(node) {
       collectTypeExtension(node);
     },
-    // InputObjectTypeDefinition(node) {
-    //   collectTypeDefinition(node);
-    // },
-    // InputObjectTypeExtension(node) {
-    //   collectTypeExtension(node);
-    // },
+    InputObjectTypeDefinition(node) {
+      collectTypeDefinition(node);
+    },
+    InputObjectTypeExtension(node) {
+      collectTypeExtension(node);
+    },
     // InterfaceTypeDefinition(node) {
     //   collectTypeDefinition(node);
     // },
@@ -102,8 +108,9 @@ export function buildModule(
   return [
     `import * as ${importNamespace} from "${importPath}";`,
     `import * as gm from "graphql-modules";`,
-    printDefinedFields(visited.objects),
-    printDefinedEnumValues(visited.enums),
+    printDefinedFields(),
+    printDefinedEnumValues(),
+    printDefinedInputFields(),
     printSchemaTypes(usedTypes),
     printResolveSignaturesPerType(visited),
     printResolversType(visited),
@@ -113,8 +120,8 @@ export function buildModule(
   /**
    * A dictionary of fields to pick from an object
    */
-  function printDefinedFields(types: string[]) {
-    const records = types.map(typeName => `${typeName}: ${printPicks(typeName, definedObjectFields)};`);
+  function printDefinedFields() {
+    const records = visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`);
 
     return [
       'type DefinedFields = {',
@@ -128,12 +135,26 @@ export function buildModule(
   /**
    * A dictionary of values to pick from an enum
    */
-  function printDefinedEnumValues(types: string[]) {
-    const records = types.map(typeName => `${typeName}: ${printPicks(typeName, definedEnumValues)};`);
+  function printDefinedEnumValues() {
+    const records = visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`);
 
     return [
       'type DefinedEnumValues = {',
       // Enum: 'kind' | 'kind' | 'kind';
+      ...records.map(indent(2)),
+      '};',
+    ].join('\n');
+  }
+
+  /**
+   * A dictionary of fields to pick from an input
+   */
+  function printDefinedInputFields() {
+    const records = visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`);
+
+    return [
+      'type DefinedInputFields = {',
+      // NewArticle: 'title' | 'text';
       ...records.map(indent(2)),
       '};',
     ].join('\n');
@@ -160,8 +181,8 @@ export function buildModule(
     const records: string[] = [];
 
     for (const kind in registry) {
-      if (registry.hasOwnProperty(kind)) {
-        const types: string[] = registry[kind];
+      if (registry.hasOwnProperty(kind) && resolverKeys.includes(kind as any)) {
+        const types = registry[kind as RegistryKeys];
 
         types.forEach(typeName => {
           records.push(`${typeName}: ${typeName}Resolvers;`);
@@ -188,9 +209,9 @@ export function buildModule(
     records.push(...types.map(type => printResolveMiddlewareRecord(`${type}.*`)));
 
     // Type.Field
-    for (const typeName in definedObjectFields) {
-      if (definedObjectFields.hasOwnProperty(typeName)) {
-        const fields = definedObjectFields[typeName];
+    for (const typeName in picks.objects) {
+      if (picks.objects.hasOwnProperty(typeName)) {
+        const fields = picks.objects[typeName];
 
         records.push(...fields.map(field => printResolveMiddlewareRecord(`${typeName}.${field}`)));
       }
@@ -227,12 +248,16 @@ export function buildModule(
       return coreType;
     }
 
-    if (defined.enums.includes(typeName) && definedEnumValues[typeName]) {
+    if (defined.enums.includes(typeName) && picks.enums[typeName]) {
       return `Pick<${coreType}, DefinedEnumValues['${typeName}']>`;
     }
 
-    if (defined.objects.includes(typeName) && definedObjectFields[typeName]) {
+    if (defined.objects.includes(typeName) && picks.objects[typeName]) {
       return `Pick<${coreType}, DefinedFields['${typeName}']>`;
+    }
+
+    if (defined.inputs.includes(typeName) && picks.inputs[typeName]) {
+      return `Pick<${coreType}, DefinedInputFields['${typeName}']>`;
     }
 
     return coreType;
@@ -254,12 +279,26 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.fields) {
-      if (!definedObjectFields[name]) {
-        definedObjectFields[name] = [];
+      if (!picks.objects[name]) {
+        picks.objects[name] = [];
       }
 
       node.fields.forEach(field => {
-        definedObjectFields[name].push(field.name.value);
+        picks.objects[name].push(field.name.value);
+      });
+    }
+  }
+
+  function collectFieldsFromInput(node: InputObjectTypeDefinitionNode | InputObjectTypeExtensionNode) {
+    const name = node.name.value;
+
+    if (node.fields) {
+      if (!picks.inputs[name]) {
+        picks.inputs[name] = [];
+      }
+
+      node.fields.forEach(field => {
+        picks.inputs[name].push(field.name.value);
       });
     }
   }
@@ -268,12 +307,12 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.values) {
-      if (!definedEnumValues[name]) {
-        definedEnumValues[name] = [];
+      if (!picks.enums[name]) {
+        picks.enums[name] = [];
       }
 
       node.values.forEach(field => {
-        definedEnumValues[name].push(field.name.value);
+        picks.enums[name].push(field.name.value);
       });
     }
   }
@@ -292,6 +331,11 @@ export function buildModule(
         defined.enums.push(name);
         collectValuesFromEnum(node);
         break;
+      }
+
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION: {
+        defined.inputs.push(name);
+        collectFieldsFromInput(node);
       }
     }
   }
@@ -313,10 +357,16 @@ export function buildModule(
 
         break;
       }
+
       case Kind.ENUM_TYPE_EXTENSION: {
         collectValuesFromEnum(node);
         pushUnique(extended.enums, name);
+        break;
+      }
 
+      case Kind.INPUT_OBJECT_TYPE_EXTENSION: {
+        collectFieldsFromInput(node);
+        pushUnique(extended.inputs, name);
         break;
       }
     }

@@ -11,6 +11,11 @@ const testDoc = parse(/* GraphQL */ `
     comments: [Comment!]
   }
 
+  input NewArticle {
+    title: String!
+    text: String!
+  }
+
   extend type User {
     articles: [Article!]
   }
@@ -39,7 +44,7 @@ test('should include import statement', () => {
   `);
 });
 
-test('should pick fields from defined and extended objects', () => {
+test('should pick fields from defined and extended types', () => {
   const output = buildModule(testDoc, {
     importPath: '../types',
     importNamespace: 'core',
@@ -52,17 +57,16 @@ test('should pick fields from defined and extended objects', () => {
       User: 'articles';
     };
   `);
-});
-
-test('should pick values from defined and extended enums', () => {
-  const output = buildModule(testDoc, {
-    importPath: '../types',
-    importNamespace: 'core',
-  });
 
   expect(output).toBeSimilarStringTo(`
     type DefinedEnumValues = {
       UserKind: 'ADMIN' | 'WRITER' | 'REGULAR';
+    };
+  `);
+
+  expect(output).toBeSimilarStringTo(`
+    type DefinedInputFields = {
+      NewArticle: 'title' | 'text';
     };
   `);
 });
@@ -95,6 +99,9 @@ test('should export partial types, only those defined in module or root types', 
   `);
   expect(output).toBeSimilarStringTo(`
     export type UserKind = Pick<core.UserKind, DefinedEnumValues['UserKind']>;
+  `);
+  expect(output).toBeSimilarStringTo(`
+    export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
   `);
 });
 
