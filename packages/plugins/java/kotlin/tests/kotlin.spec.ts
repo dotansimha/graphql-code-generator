@@ -235,7 +235,7 @@ describe('Kotlin', () => {
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class User(
-        val id: String,
+        val id: Any,
         val username: String,
         val email: String,
         val name: String?,
@@ -245,7 +245,7 @@ describe('Kotlin', () => {
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class Chat(
-        val id: String,
+        val id: Any,
         val users: Iterable<User>,
         val title: String?
       )`);
