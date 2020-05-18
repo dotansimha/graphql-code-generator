@@ -212,4 +212,43 @@ describe('Kotlin', () => {
         )`);
     });
   });
+
+  describe('Types', () => {
+    it('Should NOT generate type class per each type if withTypes is not specified', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      // language=kotlin
+      expect(result).not.toBeSimilarStringTo(`data class User(
+        val skip: Int? = null,
+        val limit: Int? = null
+      )`);
+
+      // language=kotlin
+      expect(result).not.toBeSimilarStringTo(`data class Chat(
+        val skip: Int? = null,
+        val limit: Int? = null
+      )`);
+    });
+
+    it('Should generate type class per each type if withTypes is true', async () => {
+      const result = await plugin(schema, [], { withTypes: true }, { outputFile: OUTPUT_FILE });
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`data class User(
+        val id: String,
+        val username: String,
+        val email: String,
+        val name: String?,
+        val friends: Iterable<User>,
+        val hobbies: Iterable<String>
+      )`);
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`data class Chat(
+        val id: String,
+        val users: Iterable<User>,
+        val title: String?
+      )`);
+    });
+  });
 });

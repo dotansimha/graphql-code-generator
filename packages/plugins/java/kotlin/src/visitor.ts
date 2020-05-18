@@ -18,6 +18,7 @@ import {
   InputValueDefinitionNode,
   isEnumType,
   isInputObjectType,
+  isObjectType,
   isScalarType,
   Kind,
   ObjectTypeDefinitionNode,
@@ -38,6 +39,12 @@ export interface KotlinResolverParsedConfig extends ParsedConfig {
   package: string;
   listType: string;
   enumValues: EnumValuesMap;
+  withTypes: boolean;
+}
+
+export interface FieldDefinitionReturnType {
+  inputTransformer?: ((typeName: string) => string) | FieldDefinitionNode;
+  node: FieldDefinitionNode;
 }
 
 export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRawConfig, KotlinResolverParsedConfig> {
@@ -45,6 +52,7 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'Iterable',
+      withTypes: rawConfig.withTypes || false,
       package: rawConfig.package || defaultPackageName,
       scalars: buildScalars(_schema, rawConfig.scalars, KOTLIN_SCALARS),
     });
@@ -130,7 +138,7 @@ ${enumValues}
         isArray,
         nullable: nullable,
       };
-    } else if (isEnumType(schemaType)) {
+    } else if (isEnumType(schemaType) || isObjectType(schemaType)) {
       result = {
         isArray,
         baseType: this.convertName(schemaType.name),
@@ -157,6 +165,24 @@ ${enumValues}
         const initial = initialValue ? ` = ${initialValue}` : typeToUse.nullable ? ' = null' : '';
 
         return indent(`val ${arg.name.value}: ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}${initial}`, 2);
+      })
+      .join(',\n');
+
+    // language=kotlin
+    return `data class ${name}(
+${classMembers}
+)`;
+  }
+
+  protected buildTypeTransfomer(name: string, typeValueArray: ReadonlyArray<FieldDefinitionNode>): string {
+    const classMembers = typeValueArray
+      .map(arg => {
+        if (!arg.type) {
+          return '';
+        }
+        const typeToUse = this.resolveInputFieldType(arg.type);
+
+        return indent(`val ${arg.name.value}: ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}`, 2);
       })
       .join(',\n');
 
@@ -194,19 +220,20 @@ ${classMembers}
     return undefined;
   }
 
-  FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {
-    return (typeName: string) => {
-      if (node.arguments.length > 0) {
+  FieldDefinition(node: FieldDefinitionNode): FieldDefinitionReturnType {
+    if (node.arguments.length > 0) {
+      const inputTransformer = (typeName: string) => {
         const transformerName = `${this.convertName(typeName, { useTypesPrefix: true })}${this.convertName(
           node.name.value,
           { useTypesPrefix: false }
         )}Args`;
 
         return this.buildInputTransfomer(transformerName, node.arguments);
-      }
+      };
 
-      return null;
-    };
+      return { node, inputTransformer };
+    }
+    return { node };
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
@@ -217,8 +244,24 @@ ${classMembers}
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const fieldsArguments = node.fields.map(f => (f as any)(node.name.value)).filter(r => r);
+    const name = this.convertName(node);
+    const fields = (node.fields as unknown) as FieldDefinitionReturnType[];
 
-    return fieldsArguments.join('\n');
+    const fieldNodes = [];
+    const argsTypes = [];
+    fields.forEach(({ node, inputTransformer }) => {
+      if (node) {
+        fieldNodes.push(node);
+      }
+      if (inputTransformer) {
+        argsTypes.push(inputTransformer);
+      }
+    });
+
+    let types = argsTypes.map(f => (f as any)(node.name.value)).filter(r => r);
+    if (this.config.withTypes) {
+      types = types.concat([this.buildTypeTransfomer(name, fieldNodes)]);
+    }
+    return types.join('\n');
   }
 }
