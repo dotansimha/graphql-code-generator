@@ -5,7 +5,7 @@ module.exports = {
   projectName: 'graphql-code-generator',
   organizationName: 'dotansimha',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   themeConfig: {
     googleAnalytics: {
       trackingID: 'UA-128969121-3',
