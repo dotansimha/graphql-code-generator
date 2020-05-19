@@ -14,6 +14,14 @@
   --ifm-code-font-size: 95%;
 }
 
+.admonition-shell {
+  --ra-admonition-background-color: rgb(41, 45, 62) !important;
+}
+
+.admonition a {
+  color: black;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

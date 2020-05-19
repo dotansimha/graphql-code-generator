@@ -54,4 +54,39 @@ fs.writeFile(path.join(__dirname, outputFile), output, () => {
 });
 ```
 
-> We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/live-demo/src/generate.ts).
+:::info
+We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/live-demo/src/generate.ts).
+:::
+
+:::tip Loading schema and documents
+You can use one of the tools from [`@graphql-toolkit`](https://github.com/ardatan/graphql-toolkit) for file loading, schema merging, transformations and more. 
+:::
+
+## Using the CLI instead of `core`
+
+If you with to have the benefits that `cli` package has (like loading schema and document files, parsing endpoints and more), you can use `require()` (or `import`) for `@graphql-codegen/cli` directly with Node.JS:
+
+```js
+import { generate } from '@graphql-codegen/cli';
+
+async function doSomething() {
+  const generatedFiles = await generate(
+    {
+      schema: 'http://127.0.0.1:3000/graphql',
+      documents: './src/**/*.graphql',
+      generates: {
+        [process.cwd() + '/models/types.d.ts']: {
+          plugins: ['typescript'],
+        },
+      },
+    },
+    true
+  );
+}
+```
+
+The return value should be of type `Promise<FileOutput[]>`.
+
+:::caution
+This usage will not work in a browser environment, because the `cli` package depends on NodeJS internals and file-system.
+::: 

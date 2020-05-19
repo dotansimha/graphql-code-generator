@@ -42,9 +42,13 @@ You can either run it in a separate terminal session, or use tools like [`concur
 }
 ```
 
-If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command:
+If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
 
-  graphql-codegen --watch "src/**/*.js"
+:::shell ""
+    $ yarn graphql-codegen --watch "src/**/*.js"
+
+Use this when you are loading your schema or documents from a single code file, that depends on other files internally, because codegen can't tell that you using those files automatically.   
+:::
 
 ### Monorepo and Yarn Workspaces
 
