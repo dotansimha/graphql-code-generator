@@ -15,7 +15,7 @@ import {
   collectUsedTypes,
   unique,
   withQuotes,
-  indent,
+  buildBlock,
   pushUnique,
   concatByKey,
   uniqueByKey,
@@ -117,43 +117,36 @@ export function buildModule(
    * A dictionary of fields to pick from an object
    */
   function printDefinedFields() {
-    const records = visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`);
-
-    return [
-      'type DefinedFields = {',
-      // Query: 'articles' | 'articleById' | 'articlesByUser';
-      // Article: 'id' | 'title' | 'text' | 'author';
-      ...records.map(indent(2)),
-      '};',
-    ].join('\n');
+    return buildBlock(
+      'type',
+      'DefinedFields',
+      visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`),
+      false
+    );
   }
 
   /**
    * A dictionary of values to pick from an enum
    */
   function printDefinedEnumValues() {
-    const records = visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`);
-
-    return [
-      'type DefinedEnumValues = {',
-      // Enum: 'kind' | 'kind' | 'kind';
-      ...records.map(indent(2)),
-      '};',
-    ].join('\n');
+    return buildBlock(
+      'type',
+      'DefinedEnumValues',
+      visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`),
+      false
+    );
   }
 
   /**
    * A dictionary of fields to pick from an input
    */
   function printDefinedInputFields() {
-    const records = visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`);
-
-    return [
-      'type DefinedInputFields = {',
-      // NewArticle: 'title' | 'text';
-      ...records.map(indent(2)),
-      '};',
-    ].join('\n');
+    return buildBlock(
+      'type',
+      'DefinedInputFields',
+      visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`),
+      false
+    );
   }
 
   /**
@@ -168,8 +161,16 @@ export function buildModule(
 
   function printResolveSignaturesPerType(registry: Registry) {
     return [
-      registry.objects.map(printResolverType('DefinedFields')).join('\n'),
-      registry.enums.map(printResolverType('DefinedEnumValues')).join('\n'),
+      registry.objects
+        .map(name =>
+          printResolverType(
+            name,
+            'DefinedFields',
+            !ROOT_TYPES.includes(name) && defined.objects.includes(name) ? ` | '__isTypeOf'` : ''
+          )
+        )
+        .join('\n'),
+      registry.enums.map(name => printResolverType(name, 'DefinedEnumValues')).join('\n'),
     ].join('\n');
   }
 
@@ -207,13 +208,7 @@ export function buildModule(
       }
     }
 
-    return [
-      'export type Resolvers = {',
-      ...records.map(indent(2)),
-      // Query: QueryResolvers;
-      // Article: ArticleResolvers;
-      '};',
-    ].join('\n');
+    return buildBlock('type', 'Resolvers', records);
   }
 
   /**
@@ -234,35 +229,19 @@ export function buildModule(
       }
     }
 
-    return [
-      'export interface ResolveMiddlewareMap {',
-      ...records.map(indent(2)),
-      // '*'?: ResolveMiddleware[];
-      // 'Article.*'?: ResolveMiddleware[];
-      // 'Article.user'?: ResolveMiddleware[];
-      '};',
-    ].join('\n');
+    return buildBlock('interface', 'ResolveMiddlewareMap', records);
   }
 
   function printResolveMiddlewareRecord(path: string): string {
     return `'${path}'?: gm.ResolveMiddleware[];`;
   }
 
-  function printResolverType(picksTypeName: string) {
-    return (typeName: string) => {
-      return `export type ${typeName}Resolvers = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']>;`;
-    };
+  function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {
+    return `export type ${typeName}Resolvers = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']${extraKeys}>;`;
   }
 
   function printPicks(typeName: string, records: Record<string, string[]>): string {
-    const fields = records[typeName].filter(unique);
-
-    // We want to expose isTypeOf only to a module that defined the type
-    if (!ROOT_TYPES.includes(typeName) && defined.objects.includes(typeName)) {
-      fields.push('isTypeOf');
-    }
-
-    return fields.map(withQuotes).join(' | ');
+    return records[typeName].filter(unique).map(withQuotes).join(' | ');
   }
 
   function printTypeBody(typeName: string): string {

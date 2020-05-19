@@ -60,7 +60,7 @@ test('should pick fields from defined and extended types', () => {
 
   expect(output).toBeSimilarStringTo(`
     type DefinedFields = {
-      Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'isTypeOf';
+      Article: 'id' | 'title' | 'text' | 'author' | 'comments';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
     };
@@ -142,7 +142,7 @@ test('should use and export resolver signatures of types defined or extended in 
   });
 
   expect(output).toBeSimilarStringTo(`
-    export type ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article']>;
+    export type ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
   `);
   expect(output).toBeSimilarStringTo(`
     export type QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
@@ -157,12 +157,12 @@ test('should use and export resolver signatures of types defined or extended in 
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
   `);
   // Interfaces should not have resolvers
-  // We want Object types to have isTypeOf
+  // We want Object types to have __isTypeOf
   expect(output).not.toBeSimilarStringTo(`
     export type NodeResolvers
   `);
   // Unions should not have resolvers
-  // We want Object types to have isTypeOf
+  // We want Object types to have __isTypeOf
   expect(output).not.toBeSimilarStringTo(`
     export type ArticleOrUserResolvers
   `);

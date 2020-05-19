@@ -120,6 +120,23 @@ export function indent(size: number) {
   return (val: string) => `${space}${val}`;
 }
 
+export function buildBlock(
+  kind: 'interface' | 'type',
+  name: string,
+  lines: string[],
+  exported = true
+): string {
+  if (!lines.length) {
+    return '';
+  }
+
+  return [
+    `${exported ? 'export ' : ''}${kind} ${name} ${kind === 'type' ? '= ' : ''}{`,
+    ...lines.map(indent(2)),
+    '};',
+  ].join('\n');
+}
+
 export function groupSourcesByModule(sources: Source[], basePath: string): Record<string, Source[]> {
   const grouped: Record<string, Source[]> = {};
 
