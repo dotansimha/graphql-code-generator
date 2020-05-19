@@ -70,4 +70,4 @@ export type Query = {
   posts?: Maybe<Array<Maybe<Post>>>,
 };
 ```
-UPDATE THIS 
+I THINK WE SHOULD UPDATE THIS 
