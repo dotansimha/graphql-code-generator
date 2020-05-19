@@ -85,12 +85,7 @@ module.exports = {
       // we may want to load it ASAP
       async: true,
       defer: true,
-    },
-    {
-      src: '/js/crisp.js',
-      async: true,
-      defer: true,
-    },
+    }
   ],
   presets: [
     [
