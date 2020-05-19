@@ -17,6 +17,8 @@ const testDoc = parse(/* GraphQL */ `
     id: ID!
   }
 
+  union ArticleOrUser = Article | User
+
   input NewArticle {
     title: String!
     text: String!
@@ -112,6 +114,9 @@ test('should export partial types, only those defined in module or root types', 
   expect(output).toBeSimilarStringTo(`
     export type Node = core.Node;
   `);
+  expect(output).toBeSimilarStringTo(`
+    export type ArticleOrUser = core.ArticleOrUser;
+  `);
 });
 
 test('should export partial types of scalars, only those defined in module or root types', () => {
@@ -155,6 +160,11 @@ test('should use and export resolver signatures of types defined or extended in 
   // We want Object types to have isTypeOf
   expect(output).not.toBeSimilarStringTo(`
     export type NodeResolvers
+  `);
+  // Unions should not have resolvers
+  // We want Object types to have isTypeOf
+  expect(output).not.toBeSimilarStringTo(`
+    export type ArticleOrUserResolvers
   `);
 });
 

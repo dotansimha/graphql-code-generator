@@ -27,12 +27,7 @@ import {
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
 type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
-const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars' | 'unions'>> = [
-  'scalars',
-  'objects',
-  'enums',
-  'unions',
-];
+const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>> = ['scalars', 'objects', 'enums'];
 
 // Unfortunately it's static... for now
 const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
@@ -76,12 +71,12 @@ export function buildModule(
     ScalarTypeDefinition(node) {
       collectTypeDefinition(node);
     },
-    // UnionTypeDefinition(node) {
-    //   collectTypeDefinition(node);
-    // },
-    // UnionTypeExtension(node) {
-    //   collectTypeExtension(node);
-    // },
+    UnionTypeDefinition(node) {
+      collectTypeDefinition(node);
+    },
+    UnionTypeExtension(node) {
+      collectTypeExtension(node);
+    },
     EnumTypeDefinition(node) {
       collectTypeDefinition(node);
     },
@@ -377,6 +372,11 @@ export function buildModule(
         defined.interfaces.push(name);
         break;
       }
+
+      case Kind.UNION_TYPE_DEFINITION: {
+        defined.unions.push(name);
+        break;
+      }
     }
   }
 
@@ -412,6 +412,11 @@ export function buildModule(
 
       case Kind.INTERFACE_TYPE_EXTENSION: {
         pushUnique(extended.interfaces, name);
+        break;
+      }
+
+      case Kind.UNION_TYPE_EXTENSION: {
+        pushUnique(extended.unions, name);
         break;
       }
     }
