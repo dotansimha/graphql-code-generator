@@ -1,38 +1,37 @@
 {
-    "name": "@graphql-codegen/named-operations-object",
-    "version": "1.13.5",
-    "description": "GraphQL Code Generator plugin for generating an enum with all loaded operations, for simpler and type-safe access",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/dotansimha/graphql-code-generator.git",
-      "directory": "packages/plugins/typescript/named-operations-object"
-    },
-    "license": "MIT",
-    "scripts": {
-      "lint": "eslint **/*.ts",
-      "test": "jest --no-watchman --config ../../../../jest.config.js",
-      "prepack": "bob prepack"
-    },
-    "peerDependencies": {
-      "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
-      "graphql-tag": "^2.0.0"
-    },
-    "dependencies": {
-      "@graphql-codegen/plugin-helpers": "1.13.5",
-      "change-case": "4.1.1",
-      "tslib": "~2.0.0"
-    },
-    "main": "dist/index.cjs.js",
-    "module": "dist/index.esm.js",
-    "typings": "dist/index.d.ts",
-    "typescript": {
-      "definition": "dist/index.d.ts"
-    },
-    "buildOptions": {
-      "input": "./src/index.ts"
-    },
-    "publishConfig": {
-      "access": "public"
-    }
+  "name": "@graphql-codegen/named-operations-object",
+  "version": "1.14.0",
+  "description": "GraphQL Code Generator plugin for generating an enum with all loaded operations, for simpler and type-safe access",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/named-operations-object"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
+    "graphql-tag": "^2.0.0"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.14.0",
+    "change-case": "4.1.1",
+    "tslib": "~2.0.0"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
-  
+}
