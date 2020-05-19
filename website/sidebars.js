@@ -2,6 +2,7 @@ module.exports = {
   sidebar: {
     'Getting Started': [
       'getting-started/index',
+      'getting-started/installation',
       {
         type: 'category',
         label: 'Config Reference',

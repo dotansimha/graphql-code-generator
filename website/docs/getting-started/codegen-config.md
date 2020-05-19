@@ -1,13 +1,21 @@
 ---
 id: codegen-config
-title: Codegen Options Config
+title: codegen.yml
 ---
 
 Having a config file fits well when we have a large amount of options to provide in order to generate some code. This can happen mostly in large scale projects where the GraphQL schema is pretty complex and we would like to generate a lot of different formats.
 
-To generate code from a config file, you can simply create a `codegen.yml` or `codegen.json` file and run `$ graphql-codegen`. The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
+To pass configuration to GraphQL Codegen, you need to simply create a `codegen.yml` or `codegen.json` file and run the codegen.
 
-    $ graphql-codegen --config ./path/to/config.yml
+The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
+
+:::shell With `yarn`
+    $ yarn graphql-codegen --config ./path/to/config.yml
+:::
+
+:::shell With `npm`
+    $ npx graphql-codegen --config ./path/to/config.yml
+:::
 
 Here's an example for a possible config file:
 
@@ -21,13 +29,13 @@ generates:
       - typescript-operations
 ```
 
-A very large config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
+An example for a very large config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
 ## Available Options
 
 Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L92)):
 
-- [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](./schema-field#available-formats).
+- [**`schema` (required)**](schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
 
 - [**`documents`**](./documents-field#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide this options with a string instead of an array, in case you're dealing with a single document. You can read more about the supported formats [here](./documents-field#available-formats).
 
