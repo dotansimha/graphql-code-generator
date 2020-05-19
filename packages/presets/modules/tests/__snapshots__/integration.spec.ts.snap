@@ -6,15 +6,14 @@ exports[`Integration dotanions module should export DefinedFields, Schema Types 
 import * as gm from \\"graphql-modules\\";
 
 type DefinedFields = {
-  Paypal: 'id' | 'url' | 'isTypeOf';
-  CreditCard: 'id' | 'cardNumber' | 'cardOwner' | 'isTypeOf';
-  Donation: 'id' | 'sender' | 'recipient' | 'amount' | 'isTypeOf';
+  Paypal: 'id' | 'url';
+  CreditCard: 'id' | 'cardNumber' | 'cardOwner';
+  Donation: 'id' | 'sender' | 'recipient' | 'amount';
   Mutation: 'donate';
   User: 'paymentOptions';
 };
 
-type DefinedEnumValues = {
-};
+
 
 type DefinedInputFields = {
   DonationInput: 'user' | 'amount' | 'paymentOption';
@@ -30,9 +29,9 @@ export type Mutation = Pick<Types.Mutation, DefinedFields['Mutation']>;
 
 
 
-export type PaypalResolvers = Pick<Types.PaypalResolvers, DefinedFields['Paypal']>;
-export type CreditCardResolvers = Pick<Types.CreditCardResolvers, DefinedFields['CreditCard']>;
-export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Donation']>;
+export type PaypalResolvers = Pick<Types.PaypalResolvers, DefinedFields['Paypal'] | '__isTypeOf'>;
+export type CreditCardResolvers = Pick<Types.CreditCardResolvers, DefinedFields['CreditCard'] | '__isTypeOf'>;
+export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Donation'] | '__isTypeOf'>;
 export type MutationResolvers = Pick<Types.MutationResolvers, DefinedFields['Mutation']>;
 export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
 
