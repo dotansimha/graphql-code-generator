@@ -54,7 +54,7 @@ test('should pick fields from defined and extended types', () => {
 
   expect(output).toBeSimilarStringTo(`
     type DefinedFields = {
-      Article: 'id' | 'title' | 'text' | 'author' | 'comments';
+      Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'isTypeOf';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
     };

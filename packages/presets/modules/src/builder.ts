@@ -260,7 +260,14 @@ export function buildModule(
   }
 
   function printPicks(typeName: string, records: Record<string, string[]>): string {
-    return records[typeName].filter(unique).map(withQuotes).join(' | ');
+    const fields = records[typeName].filter(unique);
+
+    // We want to expose isTypeOf only to a module that defined the type
+    if (!ROOT_TYPES.includes(typeName) && defined.objects.includes(typeName)) {
+      fields.push('isTypeOf');
+    }
+
+    return fields.map(withQuotes).join(' | ');
   }
 
   function printTypeBody(typeName: string): string {
@@ -365,6 +372,11 @@ export function buildModule(
         defined.scalars.push(name);
         break;
       }
+
+      // case Kind.INTERFACE_TYPE_DEFINITION: {
+      //   defined.interfaces.push(name);
+      //   break;
+      // }
     }
   }
 
@@ -397,6 +409,11 @@ export function buildModule(
         pushUnique(extended.inputs, name);
         break;
       }
+
+      // case Kind.INTERFACE_TYPE_EXTENSION: {
+      //   pushUnique(extended.interfaces, name);
+      //   break;
+      // }
     }
   }
 }
