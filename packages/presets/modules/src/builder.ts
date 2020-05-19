@@ -28,9 +28,9 @@ type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' |
 type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars' | 'unions'>> = [
+  'scalars',
   'objects',
   'enums',
-  'scalars',
   'unions',
 ];
 
@@ -73,9 +73,9 @@ export function buildModule(
     // InterfaceTypeExtension(node) {
     //   collectTypeExtension(node);
     // },
-    // ScalarTypeDefinition(node) {
-    //   collectTypeDefinition(node);
-    // },
+    ScalarTypeDefinition(node) {
+      collectTypeDefinition(node);
+    },
     // UnionTypeDefinition(node) {
     //   collectTypeDefinition(node);
     // },
@@ -112,6 +112,7 @@ export function buildModule(
     printDefinedEnumValues(),
     printDefinedInputFields(),
     printSchemaTypes(usedTypes),
+    printScalars(visited),
     printResolveSignaturesPerType(visited),
     printResolversType(visited),
     printResolveMiddlewareMap(visited.objects),
@@ -164,13 +165,29 @@ export function buildModule(
    * Prints signatures of schema types with picks
    */
   function printSchemaTypes(types: string[]) {
-    return types.map(printExportType).join('\n');
+    return types
+      .filter(type => !visited.scalars.includes(type))
+      .map(printExportType)
+      .join('\n');
   }
 
   function printResolveSignaturesPerType(registry: Registry) {
     return [
       registry.objects.map(printResolverType('DefinedFields')).join('\n'),
       registry.enums.map(printResolverType('DefinedEnumValues')).join('\n'),
+    ].join('\n');
+  }
+
+  function printScalars(registry: Registry) {
+    if (!registry.scalars.length) {
+      return '';
+    }
+
+    return [
+      `export type Scalars = Pick<${importNamespace}.Scalars, ${registry.scalars.map(withQuotes).join(' | ')}>;`,
+      ...registry.scalars.map(
+        scalar => `export type ${scalar}ScalarConfig = ${importNamespace}.${scalar}ScalarConfig;`
+      ),
     ].join('\n');
   }
 
@@ -181,11 +198,16 @@ export function buildModule(
     const records: string[] = [];
 
     for (const kind in registry) {
-      if (registry.hasOwnProperty(kind) && resolverKeys.includes(kind as any)) {
-        const types = registry[kind as RegistryKeys];
+      const k = kind as RegistryKeys;
+      if (registry.hasOwnProperty(k) && resolverKeys.includes(k as any)) {
+        const types = registry[k];
 
         types.forEach(typeName => {
-          records.push(`${typeName}: ${typeName}Resolvers;`);
+          if (k === 'scalars') {
+            records.push(`${typeName}?: ${importNamespace}.Resolvers['${typeName}'];`);
+          } else {
+            records.push(`${typeName}?: ${typeName}Resolvers;`);
+          }
         });
       }
     }
@@ -336,6 +358,12 @@ export function buildModule(
       case Kind.INPUT_OBJECT_TYPE_DEFINITION: {
         defined.inputs.push(name);
         collectFieldsFromInput(node);
+        break;
+      }
+
+      case Kind.SCALAR_TYPE_DEFINITION: {
+        defined.scalars.push(name);
+        break;
       }
     }
   }

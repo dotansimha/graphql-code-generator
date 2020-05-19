@@ -3,6 +3,8 @@ import { parse } from 'graphql';
 import { buildModule } from '../src/builder';
 
 const testDoc = parse(/* GraphQL */ `
+  scalar DateTime
+
   type Article {
     id: ID!
     title: String!
@@ -105,6 +107,22 @@ test('should export partial types, only those defined in module or root types', 
   `);
 });
 
+test('should export partial types of scalars, only those defined in module or root types', () => {
+  const output = buildModule(testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+  });
+
+  expect(output).toBeSimilarStringTo(`
+    export type Scalars = Pick<core.Scalars, 'DateTime'>;
+  `);
+
+  // DateTime type should not be generated
+  expect(output).not.toBeSimilarStringTo(`
+    export type DateTime =
+  `);
+});
+
 test('should use and export resolver signatures of types defined or extended in a module', () => {
   const output = buildModule(testDoc, {
     importPath: '../types',
@@ -122,6 +140,9 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
   expect(output).toBeSimilarStringTo(`
     export type UserKindResolvers = Pick<core.UserKindResolvers, DefinedEnumValues['UserKind']>;
+  `);
+  expect(output).toBeSimilarStringTo(`
+    export type DateTimeScalarConfig = core.DateTimeScalarConfig;
   `);
 });
 
@@ -142,10 +163,11 @@ test('should generate an aggregation of individual resolver signatures', () => {
 
   expect(output).toBeSimilarStringTo(`
     export type Resolvers = {
-      Article: ArticleResolvers;
-      Query: QueryResolvers;
-      User: UserResolvers;
-      UserKind: UserKindResolvers;
+      Article?: ArticleResolvers;
+      Query?: QueryResolvers;
+      User?: UserResolvers;
+      DateTime?: core.Resolvers['DateTime'];
+      UserKind?: UserKindResolvers;
     };
   `);
 });
