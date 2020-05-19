@@ -13,6 +13,7 @@ const mapping = {
   '../packages/plugins/c-sharp/c-sharp-operations/src/config.ts': BASE_DIR + '/c-sharp-operations.md',
   '../packages/plugins/other/schema-ast/src/index.ts': BASE_DIR + '/schema-ast.md',
   '../packages/plugins/other/time/src/index.ts': BASE_DIR + '/time.md',
+  '../packages/plugins/typescript/graphql-files-modules/src/index.ts': BASE_DIR + '/graphql-files-modules.md',
   '../packages/plugins/typescript/named-operations-object/src/index.ts': BASE_DIR + '/named-operations-object.md',
   '../packages/plugins/typescript/graphql-request/src/config.ts': BASE_DIR + '/typescript-graphql-request.md',
   '../packages/plugins/typescript/typescript/src/config.ts': BASE_DIR + '/typescript.md',
