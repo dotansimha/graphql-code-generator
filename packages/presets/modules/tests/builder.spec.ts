@@ -13,6 +13,10 @@ const testDoc = parse(/* GraphQL */ `
     comments: [Comment!]
   }
 
+  interface Node {
+    id: ID!
+  }
+
   input NewArticle {
     title: String!
     text: String!
@@ -105,6 +109,9 @@ test('should export partial types, only those defined in module or root types', 
   expect(output).toBeSimilarStringTo(`
     export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
   `);
+  expect(output).toBeSimilarStringTo(`
+    export type Node = core.Node;
+  `);
 });
 
 test('should export partial types of scalars, only those defined in module or root types', () => {
@@ -143,6 +150,11 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
   expect(output).toBeSimilarStringTo(`
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
+  `);
+  // Interfaces should not have resolvers
+  // We want Object types to have isTypeOf
+  expect(output).not.toBeSimilarStringTo(`
+    export type NodeResolvers
   `);
 });
 

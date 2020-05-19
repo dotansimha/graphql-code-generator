@@ -67,12 +67,12 @@ export function buildModule(
     InputObjectTypeExtension(node) {
       collectTypeExtension(node);
     },
-    // InterfaceTypeDefinition(node) {
-    //   collectTypeDefinition(node);
-    // },
-    // InterfaceTypeExtension(node) {
-    //   collectTypeExtension(node);
-    // },
+    InterfaceTypeDefinition(node) {
+      collectTypeDefinition(node);
+    },
+    InterfaceTypeExtension(node) {
+      collectTypeExtension(node);
+    },
     ScalarTypeDefinition(node) {
       collectTypeDefinition(node);
     },
@@ -373,10 +373,10 @@ export function buildModule(
         break;
       }
 
-      // case Kind.INTERFACE_TYPE_DEFINITION: {
-      //   defined.interfaces.push(name);
-      //   break;
-      // }
+      case Kind.INTERFACE_TYPE_DEFINITION: {
+        defined.interfaces.push(name);
+        break;
+      }
     }
   }
 
@@ -410,10 +410,10 @@ export function buildModule(
         break;
       }
 
-      // case Kind.INTERFACE_TYPE_EXTENSION: {
-      //   pushUnique(extended.interfaces, name);
-      //   break;
-      // }
+      case Kind.INTERFACE_TYPE_EXTENSION: {
+        pushUnique(extended.interfaces, name);
+        break;
+      }
     }
   }
 }
