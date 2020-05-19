@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/modules-preset",
-  "version": "1.13.5",
+  "version": "1.14.0",
   "description": "GraphQL Code Generator preset for modularized schema",
   "repository": {
     "type": "git",
@@ -9,17 +9,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../jest.config.js",
     "prepack": "bob prepack"
   },
   "devDependencies": {
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "1.13.5",
-    "@graphql-codegen/plugin-helpers": "1.13.5",
-    "@graphql-codegen/visitor-plugin-common": "1.13.5",
+    "@graphql-codegen/add": "1.14.0",
+    "@graphql-codegen/plugin-helpers": "1.14.0",
+    "@graphql-codegen/visitor-plugin-common": "1.14.0",
     "parse-filepath": "1.0.2",
     "tslib": "~2.0.0"
   },
