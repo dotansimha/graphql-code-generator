@@ -59,7 +59,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     NonNullType: {
       leave(node, _, parent) {
         if (parent === undefined) {
-          return;
+          return node;
         }
 
         return node.type;
