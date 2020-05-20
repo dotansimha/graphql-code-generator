@@ -2,17 +2,17 @@ import * as Types from '../types';
 
 import * as gm from 'graphql-modules';
 
-type DefinedFields = {
+interface DefinedFields {
   Paypal: 'id' | 'url';
   CreditCard: 'id' | 'cardNumber' | 'cardOwner';
   Donation: 'id' | 'sender' | 'recipient' | 'amount';
   Mutation: 'donate';
   User: 'paymentOptions';
-};
+}
 
-type DefinedInputFields = {
+interface DefinedInputFields {
   DonationInput: 'user' | 'amount' | 'paymentOption';
-};
+}
 
 export type Paypal = Pick<Types.Paypal, DefinedFields['Paypal']>;
 export type CreditCard = Pick<Types.CreditCard, DefinedFields['CreditCard']>;
@@ -28,30 +28,42 @@ export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Don
 export type MutationResolvers = Pick<Types.MutationResolvers, DefinedFields['Mutation']>;
 export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
 
-export type Resolvers = {
+export interface Resolvers {
   Paypal?: PaypalResolvers;
   CreditCard?: CreditCardResolvers;
   Donation?: DonationResolvers;
   Mutation?: MutationResolvers;
   User?: UserResolvers;
-};
+}
 
 export interface ResolveMiddlewareMap {
-  '*'?: gm.ResolveMiddleware[];
-  'Paypal.*'?: gm.ResolveMiddleware[];
-  'CreditCard.*'?: gm.ResolveMiddleware[];
-  'Donation.*'?: gm.ResolveMiddleware[];
-  'Mutation.*'?: gm.ResolveMiddleware[];
-  'User.*'?: gm.ResolveMiddleware[];
-  'Paypal.id'?: gm.ResolveMiddleware[];
-  'Paypal.url'?: gm.ResolveMiddleware[];
-  'CreditCard.id'?: gm.ResolveMiddleware[];
-  'CreditCard.cardNumber'?: gm.ResolveMiddleware[];
-  'CreditCard.cardOwner'?: gm.ResolveMiddleware[];
-  'User.paymentOptions'?: gm.ResolveMiddleware[];
-  'Donation.id'?: gm.ResolveMiddleware[];
-  'Donation.sender'?: gm.ResolveMiddleware[];
-  'Donation.recipient'?: gm.ResolveMiddleware[];
-  'Donation.amount'?: gm.ResolveMiddleware[];
-  'Mutation.donate'?: gm.ResolveMiddleware[];
+  '*'?: {
+    '*'?: gm.ResolveMiddleware[];
+  };
+  Paypal?: {
+    '*'?: gm.ResolveMiddleware[];
+    id?: gm.ResolveMiddleware[];
+    url?: gm.ResolveMiddleware[];
+  };
+  CreditCard?: {
+    '*'?: gm.ResolveMiddleware[];
+    id?: gm.ResolveMiddleware[];
+    cardNumber?: gm.ResolveMiddleware[];
+    cardOwner?: gm.ResolveMiddleware[];
+  };
+  User?: {
+    '*'?: gm.ResolveMiddleware[];
+    paymentOptions?: gm.ResolveMiddleware[];
+  };
+  Donation?: {
+    '*'?: gm.ResolveMiddleware[];
+    id?: gm.ResolveMiddleware[];
+    sender?: gm.ResolveMiddleware[];
+    recipient?: gm.ResolveMiddleware[];
+    amount?: gm.ResolveMiddleware[];
+  };
+  Mutation?: {
+    '*'?: gm.ResolveMiddleware[];
+    donate?: gm.ResolveMiddleware[];
+  };
 }
