@@ -29,7 +29,7 @@ type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>> = ['scalars', 'objects', 'enums'];
 
-// Unfortunately it's static... for now
+// TODO: Unfortunately it's static... for now
 const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
 
 export function buildModule(
