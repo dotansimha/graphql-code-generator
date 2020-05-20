@@ -59,7 +59,7 @@ describe('Integration', () => {
 
   test('each module-types should export Resolvers', async () => {
     const output = await executeCodegen(options);
-    const exportStatemment = `export type Resolvers = `;
+    const exportStatemment = `export interface Resolvers `;
 
     expect(output.length).toBe(5);
     expect(output[1].content).toMatch(exportStatemment);

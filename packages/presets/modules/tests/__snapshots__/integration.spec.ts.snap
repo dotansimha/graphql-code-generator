@@ -5,7 +5,7 @@ exports[`Integration dotanions module should export DefinedFields, Schema Types 
 
 import * as gm from \\"graphql-modules\\";
 
-type DefinedFields = {
+interface DefinedFields {
   Paypal: 'id' | 'url';
   CreditCard: 'id' | 'cardNumber' | 'cardOwner';
   Donation: 'id' | 'sender' | 'recipient' | 'amount';
@@ -15,7 +15,7 @@ type DefinedFields = {
 
 
 
-type DefinedInputFields = {
+interface DefinedInputFields {
   DonationInput: 'user' | 'amount' | 'paymentOption';
 };
 
@@ -36,7 +36,7 @@ export type MutationResolvers = Pick<Types.MutationResolvers, DefinedFields['Mut
 export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
 
 
-export type Resolvers = {
+export interface Resolvers {
   Paypal?: PaypalResolvers;
   CreditCard?: CreditCardResolvers;
   Donation?: DonationResolvers;

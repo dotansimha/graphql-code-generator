@@ -117,24 +117,22 @@ export function withQuotes(val: string): string {
 export function indent(size: number) {
   const space = new Array(size).fill(' ').join('');
 
-  return (val: string) => `${space}${val}`;
+  function indentInner(val: string): string {
+    return val
+      .split('\n')
+      .map(line => `${space}${line}`)
+      .join('\n');
+  }
+
+  return indentInner;
 }
 
-export function buildBlock(
-  kind: 'interface' | 'type',
-  name: string,
-  lines: string[],
-  exported = true
-): string {
+export function buildBlock({ name, lines }: { name: string; lines: string[] }): string {
   if (!lines.length) {
     return '';
   }
 
-  return [
-    `${exported ? 'export ' : ''}${kind} ${name} ${kind === 'type' ? '= ' : ''}{`,
-    ...lines.map(indent(2)),
-    '};',
-  ].join('\n');
+  return [`${name} {`, ...lines.map(indent(2)), '};'].join('\n');
 }
 
 export function groupSourcesByModule(sources: Source[], basePath: string): Record<string, Source[]> {

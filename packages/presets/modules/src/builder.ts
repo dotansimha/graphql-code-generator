@@ -12,7 +12,6 @@ import {
   InputObjectTypeExtensionNode,
 } from 'graphql';
 import {
-  collectUsedTypes,
   unique,
   withQuotes,
   buildBlock,
@@ -20,6 +19,7 @@ import {
   concatByKey,
   uniqueByKey,
   createObject,
+  collectUsedTypes,
 } from './utils';
 
 // TODO: consider options of other plugins (naming convention etc)
@@ -110,43 +110,37 @@ export function buildModule(
     printScalars(visited),
     printResolveSignaturesPerType(visited),
     printResolversType(visited),
-    printResolveMiddlewareMap(visited.objects),
+    printResolveMiddlewareMap(),
   ].join('\n\n');
 
   /**
    * A dictionary of fields to pick from an object
    */
   function printDefinedFields() {
-    return buildBlock(
-      'type',
-      'DefinedFields',
-      visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`),
-      false
-    );
+    return buildBlock({
+      name: 'interface DefinedFields',
+      lines: visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`),
+    });
   }
 
   /**
    * A dictionary of values to pick from an enum
    */
   function printDefinedEnumValues() {
-    return buildBlock(
-      'type',
-      'DefinedEnumValues',
-      visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`),
-      false
-    );
+    return buildBlock({
+      name: 'interface DefinedEnumValues',
+      lines: visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`),
+    });
   }
 
   /**
    * A dictionary of fields to pick from an input
    */
   function printDefinedInputFields() {
-    return buildBlock(
-      'type',
-      'DefinedInputFields',
-      visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`),
-      false
-    );
+    return buildBlock({
+      name: 'interface DefinedInputFields',
+      lines: visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`),
+    });
   }
 
   /**
@@ -191,7 +185,7 @@ export function buildModule(
    * Aggregation of type resolver signatures
    */
   function printResolversType(registry: Registry) {
-    const records: string[] = [];
+    const lines: string[] = [];
 
     for (const kind in registry) {
       const k = kind as RegistryKeys;
@@ -200,40 +194,50 @@ export function buildModule(
 
         types.forEach(typeName => {
           if (k === 'scalars') {
-            records.push(`${typeName}?: ${importNamespace}.Resolvers['${typeName}'];`);
+            lines.push(`${typeName}?: ${importNamespace}.Resolvers['${typeName}'];`);
           } else {
-            records.push(`${typeName}?: ${typeName}Resolvers;`);
+            lines.push(`${typeName}?: ${typeName}Resolvers;`);
           }
         });
       }
     }
 
-    return buildBlock('type', 'Resolvers', records);
+    return buildBlock({
+      name: 'export interface Resolvers',
+      lines,
+    });
   }
 
   /**
    * Signature for a map of resolve middlewares
    */
-  function printResolveMiddlewareMap(types: string[]) {
-    const records: string[] = [printResolveMiddlewareRecord('*')];
-
-    // Type.*
-    records.push(...types.map(type => printResolveMiddlewareRecord(`${type}.*`)));
+  function printResolveMiddlewareMap() {
+    const wildcardField = printResolveMiddlewareRecord(withQuotes('*'));
+    const blocks: string[] = [buildBlock({ name: `${withQuotes('*')}?:`, lines: [wildcardField] })];
 
     // Type.Field
     for (const typeName in picks.objects) {
       if (picks.objects.hasOwnProperty(typeName)) {
         const fields = picks.objects[typeName];
+        const lines = [wildcardField].concat(fields.map(field => printResolveMiddlewareRecord(field)));
 
-        records.push(...fields.map(field => printResolveMiddlewareRecord(`${typeName}.${field}`)));
+        blocks.push(
+          buildBlock({
+            name: `${typeName}?:`,
+            lines,
+          })
+        );
       }
     }
 
-    return buildBlock('interface', 'ResolveMiddlewareMap', records);
+    return buildBlock({
+      name: 'export interface ResolveMiddlewareMap',
+      lines: blocks,
+    });
   }
 
   function printResolveMiddlewareRecord(path: string): string {
-    return `'${path}'?: gm.ResolveMiddleware[];`;
+    return `${path}?: gm.ResolveMiddleware[];`;
   }
 
   function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {

@@ -59,7 +59,7 @@ test('should pick fields from defined and extended types', () => {
   });
 
   expect(output).toBeSimilarStringTo(`
-    type DefinedFields = {
+    interface DefinedFields {
       Article: 'id' | 'title' | 'text' | 'author' | 'comments';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
@@ -67,13 +67,13 @@ test('should pick fields from defined and extended types', () => {
   `);
 
   expect(output).toBeSimilarStringTo(`
-    type DefinedEnumValues = {
+    interface DefinedEnumValues {
       UserKind: 'ADMIN' | 'WRITER' | 'REGULAR';
     };
   `);
 
   expect(output).toBeSimilarStringTo(`
-    type DefinedInputFields = {
+    interface DefinedInputFields {
       NewArticle: 'title' | 'text';
     };
   `);
@@ -184,7 +184,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
   });
 
   expect(output).toBeSimilarStringTo(`
-    export type Resolvers = {
+    export interface Resolvers {
       Article?: ArticleResolvers;
       Query?: QueryResolvers;
       User?: UserResolvers;
@@ -204,19 +204,27 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
 
   expect(output).toBeSimilarStringTo(`
     export interface ResolveMiddlewareMap {
-      '*'?: gm.ResolveMiddleware[];
-      'Article.*'?: gm.ResolveMiddleware[];
-      'Query.*'?: gm.ResolveMiddleware[];
-      'User.*'?: gm.ResolveMiddleware[];
-      'Article.id'?: gm.ResolveMiddleware[];
-      'Article.title'?: gm.ResolveMiddleware[];
-      'Article.text'?: gm.ResolveMiddleware[];
-      'Article.author'?: gm.ResolveMiddleware[];
-      'Article.comments'?: gm.ResolveMiddleware[];
-      'User.articles'?: gm.ResolveMiddleware[];
-      'Query.articles'?: gm.ResolveMiddleware[];
-      'Query.articleById'?: gm.ResolveMiddleware[];
-      'Query.articlesByUser'?: gm.ResolveMiddleware[];
+      '*'?: {
+        '*'?: gm.ResolveMiddleware[];
+      };
+      Article?: {
+        '*'?: gm.ResolveMiddleware[];
+        id?: gm.ResolveMiddleware[];
+        title?: gm.ResolveMiddleware[];
+        text?: gm.ResolveMiddleware[];
+        author?: gm.ResolveMiddleware[];
+        comments?: gm.ResolveMiddleware[];
+      };
+      User?: {
+        '*'?: gm.ResolveMiddleware[];
+        articles?: gm.ResolveMiddleware[];
+      };
+      Query?: {
+        '*'?: gm.ResolveMiddleware[];
+        articles?: gm.ResolveMiddleware[];
+        articleById?: gm.ResolveMiddleware[];
+        articlesByUser?: gm.ResolveMiddleware[];
+      };
     };
   `);
 });
