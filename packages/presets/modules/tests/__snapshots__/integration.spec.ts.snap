@@ -13,8 +13,6 @@ interface DefinedFields {
   User: 'paymentOptions';
 };
 
-
-
 interface DefinedInputFields {
   DonationInput: 'user' | 'amount' | 'paymentOption';
 };
@@ -26,8 +24,6 @@ export type User = Types.User;
 export type Donation = Pick<Types.Donation, DefinedFields['Donation']>;
 export type DonationInput = Pick<Types.DonationInput, DefinedInputFields['DonationInput']>;
 export type Mutation = Pick<Types.Mutation, DefinedFields['Mutation']>;
-
-
 
 export type PaypalResolvers = Pick<Types.PaypalResolvers, DefinedFields['Paypal'] | '__isTypeOf'>;
 export type CreditCardResolvers = Pick<Types.CreditCardResolvers, DefinedFields['CreditCard'] | '__isTypeOf'>;

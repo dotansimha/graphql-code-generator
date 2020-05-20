@@ -111,7 +111,9 @@ export function buildModule(
     printResolveSignaturesPerType(visited),
     printResolversType(visited),
     printResolveMiddlewareMap(),
-  ].join('\n\n');
+  ]
+    .filter(Boolean)
+    .join('\n\n');
 
   /**
    * A dictionary of fields to pick from an object
