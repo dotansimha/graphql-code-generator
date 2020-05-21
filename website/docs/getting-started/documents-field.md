@@ -50,7 +50,7 @@ schema: http://server1.com/graphql
 documents: "src/**/*.{ts,tsx}"
 ```
 
-## Available formats
+## Available Formats
 
 The following can be specified as a single value or as an array with mixed values.
 
@@ -113,7 +113,7 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig`.
+> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig` (see below).
 
 - ### String
 
@@ -123,6 +123,66 @@ You can specify your GraphQL documents directly as an AST string in your config 
 documents:
   - 'query { f1 }'
   - 'query { f2 }'
+```
+
+## GraphQL Tag Pluck
+
+GraphQL Code Generator uses `graphql-tag-pluck` internally to extract GraphQL documents from your code file.
+
+If you are pointing to a code file (such as `.js` or `.jsx`), GraphQL will try to look for usages of `gql` tag, or string literals that are using magic GraphQL comment (`/* GraphQL */`), for example:
+
+
+```jsx
+import React from 'react';
+import { gql } from 'graphql-tag';
+
+// This will work
+const MY_QUERY = gql`
+  query myQuery {
+    getSomething {
+      id
+    }
+  }
+`;
+
+// This will also work
+const MY_QUERY = /* GraphQL */`
+  query myQuery {
+    getSomething {
+      id
+    }
+  }
+`;
+
+// ... some components code ...
+```
+
+By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-toolkit/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L13)
+
+You can add custom tags if you need, by using `pluckConfig` on the root level on your config file:
+
+```yaml
+pluckConfig:
+  modules:
+    - name: my-custom-module
+      identifier: gql
+```
+
+You can also customize globally used identifiers, like that:
+
+```yaml
+pluckConfig:
+  globalGqlIdentifierName:
+    - gql
+    - graphql
+    - myCustomGlobalGqlTag
+```
+
+And you can customize the magic GraphQL commend by doing:
+
+```yaml
+pluckConfig:
+  gqlMagicComment: customcomment
 ```
 
 ## Custom Document Loader

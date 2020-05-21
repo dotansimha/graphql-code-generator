@@ -515,7 +515,7 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type Impl1 = {|
         ...Some_Interface,
         ...{|
-           __typename?: 'Impl1',
+          __typename?: 'Impl1',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
@@ -523,7 +523,7 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type Impl_2 = {|
         ...Some_Interface,
         ...{|
-           __typename?: 'Impl_2',
+          __typename?: 'Impl_2',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
@@ -531,13 +531,13 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type Impl_3 = {|
         ...Some_Interface,
         ...{|
-           __typename?: 'impl_3',
+          __typename?: 'impl_3',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
 
       expect(result.content).toBeSimilarStringTo(`export type Query = {|
-        __typename?: 'Query',
+       __typename?: 'Query',
        something?: ?MyUnion,
        use_interface?: ?Some_Interface,
      |};`);
@@ -580,7 +580,7 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type IImpl1 = {|
         ...ISome_Interface,
         ...{|
-           __typename?: 'Impl1',
+          __typename?: 'Impl1',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
@@ -588,7 +588,7 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type IImpl_2 = {|
         ...ISome_Interface,
         ...{|
-           __typename?: 'Impl_2',
+          __typename?: 'Impl_2',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
@@ -596,13 +596,13 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type IImpl_3 = {|
         ...ISome_Interface,
         ...{|
-           __typename?: 'impl_3',
+          __typename?: 'impl_3',
           id: $ElementType<Scalars, 'ID'>,
         |}
       |};`);
 
       expect(result.content).toBeSimilarStringTo(`export type IQuery = {|
-        __typename?: 'Query',
+       __typename?: 'Query',
        something?: ?IMyUnion,
        use_interface?: ?ISome_Interface,
      |};`);

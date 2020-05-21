@@ -30,3 +30,19 @@ path/to/file.ts:
  config:
    apolloClientVersion: 3
 ```
+
+### useExplicitTyping (`boolean`, default value: `false`)
+
+Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - fragment-matcher
+ config:
+   useExplicitTyping: true
+```

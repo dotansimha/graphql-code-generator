@@ -335,7 +335,7 @@ export class BaseTypesVisitor<
       ...(this.config.addTypename
         ? [
             indent(
-              `${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(
+              `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'${this.getPunctuation(
                 type
               )}`
             ),

@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/typescript-resolvers",
+  "name": "@graphql-codegen/named-operations-object",
   "version": "1.14.0",
-  "description": "GraphQL Code Generator plugin for generating TypeScript types for resolvers signature",
+  "description": "GraphQL Code Generator plugin for generating an enum with all loaded operations, for simpler and type-safe access",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/typescript/resolvers"
+    "directory": "packages/plugins/typescript/named-operations-object"
   },
   "license": "MIT",
   "scripts": {
@@ -13,19 +13,14 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js",
     "prepack": "bob prepack"
   },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
+    "graphql-tag": "^2.0.0"
+  },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.14.0",
-    "@graphql-codegen/typescript": "1.14.0",
-    "@graphql-codegen/visitor-plugin-common": "1.14.0",
-    "@graphql-tools/utils": "6.0.0",
-    "auto-bind": "~4.0.0",
+    "change-case": "4.1.1",
     "tslib": "~2.0.0"
-  },
-  "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
-  },
-  "devDependencies": {
-    "graphql-subscriptions": "1.1.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

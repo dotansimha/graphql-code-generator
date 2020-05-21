@@ -2,6 +2,7 @@ module.exports = {
   sidebar: {
     'Getting Started': [
       'getting-started/index',
+      'getting-started/installation',
       {
         type: 'category',
         label: 'Config Reference',
@@ -37,6 +38,7 @@ module.exports = {
           'plugins/typescript-stencil-apollo',
           'plugins/typescript-urql',
           'plugins/typescript-graphql-request',
+          'plugins/named-operations-object'
         ],
       },
       {

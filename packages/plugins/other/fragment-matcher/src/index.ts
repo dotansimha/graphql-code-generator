@@ -58,6 +58,23 @@ export interface FragmentMatcherConfig {
    * ```
    */
   apolloClientVersion?: 2 | 3;
+  /**
+   * @name useExplicitTyping
+   * @type boolean
+   * @description Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - fragment-matcher
+   *  config:
+   *    useExplicitTyping: true
+   * ```
+   */
+  useExplicitTyping?: boolean;
   federation?: boolean;
 }
 
@@ -77,11 +94,13 @@ export const plugin: PluginFunction = async (
     module: 'es2015',
     federation: false,
     apolloClientVersion: 2,
+    useExplicitTyping: false,
     ...pluginConfig,
   };
 
   const apolloClientVersion = parseInt(config.apolloClientVersion as any);
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
+  const useExplicitTyping = config.useExplicitTyping;
 
   const introspection = await execute({
     schema: cleanSchema,
@@ -139,9 +158,18 @@ export const plugin: PluginFunction = async (
   }
 
   if (extensions.ts.includes(ext)) {
+    let typename: string;
     if (apolloClientVersion === 2) {
-      return `
-      export interface IntrospectionResultData {
+      typename = `IntrospectionResultData`;
+    } else if (apolloClientVersion === 3) {
+      typename = `PossibleTypesResultData`;
+    }
+
+    let type: string;
+    if (useExplicitTyping) {
+      type = `export type ${typename} = ${content};`;
+    } else if (apolloClientVersion === 2) {
+      type = `export interface ${typename} {
         __schema: {
           types: {
             kind: string;
@@ -151,23 +179,20 @@ export const plugin: PluginFunction = async (
             }[];
           }[];
         };
-      }
-      const result: IntrospectionResultData = ${content};
-      export default result;
-    `;
+      }`;
     } else if (apolloClientVersion === 3) {
-      return `
-      export interface PossibleTypesResultData {
+      type = `export interface ${typename} {
         possibleTypes: {
           [key: string]: string[]
         }
-      }
+      }`;
+    }
 
-      const result: PossibleTypesResultData = ${content};
-
+    return `
+      ${type}
+      const result: ${typename} = ${content};
       export default result;
     `;
-    }
   }
 
   throw new Error(`Extension ${ext} is not supported`);

@@ -61,6 +61,23 @@ path/to/file.ts:
    enumsAsTypes: true
 ```
 
+### futureProofEnums (`boolean`, default value: `false`)
+
+This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option. This is useful if you are using `relay`.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   enumsAsTypes: true
+   futureProofEnums: true
+```
+
 ### enumsAsConst (`boolean`, default value: `false`)
 
 Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
@@ -77,12 +94,12 @@ path/to/file.ts:
    enumsAsConst: true
 ```
 
-### fieldWrapperValue (`string`, default value: `T | Promise | (() = T | Promise)`)
+### onlyOperationTypes (`boolean`, default value: `false`)
 
-Allow to override the type value of `FieldWrapper`.
+This will cause the generator to emit types for operations only (basically only enums and scalars). Interacts well with `preResolveTypes: true`
 
 
-#### Usage Example: Only allow values
+#### Usage Example: Override all definition types
 
 ```yml
 generates:
@@ -90,7 +107,7 @@ path/to/file.ts:
  plugins:
    - typescript
  config:
-   fieldWrapperValue: T
+   onlyOperationTypes: true
 ```
 
 ### immutableTypes (`boolean`, default value: `false`)
@@ -150,20 +167,4 @@ path/to/file.ts:
    - typescript
  config:
    noExport: true
-```
-
-### wrapFieldDefinitions (`boolean`, default value: `true`)
-
-Set the to `true` in order to wrap field definitions with `FieldWrapper`. This is useful to allow return types such as Promises and functions.
-
-
-#### Usage Example: Enable wrapping fields
-
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - typescript
- config:
-   wrapFieldDefinitions: false
 ```

@@ -62,7 +62,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       allImports.push(`java.util.stream.Collectors`);
     }
 
-    return allImports.map((i) => `import ${i};`).join('\n') + '\n';
+    return allImports.map(i => `import ${i};`).join('\n') + '\n';
   }
 
   public wrapWithClass(content: string): string {
@@ -104,7 +104,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     this._addHashMapImport = true;
     this._addMapImport = true;
     const enumName = this.convertName(node.name);
-    const enumValues = node.values.map((enumValue) => (enumValue as any)(node.name.value)).join(',\n') + ';';
+    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';';
     const enumCtor = indentMultiline(`
 public final String label;
  
@@ -156,9 +156,11 @@ public static ${enumName} valueOfLabel(String label) {
         result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true, isEnum: false };
       }
     } else if (isInputObjectType(schemaType)) {
+      const convertedName = this.convertName(schemaType.name);
+      const typeName = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
       result = {
-        baseType: `${this.convertName(schemaType.name)}Input`,
-        typeName: `${this.convertName(schemaType.name)}Input`,
+        baseType: typeName,
+        typeName: typeName,
         isScalar: false,
         isEnum: false,
         isArray,
@@ -186,14 +188,14 @@ public static ${enumName} valueOfLabel(String label) {
     this._addMapImport = true;
 
     const classMembers = inputValueArray
-      .map((arg) => {
+      .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
         return indent(`private ${typeToUse.typeName} _${arg.name.value};`);
       })
       .join('\n');
     const ctorSet = inputValueArray
-      .map((arg) => {
+      .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
         if (typeToUse.isArray && !typeToUse.isScalar) {
@@ -224,7 +226,7 @@ public static ${enumName} valueOfLabel(String label) {
       })
       .join('\n');
     const getters = inputValueArray
-      .map((arg) => {
+      .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
         return indent(
@@ -269,7 +271,7 @@ ${getters}
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const fieldsArguments = node.fields.map((f) => (f as any)(node.name.value)).filter((r) => r);
+    const fieldsArguments = node.fields.map(f => (f as any)(node.name.value)).filter(r => r);
 
     return fieldsArguments.join('\n');
   }

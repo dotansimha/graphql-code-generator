@@ -119,6 +119,7 @@ export const createWatcher = (
       lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
       debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
       const fullPath = join(process.cwd(), path);
+      delete require.cache[fullPath];
 
       if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
         log(`${logSymbols.info} Config file has changed, reloading...`);

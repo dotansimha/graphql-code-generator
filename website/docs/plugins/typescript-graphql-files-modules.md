@@ -41,3 +41,7 @@ import myQuery from './my-query.graphql';
 
 import { myQuery } from './my-query.graphql';
 ```
+
+## Configuration
+
+{@import ../generated-config/graphql-files-modules.md}
