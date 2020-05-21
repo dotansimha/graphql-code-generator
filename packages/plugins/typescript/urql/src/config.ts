@@ -3,7 +3,6 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @name withComponent
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated Component.
    * @default true
    *
@@ -22,7 +21,6 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   withComponent?: boolean;
   /**
    * @name withHooks
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated React Hooks.
    * @default false
    *
@@ -41,7 +39,6 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   withHooks?: boolean;
   /**
    * @name urqlImportFrom
-   * @type string
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
    * This is useful for further abstraction of some common tasks (eg. error handling).
    * Filepath relative to generated file can be also specified.

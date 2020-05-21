@@ -41,7 +41,6 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
 export interface RawDocumentsConfig extends RawTypesConfig {
   /**
    * @name preResolveTypes
-   * @type boolean
    * @default false
    * @description Avoid using `Pick` and resolve the actual primitive type of all selection set.
    *
@@ -55,7 +54,6 @@ export interface RawDocumentsConfig extends RawTypesConfig {
   preResolveTypes?: boolean;
   /**
    * @name globalNamespace
-   * @type boolean
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
    *
@@ -69,28 +67,24 @@ export interface RawDocumentsConfig extends RawTypesConfig {
   globalNamespace?: boolean;
   /**
    * @name operationResultSuffix
-   * @type string
    * @default ""
    * @description Adds a suffix to generated operation result type names
    */
   operationResultSuffix?: string;
   /**
    * @name dedupeOperationSuffix
-   * @type boolean
    * @default false
    * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
    */
   dedupeOperationSuffix?: boolean;
   /**
    * @name omitOperationSuffix
-   * @type boolean
    * @default false
    * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
    */
   omitOperationSuffix?: boolean;
   /**
    * @name exportFragmentSpreadSubTypes
-   * @type boolean
    * @default false
    * @description If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
    */

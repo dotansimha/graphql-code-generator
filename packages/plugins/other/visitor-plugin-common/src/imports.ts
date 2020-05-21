@@ -1,7 +1,7 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
 
-export type ImportDecleration<T = string> = {
+export type ImportDeclaration<T = string> = {
   outputPath: string;
   importSource: ImportSource<T>;
   baseOutputDir: string;
@@ -29,7 +29,7 @@ export type FragmentImport = {
 };
 
 export function generateFragmentImportStatement(
-  statement: ImportDecleration<FragmentImport>,
+  statement: ImportDeclaration<FragmentImport>,
   kind: 'type' | 'document' | 'both'
 ): string {
   const { importSource: fragmentImportSource, ...rest } = statement;
@@ -44,7 +44,7 @@ export function generateFragmentImportStatement(
   return generateImportStatement({ importSource, ...rest });
 }
 
-export function generateImportStatement(statement: ImportDecleration): string {
+export function generateImportStatement(statement: ImportDeclaration): string {
   const { baseDir, importSource, outputPath } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames =

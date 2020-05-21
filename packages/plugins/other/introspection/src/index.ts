@@ -5,7 +5,6 @@ import { extname } from 'path';
 export interface IntrospectionPluginConfig {
   /**
    * @name minify
-   * @type boolean
    * @description Set to `true` in order to minify the JSON output.
    * @default false
    *

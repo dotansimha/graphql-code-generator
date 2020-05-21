@@ -10,7 +10,6 @@ import { TypeScriptDocumentNodesVisitor } from './visitor';
 export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @name namingConvention
-   * @type NamingConvention
    * @default pascal-case#pascalCase
    * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
@@ -48,7 +47,6 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
   namingConvention?: NamingConvention;
   /**
    * @name namePrefix
-   * @type string
    * @default ''
    * @description Adds prefix to the name
    *
@@ -66,7 +64,6 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
   namePrefix?: string;
   /**
    * @name nameSuffix
-   * @type string
    * @default ''
    * @description Adds suffix to the name
    *

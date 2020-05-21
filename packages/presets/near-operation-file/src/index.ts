@@ -10,7 +10,6 @@ export { resolveDocumentImports, DocumentImportResolverOptions };
 export type NearOperationFileConfig = {
   /**
    * @name schemaTypesPath
-   * @type string
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
@@ -28,7 +27,6 @@ export type NearOperationFileConfig = {
   baseTypesPath: string;
   /**
    * @name extension
-   * @type string
    * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
    * @default .generates.ts
    *
@@ -48,7 +46,6 @@ export type NearOperationFileConfig = {
   extension?: string;
   /**
    * @name cwd
-   * @type string
    * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
    * @default process.cwd()
    *
@@ -67,7 +64,6 @@ export type NearOperationFileConfig = {
   cwd?: string;
   /**
    * @name folder
-   * @type string
    * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
    * @default ''
    *
@@ -86,7 +82,6 @@ export type NearOperationFileConfig = {
   folder?: string;
   /**
    * @name importTypesNamespace
-   * @type string
    * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
    * @default Types
    *

@@ -37,7 +37,7 @@ The following lifecycle hooks are supported on root level:
 
 ### `afterStart`
 
-Trigged with no arguments, when the codegen starts (after the `codegen.yml` has beed readed and parsed).
+Triggered with no arguments, when the codegen starts (after the `codegen.yml` has beed parsed).
 
 ### `onWatchTriggered`
 
@@ -51,7 +51,7 @@ Triggered in case of a general error in the codegen. The argument is a string co
 ### `beforeAllFileWrite`
 
 Executed after the codegen has done creating the output and before writing the files to the file-system.
-Triggerd with multiple arguments - paths for all relevant files.
+Triggered with multiple arguments - paths for all relevant files.
 
 > Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution.
 
@@ -59,26 +59,26 @@ Triggerd with multiple arguments - paths for all relevant files.
 
 Triggered before a file is written to the file-system. Executed with the path for the file.
 
-If the content of the file hasn't changed since last execution - this hooks won't be triggerd.
+If the content of the file hasn't changed since last execution - this hooks won't be triggered.
 
 ### `afterOneFileWrite`
 
 Triggered after a file is written to the file-system. Executed with the path for the file.
-If the content of the file hasn't changed since last execution - this hooks won't be triggerd.
+If the content of the file hasn't changed since last execution - this hooks won't be triggered.
 
 > This is a very useful hook, you can use it for integration with Prettier or other linters.
 
 ### `afterAllFileWrite`
 
 Executed after writing all the files to the file-system.
-Triggerd with multiple arguments - paths for all files.
+Triggered with multiple arguments - paths for all files.
 
 ### `beforeDone`
 
-Triggerd with no arguments, right before the codegen closes, or when watch mode is stopped.
+Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.
 
 ## Output Level
 
-The following hooks are avialable for a single output file: `beforeOneFileWrite` and `afterOneFileWrite`.
+The following hooks are available for a single output file: `beforeOneFileWrite` and `afterOneFileWrite`.
 
-Output level hooks are triggerd before root level hooks.
+Output level hooks are triggered before root level hooks.

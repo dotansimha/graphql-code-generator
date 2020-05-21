@@ -12,7 +12,7 @@ import { createHash } from 'crypto';
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
 export async function generate(
-  input: CodegenContext | Types.Config,
+  input: CodegenContext | (Types.Config & { cwd?: string }),
   saveToFile = true
 ): Promise<Types.FileOutput[] | any> {
   const context = ensureContext(input);

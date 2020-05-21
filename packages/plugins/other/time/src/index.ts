@@ -7,7 +7,6 @@ export type TimePluginConfig =
   | {
       /**
        * @name format
-       * @type string
        * @description Customize the Moment format of the output time.
        * @default YYYY-MM-DDTHH:mm:ssZ
        *
@@ -23,7 +22,6 @@ export type TimePluginConfig =
       format: string;
       /**
        * @name message
-       * @type string
        * @description Customize the comment message
        * @default Generated on
        *

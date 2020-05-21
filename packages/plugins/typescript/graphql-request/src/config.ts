@@ -2,7 +2,6 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 
 /**
  * @name rawRequest
- * @type boolean
  * @description By default the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.
  * @default false
  *

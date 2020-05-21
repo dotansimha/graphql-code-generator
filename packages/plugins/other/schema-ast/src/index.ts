@@ -6,7 +6,6 @@ import { printSchemaWithDirectives } from '@graphql-tools/utils';
 export interface SchemaASTConfig {
   /**
    * @name includeDirectives
-   * @type boolean
    * @description Include directives to Schema output.
    * @default false
    *
@@ -25,7 +24,6 @@ export interface SchemaASTConfig {
   includeDirectives?: boolean;
   /**
    * @name commentDescriptions
-   * @type boolean
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
    *

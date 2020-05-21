@@ -12,7 +12,7 @@ import { DeclarationBlockConfig } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDecleration, FragmentImport } from './imports';
+import { ImportDeclaration, FragmentImport } from './imports';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -25,14 +25,13 @@ export interface ParsedConfig {
   addTypename: boolean;
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
-  fragmentImports: ImportDecleration<FragmentImport>[];
+  fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
 }
 
 export interface RawConfig {
   /**
    * @name scalars
-   * @type ScalarsMap
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
    * @example
@@ -46,14 +45,13 @@ export interface RawConfig {
   scalars?: ScalarsMap;
   /**
    * @name namingConvention
-   * @type NamingConvention
    * @default pascal-case#pascalCase
    * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
-   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour,
+   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
    * which is to preserves underscores.
    *
    * @example Override All Names
@@ -84,7 +82,6 @@ export interface RawConfig {
   namingConvention?: NamingConvention;
   /**
    * @name typesPrefix
-   * @type string
    * @default ""
    * @description Prefixes all the generated types.
    *
@@ -97,7 +94,6 @@ export interface RawConfig {
   typesPrefix?: string;
   /**
    * @name skipTypename
-   * @type boolean
    * @default false
    * @description Does not add __typename to the generated types, unless it was specified in the selection set.
    *
@@ -110,7 +106,6 @@ export interface RawConfig {
   skipTypename?: boolean;
   /**
    * @name nonOptionalTypename
-   * @type boolean
    * @default false
    * @description Automatically adds `__typename` field to the generated types, even when they are not specified
    * in the selection set, and makes it non-optional
@@ -124,8 +119,17 @@ export interface RawConfig {
   nonOptionalTypename?: boolean;
 
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
+  /**
+   * @ignore
+   */
   externalFragments?: LoadedFragment[];
-  fragmentImports?: ImportDecleration<FragmentImport>[];
+  /**
+   * @ignore
+   */
+  fragmentImports?: ImportDeclaration<FragmentImport>[];
+  /**
+   * @ignore
+   */
   globalNamespace?: boolean;
 }
 

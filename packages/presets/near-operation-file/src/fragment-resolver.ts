@@ -8,7 +8,7 @@ import {
   LoadedFragment,
   ParsedConfig,
   RawConfig,
-  ImportDecleration,
+  ImportDeclaration,
 } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode, FragmentDefinitionNode, GraphQLSchema, Kind, print } from 'graphql';
 import { DocumentImportResolverOptions } from './resolve-document-imports';
@@ -167,7 +167,7 @@ export default function buildFragmentResolver<T>(
     return {
       externalFragments,
       fragmentImports: Object.entries(fragmentFileImports).map(
-        ([fragmentsFilePath, identifiers]): ImportDecleration<FragmentImport> => ({
+        ([fragmentsFilePath, identifiers]): ImportDeclaration<FragmentImport> => ({
           baseDir,
           baseOutputDir,
           outputPath: generatedFilePath,

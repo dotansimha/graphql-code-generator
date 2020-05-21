@@ -4,7 +4,7 @@ import {
   ImportSource,
   resolveImportSource,
   FragmentImport,
-  ImportDecleration,
+  ImportDeclaration,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
@@ -31,7 +31,7 @@ interface ResolveDocumentImportResult {
   filename: string;
   documents: [Source];
   importStatements: string[];
-  fragmentImports: ImportDecleration<FragmentImport>[];
+  fragmentImports: ImportDeclaration<FragmentImport>[];
   externalFragments: LoadedFragment<{
     level: number;
   }>[];
