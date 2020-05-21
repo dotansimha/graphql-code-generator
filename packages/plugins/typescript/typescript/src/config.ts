@@ -3,7 +3,6 @@ import { RawTypesConfig, AvoidOptionalsConfig } from '@graphql-codegen/visitor-p
 export interface TypeScriptPluginConfig extends RawTypesConfig {
   /**
    * @name avoidOptionals
-   * @type boolean
    * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
@@ -35,7 +34,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @name constEnums
-   * @type boolean
    * @description Will prefix every generated `enum` with `const`, you can read more
    * about const enums {@link https://www.typescriptlang.org/docs/handbook/enums.html|here}.
    * @default false
@@ -53,8 +51,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   constEnums?: boolean;
   /**
    * @name enumsAsTypes
-   * @type boolean
-   * @description Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to genereate `.d.ts` declartion file instead of `.ts`
+   * @description Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`
    * @default false
    *
    * @example
@@ -70,7 +67,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   enumsAsTypes?: boolean;
   /**
    * @name futureProofEnums
-   * @type boolean
    * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
    * This is useful if you are using `relay`.
    * @default false
@@ -89,7 +85,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   futureProofEnums?: boolean;
   /**
    * @name enumsAsConst
-   * @type boolean
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
    * @default false
    *
@@ -106,7 +101,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   enumsAsConst?: boolean;
   /**
    * @name onlyOperationTypes
-   * @type boolean
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
    * Interacts well with `preResolveTypes: true`
    * @default false
@@ -124,7 +118,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   onlyOperationTypes?: boolean;
   /**
    * @name immutableTypes
-   * @type boolean
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
    * @default false
    *
@@ -141,7 +134,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   immutableTypes?: boolean;
   /**
    * @name maybeValue
-   * @type string
    * @description Allow to override the type value of `Maybe`.
    * @default T | null
    *
@@ -168,7 +160,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   maybeValue?: string;
   /**
    * @name noExport
-   * @type boolean
    * @description Set the to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false

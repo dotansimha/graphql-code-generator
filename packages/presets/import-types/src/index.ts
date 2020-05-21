@@ -5,7 +5,6 @@ import { FragmentDefinitionNode } from 'graphql';
 export type ImportTypesConfig = {
   /**
    * @name baseTypesPath
-   * @type string
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
@@ -23,7 +22,6 @@ export type ImportTypesConfig = {
   typesPath: string;
   /**
    * @name importTypesNamespace
-   * @type string
    * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
    * @default Types
    *

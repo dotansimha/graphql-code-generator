@@ -2,7 +2,6 @@ import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common
 export interface CSharpResolversPluginRawConfig extends RawConfig {
   /**
    * @name enumValues
-   * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    *
    * @example With Custom Values
@@ -16,7 +15,6 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
   enumValues?: EnumValuesMap;
   /**
    * @name className
-   * @type string
    * @default Types
    * @description Allow you to customize the parent class name.
    *
@@ -33,7 +31,6 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
   className?: string;
   /**
    * @name listType
-   * @type string
    * @default IEnumberable
    * @description Allow you to customize the list type
    *

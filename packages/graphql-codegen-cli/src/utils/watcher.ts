@@ -26,7 +26,7 @@ export const createWatcher = (
   onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
 ) => {
   debugLog(`[Watcher] Starting watcher...`);
-  let config: Types.Config = initalContext.getConfig();
+  let config: Types.Config & { configFilePath?: string } = initalContext.getConfig();
   const files: string[] = [initalContext.filepath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
@@ -125,7 +125,7 @@ export const createWatcher = (
         log(`${logSymbols.info} Config file has changed, reloading...`);
         const context = await loadContext(config.configFilePath);
 
-        const newParsedConfig = context.getConfig();
+        const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;

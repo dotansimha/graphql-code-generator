@@ -10,7 +10,6 @@ import { CustomTypeClassVisitor } from './custom-type-class';
 export interface JavaApolloAndroidPluginConfig extends RawConfig {
   /**
    * @name package
-   * @type string
    * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.
    *
    * @example
@@ -27,7 +26,6 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
   package?: string;
   /**
    * @name typePackage
-   * @type string
    * @description Customize the Java package name for the types generated based on input types.
    *
    * @example
@@ -44,7 +42,6 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
   typePackage?: string;
   /**
    * @name fragmentPackage
-   * @type string
    * @description Customize the Java package name for the fragments generated classes.
    *
    * @example

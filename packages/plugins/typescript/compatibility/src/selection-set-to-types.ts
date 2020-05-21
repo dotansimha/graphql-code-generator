@@ -10,8 +10,8 @@ import {
   GraphQLSchema,
   isUnionType,
 } from 'graphql';
-import { CompatabilityPluginRawConfig } from './config';
-import { CompatabilityPluginConfig } from './visitor';
+import { CompatibilityPluginRawConfig } from './config';
+import { CompatibilityPluginConfig } from './visitor';
 
 export type SelectionSetToObjectResult = {
   [typeName: string]: {
@@ -32,7 +32,7 @@ const handleTypeNameDuplicates = (result: SelectionSetToObjectResult, name: stri
 
 export function selectionSetToTypes(
   typesPrefix: string,
-  baseVisitor: BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig>,
+  baseVisitor: BaseVisitor<CompatibilityPluginRawConfig, CompatibilityPluginConfig>,
   schema: GraphQLSchema,
   parentTypeName: string,
   stack: string,

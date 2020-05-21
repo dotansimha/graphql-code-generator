@@ -2,10 +2,9 @@ import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, visit } from 'graphql';
 import { capitalCase } from 'change-case';
 
-export interface PluginConfig {
+export interface NamedOperationsObjectPluginConfig {
   /**
    * @name identifierName
-   * @type string
    * @description Allow you to customize the name of the exported identifier
    * @default namedOperations
    *
@@ -23,10 +22,10 @@ export interface PluginConfig {
   identifierName?: string;
 }
 
-export const plugin: PluginFunction<PluginConfig, string> = (
+export const plugin: PluginFunction<NamedOperationsObjectPluginConfig, string> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: PluginConfig
+  config: NamedOperationsObjectPluginConfig
 ) => {
   const identifierName = config.identifierName || 'namedOperations';
   const allAst = concatAST(documents.map(v => v.document));

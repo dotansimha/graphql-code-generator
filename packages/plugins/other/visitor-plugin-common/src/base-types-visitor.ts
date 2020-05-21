@@ -55,7 +55,6 @@ export interface ParsedTypesConfig extends ParsedConfig {
 export interface RawTypesConfig extends RawConfig {
   /**
    * @name addUnderscoreToArgsType
-   * @type boolean
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
    * @example With Custom Values
@@ -68,7 +67,6 @@ export interface RawTypesConfig extends RawConfig {
   addUnderscoreToArgsType?: boolean;
   /**
    * @name enumValues
-   * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
    *
@@ -96,7 +94,6 @@ export interface RawTypesConfig extends RawConfig {
   enumValues?: EnumValuesMap;
   /**
    * @name declarationKind
-   * @type DeclarationKindConfig
    * @description Overrides the default output for various GraphQL elements.
    *
    * @example Override all declarations
@@ -116,7 +113,6 @@ export interface RawTypesConfig extends RawConfig {
   declarationKind?: DeclarationKind | DeclarationKindConfig;
   /**
    * @name enumPrefix
-   * @type boolean
    * @default true
    * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
@@ -130,7 +126,6 @@ export interface RawTypesConfig extends RawConfig {
   enumPrefix?: boolean;
   /**
    * @name fieldWrapperValue
-   * @type string
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
    *
@@ -148,7 +143,6 @@ export interface RawTypesConfig extends RawConfig {
   fieldWrapperValue?: string;
   /**
    * @name wrapFieldDefinitions
-   * @type boolean
    * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
    * This is useful to allow return types such as Promises and functions.
    * @default false
@@ -166,7 +160,6 @@ export interface RawTypesConfig extends RawConfig {
   wrapFieldDefinitions?: boolean;
   /**
    * @name onlyOperationTypes
-   * @type boolean
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
    * @default false
    *

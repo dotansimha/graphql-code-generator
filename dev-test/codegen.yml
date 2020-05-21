@@ -1,4 +1,3 @@
-overwrite: true
 hooks:
   afterAllFileWrite:
     - prettier --write

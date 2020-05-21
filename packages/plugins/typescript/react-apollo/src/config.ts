@@ -2,7 +2,6 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @name withComponent
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated Component.
    * @default true
    *
@@ -21,7 +20,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withComponent?: boolean;
   /**
    * @name withHOC
-   * @type boolean
    * @description Customized the output by enabling/disabling the HOC.
    * @default true
    *
@@ -40,7 +38,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withHOC?: boolean;
   /**
    * @name withHooks
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated React Hooks.
    * @default false
    *
@@ -59,7 +56,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withHooks?: boolean;
   /**
    * @name withMutationFn
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated mutation function signature.
    * @default true
    *
@@ -78,7 +74,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withMutationFn?: boolean;
   /**
    * @name withRefetchFn
-   * @type boolean
    * @description Enable generating a function to be used with refetchQueries
    * @default false
    *
@@ -97,38 +92,32 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withRefetchFn?: boolean;
   /**
    * @name apolloReactCommonImportFrom
-   * @type string
    * @default @apollo/react-common
    */
   apolloReactCommonImportFrom?: string;
   /**
    * @name apolloReactComponentsImportFrom
-   * @type string
    * @default @apollo/react-components
    */
   apolloReactComponentsImportFrom?: string;
   /**
    * @name apolloReactHocImportFrom
-   * @type string
    * @default @apollo/react-hoc
    */
   apolloReactHocImportFrom?: string;
   /**
    * @name apolloReactHooksImportFrom
-   * @type string
    * @default @apollo/react-hooks
    */
   apolloReactHooksImportFrom?: string;
   /**
    * @name componentSuffix
-   * @type string
    * @description You can specify a suffix that gets attached to the name of the generated component.
    * @default Component
    */
   componentSuffix?: string;
   /**
    * @name reactApolloVersion
-   * @type 2 | 3
    * @description Sets the version of react-apollo.
    * @default 2
    *
@@ -147,7 +136,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   reactApolloVersion?: 2 | 3;
   /**
    * @name withResultType
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated result type.
    * @default true
    *
@@ -166,7 +154,6 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withResultType?: boolean;
   /**
    * @name withMutationOptionsType
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated mutation option type.
    * @default true
    *
@@ -185,9 +172,8 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withMutationOptionsType?: boolean;
   /**
    * @name addDocBlocks
-   * @type boolean
    * @description Allows you to enable/disable the generation of docblocks in generated code.
-   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
+   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.
    * @default true
    *
    * @example

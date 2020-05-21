@@ -170,7 +170,7 @@ export async function createContext(
 }
 
 export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Command & YamlCliFlags) {
-  const config: Partial<Types.Config> = {
+  const config: Partial<Types.Config & { configFilePath?: string }> = {
     configFilePath: context.filepath,
   };
 

@@ -3,7 +3,6 @@ import { RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 export interface FlowPluginConfig extends RawTypesConfig {
   /**
    * @name useFlowExactObjects
-   * @type boolean
    * @description Generates Flow types as Exact types.
    * @default true
    *
@@ -20,7 +19,6 @@ export interface FlowPluginConfig extends RawTypesConfig {
   useFlowExactObjects?: boolean;
   /**
    * @name useFlowReadOnlyTypes
-   * @type boolean
    * @description Generates read-only Flow types
    * @default false
    *

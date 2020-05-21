@@ -76,7 +76,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       await import(mod);
     }
 
-    /* Root templates-config */
+    /* Root plugin  config */
     rootConfig = config.config || {};
 
     /* Normalize root "schema" field */

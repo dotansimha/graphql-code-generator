@@ -3,7 +3,6 @@ import { RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
 export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   /**
    * @name useFlowExactObjects
-   * @type boolean
    * @description Generates Flow types as Exact types.
    * @default true
    *
@@ -20,7 +19,6 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   useFlowExactObjects?: boolean;
   /**
    * @name useFlowReadOnlyTypes
-   * @type boolean
    * @description Generates read-only Flow types
    * @default false
    *
@@ -37,7 +35,6 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   useFlowReadOnlyTypes?: boolean;
   /**
    * @name flattenGeneratedTypes
-   * @type boolean
    * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
    * @default false
    *
