@@ -8,13 +8,11 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query myQuery {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query myQuery {
+              id
+            }
+          `),
         },
       ],
       {}
@@ -32,13 +30,11 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query {
+              id
+            }
+          `),
         },
       ],
       {}
@@ -52,22 +48,18 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query myQuery {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query myQuery {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              fragment UserFields on User {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            fragment UserFields on User {
+              id
+            }
+          `),
         },
       ],
       {}
@@ -94,13 +86,11 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query myQuery {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query myQuery {
+              id
+            }
+          `),
         },
       ],
       { identifierName: 'AllMyOperations' }
@@ -118,40 +108,32 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query myQuery {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query myQuery {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              mutation doSomething {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            mutation doSomething {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              mutation doSomethingElse {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            mutation doSomethingElse {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              subscription somethingHappened {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            subscription somethingHappened {
+              id
+            }
+          `),
         },
       ],
       {}
@@ -176,40 +158,32 @@ describe('named-operations-object', () => {
       null,
       [
         {
-          document: parse(
-            /* GraphQL */ `
-              query {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            query {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              mutation doSomething {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            mutation doSomething {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              mutation doSomethingElse {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            mutation doSomethingElse {
+              id
+            }
+          `),
         },
         {
-          document: parse(
-            /* GraphQL */ `
-              subscription somethingHappened {
-                id
-              }
-            `
-          ),
+          document: parse(/* GraphQL */ `
+            subscription somethingHappened {
+              id
+            }
+          `),
         },
       ],
       {}

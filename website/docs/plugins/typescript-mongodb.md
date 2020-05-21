@@ -40,7 +40,7 @@ This interface can be used for db read/write purposes, thus making communication
 Once installed, add the directives declaration to your GraphQL Schema definition:
 
 ```typescript
-import { makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import { DIRECTIVES } from '@graphql-codegen/typescript-mongodb';
 
 const schema = makeExecutableSchema({

@@ -1,9 +1,9 @@
 import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
 import { visit, parse, DefinitionNode, Kind, print } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-tools/utils';
 
-import { mergeSchemas } from '@graphql-toolkit/schema-merging';
+import { mergeSchemas } from '@graphql-tools/merge';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
