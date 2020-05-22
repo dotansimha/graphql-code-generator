@@ -56,7 +56,6 @@
     "camel-case": "4.1.1",
     "chalk": "4.0.0",
     "chokidar": "3.4.0",
-    "commander": "5.1.0",
     "common-tags": "1.8.0",
     "constant-case": "3.0.3",
     "cosmiconfig": "6.0.0",
@@ -81,7 +80,8 @@
     "tslib": "^2.0.0",
     "upper-case": "2.0.1",
     "valid-url": "1.0.9",
-    "wrap-ansi": "7.0.0"
+    "wrap-ansi": "7.0.0",
+    "yargs": "15.3.1"
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
