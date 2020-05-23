@@ -25,7 +25,7 @@ export type TimePluginConfig =
        * @name message
        * @type string
        * @description Customize the comment message
-       * @default Generated in
+       * @default Generated on
        *
        * @example
        * ```yml
@@ -33,7 +33,7 @@ export type TimePluginConfig =
        * path/to/file.ts:
        *  plugins:
        *    - time:
-       *        message: "The file generated in: "
+       *        message: "The file generated on: "
        * ```
        */
       message: string;
@@ -45,18 +45,18 @@ export const plugin: PluginFunction<TimePluginConfig> = async (
   config: TimePluginConfig
 ): Promise<string> => {
   let format;
-  let message = 'Generated in ';
+  let message = 'Generated on ';
 
   if (config && typeof config === 'string') {
     format = config;
-  } else if (config && typeof config === 'object' && config.format) {
-    format = config.format;
+  } else if (config && typeof config === 'object') {
+    if (config.format) {
+      format = config.format;
+    }
 
     if (config.message) {
       message = config.message;
     }
-  } else {
-    config = null;
   }
 
   return '// ' + message + moment().format(format) + '\n';
