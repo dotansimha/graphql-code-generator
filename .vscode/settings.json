@@ -1,5 +1,5 @@
 {
     "yaml.schemas": {
-      "./packages/config-schema/dist/config.schema.json": "*codegen.*"
+      "./website/static/config.schema.json": "*codegen.*"
     }
   }
