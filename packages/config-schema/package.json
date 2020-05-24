@@ -8,6 +8,8 @@
     "build": "mkdir dist && ts-node src/index.ts"
   },
   "devDependencies": {
+    "@types/jsonpath": "0.2.0",
+    "jsonpath": "1.0.2",
     "json-schema-merge-allof": "0.7.0",
     "@types/json-schema-merge-allof": "0.6.0",
     "@types/node": "13",

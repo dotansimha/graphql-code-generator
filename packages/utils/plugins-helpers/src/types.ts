@@ -27,7 +27,6 @@ export namespace Types {
   export type DocumentFile = Source;
 
   /* Utils */
-  export type ConfigObjectMap<T = any> = { [key: string]: T };
   export type Promisable<T> = T | Promise<T>;
   export type InstanceOrArray<T> = T | T[];
 
@@ -68,15 +67,23 @@ export namespace Types {
   export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader;
 
   /* Plugin Definition */
-  export type PluginConfig = InstanceOrArray<string> | ConfigObjectMap;
-  export type ConfiguredPlugin = { [name: string]: PluginConfig };
+  export type PluginConfig<T = any> = { [key: string]: T };
+  export interface ConfiguredPlugin {
+    [name: string]: PluginConfig;
+  }
   export type NamedPlugin = string;
 
   /* Output Definition */
   export type NamedPreset = string;
-  export type OutputConfig = InstanceOrArray<NamedPlugin | ConfiguredPlugin>;
-  export type ConfiguredOutput = {
+  export type OutputConfig = NamedPlugin | ConfiguredPlugin;
+
+  /**
+   * @additionalProperties false
+   */
+  export interface ConfiguredOutput {
     /**
+     * @type array
+     * @items { "$ref": "#/definitions/GeneratedPluginsMap" }
      * @description List of plugins to apply to this current output file.
      *
      * You can either specify plugins from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for custom plugins.
@@ -84,7 +91,7 @@ export namespace Types {
      * You can find a list of available plugins here: https://graphql-code-generator.com/docs/plugins/index
      * Need a custom plugin? read this: https://graphql-code-generator.com/docs/custom-codegen/index
      */
-    plugins: OutputConfig;
+    plugins: OutputConfig[];
     /**
      * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
      *
@@ -154,7 +161,7 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
      */
     hooks?: LifecycleHooksDefinition<string | string[]>;
-  };
+  }
 
   /* Output Builder Preset */
   export type PresetFnArgs<
@@ -184,7 +191,11 @@ export namespace Types {
 
   /* PackageLoaderFn Loader */
   export type PackageLoaderFn<TExpectedResult> = (name: string) => Promisable<TExpectedResult>;
-  /* Config Definition */
+
+  /**
+   * @description Represents the root YAML schema for the config file.
+   * @additionalProperties false
+   */
   export interface Config {
     /**
      * @description A pointer(s) to your GraphQL schema. This schema will be the base schema for all your outputs.
@@ -240,13 +251,15 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/config-field
      */
-    config?: ConfigObjectMap;
+    config?: PluginConfig;
     /**
      * @description A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
      */
-    generates: { [output: string]: OutputConfig | ConfiguredOutput };
+    generates: {
+      [outputPath: string]: ConfiguredOutput;
+    };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
@@ -309,6 +322,10 @@ export namespace Types {
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
   export type PluginOutput = string | ComplexPluginOutput;
 
+  /**
+   * @description All available lifecycle hooks
+   * @additionalProperties false
+   */
   export type LifecycleHooksDefinition<T = string | string[]> = {
     /**
      * @description Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).
