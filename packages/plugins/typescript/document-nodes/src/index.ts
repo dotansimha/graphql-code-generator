@@ -7,6 +7,9 @@ import {
 import { GraphQLSchema, visit, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor';
 
+/**
+ * @description This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).
+ */
 export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @default pascal-case#pascalCase

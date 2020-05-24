@@ -40,6 +40,7 @@ module.exports = {
           'plugins/typescript-graphql-request',
           'plugins/typescript-oclif',
           'plugins/named-operations-object',
+          'plugins/typescript-type-graphql'
         ],
       },
       {

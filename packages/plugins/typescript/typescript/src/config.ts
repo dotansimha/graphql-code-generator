@@ -38,8 +38,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
-   * @description Will prefix every generated `enum` with `const`, you can read more
-   * about const enums {@link https://www.typescriptlang.org/docs/handbook/enums.html|here}.
+   * @description Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.
    * @default false
    *
    * @examples

@@ -3,16 +3,11 @@ id: typescript-react-apollo
 title: TypeScript React Apollo
 ---
 
-This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
-
-
 {@import ../plugins/client-note.md}
 
-## Installation
+{@import ../generated-config/typescript-react-apollo.md}
 
-    $ yarn add @graphql-codegen/typescript-react-apollo
-
-## Usage
+## Usage Example
 
 For the given input:
 
@@ -45,12 +40,3 @@ Or if you prefer:
 ```tsx
   const withTestData = withTestQuery(...);
 ```
-
-## Configuration
-
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-react-apollo.md}

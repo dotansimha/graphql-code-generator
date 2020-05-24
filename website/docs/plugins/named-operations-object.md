@@ -16,11 +16,7 @@ export const namedOperations = {
 }
 ```
 
-## Installation
-
-Install using `yarn`:
-
-    $ yarn add -D @graphql-codegen/named-operations-object 
+{@import ../generated-config/named-operations-object.md}
 
 ## How to use?
 
@@ -47,7 +43,3 @@ client
     { refetchQueries: [namedOperations.Query.myQuery] }
   );
 ```
-
-## Configuration
-
-{@import ../generated-config/named-operations-object.md}

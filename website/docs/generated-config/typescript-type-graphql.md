@@ -1,17 +1,21 @@
-This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.
-It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
-
-Note: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.
-
 ## Installation
 
 :::shell Using `yarn`
 
-    $ yarn add -D @graphql-codegen/typescript-operations
+    $ yarn add -D @graphql-codegen/typescript-type-graphql
 
 :::
 
 ## API Reference
+
+### `decoratorName`
+
+type: `Partial`
+
+
+
+
+
 
 ### `avoidOptionals`
 
@@ -31,7 +35,6 @@ generates:
 path/to/file.ts:
  plugins:
    - typescript
-   - typescript-operations
  config:
    avoidOptionals: true
 ```
@@ -50,6 +53,111 @@ path/to/file.ts:
 ```
 
 
+### `constEnums`
+
+type: `boolean`
+
+default: `false`
+
+Will prefix every generated `enum` with `const`, you can read more
+about const enums {@link https://www.typescriptlang.org/docs/handbook/enums.html|here}.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   constEnums: true
+```
+
+
+### `enumsAsTypes`
+
+type: `boolean`
+
+default: `false`
+
+Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   enumsAsTypes: true
+```
+
+
+### `futureProofEnums`
+
+type: `boolean`
+
+default: `false`
+
+This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
+This is useful if you are using `relay`.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   enumsAsTypes: true
+   futureProofEnums: true
+```
+
+
+### `enumsAsConst`
+
+type: `boolean`
+
+default: `false`
+
+Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   enumsAsConst: true
+```
+
+
+### `onlyOperationTypes`
+
+type: `boolean`
+
+default: `false`
+
+This will cause the generator to emit types for operations only (basically only enums and scalars).
+Interacts well with `preResolveTypes: true`
+
+#### Usage Examples
+
+Override all definition types
+```yml
+generates:
+path/to/file.ts:
+plugins:
+- typescript
+config:
+onlyOperationTypes: true
+```
+
+
 ### `immutableTypes`
 
 type: `boolean`
@@ -65,30 +173,40 @@ generates:
 path/to/file.ts:
  plugins:
    - typescript
-   - typescript-operations
  config:
    immutableTypes: true
 ```
 
 
-### `flattenGeneratedTypes`
+### `maybeValue`
 
-type: `boolean`
+type: `string`
 
-default: `false`
+default: `T | null`
 
-Flatten fragment spread and inline fragments into a simple selection set before generating.
+Allow to override the type value of `Maybe`.
 
 #### Usage Examples
 
+##### Allow undefined
 ```yml
 generates:
-path/to/file.ts:
- plugins:
-   - typescript
-   - typescript-operations
- config:
-   flattenGeneratedTypes: true
+ path/to/file.ts:
+   plugins:
+     - typescript
+   config:
+     maybeValue: T | null | undefined
+```
+
+##### Allow `null` in resolvers:
+```yml
+generates:
+ path/to/file.ts:
+   plugins:
+     - typescript
+     - typescript-resolves
+   config:
+     maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
 ```
 
 
@@ -103,6 +221,7 @@ This is useful if you are generating `.d.ts` file and want it to be globally ava
 
 #### Usage Examples
 
+##### Disable all export from a file
 ```yml
 generates:
 path/to/file.ts:
@@ -111,72 +230,6 @@ path/to/file.ts:
  config:
    noExport: true
 ```
-
-
-### `globalNamespace`
-
-type: `boolean`
-
-
-
-
-
-
-### `preResolveTypes`
-
-type: `boolean`
-
-default: `false`
-
-Avoid using `Pick` and resolve the actual primitive type of all selection set.
-
-#### Usage Examples
-
-```yml
-plugins
-  config:
-    preResolveTypes: true
-```
-
-
-### `operationResultSuffix`
-
-type: `string`
-
-default: ``
-
-Adds a suffix to generated operation result type names
-
-
-
-### `dedupeOperationSuffix`
-
-type: `boolean`
-
-default: `false`
-
-Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
-
-
-
-### `omitOperationSuffix`
-
-type: `boolean`
-
-default: `false`
-
-Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
-
-
-
-### `exportFragmentSpreadSubTypes`
-
-type: `boolean`
-
-default: `false`
-
-If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
-
 
 
 ### `addUnderscoreToArgsType`
@@ -310,27 +363,6 @@ path/to/file.ts:
    - typescript
  config:
    wrapFieldDefinitions: true
-```
-
-
-### `onlyOperationTypes`
-
-type: `boolean`
-
-default: `false`
-
-This will cause the generator to emit types for operations only (basically only enums and scalars)
-
-#### Usage Examples
-
-##### Override all definition types
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - typescript
- config:
-   onlyOperationTypes: true
 ```
 
 

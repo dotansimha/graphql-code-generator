@@ -1,10 +1,24 @@
+This plugin generates a GraphQL introspection file based on your GraphQL schema.
 
-### minify (`boolean`, default value: `false`)
+## Installation
+
+:::shell Using `yarn`
+
+    $ yarn add -D @graphql-codegen/introspection
+
+:::
+
+## API Reference
+
+### `minify`
+
+type: `boolean`
+
+default: `false`
 
 Set to `true` in order to minify the JSON output.
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
 generates:
@@ -14,3 +28,12 @@ introspection.json:
   config:
     minify: true
 ```
+
+
+### `federation`
+
+type: `boolean`
+
+
+
+

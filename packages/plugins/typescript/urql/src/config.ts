@@ -1,5 +1,8 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
+ */
 export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Component.

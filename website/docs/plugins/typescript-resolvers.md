@@ -3,17 +3,11 @@ id: typescript-resolvers
 title: TypeScript Resolvers
 ---
 
-This plugin generates types for resolve functions. 
+{@import ../generated-config/typescript-resolvers.md}
 
-You can use this plugin as-is to generate simple resolvers signature based on your GraphQL types, or you can change it's behaviour be providing custom model types (`mappers`).
+## Usage Example
 
-## Installation
-
-    $ yarn add -D @graphql-codegen/typescript-resolvers
-
-## Usage
-
-:::info Quick Start with `typescript-resovlers`
+:::info Quick Start with `typescript-resolvers`
 You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
 :::
 
@@ -49,11 +43,3 @@ Generated resolvers can be passed directly into [graphql-tools](https://www.npmj
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
 If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial typse in your resolvers.
-
-## Configuration
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/base-resolvers-visitor.md}
-
-{@import ../generated-config/typescript-resolvers.md}

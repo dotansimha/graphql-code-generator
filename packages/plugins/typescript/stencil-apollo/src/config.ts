@@ -1,5 +1,10 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates Stencil Apollo functional components typings
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ */
 export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customize the output of the plugin - you can choose to generate a Component class or a function component.

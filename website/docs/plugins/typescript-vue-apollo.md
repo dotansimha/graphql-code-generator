@@ -3,10 +3,10 @@ id: typescript-vue-apollo
 title: TypeScript Vue Apollo
 ---
 
-This plugin generates @vue/apollo-composable composition functions with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
-
-
 {@import ../plugins/client-note.md}
+
+{@import ../generated-config/typescript-vue-apollo.md}
+
 
 ## Installation
 
@@ -14,7 +14,7 @@ This plugin generates @vue/apollo-composable composition functions with TypeScri
 $ yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable@4.0.0-alpha.8 @vue/composition-api
 ```
 
-## Usage
+## Usage Example
 
 For the given input:
 
@@ -51,11 +51,3 @@ export default createComponent({
 </script>
 ```
 
-## Configuration
-
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-vue-apollo.md}

@@ -3,18 +3,9 @@ id: typescript-apollo-angular
 title: TypeScript Apollo Angular
 ---
 
-This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.
-
-It will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.
-
-To shed some more light regards this template, it's recommended to go through the ["Query, Mutation, Subscription services"](http://apollographql.com/docs/angular/basics/services.html) chapter of Apollo Angular docs and to read the ["Code Generation with Apollo Angular"](https://the-guild.dev/blog/apollo-angular-12) article.
-
-
 {@import ../plugins/client-note.md}
 
-## Installation
-
-    $ yarn add -D @graphql-codegen/typescript-apollo-angular
+{@import ../generated-config/typescript-apollo-angular.md}
 
 ## How to use?
 
@@ -29,7 +20,7 @@ query MyFeed {
 }
 ```
 
-Using `graphql-codegen` you can generate a file with typesand services that you can use when coding an Angular component:
+Using `graphql-codegen` you can generate a file with Angular services that you can use when coding an Angular component:
 
 ```yaml
 # ...
@@ -94,11 +85,3 @@ query feed {
 }
 ```
 
-## Configuration
-
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-apollo-angular.md}
