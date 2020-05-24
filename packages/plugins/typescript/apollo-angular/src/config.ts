@@ -1,10 +1,9 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name ngModule
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   ngModule: ./path/to/module#MyModule
@@ -12,10 +11,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   ngModule?: string;
   /**
-   * @name namedClient
    * @description Defined the global value of `namedClient`.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -23,10 +21,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   namedClient?: string;
   /**
-   * @name serviceName
    * @description Defined the global value of `serviceName`.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -34,10 +31,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   serviceName?: string;
   /**
-   * @name serviceProvidedInRoot
    * @description Defined the global value of `serviceProvidedInRoot`.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   serviceProvidedInRoot: false
@@ -45,18 +41,15 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   serviceProvidedInRoot?: boolean;
   /**
-   * @name sdkClass
    * @description Set to `true` in order to generate a SDK service class that uses all generated services.
    * @default false
-   *
    */
   sdkClass?: boolean;
   /**
-   * @name querySuffix
    * @description Allows to define a custom suffix for query operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -64,11 +57,10 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   querySuffix?: string;
   /**
-   * @name mutationSuffix
    * @description Allows to define a custom suffix for mutation operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -76,11 +68,10 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   mutationSuffix?: string;
   /**
-   * @name subscriptionSuffix
    * @description Allows to define a custom suffix for Subscription operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'
@@ -88,10 +79,8 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   subscriptionSuffix?: 'GQL' | string;
   /**
-   * @name apolloAngularPackage
    * @description Allows to define a custom Apollo-Angular package to import types from.
    * @default 'apollo-angular'
-   *
    */
   apolloAngularPackage?: 'apollo-angular' | string;
 }

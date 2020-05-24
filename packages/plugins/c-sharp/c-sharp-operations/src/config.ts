@@ -2,10 +2,9 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 
 export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name namedClient
    * @description Defined the global value of `namedClient`.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -13,10 +12,9 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   namedClient?: string;
   /**
-   * @name serviceName
    * @description Defined the global value of `serviceName`.
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -24,11 +22,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   serviceName?: string;
   /**
-   * @name querySuffix
    * @description Allows to define a custom suffix for query operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -36,11 +33,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   querySuffix?: string;
   /**
-   * @name mutationSuffix
    * @description Allows to define a custom suffix for mutation operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -48,11 +44,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   mutationSuffix?: string;
   /**
-   * @name subscriptionSuffix
    * @description Allows to define a custom suffix for Subscription operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @examples
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'

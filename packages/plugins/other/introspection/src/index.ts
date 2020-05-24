@@ -4,11 +4,10 @@ import { extname } from 'path';
 
 export interface IntrospectionPluginConfig {
   /**
-   * @name minify
    * @description Set to `true` in order to minify the JSON output.
    * @default false
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * introspection.json:

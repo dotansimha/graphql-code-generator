@@ -2,11 +2,10 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 
 export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name componentType
    * @description Customize the output of the plugin - you can choose to generate a Component class or a function component.
    * @default functional
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.ts:

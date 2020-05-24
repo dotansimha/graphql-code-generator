@@ -2,11 +2,10 @@ import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
 
 export interface TypeScriptMongoPluginConfig extends RawConfig {
   /**
-   * @name dbTypeSuffix
    * @default DbObject
    * @description Customize the suffix for the generated GraphQL `type`s.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   dbTypeSuffix: MyType
@@ -14,11 +13,10 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   dbTypeSuffix?: string;
   /**
-   * @name dbInterfaceSuffix
    * @default DbObject
    * @description Customize the suffix for the generated GraphQL `interface`s.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   dbInterfaceSuffix: MyInterface
@@ -26,11 +24,10 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   dbInterfaceSuffix?: string;
   /**
-   * @name objectIdType
    * @default mongodb#ObjectId
    * @description Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   objectIdType: ./my-models.ts#MyIdType
@@ -38,11 +35,10 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   objectIdType?: string;
   /**
-   * @name idFieldName
    * @default _id
    * @description Customize the name of the id field generated after using `@id` directive over a GraphQL field.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   idFieldName: id
@@ -50,11 +46,10 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   idFieldName?: string;
   /**
-   * @name enumsAsString
    * @default true
    * @description Replaces generated `enum` values with `string`.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   enumsAsString: false
@@ -62,13 +57,12 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   enumsAsString?: boolean;
   /**
-   * @name avoidOptionals
    * @description This will cause the generator to avoid using TypeScript optionals (`?`),
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.ts:

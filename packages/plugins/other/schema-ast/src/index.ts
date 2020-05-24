@@ -5,11 +5,10 @@ import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
 export interface SchemaASTConfig {
   /**
-   * @name includeDirectives
    * @description Include directives to Schema output.
    * @default false
    *
-   * @example
+   * @examples
    * ```yml
    * schema:
    *   - './src/schema.graphql'
@@ -23,11 +22,10 @@ export interface SchemaASTConfig {
    */
   includeDirectives?: boolean;
   /**
-   * @name commentDescriptions
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
    *
-   * @example
+   * @examples
    * ```yml
    * schema: http://localhost:3000/graphql
    * generates:

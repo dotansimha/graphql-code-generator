@@ -4,12 +4,11 @@ import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
 export interface TypeScriptFilesModulesPluginConfig {
   /**
-   * @name modulePathPrefix
-   * @default ''
+   * @default ""
    * @description Allows specifying a module definition path prefix to provide distinction
    * between generated types.
    *
-   * @example
+   * @examples
    * ```yml
    * generates: src/api/user-service/queries.d.ts
    *  documents: src/api/user-service/queries.graphql
@@ -23,13 +22,11 @@ export interface TypeScriptFilesModulesPluginConfig {
    */
   modulePathPrefix?: string;
   /**
-   * @name relativeToCwd
    * @default false
    * @description By default, only the filename is being used to generate TS module declarations. Setting this to `true` will generate it with a full path based on the CWD.
    */
   relativeToCwd?: boolean;
   /**
-   * @name prefix
    * @default *\/
    * @description By default, a wildcard is being added as prefix, you can change that to a custom prefix
    */
