@@ -1,7 +1,7 @@
 import { GraphQLSchema, printSchema } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
-import { printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
 export interface SchemaASTConfig {
   /**

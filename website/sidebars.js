@@ -38,7 +38,8 @@ module.exports = {
           'plugins/typescript-stencil-apollo',
           'plugins/typescript-urql',
           'plugins/typescript-graphql-request',
-          'plugins/named-operations-object'
+          'plugins/typescript-oclif',
+          'plugins/named-operations-object',
         ],
       },
       {
@@ -88,7 +89,7 @@ module.exports = {
       'custom-codegen/validate-configuration',
       'custom-codegen/extend-schema',
       'custom-codegen/using-visitor',
-      'custom-codegen/contributing'
+      'custom-codegen/contributing',
     ],
     'Migration Guides': ['migration/from-0-18', 'migration/from-0-13'],
   },

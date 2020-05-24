@@ -9,8 +9,8 @@
     "generate:config-docs": "node generate-config.js"
   },
   "devDependencies": {
-    "@docusaurus/core": "2.0.0-alpha.54",
     "@docusaurus/preset-classic": "2.0.0-alpha.55",
+    "@docusaurus/core": "2.0.0-alpha.55",
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
     "react": "16.13.1",
@@ -50,10 +50,10 @@
     "@graphql-codegen/typescript-type-graphql": "1.14.0",
     "@graphql-codegen/typescript-urql": "1.14.0",
     "@graphql-codegen/typescript-vue-apollo": "1.14.0",
-    "codemirror": "5.53.2",
+    "codemirror": "5.54.0",
     "codemirror-graphql": "0.11.6",
-    "js-yaml": "3.13.1",
-    "react-codemirror2": "7.1.0"
+    "js-yaml": "3.14.0",
+    "react-codemirror2": "7.2.0"
   },
   "browserslist": {
     "production": [

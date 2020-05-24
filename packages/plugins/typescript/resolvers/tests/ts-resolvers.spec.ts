@@ -86,7 +86,7 @@ describe('TypeScript Resolvers Plugin', () => {
         tsContent,
         resolversContent,
         `
-          import { makeExecutableSchema } from 'graphql-tools';
+          import { makeExecutableSchema } from '@graphql-tools/schema';
 
           interface Context {
             users: Array<{
@@ -987,7 +987,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       tsContent,
       resolversContent,
       `
-        import { makeExecutableSchema } from 'graphql-tools';
+        import { makeExecutableSchema } from '@graphql-tools/schema';
 
         interface AppContext {
           users: Array<{
@@ -1042,7 +1042,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       tsContent,
       resolversContent,
       `
-        import { makeExecutableSchema } from 'graphql-tools';
+        import { makeExecutableSchema } from '@graphql-tools/schema';
 
         interface AppContext {
           users: Array<{
