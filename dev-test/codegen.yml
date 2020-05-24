@@ -4,10 +4,11 @@ hooks:
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
+    config:
+      enumPrefix: true
+      avoidOptionals: false
     plugins:
       - typescript
-      - ./plugin.js
-      - typescript-resolvers
   ./dev-test/test-schema/flow-types.flow.js:
     schema: ./dev-test/test-schema/schema.json
     plugins:

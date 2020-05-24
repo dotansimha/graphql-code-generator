@@ -201,7 +201,7 @@ export interface RawResolversConfig extends RawConfig {
   defaultMapper?: string;
   /**
    * @name avoidOptionals
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * @description This will cause the generator to avoid using optionals (`?`),
    * so all field resolvers must be implemented in order to avoid compilation errors.
    *
    * @default false
