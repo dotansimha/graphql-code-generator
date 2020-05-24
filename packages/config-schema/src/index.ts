@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
 import * as TJS from 'typescript-json-schema';
 import { writeFile } from 'fs-extra';
-// import { query } from 'jsonpath';
 
 const ROOT_FILE = '../utils/plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';
 
-const relevantConfigurations: { file: string; identifier: string; pluginName: string }[] = [
+const relevantConfigurations: { file: string; identifier: string; pluginName: string; link?: string }[] = [
   {
     file: '../plugins/typescript/typescript/src/config.ts',
     identifier: 'TypeScriptPluginConfig',
@@ -160,10 +159,7 @@ async function generate() {
     true
   );
 
-  const listAllPlugins = relevantConfigurations.reduce((prev, t) => {
-    return [...prev, t.pluginName, `@graphql-codegen/${t.pluginName}`];
-  }, []);
-
+  // This will make sure to add a nice auto complete for all built-in plugins and their configuration mapped
   schema.definitions.GeneratedPluginsMap = {
     anyOf: [
       {
@@ -184,10 +180,27 @@ async function generate() {
       },
       {
         type: 'string',
-        oneOf: listAllPlugins.map(p => ({
-          const: p,
-          description: `This will load the ${p} plugin package using "require". Make sure to include "${p}" in your package.json file and install your dependencies.`,
-        })),
+        oneOf: relevantConfigurations.reduce((prev, p) => {
+          const description = `${
+            (schema.definitions[p.identifier] as TJS.Definition).description || ''
+          }\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/${
+            p.pluginName
+          }\n\n=> Make sure to include "@graphql-codegen/${
+            p.pluginName
+          }" in your package.json file and install your dependencies.\n\n`;
+
+          return [
+            ...prev,
+            {
+              const: p.pluginName,
+              description,
+            },
+            {
+              const: `@graphql-codegen/${p.pluginName}`,
+              description,
+            },
+          ];
+        }, []),
       },
       {
         type: 'string',
@@ -200,6 +213,32 @@ async function generate() {
       },
     ],
   };
+
+  const outputRecord = schema.definitions['Types.ConfiguredOutput'] as TJS.Definition;
+
+  outputRecord.properties.config = {
+    additionalProperties: true,
+  };
+
+  outputRecord.allOf = relevantConfigurations.map(p => {
+    return {
+      if: {
+        properties: {
+          plugins: {
+            contains: {
+              type: 'string',
+              const: p.pluginName,
+            },
+          },
+        },
+      },
+      then: {
+        properties: {
+          config: { $ref: `#/definitions/${p.identifier}` },
+        },
+      },
+    };
+  });
 
   // Point the root schema to the config root
   schema.$ref = `#/definitions/${ROOT_IDENTIFIER}`;

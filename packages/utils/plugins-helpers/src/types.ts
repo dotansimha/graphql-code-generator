@@ -30,40 +30,77 @@ export namespace Types {
   export type Promisable<T> = T | Promise<T>;
   export type InstanceOrArray<T> = T | T[];
 
-  /* Schema Definition */
-  export type SchemaWithLoader = { [schemaString: string]: { loader: string } };
-  export type UrlSchema =
-    | string
-    | {
-        [url: string]: {
-          /**
-           * @description HTTP headers you wish to add to the HTTP request sent by codegen to fetch your GraphQL remote schema.
-           */
-          headers?: { [headerName: string]: string };
-        };
-      };
+  /**
+   * @additionalProperties false
+   * @description Loads schema using a pointer, with a custom loader (code file).
+   */
+  export interface SchemaWithLoaderOptions {
+    /**
+     * @description Specify a path to a custom code file (local or module) that will handle the schema loading.
+     */
+    loader: string;
+  }
+  export interface SchemaWithLoader {
+    [pointer: string]: SchemaWithLoaderOptions;
+  }
+
+  /**
+   * @additionalProperties false
+   * @description Loads schema using a pointer, without using `require` while looking for schemas in code files.
+   */
+  export interface SchemaWithRequireOptions {
+    /**
+     * @description Set this to `true` in order to tell codegen not to try to `require` files in order to find schema
+     */
+    noRequire?: boolean;
+  }
+  export interface SchemaWithRequire {
+    [path: string]: SchemaWithRequireOptions;
+  }
+
+  /**
+   * @additionalProperties false
+   * @description Loads a schema from remote endpoint, with custom http options.
+   */
+  export interface UrlSchemaOptions {
+    /**
+     * @description HTTP headers you wish to add to the HTTP request sent by codegen to fetch your GraphQL remote schema.
+     */
+    headers?: { [headerName: string]: string };
+  }
+  export interface UrlSchemaWithOptions {
+    [url: string]: UrlSchemaOptions;
+  }
+
   export type LocalSchemaPath = string;
   export type SchemaGlobPath = string;
   /**
    * @description A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
    */
   export type Schema =
-    | UrlSchema
+    | string
+    | UrlSchemaWithOptions
     | LocalSchemaPath
     | SchemaGlobPath
     | SchemaWithLoader
-    | {
-        [path: string]: {
-          /**
-           * @description Set this to `true` in order to tell codegen not to try to `require` files in order to find schema
-           */
-          noRequire?: boolean;
-        };
-      };
+    | SchemaWithRequire;
 
   /* Document Definitions */
   export type OperationDocumentGlobPath = string;
-  export type CustomDocumentLoader = { [path: string]: { loader: string } };
+
+  /**
+   * @additionalProperties false
+   * @description Specify a path to a custom loader for your GraphQL documents.
+   */
+  export interface CustomDocumentLoaderOptions {
+    /**
+     * @description Specify a path to a custom code file (local or module) that will handle the documents loading.
+     */
+    loader: string;
+  }
+  export interface CustomDocumentLoader {
+    [path: string]: CustomDocumentLoaderOptions;
+  }
   export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader;
 
   /* Plugin Definition */
@@ -244,6 +281,8 @@ export namespace Types {
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
+     * @type object
+     * @additionalProperties true
      * @description Configuration object containing key => value that will be passes to the plugins.
      * Specifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.
      *
