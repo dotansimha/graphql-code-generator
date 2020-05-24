@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as TJS from 'typescript-json-schema';
 import { writeFile } from 'fs-extra';
+// import { query } from 'jsonpath';
 
 const ROOT_FILE = '../utils/plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';
@@ -50,11 +51,6 @@ const relevantConfigurations: { file: string; identifier: string; pluginName: st
     file: '../plugins/typescript/graphql-request/src/config.ts',
     identifier: 'RawGraphQLRequestPluginConfig',
     pluginName: 'typescript-graphql-request',
-  },
-  {
-    file: '../plugins/typescript/compatibility/src/config.ts',
-    identifier: 'CompatibilityPluginRawConfig',
-    pluginName: 'typescript-compatibility',
   },
   {
     file: '../plugins/typescript/compatibility/src/config.ts',
@@ -153,23 +149,62 @@ async function generate() {
     esModuleInterop: true,
   });
 
-  const pluginsSchemas = TJS.generateSchema(program, '*', {
+  const generator = TJS.buildGenerator(program, {
     topRef: true,
     aliasRef: true,
+    ref: true,
   });
 
-  const rootSchema = TJS.generateSchema(program, ROOT_IDENTIFIER, {
-    topRef: true,
-    aliasRef: true,
-    noExtraProps: true,
-  });
+  const schema = generator.getSchemaForSymbols(
+    [ROOT_IDENTIFIER, ...relevantConfigurations.map(f => f.identifier)],
+    true
+  );
 
-  rootSchema.definitions = {
-    ...rootSchema.definitions,
-    ...pluginsSchemas.definitions,
+  const listAllPlugins = relevantConfigurations.reduce((prev, t) => {
+    return [...prev, t.pluginName, `@graphql-codegen/${t.pluginName}`];
+  }, []);
+
+  schema.definitions.GeneratedPluginsMap = {
+    anyOf: [
+      {
+        type: 'object',
+        additionalProperties: true,
+        properties: relevantConfigurations.reduce((prev, plugin) => {
+          const refObj = {
+            additionalProperties: false,
+            $ref: `#/definitions/${plugin.identifier}`,
+          };
+
+          return {
+            ...prev,
+            [plugin.pluginName]: refObj,
+            [`@graphql-codegen/${plugin.pluginName}`]: refObj,
+          };
+        }, {}),
+      },
+      {
+        type: 'string',
+        oneOf: listAllPlugins.map(p => ({
+          const: p,
+          description: `This will load the ${p} plugin package using "require". Make sure to include "${p}" in your package.json file and install your dependencies.`,
+        })),
+      },
+      {
+        type: 'string',
+        description: `Point to a custom plugin loaded from your file-system.`,
+        pattern: `(\\\\?([^\\/]*[\\/])*)([^\\/]+)$`,
+      },
+      {
+        type: 'string',
+        description: `You can point to any third-party module from node_modules that matches the requirements of a GraphQL Codegen plugin.`,
+      },
+    ],
   };
 
-  save(`./dist/config-schema.json`, rootSchema);
+  // Point the root schema to the config root
+  schema.$ref = `#/definitions/${ROOT_IDENTIFIER}`;
+
+  save(`./dist/config-schema.json`, schema);
 }
 
 async function save(path: string, schema: TJS.Definition) {

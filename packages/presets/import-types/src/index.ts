@@ -74,7 +74,11 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
           options.schemaAst
         )
       ) {
-        plugins.unshift({ add: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n` });
+        plugins.unshift({
+          content: {
+            value: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n`,
+          },
+        });
       }
     });
     return [

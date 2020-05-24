@@ -144,7 +144,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
       const plugins = [
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
-        ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({ add: importStatement }))),
+        ...(options.config.globalNamespace
+          ? []
+          : importStatements.map(importStatement => ({ add: { content: importStatement } }))),
         ...options.plugins,
       ];
       const config = {

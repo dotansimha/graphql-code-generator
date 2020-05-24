@@ -25,8 +25,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['typescript'],
-          'out2.ts': ['typescript'],
+          'out1.ts': { plugins: ['typescript'] },
+          'out2.ts': { plugins: ['typescript'] },
         },
       });
 
@@ -40,7 +40,7 @@ describe('Codegen Executor', () => {
         schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
         require: join(__dirname, './dummy-require.js'),
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': { plugins: ['typescript'] },
         },
         cwd: __dirname,
       });
@@ -55,7 +55,7 @@ describe('Codegen Executor', () => {
           schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
           require: join(__dirname, './missing.js'),
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': { plugins: ['typescript'] },
           },
           cwd: __dirname,
         });
@@ -72,9 +72,11 @@ describe('Codegen Executor', () => {
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            plugins: {
-              'typescript-operations': {},
-            },
+            plugins: [
+              {
+                'typescript-operations': {},
+              },
+            ],
           },
         },
       });
@@ -83,7 +85,7 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('export type RootQuery');
     });
 
-    it('Should accept plugins as arrat of objects', async () => {
+    it('Should accept plugins as array of objects', async () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
@@ -116,7 +118,9 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out.ts': ['typescript'],
+          'out.ts': {
+            plugins: ['typescript'],
+          },
         },
       });
 
@@ -145,7 +149,9 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': ['typescript'],
+            'out.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -160,7 +166,9 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': [],
+            'out.ts': {
+              plugins: [],
+            },
           },
         });
 
@@ -175,7 +183,9 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
-          'out.ts': ['typescript'],
+          'out.ts': {
+            plugins: ['typescript'],
+          },
         },
       });
 
@@ -245,7 +255,7 @@ describe('Codegen Executor', () => {
           `,
           documents: [`query q { e }`, `query q { f }`],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': { plugins: ['typescript'] },
           },
         });
         throw SHOULD_NOT_THROW_STRING;
@@ -260,7 +270,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
       expect(result[0].content).toContain('MyQuery');
@@ -272,7 +284,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
 
@@ -285,7 +299,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
 
@@ -298,7 +314,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
 
@@ -312,7 +330,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
       expect(result[0].content).toContain('MyQuery');
@@ -324,7 +344,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
 
@@ -337,7 +359,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
         pluckConfig: {
           modules: [
@@ -357,7 +381,7 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': { plugins: ['typescript'] },
         },
       });
 
@@ -373,7 +397,7 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': { plugins: ['typescript'] },
         },
         pluckConfig: {
           modules: [
@@ -402,7 +426,9 @@ describe('Codegen Executor', () => {
           namingConvention: 'lower-case#lowerCase',
         },
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations'],
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+          },
         },
       });
 
@@ -498,7 +524,9 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/basic.js'],
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/basic.js'],
+          },
         },
       });
 
@@ -511,7 +539,9 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['./tests/custom-plugins/invalid.js'],
+            'out1.ts': {
+              plugins: ['./tests/custom-plugins/invalid.js'],
+            },
           },
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -527,7 +557,9 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['./tests/custom-plugins/validation.js'],
+            'out1.ts': {
+              plugins: ['./tests/custom-plugins/validation.js'],
+            },
           },
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -542,7 +574,9 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+          },
         },
       });
 
@@ -558,7 +592,9 @@ describe('Codegen Executor', () => {
           test: 'MyType',
         },
         generates: {
-          'out1.ts': ['./tests/custom-plugins/extends-schema-fn.js'],
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/extends-schema-fn.js'],
+          },
         },
       });
 
@@ -679,7 +715,7 @@ describe('Codegen Executor', () => {
           },
         ],
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': { plugins: ['typescript'] },
         },
       });
 
@@ -716,7 +752,7 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': { plugins: ['typescript'] },
           },
         });
 
@@ -738,7 +774,9 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -760,7 +798,9 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -785,7 +825,9 @@ describe('Codegen Executor', () => {
           },
         ],
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
         },
       });
 
@@ -824,7 +866,9 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -847,7 +891,9 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -870,7 +916,9 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': ['typescript'],
+            'out1.ts': {
+              plugins: ['typescript'],
+            },
           },
         });
 
@@ -889,7 +937,9 @@ describe('Codegen Executor', () => {
         customFetch: 'some-fetch#someFetchFn',
         documents: ['./tests/test-documents/valid.graphql'],
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
         },
       });
     } catch (error) {
@@ -914,7 +964,9 @@ describe('Codegen Executor', () => {
           '!./tests/test-documents/unused-*.graphql',
         ],
         generates: {
-          'out1.ts': ['typescript'],
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
         },
       });
     } catch (e) {
@@ -927,7 +979,9 @@ describe('Codegen Executor', () => {
         schema: `schema { query: RootQuery } type MyType { f: String } type RootQuery { f: String }`,
         documents: `query root { f }`,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+          },
         },
       });
       expect(output.length).toBe(1);
