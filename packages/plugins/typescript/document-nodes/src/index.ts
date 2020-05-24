@@ -9,34 +9,37 @@ import { TypeScriptDocumentNodesVisitor } from './visitor';
 
 export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name namingConvention
    * @default pascal-case#pascalCase
    * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
-   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour,
+   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
    * which is to preserves underscores.
    *
-   * @example Override All Names
+   * @examples
+   * ## Override All Names
    * ```yml
    * config:
    *   namingConvention: lower-case#lowerCase
    * ```
-   * @example Upper-case enum values
+   *
+   * ## Upper-case enum values
    * ```yml
    * config:
    *   namingConvention:
    *     typeNames: pascal-case#pascalCase
    *     enumValues: upper-case#upperCase
    * ```
-   * @example Keep
+   *
+   * ## Keep name as-is
    * ```yml
    * config:
    *   namingConvention: keep
    * ```
-   * @example Remove Underscores
+   *
+   * ## Remove Underscores
    * ```yml
    * config:
    *   namingConvention:
@@ -46,11 +49,10 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    */
   namingConvention?: NamingConvention;
   /**
-   * @name namePrefix
-   * @default ''
+   * @default ""
    * @description Adds prefix to the name
    *
-   * @example
+   * @examples
    * ```yml
    *  documents: src/api/user-service/queries.graphql
    *  generates:
@@ -63,11 +65,10 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    */
   namePrefix?: string;
   /**
-   * @name nameSuffix
-   * @default ''
+   * @default ""
    * @description Adds suffix to the name
    *
-   * @example
+   * @examples
    * ```yml
    *  documents: src/api/user-service/queries.graphql
    *  generates:
@@ -79,7 +80,15 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * ```
    */
   nameSuffix?: string;
+  /**
+   * @default ""
+   * @description Adds prefix to the fragment variable
+   */
   fragmentPrefix?: string;
+  /**
+   * @default ""
+   * @description Adds suffix to the fragment variable
+   */
   fragmentSuffix?: string;
 }
 

@@ -31,10 +31,9 @@ export interface ParsedConfig {
 
 export interface RawConfig {
   /**
-   * @name scalars
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   scalars:
@@ -44,7 +43,6 @@ export interface RawConfig {
    */
   scalars?: ScalarsMap;
   /**
-   * @name namingConvention
    * @default pascal-case#pascalCase
    * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
@@ -54,24 +52,28 @@ export interface RawConfig {
    * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
    * which is to preserves underscores.
    *
-   * @example Override All Names
+   * @examples
+   * ## Override All Names
    * ```yml
    * config:
    *   namingConvention: lower-case#lowerCase
    * ```
-   * @example Upper-case enum values
+   *
+   * ## Upper-case enum values
    * ```yml
    * config:
    *   namingConvention:
    *     typeNames: pascal-case#pascalCase
    *     enumValues: upper-case#upperCase
    * ```
-   * @example Keep
+   *
+   * ## Keep names as is
    * ```yml
    * config:
    *   namingConvention: keep
    * ```
-   * @example Remove Underscores
+   *
+   * ## Remove Underscores
    * ```yml
    * config:
    *   namingConvention:
@@ -81,11 +83,10 @@ export interface RawConfig {
    */
   namingConvention?: NamingConvention;
   /**
-   * @name typesPrefix
    * @default ""
    * @description Prefixes all the generated types.
    *
-   * @example Add "I" Prefix
+   * @examples
    * ```yml
    * config:
    *   typesPrefix: I
@@ -93,11 +94,10 @@ export interface RawConfig {
    */
   typesPrefix?: string;
   /**
-   * @name skipTypename
    * @default false
    * @description Does not add __typename to the generated types, unless it was specified in the selection set.
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   skipTypename: true
@@ -105,12 +105,11 @@ export interface RawConfig {
    */
   skipTypename?: boolean;
   /**
-   * @name nonOptionalTypename
    * @default false
    * @description Automatically adds `__typename` field to the generated types, even when they are not specified
    * in the selection set, and makes it non-optional
    *
-   * @example
+   * @examples
    * ```yml
    * config:
    *   nonOptionalTypename: true

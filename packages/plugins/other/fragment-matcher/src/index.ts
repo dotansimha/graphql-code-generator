@@ -25,11 +25,10 @@ interface PossibleTypesResultData {
 
 export interface FragmentMatcherConfig {
   /**
-   * @name module
    * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.
    * @default es2015
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.json:
@@ -41,11 +40,10 @@ export interface FragmentMatcherConfig {
    */
   module?: 'commonjs' | 'es2015';
   /**
-   * @name apolloClientVersion
    * @description Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
    * @default 2
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -57,11 +55,10 @@ export interface FragmentMatcherConfig {
    */
   apolloClientVersion?: 2 | 3;
   /**
-   * @name useExplicitTyping
    * @description Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.
    * @default false
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.ts:

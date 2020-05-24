@@ -4,11 +4,10 @@ import { capitalCase } from 'change-case';
 
 export interface NamedOperationsObjectPluginConfig {
   /**
-   * @name identifierName
    * @description Allow you to customize the name of the exported identifier
    * @default namedOperations
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    * path/to/file.ts:

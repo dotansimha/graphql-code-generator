@@ -6,11 +6,10 @@ export type TimePluginConfig =
   | string
   | {
       /**
-       * @name format
        * @description Customize the Moment format of the output time.
        * @default YYYY-MM-DDTHH:mm:ssZ
        *
-       * @example
+       * @examples
        * ```yml
        * generates:
        * path/to/file.ts:
@@ -21,11 +20,10 @@ export type TimePluginConfig =
        */
       format: string;
       /**
-       * @name message
        * @description Customize the comment message
        * @default Generated on
        *
-       * @example
+       * @examples
        * ```yml
        * generates:
        * path/to/file.ts:

@@ -145,7 +145,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *    config:
    *      maybeValue: T | null | undefined
    * ```
-   * @example
+   *
    * ## Allow `null` in resolvers:
    * ```yml
    * generates:
@@ -163,7 +163,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false
    *
-   * @example
+   * @examples
    * ## Disable all export from a file
    * ```yml
    * generates:

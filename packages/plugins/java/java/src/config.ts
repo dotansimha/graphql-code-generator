@@ -1,10 +1,9 @@
 import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common';
 export interface JavaResolversPluginRawConfig extends RawConfig {
   /**
-   * @name package
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
@@ -16,10 +15,9 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    */
   package?: string;
   /**
-   * @name enumValues
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    *
-   * @example With Custom Values
+   * @examples
    * ```yml
    *   config:
    *     enumValues:
@@ -29,11 +27,10 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
-   * @name className
    * @default Types
    * @description Allow you to customize the parent class name.
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/MyGeneratedTypes.java:
@@ -45,11 +42,10 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    */
   className?: string;
   /**
-   * @name listType
    * @default Iterable
    * @description Allow you to customize the list type
    *
-   * @example
+   * @examples
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/Types.java:
