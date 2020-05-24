@@ -14,7 +14,7 @@ path/to/file.ts:
        format: DD.MM.YY
 ```
 
-### message (`string`, default value: `Generated in`)
+### message (`string`, default value: `Generated on`)
 
 Customize the comment message
 
@@ -26,5 +26,5 @@ generates:
 path/to/file.ts:
  plugins:
    - time:
-       message: "The file generated in: "
+       message: "The file generated on: "
 ```
