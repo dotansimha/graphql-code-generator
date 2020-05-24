@@ -1,4 +1,10 @@
 import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
+
+/**
+ * @description If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.
+ *
+ * It generates types that are pointing to the new form of types. It supports _most_ of the use-cases.
+ */
 export interface CompatibilityPluginRawConfig extends RawConfig {
   /**
    * @description Does not generate TypeScript `namespace`s and uses the operation name as prefix.

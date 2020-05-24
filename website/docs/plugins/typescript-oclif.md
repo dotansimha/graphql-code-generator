@@ -181,9 +181,3 @@ command, for example, you can just create a file at `src/commands/fix.ts`, follo
 (ie, export a class with a `run()` method), and `graphql-codegen` won't disturb that file - so long
 as you **don't** _also_ create a `fix.graphql` file next to it (in which case, it _would_ overrride
 `fix.ts` on the next run of `graphql-codegen`).
-
-## Configuration
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}

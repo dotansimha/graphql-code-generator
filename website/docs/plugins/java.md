@@ -3,13 +3,11 @@ id: java
 title: Java
 ---
 
-The `java` plugin generates Java `classes` for Enums and Input types.
+{@import ../generated-config/java.md}
 
-It works with `graphql-java` library.
+## How to use
 
-You can use this plugin to generate Java enums based on your GraphQL schema, and it also generates a type-safe Java transformer for GraphQL `input` types.
-
-Then, you can use it directly to transform your `input` in your resolvers:
+You can use it directly to transform your `input` in your resolvers:
 
 ```graphql
 type Query {
@@ -39,15 +37,3 @@ export class QueryResolvers {
     }
 }
 ```
-
-## Installation
-
-
-{@import ../plugins/java-installation.md}
-
-## Configuration
-
-
-{@import ../generated-config/java.md}
-
-{@import ../generated-config/base-visitor.md}

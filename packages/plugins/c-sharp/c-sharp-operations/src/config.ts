@@ -1,5 +1,8 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates C# `class` based on your GraphQL operations.
+ */
 export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Defined the global value of `namedClient`.

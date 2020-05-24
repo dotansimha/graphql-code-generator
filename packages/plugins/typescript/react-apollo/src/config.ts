@@ -1,4 +1,10 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+
+/**
+ * @description This plugin generates React Apollo components and HOC with TypeScript typings.
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ */
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Component.

@@ -7,6 +7,9 @@ import { OperationVisitor } from './operation-visitor';
 import { FileType } from './file-type';
 import { CustomTypeClassVisitor } from './custom-type-class';
 
+/**
+ * @description This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.
+ */
 export interface JavaApolloAndroidPluginConfig extends RawConfig {
   /**
    * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.

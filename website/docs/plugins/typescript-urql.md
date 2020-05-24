@@ -3,16 +3,11 @@ id: typescript-urql
 title: TypeScript Urql
 ---
 
-This plugin generates [`urql`](https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
-
-
 {@import ../plugins/client-note.md}
 
-## Installation
+{@import ../generated-config/typescript-urql.md}
 
-    $ yarn add @graphql-codegen/typescript-urql
-
-## Usage
+## Usage Example
 
 For the given input:
 
@@ -48,9 +43,3 @@ Or if you prefer:
 
 ## Configuration
 
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-urql.md}

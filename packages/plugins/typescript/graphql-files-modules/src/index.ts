@@ -2,6 +2,14 @@ import { basename, relative } from 'path';
 import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
+/**
+ * @description This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
+ *
+ * This plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.
+ *
+ * > ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.
+ *
+ */
 export interface TypeScriptFilesModulesPluginConfig {
   /**
    * @default ""
