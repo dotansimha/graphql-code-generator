@@ -1501,12 +1501,12 @@
     prisma-yml "1.34.10"
     tslib "~2.0.0"
 
-"@graphql-tools/relay-operation-optimizer@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/relay-operation-optimizer/-/relay-operation-optimizer-6.0.0.tgz#7e2bcad8fc870a5660d5261c0fbdfcb35cb084bd"
-  integrity sha512-r4WsuPpaKc5kLwnMb0MIiucqYEy6L9iAt/kfhsavzQkBzAAc1Ma5PwuiAqZsrW6AIl8WAf/fqkJ2wbb68ufv9w==
+"@graphql-tools/relay-operation-optimizer@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/relay-operation-optimizer/-/relay-operation-optimizer-6.0.1.tgz#1776774895c30d9126a6f343746023fc22093638"
+  integrity sha512-p2ZH+ov5JZfQW9P/w+o3SGNLiEJ9DHCrhfQuG6C8jJOqUs5TXtwqEaATdR19tuWYDCglmkBCYh727TYO9xwwXQ==
   dependencies:
-    "@graphql-tools/utils" "6.0.0"
+    "@graphql-tools/utils" "6.0.1"
     relay-compiler "9.1.0"
 
 "@graphql-tools/schema@6.0.0":
