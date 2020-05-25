@@ -12,7 +12,7 @@
     "mkdirp": "1.0.4",
     "jsonpath": "1.0.2",
     "@types/jsonpath": "0.2.0",
-    "@types/node": "13.13.8",
+    "@types/node": "13.13.9",
     "@types/fs-extra": "9.0.1",
     "fs-extra": "9.0.0",
     "typescript-json-schema": "0.42.0",
