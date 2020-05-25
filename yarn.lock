@@ -1388,6 +1388,15 @@
     "@graphql-tools/utils" "6.0.0"
     tslib "~2.0.0"
 
+"@graphql-tools/delegate@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-6.0.1.tgz#17581d5681ff1183d3492cd0b8acb74c8bfaa092"
+  integrity sha512-eb6KyskEOTOe3cJtqQGwoyjSxWZKvARPoS7bUB1ZY7SzSAFvDUomee3ercLVk9PTNwv+BE2ePpsFyAZkBhF4Xg==
+  dependencies:
+    "@graphql-tools/schema" "6.0.1"
+    "@graphql-tools/utils" "6.0.1"
+    tslib "~2.0.0"
+
 "@graphql-tools/git-loader@6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.0.1.tgz#3f9575802aabde23c2b058bbaec3305b6f4bf499"
@@ -1415,18 +1424,6 @@
     "@graphql-tools/utils" "6.0.1"
     fs-extra "9.0.0"
     tslib "~2.0.0"
-
-"@graphql-tools/graphql-tag-pluck@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.0.0.tgz#183142e8359190c16e712cdd47b62c49ccaa5841"
-  integrity sha512-EV6Ij0ACf2rIYpXolcLmNtgHUzVigZwvc7x3QCqG865jsIM9pn6LNCyChDlR/pqUe6yQT+9XmjcEGxZhYmpuNQ==
-  dependencies:
-    "@babel/parser" "7.9.6"
-    "@babel/traverse" "7.9.6"
-    "@babel/types" "7.9.6"
-    "@graphql-tools/utils" "6.0.0"
-  optionalDependencies:
-    vue-template-compiler "^2.6.11"
 
 "@graphql-tools/graphql-tag-pluck@6.0.1":
   version "6.0.1"
@@ -1472,15 +1469,6 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/merge@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.0.0.tgz#bbedb8c162fae5f2388cfd3aada52d39edafd928"
-  integrity sha512-ikLdS46Em08Hfuf9KRsoKkN08E4NaW4H3X2Mty6D8Vue7X+z4/wRXpfgAp09rYxN+EwVmWHJU5NswCyHTiVYSg==
-  dependencies:
-    "@graphql-tools/schema" "6.0.0"
-    "@graphql-tools/utils" "6.0.0"
-    tslib "~2.0.0"
-
 "@graphql-tools/merge@6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.0.1.tgz#2ce4efe5f541b7ea34b80e94e546dd4b99dde274"
@@ -1490,13 +1478,13 @@
     "@graphql-tools/utils" "6.0.1"
     tslib "~2.0.0"
 
-"@graphql-tools/prisma-loader@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-6.0.0.tgz#430377aaa8c1094f94c4cab49f832e5ce8c010ce"
-  integrity sha512-Mop9amXM/cs0jzwoh7ck61z1sKTy9lCkhPmu4U4N2CT35J11fKo5w8WAyKVY/hhAgGcvJFD1op6Y+/qcxeNqBQ==
+"@graphql-tools/prisma-loader@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-6.0.1.tgz#6eb3d88dfd734a2674d64ec3bd17771d8b9801c8"
+  integrity sha512-XkKD6fd+/bGPAV55jzXtkG7qPCytyRQ2XULLdRQNjyNg10R68iYA1wVAMP+tL84J0gpikmO9Bu2QiwxdCAFNwA==
   dependencies:
-    "@graphql-tools/url-loader" "6.0.0"
-    "@graphql-tools/utils" "6.0.0"
+    "@graphql-tools/url-loader" "6.0.1"
+    "@graphql-tools/utils" "6.0.1"
     fs-extra "9.0.0"
     prisma-yml "1.34.10"
     tslib "~2.0.0"
@@ -1536,6 +1524,17 @@
     tslib "~2.0.0"
     valid-url "1.0.9"
 
+"@graphql-tools/url-loader@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.0.1.tgz#b7ebcd8fe4dd7756b01039eb5992a46aa6327e80"
+  integrity sha512-Op+WqdQyFbNisY6hLKJYpc7HiYtiUD7JlzPqglFld9sgWv2dRHpQ9VB/oyzDhq+pLZ4KweVMPr8Bqfl/qw5cyg==
+  dependencies:
+    "@graphql-tools/utils" "6.0.1"
+    "@graphql-tools/wrap" "6.0.1"
+    cross-fetch "3.0.4"
+    tslib "~2.0.0"
+    valid-url "1.0.9"
+
 "@graphql-tools/utils@6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.0.tgz#ddbff7ceec9609fc02fde5a14c774a14a9b17e18"
@@ -1558,6 +1557,16 @@
     "@graphql-tools/delegate" "6.0.0"
     "@graphql-tools/schema" "6.0.0"
     "@graphql-tools/utils" "6.0.0"
+    tslib "~2.0.0"
+
+"@graphql-tools/wrap@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/wrap/-/wrap-6.0.1.tgz#8ef2bb5bf83898331e8e69cd402828c08fd2d845"
+  integrity sha512-8D5TZalct+7yqXbkv6fdpLs81/60T3EjL1SP/xAjvRlKCy3nrGL31xLeJmch6sqH3yQvzhD9sISmkjs6xTNAqQ==
+  dependencies:
+    "@graphql-tools/delegate" "6.0.1"
+    "@graphql-tools/schema" "6.0.1"
+    "@graphql-tools/utils" "6.0.1"
     tslib "~2.0.0"
 
 "@hapi/address@2.x.x":
