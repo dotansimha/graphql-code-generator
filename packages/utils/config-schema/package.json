@@ -1,0 +1,22 @@
+{
+  "name": "@graphql-codegen/config-schema",
+  "private": true,
+  "description": "This internal package is in charge of creating a dynamic JSON Schema validation for the codegen.yml file",
+  "version": "1.14.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/mkdirp": "1.0.0",
+    "mkdirp": "1.0.4",
+    "jsonpath": "1.0.2",
+    "@types/jsonpath": "0.2.0",
+    "@types/node": "13",
+    "@types/fs-extra": "9.0.1",
+    "fs-extra": "9.0.0",
+    "typescript-json-schema": "0.42.0",
+    "typescript": "3.9.3",
+    "ts-node": "8.10.1"
+  }
+}

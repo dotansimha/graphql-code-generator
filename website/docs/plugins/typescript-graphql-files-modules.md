@@ -3,19 +3,17 @@ id: typescript-graphql-files-modules
 title: TypeScript GraphQL Files Modules
 ---
 
-This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
+:::note Webpack Integration
 
-This plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.
+If you wish to have a simpler integration in a Webpack project, use [`graphql-let`](https://github.com/piglovesyou/graphql-let), it uses this plugin behind the scenes, and provides simpler developer experience.
 
-> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.
+:::
 
 ## Pre-Requirements
 
 To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack.
 
-## Installation
-
-    $ yarn add -D @graphql-codegen/typescript-graphql-files-modules 
+{@import ../generated-config/typescript-graphql-files-modules.md}
 
 ## Example
 
@@ -41,7 +39,3 @@ import myQuery from './my-query.graphql';
 
 import { myQuery } from './my-query.graphql';
 ```
-
-## Configuration
-
-{@import ../generated-config/graphql-files-modules.md}

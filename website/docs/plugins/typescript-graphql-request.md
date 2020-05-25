@@ -3,31 +3,13 @@ id: typescript-graphql-request
 title: TypeScript GraphQL-Request
 ---
 
-This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.
-
-
 {@import ../plugins/client-note.md}
 
-## Installation
+> Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
 
-[You can find a working example with this plugin here](https://github.com/dotansimha/graphql-codegen-graphql-request-example)
+{@import ../generated-config/typescript-graphql-request.md}
 
-    $ yarn add @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-graphql-request
-
-The, make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
-
-```yml
-schema: https://countries.trevorblades.com/
-documents: 'src/graphql/**/*.graphql'
-generates:
-  src/sdk.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-graphql-request
-```
-
-## Usage
+## Usage Example
 
 For the given input:
 
@@ -61,15 +43,6 @@ async function main() {
 }
 ```
 
-## Configuration
-
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-graphql-request.md}
-
 ## Simple Request Middleware
 
 The generated sdk accepts an optional middleware function to wrap the requests the `client` makes.
@@ -89,7 +62,7 @@ type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 - This example shows a naive request timing logger.
 
-```
+```ts
 const client = new GraphQLClient('');
 const clientTimingWrapper: SdkFunctionWrapper = async <T>(action: () => Promise<T>): Promise<T> => {
   const startTime = new Date();
@@ -103,7 +76,7 @@ const sdk = getSdk(client, clientTimingWrapper);
 
 - This example uses [polly-js](https://github.com/mauricedb/polly-js) to define a failure retry wrapper. (this is the use case for which i originally intended to add this capability)
 
-```
+```ts
 const withRetries: RetryWrapper = <T>(action: () => Promise<T>) =>
   polly()
     .handle((err: Error) => {

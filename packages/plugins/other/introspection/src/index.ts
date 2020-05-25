@@ -2,14 +2,15 @@ import { GraphQLSchema, introspectionFromSchema } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 
+/**
+ * @description This plugin generates a GraphQL introspection file based on your GraphQL schema.
+ */
 export interface IntrospectionPluginConfig {
   /**
-   * @name minify
-   * @type boolean
    * @description Set to `true` in order to minify the JSON output.
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * introspection.json:

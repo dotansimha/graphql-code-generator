@@ -1,0 +1,4175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Types.Config": {
+      "description": "Represents the root YAML schema for the config file.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/Types.InstanceOrArray",
+          "description": "A pointer(s) to your GraphQL schema. This schema will be the base schema for all your outputs.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/schema-field"
+        },
+        "require": {
+          "$ref": "#/definitions/Types.RequireExtension",
+          "description": "A path to a file which defines custom Node.JS require() handlers for custom file extensions.\nThis is essential if the code generator has to go through files which require other files in an unsupported format (by default).\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/require-field\nSee more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.\n\nNote: values that specified in your .yml file will get loaded after loading the config .yml file."
+        },
+        "customFetch": {
+          "description": "Name for a library that implements `fetch`.\nUse this to tell codegen to use that to fetch schemas in a custom way.",
+          "type": "string"
+        },
+        "documents": {
+          "$ref": "#/definitions/Types.InstanceOrArray_1",
+          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field"
+        },
+        "config": {
+          "$ref": "#/definitions/Types.PluginConfig",
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/config-field"
+        },
+        "generates": {
+          "description": "A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Types.ConfiguredOutput"
+          }
+        },
+        "overwrite": {
+          "description": "A flag to overwrite files if they already exist when generating code (`true` by default).\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
+          "type": "boolean"
+        },
+        "watch": {
+          "description": "A flag to trigger codegen when there are changes in the specified GraphQL schemas.\n\nYou can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": [
+                "string",
+                "boolean"
+              ]
+            }
+          ]
+        },
+        "silent": {
+          "description": "A flag to suppress printing errors when they occur.",
+          "type": "boolean"
+        },
+        "pluginLoader": {
+          "$ref": "#/definitions/Types.PackageLoaderFn",
+          "description": "If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than require."
+        },
+        "pluckConfig": {
+          "description": "Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field#graphql-tag-pluck",
+          "type": "object",
+          "properties": {
+            "modules": {
+              "$ref": "#/definitions/Array",
+              "description": "An array of package name and identifier that will be used to track down your gql usages and imports. Use this if your code files imports gql from another library or you have a custom gql tag. identifier is the named export, so don't provide it if the tag function is imported as default."
+            },
+            "magicComment": {
+              "description": "Configures the magic GraphQL comments to look for. The default is `GraphQL`.",
+              "type": "string"
+            },
+            "globalIdentifier": {
+              "description": "Overrides the name of the default GraphQL name identifier.",
+              "type": "string"
+            }
+          }
+        },
+        "hooks": {
+          "$ref": "#/definitions/Types.LifecycleHooksDefinition",
+          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
+        }
+      }
+    },
+    "TypeScriptPluginConfig": {
+      "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)",
+      "type": "object",
+      "properties": {
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.",
+          "default": false,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AvoidOptionalsConfig"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "constEnums": {
+          "description": "Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.",
+          "default": false,
+          "type": "boolean"
+        },
+        "enumsAsTypes": {
+          "description": "Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`",
+          "default": false,
+          "type": "boolean"
+        },
+        "futureProofEnums": {
+          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "enumsAsConst": {
+          "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.",
+          "default": false,
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars).\nInteracts well with `preResolveTypes: true`",
+          "default": false,
+          "type": "boolean"
+        },
+        "immutableTypes": {
+          "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "maybeValue": {
+          "description": "Allow to override the type value of `Maybe`.",
+          "default": "T | null",
+          "type": "string"
+        },
+        "noExport": {
+          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.",
+          "default": false,
+          "type": "boolean"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "declarationKind": {
+          "description": "Overrides the default output for various GraphQL elements.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeclarationKindConfig"
+            },
+            {
+              "enum": [
+                "abstract class",
+                "class",
+                "interface",
+                "type"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "fieldWrapperValue": {
+          "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.",
+          "default": "T",
+          "type": "string"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeScriptDocumentsPluginConfig": {
+      "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.",
+      "type": "object",
+      "properties": {
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.",
+          "default": false,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AvoidOptionalsConfig"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "immutableTypes": {
+          "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "flattenGeneratedTypes": {
+          "description": "Flatten fragment spread and inline fragments into a simple selection set before generating.",
+          "default": false,
+          "type": "boolean"
+        },
+        "noExport": {
+          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.",
+          "default": false,
+          "type": "boolean"
+        },
+        "globalNamespace": {
+          "type": "boolean"
+        },
+        "preResolveTypes": {
+          "default": false,
+          "description": "Avoid using `Pick` and resolve the actual primitive type of all selection set.",
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
+          "type": "string"
+        },
+        "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
+          "type": "boolean"
+        },
+        "exportFragmentSpreadSubTypes": {
+          "default": false,
+          "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.",
+          "type": "boolean"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "declarationKind": {
+          "description": "Overrides the default output for various GraphQL elements.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeclarationKindConfig"
+            },
+            {
+              "enum": [
+                "abstract class",
+                "class",
+                "interface",
+                "type"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "fieldWrapperValue": {
+          "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.",
+          "default": "T",
+          "type": "string"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "CSharpResolversPluginRawConfig": {
+      "description": "This plugin generates C# `class` identifier for your schema types.",
+      "type": "object",
+      "properties": {
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema."
+        },
+        "className": {
+          "default": "Types",
+          "description": "Allow you to customize the parent class name.",
+          "type": "string"
+        },
+        "listType": {
+          "default": "IEnumberable",
+          "description": "Allow you to customize the list type",
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "CSharpOperationsRawPluginConfig": {
+      "description": "This plugin generates C# `class` based on your GraphQL operations.",
+      "type": "object",
+      "properties": {
+        "namedClient": {
+          "description": "Defined the global value of `namedClient`.",
+          "type": "string"
+        },
+        "serviceName": {
+          "description": "Defined the global value of `serviceName`.",
+          "type": "string"
+        },
+        "querySuffix": {
+          "description": "Allows to define a custom suffix for query operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "mutationSuffix": {
+          "description": "Allows to define a custom suffix for mutation operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "subscriptionSuffix": {
+          "description": "Allows to define a custom suffix for Subscription operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "SchemaASTConfig": {
+      "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.",
+      "type": "object",
+      "properties": {
+        "includeDirectives": {
+          "description": "Include directives to Schema output.",
+          "default": false,
+          "type": "boolean"
+        },
+        "commentDescriptions": {
+          "description": "Set to true in order to print description as comments (using # instead of \"\"\")",
+          "default": false,
+          "type": "boolean"
+        },
+        "federation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeGraphQLPluginConfig": {
+      "type": "object",
+      "properties": {
+        "decoratorName": {
+          "$ref": "#/definitions/Partial"
+        },
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.",
+          "default": false,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AvoidOptionalsConfig"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "constEnums": {
+          "description": "Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.",
+          "default": false,
+          "type": "boolean"
+        },
+        "enumsAsTypes": {
+          "description": "Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`",
+          "default": false,
+          "type": "boolean"
+        },
+        "futureProofEnums": {
+          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "enumsAsConst": {
+          "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.",
+          "default": false,
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars).\nInteracts well with `preResolveTypes: true`",
+          "default": false,
+          "type": "boolean"
+        },
+        "immutableTypes": {
+          "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "maybeValue": {
+          "description": "Allow to override the type value of `Maybe`.",
+          "default": "T | null",
+          "type": "string"
+        },
+        "noExport": {
+          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.",
+          "default": false,
+          "type": "boolean"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "declarationKind": {
+          "description": "Overrides the default output for various GraphQL elements.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeclarationKindConfig"
+            },
+            {
+              "enum": [
+                "abstract class",
+                "class",
+                "interface",
+                "type"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "fieldWrapperValue": {
+          "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.",
+          "default": "T",
+          "type": "string"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeScriptFilesModulesPluginConfig": {
+      "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.",
+      "type": "object",
+      "properties": {
+        "modulePathPrefix": {
+          "default": "",
+          "description": "Allows specifying a module definition path prefix to provide distinction\nbetween generated types.",
+          "type": "string"
+        },
+        "relativeToCwd": {
+          "default": false,
+          "description": "By default, only the filename is being used to generate TS module declarations. Setting this to `true` will generate it with a full path based on the CWD.",
+          "type": "boolean"
+        },
+        "prefix": {
+          "default": "*\\/",
+          "description": "By default, a wildcard is being added as prefix, you can change that to a custom prefix",
+          "type": "string"
+        }
+      }
+    },
+    "NamedOperationsObjectPluginConfig": {
+      "type": "object",
+      "properties": {
+        "identifierName": {
+          "description": "Allow you to customize the name of the exported identifier",
+          "default": "namedOperations",
+          "type": "string"
+        }
+      }
+    },
+    "RawGraphQLRequestPluginConfig": {
+      "description": "This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.",
+      "type": "object",
+      "properties": {
+        "rawRequest": {
+          "description": "By default the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.",
+          "default": false,
+          "type": "boolean"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "CompatibilityPluginRawConfig": {
+      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
+      "type": "object",
+      "properties": {
+        "noNamespaces": {
+          "description": "Does not generate TypeScript `namespace`s and uses the operation name as prefix.",
+          "default": false,
+          "type": "boolean"
+        },
+        "strict": {
+          "description": "Make sure to generate code that compatible with TypeScript strict mode.",
+          "default": false,
+          "type": "boolean"
+        },
+        "preResolveTypes": {
+          "description": "Avoid using `Pick` in `typescript-operations` and make sure to optimize this package as well.",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeScriptMongoPluginConfig": {
+      "type": "object",
+      "properties": {
+        "dbTypeSuffix": {
+          "default": "DbObject",
+          "description": "Customize the suffix for the generated GraphQL `type`s.",
+          "type": "string"
+        },
+        "dbInterfaceSuffix": {
+          "default": "DbObject",
+          "description": "Customize the suffix for the generated GraphQL `interface`s.",
+          "type": "string"
+        },
+        "objectIdType": {
+          "default": "mongodb#ObjectId",
+          "description": "Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.",
+          "type": "string"
+        },
+        "idFieldName": {
+          "default": "_id",
+          "description": "Customize the name of the id field generated after using `@id` directive over a GraphQL field.",
+          "type": "string"
+        },
+        "enumsAsString": {
+          "default": true,
+          "description": "Replaces generated `enum` values with `string`.",
+          "type": "boolean"
+        },
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeScriptResolversPluginConfig": {
+      "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen",
+      "type": "object",
+      "properties": {
+        "useIndexSignature": {
+          "description": "Adds an index signature to any generates resolver.",
+          "default": false,
+          "type": "boolean"
+        },
+        "noSchemaStitching": {
+          "description": "Disables Schema Stitching support.\n\nNote: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.",
+          "default": false,
+          "type": "boolean"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions. Needed for\ncompatibility with `federation: true` when",
+          "default": true,
+          "type": "boolean"
+        },
+        "customResolveInfo": {
+          "description": "You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js",
+          "default": "graphql#GraphQLResolveInfo",
+          "type": "string"
+        },
+        "customResolverFn": {
+          "description": "You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>",
+          "default": "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult",
+          "type": "string"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "contextType": {
+          "description": "Use this configuration to set a custom type for your `context`, and it will\neffect all the resolvers, without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use a `module#type` syntax.",
+          "type": "string"
+        },
+        "fieldContextTypes": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
+        "rootValueType": {
+          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\neffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
+          "type": "string"
+        },
+        "mapperTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
+        },
+        "mappers": {
+          "description": "Replaces a GraphQL type usage with a custom type, allowing you to return custom object from\nyour resolvers.\nYou can use both `module#type` and `module#namespace#type` syntax.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "defaultMapper": {
+          "description": "Allow you to set the default mapper when it's not being override by `mappers` or generics.\nYou can specify a type name, or specify a string in `module#type` or `module#namespace#type` format.\nThe default value of mappers it the TypeScript type generated by `typescript` package.",
+          "type": "string"
+        },
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.",
+          "default": false,
+          "type": "boolean"
+        },
+        "showUnusedMappers": {
+          "description": "Warns about unused mappers.",
+          "default": true,
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
+        },
+        "resolverTypeWrapperSignature": {
+          "default": "Promise<T> | T",
+          "description": "Allow you to override `resolverTypeWrapper` definition.",
+          "type": "string"
+        },
+        "federation": {
+          "default": false,
+          "description": "Supports Apollo Federation",
+          "type": "boolean"
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "optionalResolveType": {
+          "default": false,
+          "description": "Sets the `__resolveType` field as optional field.",
+          "type": "boolean"
+        },
+        "immutableTypes": {
+          "default": false,
+          "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "ApolloAngularRawPluginConfig": {
+      "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12",
+      "type": "object",
+      "properties": {
+        "ngModule": {
+          "description": "Allows to define `ngModule` as part of the plugin's config so it's globally available.",
+          "type": "string"
+        },
+        "namedClient": {
+          "description": "Defined the global value of `namedClient`.",
+          "type": "string"
+        },
+        "serviceName": {
+          "description": "Defined the global value of `serviceName`.",
+          "type": "string"
+        },
+        "serviceProvidedInRoot": {
+          "description": "Defined the global value of `serviceProvidedInRoot`.",
+          "type": "boolean"
+        },
+        "sdkClass": {
+          "description": "Set to `true` in order to generate a SDK service class that uses all generated services.",
+          "default": false,
+          "type": "boolean"
+        },
+        "querySuffix": {
+          "description": "Allows to define a custom suffix for query operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "mutationSuffix": {
+          "description": "Allows to define a custom suffix for mutation operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "subscriptionSuffix": {
+          "description": "Allows to define a custom suffix for Subscription operations.",
+          "default": "GQL",
+          "type": "string"
+        },
+        "apolloAngularPackage": {
+          "description": "Allows to define a custom Apollo-Angular package to import types from.",
+          "default": "'apollo-angular'",
+          "type": "string"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "UrqlRawPluginConfig": {
+      "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.",
+      "type": "object",
+      "properties": {
+        "withComponent": {
+          "description": "Customized the output by enabling/disabling the generated Component.",
+          "default": true,
+          "type": "boolean"
+        },
+        "withHooks": {
+          "description": "Customized the output by enabling/disabling the generated React Hooks.",
+          "default": false,
+          "type": "boolean"
+        },
+        "urqlImportFrom": {
+          "description": "You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs\nThis is useful for further abstraction of some common tasks (eg. error handling).\nFilepath relative to generated file can be also specified.",
+          "default": "urql",
+          "type": "string"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "ReactApolloRawPluginConfig": {
+      "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "type": "object",
+      "properties": {
+        "withComponent": {
+          "description": "Customized the output by enabling/disabling the generated Component.",
+          "default": true,
+          "type": "boolean"
+        },
+        "withHOC": {
+          "description": "Customized the output by enabling/disabling the HOC.",
+          "default": true,
+          "type": "boolean"
+        },
+        "withHooks": {
+          "description": "Customized the output by enabling/disabling the generated React Hooks.",
+          "default": false,
+          "type": "boolean"
+        },
+        "withMutationFn": {
+          "description": "Customized the output by enabling/disabling the generated mutation function signature.",
+          "default": true,
+          "type": "boolean"
+        },
+        "withRefetchFn": {
+          "description": "Enable generating a function to be used with refetchQueries",
+          "default": false,
+          "type": "boolean"
+        },
+        "apolloReactCommonImportFrom": {
+          "description": "Customize the package where apollo-react common lib is loaded from.",
+          "default": "",
+          "type": "string"
+        },
+        "apolloReactComponentsImportFrom": {
+          "description": "Customize the package where apollo-react component lib is loaded from.",
+          "default": "",
+          "type": "string"
+        },
+        "apolloReactHocImportFrom": {
+          "description": "Customize the package where apollo-react HOC lib is loaded from.",
+          "default": "",
+          "type": "string"
+        },
+        "apolloReactHooksImportFrom": {
+          "description": "Customize the package where apollo-react hooks lib is loaded from.",
+          "default": "",
+          "type": "string"
+        },
+        "componentSuffix": {
+          "description": "You can specify a suffix that gets attached to the name of the generated component.",
+          "default": "Component",
+          "type": "string"
+        },
+        "reactApolloVersion": {
+          "description": "Sets the version of react-apollo.",
+          "default": 2,
+          "enum": [
+            2,
+            3
+          ],
+          "type": "number"
+        },
+        "withResultType": {
+          "description": "Customized the output by enabling/disabling the generated result type.",
+          "default": true,
+          "type": "boolean"
+        },
+        "withMutationOptionsType": {
+          "description": "Customized the output by enabling/disabling the generated mutation option type.",
+          "default": true,
+          "type": "boolean"
+        },
+        "addDocBlocks": {
+          "description": "Allows you to enable/disable the generation of docblocks in generated code.\nSome IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.",
+          "default": true,
+          "type": "boolean"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "VueApolloRawPluginConfig": {
+      "description": "This plugin generates",
+      "type": "object",
+      "properties": {
+        "withCompositionFunctions": {
+          "description": "Customized the output by enabling/disabling the generated Vue composition functions.",
+          "default": true,
+          "type": "boolean"
+        },
+        "vueApolloComposableImportFrom": {
+          "default": "",
+          "type": "string"
+        },
+        "addDocBlocks": {
+          "description": "Allows you to enable/disable the generation of docblocks in generated code.\nSome IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.",
+          "default": true,
+          "type": "boolean"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "StencilApolloRawPluginConfig": {
+      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "type": "object",
+      "properties": {
+        "componentType": {
+          "$ref": "#/definitions/StencilComponentType",
+          "description": "Customize the output of the plugin - you can choose to generate a Component class or a function component.",
+          "default": "functional"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "TypeScriptDocumentNodesRawPluginConfig": {
+      "description": "This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).",
+      "type": "object",
+      "properties": {
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "namePrefix": {
+          "default": "",
+          "description": "Adds prefix to the name",
+          "type": "string"
+        },
+        "nameSuffix": {
+          "default": "",
+          "description": "Adds suffix to the name",
+          "type": "string"
+        },
+        "fragmentPrefix": {
+          "default": "",
+          "description": "Adds prefix to the fragment variable",
+          "type": "string"
+        },
+        "fragmentSuffix": {
+          "default": "",
+          "description": "Adds suffix to the fragment variable",
+          "type": "string"
+        },
+        "noGraphQLTag": {
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "type": "string"
+        },
+        "noExport": {
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode"
+        },
+        "importOperationTypesFrom": {
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "JavaApolloAndroidPluginConfig": {
+      "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.",
+      "type": "object",
+      "properties": {
+        "package": {
+          "description": "Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.",
+          "type": "string"
+        },
+        "typePackage": {
+          "description": "Customize the Java package name for the types generated based on input types.",
+          "type": "string"
+        },
+        "fragmentPackage": {
+          "description": "Customize the Java package name for the fragments generated classes.",
+          "type": "string"
+        },
+        "fileType": {
+          "$ref": "#/definitions/FileType"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "JavaResolversPluginRawConfig": {
+      "type": "object",
+      "properties": {
+        "package": {
+          "description": "Customize the Java package name. The default package name will be generated according to the output file path.",
+          "type": "string"
+        },
+        "mappers": {
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "defaultMapper": {
+          "default": "Object",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.",
+          "type": "string"
+        },
+        "className": {
+          "default": "Resolvers",
+          "description": "Allow you to customize the parent class name.",
+          "type": "string"
+        },
+        "listType": {
+          "default": "Iterable",
+          "description": "Allow you to customize the list type.",
+          "type": "string"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "KotlinResolversPluginRawConfig": {
+      "type": "object",
+      "properties": {
+        "package": {
+          "description": "Customize the Java package name. The default package name will be generated according to the output file path.",
+          "type": "string"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema."
+        },
+        "listType": {
+          "default": "Iterable",
+          "description": "Allow you to customize the list type",
+          "type": "string"
+        },
+        "withTypes": {
+          "default": false,
+          "description": "Allow you to enable generation for the types",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "FlowPluginConfig": {
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "type": "object",
+      "properties": {
+        "useFlowExactObjects": {
+          "description": "Generates Flow types as Exact types.",
+          "default": true,
+          "type": "boolean"
+        },
+        "useFlowReadOnlyTypes": {
+          "description": "Generates read-only Flow types",
+          "default": false,
+          "type": "boolean"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "declarationKind": {
+          "description": "Overrides the default output for various GraphQL elements.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeclarationKindConfig"
+            },
+            {
+              "enum": [
+                "abstract class",
+                "class",
+                "interface",
+                "type"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "fieldWrapperValue": {
+          "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.",
+          "default": "T",
+          "type": "string"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "RawFlowResolversConfig": {
+      "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "type": "object",
+      "properties": {
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "contextType": {
+          "description": "Use this configuration to set a custom type for your `context`, and it will\neffect all the resolvers, without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use a `module#type` syntax.",
+          "type": "string"
+        },
+        "fieldContextTypes": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
+        "rootValueType": {
+          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\neffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
+          "type": "string"
+        },
+        "mapperTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
+        },
+        "mappers": {
+          "description": "Replaces a GraphQL type usage with a custom type, allowing you to return custom object from\nyour resolvers.\nYou can use both `module#type` and `module#namespace#type` syntax.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "defaultMapper": {
+          "description": "Allow you to set the default mapper when it's not being override by `mappers` or generics.\nYou can specify a type name, or specify a string in `module#type` or `module#namespace#type` format.\nThe default value of mappers it the TypeScript type generated by `typescript` package.",
+          "type": "string"
+        },
+        "avoidOptionals": {
+          "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.",
+          "default": false,
+          "type": "boolean"
+        },
+        "showUnusedMappers": {
+          "description": "Warns about unused mappers.",
+          "default": true,
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
+        },
+        "resolverTypeWrapperSignature": {
+          "default": "Promise<T> | T",
+          "description": "Allow you to override `resolverTypeWrapper` definition.",
+          "type": "string"
+        },
+        "federation": {
+          "default": false,
+          "description": "Supports Apollo Federation",
+          "type": "boolean"
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "optionalResolveType": {
+          "default": false,
+          "description": "Sets the `__resolveType` field as optional field.",
+          "type": "boolean"
+        },
+        "immutableTypes": {
+          "default": false,
+          "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "FlowDocumentsPluginConfig": {
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "type": "object",
+      "properties": {
+        "useFlowExactObjects": {
+          "description": "Generates Flow types as Exact types.",
+          "default": true,
+          "type": "boolean"
+        },
+        "useFlowReadOnlyTypes": {
+          "description": "Generates read-only Flow types",
+          "default": false,
+          "type": "boolean"
+        },
+        "flattenGeneratedTypes": {
+          "description": "Flatten fragment spread and inline fragments into a simple selection set before generating.",
+          "default": false,
+          "type": "boolean"
+        },
+        "preResolveTypes": {
+          "default": false,
+          "description": "Avoid using `Pick` and resolve the actual primitive type of all selection set.",
+          "type": "boolean"
+        },
+        "globalNamespace": {
+          "default": false,
+          "description": "Puts all generated code under `global` namespace. Useful for Stencil integration.",
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
+          "type": "string"
+        },
+        "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
+          "type": "boolean"
+        },
+        "exportFragmentSpreadSubTypes": {
+          "default": false,
+          "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.",
+          "type": "boolean"
+        },
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "declarationKind": {
+          "description": "Overrides the default output for various GraphQL elements.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeclarationKindConfig"
+            },
+            {
+              "enum": [
+                "abstract class",
+                "class",
+                "interface",
+                "type"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "fieldWrapperValue": {
+          "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.",
+          "default": "T",
+          "type": "string"
+        },
+        "wrapFieldDefinitions": {
+          "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
+    "IntrospectionPluginConfig": {
+      "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.",
+      "type": "object",
+      "properties": {
+        "minify": {
+          "description": "Set to `true` in order to minify the JSON output.",
+          "default": false,
+          "type": "boolean"
+        },
+        "federation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FragmentMatcherConfig": {
+      "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.",
+      "type": "object",
+      "properties": {
+        "module": {
+          "description": "Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.",
+          "default": "es2015",
+          "enum": [
+            "commonjs",
+            "es2015"
+          ],
+          "type": "string"
+        },
+        "apolloClientVersion": {
+          "description": "Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.",
+          "default": 2,
+          "enum": [
+            2,
+            3
+          ],
+          "type": "number"
+        },
+        "useExplicitTyping": {
+          "description": "Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.",
+          "default": false,
+          "type": "boolean"
+        },
+        "federation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Types.InstanceOrArray": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Types.SchemaWithLoader"
+        },
+        {
+          "$ref": "#/definitions/Types.SchemaWithRequire"
+        },
+        {
+          "$ref": "#/definitions/Types.UrlSchemaWithOptions"
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Types.SchemaWithLoader"
+              },
+              {
+                "$ref": "#/definitions/Types.SchemaWithRequire"
+              },
+              {
+                "$ref": "#/definitions/Types.UrlSchemaWithOptions"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Types.SchemaWithLoader": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.SchemaWithLoaderOptions"
+      }
+    },
+    "Types.SchemaWithLoaderOptions": {
+      "additionalProperties": false,
+      "description": "Loads schema using a pointer, with a custom loader (code file).",
+      "type": "object",
+      "properties": {
+        "loader": {
+          "description": "Specify a path to a custom code file (local or module) that will handle the schema loading.",
+          "type": "string"
+        }
+      }
+    },
+    "Types.SchemaWithRequire": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.SchemaWithRequireOptions"
+      }
+    },
+    "Types.SchemaWithRequireOptions": {
+      "additionalProperties": false,
+      "description": "Loads schema using a pointer, without using `require` while looking for schemas in code files.",
+      "type": "object",
+      "properties": {
+        "noRequire": {
+          "description": "Set this to `true` in order to tell codegen not to try to `require` files in order to find schema",
+          "type": "boolean"
+        }
+      }
+    },
+    "Types.UrlSchemaWithOptions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.UrlSchemaOptions"
+      }
+    },
+    "Types.UrlSchemaOptions": {
+      "additionalProperties": false,
+      "description": "Loads a schema from remote endpoint, with custom http options.",
+      "type": "object",
+      "properties": {
+        "headers": {
+          "description": "HTTP headers you wish to add to the HTTP request sent by codegen to fetch your GraphQL remote schema.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Types.RequireExtension": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Types.InstanceOrArray_1": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Types.CustomDocumentLoader"
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Types.CustomDocumentLoader"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Types.CustomDocumentLoader": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.CustomDocumentLoaderOptions"
+      }
+    },
+    "Types.CustomDocumentLoaderOptions": {
+      "additionalProperties": false,
+      "description": "Specify a path to a custom loader for your GraphQL documents.",
+      "type": "object",
+      "properties": {
+        "loader": {
+          "description": "Specify a path to a custom code file (local or module) that will handle the documents loading.",
+          "type": "string"
+        }
+      }
+    },
+    "__type": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/T"
+      }
+    },
+    "T": {
+      "type": "object"
+    },
+    "Types.PluginConfig": {
+      "$ref": "#/definitions/__type"
+    },
+    "Types.ConfiguredOutput": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "plugins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeneratedPluginsMap"
+          },
+          "description": "List of plugins to apply to this current output file.\n\nYou can either specify plugins from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for custom plugins.\n\nYou can find a list of available plugins here: https://graphql-code-generator.com/docs/plugins/index\nNeed a custom plugin? read this: https://graphql-code-generator.com/docs/custom-codegen/index"
+        },
+        "preset": {
+          "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "buildGeneratesSection": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "presetConfig": {
+          "description": "If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "overwrite": {
+          "description": "A flag to overwrite files if they already exist when generating code (`true` by default).\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
+          "type": "boolean"
+        },
+        "documents": {
+          "$ref": "#/definitions/Types.InstanceOrArray_1",
+          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field"
+        },
+        "schema": {
+          "$ref": "#/definitions/Types.InstanceOrArray",
+          "description": "A pointer(s) to your GraphQL schema. This schema will be available only for this specific `generates` record.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/schema-field"
+        },
+        "config": {
+          "additionalProperties": true
+        },
+        "hooks": {
+          "$ref": "#/definitions/Types.LifecycleHooksDefinition",
+          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect only the current output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-operations"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptDocumentsPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "c-sharp"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/CSharpResolversPluginRawConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "c-sharp-operations"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/CSharpOperationsRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "schema-ast"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/SchemaASTConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-type-graphql"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeGraphQLPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-graphql-files-modules"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "named-operations-object"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/NamedOperationsObjectPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-graphql-request"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/RawGraphQLRequestPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-compatibility"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/CompatibilityPluginRawConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-mongodb"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptMongoPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-resolvers"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptResolversPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-apollo-angular"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/ApolloAngularRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-urql"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/UrqlRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-react-apollo"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/ReactApolloRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-vue-apollo"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/VueApolloRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-stencil-apollo"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/StencilApolloRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-document-nodes"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "java-apollo-android"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "java-resolvers"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/JavaResolversPluginRawConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "java"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/JavaResolversPluginRawConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "kotlin"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/KotlinResolversPluginRawConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "flow"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/FlowPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "flow-resolvers"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/RawFlowResolversConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "flow-operations"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/FlowDocumentsPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "introspection"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/IntrospectionPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "fragment-matcher"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/FragmentMatcherConfig"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "__type_1": {
+      "type": "object",
+      "properties": {
+        "afterStart": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).\n\nSpecify a shell command to run."
+        },
+        "beforeDone": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.\n\nSpecify a shell command to run."
+        },
+        "onWatchTriggered": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered every time a file changes when using watch mode.\nTriggered with two arguments: the type of the event (for example, `changed`) and the path of the file."
+        },
+        "onError": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered in case of a general error in the codegen. The argument is a string containing the error."
+        },
+        "afterOneFileWrite": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered after a file is written to the file-system. Executed with the path for the file.\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered.\n\n> This is a very useful hook, you can use it for integration with Prettier or other linters."
+        },
+        "afterAllFileWrite": {
+          "$ref": "#/definitions/T_1",
+          "description": "Executed after writing all the files to the file-system.\nTriggered with multiple arguments - paths for all files."
+        },
+        "beforeOneFileWrite": {
+          "$ref": "#/definitions/T_1",
+          "description": "Triggered before a file is written to the file-system. Executed with the path for the file.\n\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered."
+        },
+        "beforeAllFileWrite": {
+          "$ref": "#/definitions/T_1",
+          "description": "Executed after the codegen has done creating the output and before writing the files to the file-system.\n\nTriggered with multiple arguments - paths for all relevant files.\n\n> Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution."
+        }
+      }
+    },
+    "T_1": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Types.LifecycleHooksDefinition": {
+      "$ref": "#/definitions/__type_1"
+    },
+    "__type_2": {
+      "type": "object"
+    },
+    "Types.PackageLoaderFn": {
+      "$ref": "#/definitions/__type_2"
+    },
+    "Array": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "the name of the NPM package name you wish to look for",
+            "type": "string"
+          },
+          "identifier": {
+            "description": "the tag identifier name you wish to look for",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AvoidOptionalsConfig": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "boolean"
+        },
+        "object": {
+          "type": "boolean"
+        },
+        "inputValue": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EnumValuesMap": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number"
+                      ]
+                    }
+                  },
+                  {
+                    "$ref": "#/definitions/AdditionalProps"
+                  }
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "AdditionalProps": {
+      "type": "object"
+    },
+    "DeclarationKindConfig": {
+      "type": "object",
+      "properties": {
+        "scalar": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "input": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "type": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "interface": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "arguments": {
+          "$ref": "#/definitions/DeclarationKind"
+        }
+      }
+    },
+    "DeclarationKind": {
+      "enum": [
+        "abstract class",
+        "class",
+        "interface",
+        "type"
+      ],
+      "type": "string"
+    },
+    "ScalarsMap": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "NamingConvention": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/NamingConventionMap"
+        },
+        {
+          "type": [
+            "string",
+            "object"
+          ]
+        }
+      ]
+    },
+    "NamingConventionMap": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "enumValues": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "typeNames": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "transformUnderscore": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FragmentDefinitionNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "FragmentDefinition"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "variableDefinitions": {
+          "$ref": "#/definitions/ReadonlyArray"
+        },
+        "typeCondition": {
+          "$ref": "#/definitions/NamedTypeNode"
+        },
+        "directives": {
+          "$ref": "#/definitions/ReadonlyArray_3"
+        },
+        "selectionSet": {
+          "$ref": "#/definitions/SelectionSetNode"
+        }
+      }
+    },
+    "Location": {
+      "description": "Contains a range of UTF-8 character offsets and token references that\nidentify the region of the source from which the AST derived.",
+      "type": "object",
+      "properties": {
+        "start": {
+          "description": "The character offset at which this Node begins.",
+          "type": "number"
+        },
+        "end": {
+          "description": "The character offset at which this Node ends.",
+          "type": "number"
+        },
+        "startToken": {
+          "$ref": "#/definitions/Token",
+          "description": "The Token at which this Node begins."
+        },
+        "endToken": {
+          "$ref": "#/definitions/Token",
+          "description": "The Token at which this Node ends."
+        },
+        "source": {
+          "$ref": "#/definitions/Source",
+          "description": "The Source document the AST represents."
+        }
+      }
+    },
+    "Token": {
+      "description": "Represents a range of characters represented by a lexical token\nwithin a Source.",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/TokenKindEnum",
+          "description": "The kind of Token."
+        },
+        "start": {
+          "description": "The character offset at which this Node begins.",
+          "type": "number"
+        },
+        "end": {
+          "description": "The character offset at which this Node ends.",
+          "type": "number"
+        },
+        "line": {
+          "description": "The 1-indexed line number on which this Token appears.",
+          "type": "number"
+        },
+        "column": {
+          "description": "The 1-indexed column number at which this Token begins.",
+          "type": "number"
+        },
+        "value": {
+          "description": "For non-punctuation tokens, represents the interpreted value of the token.",
+          "type": "string"
+        },
+        "prev": {
+          "$ref": "#/definitions/Token",
+          "description": "Tokens exist as nodes in a double-linked-list amongst all tokens\nincluding ignored tokens. <SOF> is always the first node and <EOF>\nthe last."
+        },
+        "next": {
+          "$ref": "#/definitions/Token"
+        }
+      }
+    },
+    "TokenKindEnum": {
+      "description": "The enum type representing the token kinds values.",
+      "enum": [
+        "!",
+        "$",
+        "&",
+        "(",
+        ")",
+        "...",
+        ":",
+        "<EOF>",
+        "<SOF>",
+        "=",
+        "@",
+        "BlockString",
+        "Comment",
+        "Float",
+        "Int",
+        "Name",
+        "String",
+        "[",
+        "]",
+        "{",
+        "|",
+        "}"
+      ],
+      "type": "string"
+    },
+    "Source": {
+      "description": "A representation of source input to GraphQL.\n`name` and `locationOffset` are optional. They are useful for clients who\nstore GraphQL documents in source files; for example, if the GraphQL input\nstarts at line 40 in a file named Foo.graphql, it might be useful for name to\nbe \"Foo.graphql\" and location to be `{ line: 40, column: 0 }`.\nline and column in locationOffset are 1-indexed",
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "locationOffset": {
+          "$ref": "#/definitions/Location_1"
+        }
+      }
+    },
+    "Location_1": {
+      "type": "object",
+      "properties": {
+        "line": {
+          "type": "number"
+        },
+        "column": {
+          "type": "number"
+        }
+      }
+    },
+    "NameNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Name"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ReadonlyArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/VariableDefinitionNode"
+      }
+    },
+    "VariableDefinitionNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "VariableDefinition"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "variable": {
+          "$ref": "#/definitions/VariableNode"
+        },
+        "type": {
+          "$ref": "#/definitions/TypeNode"
+        },
+        "defaultValue": {
+          "$ref": "#/definitions/ValueNode"
+        },
+        "directives": {
+          "$ref": "#/definitions/ReadonlyArray_3"
+        }
+      }
+    },
+    "VariableNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Variable"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        }
+      }
+    },
+    "TypeNode": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/NamedTypeNode"
+        },
+        {
+          "$ref": "#/definitions/ListTypeNode"
+        },
+        {
+          "$ref": "#/definitions/NonNullTypeNode"
+        }
+      ]
+    },
+    "NamedTypeNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "NamedType"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        }
+      }
+    },
+    "ListTypeNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ListType"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "type": {
+          "$ref": "#/definitions/TypeNode"
+        }
+      }
+    },
+    "NonNullTypeNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "NonNullType"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/NamedTypeNode"
+            },
+            {
+              "$ref": "#/definitions/ListTypeNode"
+            }
+          ]
+        }
+      }
+    },
+    "ValueNode": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VariableNode"
+        },
+        {
+          "$ref": "#/definitions/IntValueNode"
+        },
+        {
+          "$ref": "#/definitions/FloatValueNode"
+        },
+        {
+          "$ref": "#/definitions/StringValueNode"
+        },
+        {
+          "$ref": "#/definitions/BooleanValueNode"
+        },
+        {
+          "$ref": "#/definitions/NullValueNode"
+        },
+        {
+          "$ref": "#/definitions/EnumValueNode"
+        },
+        {
+          "$ref": "#/definitions/ListValueNode"
+        },
+        {
+          "$ref": "#/definitions/ObjectValueNode"
+        }
+      ]
+    },
+    "IntValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "IntValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "FloatValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "FloatValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "StringValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "StringValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "string"
+        },
+        "block": {
+          "type": "boolean"
+        }
+      }
+    },
+    "BooleanValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "BooleanValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NullValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "NullValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        }
+      }
+    },
+    "EnumValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "EnumValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ListValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ListValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "values": {
+          "$ref": "#/definitions/ReadonlyArray_1"
+        }
+      }
+    },
+    "ReadonlyArray_1": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/VariableNode"
+          },
+          {
+            "$ref": "#/definitions/IntValueNode"
+          },
+          {
+            "$ref": "#/definitions/FloatValueNode"
+          },
+          {
+            "$ref": "#/definitions/StringValueNode"
+          },
+          {
+            "$ref": "#/definitions/BooleanValueNode"
+          },
+          {
+            "$ref": "#/definitions/NullValueNode"
+          },
+          {
+            "$ref": "#/definitions/EnumValueNode"
+          },
+          {
+            "$ref": "#/definitions/ListValueNode"
+          },
+          {
+            "$ref": "#/definitions/ObjectValueNode"
+          }
+        ]
+      }
+    },
+    "ObjectValueNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ObjectValue"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "fields": {
+          "$ref": "#/definitions/ReadonlyArray_2"
+        }
+      }
+    },
+    "ReadonlyArray_2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ObjectFieldNode"
+      }
+    },
+    "ObjectFieldNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ObjectField"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "value": {
+          "$ref": "#/definitions/ValueNode"
+        }
+      }
+    },
+    "ReadonlyArray_3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DirectiveNode"
+      }
+    },
+    "DirectiveNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Directive"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "arguments": {
+          "$ref": "#/definitions/ReadonlyArray_4"
+        }
+      }
+    },
+    "ReadonlyArray_4": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ArgumentNode"
+      }
+    },
+    "ArgumentNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Argument"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "value": {
+          "$ref": "#/definitions/ValueNode"
+        }
+      }
+    },
+    "SelectionSetNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SelectionSet"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "selections": {
+          "$ref": "#/definitions/ReadonlyArray_5"
+        }
+      }
+    },
+    "ReadonlyArray_5": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/FieldNode"
+          },
+          {
+            "$ref": "#/definitions/FragmentSpreadNode"
+          },
+          {
+            "$ref": "#/definitions/InlineFragmentNode"
+          }
+        ]
+      }
+    },
+    "FieldNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Field"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "alias": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "arguments": {
+          "$ref": "#/definitions/ReadonlyArray_4"
+        },
+        "directives": {
+          "$ref": "#/definitions/ReadonlyArray_3"
+        },
+        "selectionSet": {
+          "$ref": "#/definitions/SelectionSetNode"
+        }
+      }
+    },
+    "FragmentSpreadNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "FragmentSpread"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode"
+        },
+        "directives": {
+          "$ref": "#/definitions/ReadonlyArray_3"
+        }
+      }
+    },
+    "InlineFragmentNode": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "InlineFragment"
+          ]
+        },
+        "loc": {
+          "$ref": "#/definitions/Location"
+        },
+        "typeCondition": {
+          "$ref": "#/definitions/NamedTypeNode"
+        },
+        "directives": {
+          "$ref": "#/definitions/ReadonlyArray_3"
+        },
+        "selectionSet": {
+          "$ref": "#/definitions/SelectionSetNode"
+        }
+      }
+    },
+    "__type_3": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "Source path, relative to the `baseOutputDir`",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace to import source as",
+          "type": "string"
+        },
+        "identifiers": {
+          "description": "Entity names to import",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "document",
+                  "type"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ImportSource": {
+      "$ref": "#/definitions/__type_3"
+    },
+    "DocumentMode": {
+      "enum": [
+        "documentNode",
+        "documentNodeImportFragments",
+        "external",
+        "graphQLTag",
+        "string"
+      ],
+      "type": "string"
+    },
+    "__type_4": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "interface": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "arguments": {
+          "type": "string"
+        }
+      }
+    },
+    "Partial": {
+      "$ref": "#/definitions/__type_4"
+    },
+    "Array_1": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "StencilComponentType": {
+      "enum": [
+        "class",
+        "functional"
+      ],
+      "type": "string"
+    },
+    "FileType": {
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "type": "number"
+    },
+    "GeneratedPluginsMap": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "typescript": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptPluginConfig"
+            },
+            "@graphql-codegen/typescript": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptPluginConfig"
+            },
+            "typescript-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptDocumentsPluginConfig"
+            },
+            "@graphql-codegen/typescript-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptDocumentsPluginConfig"
+            },
+            "c-sharp": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CSharpResolversPluginRawConfig"
+            },
+            "@graphql-codegen/c-sharp": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CSharpResolversPluginRawConfig"
+            },
+            "c-sharp-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CSharpOperationsRawPluginConfig"
+            },
+            "@graphql-codegen/c-sharp-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CSharpOperationsRawPluginConfig"
+            },
+            "schema-ast": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/SchemaASTConfig"
+            },
+            "@graphql-codegen/schema-ast": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/SchemaASTConfig"
+            },
+            "typescript-type-graphql": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeGraphQLPluginConfig"
+            },
+            "@graphql-codegen/typescript-type-graphql": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeGraphQLPluginConfig"
+            },
+            "typescript-graphql-files-modules": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig"
+            },
+            "@graphql-codegen/typescript-graphql-files-modules": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig"
+            },
+            "named-operations-object": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/NamedOperationsObjectPluginConfig"
+            },
+            "@graphql-codegen/named-operations-object": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/NamedOperationsObjectPluginConfig"
+            },
+            "typescript-graphql-request": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawGraphQLRequestPluginConfig"
+            },
+            "@graphql-codegen/typescript-graphql-request": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawGraphQLRequestPluginConfig"
+            },
+            "typescript-compatibility": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CompatibilityPluginRawConfig"
+            },
+            "@graphql-codegen/typescript-compatibility": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/CompatibilityPluginRawConfig"
+            },
+            "typescript-mongodb": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptMongoPluginConfig"
+            },
+            "@graphql-codegen/typescript-mongodb": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptMongoPluginConfig"
+            },
+            "typescript-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptResolversPluginConfig"
+            },
+            "@graphql-codegen/typescript-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptResolversPluginConfig"
+            },
+            "typescript-apollo-angular": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ApolloAngularRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-apollo-angular": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ApolloAngularRawPluginConfig"
+            },
+            "typescript-urql": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/UrqlRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-urql": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/UrqlRawPluginConfig"
+            },
+            "typescript-react-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ReactApolloRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-react-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ReactApolloRawPluginConfig"
+            },
+            "typescript-vue-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/VueApolloRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-vue-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/VueApolloRawPluginConfig"
+            },
+            "typescript-stencil-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/StencilApolloRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-stencil-apollo": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/StencilApolloRawPluginConfig"
+            },
+            "typescript-document-nodes": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-document-nodes": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
+            },
+            "java-apollo-android": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
+            },
+            "@graphql-codegen/java-apollo-android": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
+            },
+            "java-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaResolversPluginRawConfig"
+            },
+            "@graphql-codegen/java-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaResolversPluginRawConfig"
+            },
+            "java": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaResolversPluginRawConfig"
+            },
+            "@graphql-codegen/java": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/JavaResolversPluginRawConfig"
+            },
+            "kotlin": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/KotlinResolversPluginRawConfig"
+            },
+            "@graphql-codegen/kotlin": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/KotlinResolversPluginRawConfig"
+            },
+            "flow": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FlowPluginConfig"
+            },
+            "@graphql-codegen/flow": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FlowPluginConfig"
+            },
+            "flow-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawFlowResolversConfig"
+            },
+            "@graphql-codegen/flow-resolvers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawFlowResolversConfig"
+            },
+            "flow-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FlowDocumentsPluginConfig"
+            },
+            "@graphql-codegen/flow-operations": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FlowDocumentsPluginConfig"
+            },
+            "introspection": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/IntrospectionPluginConfig"
+            },
+            "@graphql-codegen/introspection": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/IntrospectionPluginConfig"
+            },
+            "fragment-matcher": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FragmentMatcherConfig"
+            },
+            "@graphql-codegen/fragment-matcher": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FragmentMatcherConfig"
+            }
+          }
+        },
+        {
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "typescript",
+              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript",
+              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-operations",
+              "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-operations",
+              "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "c-sharp",
+              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/c-sharp",
+              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "c-sharp-operations",
+              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/c-sharp-operations",
+              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "schema-ast",
+              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/schema-ast",
+              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-type-graphql",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-type-graphql",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-graphql-files-modules",
+              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-graphql-files-modules",
+              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "named-operations-object",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/named-operations-object",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-graphql-request",
+              "description": "This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-graphql-request",
+              "description": "This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-compatibility",
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-compatibility",
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-mongodb",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-mongodb",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-resolvers",
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-resolvers",
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-apollo-angular",
+              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-apollo-angular",
+              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-urql",
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-urql",
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-react-apollo",
+              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-react-apollo",
+              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-vue-apollo",
+              "description": "This plugin generates\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-vue-apollo",
+              "description": "This plugin generates\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-stencil-apollo",
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-stencil-apollo",
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-document-nodes",
+              "description": "This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-document-nodes",
+              "description": "This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "java-apollo-android",
+              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/java-apollo-android",
+              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "java-resolvers",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/java-resolvers",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "java",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/java",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "kotlin",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/kotlin",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "flow",
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/flow",
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "flow-resolvers",
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/flow-resolvers",
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "flow-operations",
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/flow-operations",
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "introspection",
+              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/introspection",
+              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "fragment-matcher",
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/fragment-matcher",
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+            }
+          ]
+        },
+        {
+          "type": "string",
+          "description": "Point to a custom plugin loaded from your file-system.",
+          "pattern": "(\\\\?([^\\/]*[\\/])*)([^\\/]+)$"
+        },
+        {
+          "type": "string",
+          "description": "You can point to any third-party module from node_modules that matches the requirements of a GraphQL Codegen plugin."
+        }
+      ]
+    }
+  },
+  "$ref": "#/definitions/Types.Config"
+}

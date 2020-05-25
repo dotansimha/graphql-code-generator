@@ -27,12 +27,16 @@ export interface ConvertOptions {
 }
 
 export type ConvertFn<T = {}> = (node: ASTNode | string, options?: ConvertOptions & T) => string;
-export type NamingConventionResolvePath = string; // module-name#exportedFunction
-export type NamingConvention = string | Function | NamingConventionMap;
+export type NamingConventionFn = (str: string) => string;
+export type NamingConventionResolvePath = string;
+export type NamingConvention = string | NamingConventionFn | NamingConventionMap;
 
+/**
+ * @additionalProperties false
+ */
 export interface NamingConventionMap {
-  enumValues?: 'keep' | NamingConventionResolvePath | Function;
-  typeNames?: 'keep' | NamingConventionResolvePath | Function;
+  enumValues?: 'keep' | NamingConventionResolvePath | NamingConventionFn;
+  typeNames?: 'keep' | NamingConventionResolvePath | NamingConventionFn;
   transformUnderscore?: boolean;
 }
 

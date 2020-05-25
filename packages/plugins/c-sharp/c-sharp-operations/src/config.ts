@@ -1,12 +1,13 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates C# `class` based on your GraphQL operations.
+ */
 export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name namedClient
-   * @type string
    * @description Defined the global value of `namedClient`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -14,11 +15,9 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   namedClient?: string;
   /**
-   * @name serviceName
-   * @type string
    * @description Defined the global value of `serviceName`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -26,12 +25,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   serviceName?: string;
   /**
-   * @name querySuffix
-   * @type string
    * @description Allows to define a custom suffix for query operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -39,12 +36,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   querySuffix?: string;
   /**
-   * @name mutationSuffix
-   * @type string
    * @description Allows to define a custom suffix for mutation operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -52,12 +47,10 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    */
   mutationSuffix?: string;
   /**
-   * @name subscriptionSuffix
-   * @type string
    * @description Allows to define a custom suffix for Subscription operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'

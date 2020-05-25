@@ -225,7 +225,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   }
 }
 
-function isObjectMap(obj: any): obj is Types.ObjectMap<any> {
+function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
   return obj && typeof obj === 'object' && !Array.isArray(obj);
 }
 

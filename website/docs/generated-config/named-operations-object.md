@@ -1,10 +1,21 @@
+## Installation
 
-### identifierName (`string`, default value: `namedOperations`)
+:::shell Using `yarn`
+
+    $ yarn add -D @graphql-codegen/named-operations-object
+
+:::
+
+## API Reference
+
+### `identifierName`
+
+type: `string`
+default: `namedOperations`
 
 Allow you to customize the name of the exported identifier
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
 generates:

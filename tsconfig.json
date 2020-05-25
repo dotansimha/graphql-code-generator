@@ -3,6 +3,7 @@
     "incremental": true,
     "baseUrl": ".",
     "outDir": "dist",
+    "rootDir": "packages",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
@@ -59,7 +60,6 @@
       "@graphql-codegen/c-sharp-apollo": ["packages/plugins/c-sharp/apollo-dot-net/src/index.ts"],
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],
       "@graphql-codegen/near-operation-file-preset": ["packages/presets/near-operation-file/src/index.ts"],
-      "@graphql-codegen/config-markdown-generator": ["packages/utils/config-md-generator/src/index.ts"],
       "@graphql-codegen/testing": ["packages/utils/graphql-codegen-testing/src/index.ts"],
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"]
     }

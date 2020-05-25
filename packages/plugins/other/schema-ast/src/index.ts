@@ -3,14 +3,15 @@ import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@grap
 import { extname } from 'path';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
+/**
+ * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
+ */
 export interface SchemaASTConfig {
   /**
-   * @name includeDirectives
-   * @type boolean
    * @description Include directives to Schema output.
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * schema:
    *   - './src/schema.graphql'
@@ -24,12 +25,10 @@ export interface SchemaASTConfig {
    */
   includeDirectives?: boolean;
   /**
-   * @name commentDescriptions
-   * @type boolean
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * schema: http://localhost:3000/graphql
    * generates:

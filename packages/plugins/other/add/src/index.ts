@@ -1,8 +1,8 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 
-type ContentType = string | string[] | { [index: string]: string };
-interface AddPluginParams {
+export type ContentType = string | string[] | { [index: string]: string };
+export interface AddPluginParams {
   placement: string;
   content: ContentType;
 }

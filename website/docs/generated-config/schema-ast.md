@@ -1,10 +1,23 @@
+This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
 
-### includeDirectives (`boolean`, default value: `false`)
+## Installation
+
+:::shell Using `yarn`
+
+    $ yarn add -D @graphql-codegen/schema-ast
+
+:::
+
+## API Reference
+
+### `includeDirectives`
+
+type: `boolean`
+default: `false`
 
 Include directives to Schema output.
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
 schema:
@@ -17,12 +30,14 @@ generates:
       includeDirectives: true
 ```
 
-### commentDescriptions (`boolean`, default value: `false`)
+### `commentDescriptions`
+
+type: `boolean`
+default: `false`
 
 Set to true in order to print description as comments (using # instead of """)
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
 schema: http://localhost:3000/graphql
@@ -33,3 +48,8 @@ generates:
     config:
       commentDescriptions: true
 ```
+
+### `federation`
+
+type: `boolean`
+

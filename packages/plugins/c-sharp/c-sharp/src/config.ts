@@ -1,11 +1,13 @@
 import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common';
+
+/**
+ * @description This plugin generates C# `class` identifier for your schema types.
+ */
 export interface CSharpResolversPluginRawConfig extends RawConfig {
   /**
-   * @name enumValues
-   * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
-   *
-   * @example With Custom Values
+   * @exampleMarkdown
+   * ## With Custom Values
    * ```yml
    *   config:
    *     enumValues:
@@ -15,12 +17,10 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
-   * @name className
-   * @type string
    * @default Types
    * @description Allow you to customize the parent class name.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/c-sharp/my-org/my-app/MyGeneratedTypes.cs:
@@ -32,12 +32,10 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    */
   className?: string;
   /**
-   * @name listType
-   * @type string
    * @default IEnumberable
    * @description Allow you to customize the list type
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:

@@ -6,11 +6,14 @@
     "start": "docusaurus start",
     "build:website": "docusaurus build",
     "prebuild:website": "yarn generate:config-docs",
-    "generate:config-docs": "node generate-config.js"
+    "prestart": "yarn generate:config-docs",
+    "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
     "@docusaurus/preset-classic": "2.0.0-alpha.55",
     "@docusaurus/core": "2.0.0-alpha.55",
+    "ts-node": "8.10.1",
+    "@graphql-codegen/config-schema": "1.14.0",
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
     "react": "16.13.1",

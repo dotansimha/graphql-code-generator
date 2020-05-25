@@ -9,12 +9,10 @@ export { resolveDocumentImports, DocumentImportResolverOptions };
 
 export type NearOperationFileConfig = {
   /**
-   * @name schemaTypesPath
-   * @type string
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -27,12 +25,10 @@ export type NearOperationFileConfig = {
    */
   baseTypesPath: string;
   /**
-   * @name extension
-   * @type string
    * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
    * @default .generates.ts
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -47,12 +43,10 @@ export type NearOperationFileConfig = {
    */
   extension?: string;
   /**
-   * @name cwd
-   * @type string
    * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
    * @default process.cwd()
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -66,12 +60,10 @@ export type NearOperationFileConfig = {
    */
   cwd?: string;
   /**
-   * @name folder
-   * @type string
    * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
    * @default ''
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -85,12 +77,10 @@ export type NearOperationFileConfig = {
    */
   folder?: string;
   /**
-   * @name importTypesNamespace
-   * @type string
    * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
    * @default Types
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -149,7 +139,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
       const plugins = [
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
-        ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({ add: importStatement }))),
+        ...(options.config.globalNamespace
+          ? []
+          : importStatements.map(importStatement => ({ add: { content: importStatement } }))),
         ...options.plugins,
       ];
       const config = {

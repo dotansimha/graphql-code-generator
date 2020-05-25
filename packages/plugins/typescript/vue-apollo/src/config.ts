@@ -1,13 +1,17 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates @vue/apollo-composable composition functions with TypeScript typings.
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ *
+ */
 export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name withCompositionFunctions
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated Vue composition functions.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -21,19 +25,15 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    */
   withCompositionFunctions?: boolean;
   /**
-   * @name vueApolloComposableImportFrom
-   * @type string
    * @default @vue/apollo-composable
    */
   vueApolloComposableImportFrom?: string;
   /**
-   * @name addDocBlocks
-   * @type boolean
    * @description Allows you to enable/disable the generation of docblocks in generated code.
-   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
+   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

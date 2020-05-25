@@ -1,31 +1,51 @@
+This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).
 
-### namingConvention (`NamingConvention`, default value: `pascal-case#pascalCase`)
+## Installation
 
-Allow you to override the naming convention of the output. You can either override all namings, or specify an object with specific custom naming convention per output. The format of the converter must be a valid `module#method`. Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep all GraphQL names as-is. Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour, which is to preserves underscores.
+:::shell Using `yarn`
 
+    $ yarn add -D @graphql-codegen/typescript-document-nodes
 
-#### Usage Example: Override All Names
+:::
 
+## API Reference
+
+### `namingConvention`
+
+type: `NamingConvention`
+default: `pascal-case#pascalCase`
+
+Allow you to override the naming convention of the output.
+You can either override all namings, or specify an object with specific custom naming convention per output.
+The format of the converter must be a valid `module#method`.
+Allowed values for specific output are: `typeNames`, `enumValues`.
+You can also use "keep" to keep all GraphQL names as-is.
+Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
+which is to preserves underscores.
+
+#### Usage Examples
+
+##### Override All Names
 ```yml
 config:
   namingConvention: lower-case#lowerCase
 ```
-#### Usage Example: Upper-case enum values
 
+##### Upper-case enum values
 ```yml
 config:
   namingConvention:
     typeNames: pascal-case#pascalCase
     enumValues: upper-case#upperCase
 ```
-#### Usage Example: Keep
 
+##### Keep name as-is
 ```yml
 config:
   namingConvention: keep
 ```
-#### Usage Example: Remove Underscores
 
+##### Remove Underscores
 ```yml
 config:
   namingConvention:
@@ -33,12 +53,14 @@ config:
     transformUnderscore: true
 ```
 
-### namePrefix (`string`, default value: `''`)
+### `namePrefix`
+
+type: `string`
+default: ``
 
 Adds prefix to the name
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
  documents: src/api/user-service/queries.graphql
@@ -50,12 +72,14 @@ Adds prefix to the name
      namePrefix: 'gql'
 ```
 
-### nameSuffix (`string`, default value: `''`)
+### `nameSuffix`
+
+type: `string`
+default: ``
 
 Adds suffix to the name
 
-
-#### Usage Example
+#### Usage Examples
 
 ```yml
  documents: src/api/user-service/queries.graphql
@@ -65,4 +89,156 @@ Adds suffix to the name
      - typescript-document-nodes
    config:
      nameSuffix: 'Query'
+```
+
+### `fragmentPrefix`
+
+type: `string`
+default: ``
+
+Adds prefix to the fragment variable
+
+
+### `fragmentSuffix`
+
+type: `string`
+default: ``
+
+Adds suffix to the fragment variable
+
+
+### `noGraphQLTag`
+
+type: `boolean`
+
+
+
+### `gqlImport`
+
+type: `string`
+
+
+
+### `noExport`
+
+type: `boolean`
+
+
+
+### `dedupeOperationSuffix`
+
+type: `boolean`
+
+
+
+### `omitOperationSuffix`
+
+type: `boolean`
+
+
+
+### `operationResultSuffix`
+
+type: `string`
+
+
+
+### `documentVariablePrefix`
+
+type: `string`
+
+
+
+### `documentVariableSuffix`
+
+type: `string`
+
+
+
+### `fragmentVariablePrefix`
+
+type: `string`
+
+
+
+### `fragmentVariableSuffix`
+
+type: `string`
+
+
+
+### `documentMode`
+
+type: `DocumentMode`
+
+
+
+### `importOperationTypesFrom`
+
+type: `string`
+
+
+
+### `importDocumentNodeExternallyFrom`
+
+type: `string`
+
+
+
+### `scalars`
+
+type: `ScalarsMap`
+
+Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+
+#### Usage Examples
+
+```yml
+config:
+  scalars:
+    DateTime: Date
+    JSON: "{ [key: string]: any }"
+```
+
+### `typesPrefix`
+
+type: `string`
+default: ``
+
+Prefixes all the generated types.
+
+#### Usage Examples
+
+```yml
+config:
+  typesPrefix: I
+```
+
+### `skipTypename`
+
+type: `boolean`
+default: `false`
+
+Does not add __typename to the generated types, unless it was specified in the selection set.
+
+#### Usage Examples
+
+```yml
+config:
+  skipTypename: true
+```
+
+### `nonOptionalTypename`
+
+type: `boolean`
+default: `false`
+
+Automatically adds `__typename` field to the generated types, even when they are not specified
+in the selection set, and makes it non-optional
+
+#### Usage Examples
+
+```yml
+config:
+  nonOptionalTypename: true
 ```

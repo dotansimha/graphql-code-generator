@@ -181,7 +181,6 @@ In order to add it to the website, do the following:
 export type MyPluginConfig = {
   /**
    * @name name
-   * @type string
    * @description This allow you to generate a greeting with custom name
    * @default anonymous
    *
