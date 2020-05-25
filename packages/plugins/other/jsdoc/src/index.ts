@@ -35,6 +35,13 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return createDocBlock([`@typedef {Object} ${typedNode.name}`, ...typedNode.fields]);
       },
     },
+    InterfaceTypeDefinition: {
+      leave(node: unknown) {
+        const typedNode = node as { name: string; fields: Array<string> };
+
+        return createDocBlock([`@typedef {Object} ${typedNode.name}`, ...typedNode.fields]);
+      },
+    },
     UnionTypeDefinition: {
       leave(node) {
         if (node.types !== undefined) {
@@ -96,6 +103,15 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     ScalarTypeDefinition: {
       leave(node) {
         return createDocBlock([`@typedef {*} ${node.name}`]);
+      },
+    },
+    EnumTypeDefinition: {
+      leave(node) {
+        return createDocBlock([
+          `@typedef {String} ${node.name}`,
+          '@readonly',
+          ...(node.values || []).map(v => `@property {String} ${v.name}`),
+        ]);
       },
     },
   });

@@ -5,6 +5,7 @@ export const presetLoaderMap = {
 };
 
 export const pluginLoaderMap = {
+  'jsdoc': () => import('@graphql-codegen/jsdoc'),
   java: () => import('@graphql-codegen/java'),
   'java-resolvers': () => import('@graphql-codegen/java-resolvers'),
   'fragment-matcher': () => import('@graphql-codegen/fragment-matcher'),

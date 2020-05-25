@@ -348,6 +348,15 @@ export const EXAMPLES = {
   ],
   Other: [
     {
+      name: 'JSDoc',
+      config: `generates:
+  schema.js:
+    plugins:
+      - jsdoc`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+    {
       name: 'Introspection JSON',
       config: `generates:
   schema.json:
