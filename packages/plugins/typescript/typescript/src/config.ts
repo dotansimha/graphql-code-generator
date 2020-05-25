@@ -12,7 +12,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override all definition types
    * ```yml
    * generates:
@@ -41,7 +41,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -56,7 +56,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -72,7 +72,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * This is useful if you are using `relay`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -88,7 +88,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -104,7 +104,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * Interacts well with `preResolveTypes: true`
    * @default false
    *
-   * @examples Override all definition types
+   * @exampleMarkdown Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -119,7 +119,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -134,7 +134,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Allow to override the type value of `Maybe`.
    * @default T | null
    *
-   * @examples
+   * @exampleMarkdown
    * ## Allow undefined
    * ```yml
    * generates:
@@ -162,7 +162,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ## Disable all export from a file
    * ```yml
    * generates:

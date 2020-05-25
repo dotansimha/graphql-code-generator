@@ -11,7 +11,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @description Customized the output by enabling/disabling the generated Vue composition functions.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -33,7 +33,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

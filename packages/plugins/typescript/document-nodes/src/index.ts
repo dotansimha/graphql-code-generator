@@ -21,7 +21,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
    * which is to preserves underscores.
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override All Names
    * ```yml
    * config:
@@ -55,7 +55,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @default ""
    * @description Adds prefix to the name
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    *  documents: src/api/user-service/queries.graphql
    *  generates:
@@ -71,7 +71,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @default ""
    * @description Adds suffix to the name
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    *  documents: src/api/user-service/queries.graphql
    *  generates:

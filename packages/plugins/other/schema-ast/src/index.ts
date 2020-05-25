@@ -11,7 +11,7 @@ export interface SchemaASTConfig {
    * @description Include directives to Schema output.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * schema:
    *   - './src/schema.graphql'
@@ -28,7 +28,7 @@ export interface SchemaASTConfig {
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * schema: http://localhost:3000/graphql
    * generates:

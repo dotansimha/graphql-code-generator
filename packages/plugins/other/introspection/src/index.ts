@@ -10,7 +10,7 @@ export interface IntrospectionPluginConfig {
    * @description Set to `true` in order to minify the JSON output.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * introspection.json:

@@ -9,7 +9,7 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * @description By default the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

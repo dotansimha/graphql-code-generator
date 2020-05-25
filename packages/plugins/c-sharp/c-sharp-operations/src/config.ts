@@ -7,7 +7,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
   /**
    * @description Defined the global value of `namedClient`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -17,7 +17,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
   /**
    * @description Defined the global value of `serviceName`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -28,7 +28,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @description Allows to define a custom suffix for query operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -39,7 +39,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @description Allows to define a custom suffix for mutation operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -50,7 +50,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @description Allows to define a custom suffix for Subscription operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'

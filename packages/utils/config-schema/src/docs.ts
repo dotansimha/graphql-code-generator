@@ -37,7 +37,11 @@ type: \`${printType(prop)}\`
 
 ${typeof prop.default !== 'undefined' ? `default: \`${prop.default}\`\n` : ''}
 ${prop.description || ''}
-${prop.examples ? `\n#### Usage Examples\n\n${(prop.examples as string[]).map(t => t.replace(/## /g, '##### '))}` : ''}
+${
+  (prop as any).exampleMarkdown
+    ? `\n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}`
+    : ''
+}
 `;
     })
     .join('\n\n');

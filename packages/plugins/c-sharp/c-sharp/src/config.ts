@@ -6,7 +6,7 @@ import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common
 export interface CSharpResolversPluginRawConfig extends RawConfig {
   /**
    * @description Overrides the default value of enum values declared in your GraphQL schema.
-   * @examples
+   * @exampleMarkdown
    * ## With Custom Values
    * ```yml
    *   config:
@@ -20,7 +20,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @default Types
    * @description Allow you to customize the parent class name.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/c-sharp/my-org/my-app/MyGeneratedTypes.cs:
@@ -35,7 +35,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @default IEnumberable
    * @description Allow you to customize the list type
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:

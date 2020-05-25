@@ -10,7 +10,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the generated Component.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -27,7 +27,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the HOC.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -44,7 +44,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the generated React Hooks.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -61,7 +61,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the generated mutation function signature.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -78,7 +78,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Enable generating a function to be used with refetchQueries
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -120,7 +120,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Sets the version of react-apollo.
    * @default 2
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -137,7 +137,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the generated result type.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -154,7 +154,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @description Customized the output by enabling/disabling the generated mutation option type.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -172,7 +172,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

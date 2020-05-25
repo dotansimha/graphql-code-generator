@@ -12,7 +12,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Adds an index signature to any generates resolver.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -30,7 +30,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * Note: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -53,7 +53,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
    * @default "graphql#GraphQLResolveInfo"
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -69,7 +69,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
    * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
    *
-   * @examples
+   * @exampleMarkdown
    * ## Custom Signature
    * ```yml
    * generates:

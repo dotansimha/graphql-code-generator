@@ -10,7 +10,7 @@ export interface CompatibilityPluginRawConfig extends RawConfig {
    * @description Does not generate TypeScript `namespace`s and uses the operation name as prefix.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -27,7 +27,7 @@ export interface CompatibilityPluginRawConfig extends RawConfig {
    * @description Make sure to generate code that compatible with TypeScript strict mode.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

@@ -7,7 +7,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
   /**
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
@@ -21,7 +21,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
   /**
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    *   config:
    *     enumValues:
@@ -34,7 +34,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @default Types
    * @description Allow you to customize the parent class name.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/MyGeneratedTypes.java:
@@ -49,7 +49,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @default Iterable
    * @description Allow you to customize the list type
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   src/main/java/my-org/my-app/Types.java:

@@ -56,7 +56,7 @@ export interface RawTypesConfig extends RawConfig {
   /**
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
-   * @examples
+   * @exampleMarkdown
    * ## With Custom Values
    * ```yml
    *   config:
@@ -68,7 +68,7 @@ export interface RawTypesConfig extends RawConfig {
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
    *
-   * @examples
+   * @exampleMarkdown
    * ## With Custom Values
    * ```yml
    *   config:
@@ -94,7 +94,7 @@ export interface RawTypesConfig extends RawConfig {
   /**
    * @description Overrides the default output for various GraphQL elements.
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override all declarations
    * ```yml
    *   config:
@@ -114,7 +114,7 @@ export interface RawTypesConfig extends RawConfig {
    * @default true
    * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
-   * @examples
+   * @exampleMarkdown
    * ## Disable enum prefixes
    * ```yml
    *   config:
@@ -127,7 +127,7 @@ export interface RawTypesConfig extends RawConfig {
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
    *
-   * @examples
+   * @exampleMarkdown
    * ## Allow Promise
    * ```yml
    * generates:
@@ -145,7 +145,7 @@ export interface RawTypesConfig extends RawConfig {
    * This is useful to allow return types such as Promises and functions.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ## Enable wrapping fields
    * ```yml
    * generates:
@@ -161,7 +161,7 @@ export interface RawTypesConfig extends RawConfig {
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override all definition types
    * ```yml
    * generates:

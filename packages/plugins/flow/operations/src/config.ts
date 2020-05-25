@@ -12,7 +12,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @description Generates Flow types as Exact types.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -27,7 +27,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @description Generates read-only Flow types
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -42,7 +42,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
