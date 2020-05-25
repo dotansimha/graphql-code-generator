@@ -1,29 +1,35 @@
 {
-    "name": "@graphql-codegen/jsdoc",
-    "version": "1.13.5",
-    "description": "GraphQL Code Generator plugin for generating JSDoc based types for GraphQL queries, mutations, subscriptions and fragments",
-    "repository": "git@github.com:dotansimha/graphql-code-generator.git",
-    "license": "MIT",
-    "scripts": {
-        "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-        "test": "jest --config ../../../../jest.config.js"
-    },
-    "dependencies": {
-        "@graphql-codegen/plugin-helpers": "1.13.5",
-        "@graphql-codegen/visitor-plugin-common": "1.13.5",
-        "tslib": "1.11.1"
-    },
-    "sideEffects": false,
-    "main": "dist/index.cjs.js",
-    "module": "dist/index.esm.js",
-    "typings": "dist/index.d.ts",
-    "typescript": {
-        "definition": "dist/index.d.ts"
-    },
-    "jest-junit": {
-        "outputDirectory": "../../../../test-results/typescript-operations"
-    },
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@graphql-codegen/jsdoc",
+  "version": "1.14.0",
+  "description": "GraphQL Code Generator plugin for generating JSDoc based types for GraphQL queries, mutations, subscriptions and fragments",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/typescript"
+  },  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.14.0",
+    "@graphql-codegen/visitor-plugin-common": "1.14.0",
+    "tslib": "~2.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
