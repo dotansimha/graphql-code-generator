@@ -30,6 +30,9 @@ export type ConvertFn<T = {}> = (node: ASTNode | string, options?: ConvertOption
 export type NamingConventionResolvePath = string; // module-name#exportedFunction
 export type NamingConvention = string | Function | NamingConventionMap;
 
+/**
+ * @additionalProperties false
+ */
 export interface NamingConventionMap {
   enumValues?: 'keep' | NamingConventionResolvePath | Function;
   typeNames?: 'keep' | NamingConventionResolvePath | Function;
