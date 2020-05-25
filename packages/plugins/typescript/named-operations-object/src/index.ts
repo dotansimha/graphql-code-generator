@@ -7,7 +7,7 @@ export interface NamedOperationsObjectPluginConfig {
    * @description Allow you to customize the name of the exported identifier
    * @default namedOperations
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

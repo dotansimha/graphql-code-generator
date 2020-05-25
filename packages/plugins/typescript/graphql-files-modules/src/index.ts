@@ -16,7 +16,7 @@ export interface TypeScriptFilesModulesPluginConfig {
    * @description Allows specifying a module definition path prefix to provide distinction
    * between generated types.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates: src/api/user-service/queries.d.ts
    *  documents: src/api/user-service/queries.graphql

@@ -7,7 +7,7 @@ export type ImportTypesConfig = {
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -23,7 +23,7 @@ export type ImportTypesConfig = {
    * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
    * @default Types
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:

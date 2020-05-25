@@ -59,8 +59,7 @@ type: `boolean`
 
 default: `false`
 
-Will prefix every generated `enum` with `const`, you can read more
-about const enums {@link https://www.typescriptlang.org/docs/handbook/enums.html|here}.
+Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.
 
 #### Usage Examples
 

@@ -10,7 +10,7 @@ export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginCon
    * @description Customize the output of the plugin - you can choose to generate a Component class or a function component.
    * @default functional
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

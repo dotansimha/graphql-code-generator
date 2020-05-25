@@ -1,27 +1,40 @@
 /* eslint-disable no-console */
 import * as TJS from 'typescript-json-schema';
 import { writeFile } from 'fs-extra';
-import { apply } from 'jsonpath';
 import { generateDocs } from './docs';
 import { sync as mkdirp } from 'mkdirp';
 import { relevantConfigurations } from './plugins';
 import { join } from 'path';
+import tsConfig from '../../../../tsconfig.json';
+import { apply } from 'jsonpath';
 
 const ROOT_FILE = '../plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';
 const baseDir = process.argv[2] || process.cwd();
 const docsOutDir = process.argv[3] ? join(baseDir, process.argv[3]) : './docs/generated-config/';
 const schemaOutDir = process.argv[4] ? join(baseDir, process.argv[4]) : baseDir;
+const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
 
 async function generate() {
   const program = TJS.getProgramFromFiles([ROOT_FILE, ...relevantConfigurations.map(f => f.file)], {
     esModuleInterop: true,
+    baseUrl: '../../../',
+    paths: tsConfig.compilerOptions.paths,
+    module: 'esnext',
+    target: 'es2018',
+    skipLibCheck: true,
+    allowSyntheticDefaultImports: true,
+    importHelpers: true,
+    resolveJsonModule: true,
+    moduleResolution: 'node',
+    experimentalDecorators: true,
+    lib: ['es6', 'esnext', 'es2015', 'dom'],
   });
 
   const generator = TJS.buildGenerator(program, {
     topRef: true,
     aliasRef: true,
-    ref: true,
+    validationKeywords: [MARKDOWN_JSDOC_KEY],
   });
 
   const schema = generator.getSchemaForSymbols(
@@ -113,11 +126,6 @@ async function generate() {
   // Point the root schema to the config root
   schema.$ref = `#/definitions/${ROOT_IDENTIFIER}`;
 
-  // Fix examples
-  apply(schema, '$..examples', v => (Array.isArray(v) ? v : [v]));
-
-  mkdirp(schemaOutDir);
-  await writeFile(join(schemaOutDir, './config.schema.json'), JSON.stringify(schema, null, 2));
   const docsMarkdown = generateDocs(schema, relevantConfigurations);
 
   mkdirp(docsOutDir);
@@ -126,6 +134,12 @@ async function generate() {
       writeFile(join(docsOutDir, `./${identifier}.md`), docsMarkdown[identifier])
     )
   );
+
+  // Remove non-standard keys
+  apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
+
+  mkdirp(schemaOutDir);
+  await writeFile(join(schemaOutDir, './config.schema.json'), JSON.stringify(schema, null, 2));
 }
 
 generate()

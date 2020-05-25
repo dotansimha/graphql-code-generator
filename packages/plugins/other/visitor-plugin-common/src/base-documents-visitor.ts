@@ -43,7 +43,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @default false
    * @description Avoid using `Pick` and resolve the actual primitive type of all selection set.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * plugins
    *   config:
@@ -55,7 +55,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * plugins
    *   config:

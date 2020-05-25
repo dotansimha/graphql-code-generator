@@ -10,7 +10,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * @description Generates Flow types as Exact types.
    * @default true
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   path/to/file.ts:
@@ -25,7 +25,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * @description Generates read-only Flow types
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    *   path/to/file.ts:

@@ -51,7 +51,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * @description Customize from which module will `gql` be imported from.
    * This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
    *
-   * @examples
+   * @exampleMarkdown
    * ## graphql.macro
    * ```yml
    * config:
@@ -120,7 +120,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   documentMode: external

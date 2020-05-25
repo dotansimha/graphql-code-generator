@@ -13,7 +13,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override all definition types
    * ```yml
    * generates:
@@ -43,7 +43,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -59,7 +59,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -76,7 +76,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

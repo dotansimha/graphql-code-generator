@@ -6,6 +6,7 @@ generates:
     schema: ./dev-test/test-schema/schema-text.js
     plugins:
       - typescript
+      - typescript-resolvers
   ./dev-test/test-schema/flow-types.flow.js:
     schema: ./dev-test/test-schema/schema.json
     plugins:

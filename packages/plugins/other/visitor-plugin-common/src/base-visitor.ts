@@ -33,7 +33,7 @@ export interface RawConfig {
   /**
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   scalars:
@@ -52,7 +52,7 @@ export interface RawConfig {
    * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
    * which is to preserves underscores.
    *
-   * @examples
+   * @exampleMarkdown
    * ## Override All Names
    * ```yml
    * config:
@@ -86,7 +86,7 @@ export interface RawConfig {
    * @default ""
    * @description Prefixes all the generated types.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   typesPrefix: I
@@ -97,7 +97,7 @@ export interface RawConfig {
    * @default false
    * @description Does not add __typename to the generated types, unless it was specified in the selection set.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   skipTypename: true
@@ -109,7 +109,7 @@ export interface RawConfig {
    * @description Automatically adds `__typename` field to the generated types, even when they are not specified
    * in the selection set, and makes it non-optional
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   nonOptionalTypename: true

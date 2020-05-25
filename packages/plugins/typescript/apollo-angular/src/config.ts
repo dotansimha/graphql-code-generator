@@ -13,7 +13,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
   /**
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   ngModule: ./path/to/module#MyModule
@@ -23,7 +23,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
   /**
    * @description Defined the global value of `namedClient`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -33,7 +33,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
   /**
    * @description Defined the global value of `serviceName`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -43,7 +43,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
   /**
    * @description Defined the global value of `serviceProvidedInRoot`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceProvidedInRoot: false
@@ -59,7 +59,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Allows to define a custom suffix for query operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -70,7 +70,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Allows to define a custom suffix for mutation operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -81,7 +81,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Allows to define a custom suffix for Subscription operations.
    * @default GQL
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'

@@ -5,7 +5,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default DbObject
    * @description Customize the suffix for the generated GraphQL `type`s.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   dbTypeSuffix: MyType
@@ -16,7 +16,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default DbObject
    * @description Customize the suffix for the generated GraphQL `interface`s.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   dbInterfaceSuffix: MyInterface
@@ -27,7 +27,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default mongodb#ObjectId
    * @description Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   objectIdType: ./my-models.ts#MyIdType
@@ -38,7 +38,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default _id
    * @description Customize the name of the id field generated after using `@id` directive over a GraphQL field.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   idFieldName: id
@@ -49,7 +49,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default true
    * @description Replaces generated `enum` values with `string`.
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * config:
    *   enumsAsString: false
@@ -62,7 +62,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @examples
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
