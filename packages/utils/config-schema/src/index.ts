@@ -5,8 +5,9 @@ import { generateDocs } from './docs';
 import { sync as mkdirp } from 'mkdirp';
 import { relevantConfigurations } from './plugins';
 import { join } from 'path';
-import tsConfig from '../../../../tsconfig.json';
 import { apply } from 'jsonpath';
+
+const tsConfig = require('../../../../tsconfig.json');
 
 const ROOT_FILE = '../plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';
