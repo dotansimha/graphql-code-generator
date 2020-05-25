@@ -1369,13 +1369,13 @@
     cross-fetch "3.0.4"
     tslib "~2.0.0"
 
-"@graphql-tools/code-file-loader@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-6.0.0.tgz#a6916e50295ea94d6505ade3096632086353208d"
-  integrity sha512-Q1yVGXgZQJkBxED7FXH2qcjlqrYPY25tHsqEg1h8Tw0Oz0zeKlWmqI/mAL4xX3VDrBK/uYSxQnrUB0x5VxvWyQ==
+"@graphql-tools/code-file-loader@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-6.0.1.tgz#2f68e91d00d49768dea1fe6fe432ddb06b669708"
+  integrity sha512-4kB0DZI66VramNNk8WppzqP3NcFIzGQTImxHXcoWXw2QO9Nd7Wet4HP8BT61qUP3q2ty9+NkhJF8piytocd6OA==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.0.0"
-    "@graphql-tools/utils" "6.0.0"
+    "@graphql-tools/graphql-tag-pluck" "6.0.1"
+    "@graphql-tools/utils" "6.0.1"
     fs-extra "9.0.0"
     tslib "~2.0.0"
 
