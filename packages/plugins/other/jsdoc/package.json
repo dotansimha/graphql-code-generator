@@ -18,7 +18,7 @@
     "module": "dist/index.esm.js",
     "typings": "dist/index.d.ts",
     "typescript": {
-        "definition": "dist/esnext/index.d.ts"
+        "definition": "dist/index.d.ts"
     },
     "jest-junit": {
         "outputDirectory": "../../../../test-results/typescript-operations"
