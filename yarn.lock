@@ -4841,10 +4841,10 @@ bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.2.tgz#c9686902d3c9a27729f43ab10f9d79c2004da7b0"
   integrity sha512-40rZaf3bUNKTVYu9sIeeEGOg7g14Yvnj9kH7b50EiwX0Q7A6umbvfI5tvHaOERH0XigqKkfLkFQxzb4e6CIXnA==
 
-bob-the-bundler@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.0.1.tgz#823ff4d9a64b0c0b59159b2679e6cdb690554b9f"
-  integrity sha512-dP8HRgVD+zHDQ96+e33Olm8eqHrsh1y3TGjd+DPFKC/EpduQ43yhCc+wJUPjshOepTpPIiQYG58aWD90WypPbg==
+bob-the-bundler@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/bob-the-bundler/-/bob-the-bundler-1.0.2.tgz#f44e7315ead242e328171fcba42e9bcc1a457c31"
+  integrity sha512-tBLAekXApxF4yiIt26orEAzo1DM4ESnKGaTcGLjez7XlGbCqMJqzo1dBiohiNkv6qZJ1YoxLqZS16RNiSft/Aw==
   dependencies:
     "@rollup/plugin-node-resolve" "7.1.1"
     consola "2.11.3"
