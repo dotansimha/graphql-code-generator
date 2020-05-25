@@ -215,7 +215,9 @@ describe('near-operation-file preset', () => {
       expect(result.map(o => o.plugins)[0]).toEqual(
         expect.arrayContaining([
           {
-            add: `import * as Types from '../types';\n`,
+            add: {
+              content: `import * as Types from '../types';\n`,
+            },
           },
           {
             'typescript-react-apollo': {},
@@ -267,7 +269,9 @@ describe('near-operation-file preset', () => {
       expect(result.map(o => o.plugins)[0]).toEqual(
         expect.arrayContaining([
           {
-            add: `import * as Types from '../types';\n`,
+            add: {
+              content: `import * as Types from '../types';\n`,
+            },
           },
           {
             'typescript-react-apollo': {},
@@ -391,7 +395,13 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '../types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -414,7 +424,13 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[1]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '../types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -524,7 +540,13 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from './src/types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from './src/types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -549,7 +571,13 @@ describe('near-operation-file preset', () => {
       pluginMap: { 'typescript-react-apollo': {} as any },
     });
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from '../../../types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '../../../types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -574,7 +602,13 @@ describe('near-operation-file preset', () => {
       pluginMap: { 'typescript-react-apollo': {} as any },
     });
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from './types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -599,7 +633,13 @@ describe('near-operation-file preset', () => {
       pluginMap: { 'typescript-react-apollo': {} as any },
     });
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from '@internal/types';\n` }])
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '@internal/types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -657,7 +697,9 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[0]).toEqual(
       expect.arrayContaining([
         {
-          add: `import * as Types from '../types';\n`,
+          add: {
+            content: `import * as Types from '../types';\n`,
+          },
         },
         {
           'typescript-react-apollo': {},

@@ -84,7 +84,7 @@ describe('import-types preset', () => {
       pluginMap: {},
     });
 
-    expect(result.map((a) => a.filename)).toEqual(['./src/operation.ts']);
+    expect(result.map(a => a.filename)).toEqual(['./src/operation.ts']);
   });
 
   it('Should prepend the "add" plugin with the correct import', async () => {
@@ -100,8 +100,14 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map((o) => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from './types';\n`,
+          },
+        },
+      ])
     );
   });
 
@@ -121,8 +127,8 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map((o) => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: { content: `import * as Types from './types';\n` } }])
     );
   });
 
@@ -151,7 +157,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map((o) => o.plugins)[0]).not.toEqual(
+    expect(result.map(o => o.plugins)[0]).not.toEqual(
       expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
     );
   });
@@ -169,7 +175,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map((o) => o.pluginMap.add)[0]).toBeDefined();
+    expect(result.map(o => o.pluginMap.add)[0]).toBeDefined();
   });
 
   it('Should add "namespacedImportName" to config', async () => {
@@ -185,6 +191,6 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map((o) => o.config.namespacedImportName)[0]).toBe('Types');
+    expect(result.map(o => o.config.namespacedImportName)[0]).toBe('Types');
   });
 });

@@ -73,8 +73,8 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
         )
       ) {
         plugins.unshift({
-          content: {
-            value: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n`,
+          add: {
+            content: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n`,
           },
         });
       }
