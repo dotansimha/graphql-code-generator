@@ -13,7 +13,6 @@ This plugin generates
 ### `withCompositionFunctions`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated Vue composition functions.
@@ -31,21 +30,16 @@ path/to/file.ts:
    withCompositionFunctions: true
 ```
 
-
 ### `vueApolloComposableImportFrom`
 
 type: `string`
-
 default: ``
-
-
 
 
 
 ### `addDocBlocks`
 
 type: `boolean`
-
 default: `true`
 
 Allows you to enable/disable the generation of docblocks in generated code.
@@ -64,13 +58,9 @@ path/to/file.ts:
    addDocBlocks: true
 ```
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -80,15 +70,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -98,15 +82,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -116,15 +94,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -134,15 +106,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -152,15 +118,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -170,22 +130,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -198,11 +151,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -243,11 +194,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -259,11 +208,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -275,11 +222,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

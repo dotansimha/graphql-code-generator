@@ -13,7 +13,6 @@ This plugin generates a GraphQL introspection file based on your GraphQL schema.
 ### `minify`
 
 type: `boolean`
-
 default: `false`
 
 Set to `true` in order to minify the JSON output.
@@ -29,11 +28,7 @@ introspection.json:
     minify: true
 ```
 
-
 ### `federation`
 
 type: `boolean`
-
-
-
 

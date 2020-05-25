@@ -14,7 +14,6 @@ This plugin generates C# `class` based on your GraphQL operations.
 
 type: `string`
 
-
 Defined the global value of `namedClient`.
 
 #### Usage Examples
@@ -24,11 +23,9 @@ config:
   namedClient: 'customName'
 ```
 
-
 ### `serviceName`
 
 type: `string`
-
 
 Defined the global value of `serviceName`.
 
@@ -39,11 +36,9 @@ config:
   serviceName: 'MySDK'
 ```
 
-
 ### `querySuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for query operations.
@@ -55,11 +50,9 @@ config:
   querySuffix: 'QueryService'
 ```
 
-
 ### `mutationSuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for mutation operations.
@@ -71,11 +64,9 @@ config:
   mutationSuffix: 'MutationService'
 ```
 
-
 ### `subscriptionSuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for Subscription operations.
@@ -87,13 +78,9 @@ config:
   subscriptionSuffix: 'SubscriptionService'
 ```
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -103,15 +90,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -121,15 +102,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -139,15 +114,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -157,15 +126,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -175,15 +138,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -193,22 +150,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -221,11 +171,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -266,11 +214,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -282,11 +228,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -298,11 +242,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

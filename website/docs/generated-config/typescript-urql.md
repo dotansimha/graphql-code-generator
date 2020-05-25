@@ -13,27 +13,22 @@ This plugin generates `urql` (https://github.com/FormidableLabs/urql) components
 ### `withComponent`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated Component.
 
 
-
 ### `withHooks`
 
 type: `boolean`
-
 default: `false`
 
 Customized the output by enabling/disabling the generated React Hooks.
 
 
-
 ### `urqlImportFrom`
 
 type: `string`
-
 default: `urql`
 
 You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
@@ -41,13 +36,9 @@ This is useful for further abstraction of some common tasks (eg. error handling)
 Filepath relative to generated file can be also specified.
 
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -57,15 +48,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -75,15 +60,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -93,15 +72,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -111,15 +84,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -129,15 +96,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -147,22 +108,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -175,11 +129,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -220,11 +172,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -236,11 +186,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -252,11 +200,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

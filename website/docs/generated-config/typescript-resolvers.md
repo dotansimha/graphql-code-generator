@@ -16,7 +16,6 @@ You can find a blog post explaining the usage of this plugin here: https://the-g
 ### `useIndexSignature`
 
 type: `boolean`
-
 default: `false`
 
 Adds an index signature to any generates resolver.
@@ -33,11 +32,9 @@ path/to/file.ts:
    useIndexSignature: true
 ```
 
-
 ### `noSchemaStitching`
 
 type: `boolean`
-
 default: `false`
 
 Disables Schema Stitching support.
@@ -56,11 +53,9 @@ path/to/file.ts:
    noSchemaStitching: true
 ```
 
-
 ### `wrapFieldDefinitions`
 
 type: `boolean`
-
 default: `true`
 
 Set to `true` in order to wrap field definitions with `FieldWrapper`.
@@ -68,11 +63,9 @@ This is useful to allow return types such as Promises and functions. Needed for
 compatibility with `federation: true` when
 
 
-
 ### `customResolveInfo`
 
 type: `string`
-
 default: `graphql#GraphQLResolveInfo`
 
 You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
@@ -89,11 +82,9 @@ path/to/file.ts:
    customResolveInfo: ./my-types#MyResolveInfo
 ```
 
-
 ### `customResolverFn`
 
 type: `string`
-
 default: `(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult`
 
 You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
@@ -129,11 +120,9 @@ path/to/file.ts:
      ) => Promise<TResult> | TResult;
 ```
 
-
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
-
 
 Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
 
@@ -144,11 +133,9 @@ Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
     addUnderscoreToArgsType: true
 ```
 
-
 ### `contextType`
 
 type: `string`
-
 
 Use this configuration to set a custom type for your `context`, and it will
 effect all the resolvers, without the need to override it using generics each time.
@@ -171,11 +158,9 @@ plugins
     contextType: ./my-types#MyContext
 ```
 
-
 ### `fieldContextTypes`
 
 type: `Array_1`
-
 
 Use this to set a custom type for a specific field `context`.
 It will only affect the targeted resolvers.
@@ -192,11 +177,9 @@ plugins
       - MyType.bar#./my-file#ContextTypeOne
 ```
 
-
 ### `rootValueType`
 
 type: `string`
-
 
 Use this configuration to set a custom type for the `rootValue`, and it will
 effect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.
@@ -218,11 +201,9 @@ plugins
     rootValueType: ./my-types#MyRootValue
 ```
 
-
 ### `mapperTypeSuffix`
 
 type: `string`
-
 
 Adds a suffix to the imported names to prevent name clashes.
 
@@ -234,11 +215,9 @@ plugins
     mapperTypeSuffix: Model
 ```
 
-
 ### `mappers`
 
 type: `object`
-
 
 Replaces a GraphQL type usage with a custom type, allowing you to return custom object from
 your resolvers.
@@ -255,11 +234,9 @@ plugins
       Book: ./my-models#Collections#Book
 ```
 
-
 ### `defaultMapper`
 
 type: `string`
-
 
 Allow you to set the default mapper when it's not being override by `mappers` or generics.
 You can specify a type name, or specify a string in `module#type` or `module#namespace#type` format.
@@ -300,11 +277,9 @@ plugins
    defaultMapper: DeepPartial<{T}>
 ```
 
-
 ### `avoidOptionals`
 
 type: `boolean`
-
 default: `false`
 
 This will cause the generator to avoid using optionals (`?`),
@@ -322,11 +297,9 @@ path/to/file.ts:
    avoidOptionals: true
 ```
 
-
 ### `showUnusedMappers`
 
 type: `boolean`
-
 default: `true`
 
 Warns about unused mappers.
@@ -343,42 +316,34 @@ path/to/file.ts:
    showUnusedMappers: true
 ```
 
-
 ### `enumValues`
 
 type: `EnumValuesMap`
-
 
 Overrides the default value of enum values declared in your GraphQL schema, supported
 in this plugin because of the need for integration with `typescript` package.
 See documentation under `typescript` plugin for more information and examples.
 
 
-
 ### `resolverTypeWrapperSignature`
 
 type: `string`
-
 default: `Promise<T> | T`
 
 Allow you to override `resolverTypeWrapper` definition.
 
 
-
 ### `federation`
 
 type: `boolean`
-
 default: `false`
 
 Supports Apollo Federation
 
 
-
 ### `enumPrefix`
 
 type: `boolean`
-
 default: `true`
 
 Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
@@ -392,31 +357,25 @@ Allow you to disable prefixing for generated enums, works in combination with `t
     enumPrefix: false
 ```
 
-
 ### `optionalResolveType`
 
 type: `boolean`
-
 default: `false`
 
 Sets the `__resolveType` field as optional field.
 
 
-
 ### `immutableTypes`
 
 type: `boolean`
-
 default: `false`
 
 Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
 
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -429,11 +388,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -474,11 +431,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -490,11 +445,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -506,11 +459,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

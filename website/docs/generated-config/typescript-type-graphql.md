@@ -14,13 +14,9 @@ type: `Partial`
 
 
 
-
-
-
 ### `avoidOptionals`
 
 type: `AvoidOptionalsConfig | boolean`
-
 default: `false`
 
 This will cause the generator to avoid using TypeScript optionals (`?`) on types,
@@ -52,11 +48,9 @@ path/to/file.ts:
      object: true
 ```
 
-
 ### `constEnums`
 
 type: `boolean`
-
 default: `false`
 
 Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.
@@ -72,11 +66,9 @@ path/to/file.ts:
    constEnums: true
 ```
 
-
 ### `enumsAsTypes`
 
 type: `boolean`
-
 default: `false`
 
 Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`
@@ -92,11 +84,9 @@ path/to/file.ts:
    enumsAsTypes: true
 ```
 
-
 ### `futureProofEnums`
 
 type: `boolean`
-
 default: `false`
 
 This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
@@ -114,11 +104,9 @@ path/to/file.ts:
    futureProofEnums: true
 ```
 
-
 ### `enumsAsConst`
 
 type: `boolean`
-
 default: `false`
 
 Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
@@ -134,11 +122,9 @@ path/to/file.ts:
    enumsAsConst: true
 ```
 
-
 ### `onlyOperationTypes`
 
 type: `boolean`
-
 default: `false`
 
 This will cause the generator to emit types for operations only (basically only enums and scalars).
@@ -156,11 +142,9 @@ config:
 onlyOperationTypes: true
 ```
 
-
 ### `immutableTypes`
 
 type: `boolean`
-
 default: `false`
 
 Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
@@ -176,11 +160,9 @@ path/to/file.ts:
    immutableTypes: true
 ```
 
-
 ### `maybeValue`
 
 type: `string`
-
 default: `T | null`
 
 Allow to override the type value of `Maybe`.
@@ -208,11 +190,9 @@ generates:
      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
 ```
 
-
 ### `noExport`
 
 type: `boolean`
-
 default: `false`
 
 Set the to `true` in order to generate output without `export` modifier.
@@ -230,11 +210,9 @@ path/to/file.ts:
    noExport: true
 ```
 
-
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
-
 
 Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
 
@@ -246,11 +224,9 @@ Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
     addUnderscoreToArgsType: true
 ```
 
-
 ### `enumValues`
 
 type: `EnumValuesMap`
-
 
 Overrides the default value of enum values declared in your GraphQL schema.
 You can also map the entire enum to an external type by providing a string that of `module#type`.
@@ -278,11 +254,9 @@ You can also map the entire enum to an external type by providing a string that 
     enumValues: ./my-file
 ```
 
-
 ### `declarationKind`
 
 type: `DeclarationKindConfig | string (values: abstract class, class, interface, type)`
-
 
 Overrides the default output for various GraphQL elements.
 
@@ -302,11 +276,9 @@ Overrides the default output for various GraphQL elements.
       input: 'interface'
 ```
 
-
 ### `enumPrefix`
 
 type: `boolean`
-
 default: `true`
 
 Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
@@ -320,11 +292,9 @@ Allow you to disable prefixing for generated enums, works in combination with `t
     enumPrefix: false
 ```
 
-
 ### `fieldWrapperValue`
 
 type: `string`
-
 default: `T`
 
 Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
@@ -342,11 +312,9 @@ path/to/file.ts:
    fieldWrapperValue: T | Promise<T>
 ```
 
-
 ### `wrapFieldDefinitions`
 
 type: `boolean`
-
 default: `false`
 
 Set the to `true` in order to wrap field definitions with `FieldWrapper`.
@@ -364,11 +332,9 @@ path/to/file.ts:
    wrapFieldDefinitions: true
 ```
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -381,11 +347,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -426,11 +390,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -442,11 +404,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -458,11 +418,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

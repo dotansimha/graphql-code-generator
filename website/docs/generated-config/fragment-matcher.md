@@ -23,7 +23,6 @@ Both in TypeScript and JavaScript a default export is being used.
 ### `module`
 
 type: `string (values: commonjs, es2015)`
-
 default: `es2015`
 
 Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.
@@ -39,11 +38,9 @@ path/to/file.json:
    module: commonjs
 ```
 
-
 ### `apolloClientVersion`
 
 type: `number (values: 2, 3)`
-
 default: `2`
 
 Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
@@ -59,11 +56,9 @@ path/to/file.ts:
    apolloClientVersion: 3
 ```
 
-
 ### `useExplicitTyping`
 
 type: `boolean`
-
 default: `false`
 
 Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.
@@ -79,11 +74,7 @@ path/to/file.ts:
    useExplicitTyping: true
 ```
 
-
 ### `federation`
 
 type: `boolean`
-
-
-
 

@@ -15,7 +15,6 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 ### `componentType`
 
 type: `StencilComponentType`
-
 default: `functional`
 
 Customize the output of the plugin - you can choose to generate a Component class or a function component.
@@ -33,13 +32,9 @@ path/to/file.ts:
    componentType: class
 ```
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -49,15 +44,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -67,15 +56,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -85,15 +68,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -103,15 +80,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -121,15 +92,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -139,22 +104,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -167,11 +125,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -212,11 +168,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -228,11 +182,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -244,11 +196,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

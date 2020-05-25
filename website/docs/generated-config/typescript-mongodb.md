@@ -11,7 +11,6 @@
 ### `dbTypeSuffix`
 
 type: `string`
-
 default: `DbObject`
 
 Customize the suffix for the generated GraphQL `type`s.
@@ -23,11 +22,9 @@ config:
   dbTypeSuffix: MyType
 ```
 
-
 ### `dbInterfaceSuffix`
 
 type: `string`
-
 default: `DbObject`
 
 Customize the suffix for the generated GraphQL `interface`s.
@@ -39,11 +36,9 @@ config:
   dbInterfaceSuffix: MyInterface
 ```
 
-
 ### `objectIdType`
 
 type: `string`
-
 default: `mongodb#ObjectId`
 
 Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.
@@ -55,11 +50,9 @@ config:
   objectIdType: ./my-models.ts#MyIdType
 ```
 
-
 ### `idFieldName`
 
 type: `string`
-
 default: `_id`
 
 Customize the name of the id field generated after using `@id` directive over a GraphQL field.
@@ -71,11 +64,9 @@ config:
   idFieldName: id
 ```
 
-
 ### `enumsAsString`
 
 type: `boolean`
-
 default: `true`
 
 Replaces generated `enum` values with `string`.
@@ -87,11 +78,9 @@ config:
   enumsAsString: false
 ```
 
-
 ### `avoidOptionals`
 
 type: `boolean`
-
 default: `false`
 
 This will cause the generator to avoid using TypeScript optionals (`?`),
@@ -110,11 +99,9 @@ path/to/file.ts:
    avoidOptionals: true
 ```
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -127,11 +114,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -172,11 +157,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -188,11 +171,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -204,11 +185,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

@@ -14,7 +14,6 @@ This plugin generates C# `class` identifier for your schema types.
 
 type: `EnumValuesMap`
 
-
 Overrides the default value of enum values declared in your GraphQL schema.
 
 #### Usage Examples
@@ -27,11 +26,9 @@ Overrides the default value of enum values declared in your GraphQL schema.
         A: 'foo'
 ```
 
-
 ### `className`
 
 type: `string`
-
 default: `Types`
 
 Allow you to customize the parent class name.
@@ -47,11 +44,9 @@ generates:
       className: MyGeneratedTypes
 ```
 
-
 ### `listType`
 
 type: `string`
-
 default: `IEnumberable`
 
 Allow you to customize the list type
@@ -67,11 +62,9 @@ generates:
       listType: Map
 ```
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -84,11 +77,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -129,11 +120,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -145,11 +134,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -161,11 +148,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

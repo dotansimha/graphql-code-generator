@@ -12,7 +12,6 @@
 
 type: `string`
 
-
 Customize the Java package name. The default package name will be generated according to the output file path.
 
 #### Usage Examples
@@ -26,11 +25,9 @@ generates:
       package: custom.package.name
 ```
 
-
 ### `mappers`
 
 type: `object`
-
 
 Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.
 The default value is the values set by `defaultMapper` configuration.
@@ -48,11 +45,9 @@ generates:
         User: com.app.models#UserObject
 ```
 
-
 ### `defaultMapper`
 
 type: `string`
-
 default: `Object`
 
 Sets the default mapper value in case it's not specified by `mappers`.
@@ -70,11 +65,9 @@ generates:
       defaultMapper: my.app.models.BaseEntity
 ```
 
-
 ### `className`
 
 type: `string`
-
 default: `Resolvers`
 
 Allow you to customize the parent class name.
@@ -90,11 +83,9 @@ generates:
       className: MyResolvers
 ```
 
-
 ### `listType`
 
 type: `string`
-
 default: `Iterable`
 
 Allow you to customize the list type.
@@ -110,11 +101,9 @@ generates:
       listType: Map
 ```
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -127,11 +116,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -172,11 +159,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -188,11 +173,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -204,11 +187,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

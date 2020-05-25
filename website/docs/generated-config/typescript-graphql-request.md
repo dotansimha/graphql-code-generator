@@ -13,7 +13,6 @@ This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-
 ### `rawRequest`
 
 type: `boolean`
-
 default: `false`
 
 By default the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.
@@ -31,13 +30,9 @@ path/to/file.ts:
    rawRequest: true
 ```
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -47,15 +42,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -65,15 +54,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -83,15 +66,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -101,15 +78,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -119,15 +90,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -137,22 +102,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -165,11 +123,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -210,11 +166,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -226,11 +180,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -242,11 +194,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

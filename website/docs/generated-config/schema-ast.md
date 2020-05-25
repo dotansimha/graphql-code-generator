@@ -13,7 +13,6 @@ This plugin prints the merged schema as string. If multiple schemas are provided
 ### `includeDirectives`
 
 type: `boolean`
-
 default: `false`
 
 Include directives to Schema output.
@@ -31,11 +30,9 @@ generates:
       includeDirectives: true
 ```
 
-
 ### `commentDescriptions`
 
 type: `boolean`
-
 default: `false`
 
 Set to true in order to print description as comments (using # instead of """)
@@ -52,11 +49,7 @@ generates:
       commentDescriptions: true
 ```
 
-
 ### `federation`
 
 type: `boolean`
-
-
-
 

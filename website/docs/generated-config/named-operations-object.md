@@ -11,7 +11,6 @@
 ### `identifierName`
 
 type: `string`
-
 default: `namedOperations`
 
 Allow you to customize the name of the exported identifier

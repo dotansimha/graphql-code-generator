@@ -34,15 +34,12 @@ function generateContentForSchema(schema: TJS.Definition, level = 3): string {
       return `### \`${propName}\`
 
 type: \`${printType(prop)}\`
-
 ${typeof prop.default !== 'undefined' ? `default: \`${prop.default}\`\n` : ''}
-${prop.description || ''}
-${
-  (prop as any).exampleMarkdown
-    ? `\n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}`
-    : ''
-}
-`;
+${prop.description ? `${prop.description}\n` : ''}${
+        (prop as any).exampleMarkdown
+          ? `\n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}`
+          : ''
+      }`;
     })
     .join('\n\n');
 }

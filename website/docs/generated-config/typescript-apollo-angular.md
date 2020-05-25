@@ -20,7 +20,6 @@ To shed some more light regards this template, it's recommended to go through th
 
 type: `string`
 
-
 Allows to define `ngModule` as part of the plugin's config so it's globally available.
 
 #### Usage Examples
@@ -30,11 +29,9 @@ config:
   ngModule: ./path/to/module#MyModule
 ```
 
-
 ### `namedClient`
 
 type: `string`
-
 
 Defined the global value of `namedClient`.
 
@@ -45,11 +42,9 @@ config:
   namedClient: 'customName'
 ```
 
-
 ### `serviceName`
 
 type: `string`
-
 
 Defined the global value of `serviceName`.
 
@@ -60,11 +55,9 @@ config:
   serviceName: 'MySDK'
 ```
 
-
 ### `serviceProvidedInRoot`
 
 type: `boolean`
-
 
 Defined the global value of `serviceProvidedInRoot`.
 
@@ -75,21 +68,17 @@ config:
   serviceProvidedInRoot: false
 ```
 
-
 ### `sdkClass`
 
 type: `boolean`
-
 default: `false`
 
 Set to `true` in order to generate a SDK service class that uses all generated services.
 
 
-
 ### `querySuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for query operations.
@@ -101,11 +90,9 @@ config:
   querySuffix: 'QueryService'
 ```
 
-
 ### `mutationSuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for mutation operations.
@@ -117,11 +104,9 @@ config:
   mutationSuffix: 'MutationService'
 ```
 
-
 ### `subscriptionSuffix`
 
 type: `string`
-
 default: `GQL`
 
 Allows to define a custom suffix for Subscription operations.
@@ -133,23 +118,17 @@ config:
   subscriptionSuffix: 'SubscriptionService'
 ```
 
-
 ### `apolloAngularPackage`
 
 type: `string`
-
 default: `'apollo-angular'`
 
 Allows to define a custom Apollo-Angular package to import types from.
 
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -159,15 +138,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -177,15 +150,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -195,15 +162,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -213,15 +174,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -231,15 +186,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -249,22 +198,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -277,11 +219,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -322,11 +262,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -338,11 +276,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -354,11 +290,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

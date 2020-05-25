@@ -15,7 +15,6 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 ### `withComponent`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated Component.
@@ -33,11 +32,9 @@ path/to/file.ts:
    withComponent: false
 ```
 
-
 ### `withHOC`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the HOC.
@@ -55,11 +52,9 @@ path/to/file.ts:
    withHOC: false
 ```
 
-
 ### `withHooks`
 
 type: `boolean`
-
 default: `false`
 
 Customized the output by enabling/disabling the generated React Hooks.
@@ -77,11 +72,9 @@ path/to/file.ts:
    withHooks: false
 ```
 
-
 ### `withMutationFn`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated mutation function signature.
@@ -99,11 +92,9 @@ path/to/file.ts:
    withMutationFn: true
 ```
 
-
 ### `withRefetchFn`
 
 type: `boolean`
-
 default: `false`
 
 Enable generating a function to be used with refetchQueries
@@ -121,61 +112,49 @@ path/to/file.ts:
    withRefetchFn: false
 ```
 
-
 ### `apolloReactCommonImportFrom`
 
 type: `string`
-
 default: ``
 
 Customize the package where apollo-react common lib is loaded from.
 
 
-
 ### `apolloReactComponentsImportFrom`
 
 type: `string`
-
 default: ``
 
 Customize the package where apollo-react component lib is loaded from.
 
 
-
 ### `apolloReactHocImportFrom`
 
 type: `string`
-
 default: ``
 
 Customize the package where apollo-react HOC lib is loaded from.
 
 
-
 ### `apolloReactHooksImportFrom`
 
 type: `string`
-
 default: ``
 
 Customize the package where apollo-react hooks lib is loaded from.
 
 
-
 ### `componentSuffix`
 
 type: `string`
-
 default: `Component`
 
 You can specify a suffix that gets attached to the name of the generated component.
 
 
-
 ### `reactApolloVersion`
 
 type: `number (values: 2, 3)`
-
 default: `2`
 
 Sets the version of react-apollo.
@@ -193,11 +172,9 @@ path/to/file.ts:
    reactApolloVersion: 3
 ```
 
-
 ### `withResultType`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated result type.
@@ -215,11 +192,9 @@ path/to/file.ts:
    withResultType: true
 ```
 
-
 ### `withMutationOptionsType`
 
 type: `boolean`
-
 default: `true`
 
 Customized the output by enabling/disabling the generated mutation option type.
@@ -237,11 +212,9 @@ path/to/file.ts:
    withMutationOptionsType: true
 ```
 
-
 ### `addDocBlocks`
 
 type: `boolean`
-
 default: `true`
 
 Allows you to enable/disable the generation of docblocks in generated code.
@@ -260,13 +233,9 @@ path/to/file.ts:
    addDocBlocks: true
 ```
 
-
 ### `noGraphQLTag`
 
 type: `boolean`
-
-
-
 
 
 
@@ -276,15 +245,9 @@ type: `string`
 
 
 
-
-
-
 ### `noExport`
 
 type: `boolean`
-
-
-
 
 
 
@@ -294,15 +257,9 @@ type: `boolean`
 
 
 
-
-
-
 ### `omitOperationSuffix`
 
 type: `boolean`
-
-
-
 
 
 
@@ -312,15 +269,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -330,15 +281,9 @@ type: `string`
 
 
 
-
-
-
 ### `fragmentVariablePrefix`
 
 type: `string`
-
-
-
 
 
 
@@ -348,15 +293,9 @@ type: `string`
 
 
 
-
-
-
 ### `documentMode`
 
 type: `DocumentMode`
-
-
-
 
 
 
@@ -366,22 +305,15 @@ type: `string`
 
 
 
-
-
-
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
 
 
 
-
-
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -394,11 +326,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -439,11 +369,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -455,11 +383,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -471,11 +397,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

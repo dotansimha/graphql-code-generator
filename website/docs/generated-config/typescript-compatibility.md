@@ -15,7 +15,6 @@ It generates types that are pointing to the new form of types. It supports _most
 ### `noNamespaces`
 
 type: `boolean`
-
 default: `false`
 
 Does not generate TypeScript `namespace`s and uses the operation name as prefix.
@@ -33,11 +32,9 @@ path/to/file.ts:
    noNamespaces: true
 ```
 
-
 ### `strict`
 
 type: `boolean`
-
 default: `false`
 
 Make sure to generate code that compatible with TypeScript strict mode.
@@ -55,21 +52,17 @@ path/to/file.ts:
    strict: true
 ```
 
-
 ### `preResolveTypes`
 
 type: `boolean`
-
 default: `false`
 
 Avoid using `Pick` in `typescript-operations` and make sure to optimize this package as well.
 
 
-
 ### `scalars`
 
 type: `ScalarsMap`
-
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
@@ -82,11 +75,9 @@ config:
     JSON: "{ [key: string]: any }"
 ```
 
-
 ### `namingConvention`
 
 type: `NamingConvention`
-
 default: `pascal-case#pascalCase`
 
 Allow you to override the naming convention of the output.
@@ -127,11 +118,9 @@ config:
     transformUnderscore: true
 ```
 
-
 ### `typesPrefix`
 
 type: `string`
-
 default: ``
 
 Prefixes all the generated types.
@@ -143,11 +132,9 @@ config:
   typesPrefix: I
 ```
 
-
 ### `skipTypename`
 
 type: `boolean`
-
 default: `false`
 
 Does not add __typename to the generated types, unless it was specified in the selection set.
@@ -159,11 +146,9 @@ config:
   skipTypename: true
 ```
 
-
 ### `nonOptionalTypename`
 
 type: `boolean`
-
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified

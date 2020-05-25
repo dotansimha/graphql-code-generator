@@ -17,7 +17,6 @@ This plugin also handles `.graphql` files containing multiple GraphQL documents,
 ### `modulePathPrefix`
 
 type: `string`
-
 default: ``
 
 Allows specifying a module definition path prefix to provide distinction
@@ -36,22 +35,17 @@ generates: src/api/user-service/queries.d.ts
    modulePathPrefix: "/api/user-service/"
 ```
 
-
 ### `relativeToCwd`
 
 type: `boolean`
-
 default: `false`
 
 By default, only the filename is being used to generate TS module declarations. Setting this to `true` will generate it with a full path based on the CWD.
 
 
-
 ### `prefix`
 
 type: `string`
-
 default: `*\/`
 
 By default, a wildcard is being added as prefix, you can change that to a custom prefix
-
