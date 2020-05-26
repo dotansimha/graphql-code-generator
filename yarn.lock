@@ -1379,15 +1379,6 @@
     fs-extra "9.0.0"
     tslib "~2.0.0"
 
-"@graphql-tools/delegate@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-6.0.0.tgz#112150ec2d4ceaface9331935b020b767209422d"
-  integrity sha512-U4P7SiBezLia2MvVC87yGEUT5VexPCL1V4ZqB/AIt3NAPpSVUZVopknM2oBvWanPhbzeZ5pT6XdC50ma21D27Q==
-  dependencies:
-    "@graphql-tools/schema" "6.0.0"
-    "@graphql-tools/utils" "6.0.0"
-    tslib "~2.0.0"
-
 "@graphql-tools/delegate@6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-6.0.1.tgz#17581d5681ff1183d3492cd0b8acb74c8bfaa092"
@@ -1497,14 +1488,6 @@
     "@graphql-tools/utils" "6.0.1"
     relay-compiler "9.1.0"
 
-"@graphql-tools/schema@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.0.0.tgz#f9779faa78e66168aedab21cf5466a1336756911"
-  integrity sha512-bqPO0AWrWrb+MJiOszC6xdHKouKnViqE29p6y8FA6VYhJJxEggiPYCpVSbRzKIjni0NpvxeBTkt/6yfoCDL2ng==
-  dependencies:
-    "@graphql-tools/utils" "6.0.0"
-    tslib "~2.0.0"
-
 "@graphql-tools/schema@6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.0.1.tgz#7464982c866e2b772976d6d97a4ce7f72f93cbb0"
@@ -1512,17 +1495,6 @@
   dependencies:
     "@graphql-tools/utils" "6.0.1"
     tslib "~2.0.0"
-
-"@graphql-tools/url-loader@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.0.0.tgz#d56743f8e547de6246137ee1b144a11bcffcaacd"
-  integrity sha512-3qpG0Klija4VC+6bnMTsc0I1yc6YrheAv9bMjNeu+i9Xkvi7o3kWpa9DqlqK5mKQ8bcU84CYN4HAO0tWdoVPTw==
-  dependencies:
-    "@graphql-tools/utils" "6.0.0"
-    "@graphql-tools/wrap" "6.0.0"
-    cross-fetch "3.0.4"
-    tslib "~2.0.0"
-    valid-url "1.0.9"
 
 "@graphql-tools/url-loader@6.0.1":
   version "6.0.1"
@@ -1548,16 +1520,6 @@
   integrity sha512-HqqJFYFG464ydL6XgUkwmYJLO/VzCsD86Bl25AX7aCLabPpn4O/pwCKSKRFsGQZvZbrth+urkHpyRU82Iqw2RQ==
   dependencies:
     camel-case "4.1.1"
-
-"@graphql-tools/wrap@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/wrap/-/wrap-6.0.0.tgz#e8b5fd1dd31b0df72bfdb527c3cf3b01f3bfe73e"
-  integrity sha512-jFDxawcmJOp7OKaSetOB0AW0IBhnBnjWE6I6pRibOl07K/kzbZ+4+UO91CSZg75jIifj2Z5s6AfKSiDn7Lgy+A==
-  dependencies:
-    "@graphql-tools/delegate" "6.0.0"
-    "@graphql-tools/schema" "6.0.0"
-    "@graphql-tools/utils" "6.0.0"
-    tslib "~2.0.0"
 
 "@graphql-tools/wrap@6.0.1":
   version "6.0.1"
