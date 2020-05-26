@@ -40,6 +40,18 @@ Generated resolvers can be passed directly into [graphql-tools](https://www.npmj
 
 ## Integration with Apollo-Server
 
+By default `apollo-server` will not work with generated resolvers signature.
+
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
+
+```yml
+generates:
+  ./resolvers-types.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - typescript
+      - typescript-resolvers
+```
 
 If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial typse in your resolvers.
