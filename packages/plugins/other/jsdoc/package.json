@@ -1,20 +1,21 @@
 {
   "name": "@graphql-codegen/jsdoc",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "GraphQL Code Generator plugin for generating JSDoc based types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/plugins/typescript/typescript"
-  },  "license": "MIT",
+  },
+  "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../../../jest.config.js",
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.14.0",
-    "@graphql-codegen/visitor-plugin-common": "1.14.0",
+    "@graphql-codegen/plugin-helpers": "1.15.0",
+    "@graphql-codegen/visitor-plugin-common": "1.15.0",
     "tslib": "~2.0.0"
   },
   "peerDependencies": {
