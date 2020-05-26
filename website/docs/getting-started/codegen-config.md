@@ -31,6 +31,12 @@ generates:
 
 An example for a very large config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
+:::tip YAML Config Validation & auto-complete
+
+If you are using VSCode as your IDE, make sure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml), this will add validation and auto-complete for available plugins, plugins config and general structure of the `codegen.yml` file! 
+
+:::
+
 ## Available Options
 
 Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L92)):
