@@ -1507,13 +1507,6 @@
     tslib "~2.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/utils@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.0.tgz#ddbff7ceec9609fc02fde5a14c774a14a9b17e18"
-  integrity sha512-oU4f6w4+VKniFFTopUHUgFSuZpGxopjSFU0nhJ2X9Z2HietxnKaL38xoYTZACemlctlYiNeYj6Ha8Ew/FTp3qg==
-  dependencies:
-    camel-case "4.1.1"
-
 "@graphql-tools/utils@6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.1.tgz#2c65c15102ff59963d0c399c48616402c110bbc1"
