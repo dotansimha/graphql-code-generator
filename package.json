@@ -57,7 +57,7 @@
     "@apollo/react-components": "3.1.5",
     "@apollo/react-hoc": "3.1.5",
     "@apollo/react-hooks": "3.1.5",
-    "@babel/preset-typescript": "7.9.0",
+    "@babel/preset-typescript": "7.10.1",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
     "@types/jest": "25.2.3",
