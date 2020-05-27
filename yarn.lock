@@ -1360,12 +1360,12 @@
     tslib "1.11.2"
     valid-url "1.0.9"
 
-"@graphql-tools/apollo-engine-loader@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.0.1.tgz#be0102def73b1d7504743d13310b892da9a960b0"
-  integrity sha512-nFWlwCIJMqvkmxLXOXkM6m3GHjQgf0hwZV7LfYp5t/3nU4xIVxKr/1Le3wnA94+PO6uKMnnwhb0NGHa/IvYRDQ==
+"@graphql-tools/apollo-engine-loader@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.0.3.tgz#25b1585fb5f00e7d79d9cde86150c3a7001334f7"
+  integrity sha512-x4UXlF8s5q6usCn6VqpJ6EYXnQU+UVb7e8xRwOK1f+bJ6I2epb1DgwY5VDyAzye+VNqlYKQbJL7hA9diZiu14A==
   dependencies:
-    "@graphql-tools/utils" "6.0.1"
+    "@graphql-tools/utils" "6.0.3"
     cross-fetch "3.0.4"
     tslib "~2.0.0"
 
@@ -1511,6 +1511,13 @@
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.1.tgz#2c65c15102ff59963d0c399c48616402c110bbc1"
   integrity sha512-HqqJFYFG464ydL6XgUkwmYJLO/VzCsD86Bl25AX7aCLabPpn4O/pwCKSKRFsGQZvZbrth+urkHpyRU82Iqw2RQ==
+  dependencies:
+    camel-case "4.1.1"
+
+"@graphql-tools/utils@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.3.tgz#54a2ff019707d84227771a7b1c11536ee32fc563"
+  integrity sha512-uS01PqtjOeEoG309orxYlnb8TIehsI27N4Z8NxmadTzkkLW98FfbUm62CjSHvc1IqgiQZSkqDuKqS4vy8lbUFQ==
   dependencies:
     camel-case "4.1.1"
 
