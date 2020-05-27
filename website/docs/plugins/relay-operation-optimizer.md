@@ -39,3 +39,5 @@ generates:
 ```
 
 Please notice that you have to skip the document validation - but no worries, relay-compiler will validate your documents instead!
+
+> [See Laurin Quast's blog post to learn how to use those directives in your operations](https://the-guild.dev/blog/graphql-codegen-relay-compiler)
