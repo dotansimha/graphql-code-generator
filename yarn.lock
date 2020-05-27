@@ -1487,12 +1487,12 @@
     fs-extra "9.0.0"
     resolve-from "5.0.0"
 
-"@graphql-tools/json-file-loader@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/json-file-loader/-/json-file-loader-6.0.1.tgz#42174a9300e61335f9476c847fb05097036e1ac0"
-  integrity sha512-GqSgRcGDv+VqY2v+cT9IKXlzCYeFesyb2jOLDgOkp+dM8jKXfxAsMGIlsMXdWJ954Nb86KBP51whL1q5tpXKPA==
+"@graphql-tools/json-file-loader@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/json-file-loader/-/json-file-loader-6.0.3.tgz#252041089d71011e218ddcd4eef8d8732b9cab9d"
+  integrity sha512-lKWZLZ5uUySG+oba/EEalkixAWGiFYNCMCp4UZe8KsNujVQJicxeGpyqxX0YPWAAxGZnMSRTpCjJeimLAEF7Jg==
   dependencies:
-    "@graphql-tools/utils" "6.0.1"
+    "@graphql-tools/utils" "6.0.3"
     fs-extra "9.0.0"
     tslib "~2.0.0"
 
