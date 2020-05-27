@@ -1436,13 +1436,13 @@
     "@graphql-tools/utils" "6.0.3"
     simple-git "2.5.0"
 
-"@graphql-tools/github-loader@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/github-loader/-/github-loader-6.0.1.tgz#81d00a7bdbf388f2f07ab7add12b3641de5db2a4"
-  integrity sha512-me3DzQU+qSqdmqrVAHUb8HNnGcDxFNXgsCU9qjjroclWOWNQzepXDenjczCseq/0Px9oT58AjjRb/0U8ygDtTA==
+"@graphql-tools/github-loader@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/github-loader/-/github-loader-6.0.3.tgz#eba6a71f0a9824c8c06ce70a8c864cc2e93cb624"
+  integrity sha512-olZUKrj/GWosytkIcWFOJht9fvKv+vt0wQvRzzgiHUzdx4cG13z8dguFHpJn8v/WN8GspUhJyDBppvTj6yr60A==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.0.1"
-    "@graphql-tools/utils" "6.0.1"
+    "@graphql-tools/graphql-tag-pluck" "6.0.3"
+    "@graphql-tools/utils" "6.0.3"
     cross-fetch "3.0.4"
 
 "@graphql-tools/graphql-file-loader@6.0.1":
