@@ -1468,6 +1468,14 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
+"@graphql-cli/common@4.0.1-alpha-f965abc.0":
+  version "4.0.1-alpha-f965abc.0"
+  resolved "https://registry.yarnpkg.com/@graphql-cli/common/-/common-4.0.1-alpha-f965abc.0.tgz#ec301275c2f2ad64d00ffdebe07fff466394a46c"
+  integrity sha512-PKIXepzKT3QiH5nWxKz+E8VB7yxohof+ggeH+XysGpFEs5CNhuvblhmjbsEGGrSUpBq/c9U5gttPR6/TILBI9g==
+  dependencies:
+    "@graphql-tools/load" "^6.0.0"
+    tslib "^2.0.0"
+
 "@graphql-toolkit/common@0.10.7", "@graphql-toolkit/common@~0.10.6":
   version "0.10.7"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.10.7.tgz#e5d4ddeae080c4f7357bc7d6a8d02e75578e9bd1"
@@ -15572,6 +15580,11 @@ string-argv@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.1.tgz#95e2fbec0427ae19184935f816d74aaa4c5c19da"
   integrity sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==
+
+string-env-interpolation@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/string-env-interpolation/-/string-env-interpolation-1.0.1.tgz#ad4397ae4ac53fe6c91d1402ad6f6a52862c7152"
+  integrity sha512-78lwMoCcn0nNu8LszbP1UA7g55OeE4v7rCeWnM5B453rnNr4aq+5it3FEYtZrSEiMvHZOZ9Jlqb0OD0M2VInqg==
 
 string-length@^4.0.1:
   version "4.0.1"

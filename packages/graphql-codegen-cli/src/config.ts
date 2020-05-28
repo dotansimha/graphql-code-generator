@@ -1,6 +1,7 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
 import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
 import { findAndLoadGraphQLConfig } from './graphql-config';
@@ -28,18 +29,7 @@ function generateSearchPlaces(moduleName: string) {
 function customLoader(ext: 'json' | 'yaml' | 'js') {
   function loader(filepath: string, content: string) {
     if (typeof process !== 'undefined' && 'env' in process) {
-      content = content.replace(/\$\{(.*?)\}/g, (str, variable) => {
-        let varName = variable;
-        let defaultValue = '';
-
-        if (variable.includes(':')) {
-          const spl = variable.split(':');
-          varName = spl.shift();
-          defaultValue = spl.join(':');
-        }
-
-        return process.env[varName] || defaultValue;
-      });
+      content = env(content);
     }
 
     if (ext === 'json') {
