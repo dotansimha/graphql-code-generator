@@ -8604,10 +8604,10 @@ graphql-import@^0.7.1:
     lodash "^4.17.4"
     resolve-from "^4.0.0"
 
-graphql-language-service-interface@2.4.0-alpha.8, graphql-language-service-interface@^2.3.3:
-  version "2.4.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.8.tgz#2f50b107c72be01796417bcfec2669d42f3b57c7"
-  integrity sha512-HT77H0GQk2jtpE9NAE+f8aNKvCkv5e7cZ32RZd+lCL23qNmuLJYpQcy+pbuRxxFKOWpiZLa5lc17T010gd64rQ==
+graphql-language-service-interface@2.4.0-alpha.9, graphql-language-service-interface@^2.3.3:
+  version "2.4.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.9.tgz#0c3dce60054a243b9bfc39769aa7ee36155a209d"
+  integrity sha512-0XJ7uEg1JcvRn3w0pAuuiVic6Kiwf51OUV0jmrRNkeBMSvDf1T0DJypBNvjsDnS5MEt+H8GNdNOSXQGoqbHoRw==
   dependencies:
     graphql-language-service-parser "^1.6.0-alpha.4"
     graphql-language-service-types "^1.6.0-alpha.6"
