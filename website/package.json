@@ -10,7 +10,7 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
-    "@docusaurus/core": "2.0.0-alpha.55",
+    "@docusaurus/core": "2.0.0-alpha.56",
     "@docusaurus/preset-classic": "2.0.0-alpha.56",
     "@graphql-codegen/config-schema": "1.15.0",
     "babel-preset-minify": "0.5.1",
