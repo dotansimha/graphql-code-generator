@@ -98,7 +98,7 @@
     "lint-staged": "10.2.7",
     "lodash": "4.17.15",
     "rimraf": "3.0.2",
-    "ts-jest": "26.0.0",
+    "ts-jest": "26.1.0",
     "stencil-apollo": "0.1.5",
     "typescript": "3.9.3",
     "urql": "1.9.7",
