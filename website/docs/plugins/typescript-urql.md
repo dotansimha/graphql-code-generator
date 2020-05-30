@@ -38,7 +38,7 @@ We can use the generated code like this:
 Or if you prefer:
 
 ```tsx
-  const withTestData = withTestQuery(...);
+  const [ result ] = useTestQuery(...);
 ```
 
 ## Configuration
