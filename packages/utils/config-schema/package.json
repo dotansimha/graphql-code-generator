@@ -15,7 +15,7 @@
     "fs-extra": "9.0.0",
     "jsonpath": "1.0.2",
     "mkdirp": "1.0.4",
-    "ts-node": "8.10.1",
+    "ts-node": "8.10.2",
     "typescript": "3.9.3",
     "typescript-json-schema": "0.42.0"
   }
