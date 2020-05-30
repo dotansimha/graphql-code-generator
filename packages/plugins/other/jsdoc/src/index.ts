@@ -1,5 +1,14 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { printSchema, parse, visit, ListTypeNode, DocumentNode, FieldDefinitionNode, concatAST } from 'graphql';
+import {
+  printSchema,
+  parse,
+  visit,
+  ListTypeNode,
+  DocumentNode,
+  FieldDefinitionNode,
+  concatAST,
+  InputValueDefinitionNode,
+} from 'graphql';
 import { DEFAULT_SCALARS, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
 
 const transformScalar = (scalar: string) => {
@@ -29,6 +38,13 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       },
     },
     ObjectTypeDefinition: {
+      leave(node: unknown) {
+        const typedNode = node as { name: string; fields: Array<string> };
+
+        return createDocBlock([`@typedef {Object} ${typedNode.name}`, ...typedNode.fields]);
+      },
+    },
+    InputObjectTypeDefinition: {
       leave(node: unknown) {
         const typedNode = node as { name: string; fields: Array<string> };
 
@@ -81,6 +97,20 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return node;
       },
       leave(node: FieldDefinitionNode & { nonNullable?: boolean }) {
+        const fieldName = node.nonNullable ? node.name : `[${node.name}]`;
+
+        return `@property {${node.type}} ${fieldName}`;
+      },
+    },
+    InputValueDefinition: {
+      enter(node) {
+        if (node.type.kind === 'NonNullType') {
+          return { ...node, nonNullable: true };
+        }
+
+        return node;
+      },
+      leave(node: InputValueDefinitionNode & { nonNullable?: boolean }) {
         const fieldName = node.nonNullable ? node.name : `[${node.name}]`;
 
         return `@property {${node.type}} ${fieldName}`;
