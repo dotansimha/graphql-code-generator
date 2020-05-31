@@ -97,7 +97,7 @@ export function use${operationName}() {
 
     if (operationType === 'Subscription') {
       return `
-export function use${operationName}<TData = any>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationName}, TData>) {
+export function use${operationName}<TData = any>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
 };`;
     }
