@@ -1,0 +1,37 @@
+{
+  "name": "@graphql-codegen/python",
+  "version": "1.15.0",
+  "description": "GraphQL Code Generator plugin for generating typed Python classes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/python/python"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.15.0",
+    "@graphql-codegen/visitor-plugin-common": "1.15.0",
+    "auto-bind": "~4.0.0",
+    "tslib": "~2.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
