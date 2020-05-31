@@ -345,7 +345,7 @@ export class BaseTypesVisitor<
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
-        declarationBlock.withContent(' extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+        declarationBlock.withContent('extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
       }
 
       declarationBlock.withBlock(this.mergeAllFields(allFields, false));
