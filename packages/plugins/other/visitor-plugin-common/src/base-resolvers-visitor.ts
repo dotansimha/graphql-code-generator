@@ -956,7 +956,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const fieldsContent = node.fields.map((f: any) => f(node.name));
 
     if (!isRootType) {
-      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn<ParentType>${this.getPunctuation(declarationKind)}`));
+      fieldsContent.push(indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType>${this.getPunctuation(declarationKind)}`));
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
