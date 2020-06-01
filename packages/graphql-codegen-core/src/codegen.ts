@@ -1,7 +1,12 @@
 import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, parse, DefinitionNode, Kind, print } from 'graphql';
+import { visit, parse, DefinitionNode, Kind, print, NameNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-tools/utils';
+import {
+  checkValidationErrors,
+  validateGraphQlDocuments,
+  printSchemaWithDirectives,
+  Source,
+} from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/merge';
 
@@ -167,35 +172,53 @@ export function sortPrependValues(values: string[]): string[] {
 
 function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
-  const operationMap: {
+  const definitionMap: {
     [name: string]: {
       paths: Set<string>;
       contents: Set<string>;
     };
   } = {};
 
+  function addDefinition(
+    file: Source,
+    node: DefinitionNode & { name?: NameNode },
+    deduplicatedDefinitions: Set<DefinitionNode>
+  ) {
+    if (typeof node.name !== 'undefined') {
+      if (!definitionMap[node.name.value]) {
+        definitionMap[node.name.value] = {
+          paths: new Set(),
+          contents: new Set(),
+        };
+      }
+
+      const length = definitionMap[node.name.value].contents.size;
+      definitionMap[node.name.value].paths.add(file.location);
+      definitionMap[node.name.value].contents.add(print(node));
+      if (length === definitionMap[node.name.value].contents.size) {
+        return null;
+      }
+    }
+    deduplicatedDefinitions.add(node);
+  }
+
   files.forEach(file => {
+    const deduplicatedDefinitions = new Set<DefinitionNode>();
     visit(file.document, {
       OperationDefinition(node) {
-        if (typeof node.name !== 'undefined') {
-          if (!operationMap[node.name.value]) {
-            operationMap[node.name.value] = {
-              paths: new Set(),
-              contents: new Set(),
-            };
-          }
-
-          operationMap[node.name.value].paths.add(file.location);
-          operationMap[node.name.value].contents.add(print(node));
-        }
+        addDefinition(file, node, deduplicatedDefinitions);
+      },
+      FragmentDefinition(node) {
+        addDefinition(file, node, deduplicatedDefinitions);
       },
     });
+    (file.document as any).definitions = deduplicatedDefinitions;
   });
 
-  const names = Object.keys(operationMap);
+  const names = Object.keys(definitionMap);
 
   if (names.length) {
-    const duplicated = names.filter(name => operationMap[name].contents.size > 1);
+    const duplicated = names.filter(name => definitionMap[name].contents.size > 1);
 
     if (!duplicated.length) {
       return;
@@ -205,7 +228,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       .map(name =>
         `
       * ${name} found in:
-        ${[...operationMap[name].paths]
+        ${[...definitionMap[name].paths]
           .map(filepath => {
             return `
             - ${filepath}
