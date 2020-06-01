@@ -68,7 +68,7 @@ ${Array.from(relevantOperations)
 
   if (objectItems.length === 0) {
     // eslint-disable-next-line no-console
-    console.warn(`Plugin "named-oeprations-object" has an empty output, since there are no valid operations!`);
+    console.warn(`Plugin "named-operations-object" has an empty output, since there are no valid operations!`);
 
     return '';
   }

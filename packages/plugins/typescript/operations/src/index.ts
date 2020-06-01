@@ -32,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     leave: visitor,
   });
 
-  let content = Array.from(new Set(visitorResult.definitions)).join('\n');
+  let content = visitorResult.definitions.join('\n');
 
   if (config.globalNamespace) {
     content = `
