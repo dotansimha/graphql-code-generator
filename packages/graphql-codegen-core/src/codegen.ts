@@ -248,10 +248,12 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     `.trimRight()
         )
         .join('');
+
+      const definitionKindName = kind.replace('Definition', '').toLowerCase();
       throw new DetailedError(
-        `Not all ${kind.toLowerCase()}s have an unique name: ${duplicated.join(', ')}`,
+        `Not all ${definitionKindName}s have an unique name: ${duplicated.join(', ')}`,
         `
-          Not all ${kind.toLowerCase()}s have an unique name
+          Not all ${definitionKindName}s have an unique name
           ${list}
         `
       );
