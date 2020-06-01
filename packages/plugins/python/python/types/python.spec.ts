@@ -2,9 +2,6 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
-const SCALARS = `from typing import Optional, List
-from enum import Enum`;
-
 describe('Python', () => {
   it('should output a simple class', async () => {
     const schema = buildSchema(`type SimpleClass {
@@ -12,8 +9,6 @@ describe('Python', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      ${SCALARS}
-    
       class SimpleClass:
         __typename: str
         attr: str
@@ -28,8 +23,6 @@ describe('Python', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      ${SCALARS}
-      
       # My sad, sad class
       class SimpleClass:
         __typename: str
@@ -41,7 +34,7 @@ describe('Python', () => {
     const schema = buildSchema(`
       """
       So, so many comments on this class!
-      Uncle Bob would be disappointed with the lack of self-documentation
+      Not the best self-documentation...
       """
       type SimpleClass {
         attr: String!
@@ -49,11 +42,9 @@ describe('Python', () => {
 
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      ${SCALARS}
-      
       """
       So, so many comments on this class!
-      Uncle Bob would be disappointed with the lack of self-documentation
+      Not the best self-documentation...
       """
       class SimpleClass:
         __typename: str
@@ -67,8 +58,6 @@ describe('Python', () => {
       }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-        ${SCALARS}
-      
         class SimpleClass:
           __typename: str
           attr: Optional[str]
@@ -96,8 +85,6 @@ describe('Python', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      ${SCALARS}
-      
       class SimpleClass:
         __typename: str
         fullyNullable: Optional[List[Optional[str]]]
@@ -116,8 +103,6 @@ describe('Python', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-    ${SCALARS}
-    
     class SimpleClass:
       __typename: str
       attr: str
@@ -164,8 +149,6 @@ describe('Python', () => {
     `);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-${SCALARS}
-
 class Episode(Enum):
   Newhope = 'NEWHOPE'
   Empire = 'EMPIRE'
@@ -187,8 +170,6 @@ class Character:
     `);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-${SCALARS}
-
 BasicUnion = Union[int, str]
 
 class BasicType:
@@ -210,8 +191,6 @@ class BasicType:
     `);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-${SCALARS}
-
 class MyInterface:
   field: str
 
@@ -228,10 +207,28 @@ class SubType(MyInterface):
     }`);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      ${SCALARS}
-    
       class SimpleInput:
         attr: str
     `);
+  });
+
+  it('should support custom scalars', async () => {
+    const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+    const result = await plugin(schema, [], { scalars: { MyScalar: 'Date' } }, {});
+
+    expect(result.content).toBeSimilarStringTo(`
+      MyScalar = Date
+
+      class MyType:
+        __typename: str
+        foo: Optional[str]
+        bar: MyScalar
+      `);
   });
 });

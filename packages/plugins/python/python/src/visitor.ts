@@ -11,6 +11,7 @@ import {
   AvoidOptionalsConfig,
   BaseVisitorConvertOptions,
   ConvertOptions,
+  DEFAULT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import { PythonPluginConfig } from './config';
 import autoBind from 'auto-bind';
@@ -41,9 +42,7 @@ export class TsVisitor<
   PyParsedConfig extends PythonPluginParsedConfig = PythonPluginParsedConfig
 > extends BaseTypesVisitor<PyRawConfig, PyParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: PyRawConfig, additionalConfig: Partial<PyParsedConfig> = {}) {
-    super(schema, pluginConfig, {
-      ...(additionalConfig || {}),
-    } as PyParsedConfig);
+    super(schema, pluginConfig, additionalConfig as PyParsedConfig);
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
@@ -82,14 +81,26 @@ export class TsVisitor<
       case 'Float':
         return 'float';
       default:
-        throw new Error(`Scalar type ${name} not implemented`);
+        return name;
     }
   }
 
   public get scalarsDefinition() {
-    // TODO: Only include the types that are actually used?
-    return `from typing import Optional, List
-from enum import Enum`;
+    const defaultScalars = Object.keys(DEFAULT_SCALARS);
+    const allScalars = Object.keys(this.config.scalars);
+    const customScalars = allScalars.filter(scalar => defaultScalars.indexOf(scalar) === -1);
+
+    customScalars.unshift('ID');
+
+    const scalarDefs = customScalars.map(scalarName => {
+      const scalarValue = this.config.scalars[scalarName].type;
+      const scalarType = this._schema.getType(scalarName);
+      const comment =
+        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+
+      return comment + indent(`${scalarName} = ${scalarValue}`, 0);
+    });
+    return scalarDefs.join('\n');
   }
 
   protected clearOptional(str: string): string {
