@@ -221,4 +221,17 @@ class SubType(MyInterface):
   otherProp: bool
 `);
   });
+
+  it('should work for input types', async () => {
+    const schema = buildSchema(`input SimpleInput {
+      attr: String!
+    }`);
+    const result = await plugin(schema, [], {}, {});
+    expect(result.content).toBeSimilarStringTo(`
+      ${SCALARS}
+    
+      class SimpleInput:
+        attr: str
+    `);
+  });
 });

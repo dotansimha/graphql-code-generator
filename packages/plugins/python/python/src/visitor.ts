@@ -29,6 +29,7 @@ import {
   EnumValueDefinitionNode,
   UnionTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
+  InputObjectTypeDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { PythonDeclarationBlock } from './declaration-block';
@@ -162,14 +163,13 @@ from enum import Enum`;
     );
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
-    const comment = transformComment((node.description as any) as string, 1);
-    const { type } = this.config.declarationKind;
-    return (
-      comment +
-      indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}: ${node.type}${this.getPunctuation(type)}`)
-    );
+  getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new PythonDeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
+      .withBlock(node.fields.join('\n'));
   }
 
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>) {
