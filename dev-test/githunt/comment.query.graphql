@@ -1,3 +1,5 @@
+# import './comments-page-comment.fragment.graphql'
+
 query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   # Eventually move this into a no fetch query right on the entry
   # since we literally just need this info to determine whether to

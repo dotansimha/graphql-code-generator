@@ -173,9 +173,11 @@ export function sortPrependValues(values: string[]): string[] {
 function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const definitionMap: {
-    [name: string]: {
-      paths: Set<string>;
-      contents: Set<string>;
+    [kind: string]: {
+      [name: string]: {
+        paths: Set<string>;
+        contents: Set<string>;
+      };
     };
   } = {};
 
@@ -185,21 +187,26 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     deduplicatedDefinitions: Set<DefinitionNode>
   ) {
     if (typeof node.name !== 'undefined') {
-      if (!definitionMap[node.name.value]) {
-        definitionMap[node.name.value] = {
+      if (!definitionMap[node.kind]) {
+        definitionMap[node.kind] = {};
+      }
+      if (!definitionMap[node.kind][node.name.value]) {
+        definitionMap[node.kind][node.name.value] = {
           paths: new Set(),
           contents: new Set(),
         };
       }
 
-      const length = definitionMap[node.name.value].contents.size;
-      definitionMap[node.name.value].paths.add(file.location);
-      definitionMap[node.name.value].contents.add(print(node));
-      if (length === definitionMap[node.name.value].contents.size) {
+      const definitionKindMap = definitionMap[node.kind];
+
+      const length = definitionKindMap[node.name.value].contents.size;
+      definitionKindMap[node.name.value].paths.add(file.location);
+      definitionKindMap[node.name.value].contents.add(print(node));
+      if (length === definitionKindMap[node.name.value].contents.size) {
         return null;
       }
     }
-    deduplicatedDefinitions.add(node);
+    return deduplicatedDefinitions.add(node);
   }
 
   files.forEach(file => {
@@ -212,40 +219,44 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
         addDefinition(file, node, deduplicatedDefinitions);
       },
     });
-    (file.document as any).definitions = deduplicatedDefinitions;
+    (file.document as any).definitions = [...deduplicatedDefinitions];
   });
 
-  const names = Object.keys(definitionMap);
+  const kinds = Object.keys(definitionMap);
 
-  if (names.length) {
-    const duplicated = names.filter(name => definitionMap[name].contents.size > 1);
+  kinds.forEach(kind => {
+    const definitionKindMap = definitionMap[kind];
+    const names = Object.keys(definitionKindMap);
+    if (names.length) {
+      const duplicated = names.filter(name => definitionKindMap[name].contents.size > 1);
 
-    if (!duplicated.length) {
-      return;
-    }
+      if (!duplicated.length) {
+        return;
+      }
 
-    const list = duplicated
-      .map(name =>
+      const list = duplicated
+        .map(name =>
+          `
+        * ${name} found in:
+          ${[...definitionKindMap[name].paths]
+            .map(filepath => {
+              return `
+              - ${filepath}
+            `.trimRight();
+            })
+            .join('')}
+    `.trimRight()
+        )
+        .join('');
+      throw new DetailedError(
+        `Not all ${kind.toLowerCase()}s have an unique name: ${duplicated.join(', ')}`,
         `
-      * ${name} found in:
-        ${[...definitionMap[name].paths]
-          .map(filepath => {
-            return `
-            - ${filepath}
-          `.trimRight();
-          })
-          .join('')}
-  `.trimRight()
-      )
-      .join('');
-    throw new DetailedError(
-      `Not all operations have an unique name: ${duplicated.join(', ')}`,
-      `
-        Not all operations have an unique name
-        ${list}
-      `
-    );
-  }
+          Not all ${kind.toLowerCase()}s have an unique name
+          ${list}
+        `
+      );
+    }
+  });
 }
 
 function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
