@@ -4,12 +4,7 @@ import {
   indent,
   isStringValueNode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { StringValueNode, Kind } from 'graphql';
-
-// TODO:
-// function isStringValueNode(node: any): node is StringValueNode {
-//   return node && typeof node === "object" && node.kind === Kind.STRING;
-// }
+import { StringValueNode } from 'graphql';
 
 export function transformPythonComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment || comment === '') {

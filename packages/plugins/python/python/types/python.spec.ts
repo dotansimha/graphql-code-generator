@@ -196,4 +196,29 @@ class BasicType:
   myUnion: BasicUnion
 `);
   });
+
+  it('should inherit interfaces in class', async () => {
+    const schema = buildSchema(`
+    interface MyInterface {
+      field: String!
+    }
+
+    type SubType implements MyInterface {
+      field: String!
+      otherProp: Boolean!
+    }
+    `);
+    const result = await plugin(schema, [], {}, {});
+    expect(result.content).toBeSimilarStringTo(`
+${SCALARS}
+
+class MyInterface:
+  field: str
+
+class SubType(MyInterface):
+  __typename: str
+  field: str
+  otherProp: bool
+`);
+  });
 });

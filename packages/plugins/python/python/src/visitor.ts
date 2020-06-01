@@ -28,6 +28,7 @@ import {
   ASTNode,
   EnumValueDefinitionNode,
   UnionTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { PythonDeclarationBlock } from './declaration-block';
@@ -197,6 +198,25 @@ from enum import Enum`;
         );
       })
       .join('\n');
+  }
+
+  getInterfaceTypeDeclarationBlock(
+    node: InterfaceTypeDefinitionNode,
+    originalNode: InterfaceTypeDefinitionNode
+  ): DeclarationBlock {
+    const declarationBlock = new PythonDeclarationBlock({})
+      .export()
+      .asKind(this._parsedConfig.declarationKind.interface)
+      .withName(this.convertName(node))
+      .withComment((node.description as any) as string);
+
+    return declarationBlock.withBlock(node.fields.join('\n'));
+  }
+
+  protected mergeInterfaces(interfaces: string[]): string {
+    if (interfaces.length === 0) return '';
+
+    return `(${interfaces.join(', ')})`;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
