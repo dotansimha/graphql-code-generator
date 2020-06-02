@@ -1,11 +1,18 @@
+/* eslint-disable no-console */
 const { argv } = require('yargs');
 const { sync: glob } = require('globby');
-const { writeFile } = require('fs-extra');
+const { writeFile, readJSON, writeJSON } = require('fs-extra');
 const { resolve, dirname, join } = require('path');
 const semver = require('semver');
 const cp = require('child_process');
 const rootPackageJson = require('../package.json');
 const { cwd } = require('process');
+
+async function handleDependencies(dependencies, version) {
+    return Promise.all(Object.keys(dependencies).map(async dependency => {
+        dependencies[dependency] = version;
+    }));
+}
 
 async function release() {
 
@@ -16,35 +23,51 @@ async function release() {
     let tag = argv.tag || 'latest';
     if (argv.canary) {
         const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-        version = semver.inc(version, 'prerelease', true, 'alpha-c' + gitHash);
+        version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
         tag = 'canary';
     }
 
     console.info(`Version: ${version}`);
     console.info(`Tag: ${tag}`);
 
-    const workspaceGlobs = rootPackageJson.workspaces.packages.map(workspace => workspace + '/package.json');
+    const workspacePackageGlobs = Array.isArray(rootPackageJson.workspaces) ? rootPackageJson.workspaces : rootPackageJson.workspaces.packages;
+    const workspacePackageJsonGlobs = workspacePackageGlobs.packages.map(workspace => workspace + '/package.json');
 
-    const packageJsonPaths = glob(workspaceGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
+    const packageJsonPaths = glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
 
-    const packageNames = packageJsonPaths.map(packageJsonPath => require(packageJsonPath).name);
+    const packageNames = new Set();
+    const packageJsons = await Promise.all(packageJsonPaths.map(packageJsonPath => {
+        const json = await readJSON(packageJsonPath);
+        if(packageNames.has(json.name)) {
+            throw new Error(`You have ${json.name} package more then once!`)
+        }
+        packageNames.add(json.name);
+        return {
+            path: packageJsonPath,
+            content: json,
+        };
+    }));
 
     rootPackageJson.version = version;
     await writeFile(resolve(__dirname, '../package.json'), JSON.stringify(rootPackageJson, null, 2));
-    await Promise.all(packageJsonPaths.map(async packageJsonPath => {
-        const packageJson = require(packageJsonPath);
+    await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
         packageJson.version = version;
+        await Promise.all(
+            handleDependencies(packageJson.dependencies, version)
+        )
         for (const dependency in packageJson.dependencies) {
-            if (packageNames.includes(dependency)) {
+            if (packageNames.has(dependency)) {
                 packageJson.dependencies[dependency] = version;
             }
         }
         for (const dependency in packageJson.devDependencies) {
-            if (packageNames.includes(dependency)) {
+            if (packageNames.has(dependency)) {
                 packageJson.devDependencies[dependency] = version;
             }
         }
-        await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        await writeJSON(packageJsonPath, packageJson, {
+            spaces: 2,
+        });
         if (!packageJson.private) {
             const distDirName = (packageJson.publishConfig && packageJson.publishConfig.directory) || '';
             const distPath = join(dirname(packageJsonPath), distDirName);
@@ -59,7 +82,9 @@ async function release() {
             distPackageJson.publishConfig = {
                 access: (packageJson.publishConfig && packageJson.publishConfig.access) || 'public'
             }
-            await writeFile(distPackageJsonPath, JSON.stringify(distPackageJson, null, 2));
+            await writeJSON(distPackageJsonPath, distPackageJson, {
+                spaces: 2,
+            });
             return new Promise((resolve, reject) => {
                 const publishSpawn = cp.spawn('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
                 publishSpawn.stdout.on('data', (data) => {
