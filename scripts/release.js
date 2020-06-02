@@ -23,7 +23,7 @@ async function release() {
     console.info(`Version: ${version}`);
     console.info(`Tag: ${tag}`);
 
-    const workspaceGlobs = rootPackageJson.workspaces.map(workspace => workspace + '/package.json');
+    const workspaceGlobs = rootPackageJson.workspaces.packages.map(workspace => workspace + '/package.json');
 
     const packageJsonPaths = glob(workspaceGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
 
