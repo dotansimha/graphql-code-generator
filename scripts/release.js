@@ -36,7 +36,7 @@ async function release() {
     const packageJsonPaths = glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
 
     const packageNames = new Set();
-    const packageJsons = await Promise.all(packageJsonPaths.map(packageJsonPath => {
+    const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
         const json = await readJSON(packageJsonPath);
         if(packageNames.has(json.name)) {
             throw new Error(`You have ${json.name} package more then once!`)
