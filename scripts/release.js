@@ -8,12 +8,6 @@ const cp = require('child_process');
 const rootPackageJson = require('../package.json');
 const { cwd } = require('process');
 
-async function handleDependencies(dependencies, version) {
-    return Promise.all(Object.keys(dependencies).map(async dependency => {
-        dependencies[dependency] = version;
-    }));
-}
-
 async function release() {
 
     let version = process.env.RELEASE_VERSION || rootPackageJson.version;
@@ -31,10 +25,10 @@ async function release() {
     console.info(`Tag: ${tag}`);
 
     const workspacePackageGlobs = Array.isArray(rootPackageJson.workspaces) ? rootPackageJson.workspaces : rootPackageJson.workspaces.packages;
-    const workspacePackageJsonGlobs = workspacePackageGlobs.packages.map(workspace => workspace + '/package.json');
+    
+    const workspacePackageJsonGlobs = workspacePackageGlobs.map(workspace => workspace + '/package.json');
 
     const packageJsonPaths = glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
-
     const packageNames = new Set();
     const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
         const json = await readJSON(packageJsonPath);
@@ -50,21 +44,21 @@ async function release() {
 
     rootPackageJson.version = version;
     await writeFile(resolve(__dirname, '../package.json'), JSON.stringify(rootPackageJson, null, 2));
+
+    async function handleDependencies(dependencies) {
+        return Promise.all(Object.keys(dependencies).map(async dependency => {
+            if (packageNames.has(dependency)) {
+                dependencies[dependency] = version;
+            }
+        }));
+    }
+
     await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
         packageJson.version = version;
         await Promise.all(
-            handleDependencies(packageJson.dependencies, version)
-        )
-        for (const dependency in packageJson.dependencies) {
-            if (packageNames.has(dependency)) {
-                packageJson.dependencies[dependency] = version;
-            }
-        }
-        for (const dependency in packageJson.devDependencies) {
-            if (packageNames.has(dependency)) {
-                packageJson.devDependencies[dependency] = version;
-            }
-        }
+            handleDependencies(packageJson.dependencies),
+            handleDependencies(packageJson.devDependencies),
+        );
         await writeJSON(packageJsonPath, packageJson, {
             spaces: 2,
         });
