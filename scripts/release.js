@@ -16,7 +16,7 @@ async function release() {
     let tag = argv.tag || 'latest';
     if (argv.canary) {
         const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-        version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
+        version = semver.inc(version, 'prerelease', true, 'alpha-c' + gitHash);
         tag = 'canary';
     }
 
