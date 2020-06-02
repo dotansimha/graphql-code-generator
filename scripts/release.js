@@ -49,7 +49,7 @@ async function release() {
             const distDirName = (packageJson.publishConfig && packageJson.publishConfig.directory) || '';
             const distPath = join(dirname(packageJsonPath), distDirName);
 
-            //Fix package.json in dist directory
+            // Fix package.json in dist directory
             const distPackageJsonPath = join(distPath, 'package.json');
             const distPackageJson = require(distPackageJsonPath);
             distPackageJson.name = packageJson.name;
