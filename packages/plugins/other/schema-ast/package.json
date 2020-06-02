@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.15.0",
-    "@graphql-tools/utils": "6.0.5",
+    "@graphql-tools/utils": "6.0.6",
     "tslib": "~2.0.0"
   },
   "peerDependencies": {
