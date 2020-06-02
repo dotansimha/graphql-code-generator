@@ -1,28 +1,56 @@
+name: NPM Release
 on:
-  push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-name: Create Release
-
+  release:
+    types: [created]
 jobs:
   build:
-    name: Create Release on GitHub
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Master
+        uses: actions/checkout@v1
+      - name: Configure Git Credientials
+        run: |
+          git config --global user.email "theguild-bot@users.noreply.github.com"
+          git config --global user.name "theguild-bot"
+          echo "machine github.com login theguild-bot password ${{secrets.GH_API_TOKEN}}" > ~/.netrc
+      - name: Add origin remote and refetch master
+        run: |
+          git remote rm origin
+          git remote add origin "https://github.com/${{github.repository}}"
+          git fetch
+          git checkout master
+          git reset --hard
+      - name: Use Node
+        uses: actions/setup-node@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: |
-            > * Come talk to us directly on our [Discord channel](http://bit.ly/guild-chat)
-            > * Do you want `The Guild` to keep your codebase up to date and run your build on each `GraphQL Code Generator` commit so we'll make sure not to break your app?
-            > Contact us here: [the-guild.dev/connected-build](http://bit.ly/connected-codegen)
-          draft: false
-          prerelease: false
+          node-version: '14.x'
+      - name: Setup NPM credentials
+        run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Yarn
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-14-15-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-14-15-yarn-
+      - name: Install Dependencies using Yarn
+        run: yarn install && git checkout yarn.lock
+      - name: Build
+        run: yarn build
+      - name: Publish to NPM
+        run: npm run release
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+      - name: Commit updated package.json files
+        run: |
+          git add .
+          git commit -m "${{ github.event.release.tag_name }}"
+      - name: Push all the changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
