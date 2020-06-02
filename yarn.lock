@@ -8032,10 +8032,10 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.3.tgz#c1283ac9f27b368abc1e36d1ff7b04501a30356b"
   integrity sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==
 
-flow-bin@0.126.0:
-  version "0.126.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.126.0.tgz#df06d1c6bf2cb770b71c38a76e8e4491cc57d624"
-  integrity sha512-91nCLt3B0drolW9bXmTssNxhshkkGDwokVyuquBA7TeHMCajbMNxm77JI0JydzHEv9xa6nMbBJXYyM6XW8Jzgg==
+flow-bin@0.126.1:
+  version "0.126.1"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.126.1.tgz#2726595e1891dc35b379b5994627432df4ead52c"
+  integrity sha512-RI05x7rVzruRVJQN3M4vLEjZMwUHJKhGz9FmL8HN7WiSo66/131EyJS6Vo8PkKyM2pgT9GRWfGP/tXlqS54XUg==
 
 flow-parser@0.126.1:
   version "0.126.1"
