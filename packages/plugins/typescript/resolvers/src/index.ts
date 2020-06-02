@@ -53,7 +53,7 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
   selectionSet: string;
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
-  const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver | NewStitchingResolver;`;
+  const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
   const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
