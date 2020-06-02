@@ -43,12 +43,17 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
 
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
-  const stitchingResolverType = `
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+  const legacyStitchingResolverType = `
+export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-`;
+};`;
+  const newStitchingResolverType = `
+export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  selectionSet: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};`;
+  const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
   const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
@@ -77,7 +82,14 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     // | ResolverFn
     // | StitchingResolver;
     defsToInclude.push(
-      [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n')
+      [
+        legacyStitchingResolverType,
+        newStitchingResolverType,
+        stitchingResolverType,
+        resolverType,
+        `  | ${resolverFnUsage}`,
+        `  | ${stitchingResolverUsage};`,
+      ].join('\n')
     );
   }
 
