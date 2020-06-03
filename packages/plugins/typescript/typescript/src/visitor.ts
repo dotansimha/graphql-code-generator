@@ -31,6 +31,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
   enumsAsConst: boolean;
+  numericEnums: boolean;
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
@@ -50,6 +51,7 @@ export class TsVisitor<
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       ...(additionalConfig || {}),
@@ -196,6 +198,37 @@ export class TsVisitor<
               )
               .join('\n')
         ).string;
+    }
+
+    if (this.config.numericEnums) {
+      const block = new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .withComment((node.description as any) as string)
+        .withName(enumTypeName)
+        .asKind('enum')
+        .withBlock(
+          node.values
+            .map((enumOption, i) => {
+              let enumValue: string | number = i;
+              const comment = transformComment((enumOption.description as any) as string, 1);
+
+              if (
+                this.config.enumValues[enumName] &&
+                this.config.enumValues[enumName].mappedValues &&
+                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+              ) {
+                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
+              }
+
+              return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
+            })
+            .concat(
+              ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
+            )
+            .join(',\n')
+        ).string;
+
+      return block;
     }
 
     if (this.config.enumsAsConst) {

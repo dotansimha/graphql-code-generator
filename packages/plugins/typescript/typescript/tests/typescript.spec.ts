@@ -291,6 +291,37 @@ describe('TypeScript', () => {
       }`);
     });
 
+    it('#4157 - Should generate numeric values for enums if numericEnums is set to true', async () => {
+      const testSchema = buildSchema(/* GraphQl */ `
+        enum Status {
+            Idle
+            Running
+            Error
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          numericEnums: true,
+        },
+        {
+          outputFile: '',
+        }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      validateTs(output);
+
+      expect(output).toBeSimilarStringTo(`
+        export enum Status {
+            Idle = 0,
+            Running = 1,
+            Error = 2
+        }
+      `);
+    });
+
     it('#2679 - incorrect prefix for enums', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum FilterOption {
