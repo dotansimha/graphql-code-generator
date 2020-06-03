@@ -1,7 +1,8 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
 import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
-import { Command } from 'commander';
+import { env } from 'string-env-interpolation';
+import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
 import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments } from './load';
@@ -12,6 +13,7 @@ export type YamlCliFlags = {
   require: string[];
   overwrite: boolean;
   project: string;
+  silent: boolean;
 };
 
 function generateSearchPlaces(moduleName: string) {
@@ -27,18 +29,7 @@ function generateSearchPlaces(moduleName: string) {
 function customLoader(ext: 'json' | 'yaml' | 'js') {
   function loader(filepath: string, content: string) {
     if (typeof process !== 'undefined' && 'env' in process) {
-      content = content.replace(/\$\{(.*?)\}/g, (str, variable) => {
-        let varName = variable;
-        let defaultValue = '';
-
-        if (variable.includes(':')) {
-          const spl = variable.split(':');
-          varName = spl.shift();
-          defaultValue = spl.join(':');
-        }
-
-        return process.env[varName] || defaultValue;
-      });
+      content = env(content);
     }
 
     if (ext === 'json') {
@@ -123,42 +114,51 @@ function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   return configFile ? resolve(process.cwd(), configFile) : null;
 }
 
-function collect<T = string>(val: T, memo: T[]): T[] {
-  memo.push(val);
-
-  return memo;
+export function buildOptions() {
+  return {
+    c: {
+      alias: 'config',
+      type: 'string' as const,
+      describe: 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory',
+    },
+    w: {
+      alias: 'watch',
+      describe:
+        'Watch for changes and execute generation automatically. You can also specify a glob expreession for custom watch list.',
+      coerce: (watch: any) => {
+        if (watch === 'false') {
+          return false;
+        }
+        if (typeof watch === 'string' || Array.isArray(watch)) {
+          return watch;
+        }
+        return true;
+      },
+    },
+    r: {
+      alias: 'require',
+      describe: 'Loads specific require.extensions before running the codegen and reading the configuration',
+      type: 'array' as const,
+      default: [],
+    },
+    o: {
+      alias: 'overwrite',
+      describe: 'Overwrites existing files',
+      type: 'boolean' as const,
+    },
+    p: {
+      alias: 'project',
+      describe: 'Name of a project in GraphQL Config',
+      type: 'string' as const,
+    },
+  };
 }
 
-export function setCommandOptions(commandInstance: Command): Command {
-  return commandInstance
-    .allowUnknownOption(true)
-    .option(
-      '-c, --config <path>',
-      'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
-    )
-    .option(
-      '-w, --watch [value]',
-      'Watch for changes and execute generation automatically. You can also specify a glob expreession for custom watch list.'
-    )
-    .option('-s, --silent', 'A flag to not print errors in case they occur')
-    .option(
-      '-r, --require [value]',
-      'Loads specific require.extensions before running the codegen and reading the configuration',
-      collect,
-      []
-    )
-    .option('-o, --overwrite', 'Overwrites existing files')
-    .option('-p, --project <name>', 'Name of a project in GraphQL Config');
+export function parseArgv(argv = process.argv): YamlCliFlags {
+  return yargs.options(buildOptions()).parse(argv) as any;
 }
 
-export function parseArgv(argv = process.argv): Command & YamlCliFlags {
-  return (setCommandOptions(new Command().usage('graphql-codegen [options]') as any).parse(argv) as any) as Command &
-    YamlCliFlags;
-}
-
-export async function createContext(
-  cliFlags: Command & YamlCliFlags = parseArgv(process.argv)
-): Promise<CodegenContext> {
+export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
     await Promise.all(cliFlags.require.map(mod => import(mod)));
   }
@@ -169,7 +169,7 @@ export async function createContext(
   return context;
 }
 
-export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Command & YamlCliFlags) {
+export function updateContextWithCliFlags(context: CodegenContext, cliFlags: YamlCliFlags) {
   const config: Partial<Types.Config & { configFilePath?: string }> = {
     configFilePath: context.filepath,
   };

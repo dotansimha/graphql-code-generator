@@ -1,56 +1,39 @@
 {
-  "name": "@graphql-codegen/core",
+  "name": "@graphql-cli/codegen",
   "version": "1.15.0",
+  "description": "GraphQL Code Generator's GraphQL CLI plugin. GraphQL Code Generator is a tool that generates code from your GraphQL schema and documents for your backend or frontend with flexible support for custom plugins and templates.",
   "license": "MIT",
+  "keywords": [
+    "graphql-cli",
+    "graphql-cli-plugin"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/graphql-codegen-core"
+    "directory": "packages/graphql-cli-codegen-plugin"
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../jest.config.js",
+    "test": "jest --no-watchman",
     "prepack": "bob prepack"
   },
-  "keywords": [
-    "gql",
-    "generator",
-    "code",
-    "types",
-    "interfaces",
-    "graphql",
-    "codegen",
-    "apollo",
-    "node",
-    "typescript",
-    "ts",
-    "flow",
-    "types",
-    "d.ts",
-    "typings"
-  ],
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.15.0",
-    "@graphql-tools/merge": "^6.0.0",
-    "@graphql-tools/utils": "^6.0.0",
-    "tslib": "~2.0.0"
+    "@graphql-codegen/cli": "1.15.0",
+    "@graphql-cli/common": "4.0.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
   },
   "publishConfig": {
     "access": "public"
