@@ -7,10 +7,6 @@ const semver = require('semver');
 const cp = require('child_process');
 const { cwd } = require('process');
 
-const pLimit = require('p-limit');
- 
-const limit = pLimit(10);
-
 async function release() {
 
     const rootPackageJson = await readJSON(join(__dirname, '../package.json'));
@@ -62,7 +58,7 @@ async function release() {
         }));
     }
 
-    await Promise.all(packageJsons.map(({ path: packageJsonPath, content: packageJson }) => limit(async () => {
+    await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
         packageJson.version = version;
         await Promise.all([
             handleDependencies(packageJson.dependencies),
@@ -88,24 +84,14 @@ async function release() {
             await writeJSON(distPackageJsonPath, distPackageJson, {
                 spaces: 2,
             });
-            return new Promise((resolve, reject) => {
-                const publishSpawn = cp.spawn('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
-                /* publishSpawn.stdout.on('data', (data) => {
-                    console.info(data.toString('utf8'));
-                })
-                publishSpawn.stderr.on('data', function(message) {
-                    console.error(message.toString('utf8'));
-                }) */
-                publishSpawn.on("exit", function(code, signal) {
-                    if (code !== 0) {
-                        reject(new Error(`npm publish exited with code: ${code} and signal: ${signal}`));
-                    } else {
-                        resolve();
-                    }
-                });
-            });
+            const publishSpawn = cp.spawnSync('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
+            console.info(publishSpawn.stdout.toString('utf8'));
+            console.error(publishSpawn.stderr.toString('utf8'));
+            if (publishSpawn.error) {
+                throw publishSpawn.error;
+            }
         }
-    })));
+    }));
     console.info(`Released successfully!`);
     console.info(`${tag} => ${version}`);
 }
