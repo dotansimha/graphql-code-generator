@@ -96,6 +96,7 @@ async function release() {
                 publishSpawn.stderr.on('data', function(message) {
                     console.error(message.toString('utf8'));
                 }) */
+                // NOOP
                 publishSpawn.on("exit", function(code, signal) {
                     if (code !== 0) {
                         reject(new Error(`npm publish exited with code: ${code} and signal: ${signal}`));
