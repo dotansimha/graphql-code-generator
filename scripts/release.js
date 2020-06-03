@@ -5,10 +5,12 @@ const { writeFile, readJSON, writeJSON } = require('fs-extra');
 const { resolve, dirname, join } = require('path');
 const semver = require('semver');
 const cp = require('child_process');
-const rootPackageJson = require('../package.json');
 const { cwd } = require('process');
 
 async function release() {
+
+    const rootPackageJson = require('../package.json');
+    console.log(rootPackageJson)
 
     let version = process.env.RELEASE_VERSION || rootPackageJson.version;
     if(version.startsWith('v')) {
@@ -16,8 +18,8 @@ async function release() {
     }
     let tag = argv.tag || 'latest';
     if (argv.canary) {
-        // const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-        version = semver.inc(version, 'prerelease', true, 'alpha-' + Date.now());
+        const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
+        version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
         tag = 'canary';
     }
 
@@ -34,7 +36,7 @@ async function release() {
     const packageNames = new Set();
     const arr = [];
     const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
-        const json = await readJSON(packageJsonPath);
+        const json = require(packageJsonPath);
         if(packageNames.has(json.name)) {
             throw new Error(`You have ${json.name} package more then once!`)
         }
