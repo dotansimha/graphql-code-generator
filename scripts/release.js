@@ -90,12 +90,12 @@ async function release() {
             });
             return new Promise((resolve, reject) => {
                 const publishSpawn = cp.spawn('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
-                publishSpawn.stdout.on('data', (data) => {
+                /* publishSpawn.stdout.on('data', (data) => {
                     console.info(data.toString('utf8'));
                 })
                 publishSpawn.stderr.on('data', function(message) {
                     console.error(message.toString('utf8'));
-                })
+                }) */
                 publishSpawn.on("exit", function(code, signal) {
                     if (code !== 0) {
                         reject(new Error(`npm publish exited with code: ${code} and signal: ${signal}`));
