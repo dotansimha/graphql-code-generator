@@ -84,6 +84,7 @@ async function release() {
             await writeJSON(distPackageJsonPath, distPackageJson, {
                 spaces: 2,
             });
+            // Call spawnSync for consistency
             const publishSpawn = cp.spawnSync('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
             console.info(publishSpawn.stdout.toString('utf8'));
             console.error(publishSpawn.stderr.toString('utf8'));
