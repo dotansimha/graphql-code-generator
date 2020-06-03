@@ -9,8 +9,7 @@ const { cwd } = require('process');
 
 async function release() {
 
-    const rootPackageJson = require('../package.json');
-    console.log(rootPackageJson)
+    const rootPackageJson = await readJSON(join(__dirname, '../package.json'));
 
     let version = process.env.RELEASE_VERSION || rootPackageJson.version;
     if(version.startsWith('v')) {
@@ -36,7 +35,7 @@ async function release() {
     const packageNames = new Set();
     const arr = [];
     const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
-        const json = require(packageJsonPath);
+        const json = await readJSON(packageJsonPath);
         if(packageNames.has(json.name)) {
             throw new Error(`You have ${json.name} package more then once!`)
         }
@@ -74,7 +73,7 @@ async function release() {
 
             // Fix package.json in dist directory
             const distPackageJsonPath = join(distPath, 'package.json');
-            const distPackageJson = require(distPackageJsonPath);
+            const distPackageJson = await readJSON(distPackageJsonPath);
             distPackageJson.name = packageJson.name;
             distPackageJson.version = packageJson.version;
             distPackageJson.dependencies = packageJson.dependencies;
