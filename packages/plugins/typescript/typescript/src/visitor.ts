@@ -22,6 +22,7 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
+  EnumValueDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -168,6 +169,21 @@ export class TsVisitor<
       return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
+    const getValueFromConfig = (enumValue: string | number) => {
+      if (
+        this.config.enumValues[enumName] &&
+        this.config.enumValues[enumName].mappedValues &&
+        typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+      ) {
+        return this.config.enumValues[enumName].mappedValues[enumValue];
+      }
+      return null;
+    };
+
+    const withFutureAddedValue = [
+      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
+    ];
+
     const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
 
     if (this.config.enumsAsTypes) {
@@ -180,22 +196,13 @@ export class TsVisitor<
           '\n' +
             node.values
               .map(enumOption => {
-                let enumValue: string | number = (enumOption.name as any) as string;
+                const name = (enumOption.name as unknown) as string;
+                const enumValue: string | number = getValueFromConfig(name) || name;
                 const comment = transformComment((enumOption.description as any) as string, 1);
-
-                if (
-                  this.config.enumValues[enumName] &&
-                  this.config.enumValues[enumName].mappedValues &&
-                  typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-                ) {
-                  enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-                }
 
                 return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .concat(
-                ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
-              )
+              .concat(...withFutureAddedValue)
               .join('\n')
         ).string;
     }
@@ -209,22 +216,13 @@ export class TsVisitor<
         .withBlock(
           node.values
             .map((enumOption, i) => {
-              let enumValue: string | number = i;
+              const valueFromConfig = getValueFromConfig((enumOption.name as unknown) as string);
+              const enumValue: string | number = valueFromConfig || i;
               const comment = transformComment((enumOption.description as any) as string, 1);
-
-              if (
-                this.config.enumValues[enumName] &&
-                this.config.enumValues[enumName].mappedValues &&
-                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-              ) {
-                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-              }
 
               return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
             })
-            .concat(
-              ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
-            )
+            .concat(...withFutureAddedValue)
             .join(',\n')
         ).string;
 
@@ -248,15 +246,8 @@ export class TsVisitor<
             .map(enumOption => {
               const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
               const comment = transformComment((enumOption.description as any) as string, 1);
-              let enumValue: string | number = enumOption.name as any;
-
-              if (
-                this.config.enumValues[enumName] &&
-                this.config.enumValues[enumName].mappedValues &&
-                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-              ) {
-                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-              }
+              const name = (enumOption.name as unknown) as string;
+              const enumValue: string | number = getValueFromConfig(name) || name;
 
               return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
             })
