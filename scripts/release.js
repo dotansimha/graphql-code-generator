@@ -7,6 +7,10 @@ const semver = require('semver');
 const cp = require('child_process');
 const { cwd } = require('process');
 
+const pLimit = require('p-limit');
+ 
+const limit = pLimit(10);
+
 async function release() {
 
     const rootPackageJson = await readJSON(join(__dirname, '../package.json'));
@@ -58,7 +62,7 @@ async function release() {
         }));
     }
 
-    await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
+    await Promise.all(packageJsons.map(({ path: packageJsonPath, content: packageJson }) => limit(async () => {
         packageJson.version = version;
         await Promise.all([
             handleDependencies(packageJson.dependencies),
@@ -101,7 +105,7 @@ async function release() {
                 });
             });
         }
-    }));
+    })));
     console.info(`Released successfully!`);
     console.info(`${tag} => ${version}`);
 }
