@@ -29,7 +29,7 @@ async function release() {
     const workspacePackageJsonGlobs = workspacePackageGlobs.map(workspace => workspace + '/package.json');
 
     // Deduplicate using set
-    const packageJsonPaths = new Set(...glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath)));
+    const packageJsonPaths = [...new Set(...glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath)))];
     
     const packageNames = new Set();
     const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
