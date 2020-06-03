@@ -45,7 +45,7 @@ async function release() {
     rootPackageJson.version = version;
     await writeFile(resolve(__dirname, '../package.json'), JSON.stringify(rootPackageJson, null, 2));
 
-    async function handleDependencies(dependencies) {
+    async function handleDependencies(dependencies = {}) {
         return Promise.all(Object.keys(dependencies).map(async dependency => {
             if (packageNames.has(dependency)) {
                 dependencies[dependency] = version;
