@@ -55,10 +55,10 @@ async function release() {
 
     await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
         packageJson.version = version;
-        await Promise.all(
+        await Promise.all([
             handleDependencies(packageJson.dependencies),
             handleDependencies(packageJson.devDependencies),
-        );
+        ]);
         await writeJSON(packageJsonPath, packageJson, {
             spaces: 2,
         });
