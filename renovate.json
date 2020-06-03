@@ -10,5 +10,6 @@
   "automerge": true,
   "major": {
     "automerge": false
-  }
+  },
+  "rangeStrategy": "replace"
 }
