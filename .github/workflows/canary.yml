@@ -1,0 +1,57 @@
+name: Canary Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  publish-canary:
+    name: Publish Canary
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    if: contains(github.actor, 'renovate') == false
+    steps:
+      - name: Checkout Master
+        uses: actions/checkout@v1
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Yarn
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-14-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-14-yarn-
+      - name: Install Dependencies using Yarn
+        run: yarn install --ignore-engines && git checkout yarn.lock
+      - name: Build
+        run: yarn build
+
+      - name: Release Canary
+        id: canary
+        uses: 'kamilkisiela/release-canary@master'
+        if: github.repository == 'dotansimha/graphql-code-generator'
+        with:
+          npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
+          npm-script: 'release:canary'
+      - name: Publish a message
+        if: steps.canary.outputs.released
+        uses: 'kamilkisiela/pr-comment@master'
+        with:
+          message: |
+            The latest changes of this PR are available as alpha in npm: `${{ steps.canary.outputs.version }}`
+
+            Quickly update your package.json by running:
+
+                npx match-version @graphql-codegen ${{ steps.canary.outputs.version }}
+          bot-token: ${{ secrets.GH_API_TOKEN }}
+          bot: 'theguild-bot'
+          github-token: ${{ secrets.GITHUB_TOKEN }}

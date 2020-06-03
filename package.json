@@ -1,4 +1,6 @@
 {
+  "name": "graphql-code-generator",
+  "version": "1.15.0",
   "private": true,
   "scripts": {
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
@@ -10,11 +12,8 @@
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
-    "prerelease": "yarn test-and-build",
-    "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish --contents dist --exact --force-publish=\"*\"",
-    "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact",
-    "ci:release:canary": "lerna publish --contents dist --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
+    "release": "node scripts/release.js",
+    "release:canary": "node scripts/release.js --canary",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
   "husky": {
@@ -88,6 +87,7 @@
     "eslint-plugin-standard": "4.0.1",
     "flow-bin": "0.126.1",
     "flow-parser": "0.126.1",
+    "fs-extra": "9.0.0",
     "graphql": "15.0.0",
     "graphql-tag": "2.10.3",
     "husky": "4.2.5",
@@ -95,7 +95,6 @@
     "jest": "26.0.1",
     "jest-docblock": "26.0.0",
     "jest-junit": "10.0.0",
-    "lerna": "3.22.0",
     "lint-staged": "10.2.7",
     "lodash": "4.17.15",
     "rimraf": "3.0.2",
