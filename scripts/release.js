@@ -16,8 +16,8 @@ async function release() {
     }
     let tag = argv.tag || 'latest';
     if (argv.canary) {
-        const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-        version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
+        // const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
+        version = semver.inc(version, 'prerelease', true, 'alpha-' + Date.now());
         tag = 'canary';
     }
 
@@ -29,15 +29,17 @@ async function release() {
     const workspacePackageJsonGlobs = workspacePackageGlobs.map(workspace => workspace + '/package.json');
 
     // Deduplicate using set
-    const packageJsonPaths = [...new Set(...glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath)))];
+    const packageJsonPaths = glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
     
     const packageNames = new Set();
+    const arr = [];
     const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
         const json = await readJSON(packageJsonPath);
         if(packageNames.has(json.name)) {
             throw new Error(`You have ${json.name} package more then once!`)
         }
         packageNames.add(json.name);
+        arr.push(json.name)
         return {
             path: packageJsonPath,
             content: json,
