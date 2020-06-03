@@ -68,7 +68,7 @@ async function release() {
             spaces: 2,
         });
         if (!packageJson.private) {
-            const distDirName = (packageJson.publishConfig && packageJson.publishConfig.directory) || '';
+            const distDirName = (packageJson.publishConfig && packageJson.publishConfig.directory) || 'dist';
             const distPath = join(dirname(packageJsonPath), distDirName);
 
             // Fix package.json in dist directory
