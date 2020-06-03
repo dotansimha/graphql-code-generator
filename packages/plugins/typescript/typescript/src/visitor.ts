@@ -22,7 +22,6 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
-  EnumValueDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
