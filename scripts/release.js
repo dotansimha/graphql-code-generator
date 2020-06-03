@@ -58,7 +58,7 @@ async function release() {
         }));
     }
 
-    await Promise.all(packageJsons.map(async ({ path: packageJsonPath, content: packageJson }) => {
+    for (const { path: packageJsonPath, content: packageJson } of packageJsons) {       
         packageJson.version = version;
         await Promise.all([
             handleDependencies(packageJson.dependencies),
@@ -86,13 +86,13 @@ async function release() {
             });
             // Call spawnSync for consistency, spawn fails randomly
             const publishSpawn = cp.spawnSync('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
-            console.info(publishSpawn.stdout.toString('utf8'));
             console.error(publishSpawn.stderr.toString('utf8'));
+            console.info(publishSpawn.stdout.toString('utf8'));
             if (publishSpawn.error) {
                 throw publishSpawn.error;
             }
         }
-    }));
+    }
     console.info(`Released successfully!`);
     console.info(`${tag} => ${version}`);
 }
