@@ -196,7 +196,7 @@ describe('JSDoc Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [], config, { outputFile: '' });
 
-      expect(result).toEqual(expect.stringContaining('@typedef {("FOO"|"BAR")} FooOrBar'));
+      expect(result).toEqual(expect.stringContaining('* @typedef {("FOO"|"BAR")} FooOrBar'));
     });
   });
 });
