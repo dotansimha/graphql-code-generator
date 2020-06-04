@@ -100,7 +100,7 @@
     "rimraf": "3.0.2",
     "ts-jest": "26.1.0",
     "stencil-apollo": "0.1.5",
-    "typescript": "3.9.3",
+    "typescript": "3.9.5",
     "urql": "1.9.7",
     "vue": "2.6.11"
   },
