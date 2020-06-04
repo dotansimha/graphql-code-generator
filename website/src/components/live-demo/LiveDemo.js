@@ -1,11 +1,19 @@
 import React from 'react';
 import { Editor } from './Editor';
 import { safeLoad } from 'js-yaml';
-import { EXAMPLES } from './examples';
+import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
 import classes from './styles.module.css';
 import { CodegenOutput } from './CodegenOutput';
+import Select from 'react-select';
+
+const groupedExamples = Object.keys(EXAMPLES).map(catName => {
+  return {
+    label: catName,
+    options: EXAMPLES[catName].map((t, index) => ({ ...t, selectId: `${catName}__${index}` })),
+  };
+});
 
 function useCodegen(config, schema, documents, templateName) {
   const [error, setError] = React.useState(null);
@@ -64,8 +72,41 @@ export const LiveDemo = () => {
   return (
     <div>
       <div className={classes.picker}>
-        Choose Example:{' '}
-        <select value={template} onChange={e => changeTemplate(e.target.value)}>
+        <span>Choose Example: </span>
+        <Select
+          styles={{
+            container: styles => ({ ...styles, display: 'inline-block', width: '50vw' }),
+            option: styles => ({ ...styles, fontSize: 13 }),
+            singleValue: styles => ({ ...styles, width: '100%' }),
+          }}
+          isMulti={false}
+          isClearable={false}
+          onChange={e => changeTemplate(e.selectId)}
+          getOptionValue={o => o.selectId}
+          getOptionLabel={o => {
+            return (
+              <>
+                <span>{o.name}</span>
+                <span className={classes.exampleTags}>
+                  {o.tags && o.tags.length
+                    ? o.tags.map((t, index) =>
+                        EXAMPLES_ICONS[t] ? (
+                          EXAMPLES_ICONS[t](`${o.name}_${index}`)
+                        ) : (
+                          <span key={`${o.name}_${index}`} className={classes.exampleTag}>
+                            {t}
+                          </span>
+                        )
+                      )
+                    : null}
+                </span>
+              </>
+            );
+          }}
+          defaultValue={groupedExamples[0].options[0]}
+          options={groupedExamples}
+        />
+        {/* <select value={template} onChange={e => changeTemplate(e.target.value)}>
           {Object.keys(EXAMPLES).map(catName => (
             <optgroup label={catName} key={catName}>
               {EXAMPLES[catName].map((item, index) => (
@@ -75,7 +116,7 @@ export const LiveDemo = () => {
               ))}
             </optgroup>
           ))}
-        </select>
+        </select> */}
       </div>
       <div className={classes.container}>
         <div className={classes.column}>

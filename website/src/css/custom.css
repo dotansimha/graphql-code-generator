@@ -1,8 +1,3 @@
-@import '~codemirror/lib/codemirror.css';
-@import '~codemirror/addon/lint/lint.css';
-@import '~codemirror/theme/nord.css';
-@import '~codemirror/theme/neo.css';
-
 :root {
   --ifm-color-primary: #e15799;
   --ifm-color-primary-dark: #dc3d89;
@@ -28,11 +23,6 @@ code {
 
 .menu button {
   margin-bottom: 70px;
-}
-
-.CodeMirror {
-  height: 70vh;
-  border-left: 1px solid #e5e5e5;
 }
 
 button {

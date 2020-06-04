@@ -1,3 +1,22 @@
+import React from 'react';
+import classes from './styles.module.css';
+
+export const EXAMPLES_ICONS = {
+  typescript: k => <img alt={'TypeScript'} className={classes.exampleIcon} key={k} src={'/img/icons/typescript.svg'} />,
+  react: k => <img alt={'React'} className={classes.exampleIcon} key={k} src={'/img/icons/react.svg'} />,
+  apollo: k => <img alt={'Apollo GraphQL'} className={classes.exampleIcon} key={k} src={'/img/icons/apollo.svg'} />,
+  csharp: k => <img alt={'C#'} className={classes.exampleIcon} key={k} src={'/img/icons/csharp.svg'} />,
+  graphql: k => <img alt={'GraphQL'} className={classes.exampleIcon} key={k} src={'/img/icons/graphql.svg'} />,
+  vue: k => <img alt={'VueJS'} className={classes.exampleIcon} key={k} src={'/img/icons/vue.svg'} />,
+  java: k => <img alt={'Java'} className={classes.exampleIcon} key={k} src={'/img/icons/java.svg'} />,
+  flow: k => <img alt={'FlowJS'} className={classes.exampleIcon} key={k} src={'/img/icons/flow.svg'} />,
+  angular: k => <img alt={'Angular'} className={classes.exampleIcon} key={k} src={'/img/icons/angular.svg'} />,
+  urql: k => <img alt={'urql'} className={classes.exampleIcon} key={k} src={'/img/icons/urql.svg'} />,
+  nodejs: k => <img alt={'NodeJS'} className={classes.exampleIcon} key={k} src={'/img/icons/nodejs.svg'} />,
+  'type-graphql': k => <img alt={'type-graphql'} className={classes.exampleIcon} key={k} src={'/img/icons/type-graphql.png'} />,
+  'mongodb': k => <img alt={'MongoDB'} className={classes.exampleIcon} key={k} src={'/img/icons/mongodb.png'} />,
+}
+
 const TS_SCHEMA = `scalar Date
 
 schema {
@@ -60,6 +79,7 @@ export const EXAMPLES = {
   TypeScript: [
     {
       name: 'Schema types',
+      tags: ['typescript', 'frontend', 'backend'],
       config: `generates:
   types.ts:
     plugins:
@@ -69,6 +89,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Operations types',
+      tags: ['typescript', 'frontend'],
       config: `generates:
   operations-types.ts:
     plugins:
@@ -79,6 +100,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Operations types (near-operation-file)',
+      tags: ['typescript', 'frontend'],
       config: `generates:
   ./types.ts:
     plugins:
@@ -96,6 +118,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Operations types (without Pick)',
+      tags: ['typescript', 'frontend'],
       config: `generates:
   operations-types.ts:
     config:
@@ -108,6 +131,7 @@ export const EXAMPLES = {
     },
     {
       name: 'React-Apollo Hooks',
+      tags: ['typescript', 'react', 'apollo', 'frontend'],
       config: `generates:
   types-and-hooks.tsx:
     config:
@@ -123,6 +147,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Vue-Apollo composition functions',
+      tags: ['typescript', 'vue', 'apollo', 'frontend'],
       config: `generates:
   composition-functions.ts:
     plugins:
@@ -134,6 +159,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Apollo-Angular Components',
+      tags: ['typescript', 'angular', 'apollo', 'frontend'],
       config: `generates:
   components.ts:
     plugins:
@@ -145,6 +171,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Urql',
+      tags: ['typescript', 'urql', 'react', 'frontend'],
       config: `generates:
   components.tsx:
     plugins:
@@ -156,6 +183,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Stencil-Apollo Components',
+      tags: ['typescript', 'stencil', 'apollo', 'frontend'],
       config: `generates:
   components.tsx:
     plugins:
@@ -167,6 +195,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Resolvers Signature',
+      tags: ['nodejs', 'backend'],
       config: `generates:
   resolvers.ts:
     plugins:
@@ -177,6 +206,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Resolvers Signature (with custom models)',
+      tags: ['nodejs', 'backend'],
       config: `generates:
   resolvers.ts:
     config:
@@ -191,6 +221,7 @@ export const EXAMPLES = {
     },
     {
       name: 'graphql-request typed SDK',
+      tags: ['nodejs', 'backend', 'frontend'],
       config: `generates:
   sdk.ts:
     plugins:
@@ -201,6 +232,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Generic SDK',
+      tags: ['nodejs', 'backend'],
       config: `generates:
   sdk.ts:
     plugins:
@@ -211,6 +243,7 @@ export const EXAMPLES = {
     },
     {
       name: 'type-graphql',
+      tags: ['type-graphql', 'nodejs', 'backend'],
       config: `generates:
   types.ts:
     plugins:
@@ -220,6 +253,7 @@ export const EXAMPLES = {
     },
     {
       name: 'MongoDB Models',
+      tags: ['mongodb', 'nodejs', 'backend'],
       config: `generates:
     models.ts:
       plugins:
@@ -261,6 +295,7 @@ export const EXAMPLES = {
   '.NET': [
     {
       name: 'C# Schema types',
+      tags: ['csharp', 'frontend', 'backend'],
       config: `generates:
   src/main/c-sharp/my-org/my-app/Types.cs:
     plugins:
@@ -270,6 +305,7 @@ export const EXAMPLES = {
     },
     {
       name: 'C# Operations',
+      tags: ['csharp', 'frontend'],
       config: `generates:
   src/main/c-sharp/my-org/my-app/Operations.cs:
     plugins:
@@ -281,6 +317,7 @@ export const EXAMPLES = {
   Java: [
     {
       name: 'Types (Enum & Input)',
+      tags: ['java', 'backend'],
       config: `generates:
   src/main/java/my/app/generated/Types.java:
     plugins:
@@ -290,6 +327,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Resolvers Signature',
+      tags: ['java', 'backend'],
       config: `generates:
   src/main/java/my/app/generated/Resolvers.java:
     plugins:
@@ -299,6 +337,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Apollo Android',
+      tags: ['java', 'apollo', 'frontend'],
       config: `generates:
   ./app/src/main/java/:
     preset: java-apollo-android
@@ -315,6 +354,7 @@ export const EXAMPLES = {
   Flow: [
     {
       name: 'Schema types',
+      tags: ['flow', 'frontend', 'backend'],
       config: `generates:
   types.flow.js:
     plugins:
@@ -325,6 +365,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Resolvers Signature',
+      tags: ['flow', 'backend'],
       config: `generates:
   resolvers.flow.js:
     plugins:
@@ -336,6 +377,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Operations types',
+      tags: ['flow', 'frontend'],
       config: `generates:
   types.flow.js:
     plugins:
@@ -358,6 +400,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Introspection JSON',
+      tags: ['graphql'],
       config: `generates:
   schema.json:
     plugins:
@@ -367,6 +410,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Schema AST',
+      tags: ['graphql'],
       config: `generates:
   schema.graphql:
     plugins:
@@ -376,6 +420,7 @@ export const EXAMPLES = {
     },
     {
       name: 'Fragment Matcher',
+      tags: ['typescript', 'apollo', 'frontend'],
       config: `generates:
   fragment-matcher.json:
     plugins:
