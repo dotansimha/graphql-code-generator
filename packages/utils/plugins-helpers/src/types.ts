@@ -48,14 +48,22 @@ export namespace Types {
    * @additionalProperties false
    * @description Loads schema using a pointer, without using `require` while looking for schemas in code files.
    */
-  export interface SchemaWithRequireOptions {
+  export interface SchemaFromCodeFileOptions {
     /**
-     * @description Set this to `true` in order to tell codegen not to try to `require` files in order to find schema
+     * @description Set this to `true` in order to tell codegen not to try to `require` files in order to find schema/docs
      */
     noRequire?: boolean;
+    /**
+     * @description Set this to `true` in order to tell codegen not to try to extract GraphQL AST strings schema/docs
+     */
+    noPluck?: boolean;
+    /**
+     * @description Set this to `true` in order to tell codegen to skip documents validation.
+     */
+    assumeValid?: boolean;
   }
-  export interface SchemaWithRequire {
-    [path: string]: SchemaWithRequireOptions;
+  export interface SchemaFromCodeFile {
+    [path: string]: SchemaFromCodeFileOptions;
   }
 
   /**
@@ -67,6 +75,14 @@ export namespace Types {
      * @description HTTP headers you wish to add to the HTTP request sent by codegen to fetch your GraphQL remote schema.
      */
     headers?: { [headerName: string]: string };
+    /**
+     * @description Specify a Node module name, or a custom file, to be used instead of standard `fetch`
+     */
+    customFetch?: string;
+    /**
+     * @description HTTP Method to use, either POST (default) or GET.
+     */
+    method?: string;
   }
   export interface UrlSchemaWithOptions {
     [url: string]: UrlSchemaOptions;
@@ -83,7 +99,7 @@ export namespace Types {
     | LocalSchemaPath
     | SchemaGlobPath
     | SchemaWithLoader
-    | SchemaWithRequire;
+    | SchemaFromCodeFile;
 
   /* Document Definitions */
   export type OperationDocumentGlobPath = string;

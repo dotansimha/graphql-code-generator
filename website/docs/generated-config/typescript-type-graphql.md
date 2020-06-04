@@ -84,6 +84,24 @@ path/to/file.ts:
    enumsAsTypes: true
 ```
 
+### `numericEnums`
+
+type: `boolean`
+default: `false`
+
+Controls whether to preserve typescript enum values as numbers
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   numericEnums: true
+```
+
 ### `futureProofEnums`
 
 type: `boolean`

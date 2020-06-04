@@ -114,6 +114,11 @@
           "default": false,
           "type": "boolean"
         },
+        "numericEnums": {
+          "description": "Controls whether to preserve typescript enum values as numbers",
+          "default": false,
+          "type": "boolean"
+        },
         "futureProofEnums": {
           "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.",
           "default": false,
@@ -520,6 +525,11 @@
         },
         "enumsAsTypes": {
           "description": "Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`",
+          "default": false,
+          "type": "boolean"
+        },
+        "numericEnums": {
+          "description": "Controls whether to preserve typescript enum values as numbers",
           "default": false,
           "type": "boolean"
         },
@@ -2040,7 +2050,7 @@
           "$ref": "#/definitions/Types.SchemaWithLoader"
         },
         {
-          "$ref": "#/definitions/Types.SchemaWithRequire"
+          "$ref": "#/definitions/Types.SchemaFromCodeFile"
         },
         {
           "$ref": "#/definitions/Types.UrlSchemaWithOptions"
@@ -2053,7 +2063,7 @@
                 "$ref": "#/definitions/Types.SchemaWithLoader"
               },
               {
-                "$ref": "#/definitions/Types.SchemaWithRequire"
+                "$ref": "#/definitions/Types.SchemaFromCodeFile"
               },
               {
                 "$ref": "#/definitions/Types.UrlSchemaWithOptions"
@@ -2086,19 +2096,27 @@
         }
       }
     },
-    "Types.SchemaWithRequire": {
+    "Types.SchemaFromCodeFile": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Types.SchemaWithRequireOptions"
+        "$ref": "#/definitions/Types.SchemaFromCodeFileOptions"
       }
     },
-    "Types.SchemaWithRequireOptions": {
+    "Types.SchemaFromCodeFileOptions": {
       "additionalProperties": false,
       "description": "Loads schema using a pointer, without using `require` while looking for schemas in code files.",
       "type": "object",
       "properties": {
         "noRequire": {
-          "description": "Set this to `true` in order to tell codegen not to try to `require` files in order to find schema",
+          "description": "Set this to `true` in order to tell codegen not to try to `require` files in order to find schema/docs",
+          "type": "boolean"
+        },
+        "noPluck": {
+          "description": "Set this to `true` in order to tell codegen not to try to extract GraphQL AST strings schema/docs",
+          "type": "boolean"
+        },
+        "assumeValid": {
+          "description": "Set this to `true` in order to tell codegen to skip documents validation.",
           "type": "boolean"
         }
       }
@@ -2120,6 +2138,14 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "customFetch": {
+          "description": "Specify a Node module name, or a custom file, to be used instead of standard `fetch`",
+          "type": "string"
+        },
+        "method": {
+          "description": "HTTP Method to use, either POST (default) or GET.",
+          "type": "string"
         }
       }
     },

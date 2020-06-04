@@ -172,7 +172,8 @@ If your schema has a different or complicated way of loading, you can point to a
 
 ```yml
 schema:
-  - ./my-schema-loader.js
+  - ./my-schema-loader.js:
+      noPluck: true
 ```
 
 Your custom loader should export a default function that returns `GraphQLSchema` object, or an identifier called `schema`. For example:
@@ -186,3 +187,5 @@ module.exports = function(schemaString, config) {
   return buildSchema(readFileSync(schemaString, { encoding: 'utf-8' }));
 };
 ```
+
+> We need to specify `noPluck: true` because otherwise Codegen will look for GraphQL AST strings in that file. 
