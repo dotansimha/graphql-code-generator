@@ -47,12 +47,8 @@ describe('JSDoc Operations Plugin', () => {
       const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`/**
-      * @typedef {String} Test
-      * @readonly
+      * @typedef {("A"|"B"|"C")} Test
       * @description  enum desc
-      * @property {String} A
-      * @property {String} B
-      * @property {String} C -  enum value desc
       */`);
       expect(result).toBeSimilarStringTo(`/**
       * @typedef {(Foo)} TestU
@@ -187,6 +183,20 @@ describe('JSDoc Operations Plugin', () => {
 
       expect(result).toEqual(expect.stringContaining('@typedef {*} Bar'));
       expect(result).toEqual(expect.stringContaining('@property {Bar} [foo]'));
+    });
+
+    it('should generate a typedef for enums', async () => {
+      const schema = buildSchema(/* Graphql */ `
+        enum FooOrBar{
+            FOO
+            BAR
+        }
+    `);
+
+      const config = {};
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      expect(result).toEqual(expect.stringContaining('* @typedef {("FOO"|"BAR")} FooOrBar'));
     });
   });
 });

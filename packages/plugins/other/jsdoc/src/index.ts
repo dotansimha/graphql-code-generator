@@ -167,15 +167,12 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     },
     EnumTypeDefinition: {
       leave(node) {
-        return createDocBlock([
-          `@typedef {String} ${node.name}`,
-          '@readonly',
-          createDescriptionBlock(node),
-          ...(node.values || []).map(
-            v =>
-              `@property {String} ${v.name}${v.description && v.description.value ? ` - ${v.description.value}` : ''}`
-          ),
-        ]);
+        const values = node?.values?.map(value => `"${value.name}"`).join('|');
+
+        /** If for some reason the enum does not contain any values we fallback to "any" or "*" */
+        const valueType = values ? `(${values})` : '*';
+
+        return createDocBlock([`@typedef {${valueType}} ${node.name}`, createDescriptionBlock(node)]);
       },
     },
   });

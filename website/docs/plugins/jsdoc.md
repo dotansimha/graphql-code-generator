@@ -5,7 +5,7 @@ title: JSDoc
 
 > developed by [`CarloPalinckx`](https://github.com/CarloPalinckx) 
 
-This plugin generated JSDoc comments based in your GraphQLSchema.
+This plugin generates types in the form of JSDoc comments based on your GraphQLSchema.
 
 ## Installation
 
