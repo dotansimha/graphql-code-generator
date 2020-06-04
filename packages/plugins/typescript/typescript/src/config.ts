@@ -68,6 +68,21 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsTypes?: boolean;
   /**
+   * @description Controls whether to preserve typescript enum values as numbers
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    numericEnums: true
+   * ```
+   */
+  numericEnums?: boolean;
+  /**
    * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
    * This is useful if you are using `relay`.
    * @default false

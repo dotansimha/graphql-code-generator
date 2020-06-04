@@ -31,6 +31,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
   enumsAsConst: boolean;
+  numericEnums: boolean;
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
@@ -50,6 +51,7 @@ export class TsVisitor<
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       ...(additionalConfig || {}),
@@ -166,6 +168,21 @@ export class TsVisitor<
       return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
+    const getValueFromConfig = (enumValue: string | number) => {
+      if (
+        this.config.enumValues[enumName] &&
+        this.config.enumValues[enumName].mappedValues &&
+        typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+      ) {
+        return this.config.enumValues[enumName].mappedValues[enumValue];
+      }
+      return null;
+    };
+
+    const withFutureAddedValue = [
+      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
+    ];
+
     const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
 
     if (this.config.enumsAsTypes) {
@@ -178,24 +195,37 @@ export class TsVisitor<
           '\n' +
             node.values
               .map(enumOption => {
-                let enumValue: string | number = (enumOption.name as any) as string;
+                const name = (enumOption.name as unknown) as string;
+                const enumValue: string | number = getValueFromConfig(name) || name;
                 const comment = transformComment((enumOption.description as any) as string, 1);
-
-                if (
-                  this.config.enumValues[enumName] &&
-                  this.config.enumValues[enumName].mappedValues &&
-                  typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-                ) {
-                  enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-                }
 
                 return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .concat(
-                ...[this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []]
-              )
+              .concat(...withFutureAddedValue)
               .join('\n')
         ).string;
+    }
+
+    if (this.config.numericEnums) {
+      const block = new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .withComment((node.description as any) as string)
+        .withName(enumTypeName)
+        .asKind('enum')
+        .withBlock(
+          node.values
+            .map((enumOption, i) => {
+              const valueFromConfig = getValueFromConfig((enumOption.name as unknown) as string);
+              const enumValue: string | number = valueFromConfig || i;
+              const comment = transformComment((enumOption.description as any) as string, 1);
+
+              return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
+            })
+            .concat(...withFutureAddedValue)
+            .join(',\n')
+        ).string;
+
+      return block;
     }
 
     if (this.config.enumsAsConst) {
@@ -215,15 +245,8 @@ export class TsVisitor<
             .map(enumOption => {
               const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
               const comment = transformComment((enumOption.description as any) as string, 1);
-              let enumValue: string | number = enumOption.name as any;
-
-              if (
-                this.config.enumValues[enumName] &&
-                this.config.enumValues[enumName].mappedValues &&
-                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-              ) {
-                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-              }
+              const name = (enumOption.name as unknown) as string;
+              const enumValue: string | number = getValueFromConfig(name) || name;
 
               return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
             })
