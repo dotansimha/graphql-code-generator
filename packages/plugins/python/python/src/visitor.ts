@@ -7,6 +7,7 @@ import {
   DeclarationKind,
   DEFAULT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
+import flatMap from 'array.prototype.flatmap';
 import { PythonPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import {
@@ -26,6 +27,7 @@ import {
 } from 'graphql';
 import { PythonOperationVariablesToObject } from './python-variables-to-object';
 import { PythonDeclarationBlock, transformPythonComment } from './declaration-block';
+import { PythonScalars } from './scalars';
 
 export interface PythonPluginParsedConfig extends ParsedTypesConfig {}
 
@@ -34,7 +36,7 @@ export class PyVisitor<
   PyParsedConfig extends PythonPluginParsedConfig = PythonPluginParsedConfig
 > extends BaseTypesVisitor<PyRawConfig, PyParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: PyRawConfig, additionalConfig: Partial<PyParsedConfig> = {}) {
-    super(schema, pluginConfig, additionalConfig as PyParsedConfig);
+    super(schema, pluginConfig, additionalConfig as PyParsedConfig, PythonScalars);
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
@@ -63,41 +65,29 @@ export class PyVisitor<
   }
 
   protected _getScalar(name: string) {
-    switch (name) {
-      case 'String':
-        return 'str';
-      case 'Boolean':
-        return 'bool';
-      case 'Int':
-        return 'int';
-      case 'Float':
-        return 'float';
-      default:
-        return name;
-    }
+    return `Scalars.${name}`;
   }
 
   public get scalarsDefinition() {
     const top = `from typing import Optional, List
 from enum import Enum`;
 
-    const defaultScalars = Object.keys(DEFAULT_SCALARS);
-    const allScalars = Object.keys(this.config.scalars);
-    const customScalars = allScalars.filter(scalar => defaultScalars.indexOf(scalar) === -1);
+    const scalars = Object.keys(this.config.scalars);
 
-    customScalars.unshift('ID');
-
-    const scalarDefs = customScalars.map(scalarName => {
+    const scalarDefs = scalars.map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment =
         scalarType && scalarType.astNode && scalarType.description
-          ? transformPythonComment(scalarType.description, 0)
+          ? transformPythonComment(scalarType.description, 1)
           : '';
 
-      return comment + indent(`${scalarName} = ${scalarValue}`, 0);
+      return comment + indent(`${scalarName}: ${scalarValue}`, 1);
     });
-    return [top, ...scalarDefs].join('\n');
+
+    const scalarBlock = ['class Scalars:', ...scalarDefs].join('\n');
+
+    return [top, scalarBlock].join('\n\n');
   }
 
   protected clearOptional(str: string): string {
@@ -135,7 +125,13 @@ from enum import Enum`;
     originalNode: ObjectTypeDefinitionNode
   ): DeclarationBlock {
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`__typename: str`)] : []), ...node.fields] as string[];
+
+    const allFields = ([...node.fields] as unknown) as string[];
+    if (this.config.addTypename) {
+      const typenameType = this.config.nonOptionalTypename ? 'Scalars.String' : 'Optional[Scalars.String]';
+      allFields.unshift(indent(`__typename: ${typenameType}`));
+    }
+
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new PythonDeclarationBlock({
@@ -257,13 +253,49 @@ from enum import Enum`;
     return `(${interfaces.join(', ')})`;
   }
 
+  protected _buildTypeImport(identifier: string, source: string): string {
+    return `from ${source} import ${identifier}`;
+  }
+
+  handleEnumValueMapper(
+    typeIdentifier: string,
+    importIdentifier: string | null,
+    sourceIdentifier: string | null,
+    sourceFile: string | null
+  ): string[] {
+    const importStatement = this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile);
+
+    if (importIdentifier !== sourceIdentifier || sourceIdentifier !== typeIdentifier) {
+      return [importStatement, `${typeIdentifier} = ${sourceIdentifier}`];
+    }
+
+    return [importStatement];
+  }
+
+  public getEnumsImports(): string[] {
+    return flatMap(Object.keys(this.config.enumValues), enumName => {
+      const mappedValue = this.config.enumValues[enumName];
+
+      if (mappedValue.sourceFile) {
+        return this.handleEnumValueMapper(
+          mappedValue.typeIdentifier,
+          mappedValue.importIdentifier,
+          mappedValue.sourceIdentifier,
+          mappedValue.sourceFile
+        );
+      }
+
+      return [];
+    }).filter(a => a);
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const enumName = (node.name as any) as string;
 
     // In case of mapped external enum string
-    // if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
-    //   return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
-    // }
+    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
+      return '';
+    }
 
     const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
 
@@ -288,8 +320,6 @@ from enum import Enum`;
       .withComment((node.description as any) as string)
       .withContent(possibleTypes).string;
   }
-
-  protected _buildTypeImport;
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return '';
