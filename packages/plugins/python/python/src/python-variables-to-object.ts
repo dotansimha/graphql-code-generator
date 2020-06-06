@@ -3,7 +3,6 @@ import {
   OperationVariablesToObject,
   NormalizedScalarsMap,
   ConvertNameFn,
-  getBaseTypeNode,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
@@ -57,39 +56,6 @@ export class PythonOperationVariablesToObject extends OperationVariablesToObject
 
     return `${prefix}Scalars.${name}`;
   }
-
-  // protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
-  //   let typeValue = null;
-  //   const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
-
-  //   if (typeof variable.type === 'string') {
-  //     typeValue = variable.type;
-  //   } else {
-  //     const baseType = getBaseTypeNode(variable.type);
-  //     const typeName = baseType.name.value;
-
-  //     if (this._scalars[typeName]) {
-  //       typeValue = this.getScalar(typeName);
-  //     } else if (this._enumValues[typeName] && this._enumValues[typeName].sourceFile) {
-  //       typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
-  //     } else {
-  //       typeValue = `${prefix}${this._convertName(baseType, {
-  //         useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
-  //       })}`;
-  //     }
-  //   }
-
-  //   const fieldName = this.getName(variable);
-  //   const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type);
-
-  //   const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
-  //   const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
-
-  //   const formattedFieldString = this.formatFieldString(fieldName, isNonNullType, hasDefaultValue);
-  //   const formattedTypeString = this.formatTypeString(fieldType, isNonNullType, hasDefaultValue);
-
-  //   return `${formattedFieldString}: ${formattedTypeString}`;
-  // }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
     if (!hasDefaultValue && isNonNullType) {

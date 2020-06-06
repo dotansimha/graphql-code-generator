@@ -5,7 +5,6 @@ import {
   BaseTypesVisitor,
   ParsedTypesConfig,
   DeclarationKind,
-  DEFAULT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import flatMap from 'array.prototype.flatmap';
 import { PythonPluginConfig } from './config';
@@ -69,7 +68,7 @@ export class PyVisitor<
   }
 
   public get scalarsDefinition() {
-    const top = `from typing import Optional, List
+    const top = `from typing import Optional, List, Literal
 from enum import Enum`;
 
     const scalars = Object.keys(this.config.scalars);
@@ -128,8 +127,7 @@ from enum import Enum`;
 
     const allFields = ([...node.fields] as unknown) as string[];
     if (this.config.addTypename) {
-      const typenameType = this.config.nonOptionalTypename ? 'Scalars.String' : 'Optional[Scalars.String]';
-      allFields.unshift(indent(`__typename: ${typenameType}`));
+      allFields.unshift(indent(`__typename: Literal["${node.name}"]`));
     }
 
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
