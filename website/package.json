@@ -57,7 +57,7 @@
     "codemirror": "5.54.0",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.14.0",
-    "react-codemirror2": "7.2.0"
+    "react-codemirror2": "7.2.1"
   },
   "browserslist": {
     "production": [
