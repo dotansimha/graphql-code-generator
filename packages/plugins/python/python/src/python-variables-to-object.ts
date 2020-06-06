@@ -10,8 +10,6 @@ export class PythonOperationVariablesToObject extends OperationVariablesToObject
   constructor(
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
-    private _avoidOptionals: boolean,
-    private _immutableTypes: boolean,
     _namespacedImportName: string | null = null,
     _enumNames: string[] = [],
     _enumPrefix = true,

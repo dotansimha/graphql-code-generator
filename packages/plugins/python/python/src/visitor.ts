@@ -63,11 +63,11 @@ export class PyVisitor<
     return [];
   }
 
-  protected _getScalar(name: string) {
+  protected _getScalar(name: string): string {
     return `Scalars.${name}`;
   }
 
-  public get scalarsDefinition() {
+  public get scalarsDefinition(): string {
     const top = `from typing import Optional, List, Literal
 from enum import Enum`;
 
@@ -155,7 +155,6 @@ from enum import Enum`;
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
     const typeString = (node.type as any) as string;
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
     const comment = this.getFieldComment(node);
     const { type } = this.config.declarationKind;
 
