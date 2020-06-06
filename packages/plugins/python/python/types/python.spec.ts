@@ -2,7 +2,19 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
-describe('Python', () => {
+describe('Base Requirements', () => {
+  it('should import optional, list, and enum types', async () => {
+    const schema = buildSchema(`type SimpleClass {
+      attr: String!
+    }`);
+    const result = await plugin(schema, [], {}, {});
+    console.log(result.content);
+    expect(result.content).toBeSimilarStringTo(`
+      from typing import Optional, List
+      from enum import Enum
+    `);
+  });
+
   it('should output a simple class', async () => {
     const schema = buildSchema(`type SimpleClass {
       attr: String!
@@ -230,5 +242,88 @@ class SubType(MyInterface):
         foo: Optional[str]
         bar: MyScalar
       `);
+  });
+
+  it('should include a description for Scalars type', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      "My custom scalar"
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.content).toBeSimilarStringTo(`
+      # My custom scalar
+      A = any
+    `);
+  });
+
+  it('Should add description for input types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      "MyInput"
+      input MyInput {
+        f: String
+      }
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      # MyInput
+      class MyInput:`);
+  });
+
+  it('Should add description for input fields', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      "MyInput"
+      input MyInput {
+        "f is something"
+        f: String!
+      }
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      # MyInput
+      class MyInput:
+        # f is something
+        f: str
+      `);
+  });
+
+  it('should comment type fields', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type SimpleType {
+        "the attribute"
+        attr: String!
+      }
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+    class SimpleType:
+      __typename: str
+      # the attribute
+      attr: str
+    `);
+  });
+});
+
+describe('Config', () => {
+  describe('Naming Convention & Types Prefix', async () => {
+    it('Should use custom namingConvention for type name and args typename', async () => {
+      const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
+      const result = await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        class mytypefooargs:
+          a: str
+          b: Optional[str]
+          c: Optional[List[Optional[str]]]
+          d: List[int]
+    `);
+      expect(result.content).toBeSimilarStringTo(`
+        class mytype:
+          __typename: str
+          foo: Optional[str]
+    `);
+    });
   });
 });

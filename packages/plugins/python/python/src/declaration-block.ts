@@ -54,17 +54,15 @@ export class PythonDeclarationBlock extends DeclarationBlock {
       result += this._name + (this._nameGenerics || '');
     }
 
-    if (this._kind) {
-      switch (this._kind) {
-        case 'enum':
-          result += '(Enum)';
-          break;
-        case 'union':
-          result += ' = Union[';
-          break;
-        default:
-          break;
-      }
+    switch (this._kind) {
+      case 'enum':
+        result += '(Enum)';
+        break;
+      case 'union':
+        result += ' = Union[';
+        break;
+      default:
+        break;
     }
 
     if (this._block) {

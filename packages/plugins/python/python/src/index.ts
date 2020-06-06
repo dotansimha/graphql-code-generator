@@ -13,11 +13,11 @@ import {
   printIntrospectionSchema,
   isObjectType,
 } from 'graphql';
-import { TsVisitor } from './visitor';
+import { PyVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
 import { PythonPluginConfig } from './config';
 
-export * from './typescript-variables-to-object';
+export * from './python-variables-to-object';
 export * from './visitor';
 export * from './config';
 export * from './introspection-visitor';
@@ -27,7 +27,7 @@ export const plugin: PluginFunction<PythonPluginConfig, Types.ComplexPluginOutpu
   documents: Types.DocumentFile[],
   config: PythonPluginConfig
 ) => {
-  const visitor = new TsVisitor(schema, config);
+  const visitor = new PyVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });

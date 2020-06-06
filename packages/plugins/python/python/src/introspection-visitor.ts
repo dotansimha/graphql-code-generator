@@ -1,9 +1,9 @@
 import { GraphQLSchema, GraphQLNamedType, EnumTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql';
-import { TsVisitor } from './visitor';
+import { PyVisitor } from './visitor';
 import { PythonPluginConfig } from './config';
 import autoBind from 'auto-bind';
 
-export class TsIntrospectionVisitor extends TsVisitor {
+export class TsIntrospectionVisitor extends PyVisitor {
   private typesToInclude: GraphQLNamedType[] = [];
 
   constructor(schema: GraphQLSchema, pluginConfig: PythonPluginConfig = {}, typesToInclude: GraphQLNamedType[]) {

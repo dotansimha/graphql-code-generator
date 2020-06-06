@@ -6,7 +6,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
-export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
+export class PythonOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
@@ -21,8 +21,8 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   private clearOptional(str: string): string {
-    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
-    const rgx = new RegExp(`^${prefix}Optional[(.*?)]$`, 'i');
+    // const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : "";
+    const rgx = new RegExp(`^Optional\\[(.*?)\\]$`, 'i');
 
     if (str.startsWith(`${this._namespacedImportName ? `${this._namespacedImportName}.` : ''}Optional`)) {
       return str.replace(rgx, '$1');
@@ -41,17 +41,14 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `${prefix}Optional[List[${innerType}]]`;
     } else {
-      return `${prefix}Maybe<${baseType}>`;
+      return `${prefix}Optional[${baseType}]`;
     }
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
-    if (!hasDefaultValue && (this._avoidOptionals || isNonNullType)) {
-      return fieldName;
-    }
-    return `${fieldName}?`;
+    return fieldName;
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {

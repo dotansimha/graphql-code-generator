@@ -1,16 +1,10 @@
 import {
-  transformComment,
   wrapWithSingleQuotes,
   DeclarationBlock,
   indent,
   BaseTypesVisitor,
   ParsedTypesConfig,
-  getConfigValue,
   DeclarationKind,
-  normalizeAvoidOptionals,
-  AvoidOptionalsConfig,
-  BaseVisitorConvertOptions,
-  ConvertOptions,
   DEFAULT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import { PythonPluginConfig } from './config';
@@ -21,23 +15,21 @@ import {
   ListTypeNode,
   NonNullTypeNode,
   EnumTypeDefinitionNode,
-  Kind,
-  InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
   ObjectTypeDefinitionNode,
-  ASTNode,
   EnumValueDefinitionNode,
   UnionTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
+  InputValueDefinitionNode,
 } from 'graphql';
-import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
-import { PythonDeclarationBlock } from './declaration-block';
+import { PythonOperationVariablesToObject } from './python-variables-to-object';
+import { PythonDeclarationBlock, transformPythonComment } from './declaration-block';
 
 export interface PythonPluginParsedConfig extends ParsedTypesConfig {}
 
-export class TsVisitor<
+export class PyVisitor<
   PyRawConfig extends PythonPluginConfig = PythonPluginConfig,
   PyParsedConfig extends PythonPluginParsedConfig = PythonPluginParsedConfig
 > extends BaseTypesVisitor<PyRawConfig, PyParsedConfig> {
@@ -49,7 +41,7 @@ export class TsVisitor<
       .filter(isEnumType)
       .map(type => type.name);
     this.setArgumentsTransformer(
-      new TypeScriptOperationVariablesToObject(
+      new PythonOperationVariablesToObject(
         this.scalars,
         this.convertName,
         false,
@@ -86,6 +78,9 @@ export class TsVisitor<
   }
 
   public get scalarsDefinition() {
+    const top = `from typing import Optional, List
+from enum import Enum`;
+
     const defaultScalars = Object.keys(DEFAULT_SCALARS);
     const allScalars = Object.keys(this.config.scalars);
     const customScalars = allScalars.filter(scalar => defaultScalars.indexOf(scalar) === -1);
@@ -96,11 +91,13 @@ export class TsVisitor<
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment =
-        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+        scalarType && scalarType.astNode && scalarType.description
+          ? transformPythonComment(scalarType.description, 0)
+          : '';
 
       return comment + indent(`${scalarName} = ${scalarValue}`, 0);
     });
-    return scalarDefs.join('\n');
+    return [top, ...scalarDefs].join('\n');
   }
 
   protected clearOptional(str: string): string {
@@ -183,6 +180,36 @@ export class TsVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getArgumentsObjectDeclarationBlock(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): DeclarationBlock {
+    return new PythonDeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.arguments)
+      .withName(this.convertName(name))
+      .withComment(node.description)
+      .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments));
+  }
+
+  getFieldComment(node: FieldDefinitionNode): string {
+    let commentText: string = node.description as any;
+    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+    }
+    const comment = transformPythonComment(commentText, 1);
+    return comment;
+  }
+
+  InputValueDefinition(node: InputValueDefinitionNode): string {
+    const comment = transformPythonComment(node.description, 1);
+
+    return comment + indent(`${node.name}: ${node.type}`);
+  }
+
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>) {
     return values
       .map(enumOption => {
@@ -190,7 +217,7 @@ export class TsVisitor<
           useTypesPrefix: false,
           transformUnderscore: true,
         });
-        const comment = transformComment((enumOption.description as any) as string, 1);
+        const comment = transformPythonComment((enumOption.description as any) as string, 1);
         let enumValue: string | number = enumOption.name as any;
 
         if (
