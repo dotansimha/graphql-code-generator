@@ -1,4 +1,17 @@
 const path = require('path');
+const { languagesArr } = require('monaco-editor-webpack-plugin/out/languages');
+
+const yamlLang = languagesArr.find(t => t.label === 'yaml');
+
+yamlLang.entry = [
+  yamlLang.entry,
+  '../../monaco-yaml/esm/monaco.contribution'
+];
+yamlLang.worker = {
+  id: 'vs/language/yaml/yamlWorker',
+  entry: '../../monaco-yaml/esm/yaml.worker.js'
+}
+
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const MONACO_DIR = path.resolve(__dirname, '../node_modules/monaco-editor');
@@ -14,22 +27,20 @@ module.exports = function() {
         MONACO_DIR
       ];
 
-      config.module.rules.unshift({
+      config.module.rules.push({
         test: /\.css$/,
         include: MONACO_DIR,
         use: ['style-loader', 'css-loader'],
       });
 
-      config.module.rules.unshift({
+      config.module.rules.push({
           test: /\.ttf$/,
           use: ['file-loader']
       })
 
       config.plugins = [
         ...(config.plugins || []),
-        new MonacoWebpackPlugin({
-          publicPath: '/'
-        })
+        new MonacoWebpackPlugin()
       ];
     },
   };

@@ -4,7 +4,17 @@
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 5px;
-  white-space: nowrap;
+  margin: 30px auto 0px auto;
+  text-align: center;
+  width: 50%;
+}
+
+.exampleDesc {
+  font-size: 0.9em;
+  border-left: 10px #f1f1f1 solid;
+  padding-left: 10px;
+  margin-top: 10px;
+  text-align: left;
 }
 
 .exampleIcon {

@@ -1,11 +1,32 @@
 import React from 'react';
 import useThemeContext from '@theme/hooks/useThemeContext';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import CodegenYamlSchema from '../../../static/config.schema.json';
 
 let MonacoEditor = () => <div />;
 
 if (ExecutionEnvironment.canUseDOM) {
   MonacoEditor = require('react-monaco-editor').default;
+  const { languages } = require('monaco-editor/esm/vs/editor/editor.api');
+
+  if (languages.yaml && languages.yaml.yamlDefaults) {
+    languages.yaml.yamlDefaults.setDiagnosticsOptions({
+      validate: true,
+      enableSchemaRequest: true,
+      hover: true,
+      completion: true,
+      schemas: [
+        {
+          uri: 'http://codegen/schema.json',
+          fileMatch: ['*'],
+          schema: {
+            id: 'http://codegen/schema.json',
+            ...CodegenYamlSchema
+          },
+        }
+      ]
+    });
+  }
 }
 
 export const Editor = ({ value, lang, readOnly, onEdit }) => {
