@@ -17,6 +17,10 @@
   text-align: left;
 }
 
+.react-monaco-editor-container, .monaco-editor {
+  height: 400px;
+}
+
 .exampleIcon {
   width: 18px;
   height: 18px;
