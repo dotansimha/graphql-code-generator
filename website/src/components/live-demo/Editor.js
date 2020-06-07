@@ -1,48 +1,51 @@
 import React from 'react';
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import { Controlled as ReactCodeMirror } from 'react-codemirror2';
 import useThemeContext from '@theme/hooks/useThemeContext';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import CodegenYamlSchema from '../../../static/config.schema.json';
+
+let MonacoEditor = () => <div />;
 
 if (ExecutionEnvironment.canUseDOM) {
-  require('codemirror');
-  require('codemirror/keymap/sublime');
-  require('codemirror/addon/lint/lint');
-  require('codemirror/addon/lint/yaml-lint');
-  require('codemirror/addon/hint/show-hint');
-  require('codemirror/addon/comment/comment');
-  require('codemirror/addon/edit/matchbrackets');
-  require('codemirror/addon/edit/closebrackets');
-  require('codemirror/addon/fold/foldgutter');
-  require('codemirror/addon/fold/brace-fold');
-  require('codemirror/addon/search/search');
-  require('codemirror/addon/search/searchcursor');
-  require('codemirror/addon/search/jump-to-line');
-  require('codemirror/addon/dialog/dialog');
-  require('codemirror/addon/lint/lint');
-  require('codemirror/mode/yaml/yaml');
-  require('codemirror/mode/javascript/javascript');
-  require('codemirror-graphql/hint');
-  require('codemirror-graphql/lint');
-  require('codemirror-graphql/info');
-  require('codemirror-graphql/jump');
-  require('codemirror-graphql/mode');
+  MonacoEditor = require('react-monaco-editor').default;
+  const { languages } = require('monaco-editor/esm/vs/editor/editor.api');
+
+  if (languages.yaml && languages.yaml.yamlDefaults) {
+    languages.yaml.yamlDefaults.setDiagnosticsOptions({
+      validate: true,
+      enableSchemaRequest: true,
+      hover: true,
+      completion: true,
+      schemas: [
+        {
+          uri: 'http://codegen/schema.json',
+          fileMatch: ['*'],
+          schema: {
+            id: 'http://codegen/schema.json',
+            ...CodegenYamlSchema
+          },
+        }
+      ]
+    });
+  }
 }
 
 export const Editor = ({ value, lang, readOnly, onEdit }) => {
   const { isDarkTheme } = useThemeContext();
   const options = {
-    theme: isDarkTheme ? 'nord' : 'neo',
-    lineNumbers: true,
-    tabSize: 2,
-    mode: lang,
-    keyMap: 'sublime',
-    matchBrackets: true,
-    indentWithTabs: false,
-    indentUnit: 2,
-    showCursorWhenSelecting: true,
-    readOnly: readOnly,
-    gutters: ['CodeMirror-lint-markers'],
+    readOnly,
+    minimap: {
+      enabled: false,
+    },
   };
 
-  return <ReactCodeMirror value={value} onBeforeChange={(editor, data, value) => onEdit(value)} options={options} />;
+  return (
+    <MonacoEditor
+      height="400"
+      language={lang}
+      theme={isDarkTheme ? 'vs-dark' : 'vs'}
+      value={value}
+      options={options}
+      onChange={newValue => onEdit(newValue)}
+    />
+  );
 };

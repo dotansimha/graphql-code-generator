@@ -1,3 +1,5 @@
+const { resolve } = require('path');
+
 module.exports = {
   title: 'GraphQL Code Generator',
   tagline: 'Generate code from your GraphQL schema with a single function call',
@@ -87,6 +89,7 @@ module.exports = {
       defer: true,
     }
   ],
+  plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
     [
       '@docusaurus/preset-classic',

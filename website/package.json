@@ -10,6 +10,10 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
+    "worker-loader": "2.0.0",
+    "file-loader": "6.0.0",
+    "style-loader": "1.2.1",
+    "monaco-editor-webpack-plugin": "1.9.0",
     "@docusaurus/core": "2.0.0-alpha.56",
     "@docusaurus/preset-classic": "2.0.0-alpha.56",
     "@graphql-codegen/config-schema": "1.15.1",
@@ -23,6 +27,9 @@
     "vscode-languageserver-types": "3.15.1"
   },
   "dependencies": {
+    "react-markdown": "4.3.1",
+    "monaco-yaml": "2.4.0",
+    "react-select": "3.1.0",
     "@graphql-codegen/add": "1.15.1",
     "@graphql-codegen/c-sharp": "1.15.1",
     "@graphql-codegen/c-sharp-operations": "1.15.1",
@@ -54,10 +61,8 @@
     "@graphql-codegen/typescript-type-graphql": "1.15.1",
     "@graphql-codegen/typescript-urql": "1.15.1",
     "@graphql-codegen/typescript-vue-apollo": "1.15.1",
-    "codemirror": "5.54.0",
-    "codemirror-graphql": "0.11.6",
-    "js-yaml": "3.14.0",
-    "react-codemirror2": "7.2.0"
+    "react-monaco-editor": "0.36.0",
+    "js-yaml": "3.14.0"
   },
   "browserslist": {
     "production": [

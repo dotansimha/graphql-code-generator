@@ -1,11 +1,21 @@
 import React from 'react';
 import { Editor } from './Editor';
 import { safeLoad } from 'js-yaml';
-import { EXAMPLES } from './examples';
+import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
 import classes from './styles.module.css';
 import { CodegenOutput } from './CodegenOutput';
+import Select from 'react-select';
+import useThemeContext from '@theme/hooks/useThemeContext';
+import ReactMarkdown from 'react-markdown';
+
+const groupedExamples = Object.keys(EXAMPLES).map(catName => {
+  return {
+    label: catName,
+    options: EXAMPLES[catName].map((t, index) => ({ ...t, selectId: `${catName}__${index}` })),
+  };
+});
 
 function useCodegen(config, schema, documents, templateName) {
   const [error, setError] = React.useState(null);
@@ -39,6 +49,7 @@ const DEFAULT_EXAMPLE = {
 };
 
 export const LiveDemo = () => {
+  const { isDarkTheme } = useThemeContext();
   const [template, setTemplate] = React.useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
   const [schema, setSchema] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = React.useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
@@ -61,21 +72,60 @@ export const LiveDemo = () => {
     mode = mode === 'typescript' ? 'text/typescript' : mode;
   } catch (e) {}
 
+  let description = null;
+
+  if (template) {
+    const [catName, index] = template.split('__');
+    description = EXAMPLES[catName][index].description;
+  }
+
   return (
     <div>
       <div className={classes.picker}>
-        Choose Example:{' '}
-        <select value={template} onChange={e => changeTemplate(e.target.value)}>
-          {Object.keys(EXAMPLES).map(catName => (
-            <optgroup label={catName} key={catName}>
-              {EXAMPLES[catName].map((item, index) => (
-                <option key={`${catName}_${index}`} value={`${catName}__${index}`}>
-                  {item.name}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <div>
+          <strong>Choose Example: </strong>
+        </div>
+        <br />
+        <div>
+          <Select
+            styles={{
+              menu: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
+              control: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
+              container: styles => ({ ...styles, display: 'inline-block', width: '100%', textAlign: 'left' }),
+              option: styles => ({ ...styles, fontSize: 13 }),
+              singleValue: styles => ({ ...styles, width: '100%', ...(isDarkTheme ? { color: 'white' } : {}) }),
+            }}
+            isMulti={false}
+            isClearable={false}
+            onChange={e => changeTemplate(e.selectId)}
+            getOptionValue={o => o.selectId}
+            getOptionLabel={o => {
+              return (
+                <>
+                  <span>{o.name}</span>
+                  <span className={classes.exampleTags}>
+                    {o.tags && o.tags.length
+                      ? o.tags.map((t, index) =>
+                          EXAMPLES_ICONS[t] ? (
+                            EXAMPLES_ICONS[t](`${o.name}_${index}`)
+                          ) : (
+                            <span key={`${o.name}_${index}`} className={classes.exampleTag}>
+                              {t}
+                            </span>
+                          )
+                        )
+                      : null}
+                  </span>
+                </>
+              );
+            }}
+            defaultValue={groupedExamples[0].options[0]}
+            options={groupedExamples}
+          />
+          <div className={classes.exampleDesc}>
+            {description ? <ReactMarkdown source={description} /> : null}
+          </div>
+        </div>
       </div>
       <div className={classes.container}>
         <div className={classes.column}>
