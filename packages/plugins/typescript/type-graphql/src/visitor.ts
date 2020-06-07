@@ -246,10 +246,20 @@ export class TypeGraphQLVisitor<
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(typeString);
+
+    const maybeType = type.type.match(MAYBE_REGEX);
+
+    let arrayReturnType = `[${type.type}]`;
+
+    if (maybeType) {
+      const [, typeNameWithoutMaybe] = maybeType;
+      arrayReturnType = `[${typeNameWithoutMaybe}]`;
+    }
+
     const decorator =
       '\n' +
       indent(
-        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${
+        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? arrayReturnType : type.type}${
           type.isNullable ? ', { nullable: true }' : ''
         })`
       ) +
