@@ -7,8 +7,8 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import flatMap from 'array.prototype.flatmap';
-import { PythonPluginConfig } from './config';
 import autoBind from 'auto-bind';
+import { PythonPluginConfig } from './config';
 import {
   FieldDefinitionNode,
   NamedTypeNode,
@@ -45,8 +45,6 @@ export class PyVisitor<
       new PythonOperationVariablesToObject(
         this.scalars,
         this.convertName,
-        false,
-        this.config.immutableTypes,
         null,
         enumNames,
         pluginConfig.enumPrefix,

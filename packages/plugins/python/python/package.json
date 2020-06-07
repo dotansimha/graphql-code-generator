@@ -22,6 +22,9 @@
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
+  "devDependencies": {
+    "@types/array.prototype.flatmap": "1.2.1"
+  },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
