@@ -6,7 +6,6 @@ import {
   ParsedTypesConfig,
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
-import flatMap from 'array.prototype.flatmap';
 import autoBind from 'auto-bind';
 import { PythonPluginConfig } from './config';
 import {
@@ -27,6 +26,8 @@ import {
 import { PythonOperationVariablesToObject } from './python-variables-to-object';
 import { PythonDeclarationBlock, transformPythonComment } from './declaration-block';
 import { PythonScalars } from './scalars';
+
+const flatMap = require('array.prototype.flatmap');
 
 export interface PythonPluginParsedConfig extends ParsedTypesConfig {}
 
