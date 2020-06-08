@@ -3067,10 +3067,10 @@
   dependencies:
     throttle-debounce "^2.1.0"
 
-"@vue/composition-api@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-0.6.0.tgz#ca2d02e22487721f031c9f59ddf855c3a8164adf"
-  integrity sha512-CzLjf40PaZ2xc5HS8qL4SeOpihmP5yY2X1uX7ZEEwZevKXTMyUkAIe+f3sfiIH7XGXLRa0d69p8guk8ZYdEqug==
+"@vue/composition-api@0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-0.6.1.tgz#0a32e7d18e4b69912e3547e11d0c85e770de6825"
+  integrity sha512-NfP6kiBDXkYWrzFwK9IBem5MQSXMujIl8QDBJuLx0Y/6pwK3PC+F7dFDhja+H03SE6WwLleZASM6+zY3BT3Bkw==
   dependencies:
     tslib "^2.0.0"
 
