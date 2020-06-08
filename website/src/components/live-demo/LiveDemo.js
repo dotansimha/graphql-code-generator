@@ -83,9 +83,8 @@ export const LiveDemo = () => {
     <div>
       <div className={classes.picker}>
         <div>
-          <strong>Choose Example: </strong>
+          <h3>Choose Live Example: </h3>
         </div>
-        <br />
         <div>
           <Select
             styles={{

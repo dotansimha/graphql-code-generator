@@ -219,7 +219,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
         addDefinition(file, node, deduplicatedDefinitions);
       },
     });
-    (file.document as any).definitions = [...deduplicatedDefinitions];
+    (file.document as any).definitions = Array.from(deduplicatedDefinitions);
   });
 
   const kinds = Object.keys(definitionMap);
