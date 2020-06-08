@@ -1,5 +1,5 @@
 
-### schemaTypesPath (`string`)
+### baseTypesPath (`string`)
 
 Required, should point to the base schema types file. The key of the output is used a the base path for this file.
 
@@ -11,7 +11,7 @@ generates:
 src/:
  preset: near-operation-file
  presetConfig:
-   schemaTypesPath: types.ts
+   baseTypesPath: types.ts
  plugins:
    - typescript-operations
 ```
