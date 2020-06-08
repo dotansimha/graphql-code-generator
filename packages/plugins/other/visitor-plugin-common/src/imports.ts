@@ -48,7 +48,7 @@ export function generateImportStatement(statement: ImportDeclaration): string {
   const { baseDir, importSource, outputPath } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames =
-    importSource.identifiers && importSource.identifiers.length ? `{ ${importSource.identifiers.join(', ')} }` : '*';
+    importSource.identifiers && importSource.identifiers.length ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }` : '*';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
 }
