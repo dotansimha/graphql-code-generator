@@ -113,7 +113,7 @@
     ]
   },
   "resolutions": {
-    "graphql-language-service-interface": "2.4.0-alpha.8",
+    "graphql-language-service-interface": "2.4.0-alpha.11",
     "**/apollo-language-server/graphql": "^15.0.0",
     "**/@types/graphql-upload/graphql": "^15.0.0"
   }
