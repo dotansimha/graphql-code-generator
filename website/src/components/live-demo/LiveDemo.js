@@ -139,7 +139,7 @@ export const LiveDemo = () => {
             <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
             <span className={classes.iconText}>operation.graphql</span>
           </div>
-          <Editor lang={'graphql'} onEdit={setDocuments} value={documents} />
+          <Editor lang={'graphql'} onEdit={setDocuments} value={documents || `# This example isn't\n# using GraphQL operations` } />
         </div>
         <div className={classes.column}>
           <div className={classes.title}>
