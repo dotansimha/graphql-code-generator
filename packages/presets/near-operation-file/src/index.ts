@@ -18,7 +18,7 @@ export type NearOperationFileConfig = {
    * src/:
    *  preset: near-operation-file
    *  presetConfig:
-   *    schemaTypesPath: types.ts
+   *    baseTypesPath: types.ts
    *  plugins:
    *    - typescript-operations
    * ```
