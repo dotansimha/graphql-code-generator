@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -162,9 +163,9 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscriptionVariables = {
+export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
   commentAdded?: Maybe<
@@ -174,11 +175,11 @@ export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
   >;
 };
 
-export type CommentQueryVariables = {
+export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type CommentQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
@@ -211,20 +212,20 @@ export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Entry, 'id' | 'c
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   type: FeedType;
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type FeedQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
   feed?: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
-export type SubmitRepositoryMutationVariables = {
+export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
   submitRepository?: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
@@ -238,10 +239,10 @@ export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt
     postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
-export type SubmitCommentMutationVariables = {
+export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
-};
+}>;
 
 export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
   submitComment?: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
@@ -251,10 +252,10 @@ export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'
     vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
   };
 
-export type VoteMutationVariables = {
+export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
-};
+}>;
 
 export type VoteMutation = { __typename?: 'Mutation' } & {
   vote?: Maybe<

@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -162,9 +163,9 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscriptionVariables = {
+export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type OnCommentAddedSubscription = { readonly __typename?: 'Subscription' } & {
   readonly commentAdded?: Maybe<
@@ -174,11 +175,11 @@ export type OnCommentAddedSubscription = { readonly __typename?: 'Subscription' 
   >;
 };
 
-export type CommentQueryVariables = {
+export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type CommentQuery = { readonly __typename?: 'Query' } & {
   readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
@@ -212,20 +213,20 @@ export type FeedEntryFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   type: FeedType;
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type FeedQuery = { readonly __typename?: 'Query' } & {
   readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>;
   readonly feed?: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
-export type SubmitRepositoryMutationVariables = {
+export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type SubmitRepositoryMutation = { readonly __typename?: 'Mutation' } & {
   readonly submitRepository?: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
@@ -239,10 +240,10 @@ export type RepoInfoFragment = { readonly __typename?: 'Entry' } & Pick<Entry, '
     readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
-export type SubmitCommentMutationVariables = {
+export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
-};
+}>;
 
 export type SubmitCommentMutation = { readonly __typename?: 'Mutation' } & {
   readonly submitComment?: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>;
@@ -252,10 +253,10 @@ export type VoteButtonsFragment = { readonly __typename?: 'Entry' } & Pick<Entry
     readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
   };
 
-export type VoteMutationVariables = {
+export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
-};
+}>;
 
 export type VoteMutation = { readonly __typename?: 'Mutation' } & {
   readonly vote?: Maybe<

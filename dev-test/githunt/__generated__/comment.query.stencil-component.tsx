@@ -1,13 +1,14 @@
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type CommentQueryVariables = {
+  export type CommentQueryVariables = Exact<{
     repoFullName: Types.Scalars['String'];
     limit?: Types.Maybe<Types.Scalars['Int']>;
     offset?: Types.Maybe<Types.Scalars['Int']>;
-  };
+  }>;
 
   export type CommentQuery = { __typename?: 'Query' } & {
     currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;

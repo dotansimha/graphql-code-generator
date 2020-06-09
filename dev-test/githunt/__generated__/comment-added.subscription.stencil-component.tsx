@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type OnCommentAddedSubscriptionVariables = {
+  export type OnCommentAddedSubscriptionVariables = Exact<{
     repoFullName: Types.Scalars['String'];
-  };
+  }>;
 
   export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
     commentAdded?: Types.Maybe<

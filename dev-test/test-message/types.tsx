@@ -2,6 +2,7 @@ import * as Operations from './documents';
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -54,42 +55,42 @@ export type MutationEscalateArgs = {
   id: Scalars['ID'];
 };
 
-export type GetMessagesQueryVariables = {
+export type GetMessagesQueryVariables = Exact<{
   tab: Scalars['String'];
-};
+}>;
 
 export type GetMessagesQuery = { __typename?: 'Query' } & {
   messages?: Maybe<Array<Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>>>;
 };
 
-export type CreateMessageMutationVariables = {
+export type CreateMessageMutationVariables = Exact<{
   args: CreateMessageInput;
-};
+}>;
 
 export type CreateMessageMutation = { __typename?: 'Mutation' } & {
   createMessage?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
-export type DeclineMutationVariables = {
+export type DeclineMutationVariables = Exact<{
   id: Scalars['ID'];
   reason: Scalars['String'];
-};
+}>;
 
 export type DeclineMutation = { __typename?: 'Mutation' } & {
   decline?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
-export type ApproveMutationVariables = {
+export type ApproveMutationVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 export type ApproveMutation = { __typename?: 'Mutation' } & {
   approve?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
 };
 
-export type EscalateMutationVariables = {
+export type EscalateMutationVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 export type EscalateMutation = { __typename?: 'Mutation' } & {
   escalate?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;

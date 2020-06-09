@@ -5,12 +5,13 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as React from 'react';
 import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type CreateReviewForEpisodeMutationVariables = {
+export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Types.Episode;
   review: Types.ReviewInput;
-};
+}>;
 
 export type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
   createReview?: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;

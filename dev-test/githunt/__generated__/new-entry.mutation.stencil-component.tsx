@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type SubmitRepositoryMutationVariables = {
+  export type SubmitRepositoryMutationVariables = Exact<{
     repoFullName: Types.Scalars['String'];
-  };
+  }>;
 
   export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
     submitRepository?: Types.Maybe<{ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>>;
