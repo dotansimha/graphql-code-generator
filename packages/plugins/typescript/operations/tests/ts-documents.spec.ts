@@ -2005,9 +2005,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type MeQueryVariables = {
+        `export type MeQueryVariables = Exact<{
           repoFullName: Scalars['String'];
-        };`
+        }>;`
       );
       expect(content).toBeSimilarStringTo(`
         export type MeQuery = { currentUser?: Maybe<Pick<User, 'login' | 'html_url'>>, entry?: Maybe<(
@@ -2134,9 +2134,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       const o = await validate(content, config, testSchema);
-      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = {
+      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = Exact<{
         e: Information_EntryType;
-      };`);
+      }>;`);
       expect(o).toContain(`export type IQuery = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
@@ -2320,7 +2320,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = {
+        `export type TestQueryQueryVariables = Exact<{
           username?: Maybe<Scalars['String']>;
           email?: Maybe<Scalars['String']>;
           password: Scalars['String'];
@@ -2329,7 +2329,7 @@ describe('TypeScript Operations Plugin', () => {
           testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
           requireString: Array<Maybe<Scalars['String']>>;
           innerRequired: Array<Scalars['String']>;
-        };`
+        }>;`
       );
       await validate(content, config);
     });
@@ -2346,9 +2346,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = {
+        `export type TestQueryQueryVariables = Exact<{
           test?: Maybe<Scalars['DateTime']>;
-        };`
+        }>;`
       );
       await validate(content, config);
     });
@@ -2658,9 +2658,9 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type PREFIX_UsersQueryVariables = {
+        export type PREFIX_UsersQueryVariables = Exact<{
           filter: PREFIX_Filter;
-        };
+        }>;
       `);
       expect(content).toBeSimilarStringTo(`
         export type PREFIX_UsersQuery = (
@@ -2700,9 +2700,9 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UsersQueryVariables = {
+        export type UsersQueryVariables = Exact<{
           reverse?: Maybe<Scalars['Boolean']>;
-        };
+        }>;
       `);
     });
   });

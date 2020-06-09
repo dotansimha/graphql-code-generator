@@ -18,6 +18,7 @@ import { TypeScriptDocumentsPluginConfig } from './config';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 
+export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };`;
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
@@ -106,5 +107,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return ';';
+  }
+
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    this._globalDeclarations.add(EXACT_SIGNATURE);
+
+    return `Exact<${variablesBlock}>`;
   }
 }

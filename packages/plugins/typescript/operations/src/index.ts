@@ -38,12 +38,11 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     content = `
     declare global { 
       ${content} 
-    }
-          `;
+    }`;
   }
 
   return {
-    prepend: visitor.getImports(),
+    prepend: [...visitor.getImports(), ...visitor.getGlobalDeclarations(visitor.config.noExport)],
     content,
   };
 };

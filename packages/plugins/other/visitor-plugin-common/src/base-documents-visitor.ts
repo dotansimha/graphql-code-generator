@@ -98,6 +98,7 @@ export class BaseDocumentsVisitor<
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
+  protected _globalDeclarations: Set<string> = new Set<string>();
 
   constructor(
     rawConfig: TRawConfig,
@@ -127,7 +128,11 @@ export class BaseDocumentsVisitor<
     );
   }
 
-  setSelectionSetHandler(handler: SelectionSetToObject) {
+  public getGlobalDeclarations(noExport = false): string[] {
+    return Array.from(this._globalDeclarations).map(t => (noExport ? t : `export ${t}`));
+  }
+
+  setSelectionSetHandler(handler: SelectionSetToObject): void {
     this._selectionSetToObject = handler;
   }
 
@@ -147,7 +152,7 @@ export class BaseDocumentsVisitor<
     return this._parsedConfig.addTypename;
   }
 
-  private handleAnonymouseOperation(node: OperationDefinitionNode): string {
+  private handleAnonymousOperation(node: OperationDefinitionNode): string {
     const name = node.name && node.name.value;
 
     if (name) {
@@ -175,8 +180,12 @@ export class BaseDocumentsVisitor<
     );
   }
 
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    return variablesBlock;
+  }
+
   OperationDefinition(node: OperationDefinitionNode): string {
-    const name = this.handleAnonymouseOperation(node);
+    const name = this.handleAnonymousOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
 
     if (!operationRootType) {
@@ -200,7 +209,10 @@ export class BaseDocumentsVisitor<
       )
       .withContent(selectionSet.transformSelectionSet()).string;
 
-    const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
+    const operationVariables = new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer: t => this.applyVariablesWrapper(t),
+    })
       .export()
       .asKind('type')
       .withName(

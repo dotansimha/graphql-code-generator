@@ -2,6 +2,7 @@
 
 exports[`generic-sdk sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
@@ -191,9 +192,9 @@ export type FeedQuery = (
   )>>> }
 );
 
-export type Feed2QueryVariables = {
+export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
-};
+}>;
 
 
 export type Feed2Query = (
@@ -204,9 +205,9 @@ export type Feed2Query = (
   )>>> }
 );
 
-export type Feed3QueryVariables = {
+export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type Feed3Query = (
@@ -217,9 +218,9 @@ export type Feed3Query = (
   )>>> }
 );
 
-export type Feed4QueryVariables = {
+export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
-};
+}>;
 
 
 export type Feed4Query = (
@@ -302,6 +303,7 @@ async function test() {
 
 exports[`generic-sdk sdk Should generate a correct wrap method with documentMode=string 1`] = `
 "export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -489,9 +491,9 @@ export type FeedQuery = (
   )>>> }
 );
 
-export type Feed2QueryVariables = {
+export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
-};
+}>;
 
 
 export type Feed2Query = (
@@ -502,9 +504,9 @@ export type Feed2Query = (
   )>>> }
 );
 
-export type Feed3QueryVariables = {
+export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type Feed3Query = (
@@ -515,9 +517,9 @@ export type Feed3Query = (
   )>>> }
 );
 
-export type Feed4QueryVariables = {
+export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
-};
+}>;
 
 
 export type Feed4Query = (
