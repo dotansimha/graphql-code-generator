@@ -1,4 +1,5 @@
 type Maybe<T> = T | null;
+type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 type Scalars = {
   ID: string;
@@ -232,18 +233,18 @@ type ColorInput = {
   blue: Scalars['Int'];
 };
 
-type CreateReviewForEpisodeMutationVariables = {
+type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
-};
+}>;
 
 type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
   createReview?: Maybe<{ __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>>;
 };
 
-type HeroAndFriendsNamesQueryVariables = {
+type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
@@ -273,9 +274,9 @@ type HeroAppearsInQuery = { __typename?: 'Query' } & {
   >;
 };
 
-type HeroDetailsQueryVariables = {
+type HeroDetailsQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroDetailsQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
@@ -290,9 +291,9 @@ type HeroDetails_Droid_Fragment = { __typename?: 'Droid' } & Pick<Droid, 'primar
 
 type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
 
-type HeroDetailsWithFragmentQueryVariables = {
+type HeroDetailsWithFragmentQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
@@ -300,35 +301,35 @@ type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   >;
 };
 
-type HeroNameQueryVariables = {
+type HeroNameQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroNameQuery = { __typename?: 'Query' } & {
   hero?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
 };
 
-type HeroNameConditionalInclusionQueryVariables = {
+type HeroNameConditionalInclusionQueryVariables = Exact<{
   episode?: Maybe<Episode>;
   includeName: Scalars['Boolean'];
-};
+}>;
 
 type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
   hero?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
 };
 
-type HeroNameConditionalExclusionQueryVariables = {
+type HeroNameConditionalExclusionQueryVariables = Exact<{
   episode?: Maybe<Episode>;
   skipName: Scalars['Boolean'];
-};
+}>;
 
 type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
   hero?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
 };
 
-type HeroParentTypeDependentFieldQueryVariables = {
+type HeroParentTypeDependentFieldQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
@@ -355,9 +356,9 @@ type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   >;
 };
 
-type HeroTypeDependentAliasedFieldQueryVariables = {
+type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
   episode?: Maybe<Episode>;
-};
+}>;
 
 type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
