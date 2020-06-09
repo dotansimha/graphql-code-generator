@@ -10,7 +10,7 @@
   "devDependencies": {
     "@types/fs-extra": "9.0.1",
     "@types/jsonpath": "0.2.0",
-    "@types/mkdirp": "1.0.0",
+    "@types/mkdirp": "1.0.1",
     "@types/node": "13.13.11",
     "fs-extra": "9.0.1",
     "jsonpath": "1.0.2",
