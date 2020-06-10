@@ -317,7 +317,9 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type NotificationsQueryVariables = {};`);
+      expect(content).toBeSimilarStringTo(
+        `export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;`
+      );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQueryResult = (
           { __typename?: 'Query' }
@@ -408,7 +410,9 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
+      expect(content).toBeSimilarStringTo(
+        `export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;`
+      );
       expect(content).toBeSimilarStringTo(`
         export type inotificationsquery = (
           { __typename?: 'Query' }
@@ -1104,7 +1108,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = {};
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       await validate(content, config);
     });
@@ -1128,13 +1132,13 @@ describe('TypeScript Operations Plugin', () => {
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = {};
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_2_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_2_QueryVariables = {};
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       await validate(content, config);
     });
@@ -2364,7 +2368,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
+      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`);
       await validate(content, config);
     });
 

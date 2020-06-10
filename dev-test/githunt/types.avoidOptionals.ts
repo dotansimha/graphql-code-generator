@@ -199,7 +199,7 @@ export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comm
     postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
   };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
   currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;

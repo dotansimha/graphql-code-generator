@@ -200,7 +200,7 @@ export type CommentsPageCommentFragment = { readonly __typename?: 'Comment' } & 
   'id' | 'createdAt' | 'content'
 > & { readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'> };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = { readonly __typename?: 'Query' } & {
   readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;

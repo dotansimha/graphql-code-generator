@@ -173,7 +173,7 @@ export type Subscription = {
 export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
-export type FeedQueryVariables = {};
+export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FeedQuery = (
@@ -486,7 +486,7 @@ export type Subscription = {
 export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
-export type FeedQueryVariables = {};
+export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FeedQuery = (
@@ -790,7 +790,7 @@ export type Subscription = {
 export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
-export type FeedQueryVariables = {};
+export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FeedQuery = (

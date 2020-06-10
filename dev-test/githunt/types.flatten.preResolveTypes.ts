@@ -213,7 +213,7 @@ export type CommentQuery = {
   }>;
 };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
