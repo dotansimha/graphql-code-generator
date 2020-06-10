@@ -35,12 +35,17 @@ import {
   DirectiveDefinitionNode,
   GraphQLObjectType,
   InputValueDefinitionNode,
+  EnumTypeDefinitionNode,
+  GraphQLEnumType,
 } from 'graphql';
 
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
+
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -335,7 +340,8 @@ export class BaseResolversVisitor<
     this._resolversParentTypes = this.createResolversFields(
       type => type,
       type => type,
-      name => this.getParentTypeToUse(name)
+      name => this.getParentTypeToUse(name),
+      namedType => !isEnumType(namedType)
     );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
   }
@@ -397,7 +403,8 @@ export class BaseResolversVisitor<
   protected createResolversFields(
     applyWrapper: (str: string) => string,
     clearWrapper: (str: string) => string,
-    getTypeToUse: (str: string) => string
+    getTypeToUse: (str: string) => string,
+    shouldInclude?: (type: GraphQLNamedType) => boolean
   ): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
@@ -409,17 +416,17 @@ export class BaseResolversVisitor<
     });
 
     return typeNames.reduce((prev: ResolverTypes, typeName: string) => {
-      if (typeName.startsWith('__')) {
+      const schemaType = allSchemaTypes[typeName];
+
+      if (typeName.startsWith('__') || (shouldInclude && !shouldInclude(schemaType))) {
         return prev;
       }
 
       let shouldApplyOmit = false;
       const isRootType = this._rootTypeNames.includes(typeName);
-
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
-      const schemaType = allSchemaTypes[typeName];
 
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
@@ -444,7 +451,9 @@ export class BaseResolversVisitor<
         prev[typeName] = possibleTypes;
         return prev;
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-        prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
+        prev[typeName] =
+          this.config.enumValues[typeName].sourceIdentifier ||
+          this.convertName(this.config.enumValues[typeName].typeIdentifier);
       } else if (isMapped && this.config.mappers[typeName].type) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
@@ -863,16 +872,14 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${
-            this.convertName(parentName, {
-              useTypesPrefix: true,
-            }) +
+        ? `${this.convertName(parentName, {
+            useTypesPrefix: true,
+          }) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
             }) +
-            'Args'
-          }`
+            'Args'}`
         : null;
 
       if (argsType !== null) {
@@ -1071,6 +1078,30 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         )
         .withContent(`DirectiveResolverFn<Result, Parent, ContextType, Args>`).string,
     ].join('\n');
+  }
+
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const rawTypeName = node.name as any;
+
+    if (
+      !this.config.enumValues[rawTypeName] ||
+      (this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues)
+    ) {
+      return null;
+    }
+
+    const name = this.convertName(node, { suffix: 'Resolvers' });
+    const typeToUse = `{ ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .join(', ')}}`;
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+    this._collectedResolvers[rawTypeName] = name;
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(name)
+      .withContent(`EnumResolverSignature<${typeToUse}, ${this.getTypeToUse(rawTypeName)}>`).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
