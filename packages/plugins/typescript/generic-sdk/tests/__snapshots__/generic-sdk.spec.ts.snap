@@ -301,7 +301,7 @@ async function test() {
 }"
 `;
 
-exports[`generic-sdk sdk Should generate a correct wrap method when useObservable 1`] = `
+exports[`generic-sdk sdk Should generate a correct wrap method when usingObservableFrom is set 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 import Observable from 'zen-observable';
@@ -512,7 +512,7 @@ export const CommentAddedDocument = gql\`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
+export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | Observable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
