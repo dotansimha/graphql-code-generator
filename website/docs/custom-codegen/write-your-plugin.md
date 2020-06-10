@@ -62,7 +62,7 @@ module.exports = {
   plugin: (schema, documents, config, info) => {
     return documents
       .map(doc => {
-        const docsNames = doc.content.definitions.map(def => def.name.value);
+        const docsNames = doc.document.definitions.map(def => def.name.value);
 
         return `File ${doc.location} contains: ${docsNames.join(', ')}`;
       })
