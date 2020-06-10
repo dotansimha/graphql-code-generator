@@ -101,7 +101,7 @@
     "ts-jest": "26.1.0",
     "stencil-apollo": "0.1.5",
     "typescript": "3.9.5",
-    "urql": "1.9.7",
+    "urql": "1.9.8",
     "vue": "2.6.11"
   },
   "lint-staged": {
