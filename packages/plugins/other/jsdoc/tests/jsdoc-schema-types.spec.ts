@@ -210,7 +210,7 @@ describe('JSDoc Operations Plugin', () => {
 
       const config = {};
       const result = await plugin(schema, [], config, { outputFile: '' });
-      console.log(result);
+
       expect(result).toEqual(expect.stringContaining(`* @property {string} foo - DEPRECATED: ${warning}`));
     });
   });
