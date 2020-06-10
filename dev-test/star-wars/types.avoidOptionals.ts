@@ -267,7 +267,7 @@ export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type HeroAppearsInQueryVariables = {};
+export type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = { __typename?: 'Query' } & {
   hero: Maybe<
@@ -371,13 +371,13 @@ export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
 
 export type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
 
-export type HumanWithNullHeightQueryVariables = {};
+export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
   human: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
 };
 
-export type TwoHeroesQueryVariables = {};
+export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TwoHeroesQuery = { __typename?: 'Query' } & {
   r2: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;

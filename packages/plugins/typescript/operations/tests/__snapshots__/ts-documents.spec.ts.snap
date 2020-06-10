@@ -119,7 +119,7 @@ export type ElementMetadataFragment = ElementMetadata_Company_Fragment | Element
 `;
 
 exports[`TypeScript Operations Plugin Issues #2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset 1`] = `
-"export type UserQueryVariables = {};
+"export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQuery = { user: { id: string, username: string, email: string, dep: Types.Department } };
@@ -143,7 +143,7 @@ type Venue_Transport_Fragment = (
 
 export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
 
-export type QQueryVariables = {};
+export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QQuery = (
@@ -220,7 +220,7 @@ type Venue_Transport_Fragment = (
 
 export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
 
-export type QQueryVariables = {};
+export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QQuery = (
@@ -245,7 +245,7 @@ function test(q: QQuery) {
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
-"export type UserQueryQueryVariables = {};
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -264,7 +264,7 @@ export type UserFragment = (
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment over type 1`] = `
-"export type UserQueryQueryVariables = {};
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -278,7 +278,7 @@ export type UserQueryQuery = (
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment spread over type 1`] = `
-"export type UserQueryQueryVariables = {};
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -302,7 +302,7 @@ exports[`TypeScript Operations Plugin Selection Set Should generate the correct 
   & Pick<User, 'id'>
 );
 
-export type AaaQueryVariables = {};
+export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AaaQuery = (
@@ -316,7 +316,7 @@ export type AaaQuery = (
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct intersection for fragments when using with interfaces with same type 1`] = `
-"export type Unnamed_1_QueryVariables = {};
+"export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type Unnamed_1_Query = (
@@ -353,7 +353,7 @@ type NetRoute_Ipv6Route_Fragment = (
 
 export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
 
-export type QqQueryVariables = {};
+export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = (
@@ -387,7 +387,7 @@ export type TestFragment = (
   & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
 );
 
-export type QqQueryVariables = {};
+export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = (
@@ -426,7 +426,7 @@ type User_Jerry_Fragment = (
 
 export type UserFragment = User_Tom_Fragment | User_Jerry_Fragment;
 
-export type UserQueryQueryVariables = {};
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -443,7 +443,7 @@ export type UserQueryQuery = (
 `;
 
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments 1`] = `
-"export type UserQueryQueryVariables = {};
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -556,7 +556,7 @@ export type Query = {
   __typename?: 'Query';
   user: UserResult;
 };
-export type UserQueryQueryVariables = {};
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -649,7 +649,7 @@ export type Query = {
   __typename?: 'Query';
   user: UserResult;
 };
-export type UserQueryQueryVariables = {};
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (

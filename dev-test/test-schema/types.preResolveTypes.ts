@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -33,7 +34,7 @@ export type QueryUserByIdArgs = {
   id: Scalars['Int'];
 };
 
-export type TestQueryVariables = {};
+export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TestQuery = {
   __typename?: 'Query';

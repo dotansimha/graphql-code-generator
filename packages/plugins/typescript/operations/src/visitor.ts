@@ -112,6 +112,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected applyVariablesWrapper(variablesBlock: string): string {
     this._globalDeclarations.add(EXACT_SIGNATURE);
 
-    return `Exact<${variablesBlock}>`;
+    return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>`;
   }
 }

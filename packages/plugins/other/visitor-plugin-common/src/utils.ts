@@ -219,7 +219,7 @@ export class DeclarationBlock {
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {
-      result += '{}';
+      result += this._config.blockTransformer('{}');
     }
 
     return (

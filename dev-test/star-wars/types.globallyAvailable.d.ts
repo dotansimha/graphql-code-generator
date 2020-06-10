@@ -265,7 +265,7 @@ type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-type HeroAppearsInQueryVariables = {};
+type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
 type HeroAppearsInQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
@@ -369,13 +369,13 @@ type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
 
 type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
 
-type HumanWithNullHeightQueryVariables = {};
+type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
   human?: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
 };
 
-type TwoHeroesQueryVariables = {};
+type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
 type TwoHeroesQuery = { __typename?: 'Query' } & {
   r2?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
