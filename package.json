@@ -62,7 +62,7 @@
     "@types/jest": "25.2.3",
     "@types/mkdirp": "1.0.1",
     "@types/node": "10.17.25",
-    "@types/react": "16.9.35",
+    "@types/react": "16.9.36",
     "@types/request": "2.48.5",
     "@vue/apollo-composable": "4.0.0-alpha.8",
     "@vue/composition-api": "0.6.1",
