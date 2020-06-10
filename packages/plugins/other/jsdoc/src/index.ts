@@ -9,7 +9,6 @@ import {
   concatAST,
   InputValueDefinitionNode,
   StringValueNode,
-  DirectiveNode,
 } from 'graphql';
 import { DEFAULT_SCALARS, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
 
