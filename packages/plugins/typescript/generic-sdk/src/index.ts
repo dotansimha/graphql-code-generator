@@ -1,13 +1,13 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { GenericSdkVisitor } from './visitor';
+import { GenericSdkVisitor, RawGenericSdkPluginConfig } from './visitor';
 import { extname } from 'path';
 
-export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
+export const plugin: PluginFunction<RawGenericSdkPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawClientSideBasePluginConfig
+  config: RawGenericSdkPluginConfig
 ) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
