@@ -36,7 +36,6 @@ import {
   GraphQLObjectType,
   InputValueDefinitionNode,
   EnumTypeDefinitionNode,
-  GraphQLEnumType,
 } from 'graphql';
 
 import { OperationVariablesToObject } from './variables-to-object';
