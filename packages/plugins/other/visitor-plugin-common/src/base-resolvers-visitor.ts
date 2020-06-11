@@ -1082,9 +1082,15 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const rawTypeName = node.name as any;
 
+    // If we have enumValues set, and it's point to an external enum - we need to allow internal values resolvers
+    // In case we have enumValues set but as explicit values, no need to to do mapping since it's already
+    // have type validation (the original enum has been modified by base types plugin).
+    // If we have mapper for that type - we can skip
+
     if (
-      !this.config.enumValues[rawTypeName] ||
-      (this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues)
+      !this.config.mappers[rawTypeName] &&
+      (!this.config.enumValues[rawTypeName] ||
+        (this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues))
     ) {
       return null;
     }
@@ -1092,7 +1098,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const name = this.convertName(node, { suffix: 'Resolvers' });
     const typeToUse = `{ ${(node.values || [])
       .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
-      .join(', ')}}`;
+      .join(', ')} }`;
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
     this._collectedResolvers[rawTypeName] = name;
 

@@ -224,7 +224,6 @@ describe('TypeScript Resolvers Plugin', () => {
       `);
       const config = {
         noSchemaStitching: true,
-        includeEnumValuesResolvers: true,
         enumValues: {
           MyEnum: 'MyCustomEnum',
         },
@@ -258,7 +257,58 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).toContain('EnumResolverSignature');
       expect(mergedOutput).toContain(
-        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any}, ResolversTypes['MyEnum']>;`
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has mappers pointing to external enum', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        mappers: {
+          MyEnum: 'MyCustomEnum',
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        enum MyCustomEnum {
+          CUSTOM_A,
+          CUSTOM_B,
+          CUSTOM_C
+        }
+
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: MyCustomEnum.CUSTOM_A,
+            B: MyCustomEnum.CUSTOM_B,
+            C: MyCustomEnum.CUSTOM_C,
+          },
+          Query: {
+            v: () => MyCustomEnum.CUSTOM_A,
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
       );
     });
   });
