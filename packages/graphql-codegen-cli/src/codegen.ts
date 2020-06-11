@@ -86,7 +86,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
     /* Normalize "generators" field */
-    const generateKeys = Object.keys(config.generates);
+    const generateKeys = Object.keys(config.generates || {});
 
     if (generateKeys.length === 0) {
       throw new DetailedError(
