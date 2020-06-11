@@ -3,8 +3,133 @@ import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { schema } from '../../../typescript/resolvers/tests/common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('Flow Resolvers Plugin', () => {
+  describe('Enums', () => {
+    it('Should not generate enum internal values resolvers when enum doesnt have enumValues set', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      expect(result.prepend).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(result.content).not.toContain('EnumResolverSignature');
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set as object with explicit values', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        enumValues: {
+          MyEnum: {
+            A: 'val_1',
+            B: 'val_2',
+            C: 'val_3',
+          },
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+      expect(result.prepend).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(result.content).not.toContain('EnumResolverSignature');
+      expect(result.content).toContain(`export type MyEnumResolvers = {| A: 'val_1', B: 'val_2', C: 'val_3' |};`);
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        enumValues: {
+          MyEnum: 'MyCustomEnum',
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      expect(result.prepend).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(result.content).toContain('EnumResolverSignature');
+      expect(result.content).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{| A?: *, B?: *, C?: * |}, $ElementType<ResolversTypes, 'MyEnum'>>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has mappers pointing to external enum', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        mappers: {
+          MyEnum: 'MyCustomEnum',
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      expect(result.prepend).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(result.content).toContain('EnumResolverSignature');
+      expect(result.content).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{| A?: *, B?: *, C?: * |}, $ElementType<ResolversTypes, 'MyEnum'>>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set on a global level of all enums', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        enumValues: './enums',
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      expect(result.prepend).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(result.content).toContain('EnumResolverSignature');
+      expect(result.content).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{| A?: *, B?: *, C?: * |}, $ElementType<ResolversTypes, 'MyEnum'>>;`
+      );
+    });
+  });
+
   it('Should generate basic type resolvers', () => {
     const result = plugin(schema, [], {}, { outputFile: '' });
 

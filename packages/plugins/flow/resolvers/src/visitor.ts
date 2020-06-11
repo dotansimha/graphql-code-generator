@@ -5,6 +5,7 @@ import {
   GraphQLSchema,
   ScalarTypeDefinitionNode,
   InputValueDefinitionNode,
+  EnumTypeDefinitionNode,
 } from 'graphql';
 import autoBind from 'auto-bind';
 import {
@@ -17,6 +18,9 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
+
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = $ObjMap<T, () => AllowedValues>;';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
@@ -133,5 +137,29 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return declarationKind === 'type' ? ',' : ';';
+  }
+
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    const valuesMap = `{| ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: *`)
+      .join(', ')} |}`;
+
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+
+    return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
+  }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{| ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} |}`;
   }
 }

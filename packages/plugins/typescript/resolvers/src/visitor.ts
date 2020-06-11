@@ -1,5 +1,12 @@
 import { TypeScriptResolversPluginConfig } from './config';
-import { FieldDefinitionNode, ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
+import {
+  FieldDefinitionNode,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  GraphQLSchema,
+  EnumTypeDefinitionNode,
+} from 'graphql';
 import autoBind from 'auto-bind';
 import {
   ParsedResolversConfig,
@@ -8,6 +15,9 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
+
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
@@ -93,5 +103,29 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return ';';
+  }
+
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    const valuesMap = `{ ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .join(', ')} }`;
+
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+
+    return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
+  }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{ ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} }`;
   }
 }
