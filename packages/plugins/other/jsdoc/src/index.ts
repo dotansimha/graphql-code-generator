@@ -114,6 +114,21 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return node.type;
       },
     },
+    Directive: {
+      enter(node) {
+        if (node.name.value !== 'deprecated') {
+          return null;
+        }
+
+        const reason = node.arguments?.find(arg => arg.name.value === 'reason');
+
+        if (reason?.value.kind !== 'StringValue') {
+          return null;
+        }
+
+        return ` - DEPRECATED: ${reason.value.value}`;
+      },
+    },
     FieldDefinition: {
       enter(node) {
         if (node.type.kind === 'NonNullType') {
@@ -124,10 +139,10 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       },
       leave(node: FieldDefinitionNode & { nonNullable?: boolean }) {
         const fieldName = node.nonNullable ? node.name : `[${node.name}]`;
+        const description = node.description && node.description.value ? ` - ${node.description.value}` : '';
+        const directives = node?.directives?.filter(d => d !== null && d !== undefined);
 
-        return `@property {${node.type}} ${fieldName}${
-          node.description && node.description.value ? ` - ${node.description.value}` : ''
-        }`;
+        return `@property {${node.type}} ${fieldName}${description}${directives}`;
       },
     },
     InputValueDefinition: {
