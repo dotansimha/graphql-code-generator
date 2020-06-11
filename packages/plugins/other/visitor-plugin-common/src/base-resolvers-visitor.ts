@@ -43,9 +43,6 @@ import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } fro
 import { parseEnumValues } from './enum-values';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 
-export const ENUM_RESOLVERS_SIGNATURE =
-  'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
-
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
   fieldContextTypes: Array<string>;
@@ -1079,6 +1076,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     ].join('\n');
   }
 
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    throw new Error(`buildEnumResolverContentBlock is not implemented!`);
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const rawTypeName = node.name as any;
 
@@ -1086,7 +1087,6 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     // In case we have enumValues set but as explicit values, no need to to do mapping since it's already
     // have type validation (the original enum has been modified by base types plugin).
     // If we have mapper for that type - we can skip
-
     if (
       !this.config.mappers[rawTypeName] &&
       (!this.config.enumValues[rawTypeName] ||
@@ -1096,17 +1096,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     }
 
     const name = this.convertName(node, { suffix: 'Resolvers' });
-    const typeToUse = `{ ${(node.values || [])
-      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
-      .join(', ')} }`;
-    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
     this._collectedResolvers[rawTypeName] = name;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(name)
-      .withContent(`EnumResolverSignature<${typeToUse}, ${this.getTypeToUse(rawTypeName)}>`).string;
+      .withContent(this.buildEnumResolverContentBlock(node, this.getTypeToUse(rawTypeName))).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {

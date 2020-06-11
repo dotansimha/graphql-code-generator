@@ -4,7 +4,7 @@ import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { schema, validate } from './common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { ENUM_RESOLVERS_SIGNATURE } from '@graphql-codegen/visitor-plugin-common';
+import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
@@ -305,6 +305,57 @@ describe('TypeScript Resolvers Plugin', () => {
       `
       );
 
+      expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set on a global level of all enums', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: './enums',
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        enum MyCustomEnum {
+          CUSTOM_A,
+          CUSTOM_B,
+          CUSTOM_C
+        }
+
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: MyCustomEnum.CUSTOM_A,
+            B: MyCustomEnum.CUSTOM_B,
+            C: MyCustomEnum.CUSTOM_C,
+          },
+          Query: {
+            v: () => MyCustomEnum.CUSTOM_A,
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).toContain(`import { MyEnum } from './enums'`);
+      expect(mergedOutput).toContain(`export { MyEnum }`);
       expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).toContain('EnumResolverSignature');
       expect(mergedOutput).toContain(
