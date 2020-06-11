@@ -841,7 +841,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `${resolversType}['${name}']`;
   }
 
-  protected getParentTypeForSignature(node: FieldDefinitionNode) {
+  protected getParentTypeForSignature(node: FieldDefinitionNode): string {
     return 'ParentType';
   }
 
@@ -849,7 +849,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): (parentName: string) => string | null {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
 
@@ -943,7 +943,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `RequireFields<${argsType}, never>`;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: 'Resolvers',
@@ -1028,7 +1028,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .withBlock(indent(`name: '${node.name}'${this.getPunctuation('interface')}`)).string;
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode, key, parent): string {
+  DirectiveDefinition(node: DirectiveDefinitionNode, key: string | number, parent: any): string {
     if (this._federation.skipDirective(node.name as any)) {
       return null;
     }
@@ -1080,6 +1080,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     throw new Error(`buildEnumResolverContentBlock is not implemented!`);
   }
 
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    throw new Error(`buildEnumResolversExplicitMappedValues is not implemented!`);
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const rawTypeName = node.name as any;
 
@@ -1087,22 +1094,23 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     // In case we have enumValues set but as explicit values, no need to to do mapping since it's already
     // have type validation (the original enum has been modified by base types plugin).
     // If we have mapper for that type - we can skip
-    if (
-      !this.config.mappers[rawTypeName] &&
-      (!this.config.enumValues[rawTypeName] ||
-        (this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues))
-    ) {
+    if (!this.config.mappers[rawTypeName] && !this.config.enumValues[rawTypeName]) {
       return null;
     }
 
     const name = this.convertName(node, { suffix: 'Resolvers' });
     this._collectedResolvers[rawTypeName] = name;
+    const hasExplicitValues = this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(name)
-      .withContent(this.buildEnumResolverContentBlock(node, this.getTypeToUse(rawTypeName))).string;
+      .withContent(
+        hasExplicitValues
+          ? this.buildEnumResolversExplicitMappedValues(node, this.config.enumValues[rawTypeName].mappedValues)
+          : this.buildEnumResolverContentBlock(node, this.getTypeToUse(rawTypeName))
+      ).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
@@ -1125,7 +1133,6 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     }
 
     const parentType = this.getParentTypeToUse((node.name as any) as string);
-
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
 
     return new DeclarationBlock(this._declarationBlockConfig)

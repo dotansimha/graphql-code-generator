@@ -26,7 +26,7 @@ describe('Flow Resolvers Plugin', () => {
       expect(result.content).not.toContain('EnumResolverSignature');
     });
 
-    it('Should not generate enum internal values resolvers when enum has enumValues set as object with values', async () => {
+    it('Should generate enum internal values resolvers when enum has enumValues set as object with explicit values', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
           v: MyEnum
@@ -50,6 +50,7 @@ describe('Flow Resolvers Plugin', () => {
       const result = await plugin(testSchema, [], config, { outputFile: '' });
       expect(result.prepend).not.toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(result.content).not.toContain('EnumResolverSignature');
+      expect(result.content).toContain(`export type MyEnumResolvers = {| A: 'val_1', B: 'val_2', C: 'val_3' |};`);
     });
 
     it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {

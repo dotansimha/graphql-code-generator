@@ -148,4 +148,18 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
 
     return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
   }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{| ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} |}`;
+  }
 }

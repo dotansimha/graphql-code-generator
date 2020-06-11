@@ -169,7 +169,7 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(mergedOutput).not.toContain('EnumResolverSignature');
     });
 
-    it('Should not generate enum internal values resolvers when enum has enumValues set as object with values', async () => {
+    it('Should generate enum internal values resolvers when enum has enumValues set as object with explicit values', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
           v: MyEnum
@@ -199,6 +199,11 @@ describe('TypeScript Resolvers Plugin', () => {
         testSchema,
         `
         export const resolvers: Resolvers = {
+          MyEnum: {
+            A: 'val_1',
+            B: 'val_2',
+            C: 'val_3',
+          },
           Query: {
             v: () => 'val_1',
           }
@@ -208,6 +213,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
       expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).not.toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B: 'val_2', C: 'val_3' };`);
     });
 
     it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {
