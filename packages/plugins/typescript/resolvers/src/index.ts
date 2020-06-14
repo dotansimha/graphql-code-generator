@@ -75,8 +75,8 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
     defsToInclude.push(`export type RecursivePick<T, S> =
       { [K in keyof T & keyof S]: S[K] extends true ? 
         T[K] 
-        : T[K] | undefined extends T[K] ? 
-          RecursivePick<NonNullable<T[K]>, S[K]> | undefined
+        : Maybe<T[K]> extends T[K] ? 
+          Maybe<RecursivePick<NonNullable<T[K]>, S[K]>>
           : RecursivePick<T[K], S[K]>
       };`);
   }
