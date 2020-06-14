@@ -814,7 +814,7 @@
       }
     },
     "PythonPluginConfig": {
-      "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).",
+      "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nThis package requires Python 3.7, since that is the first time optionals were introduced. If you do need support for Python 3.6 or 3.5, [let us know](https://github.com/dotansimha/graphql-code-generator/issues/new/choose), and we can try to start supporting that.",
       "type": "object",
       "properties": {
         "addUnderscoreToArgsType": {
@@ -4355,11 +4355,11 @@
             },
             {
               "const": "python",
-              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nThis package requires Python 3.7, since that is the first time optionals were introduced. If you do need support for Python 3.6 or 3.5, [let us know](https://github.com/dotansimha/graphql-code-generator/issues/new/choose), and we can try to start supporting that.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/python",
-              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nThis package requires Python 3.7, since that is the first time optionals were introduced. If you do need support for Python 3.6 or 3.5, [let us know](https://github.com/dotansimha/graphql-code-generator/issues/new/choose), and we can try to start supporting that.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "schema-ast",
