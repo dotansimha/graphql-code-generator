@@ -172,12 +172,12 @@ export class ApolloFederation {
         const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
 
         // Look for @requires and see what the service needs and gets
-        const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
+        const requires = getDirectivesByName('requires', fieldNode).map(this.extractKeyOrRequiresFieldSet);
         const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
 
         // @key() @key() - "primary keys" in Federation
         const primaryKeys = keys.map(def => {
-          const fields = this.extractFieldSet(def);
+          const fields = this.extractKeyOrRequiresFieldSet(def);
           return this.translateFieldSet(fields, parentTypeSignature);
         });
 
@@ -219,7 +219,7 @@ export class ApolloFederation {
     return `RecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
   }
 
-  private extractFieldSet(directive: DirectiveNode): any {
+  private extractKeyOrRequiresFieldSet(directive: DirectiveNode): any {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
     const value = (arg.value as StringValueNode).value;
 
@@ -245,6 +245,17 @@ export class ApolloFederation {
     });
   }
 
+  private extractProvidesFieldSet(directive: DirectiveNode): string[] {
+    const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+    const value = (arg.value as StringValueNode).value;
+
+    if (/[{}]/gi.test(value)) {
+      throw new Error('Nested fields in _FieldSet is not supported in the @provides directive');
+    }
+
+    return value.split(/\s+/g);
+  }
+
   private createMapOfProvides() {
     const providesMap: Record<string, string[]> = {};
 
@@ -254,7 +265,7 @@ export class ApolloFederation {
       if (isObjectType(objectType)) {
         Object.values(objectType.getFields()).forEach(field => {
           const provides = getDirectivesByName('provides', field.astNode)
-            .map(this.extractFieldSet)
+            .map(this.extractProvidesFieldSet)
             .reduce((prev, curr) => [...prev, ...curr], []);
           const ofType = getBaseType(field.type);
 
