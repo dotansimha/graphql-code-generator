@@ -11,6 +11,8 @@ import {
   printType,
   Kind,
   visit,
+  DefinitionNode,
+  OperationDefinitionNode,
 } from 'graphql';
 import { merge } from 'lodash';
 import { getBaseType } from './utils';
@@ -223,24 +225,31 @@ export class ApolloFederation {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
     const value = (arg.value as StringValueNode).value;
 
+    type SelectionSetField = {
+      name: string,
+      selection: boolean | SelectionSetField[],
+    }
+
     return visit(parse(`{${value}}`), {
       leave: {
         SelectionSet(node) {
-          // @ts-ignore
-          return node.selections.reduce((accum, sel) => {accum[sel.name] = sel.value; return accum;}, {});
+          return ((node.selections as any) as SelectionSetField[]).reduce((accum, field) => {
+            accum[field.name] = field.selection;
+            return accum;
+          }, {});
         },
-
         Field(node) {
           return {
-              name: node.name.value,
-              value: node.selectionSet ? node.selectionSet : true,
-          };
+            name: node.name.value,
+            selection: node.selectionSet ? node.selectionSet : true,
+          } as SelectionSetField;
         },
-
         Document(node) {
-          // @ts-ignore
-            return node.definitions.find(def => def.kind === 'OperationDefinition' && def.operation === 'query').selectionSet;
-        }
+          return node.definitions.find(
+            (def: DefinitionNode): def is OperationDefinitionNode =>
+              def.kind === 'OperationDefinition' && def.operation === 'query'
+          ).selectionSet;
+        },
       },
     });
   }
