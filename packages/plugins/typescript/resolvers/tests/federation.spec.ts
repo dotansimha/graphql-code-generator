@@ -124,6 +124,76 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
   });
 
+  it('should handle nested fields from @requires directive', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      extend type User @key(fields: "id") {
+        id: ID! @external
+        name: String @external
+        age: Int! @external
+        address: Address! @external
+        username: String @requires(fields: "name age address { street }")
+      }
+
+      extend type Address {
+        street: String!
+        zip: Int!
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & RecursivePick<ParentType, {"id":true}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & RecursivePick<ParentType, {"id":true}> & RecursivePick<ParentType, {"name":true,"age":true,"address":{"street":true}}>, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+      };
+    `);
+  });
+
+  it('should handle nested fields from @key directive', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      type User @key(fields: "name { first last }") {
+        name: Name!
+        username: String
+      }
+
+      type Name {
+        first: String!
+        last: String!
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & RecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        name?: Resolver<ResolversTypes['Name'], { __typename: 'User' } & RecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & RecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+      };
+    `);
+  });
+
   it('should skip to generate resolvers of fields with @external directive', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
