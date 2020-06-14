@@ -66,7 +66,7 @@ export class PyVisitor<
     return [
       'from typing import Optional, List, Literal',
       'from enum import Enum',
-      'any = Any', // TODO: Fix this. THe issue comes in passing a distinct defaultValue to buildScalars
+      'any = Any', // TODO: Fix this. The issue comes in passing a distinct defaultValue to buildScalars
       ...super.getScalarsImports(),
     ];
   }
@@ -85,7 +85,7 @@ export class PyVisitor<
           : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
+      return comment + indent(`${scalarName} = ${scalarValue}${this.getPunctuation(scalar)}`);
     });
 
     return new PythonDeclarationBlock(this._declarationBlockConfig)
@@ -105,6 +105,16 @@ export class PyVisitor<
 
   protected getExportPrefix(): string {
     return '';
+  }
+
+  protected _getTypeForNode(node: NamedTypeNode): string {
+    const typeAsString = (node.name as any) as string;
+
+    if (this.scalars[typeAsString] || this.config.enumValues[typeAsString]) {
+      return super._getTypeForNode(node);
+    } else {
+      return `"${super._getTypeForNode(node)}"`;
+    }
   }
 
   NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
@@ -317,7 +327,7 @@ export class PyVisitor<
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : `"${this.convertName(t)}"`))
       .join(', ');
 
     return new PythonDeclarationBlock(this._declarationBlockConfig)

@@ -26,7 +26,10 @@ export function transformPythonComment(comment: string | StringValueNode, indent
 
 export class PythonDeclarationBlock extends DeclarationBlock {
   constructor(_config: DeclarationBlockConfig) {
-    super(_config);
+    super({
+      enumNameValueSeparator: '=',
+      ..._config,
+    });
   }
 
   withComment(comment: string | StringValueNode | null): DeclarationBlock {
