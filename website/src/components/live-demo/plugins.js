@@ -12,6 +12,7 @@ export const pluginLoaderMap = {
   flow: () => import('@graphql-codegen/flow'),
   'flow-operations': () => import('@graphql-codegen/flow-operations'),
   'flow-resolvers': () => import('@graphql-codegen/flow-resolvers'),
+  python: () => import('@graphql-codegen/python'),
   typescript: () => import('@graphql-codegen/typescript'),
   'typescript-compatibility': () => import('@graphql-codegen/typescript-compatibility'),
   'typescript-operations': () => import('@graphql-codegen/typescript-operations'),

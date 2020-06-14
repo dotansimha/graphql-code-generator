@@ -399,6 +399,17 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
   ],
+  Python: [
+    {
+      name: 'Types',
+      config: `generates:
+  src/main/python/my/app/generated/types.py:
+    plugins:
+      - typescript`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+  ],
   Java: [
     {
       name: 'Types (Enum & Input)',

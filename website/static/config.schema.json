@@ -813,6 +813,54 @@
         }
       }
     },
+    "PythonPluginConfig": {
+      "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).",
+      "type": "object",
+      "properties": {
+        "addUnderscoreToArgsType": {
+          "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
+          "type": "boolean"
+        },
+        "enumValues": {
+          "$ref": "#/definitions/EnumValuesMap",
+          "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
+        },
+        "enumPrefix": {
+          "default": true,
+          "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.",
+          "type": "boolean"
+        },
+        "onlyOperationTypes": {
+          "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)",
+          "default": false,
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "default": "pascal-case#pascalCase",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores."
+        },
+        "typesPrefix": {
+          "default": "",
+          "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "skipTypename": {
+          "default": false,
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "default": false,
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional",
+          "type": "boolean"
+        }
+      }
+    },
     "SchemaASTConfig": {
       "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.",
       "type": "object",
@@ -3201,6 +3249,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "python"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/PythonPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "schema-ast"
                 }
               }
@@ -4009,6 +4076,14 @@
               "additionalProperties": false,
               "$ref": "#/definitions/CSharpOperationsRawPluginConfig"
             },
+            "python": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/PythonPluginConfig"
+            },
+            "@graphql-codegen/python": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/PythonPluginConfig"
+            },
             "schema-ast": {
               "additionalProperties": false,
               "$ref": "#/definitions/SchemaASTConfig"
@@ -4277,6 +4352,14 @@
             {
               "const": "@graphql-codegen/c-sharp-operations",
               "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "python",
+              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/python",
+              "description": "This plugin generates the base Python types, based on your GraphQL schema.\n\nThis is equivalent of the `typescript` plugin. The generated types are simple, refer to your schema's exact structure, and will be used as the base type for future plugins (such as `python-operations`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/python\n\n=> Make sure to include \"@graphql-codegen/python\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "schema-ast",

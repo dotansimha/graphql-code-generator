@@ -70,6 +70,11 @@ module.exports = {
       },
       {
         type: 'category',
+        label: 'Python',
+        items: ['plugins/python'],
+      },
+      {
+        type: 'category',
         label: 'Utilities',
         items: [
           'plugins/fragment-matcher',

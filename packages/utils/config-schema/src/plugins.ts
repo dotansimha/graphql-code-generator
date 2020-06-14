@@ -66,6 +66,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'c-sharp-operations',
   },
   {
+    file: '../../plugins/python/python/src/config.ts',
+    identifier: 'PythonPluginConfig',
+    pluginName: 'python',
+  },
+  {
     file: '../../plugins/other/schema-ast/src/index.ts',
     identifier: 'SchemaASTConfig',
     name: 'schema-ast',

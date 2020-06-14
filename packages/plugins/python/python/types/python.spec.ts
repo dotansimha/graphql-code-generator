@@ -9,10 +9,9 @@ describe('Base Requirements', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
 
-    expect(result.content).toBeSimilarStringTo(`
-      from typing import Optional, List, Literal
-      from enum import Enum
-    `);
+    expect(result.prepend).toContain('from typing import Optional, List, Literal');
+    expect(result.prepend).toContain('from enum import Enum');
+    expect(result.prepend).toContain('any = Any');
   });
 
   it('should emit a scalars class', async () => {
@@ -38,7 +37,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
       class SimpleClass:
-        __typename: Literal["SimpleClass"]
+        __typename: Optional[Literal["SimpleClass"]]
         attr: Scalars.String
     `);
   });
@@ -53,7 +52,7 @@ describe('Base Requirements', () => {
     expect(result.content).toBeSimilarStringTo(`
       # My sad, sad class
       class SimpleClass:
-        __typename: Literal["SimpleClass"]
+        __typename: Optional[Literal["SimpleClass"]]
         attr: Scalars.String
     `);
   });
@@ -75,7 +74,7 @@ describe('Base Requirements', () => {
       Not the best self-documentation...
       """
       class SimpleClass:
-        __typename: Literal["SimpleClass"]
+        __typename: Optional[Literal["SimpleClass"]]
         attr: Scalars.String
     `);
   });
@@ -87,7 +86,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
         class SimpleClass:
-          __typename: Literal["SimpleClass"]
+          __typename: Optional[Literal["SimpleClass"]]
           attr: Optional[Scalars.String]
       `);
   });
@@ -99,7 +98,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
       class SimpleClass:
-        __typename: Literal["SimpleClass"]
+        __typename: Optional[Literal["SimpleClass"]]
         attr: Optional[List[Optional[Scalars.String]]]
     `);
   });
@@ -114,7 +113,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
       class SimpleClass:
-        __typename: Literal["SimpleClass"]
+        __typename: Optional[Literal["SimpleClass"]]
         fullyNullable: Optional[List[Optional[Scalars.String]]]
         nullableElements: List[Optional[Scalars.String]]
         nullableArray: Optional[List[Scalars.String]]
@@ -132,7 +131,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
     class SimpleClass:
-      __typename: Literal["SimpleClass"]
+      __typename: Optional[Literal["SimpleClass"]]
       attr: Scalars.String
       boolean: Optional[Scalars.Boolean]
       myFancyNum: Scalars.Int
@@ -153,11 +152,11 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
     class SimpleClass:
-      __typename: Literal["SimpleClass"]
+      __typename: Optional[Literal["SimpleClass"]]
       attr: Scalars.String
 
     class ComplexClass:
-      __typename: Literal["ComplexClass"]
+      __typename: Optional[Literal["ComplexClass"]]
       complexAttr: Optional[SimpleClass]
     `);
   });
@@ -175,7 +174,7 @@ describe('Base Requirements', () => {
       BasicUnion = Union[Scalars.Int, Scalars.String]
 
       class BasicType:
-        __typename: Literal["BasicType"]
+        __typename: Optional[Literal["BasicType"]]
         myUnion: BasicUnion
     `);
   });
@@ -197,7 +196,7 @@ describe('Base Requirements', () => {
         field: Scalars.String
 
       class SubType(MyInterface):
-        __typename: Literal["SubType"]
+        __typename: Optional[Literal["SubType"]]
         field: Scalars.String
         otherProp: Scalars.Boolean
       `);
@@ -227,7 +226,7 @@ describe('Base Requirements', () => {
     expect(result.content).toBeSimilarStringTo(`MyScalar: Date`);
     expect(result.content).toBeSimilarStringTo(`
       class MyType:
-        __typename: Literal["MyType"]
+        __typename: Optional[Literal["MyType"]]
         foo: Optional[Scalars.String]
         bar: Scalars.MyScalar
       `);
@@ -288,7 +287,7 @@ describe('Base Requirements', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     class SimpleType:
-      __typename: Literal["SimpleType"]
+      __typename: Optional[Literal["SimpleType"]]
       # the attribute
       attr: Scalars.String
     `);
@@ -305,7 +304,47 @@ describe('Config', () => {
     expect(result.content).not.toContain(`__typename: `);
   });
 
-  describe('Naming Convention & Types Prefix', async () => {
+  it('can makes typename nonOptional', async () => {
+    const schema = buildSchema(`type SimpleClass {
+      attr: String!
+    }`);
+    const result = await plugin(schema, [], { nonOptionalTypename: true }, {});
+
+    expect(result.content).toBeSimilarStringTo(`
+      class SimpleClass:
+        __typename: Literal["SimpleClass"]
+    `);
+  });
+
+  it('Should generate a scalars mapping correctly for custom scalars with mapping', async () => {
+    const schema = buildSchema(`
+    scalar MyScalar
+
+    type MyType {
+      foo: String
+      bar: MyScalar!
+    }`);
+    const result = await plugin(schema, [], { scalars: { MyScalar: 'Date' } }, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+    class Scalars:
+      ID: str
+      String: str
+      Boolean: bool
+      Int: int
+      Float: float
+      MyScalar: Date
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+    class MyType:
+      __typename: Optional[Literal["MyType"]]
+      foo: Optional[Scalars.String]
+      bar: Scalars.MyScalar
+    `);
+  });
+
+  describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
       const result = await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' });
@@ -319,7 +358,7 @@ describe('Config', () => {
     `);
       expect(result.content).toBeSimilarStringTo(`
         class mytype:
-          __typename: Literal["MyType"]
+          __typename: Optional[Literal["MyType"]]
           foo: Optional[Scalars.String]
     `);
     });
@@ -343,7 +382,7 @@ describe('Config', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         class Imytype:
-          __typename: Literal["MyType"]
+          __typename: Optional[Literal["MyType"]]
           foo: Optional[Scalars.String]
       `);
     });
@@ -417,7 +456,7 @@ describe('Config', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         class mytype:
-          __typename: Literal["MyType"]
+          __typename: Optional[Literal["MyType"]]
           f: Optional[Scalars.String]
           bar: Optional[myenum]
           b_a_r: Optional[Scalars.String]
@@ -425,7 +464,7 @@ describe('Config', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         class my_type:
-          __typename: Literal["My_Type"]
+          __typename: Optional[Literal["My_Type"]]
           linkTest: Optional[mytype]
         `);
       expect(result.content).toBeSimilarStringTo(`
@@ -437,22 +476,22 @@ describe('Config', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         class impl1(some_interface):
-          __typename: Literal["Impl1"]
+          __typename: Optional[Literal["Impl1"]]
           id: Scalars.ID
         `);
       expect(result.content).toBeSimilarStringTo(`
       class impl_2(some_interface):
-        __typename: Literal["Impl_2"]
+        __typename: Optional[Literal["Impl_2"]]
         id: Scalars.ID
         `);
       expect(result.content).toBeSimilarStringTo(`
         class impl_2(some_interface):
-          __typename: Literal["Impl_2"]
+          __typename: Optional[Literal["Impl_2"]]
           id: Scalars.ID
         `);
       expect(result.content).toBeSimilarStringTo(`
         class query:
-          __typename: Literal["Query"]
+          __typename: Optional[Literal["Query"]]
           something: Optional[myunion]
           use_interface: Optional[some_interface]
       `);
@@ -469,7 +508,7 @@ describe('Config', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
       class MyType:
-        __typename: Literal["MyType"]
+        __typename: Optional[Literal["MyType"]]
         f: Optional[Scalars.String]
         bar: Optional[MyEnum]
         b_a_r: Optional[Scalars.String]
@@ -477,7 +516,7 @@ describe('Config', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
       class My_Type:
-        __typename: Literal["My_Type"]
+        __typename: Optional[Literal["My_Type"]]
         linkTest: Optional[MyType]
       `);
       expect(result.content).toBeSimilarStringTo(`
@@ -489,22 +528,22 @@ describe('Config', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         class Impl1(Some_Interface):
-          __typename: Literal["Impl1"]
+          __typename: Optional[Literal["Impl1"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class Impl_2(Some_Interface):
-          __typename: Literal["Impl_2"]
+          __typename: Optional[Literal["Impl_2"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class Impl_3(Some_Interface):
-          __typename: Literal["impl_3"]
+          __typename: Optional[Literal["impl_3"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class Query:
-          __typename: Literal["Query"]
+          __typename: Optional[Literal["Query"]]
           something: Optional[MyUnion]
           use_interface: Optional[Some_Interface]
       `);
@@ -522,7 +561,7 @@ describe('Config', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       class IMyType:
-        __typename: Literal["MyType"]
+        __typename: Optional[Literal["MyType"]]
         f: Optional[Scalars.String]
         bar: Optional[IMyEnum]
         b_a_r: Optional[Scalars.String]
@@ -530,7 +569,7 @@ describe('Config', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IMy_Type:
-          __typename: Literal["My_Type"]
+          __typename: Optional[Literal["My_Type"]]
           linkTest: Optional[IMyType]
       `);
       expect(result.content).toBeSimilarStringTo(`IMyUnion = Union[IMy_Type, IMyType]`);
@@ -540,22 +579,22 @@ describe('Config', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IImpl1(ISome_Interface):
-          __typename: Literal["Impl1"]
+          __typename: Optional[Literal["Impl1"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IImpl_2(ISome_Interface):
-          __typename: Literal["Impl_2"]
+          __typename: Optional[Literal["Impl_2"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IImpl_3(ISome_Interface):
-          __typename: Literal["impl_3"]
+          __typename: Optional[Literal["impl_3"]]
           id: Scalars.ID
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IQuery:
-          __typename: Literal["Query"]
+          __typename: Optional[Literal["Query"]]
           something: Optional[IMyUnion]
           use_interface: Optional[ISome_Interface]
       `);
@@ -563,7 +602,7 @@ describe('Config', () => {
   });
 });
 
-describe('Arguments', async () => {
+describe('Arguments', () => {
   it('Should generate correctly types for field arguments - with basic fields', async () => {
     const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
 
@@ -610,7 +649,7 @@ describe('Arguments', async () => {
   });
 });
 
-describe('Enum', async () => {
+describe('Enum', () => {
   it('should permit enums', async () => {
     const schema = buildSchema(`
       enum Episode {
@@ -629,7 +668,7 @@ describe('Enum', async () => {
         Empire = 'EMPIRE'
         Jedi = 'JEDI'
       class Character:
-        __typename: Literal["Character"]
+        __typename: Optional[Literal["Character"]]
         appearsIn: List[Episode]
     `);
   });

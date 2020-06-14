@@ -62,30 +62,37 @@ export class PyVisitor<
     return [];
   }
 
+  public getScalarsImports(): string[] {
+    return [
+      'from typing import Optional, List, Literal',
+      'from enum import Enum',
+      'any = Any', // TODO: Fix this. THe issue comes in passing a distinct defaultValue to buildScalars
+      ...super.getScalarsImports(),
+    ];
+  }
+
   protected _getScalar(name: string): string {
     return `Scalars.${name}`;
   }
 
   public get scalarsDefinition(): string {
-    const top = `from typing import Optional, List, Literal
-from enum import Enum`;
-
-    const scalars = Object.keys(this.config.scalars);
-
-    const scalarDefs = scalars.map(scalarName => {
+    const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment =
         scalarType && scalarType.astNode && scalarType.description
           ? transformPythonComment(scalarType.description, 1)
           : '';
+      const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue}`, 1);
+      return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
     });
 
-    const scalarBlock = ['class Scalars:', ...scalarDefs].join('\n');
-
-    return [top, scalarBlock].join('\n\n');
+    return new PythonDeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.scalar)
+      .withName('Scalars')
+      .withBlock(allScalars.join('\n')).string;
   }
 
   protected clearOptional(str: string): string {
@@ -126,7 +133,11 @@ from enum import Enum`;
 
     const allFields = ([...node.fields] as unknown) as string[];
     if (this.config.addTypename) {
-      allFields.unshift(indent(`__typename: Literal["${node.name}"]`));
+      const typename = node.name;
+      const literal = `Literal["${typename}"]`;
+      const type = this.config.nonOptionalTypename ? literal : `Optional[${literal}]`;
+
+      allFields.unshift(indent(`__typename: ${type}`));
     }
 
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
