@@ -42,6 +42,8 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
       info: GraphQLResolveInfo
     ) => Promise<TResult> | TResult;
     `);
+
+    defsToInclude.push(`export type RecursivePick<T, U> = T`);
   }
 
   const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
