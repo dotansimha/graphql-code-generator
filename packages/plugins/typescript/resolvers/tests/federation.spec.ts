@@ -381,9 +381,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       });
 
       // __resolveReference should be unwrapped
-      expect(content).toBeSimilarStringTo(`{ __typename: 'User' } & Pick<UnwrappedObject<ParentType>, 'id'>`);
+      expect(content).toBeSimilarStringTo(`
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & RecursivePick<UnwrappedObject<ParentType>, {"id":true}>, ContextType>;
+      `);
       // but ID should not
-      expect(content).toBeSimilarStringTo(`id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>`);
+      expect(content).toBeSimilarStringTo(`id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & RecursivePick<ParentType, {"id":true}>, ContextType>`);
     });
   });
 });
