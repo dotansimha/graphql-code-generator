@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
+  export type CurrentUserForProfileQueryVariables = Types.Exact<{ [key: string]: never }>;
 
   export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
     currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>>;

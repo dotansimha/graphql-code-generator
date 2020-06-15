@@ -2,10 +2,9 @@ import gql from 'graphql-tag';
 import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type SubmitCommentMutationVariables = Exact<{
+  export type SubmitCommentMutationVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     commentContent: Types.Scalars['String'];
   }>;

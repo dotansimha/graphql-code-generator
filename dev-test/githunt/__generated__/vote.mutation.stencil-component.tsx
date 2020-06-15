@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type VoteMutationVariables = Exact<{
+  export type VoteMutationVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     type: Types.VoteType;
   }>;
