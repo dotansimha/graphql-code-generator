@@ -119,7 +119,7 @@ export type ElementMetadataFragment = ElementMetadata_Company_Fragment | Element
 `;
 
 exports[`TypeScript Operations Plugin Issues #2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset 1`] = `
-"export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+"export type UserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type UserQuery = { user: { id: string, username: string, email: string, dep: Types.Department } };
@@ -161,6 +161,7 @@ export type QQuery = (
 
 exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 2`] = `
 "export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -509,6 +510,7 @@ export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fr
 
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
 "export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -598,6 +600,7 @@ export type UserQueryQuery = (
 
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
 "export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
