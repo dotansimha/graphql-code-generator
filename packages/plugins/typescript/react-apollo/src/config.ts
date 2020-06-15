@@ -93,22 +93,22 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withRefetchFn?: boolean;
   /**
    * @description Customize the package where apollo-react common lib is loaded from.
-   * @default @apollo/react-common
+   * @default "@apollo/react-common"
    */
   apolloReactCommonImportFrom?: string;
   /**
    * @description Customize the package where apollo-react component lib is loaded from.
-   * @default @apollo/react-components
+   * @default "@apollo/react-components"
    */
   apolloReactComponentsImportFrom?: string;
   /**
    * @description Customize the package where apollo-react HOC lib is loaded from.
-   * @default @apollo/react-hoc
+   * @default "@apollo/react-hoc"
    */
   apolloReactHocImportFrom?: string;
   /**
    * @description Customize the package where apollo-react hooks lib is loaded from.
-   * @default @apollo/react-hooks
+   * @default "@apollo/react-hooks"
    */
   apolloReactHooksImportFrom?: string;
   /**

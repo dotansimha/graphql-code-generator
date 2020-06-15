@@ -30,22 +30,11 @@ export enum DocumentMode {
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
+  /**
+   * @description Deprecated. Changes the documentMode to `documentNode`.
+   * @default false
+   */
   noGraphQLTag?: boolean;
-  gqlImport?: string;
-  noExport?: boolean;
-  dedupeOperationSuffix?: boolean;
-  omitOperationSuffix?: boolean;
-  operationResultSuffix?: string;
-  documentVariablePrefix?: string;
-  documentVariableSuffix?: string;
-  fragmentVariablePrefix?: string;
-  fragmentVariableSuffix?: string;
-  documentMode?: DocumentMode;
-  importOperationTypesFrom?: string;
-  importDocumentNodeExternallyFrom?: string;
-}
-
-export interface ClientSideBasePluginConfig extends ParsedConfig {
   /**
    * @default gql#graphql-tag
    * @description Customize from which module will `gql` be imported from.
@@ -64,47 +53,47 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    *   gqlImport: gatsby#graphql
    * ```
    */
-  gqlImport: string;
-  /**
-   * @default ""
-   * @description Adds a suffix to generated operation result type names
-   */
-  operationResultSuffix: string;
-  /**
-   * @default false
-   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
-   */
-  dedupeOperationSuffix: boolean;
-  /**
-   * @default false
-   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
-   */
-  omitOperationSuffix: boolean;
+  gqlImport?: string;
   /**
    * @default false
    * @description Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.
    */
-  noExport: boolean;
+  noExport?: boolean;
+  /**
+   * @default false
+   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
+   */
+  dedupeOperationSuffix?: boolean;
+  /**
+   * @default false
+   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+   */
+  omitOperationSuffix?: boolean;
+  /**
+   * @default ""
+   * @description Adds a suffix to generated operation result type names
+   */
+  operationResultSuffix?: string;
   /**
    * @default ""
    * @description Changes the GraphQL operations variables prefix.
    */
-  documentVariablePrefix: string;
+  documentVariablePrefix?: string;
   /**
    * @default Document
    * @description Changes the GraphQL operations variables suffix.
    */
-  documentVariableSuffix: string;
+  documentVariableSuffix?: string;
   /**
    * @default ""
    * @description Changes the GraphQL fragments variables prefix.
    */
-  fragmentVariablePrefix: string;
+  fragmentVariablePrefix?: string;
   /**
    * @default FragmentDoc
    * @description Changes the GraphQL fragments variables suffix.
    */
-  fragmentVariableSuffix: string;
+  fragmentVariableSuffix?: string;
   /**
    * @default graphQLTag
    * @description Declares how DocumentNode are created:
@@ -114,6 +103,12 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
    */
   documentMode?: DocumentMode;
+  /**
+   * @default ""
+   * @description This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
+   * This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
+   */
+  importOperationTypesFrom?: string;
   /**
    * @default ""
    * @description This config should be used if `documentMode` is `external`. This has 2 usage:
@@ -134,16 +129,22 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * ```
    *
    */
-  importDocumentNodeExternallyFrom?: 'near-operation-file' | string;
+  importDocumentNodeExternallyFrom?: string;
+}
 
-  // The following are internal, and used by presets
-  /**
-   * @ignore
-   */
+export interface ClientSideBasePluginConfig extends ParsedConfig {
+  gqlImport: string;
+  operationResultSuffix: string;
+  dedupeOperationSuffix: boolean;
+  omitOperationSuffix: boolean;
+  noExport: boolean;
+  documentVariablePrefix: string;
+  documentVariableSuffix: string;
+  fragmentVariablePrefix: string;
+  fragmentVariableSuffix: string;
+  documentMode?: DocumentMode;
+  importDocumentNodeExternallyFrom?: 'near-operation-file' | string;
   importOperationTypesFrom?: string;
-  /**
-   * @ignore
-   */
   globalNamespace?: boolean;
 }
 
@@ -257,7 +258,11 @@ export class ClientSideBaseVisitor<
     const fragments = this._transformFragments(node);
 
     const doc = this._prepareDocument(`
-    ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
+    ${
+      print(node)
+        .split('\\')
+        .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
+    }
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
