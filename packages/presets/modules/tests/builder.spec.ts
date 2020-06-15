@@ -203,27 +203,27 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
   expect(output).toContain(`import * as gm from "graphql-modules";`);
 
   expect(output).toBeSimilarStringTo(`
-    export interface ResolveMiddlewareMap {
+    export interface MiddlewareMap {
       '*'?: {
-        '*'?: gm.ResolveMiddleware[];
+        '*'?: gm.Middleware[];
       };
       Article?: {
-        '*'?: gm.ResolveMiddleware[];
-        id?: gm.ResolveMiddleware[];
-        title?: gm.ResolveMiddleware[];
-        text?: gm.ResolveMiddleware[];
-        author?: gm.ResolveMiddleware[];
-        comments?: gm.ResolveMiddleware[];
+        '*'?: gm.Middleware[];
+        id?: gm.Middleware[];
+        title?: gm.Middleware[];
+        text?: gm.Middleware[];
+        author?: gm.Middleware[];
+        comments?: gm.Middleware[];
       };
       User?: {
-        '*'?: gm.ResolveMiddleware[];
-        articles?: gm.ResolveMiddleware[];
+        '*'?: gm.Middleware[];
+        articles?: gm.Middleware[];
       };
       Query?: {
-        '*'?: gm.ResolveMiddleware[];
-        articles?: gm.ResolveMiddleware[];
-        articleById?: gm.ResolveMiddleware[];
-        articlesByUser?: gm.ResolveMiddleware[];
+        '*'?: gm.Middleware[];
+        articles?: gm.Middleware[];
+        articleById?: gm.Middleware[];
+        articlesByUser?: gm.Middleware[];
       };
     };
   `);

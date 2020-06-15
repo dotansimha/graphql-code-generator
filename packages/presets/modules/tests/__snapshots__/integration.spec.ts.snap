@@ -40,35 +40,35 @@ export interface Resolvers {
   User?: UserResolvers;
 };
 
-export interface ResolveMiddlewareMap {
+export interface MiddlewareMap {
   '*'?: {
-    '*'?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
   };
   Paypal?: {
-    '*'?: gm.ResolveMiddleware[];
-    id?: gm.ResolveMiddleware[];
-    url?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    url?: gm.Middleware[];
   };
   CreditCard?: {
-    '*'?: gm.ResolveMiddleware[];
-    id?: gm.ResolveMiddleware[];
-    cardNumber?: gm.ResolveMiddleware[];
-    cardOwner?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    cardNumber?: gm.Middleware[];
+    cardOwner?: gm.Middleware[];
   };
   User?: {
-    '*'?: gm.ResolveMiddleware[];
-    paymentOptions?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    paymentOptions?: gm.Middleware[];
   };
   Donation?: {
-    '*'?: gm.ResolveMiddleware[];
-    id?: gm.ResolveMiddleware[];
-    sender?: gm.ResolveMiddleware[];
-    recipient?: gm.ResolveMiddleware[];
-    amount?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    sender?: gm.Middleware[];
+    recipient?: gm.Middleware[];
+    amount?: gm.Middleware[];
   };
   Mutation?: {
-    '*'?: gm.ResolveMiddleware[];
-    donate?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    donate?: gm.Middleware[];
   };
 };
 "
