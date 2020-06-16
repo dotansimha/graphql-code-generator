@@ -1,9 +1,10 @@
-import { transformComment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { StringValueNode, NameNode } from 'graphql';
+import { transformComment } from './common';
 const stripIndent = require('strip-indent');
 
 export type Access = 'private' | 'public' | 'protected';
-export type Kind = 'class' | 'interface' | 'enum';
+export type Kind = 'namespace' | 'class' | 'interface' | 'enum';
 export type MemberFlags = { transient?: boolean; final?: boolean; volatile?: boolean; static?: boolean };
 export type ClassMember = { value: string; name: string; access: Access; type: string; annotations: string[]; flags: MemberFlags };
 export type ClassMethod = { methodAnnotations: string[]; args: Partial<ClassMember>[]; implementation: string; name: string; access: Access; returnType: string | null; returnTypeAnnotations: string[]; flags: MemberFlags };
@@ -61,7 +62,7 @@ export class CSharpDeclarationBlock {
 
   withComment(comment: string | StringValueNode | null): CSharpDeclarationBlock {
     if (comment) {
-      this._comment = transformComment(comment, 0);
+      this._comment = transformComment(comment, 1);
     }
 
     return this;
@@ -178,25 +179,30 @@ ${indentMultiline(method.implementation)}
         name = this._name;
       }
 
-      let extendStr = '';
-      let implementsStr = '';
-      let annotatesStr = '';
-      const final = this._final ? ' final' : '';
-      const isStatic = this._static ? ' static' : '';
+      if (this._kind === 'namespace') {
+        result += `${this._kind} ${name} `;
 
-      if (this._extendStr.length > 0) {
-        extendStr = ` : ${this._extendStr.join(', ')}`;
+      } else {
+        let extendStr = '';
+        let implementsStr = '';
+        let annotatesStr = '';
+        const final = this._final ? ' final' : '';
+        const isStatic = this._static ? ' static' : '';
+
+        if (this._extendStr.length > 0) {
+          extendStr = ` : ${this._extendStr.join(', ')}`;
+        }
+
+        if (this._implementsStr.length > 0) {
+          implementsStr = ` : ${this._implementsStr.join(', ')}`;
+        }
+
+        if (this._annotations.length > 0) {
+          annotatesStr = this._annotations.map(a => `@${a}`).join('\n') + '\n';
+        }
+        
+        result += `${annotatesStr}${this._access}${isStatic}${final} ${this._kind} ${name}${extendStr}${implementsStr} `;
       }
-
-      if (this._implementsStr.length > 0) {
-        implementsStr = ` : ${this._implementsStr.join(', ')}`;
-      }
-
-      if (this._annotations.length > 0) {
-        annotatesStr = this._annotations.map(a => `@${a}`).join('\n') + '\n';
-      }
-
-      result += `${annotatesStr}${this._access}${isStatic}${final} ${this._kind} ${name}${extendStr}${implementsStr} `;
     }
 
     const members = this._members.length ? indentMultiline(stripIndent(this._members.map(member => this.printMember(member) + ';').join('\n'))) : null;
