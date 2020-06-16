@@ -129,11 +129,11 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
   private _operationSuffix(operationType: string): string {
     const defaultSuffix = 'GQL';
     switch (operationType) {
-      case 'Query':
+      case 'query':
         return this.config.querySuffix || defaultSuffix;
-      case 'Mutation':
+      case 'mutation':
         return this.config.mutationSuffix || defaultSuffix;
-      case 'Subscription':
+      case 'subscription':
         return this.config.subscriptionSuffix || defaultSuffix;
       default:
         return defaultSuffix;
