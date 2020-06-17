@@ -9,29 +9,32 @@ export function buildPackageNameFromPath(path: string): string {
     .replace(/\//g, '.');
 }
 
-export function wrapTypeWithModifiers(baseType: string, typeNode: TypeNode, listType = 'IEnumerable'): string {
-  if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return wrapTypeWithModifiers(baseType, typeNode.type, listType);
-  } else if (typeNode.kind === Kind.LIST_TYPE) {
-    const innerType = wrapTypeWithModifiers(baseType, typeNode.type, listType);
-
-    return `${listType}<${innerType}>`;
-  } else {
-    return baseType;
+export function getListInnerTypeNode(typeNode: TypeNode): TypeNode {
+  if (typeNode.kind === Kind.LIST_TYPE) {
+    return typeNode.type;
+  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
+    return typeNode.type.type;
   }
+  return typeNode;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment) {
-      return '';
+    return '';
   }
   if (isStringValueNode(comment)) {
-      comment = comment.value;
+    comment = comment.value;
   }
-  comment = comment.trimStart().split('*/').join('*\\/');
+  comment = comment
+    .trimStart()
+    .split('*/')
+    .join('*\\/');
   let lines = comment.split('\n');
   lines = ['/// <summary>', ...lines.map(line => `/// ${line}`), '/// </summary>'];
-  return lines.map(line => indent(line, indentLevel)).concat('').join('\n');
+  return lines
+    .map(line => indent(line, indentLevel))
+    .concat('')
+    .join('\n');
 }
 
 function isStringValueNode(node: any): node is StringValueNode {
