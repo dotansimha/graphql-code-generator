@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "1.15.3",
+  "version": "1.15.4",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.15.3",
+    "@graphql-codegen/plugin-helpers": "1.15.4",
     "@graphql-tools/utils": "^6.0.0",
     "tslib": "~2.0.0"
   },
