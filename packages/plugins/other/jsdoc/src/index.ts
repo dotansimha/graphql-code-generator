@@ -190,6 +190,18 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return createDocBlock([`@typedef {${valueType}} ${node.name}`, createDescriptionBlock(node)]);
       },
     },
+    OperationDefinition: {
+      enter() {
+        /** This plugin currently does not support operations yet. */
+        return null;
+      },
+    },
+    FragmentDefinition: {
+      enter() {
+        /** This plugin currently does not support fragments yet. */
+        return null;
+      },
+    },
   });
 
   return schemaTypes.join('\n\n');
