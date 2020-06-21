@@ -21,15 +21,24 @@ describe('C#', () => {
   });
 
   describe('Namespaces', () => {
-    it('Should wrap generated code block in namespace', async () => {
+    it('Should wrap generated code block in namespace using default name', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum ns {
           dummy
         }
       `);
       const result = await plugin(schema, [], {}, { outputFile: '' });
-
       expect(result).toContain('namespace GraphQLCodeGen {');
+    });
+
+    it('Should wrap generated code block in namespace using custom name', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum ns {
+          dummy
+        }
+      `);
+      const result = await plugin(schema, [], { namespaceName: 'MyCompany.MyGeneratedGql' }, { outputFile: '' });
+      expect(result).toContain('namespace MyCompany.MyGeneratedGql {');
     });
   });
 

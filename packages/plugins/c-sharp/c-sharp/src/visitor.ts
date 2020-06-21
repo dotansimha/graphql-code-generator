@@ -38,19 +38,20 @@ import {
 } from './common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
+  namespaceName: string;
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  private readonly namespaceName = 'GraphQLCodeGen';
   private readonly keywords = new Set(csharpKeywords);
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'List',
+      namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
       scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
     });
@@ -79,7 +80,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   public wrapWithNamespace(content: string): string {
     return new CSharpDeclarationBlock()
       .asKind('namespace')
-      .withName(this.namespaceName)
+      .withName(this.config.namespaceName)
       .withBlock(indentMultiline(content)).string;
   }
 
