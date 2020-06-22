@@ -17,6 +17,21 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
+   * @default GraphQLCodeGen
+   * @description Allow you to customize the namespace name.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/c-sharp/my-org/my-app/MyTypes.cs:
+   *     plugins:
+   *       - c-sharp
+   *     config:
+   *       namespaceName: MyCompany.MyNamespace
+   * ```
+   */
+  namespaceName?: string;
+  /**
    * @default Types
    * @description Allow you to customize the parent class name.
    *
