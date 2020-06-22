@@ -512,7 +512,7 @@ export const CommentAddedDocument = gql\`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | Observable<R>
+export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> & Observable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
