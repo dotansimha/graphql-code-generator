@@ -25,7 +25,6 @@ import {
   ValueNode,
   DirectiveNode,
   StringValueNode,
-  NameNode,
 } from 'graphql';
 import {
   C_SHARP_SCALARS,
@@ -34,7 +33,6 @@ import {
   isValueType,
   getListInnerTypeNode,
   FieldType,
-  csharpKeywords,
 } from './common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
@@ -45,7 +43,6 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
   private readonly namespaceName = 'GraphQLCodeGen';
-  private readonly keywords = new Set(csharpKeywords);
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
@@ -54,21 +51,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       className: rawConfig.className || 'Types',
       scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
     });
-  }
-
-  /**
-   * Checks name against list of keywords. If it is, will prefix value with @
-   *
-   * Note:
-   * This class should first invoke the convertName from base-visitor to convert the string or node
-   * value according the naming configuration, eg upper or lower case. Then resulting string checked
-   * against the list or keywords.
-   * However the generated C# code is not yet able to handle fields that are in a different case so
-   * the invocation of convertName is omitted purposely.
-   */
-  private convertSafeName(node: NameNode | string): string {
-    const name = typeof node === 'string' ? node : node.value;
-    return this.keywords.has(name) ? `@${name}` : name;
   }
 
   public getImports(): string {
@@ -87,7 +69,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.convertSafeName(this.config.className))
+      .withName(this.config.className)
       .withBlock(indentMultiline(content)).string;
   }
 
@@ -106,8 +88,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
       const enumHeader = this.getFieldHeader(node);
-      const enumOption = this.convertSafeName(node.name);
-      return enumHeader + indent(this.getEnumValue(enumName, enumOption));
+      return enumHeader + indent(`${this.getEnumValue(enumName, node.name.value)}`);
     };
   }
 
@@ -256,14 +237,13 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .map(arg => {
         const fieldHeader = this.getFieldHeader(arg);
         const typeToUse = this.resolveInputFieldType(arg.type);
-        const fieldName = this.convertSafeName(arg.name);
-        return fieldHeader + indent(`public ${typeToUse.fullTypeName} ${fieldName} { get; set; }`);
+        return fieldHeader + indent(`public ${typeToUse.fullTypeName} ${arg.name.value} { get; set; }`);
       })
       .join('\n\n');
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)} {
+${classSummary}public class ${name} {
   #region members
 ${classMembers}
   #endregion
@@ -284,14 +264,13 @@ ${classMembers}
         const fieldType = this.resolveInputFieldType(arg.type);
         const initialValue = this.initialValue(fieldType, arg.defaultValue);
         const initial = initialValue ? ` = ${initialValue};` : '';
-        const fieldName = this.convertSafeName(arg.name);
-        return fieldHeader + indent(`public ${fieldType.fullTypeName} ${fieldName} { get; set; }${initial}`);
+        return fieldHeader + indent(`public ${fieldType.fullTypeName} ${arg.name.value} { get; set; }${initial}`);
       })
       .join('\n\n');
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)} {
+${classSummary}public class ${name} {
   #region members
 ${classMembers}
   #endregion
