@@ -1,8 +1,9 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { GenericSdkVisitor, RawGenericSdkPluginConfig } from './visitor';
+import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind, visit } from 'graphql';
 import { extname } from 'path';
+import { RawGenericSdkPluginConfig } from './config';
+import { GenericSdkVisitor } from './visitor';
 
 export const plugin: PluginFunction<RawGenericSdkPluginConfig> = (
   schema: GraphQLSchema,

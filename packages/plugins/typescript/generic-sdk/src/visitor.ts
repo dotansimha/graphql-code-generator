@@ -4,14 +4,10 @@ import {
   DocumentMode,
   indentMultiline,
   LoadedFragment,
-  RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
-
-export interface RawGenericSdkPluginConfig extends RawClientSideBasePluginConfig {
-  usingObservableFrom?: string;
-}
+import { RawGenericSdkPluginConfig } from './config';
 
 export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
   usingObservableFrom: string;
