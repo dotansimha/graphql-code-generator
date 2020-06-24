@@ -540,8 +540,113 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`
-      export type MeQuery = {| me?: ?UserFieldsFragment |};
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type UserFieldsFragment = ({
+            ...$Pick<User, {| id: *, username: *, role?: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        });
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = {| me?: ?UserFieldsFragment |};
+        "
+      `);
+      validateFlow(result);
+    });
+
+    it('Should support fragment spread with flattenGeneratedTypes', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+          role
+        }
+
+        query me {
+          me {
+            ...UserFields
+          }
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [
+          {
+            location: '',
+            document: ast,
+          },
+        ],
+        { skipTypename: true, flattenGeneratedTypes: true },
+        { outputFile: '' }
+      );
+
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = {| me?: ?({
+              ...$Pick<User, {| id: *, username: *, role?: * |}>,
+            ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+          }) |};
+
+        export type UserFieldsFragment = ({
+            ...$Pick<User, {| id: *, username: *, role?: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        });
+        "
+      `);
+      validateFlow(result);
+    });
+
+    it('Should support fragment spread with flattenGeneratedTypes and preResolveTypes', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+          role
+        }
+
+        query me {
+          me {
+            ...UserFields
+          }
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [
+          {
+            location: '',
+            document: ast,
+          },
+        ],
+        { skipTypename: true, flattenGeneratedTypes: true, preResolveTypes: true },
+        { outputFile: '' }
+      );
+
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
+
+        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
+        "
       `);
       validateFlow(result);
     });

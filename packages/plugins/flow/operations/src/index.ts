@@ -10,19 +10,29 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   config: FlowDocumentsPluginConfig
 ) => {
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
-  const prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
-  const allAst = concatAST(documents.map(v => v.document));
+  const prefix = config.preResolveTypes
+    ? ''
+    : `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
+
+  let allAst = concatAST(documents.map(v => v.document));
+  const includedFragments = concatAST(rawDocuments.map(v => v.document)).definitions.filter(
+    d => d.kind === Kind.FRAGMENT_DEFINITION
+  );
+
+  // Fragments get removed when the types are optimized by relay
+  // We still want to export the types of the fragments included in the documents
+  if (config.flattenGeneratedTypes) {
+    allAst = concatAST([allAst, { kind: Kind.DOCUMENT, definitions: includedFragments }]);
+  }
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      fragmentDef => ({
-        node: fragmentDef,
-        name: fragmentDef.name.value,
-        onType: fragmentDef.typeCondition.name.value,
-        isExternal: false,
-      })
-    ),
+    ...(includedFragments as FragmentDefinitionNode[]).map(fragmentDef => ({
+      node: fragmentDef,
+      name: fragmentDef.name.value,
+      onType: fragmentDef.typeCondition.name.value,
+      isExternal: false,
+    })),
     ...(config.externalFragments || []),
   ];
 
@@ -30,5 +40,5 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
     leave: new FlowDocumentsVisitor(schema, config, allFragments),
   });
 
-  return [prefix, ...visitorResult.definitions].join('\n');
+  return ['// @flow', prefix, ...visitorResult.definitions].join('\n');
 };
