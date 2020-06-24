@@ -1,6 +1,7 @@
 export interface Field {
   baseType: string;
   isScalar: boolean;
+  required: boolean;
   nullableValueType: boolean;
   listType?: string;
 }
@@ -8,6 +9,7 @@ export interface Field {
 export class FieldType implements Field {
   baseType: string;
   isScalar: boolean;
+  required: boolean;
   nullableValueType: boolean;
   listType?: string;
 

@@ -35,7 +35,7 @@ import {
   getListInnerTypeNode,
   FieldType,
   csharpKeywords,
-} from './common/common';
+} from '../../common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -210,14 +210,16 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
         result = new FieldType({
           baseType,
           isScalar: true,
+          required,
           nullableValueType: !required && isValueType(baseType),
           listType,
         });
       } else {
         result = new FieldType({
           listType,
-          baseType: 'Object',
+          baseType: 'object',
           isScalar: true,
+          required,
           nullableValueType: false,
         });
       }
@@ -225,6 +227,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       result = new FieldType({
         baseType: `${this.convertName(schemaType.name)}`,
         isScalar: false,
+        required,
         nullableValueType: false,
         listType,
       });
@@ -232,6 +235,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       result = new FieldType({
         listType,
         baseType: this.convertName(schemaType.name),
+        required,
         nullableValueType: !required,
         isScalar: true,
       });
@@ -239,6 +243,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       result = new FieldType({
         baseType: `${schemaType.name}`,
         isScalar: false,
+        required,
         nullableValueType: false,
         listType,
       });

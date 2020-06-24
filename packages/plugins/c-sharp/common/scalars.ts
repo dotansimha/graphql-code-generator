@@ -4,7 +4,7 @@ export const C_SHARP_SCALARS = {
   Boolean: 'bool',
   Int: 'int',
   Float: 'float',
-  Date: 'DateTime'
+  Date: 'DateTime',
 };
 
 // All native C# built-in value types
@@ -18,9 +18,9 @@ export const csharpNativeValueTypes = [
   'double',
   'float',
   'int',
-  'uint',	
+  'uint',
   'long',
-  'ulong',	
+  'ulong',
   'short',
-  'ushort'
-]
+  'ushort',
+];
