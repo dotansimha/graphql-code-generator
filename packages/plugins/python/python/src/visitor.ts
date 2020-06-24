@@ -85,7 +85,7 @@ export class PyVisitor<
           : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName} = ${scalarValue}${this.getPunctuation(scalar)}`);
+      return comment + indent(`${scalarName} = Union[${scalarValue}]`);
     });
 
     return new PythonDeclarationBlock(this._declarationBlockConfig)

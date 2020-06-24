@@ -22,11 +22,11 @@ describe('Base Requirements', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       class Scalars:
-        ID = str
-        String = str
-        Boolean = bool
-        Int = int
-        Float = float
+        ID = Union[str]
+        String = Union[str]
+        Boolean = Union[bool]
+        Int = Union[int]
+        Float = Union[float]
     `);
   });
 
@@ -223,7 +223,7 @@ describe('Base Requirements', () => {
       }`);
     const result = await plugin(schema, [], { scalars: { MyScalar: 'Date' } }, {});
 
-    expect(result.content).toBeSimilarStringTo(`MyScalar = Date`);
+    expect(result.content).toBeSimilarStringTo(`MyScalar = Union[Date]`);
     expect(result.content).toBeSimilarStringTo(`
       class MyType:
         __typename: Optional[Literal["MyType"]]
@@ -240,7 +240,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
     expect(result.content).toBeSimilarStringTo(`
       # My custom scalar
-      A = any
+      A = Union[any]
     `);
   });
 
@@ -328,12 +328,12 @@ describe('Config', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     class Scalars:
-      ID = str
-      String = str
-      Boolean = bool
-      Int = int
-      Float = float
-      MyScalar = Date
+      ID = Union[str]
+      String = Union[str]
+      Boolean = Union[bool]
+      Int = Union[int]
+      Float = Union[float]
+      MyScalar = Union[Date]
     `);
 
     expect(result.content).toBeSimilarStringTo(`
