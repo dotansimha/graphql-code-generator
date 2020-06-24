@@ -167,6 +167,7 @@ export type SubscriptionCommentAddedArgs = {|
   repoFullName: $ElementType<Scalars, 'String'>,
 |};
 
+// @flow
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
 export type OnCommentAddedSubscriptionVariables = {
