@@ -26,7 +26,7 @@ describe('C# Operations', () => {
       expect(result.content).toContain('namespace GraphQLCodeGen {');
     });
 
-    it('Should wrap generated code block in namespace using custom name', async () => {
+    it('Should wrap generated code block in namespace using a custom name', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           me: Int!
@@ -120,12 +120,37 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest getFindMeGQL() {
+        public static GraphQLRequest Request(object variables = null) {
           return new GraphQLRequest {
             Query = FindMeDocument,
-            OperationName = "findMe"
+            OperationName = "findMe",
+            Variables = variables
           };
         }
+      `);
+    });
+
+    it('Should mark original method signature obsolete', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <remark>This method is obsolete. Use Request instead.</remark>
+        public static GraphQLRequest getFindMeGQL() {
       `);
     });
   });
@@ -203,12 +228,37 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest getUpdateMeGQL() {
+        public static GraphQLRequest Request(object variables = null) {
           return new GraphQLRequest {
             Query = UpdateMeDocument,
-            OperationName = "updateMe"
+            OperationName = "updateMe",
+            Variables = variables
           };
         }
+      `);
+    });
+
+    it('Should mark original method signature obsolete', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMe {
+          me
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <remark>This method is obsolete. Use Request instead.</remark>
+        public static GraphQLRequest getUpdateMeGQL() {
       `);
     });
   });
@@ -286,12 +336,37 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest getOnNotifyThemGQL() {
+        public static GraphQLRequest Request(object variables = null) {
           return new GraphQLRequest {
             Query = OnNotifyThemDocument,
-            OperationName = "onNotifyThem"
+            OperationName = "onNotifyThem",
+            Variables = variables
           };
         }
+      `);
+    });
+
+    it('Should mark original method signature obsolete', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          them: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyThem {
+          them
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <remark>This method is obsolete. Use Request instead.</remark>
+        public static GraphQLRequest getOnNotifyThemGQL() {
       `);
     });
   });
@@ -347,6 +422,112 @@ describe('C# Operations', () => {
             id
             username
           }"
+      `);
+    });
+  });
+
+  describe('Method summary header', () => {
+    it('Should generate a summary with required and optional scalar variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          runScalar(
+            id: Int
+            idr: Int!
+            name: String
+            namer: String!
+            flag: Boolean
+            flagr: Boolean!
+            flt: Float
+            fltr: Float!
+          ): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query RunScalar(
+          $id: Int
+          $idr: Int!
+          $name: String
+          $namer: String!
+          $flag: Boolean
+          $flagr: Boolean!
+          $flt: Float
+          $fltr: Float!
+        ) {
+          runScalar(id: $id, idr: $idr, name: $name, namer: $namer, flagr: $flagr, flt: $flt, fltr: $fltr)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <summary>
+        /// RunScalarGQL.Request
+        /// <para>Required variables:<br/> { idr=(int), namer=(string), flagr=(bool), fltr=(float)  }</para>
+        /// <para>Optional variables:<br/> { id=(int), name=(string), flag=(bool), flt=(float) }</para>
+        /// </summary>
+      `);
+    });
+
+    it('Should generate a summary with required and optional for complex variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum SortBy {
+          Asc
+          Desc
+        }
+        type Data {
+          flag: Boolean
+        }
+        type Query {
+          runComplex(sort: SortBy, complex: Data, arr: [ID!]!): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query RunComplex($sort: SortBy, $complex: Data, $arr: [ID!]!) {
+          runComplex(sort: $sort, complex: $complex, arr: $arr)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <summary>
+        /// RunComplexGQL.Request
+        /// <para>Required variables:<br/> { arr=(string[]) }</para>
+        /// <para>Optional variables:<br/> { sort=(SortBy), complex=(Data) }</para>
+        /// </summary>
+      `);
+    });
+
+    it('Should generate a summary without variables if query does not have variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          runSimple: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query RunSimple {
+          runSimple
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        /// <summary>
+        /// RunSimpleGQL.Request
+        /// </summary>
       `);
     });
   });

@@ -4,11 +4,22 @@ import {
   DocumentMode,
   LoadedFragment,
   indentMultiline,
+  getBaseTypeNode,
+  buildScalars,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, print, visit, GraphQLSchema } from 'graphql';
+import {
+  OperationDefinitionNode,
+  print,
+  visit,
+  GraphQLSchema,
+  Kind,
+  VariableDefinitionNode,
+  isScalarType,
+} from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { getListInnerTypeNode, C_SHARP_SCALARS } from '../../common/common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;
@@ -53,6 +64,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix || defaultSuffix,
         mutationSuffix: rawConfig.mutationSuffix || defaultSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix || defaultSuffix,
+        scalars: buildScalars(schema, rawConfig.scalars, C_SHARP_SCALARS),
       },
       documents
     );
@@ -126,6 +138,26 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
   }
 
+  private _gqlInputSignature(variable: VariableDefinitionNode): { signature: string; required: boolean } {
+    const typeNode = variable.type;
+    const innerType = getBaseTypeNode(typeNode);
+    const schemaType = this._schema.getType(innerType.name.value);
+
+    const name = variable.variable.name.value;
+    const baseType = !isScalarType(schemaType) ? innerType.name.value : this.scalars[schemaType.name] || 'object';
+
+    const isArray =
+      typeNode.kind === Kind.LIST_TYPE ||
+      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
+    const required = (isArray ? getListInnerTypeNode(typeNode) : typeNode).kind === Kind.NON_NULL_TYPE;
+    const requiredArray = isArray && typeNode.kind === Kind.NON_NULL_TYPE;
+
+    return {
+      required: !isArray ? required : requiredArray,
+      signature: !isArray ? `${name}=(${baseType})` : `${name}=(${baseType}[])`,
+    };
+  }
+
   private _operationSuffix(operationType: string): string {
     switch (operationType) {
       case 'query':
@@ -184,14 +216,38 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
       operationVariablesTypes,
     });
 
+    const inputSignatures = node.variableDefinitions?.map(v => this._gqlInputSignature(v));
+    const inputArgsHint = inputSignatures?.length
+      ? `
+      /// <para>Required variables:<br/> { ${inputSignatures
+        .filter(sig => sig.required)
+        .map(sig => sig.signature)
+        .join(', ')} }</para>
+      /// <para>Optional variables:<br/> { ${inputSignatures
+        .filter(sig => !sig.required)
+        .map(sig => sig.signature)
+        .join(', ')} }</para>`
+      : '';
+
+    // Should use ObsoleteAttribute but VS treats warnings as errors which would be super annoying so use remark comment instead
+    const obsoleteMessage = '/// <remark>This method is obsolete. Use Request instead.</remark>';
+
     const content = `
     public class ${serviceName} {
-
-      public static GraphQLRequest get${serviceName}() {
+      /// <summary>
+      /// ${serviceName}.Request ${inputArgsHint}
+      /// </summary>
+      public static GraphQLRequest Request(object variables = null) {
         return new GraphQLRequest {
           Query = ${this._getDocumentNodeVariable(node, documentVariableName)},
-          OperationName = "${node.name.value}"
+          OperationName = "${node.name.value}",
+          Variables = variables
         };
+      }
+
+      ${obsoleteMessage}
+      public static GraphQLRequest get${serviceName}() {
+        return Request();
       }
       ${this._namedClient(node)}
       ${documentString}
