@@ -1,3 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Flow Operations Plugin Output options Should respect flow option useFlowReadOnlyTypes 1`] = `undefined`;
+exports[`Flow Operations Plugin Output options Should respect flow option useFlowReadOnlyTypes 1`] = `
+"type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+export type CurrentUserQueryVariables = {};
+
+
+export type CurrentUserQuery = {| +me?: ?({
+      ...$Pick<User, {| +id: *, +username: *, +role?: * |}>,
+    ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
+  }) |};
+"
+`;

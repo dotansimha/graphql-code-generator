@@ -40,5 +40,8 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
     leave: new FlowDocumentsVisitor(schema, config, allFragments),
   });
 
-  return ['// @flow', prefix, ...visitorResult.definitions].join('\n');
+  return {
+    prepend: ['// @flow \n'],
+    content: [prefix, ...visitorResult.definitions].join('\n'),
+  };
 };
