@@ -1,5 +1,7 @@
 /* @flow */
 
+// @flow
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {|
   ID: string,
@@ -167,7 +169,6 @@ export type SubscriptionCommentAddedArgs = {|
   repoFullName: $ElementType<Scalars, 'String'>,
 |};
 
-// @flow
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
 export type OnCommentAddedSubscriptionVariables = {

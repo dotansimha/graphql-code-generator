@@ -204,21 +204,29 @@ describe('Flow Operations Plugin', () => {
         await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' }),
       ]);
 
-      expect(result).toBeSimilarStringTo(`
-      export type NotificationsQuery = ({
-        ...{ __typename?: 'Query' },
-      ...{| notifications: Array<({
-          ...{ __typename?: 'TextNotification' },
-        ...$Pick<Types.TextNotification, {| text: *, id: * |}>
-      }) | ({
-          ...{ __typename?: 'ImageNotification' },
-        ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
-        ...{| metadata: ({
-            ...{ __typename?: 'ImageMetadata' },
-          ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
-        }) |}
-      })> |}
-    });
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow 
+
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type NotificationsQueryVariables = {};
+
+
+        export type NotificationsQuery = ({
+            ...{ __typename?: 'Query' },
+          ...{| notifications: Array<({
+              ...{ __typename?: 'TextNotification' },
+            ...$Pick<Types.TextNotification, {| text: *, id: * |}>
+          }) | ({
+              ...{ __typename?: 'ImageNotification' },
+            ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
+            ...{| metadata: ({
+                ...{ __typename?: 'ImageMetadata' },
+              ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
+            }) |}
+          })> |}
+        });
+        "
       `);
       validateFlow(result);
     });
