@@ -2897,10 +2897,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
   integrity sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
 
-"@types/react@16.9.39":
-  version "16.9.39"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.39.tgz#d400fd57cef4cdd6c3a6286506e230e0b2995bba"
-  integrity sha512-kpdbGez6hqN9Ihcoi6flShP+ka9XxSBPes1UOBPLmbH6oRiBLkrh2VrtWosTy/l5LKGYSGoWf2WPFRCU4gdRmg==
+"@types/react@16.9.40":
+  version "16.9.40"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.40.tgz#10d53b61bb364af0f04eecfa9da31e9962844ee9"
+  integrity sha512-OCkF5au6H5tn7JCMq7fuutYeawzFezrpHaRvI+Zq+n386lkU0fGrQMAB5YP/WzBiQa8tAe1IXA61+lYCqLfMZg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
