@@ -9,7 +9,7 @@ describe('Base Requirements', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
 
-    expect(result.prepend).toContain('from typing import Optional, List, Literal');
+    expect(result.prepend).toContain('from typing import Optional, List, Literal, Union, Any');
     expect(result.prepend).toContain('from enum import Enum');
     expect(result.prepend).toContain('any = Any');
   });

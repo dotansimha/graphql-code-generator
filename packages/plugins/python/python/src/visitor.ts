@@ -64,7 +64,7 @@ export class PyVisitor<
 
   public getScalarsImports(): string[] {
     return [
-      'from typing import Optional, List, Literal',
+      'from typing import Optional, List, Literal, Union, Any',
       'from enum import Enum',
       'any = Any', // TODO: Fix this. The issue comes in passing a distinct defaultValue to buildScalars
       ...super.getScalarsImports(),
@@ -83,7 +83,6 @@ export class PyVisitor<
         scalarType && scalarType.astNode && scalarType.description
           ? transformPythonComment(scalarType.description, 1)
           : '';
-      const { scalar } = this._parsedConfig.declarationKind;
 
       return comment + indent(`${scalarName} = Union[${scalarValue}]`);
     });
