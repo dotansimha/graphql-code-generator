@@ -144,7 +144,7 @@ describe('TypeScript Resolvers Plugin', () => {
       };
       const result = await plugin(schema, [], config, { outputFile: '' });
       const content = mergeOutputs([result]);
-      console.log(content);
+      expect(content).toMatchSnapshot();
     });
   });
 
