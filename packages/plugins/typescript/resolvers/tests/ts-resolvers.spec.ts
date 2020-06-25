@@ -135,6 +135,19 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  describe('Config', () => {
+    it('namespacedImportName - should work correctly with imported namespaced type', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        namespacedImportName: 'Types',
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+      const content = mergeOutputs([result]);
+      expect(content).toMatchSnapshot();
+    });
+  });
+
   describe('Enums', () => {
     it('Should not generate enum internal values resolvers when enum doesnt have enumValues set', async () => {
       const testSchema = buildSchema(/* GraphQL */ `

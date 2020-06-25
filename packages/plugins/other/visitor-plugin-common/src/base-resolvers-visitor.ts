@@ -1,7 +1,7 @@
-import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
+import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap, DeclarationKind } from './types';
+import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap, DeclarationKind, ConvertOptions } from './types';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
@@ -36,6 +36,7 @@ import {
   GraphQLObjectType,
   InputValueDefinitionNode,
   EnumTypeDefinitionNode,
+  ASTNode,
 } from 'graphql';
 
 import { OperationVariablesToObject } from './variables-to-object';
@@ -59,6 +60,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumPrefix: boolean;
   optionalResolveType: boolean;
   immutableTypes: boolean;
+  namespacedImportName: string;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -272,6 +274,12 @@ export interface RawResolversConfig extends RawConfig {
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
    */
   immutableTypes?: boolean;
+  /**
+   * @default ''
+   * @description Prefixes all GraphQL related generated types with that value, as namespaces import.
+   * You can use this featuere to allow seperation of plugins to different files.
+   */
+  namespacedImportName?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -315,6 +323,7 @@ export class BaseResolversVisitor<
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
+      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
@@ -327,7 +336,11 @@ export class BaseResolversVisitor<
     autoBind(this);
     this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+    this._variablesTransfomer = new OperationVariablesToObject(
+      this.scalars,
+      this.convertName,
+      this.config.namespacedImportName
+    );
     this._resolversTypes = this.createResolversFields(
       type => this.applyResolverTypeWrapper(type),
       type => this.clearResolverTypeWrapper(type),
@@ -393,6 +406,18 @@ export class BaseResolversVisitor<
     }
 
     return false;
+  }
+
+  public convertName(
+    node: ASTNode | string,
+    options?: BaseVisitorConvertOptions & ConvertOptions,
+    applyNamespacedImport = false
+  ): string {
+    const sourceType = super.convertName(node, options);
+
+    return `${
+      applyNamespacedImport && this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
+    }${sourceType}`;
   }
 
   // Kamil: this one is heeeeavvyyyy
@@ -464,7 +489,7 @@ export class BaseResolversVisitor<
           .join(' | ');
       } else {
         shouldApplyOmit = true;
-        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix });
+        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       }
 
       if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
@@ -806,7 +831,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   protected _getScalar(name: string): string {
-    return `Scalars['${name}']`;
+    return `${this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''}Scalars['${name}']`;
   }
 
   NamedType(node: NamedTypeNode): string {
@@ -816,7 +841,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       return this._getScalar(nameStr);
     }
 
-    return this.convertName(node);
+    return this.convertName(node, null, true);
   }
 
   NonNullType(node: NonNullTypeNode): string {
@@ -868,9 +893,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${this.convertName(parentName, {
-            useTypesPrefix: true,
-          }) +
+        ? `${this.convertName(
+            parentName,
+            {
+              useTypesPrefix: true,
+            },
+            true
+          ) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,

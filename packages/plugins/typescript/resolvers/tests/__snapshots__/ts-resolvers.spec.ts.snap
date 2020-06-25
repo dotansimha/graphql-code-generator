@@ -1,0 +1,173 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 1`] = `
+"import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
+
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+}
+
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+}
+
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
+
+export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+  parent: TParent,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Types.Maybe<TTypes> | Promise<Types.Maybe<TTypes>>;
+
+export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+  next: NextResolverFn<TResult>,
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = ResolversObject<{
+  String: ResolverTypeWrapper<Types.Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Types.Scalars['Boolean']>;
+  MyType: ResolverTypeWrapper<Types.MyType>;
+  MyOtherType: ResolverTypeWrapper<Types.MyOtherType>;
+  Query: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<{}>;
+  Node: ResolversTypes['SomeNode'];
+  ID: ResolverTypeWrapper<Types.Scalars['ID']>;
+  SomeNode: ResolverTypeWrapper<Types.SomeNode>;
+  MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+  MyScalar: ResolverTypeWrapper<Types.Scalars['MyScalar']>;
+  Int: ResolverTypeWrapper<Types.Scalars['Int']>;
+}>;
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = ResolversObject<{
+  String: Types.Scalars['String'];
+  Boolean: Types.Scalars['Boolean'];
+  MyType: Types.MyType;
+  MyOtherType: Types.MyOtherType;
+  Query: {};
+  Subscription: {};
+  Node: ResolversParentTypes['SomeNode'];
+  ID: Types.Scalars['ID'];
+  SomeNode: Types.SomeNode;
+  MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+  MyScalar: Types.Scalars['MyScalar'];
+  Int: Types.Scalars['Int'];
+}>;
+
+export type MyDirectiveDirectiveArgs = {   arg: Types.Scalars['Int'];
+  arg2: Types.Scalars['String'];
+  arg3: Types.Scalars['Boolean']; };
+
+export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = ResolversObject<{
+  foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  otherType?: Resolver<Types.Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+  withArgs?: Resolver<Types.Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<Types.MyTypeWithArgsArgs, 'arg2'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
+export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = ResolversObject<{
+  bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
+}>;
+
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  somethingChanged?: SubscriptionResolver<Types.Maybe<ResolversTypes['MyOtherType']>, \\"somethingChanged\\", ParentType, ContextType>;
+}>;
+
+export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+}>;
+
+export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
+export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
+}>;
+
+export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
+  name: 'MyScalar';
+}
+
+export type Resolvers<ContextType = any> = ResolversObject<{
+  MyType?: MyTypeResolvers<ContextType>;
+  MyOtherType?: MyOtherTypeResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
+  Node?: NodeResolvers;
+  SomeNode?: SomeNodeResolvers<ContextType>;
+  MyUnion?: MyUnionResolvers;
+  MyScalar?: GraphQLScalarType;
+}>;
+
+
+/**
+ * @deprecated
+ * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
+ */
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+export type DirectiveResolvers<ContextType = any> = ResolversObject<{
+  myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
+}>;
+
+
+/**
+ * @deprecated
+ * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
+ */
+export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+`;
