@@ -1,6 +1,6 @@
 import { indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { StringValueNode, NameNode } from 'graphql';
-import { transformComment } from './common';
+import { transformComment } from './utils';
 const stripIndent = require('strip-indent');
 
 export type Access = 'private' | 'public' | 'protected';

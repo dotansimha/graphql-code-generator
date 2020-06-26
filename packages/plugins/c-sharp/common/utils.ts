@@ -1,21 +1,13 @@
 import { Kind, TypeNode, StringValueNode } from 'graphql';
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { csharpNativeValueTypes } from './common';
+import { csharpNativeValueTypes } from './scalars';
+import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
 
 export function buildPackageNameFromPath(path: string): string {
   const unixify = require('unixify');
   return unixify(path || '')
     .replace(/src\/main\/.*?\//, '')
     .replace(/\//g, '.');
-}
-
-export function getListInnerTypeNode(typeNode: TypeNode): TypeNode {
-  if (typeNode.kind === Kind.LIST_TYPE) {
-    return typeNode.type;
-  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
-    return typeNode.type.type;
-  }
-  return typeNode;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -45,4 +37,52 @@ export function isValueType(type: string): boolean {
   // Limitation: only checks the list of known built in value types
   // Eg .NET types and struct types won't be detected correctly
   return csharpNativeValueTypes.includes(type);
+}
+
+export function getListTypeField(typeNode: TypeNode): ListTypeField | undefined {
+  if (typeNode.kind === Kind.LIST_TYPE) {
+    return {
+      required: false,
+      type: getListTypeField(typeNode.type),
+    };
+  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
+    return Object.assign(getListTypeField(typeNode.type), {
+      required: true,
+    });
+  } else if (typeNode.kind === Kind.NON_NULL_TYPE) {
+    return getListTypeField(typeNode.type);
+  } else {
+    return undefined;
+  }
+}
+
+export function getListTypeDepth(listType: ListTypeField): number {
+  if (listType) {
+    return getListTypeDepth(listType.type) + 1;
+  } else {
+    return 0;
+  }
+}
+
+export function getListInnerTypeNode(typeNode: TypeNode): TypeNode {
+  if (typeNode.kind === Kind.LIST_TYPE) {
+    return getListInnerTypeNode(typeNode.type);
+  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
+    return getListInnerTypeNode(typeNode.type);
+  } else {
+    return typeNode;
+  }
+}
+
+export function wrapFieldType(
+  fieldType: CSharpFieldType,
+  listTypeField?: ListTypeField,
+  listType = 'IEnumerable'
+): string {
+  if (listTypeField) {
+    const innerType = wrapFieldType(fieldType, listTypeField.type, listType);
+    return `${listType}<${innerType}>`;
+  } else {
+    return fieldType.innerTypeName;
+  }
 }

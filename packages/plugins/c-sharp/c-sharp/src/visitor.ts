@@ -22,10 +22,10 @@ import {
   isScalarType,
   isInputObjectType,
   isEnumType,
-  ValueNode,
   DirectiveNode,
   StringValueNode,
   NameNode,
+  NamedTypeNode,
 } from 'graphql';
 import {
   C_SHARP_SCALARS,
@@ -33,8 +33,10 @@ import {
   transformComment,
   isValueType,
   getListInnerTypeNode,
-  FieldType,
+  CSharpFieldType,
   csharpKeywords,
+  wrapFieldType,
+  getListTypeField,
 } from '../../common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
@@ -125,7 +127,10 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .withBlock(enumBlock).string;
   }
 
-  getFieldHeader(node: InputValueDefinitionNode | FieldDefinitionNode | EnumValueDefinitionNode): string {
+  getFieldHeader(
+    node: InputValueDefinitionNode | FieldDefinitionNode | EnumValueDefinitionNode,
+    fieldType?: CSharpFieldType
+  ): string {
     const attributes = [];
     const commentText = transformComment(node.description?.value);
 
@@ -139,7 +144,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       attributes.push(`[JsonProperty("${node.name.value}")]`);
     }
 
-    if (node.kind === Kind.INPUT_VALUE_DEFINITION && node.type.kind === Kind.NON_NULL_TYPE) {
+    if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
       attributes.push(`[JsonRequired]`);
     }
 
@@ -169,90 +174,102 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return reason;
   }
 
-  initialValue(fieldType: FieldType, defaultValue?: ValueNode): string | undefined {
-    if (defaultValue) {
-      if (defaultValue.kind === Kind.INT || defaultValue.kind === Kind.BOOLEAN) {
-        return `${defaultValue.value}`;
-      } else if (defaultValue.kind === Kind.FLOAT) {
-        return `${defaultValue.value}f`;
-      } else if (defaultValue.kind === Kind.STRING) {
-        // TODO: to support/escape chars like " and \ in string value
-        return `"${defaultValue.value}"`;
-      } else if (defaultValue.kind === Kind.ENUM) {
-        return `${fieldType.baseType}.${defaultValue.value}`;
-      } else if (defaultValue.kind === Kind.LIST) {
-        // Does not work with all collection types, eg interfaces like IList and IEnumerable
-        // To keep it simple for now, exclude when typeName is referring to an interface
-        if (!/^I[A-Z]/.test(fieldType.fullTypeName)) {
-          const list = defaultValue.values.map(value => this.initialValue(fieldType, value)).join(', ');
-          return `new ${fieldType.fullTypeName}(new ${fieldType.innerTypeName}[] { ${list} })`;
-        }
-      } else if (defaultValue.kind === Kind.NULL) {
-        return 'null';
-      }
-    }
-    return undefined;
-  }
-
-  protected resolveInputFieldType(typeNode: TypeNode): FieldType {
+  protected resolveInputFieldType(typeNode: TypeNode, hasDefaultValue: Boolean = false): CSharpFieldType {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
-    const isArray =
-      typeNode.kind === Kind.LIST_TYPE ||
-      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    const required = (isArray ? getListInnerTypeNode(typeNode) : typeNode).kind === Kind.NON_NULL_TYPE;
-    const listType = isArray ? this.config.listType : undefined;
-    let result: FieldType = null;
+    const listType = getListTypeField(typeNode);
+    const required = getListInnerTypeNode(typeNode).kind === Kind.NON_NULL_TYPE;
+
+    let result: CSharpFieldType = null;
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
         const baseType = this.scalars[schemaType.name];
-        result = new FieldType({
-          baseType,
-          isScalar: true,
-          required,
-          nullableValueType: !required && isValueType(baseType),
+        result = new CSharpFieldType({
+          baseType: {
+            type: baseType,
+            required,
+            valueType: isValueType(baseType),
+          },
           listType,
         });
       } else {
-        result = new FieldType({
+        result = new CSharpFieldType({
+          baseType: {
+            type: 'object',
+            required,
+            valueType: false,
+          },
           listType,
-          baseType: 'object',
-          isScalar: true,
-          required,
-          nullableValueType: false,
         });
       }
     } else if (isInputObjectType(schemaType)) {
-      result = new FieldType({
-        baseType: `${this.convertName(schemaType.name)}`,
-        isScalar: false,
-        required,
-        nullableValueType: false,
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${this.convertName(schemaType.name)}`,
+          required,
+          valueType: false,
+        },
         listType,
       });
     } else if (isEnumType(schemaType)) {
-      result = new FieldType({
+      result = new CSharpFieldType({
+        baseType: {
+          type: this.convertName(schemaType.name),
+          required,
+          valueType: true,
+        },
         listType,
-        baseType: this.convertName(schemaType.name),
-        required,
-        nullableValueType: !required,
-        isScalar: true,
       });
     } else {
-      result = new FieldType({
-        baseType: `${schemaType.name}`,
-        isScalar: false,
-        required,
-        nullableValueType: false,
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${schemaType.name}`,
+          required,
+          valueType: false,
+        },
         listType,
       });
+    }
+
+    if (hasDefaultValue) {
+      // Required field is optional when default value specified, see #4273
+      (result.listType || result.baseType).required = false;
     }
 
     return result;
   }
 
-  protected buildObject(
+  protected buildClass(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<FieldDefinitionNode>,
+    interfaces?: ReadonlyArray<NamedTypeNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
+    const interfaceImpl =
+      interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
+    const classMembers = inputValueArray
+      .map(arg => {
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(arg.name);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
+      })
+      .join('\n\n');
+
+    return `
+#region ${name}
+${classSummary}public class ${this.convertSafeName(name)}${interfaceImpl} {
+  #region members
+${classMembers}
+  #endregion
+}
+#endregion`;
+  }
+
+  protected buildInterface(
     name: string,
     description: StringValueNode,
     inputValueArray: ReadonlyArray<FieldDefinitionNode>
@@ -260,25 +277,21 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const classSummary = transformComment(description?.value);
     const classMembers = inputValueArray
       .map(arg => {
-        const fieldHeader = this.getFieldHeader(arg);
-        const typeToUse = this.resolveInputFieldType(arg.type);
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
         const fieldName = this.convertSafeName(arg.name);
-        return fieldHeader + indent(`public ${typeToUse.fullTypeName} ${fieldName} { get; set; }`);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
       .join('\n\n');
 
     return `
-#region ${name}
-${classSummary}public class ${this.convertSafeName(name)} {
-  #region members
+${classSummary}public interface ${this.convertSafeName(name)} {
 ${classMembers}
-  #endregion
-}
-#endregion
-`;
+}`;
   }
 
-  protected buildInputTransfomer(
+  protected buildInputTransformer(
     name: string,
     description: StringValueNode,
     inputValueArray: ReadonlyArray<InputValueDefinitionNode>
@@ -286,12 +299,11 @@ ${classMembers}
     const classSummary = transformComment(description?.value);
     const classMembers = inputValueArray
       .map(arg => {
-        const fieldHeader = this.getFieldHeader(arg);
-        const fieldType = this.resolveInputFieldType(arg.type);
-        const initialValue = this.initialValue(fieldType, arg.defaultValue);
-        const initial = initialValue ? ` = ${initialValue};` : '';
+        const fieldType = this.resolveInputFieldType(arg.type, !!arg.defaultValue);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
         const fieldName = this.convertSafeName(arg.name);
-        return fieldHeader + indent(`public ${fieldType.fullTypeName} ${fieldName} { get; set; }${initial}`);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
       .join('\n\n');
 
@@ -323,20 +335,19 @@ ${classMembers}
   }
   #endregion
 }
-#endregion
-`;
+#endregion`;
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     const name = `${this.convertName(node)}`;
-    return this.buildInputTransfomer(name, node.description, node.fields);
+    return this.buildInputTransformer(name, node.description, node.fields);
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    return this.buildObject(node.name.value, node.description, node.fields);
+    return this.buildClass(node.name.value, node.description, node.fields, node.interfaces);
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
-    return this.buildObject(node.name.value, node.description, node.fields);
+    return this.buildInterface(node.name.value, node.description, node.fields);
   }
 }

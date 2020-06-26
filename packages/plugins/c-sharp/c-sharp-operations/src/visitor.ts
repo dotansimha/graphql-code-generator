@@ -19,7 +19,7 @@ import {
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { getListInnerTypeNode, C_SHARP_SCALARS } from '../../common/common';
+import { getListInnerTypeNode, C_SHARP_SCALARS, getListTypeField, getListTypeDepth } from '../../common/common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;
@@ -146,15 +146,14 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     const name = variable.variable.name.value;
     const baseType = !isScalarType(schemaType) ? innerType.name.value : this.scalars[schemaType.name] || 'object';
 
-    const isArray =
-      typeNode.kind === Kind.LIST_TYPE ||
-      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    const required = (isArray ? getListInnerTypeNode(typeNode) : typeNode).kind === Kind.NON_NULL_TYPE;
-    const requiredArray = isArray && typeNode.kind === Kind.NON_NULL_TYPE;
+    const listType = getListTypeField(typeNode);
+    const required = getListInnerTypeNode(typeNode).kind === Kind.NON_NULL_TYPE;
 
     return {
-      required: !isArray ? required : requiredArray,
-      signature: !isArray ? `${name}=(${baseType})` : `${name}=(${baseType}[])`,
+      required: listType ? listType.required : required,
+      signature: !listType
+        ? `${name}=(${baseType})`
+        : `${name}=(${baseType}${'[]'.repeat(getListTypeDepth(listType))})`,
     };
   }
 
@@ -217,7 +216,8 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     });
 
     const inputSignatures = node.variableDefinitions?.map(v => this._gqlInputSignature(v));
-    const inputArgsHint = inputSignatures?.length
+    const hasInputArgs = !!inputSignatures?.length;
+    const inputArgsHint = hasInputArgs
       ? `
       /// <para>Required variables:<br/> { ${inputSignatures
         .filter(sig => sig.required)
@@ -229,19 +229,23 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         .join(', ')} }</para>`
       : '';
 
-    // Should use ObsoleteAttribute but VS treats warnings as errors which would be super annoying so use remark comment instead
-    const obsoleteMessage = '/// <remark>This method is obsolete. Use Request instead.</remark>';
+    // Should use ObsoleteAttribute but VS treats warnings as errors which would be super annoying so use remarks comment instead
+    const obsoleteMessage = '/// <remarks>This method is obsolete. Use Request instead.</remarks>';
 
     const content = `
     public class ${serviceName} {
       /// <summary>
       /// ${serviceName}.Request ${inputArgsHint}
       /// </summary>
-      public static GraphQLRequest Request(object variables = null) {
+      public static GraphQLRequest Request(${hasInputArgs ? 'object variables = null' : ''}) {
         return new GraphQLRequest {
           Query = ${this._getDocumentNodeVariable(node, documentVariableName)},
-          OperationName = "${node.name.value}",
-          Variables = variables
+          OperationName = "${node.name.value}"${
+      hasInputArgs
+        ? `,
+          Variables = variables`
+        : ''
+    }
         };
       }
 
