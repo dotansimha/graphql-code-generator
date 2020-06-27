@@ -2,6 +2,8 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
+import fs from 'fs';
+
 describe('Base Requirements', () => {
   it('should import optional, list, and enum types', async () => {
     const schema = buildSchema(`type SimpleClass {
@@ -11,7 +13,6 @@ describe('Base Requirements', () => {
 
     expect(result.prepend).toContain('from typing import Optional, List, Literal, Union, Any');
     expect(result.prepend).toContain('from enum import Enum');
-    expect(result.prepend).toContain('any = Any');
   });
 
   it('should emit a scalars class', async () => {
@@ -39,6 +40,16 @@ describe('Base Requirements', () => {
       class SimpleClass:
         __typename: Optional[Literal["SimpleClass"]]
         attr: Scalars.String
+    `);
+  });
+
+  it('should define a less conflict-prone alias', async () => {
+    const schema = buildSchema(`type SimpleClass {
+      attr: String!
+    }`);
+    const result = await plugin(schema, [], {}, {});
+    expect(result.content).toBeSimilarStringTo(`
+      __GQL_CODEGEN_SimpleClass__ = SimpleClass
     `);
   });
 
@@ -121,7 +132,7 @@ describe('Base Requirements', () => {
     `);
   });
 
-  it('should create a class with every scalar', async () => {
+  it('should be able to create a class with every scalar', async () => {
     const schema = buildSchema(`type SimpleClass {
       attr: String!
       boolean: Boolean
@@ -151,13 +162,15 @@ describe('Base Requirements', () => {
     `);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-    class SimpleClass:
-      __typename: Optional[Literal["SimpleClass"]]
-      attr: Scalars.String
+      class SimpleClass:
+        __typename: Optional[Literal["SimpleClass"]]
+        attr: Scalars.String
+    `);
 
-    class ComplexClass:
-      __typename: Optional[Literal["ComplexClass"]]
-      complexAttr: Optional["SimpleClass"]
+    expect(result.content).toBeSimilarStringTo(`
+      class ComplexClass:
+        __typename: Optional[Literal["ComplexClass"]]
+        complexAttr: Optional["__GQL_CODEGEN_SimpleClass__"]
     `);
   });
 
@@ -172,10 +185,40 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
       BasicUnion = Union[Scalars.Int, Scalars.String]
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      class BasicType:
+        __typename: Optional[Literal["BasicType"]]
+        myUnion: "__GQL_CODEGEN_BasicUnion__"
+    `);
+  });
+
+  it('should output alias for union', async () => {
+    const schema = buildSchema(`
+      union BasicUnion = Int | String
+    `);
+    const result = await plugin(schema, [], {}, {});
+    expect(result.content).toBeSimilarStringTo(`
+      __GQL_CODEGEN_BasicUnion__ = BasicUnion
+    `);
+  });
+
+  it('should use use type alias for user-defined within unions', async () => {
+    const schema = buildSchema(`
+      type BasicType {
+        id: ID!
+      }
+
+      union BasicUnion = BasicType | String
+    `);
+    const result = await plugin(schema, [], {}, {});
+    expect(result.content).toBeSimilarStringTo(`
+      BasicUnion = Union[Scalars.Int, Scalars.String]
 
       class BasicType:
         __typename: Optional[Literal["BasicType"]]
-        myUnion: "BasicUnion"
+        myUnion: "__GQL_CODEGEN_BasicUnion__"
     `);
   });
 
@@ -194,12 +237,14 @@ describe('Base Requirements', () => {
     expect(result.content).toBeSimilarStringTo(`
       class MyInterface:
         field: Scalars.String
+    `);
 
+    expect(result.content).toBeSimilarStringTo(`
       class SubType(MyInterface):
         __typename: Optional[Literal["SubType"]]
         field: Scalars.String
         otherProp: Scalars.Boolean
-      `);
+    `);
   });
 
   it('should work for input types', async () => {
@@ -240,7 +285,7 @@ describe('Base Requirements', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
     expect(result.content).toBeSimilarStringTo(`
       # My custom scalar
-      A = Union[any]
+      A = Union[Any]
     `);
   });
 
@@ -392,7 +437,7 @@ describe('Config', () => {
       const result = await plugin(schema, [], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' });
 
       expect(result.content).toContain(`class E(Enum):`);
-      expect(result.content).toContain(`e: Optional["E"]`);
+      expect(result.content).toContain(`e: Optional["__GQL_CODEGEN_E__"]`);
     });
 
     it('Should enable typesPrefix for enums by default', async () => {
@@ -400,7 +445,7 @@ describe('Config', () => {
       const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result.content).toContain(`class IE(Enum):`);
-      expect(result.content).toContain(`e: Optional["IE"]`);
+      expect(result.content).toContain(`e: Optional["__GQL_CODEGEN_IE__"]`);
     });
 
     const schema = buildSchema(`
@@ -458,18 +503,18 @@ describe('Config', () => {
         class mytype:
           __typename: Optional[Literal["MyType"]]
           f: Optional[Scalars.String]
-          bar: Optional["myenum"]
+          bar: Optional["__GQL_CODEGEN_myenum__"]
           b_a_r: Optional[Scalars.String]
           myOtherField: Optional[Scalars.String]
         `);
       expect(result.content).toBeSimilarStringTo(`
         class my_type:
           __typename: Optional[Literal["My_Type"]]
-          linkTest: Optional["mytype"]
+          linkTest: Optional["__GQL_CODEGEN_mytype__"]
         `);
       expect(result.content).toBeSimilarStringTo(`
-        myunion = Union["my_type", "mytype"]
-        `);
+        myunion = Union["__GQL_CODEGEN_my_type__", "__GQL_CODEGEN_mytype__"]
+      `);
       expect(result.content).toBeSimilarStringTo(`
         class some_interface:
           id: Scalars.ID
@@ -492,8 +537,8 @@ describe('Config', () => {
       expect(result.content).toBeSimilarStringTo(`
         class query:
           __typename: Optional[Literal["Query"]]
-          something: Optional["myunion"]
-          use_interface: Optional["some_interface"]
+          something: Optional["__GQL_CODEGEN_myunion__"]
+          use_interface: Optional["__GQL_CODEGEN_some_interface__"]
       `);
     });
 
@@ -510,17 +555,17 @@ describe('Config', () => {
       class MyType:
         __typename: Optional[Literal["MyType"]]
         f: Optional[Scalars.String]
-        bar: Optional["MyEnum"]
+        bar: Optional["__GQL_CODEGEN_MyEnum__"]
         b_a_r: Optional[Scalars.String]
         myOtherField: Optional[Scalars.String]
       `);
       expect(result.content).toBeSimilarStringTo(`
       class My_Type:
         __typename: Optional[Literal["My_Type"]]
-        linkTest: Optional["MyType"]
+        linkTest: Optional["__GQL_CODEGEN_MyType__"]
       `);
       expect(result.content).toBeSimilarStringTo(`
-        MyUnion = Union["My_Type", "MyType"]
+        MyUnion = Union["__GQL_CODEGEN_My_Type__", "__GQL_CODEGEN_MyType__"]
       `);
       expect(result.content).toBeSimilarStringTo(`
       class Some_Interface:
@@ -544,8 +589,8 @@ describe('Config', () => {
       expect(result.content).toBeSimilarStringTo(`
         class Query:
           __typename: Optional[Literal["Query"]]
-          something: Optional["MyUnion"]
-          use_interface: Optional["Some_Interface"]
+          something: Optional["__GQL_CODEGEN_MyUnion__"]
+          use_interface: Optional["__GQL_CODEGEN_Some_Interface__"]
       `);
     });
 
@@ -563,16 +608,18 @@ describe('Config', () => {
       class IMyType:
         __typename: Optional[Literal["MyType"]]
         f: Optional[Scalars.String]
-        bar: Optional["IMyEnum"]
+        bar: Optional["__GQL_CODEGEN_IMyEnum__"]
         b_a_r: Optional[Scalars.String]
         myOtherField: Optional[Scalars.String]
       `);
       expect(result.content).toBeSimilarStringTo(`
         class IMy_Type:
           __typename: Optional[Literal["My_Type"]]
-          linkTest: Optional["IMyType"]
+          linkTest: Optional["__GQL_CODEGEN_IMyType__"]
       `);
-      expect(result.content).toBeSimilarStringTo(`IMyUnion = Union["IMy_Type", "IMyType"]`);
+      expect(result.content).toBeSimilarStringTo(
+        `IMyUnion = Union["__GQL_CODEGEN_IMy_Type__", "__GQL_CODEGEN_IMyType__"]`
+      );
       expect(result.content).toBeSimilarStringTo(`
         class ISome_Interface:
           id: Scalars.ID
@@ -595,8 +642,8 @@ describe('Config', () => {
       expect(result.content).toBeSimilarStringTo(`
         class IQuery:
           __typename: Optional[Literal["Query"]]
-          something: Optional["IMyUnion"]
-          use_interface: Optional["ISome_Interface"]
+          something: Optional["__GQL_CODEGEN_IMyUnion__"]
+          use_interface: Optional["__GQL_CODEGEN_ISome_Interface__"]
       `);
     });
   });
@@ -667,9 +714,12 @@ describe('Enum', () => {
         Newhope = 'NEWHOPE'
         Empire = 'EMPIRE'
         Jedi = 'JEDI'
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
       class Character:
         __typename: Optional[Literal["Character"]]
-        appearsIn: List["Episode"]
+        appearsIn: List["__GQL_CODEGEN_Episode__"]
     `);
   });
 

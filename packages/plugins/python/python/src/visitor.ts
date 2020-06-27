@@ -5,6 +5,8 @@ import {
   BaseTypesVisitor,
   ParsedTypesConfig,
   DeclarationKind,
+  buildScalars,
+  ParsedScalarsMap,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { PythonPluginConfig } from './config';
@@ -29,14 +31,29 @@ import { PythonScalars } from './scalars';
 
 const flatMap = require('array.prototype.flatmap');
 
-export interface PythonPluginParsedConfig extends ParsedTypesConfig {}
+export interface PythonPluginParsedConfig extends ParsedTypesConfig {
+  scalars: ParsedScalarsMap;
+}
 
 export class PyVisitor<
   PyRawConfig extends PythonPluginConfig = PythonPluginConfig,
   PyParsedConfig extends PythonPluginParsedConfig = PythonPluginParsedConfig
 > extends BaseTypesVisitor<PyRawConfig, PyParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: PyRawConfig, additionalConfig: Partial<PyParsedConfig> = {}) {
-    super(schema, pluginConfig, additionalConfig as PyParsedConfig, PythonScalars);
+    super(
+      schema,
+      {
+        ...pluginConfig,
+        declarationKind: {
+          scalar: 'scalar',
+        },
+      },
+      {
+        ...additionalConfig,
+        scalars: buildScalars(schema, pluginConfig.scalars, PythonScalars, 'Any'),
+      } as PyParsedConfig,
+      PythonScalars
+    );
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
@@ -66,7 +83,6 @@ export class PyVisitor<
     return [
       'from typing import Optional, List, Literal, Union, Any',
       'from enum import Enum',
-      'any = Any', // TODO: Fix this. The issue comes in passing a distinct defaultValue to buildScalars
       ...super.getScalarsImports(),
     ];
   }
@@ -112,7 +128,7 @@ export class PyVisitor<
     if (this.scalars[typeAsString] || this.config.enumValues[typeAsString]) {
       return super._getTypeForNode(node);
     } else {
-      return `"${super._getTypeForNode(node)}"`;
+      return `"__GQL_CODEGEN_${super._getTypeForNode(node)}__"`;
     }
   }
 
@@ -326,7 +342,7 @@ export class PyVisitor<
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : `"${this.convertName(t)}"`))
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this._getTypeForNode(t)))
       .join(', ');
 
     return new PythonDeclarationBlock(this._declarationBlockConfig)

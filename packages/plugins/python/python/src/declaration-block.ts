@@ -53,8 +53,10 @@ export class PythonDeclarationBlock extends DeclarationBlock {
       result += 'class ';
     }
 
-    if (this._name) {
-      result += this._name + (this._nameGenerics || '');
+    const name = this._name + (this._nameGenerics || '');
+
+    if (name) {
+      result += name;
     }
 
     switch (this._kind) {
@@ -76,7 +78,10 @@ export class PythonDeclarationBlock extends DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
 
       const before = ':' + blockWrapper;
-      const after = blockWrapper;
+      let after = blockWrapper;
+      if (this._kind !== 'scalar') {
+        after += `\n__GQL_CODEGEN_${name}__ = ${name}`;
+      }
 
       const block = [before, this._block, after].filter(val => !!val).join('\n');
 
@@ -90,6 +95,7 @@ export class PythonDeclarationBlock extends DeclarationBlock {
       if (this._kind && this._kind === 'union') {
         result += ']';
       }
+      result += `\n__GQL_CODEGEN_${name}__ = ${name}`;
     }
 
     return (this._comment ? this._comment : '') + result + '\n';
