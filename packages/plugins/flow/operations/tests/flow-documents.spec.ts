@@ -624,6 +624,11 @@ describe('Flow Operations Plugin', () => {
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
+        export type UserFieldsFragment = ({
+            ...$Pick<User, {| id: *, username: *, role?: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        });
+
         export type MeQueryVariables = {};
 
 
@@ -631,11 +636,6 @@ describe('Flow Operations Plugin', () => {
               ...$Pick<User, {| id: *, username: *, role?: * |}>,
             ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
           }) |};
-
-        export type UserFieldsFragment = ({
-            ...$Pick<User, {| id: *, username: *, role?: * |}>,
-          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-        });
         "
       `);
       validateFlow(result);
@@ -676,12 +676,12 @@ describe('Flow Operations Plugin', () => {
         "// @flow 
 
 
+        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
+
         export type MeQueryVariables = {};
 
 
         export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
-
-        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
         "
       `);
       validateFlow(result);

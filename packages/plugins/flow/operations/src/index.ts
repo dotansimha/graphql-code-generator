@@ -9,22 +9,16 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   rawDocuments: Types.DocumentFile[],
   config: FlowDocumentsPluginConfig
 ) => {
-  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
+  const documents = config.flattenGeneratedTypes
+    ? optimizeOperations(schema, rawDocuments, { includeFragments: true })
+    : rawDocuments;
 
   const prefix = config.preResolveTypes
     ? ''
     : `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
-  let allAst = concatAST(documents.map(v => v.document));
-  const includedFragments = concatAST(rawDocuments.map(v => v.document)).definitions.filter(
-    d => d.kind === Kind.FRAGMENT_DEFINITION
-  );
-
-  // Fragments get removed when the types are optimized by relay
-  // We still want to export the types of the fragments included in the documents
-  if (config.flattenGeneratedTypes) {
-    allAst = concatAST([allAst, { kind: Kind.DOCUMENT, definitions: includedFragments }]);
-  }
+  const allAst = concatAST(documents.map(v => v.document));
+  const includedFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION);
 
   const allFragments: LoadedFragment[] = [
     ...(includedFragments as FragmentDefinitionNode[]).map(fragmentDef => ({
