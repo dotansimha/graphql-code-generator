@@ -61,6 +61,8 @@ export interface ParsedResolversConfig extends ParsedConfig {
   optionalResolveType: boolean;
   immutableTypes: boolean;
   namespacedImportName: string;
+  resolverTypeSuffix: string;
+  allResolversTypeName: string;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -280,6 +282,16 @@ export interface RawResolversConfig extends RawConfig {
    * You can use this featuere to allow seperation of plugins to different files.
    */
   namespacedImportName?: string;
+  /**
+   * @default Resolvers
+   * @description Suffix we add to each generated type resolver.
+   */
+  resolverTypeSuffix?: string;
+  /**
+   * @default Resolvers
+   * @description The type name to use when exporting all resolvers signature as unified type.
+   */
+  allResolversTypeName?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -322,6 +334,8 @@ export class BaseResolversVisitor<
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
+      resolverTypeSuffix: getConfigValue(rawConfig.resolverTypeSuffix, 'Resolvers'),
+      allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
@@ -743,7 +757,7 @@ export class BaseResolversVisitor<
   }
 
   public getRootResolver(): string {
-    const name = this.convertName('Resolvers');
+    const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
@@ -975,7 +989,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
-      suffix: 'Resolvers',
+      suffix: this.config.resolverTypeSuffix,
     });
     const typeName = (node.name as any) as string;
     const parentType = this.getParentTypeToUse(typeName);
@@ -1005,7 +1019,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
-      suffix: 'Resolvers',
+      suffix: this.config.resolverTypeSuffix,
     });
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
@@ -1127,7 +1141,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       return null;
     }
 
-    const name = this.convertName(node, { suffix: 'Resolvers' });
+    const name = this.convertName(node, { suffix: this.config.resolverTypeSuffix });
     this._collectedResolvers[rawTypeName] = name;
     const hasExplicitValues = this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues;
 
@@ -1144,7 +1158,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     const name = this.convertName(node, {
-      suffix: 'Resolvers',
+      suffix: this.config.resolverTypeSuffix,
     });
     const declarationKind = 'type';
     const allTypesMap = this._schema.getTypeMap();
