@@ -112,22 +112,22 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   User: ResolverTypeWrapper<User>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   QueryRoot: ResolverTypeWrapper<{}>;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  String: Scalars['String'];
-  Boolean: Scalars['Boolean'];
   User: User;
   Int: Scalars['Int'];
+  String: Scalars['String'];
   QueryRoot: {};
   SubscriptionRoot: {};
+  Boolean: Scalars['Boolean'];
 };
 
 export type UserResolvers<
