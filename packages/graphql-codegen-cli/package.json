@@ -88,6 +88,7 @@
     "@types/chokidar": "1.7.5",
     "@types/debounce": "1.2.0",
     "@types/detect-indent": "5.0.0",
+    "@types/glob": "7.1.2",
     "@types/inquirer": "6.5.0",
     "@types/is-glob": "4.0.1",
     "@types/js-yaml": "3.12.5",
