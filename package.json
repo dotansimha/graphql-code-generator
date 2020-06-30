@@ -73,7 +73,7 @@
     "apollo-cache": "1.3.5",
     "apollo-client": "2.6.10",
     "apollo-link": "1.2.14",
-    "apollo-server": "2.15.0",
+    "apollo-server": "2.15.1",
     "apollo-utilities": "1.3.4",
     "@typescript-eslint/eslint-plugin": "3.5.0",
     "@typescript-eslint/parser": "3.5.0",
