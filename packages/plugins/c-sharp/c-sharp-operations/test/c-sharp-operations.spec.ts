@@ -101,7 +101,7 @@ describe('C# Operations', () => {
       `);
     });
 
-    it('Should generate request method for each query operation', async () => {
+    it('Should generate request method for query operations without input variables', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           me: Int!
@@ -120,10 +120,38 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest Request(object variables = null) {
+        public static GraphQLRequest Request() {
           return new GraphQLRequest {
             Query = FindMeDocument,
-            OperationName = "findMe",
+            OperationName = "findMe"
+          };
+        }
+      `);
+    });
+
+    it('Should generate request method for query operations with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMine($id: Int!) {
+          mine(id: $id)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static GraphQLRequest Request(object variables = null) {
+          return new GraphQLRequest {
+            Query = FindMineDocument,
+            OperationName = "findMine",
             Variables = variables
           };
         }
@@ -149,7 +177,7 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        /// <remark>This method is obsolete. Use Request instead.</remark>
+        /// <remarks>This method is obsolete. Use Request instead.</remarks>
         public static GraphQLRequest getFindMeGQL() {
       `);
     });
@@ -209,7 +237,7 @@ describe('C# Operations', () => {
       `);
     });
 
-    it('Should generate request method for each mutation operation', async () => {
+    it('Should generate request method for mutation operations without input variables', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Mutation {
           me: Int!
@@ -228,10 +256,38 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest Request(object variables = null) {
+        public static GraphQLRequest Request() {
           return new GraphQLRequest {
             Query = UpdateMeDocument,
-            OperationName = "updateMe",
+            OperationName = "updateMe"
+          };
+        }
+      `);
+    });
+
+    it('Should generate request method for mutation operations with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMine($id: Int) {
+          mine(id: $id)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static GraphQLRequest Request(object variables = null) {
+          return new GraphQLRequest {
+            Query = UpdateMineDocument,
+            OperationName = "updateMine",
             Variables = variables
           };
         }
@@ -257,7 +313,7 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        /// <remark>This method is obsolete. Use Request instead.</remark>
+        /// <remarks>This method is obsolete. Use Request instead.</remarks>
         public static GraphQLRequest getUpdateMeGQL() {
       `);
     });
@@ -317,7 +373,7 @@ describe('C# Operations', () => {
       `);
     });
 
-    it('Should generate request method for each subscription operation', async () => {
+    it('Should generate request method for subscription operations without input variables', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Subscription {
           them: Int!
@@ -336,10 +392,38 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        public static GraphQLRequest Request(object variables = null) {
+        public static GraphQLRequest Request() {
           return new GraphQLRequest {
             Query = OnNotifyThemDocument,
-            OperationName = "onNotifyThem",
+            OperationName = "onNotifyThem"
+          };
+        }
+      `);
+    });
+
+    it('Should generate request method for subscription operations with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          those(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyThose($id: Int!) {
+          those(id: $id)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static GraphQLRequest Request(object variables = null) {
+          return new GraphQLRequest {
+            Query = OnNotifyThoseDocument,
+            OperationName = "onNotifyThose",
             Variables = variables
           };
         }
@@ -365,7 +449,7 @@ describe('C# Operations', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toBeSimilarStringTo(`
-        /// <remark>This method is obsolete. Use Request instead.</remark>
+        /// <remarks>This method is obsolete. Use Request instead.</remarks>
         public static GraphQLRequest getOnNotifyThemGQL() {
       `);
     });
@@ -482,12 +566,12 @@ describe('C# Operations', () => {
           flag: Boolean
         }
         type Query {
-          runComplex(sort: SortBy, complex: Data, arr: [ID!]!): Int!
+          runComplex(sort: SortBy, complex: Data, arr: [ID!]!, multi: [[[String]]]): Int!
         }
       `);
       const operation = parse(/* GraphQL */ `
-        query RunComplex($sort: SortBy, $complex: Data, $arr: [ID!]!) {
-          runComplex(sort: $sort, complex: $complex, arr: $arr)
+        query RunComplex($sort: SortBy, $complex: Data, $arr: [ID!]!, $multi: [[[String]]]) {
+          runComplex(sort: $sort, complex: $complex, arr: $arr, multi: $multi)
         }
       `);
 
@@ -501,7 +585,7 @@ describe('C# Operations', () => {
         /// <summary>
         /// RunComplexGQL.Request
         /// <para>Required variables:<br/> { arr=(string[]) }</para>
-        /// <para>Optional variables:<br/> { sort=(SortBy), complex=(Data) }</para>
+        /// <para>Optional variables:<br/> { sort=(SortBy), complex=(Data), multi=(string[][][]) }</para>
         /// </summary>
       `);
     });

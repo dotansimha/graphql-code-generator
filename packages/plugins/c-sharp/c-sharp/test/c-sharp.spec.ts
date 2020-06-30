@@ -363,6 +363,39 @@ describe('C#', () => {
     });
   });
 
+  describe('Interfaces', () => {
+    it('Should generate C# interface from gql interface', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface Node {');
+    });
+
+    it('Should generate C# class that implements given interfaces', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface INode {
+          id: ID!
+        }
+        interface INameNode {
+          username: String!
+        }
+
+        type User implements INode & INameNode {
+          id: ID!
+          username: String!
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface INode {');
+      expect(result).toContain('public class User : INode, INameNode {');
+    });
+  });
+
   describe('GraphQL Value Types', () => {
     describe('Scalar', () => {
       it('Should generate properties for mandatory scalar types', async () => {
@@ -460,6 +493,31 @@ describe('C#', () => {
           public IEnumerable<bool> arr4 { get; set; }
         `);
       });
+
+      it('Should handle nested array types', async () => {
+        const schema = buildSchema(/* GraphQL */ `
+          type Complex {
+            arrA: [Boolean]
+          }
+          input ArrayInput {
+            arr1: [[Int!]]
+            arr2: [[[Float]!]!]!
+            arr3: [[Complex]]!
+          }
+        `);
+        const config: CSharpResolversPluginRawConfig = {
+          listType: 'IEnumerable',
+        };
+        const result = await plugin(schema, [], config, { outputFile: '' });
+
+        expect(result).toBeSimilarStringTo(`
+          public IEnumerable<IEnumerable<int>> arr1 { get; set; }
+          [JsonRequired]
+          public IEnumerable<IEnumerable<IEnumerable<float?>>> arr2 { get; set; }
+          [JsonRequired]
+          public IEnumerable<IEnumerable<Complex>> arr3 { get; set; }
+        `);
+      });
     });
 
     describe('Reserved keywords', () => {
@@ -484,8 +542,8 @@ describe('C#', () => {
     });
   });
 
-  describe('Initial Values', () => {
-    it('Should generate correct initial values for basic types', async () => {
+  describe('Default Values', () => {
+    it('Should mark required fields optional when a default value is assigned', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum Length {
           None
@@ -493,11 +551,11 @@ describe('C#', () => {
           Long
         }
         input InitialInput {
-          val: Int = 5
-          flt: Float = 3.1415
-          str: ID = "Dummy string"
-          flag: Boolean = true
-          hair: Length = Short
+          val: Int! = 5
+          flt: Float! = 3.1415
+          str: ID! = "Dummy string"
+          flag: Boolean! = true
+          hair: Length! = Short
         }
       `);
       const config: CSharpResolversPluginRawConfig = {
@@ -506,15 +564,15 @@ describe('C#', () => {
       const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        public int? val { get; set; } = 5;
-        public float? flt { get; set; } = 3.1415f;
-        public string str { get; set; } = "Dummy string";
-        public bool? flag { get; set; } = true;
-        public Length? hair { get; set; } = Length.Short;
+        public int? val { get; set; }
+        public float? flt { get; set; }
+        public string str { get; set; }
+        public bool? flag { get; set; }
+        public Length? hair { get; set; }
       `);
     });
 
-    it('Should generate correct initial values for arrays', async () => {
+    it('Should mark required arrays optional when a default value is assigned', async () => {
       const schema = buildSchema(/* GraphQL */ `
         input InitialInput {
           arr1: [Int] = [null, 2, 3]
@@ -529,12 +587,10 @@ describe('C#', () => {
       const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        public HashSet<int?> arr1 { get; set; } = new HashSet<int?>(new int?[] { null, 2, 3 });
-        public HashSet<int> arr2 { get; set; } = new HashSet<int>(new int[] { 1, 2, 3 });
-        [JsonRequired]
-        public HashSet<string> arr3 { get; set; } = new HashSet<string>(new string[] { "a", null, "c" });
-        [JsonRequired]
-        public HashSet<string> arr4 { get; set; } = new HashSet<string>(new string[] { "a", "b", "c" });
+        public HashSet<int?> arr1 { get; set; }
+        public HashSet<int> arr2 { get; set; }
+        public HashSet<string> arr3 { get; set; }
+        public HashSet<string> arr4 { get; set; }
       `);
     });
   });
