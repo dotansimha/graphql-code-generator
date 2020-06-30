@@ -69,9 +69,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  String: ResolverTypeWrapper<Types.Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Types.Scalars['Boolean']>;
   MyType: ResolverTypeWrapper<Types.MyType>;
+  String: ResolverTypeWrapper<Types.Scalars['String']>;
   MyOtherType: ResolverTypeWrapper<Types.MyOtherType>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -81,13 +80,13 @@ export type ResolversTypes = ResolversObject<{
   MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
   MyScalar: ResolverTypeWrapper<Types.Scalars['MyScalar']>;
   Int: ResolverTypeWrapper<Types.Scalars['Int']>;
+  Boolean: ResolverTypeWrapper<Types.Scalars['Boolean']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  String: Types.Scalars['String'];
-  Boolean: Types.Scalars['Boolean'];
   MyType: Types.MyType;
+  String: Types.Scalars['String'];
   MyOtherType: Types.MyOtherType;
   Query: {};
   Subscription: {};
@@ -97,6 +96,7 @@ export type ResolversParentTypes = ResolversObject<{
   MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
   MyScalar: Types.Scalars['MyScalar'];
   Int: Types.Scalars['Int'];
+  Boolean: Types.Scalars['Boolean'];
 }>;
 
 export type MyDirectiveDirectiveArgs = {   arg: Types.Scalars['Int'];
