@@ -1,4 +1,4 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { plugin } from '../src/index';
@@ -93,17 +93,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { namingConvention: 'lower-case#lowerCase' },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { namingConvention: 'lower-case#lowerCase' },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type notificationsquery = ({
@@ -143,17 +145,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
       expect(result).toBeSimilarStringTo(`
@@ -196,28 +200,33 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ location: '', document: ast }],
-        { namespacedImportName: 'Types' },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' }),
+      ]);
 
-      expect(result).toBeSimilarStringTo(`
-      export type NotificationsQuery = ({
-        ...{ __typename?: 'Query' },
-      ...{| notifications: Array<({
-          ...{ __typename?: 'TextNotification' },
-        ...$Pick<Types.TextNotification, {| text: *, id: * |}>
-      }) | ({
-          ...{ __typename?: 'ImageNotification' },
-        ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
-        ...{| metadata: ({
-            ...{ __typename?: 'ImageMetadata' },
-          ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
-        }) |}
-      })> |}
-    });
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow 
+
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type NotificationsQueryVariables = {};
+
+
+        export type NotificationsQuery = ({
+            ...{ __typename?: 'Query' },
+          ...{| notifications: Array<({
+              ...{ __typename?: 'TextNotification' },
+            ...$Pick<Types.TextNotification, {| text: *, id: * |}>
+          }) | ({
+              ...{ __typename?: 'ImageNotification' },
+            ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
+            ...{| metadata: ({
+                ...{ __typename?: 'ImageMetadata' },
+              ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
+            }) |}
+          })> |}
+        });
+        "
       `);
       validateFlow(result);
     });
@@ -230,17 +239,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).not.toContain(`__typename`);
       validateFlow(result);
     });
@@ -252,17 +263,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        {},
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          {},
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`
       export type Unnamed_1_Query = ({
         ...{ __typename: 'Query' },
@@ -278,17 +291,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        {},
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          {},
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`
       export type Unnamed_1_Query = ({
         ...{ __typename?: 'Query' },
@@ -305,17 +320,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`
       export type Unnamed_1_Query = ({
         ...{ __typename: 'Query' },
@@ -339,17 +356,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        {},
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          {},
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type UnionTestQuery = ({
@@ -380,17 +399,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { nonOptionalTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { nonOptionalTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type UnionTestQuery = ({
@@ -426,17 +447,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        {},
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          {},
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`
       export type NotificationsQuery = ({
         ...{ __typename?: 'Query' },
@@ -464,17 +487,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, {| dummy?: * |}>;`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
@@ -491,17 +516,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, {| dummy?: * |}>;`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_2_Query = $Pick<Query, {| dummy?: * |}>;`);
@@ -528,20 +555,134 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
-      expect(result).toBeSimilarStringTo(`
-      export type MeQuery = {| me?: ?UserFieldsFragment |};
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow 
+
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type UserFieldsFragment = ({
+            ...$Pick<User, {| id: *, username: *, role?: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        });
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = {| me?: ?UserFieldsFragment |};
+        "
+      `);
+      validateFlow(result);
+    });
+
+    it('Should support fragment spread with flattenGeneratedTypes', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+          role
+        }
+
+        query me {
+          me {
+            ...UserFields
+          }
+        }
+      `);
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, flattenGeneratedTypes: true },
+          { outputFile: '' }
+        ),
+      ]);
+
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow 
+
+        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+        export type UserFieldsFragment = ({
+            ...$Pick<User, {| id: *, username: *, role?: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        });
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = {| me?: ?({
+              ...$Pick<User, {| id: *, username: *, role?: * |}>,
+            ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+          }) |};
+        "
+      `);
+      validateFlow(result);
+    });
+
+    it('Should support fragment spread with flattenGeneratedTypes and preResolveTypes', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+          role
+        }
+
+        query me {
+          me {
+            ...UserFields
+          }
+        }
+      `);
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, flattenGeneratedTypes: true, preResolveTypes: true },
+          { outputFile: '' }
+        ),
+      ]);
+
+      expect(result).toMatchInlineSnapshot(`
+        "// @flow 
+
+
+        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
+
+        export type MeQueryVariables = {};
+
+
+        export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
+        "
       `);
       validateFlow(result);
     });
@@ -562,17 +703,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type MeQuery = {| me?: ?({
@@ -604,17 +747,19 @@ describe('Flow Operations Plugin', () => {
         }
       `);
 
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type MeQuery = {| me?: ?({
@@ -645,17 +790,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type NotificationsQuery = {| notifications: Array<$Pick<TextNotification, {| text: *, id: * |}> | ({
@@ -680,17 +827,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type UnionTestQuery = {| unionTest?: ?$Pick<User, {| id: * |}> | $Pick<Profile, {| age?: * |}> |};
@@ -712,17 +861,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type CurrentUserQuery = {| me?: ?({
@@ -750,17 +901,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        gitHuntSchema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          gitHuntSchema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(
         `export type MeQueryVariables = {
           repoFullName: $ElementType<Scalars, 'String'>,
@@ -781,17 +934,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(`export type DummyQuery = $Pick<Query, {| dummy?: * |}>;`);
       validateFlow(result);
     });
@@ -805,17 +960,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type DummyQuery = ({
@@ -839,17 +996,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type CurrentUserQuery = {| me?: ?({
@@ -873,17 +1032,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type UserFieldsFragment = ({
@@ -908,17 +1069,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type LoginMutation = {| login?: ?({
@@ -935,17 +1098,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`export type TestQuery = $Pick<Query, {| dummy?: * |}>;`);
       validateFlow(result);
@@ -959,17 +1124,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
       expect(result).toBeSimilarStringTo(
         `export type TestSubscription = {| userCreated?: ?$Pick<User, {| id: * |}> |};`
       );
@@ -982,17 +1149,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
@@ -1015,17 +1184,19 @@ describe('Flow Operations Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
       validateFlow(result);
@@ -1046,17 +1217,19 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [
-          {
-            location: '',
-            document: ast,
-          },
-        ],
-        { skipTypename: true, useFlowExactObjects: false },
-        { outputFile: '' }
-      );
+      const result = mergeOutputs([
+        await plugin(
+          schema,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, useFlowExactObjects: false },
+          { outputFile: '' }
+        ),
+      ]);
 
       expect(result).toBeSimilarStringTo(`
       export type CurrentUserQuery = { me?: ?({
@@ -1093,7 +1266,7 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
       expect(result.content).toMatchSnapshot();
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export type CurrentUserQuery = {| +me?: ?({
         ...$Pick<User, {| +id: *, +username: *, +role?: * |}>,
       ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
