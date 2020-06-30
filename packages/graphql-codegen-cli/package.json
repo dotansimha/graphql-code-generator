@@ -90,7 +90,7 @@
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
     "@types/is-glob": "4.0.1",
-    "@types/js-yaml": "3.12.4",
+    "@types/js-yaml": "3.12.5",
     "@types/listr": "0.14.2",
     "@types/log-symbols": "2.0.0",
     "@types/minimatch": "3.0.3",
