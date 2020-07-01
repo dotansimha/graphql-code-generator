@@ -2,8 +2,6 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
-import fs from 'fs';
-
 describe('Base Requirements', () => {
   it('should import optional, list, and enum types', async () => {
     const schema = buildSchema(`type SimpleClass {
@@ -11,7 +9,7 @@ describe('Base Requirements', () => {
     }`);
     const result = await plugin(schema, [], {}, {});
 
-    expect(result.prepend).toContain('from typing import Optional, List, Literal, Union, Any');
+    expect(result.prepend).toContain('from typing import Optional, List, Union, Any, Literal');
     expect(result.prepend).toContain('from enum import Enum');
   });
 
@@ -214,11 +212,7 @@ describe('Base Requirements', () => {
     `);
     const result = await plugin(schema, [], {}, {});
     expect(result.content).toBeSimilarStringTo(`
-      BasicUnion = Union[Scalars.Int, Scalars.String]
-
-      class BasicType:
-        __typename: Optional[Literal["BasicType"]]
-        myUnion: "__GQL_CODEGEN_BasicUnion__"
+      BasicUnion = Union["__GQL_CODEGEN_BasicType__", Scalars.String]
     `);
   });
 
@@ -347,6 +341,19 @@ describe('Config', () => {
     const result = await plugin(schema, [], { skipTypename: true }, {});
 
     expect(result.content).not.toContain(`__typename: `);
+  });
+
+  it("doesn't use Literal when typenameAsString=true", async () => {
+    const schema = buildSchema(`type SimpleClass {
+      attr: String!
+    }`);
+    const result = await plugin(schema, [], { typenameAsString: true }, {});
+
+    expect(result.prepend.join('')).toEqual(expect.not.stringContaining('Literal'));
+    expect(result.content).toBeSimilarStringTo(`
+      class SimpleClass:
+        __typename: Optional[Scalars.String]
+    `);
   });
 
   it('can makes typename nonOptional', async () => {

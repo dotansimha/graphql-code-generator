@@ -374,3 +374,16 @@ generates:
       gqlImport: graphql-tag
       hooksImportFrom: '@apollo/react-hooks'
       withMutationFn: false
+  ./dev-test/test-schema/resolvers-types.py:
+    schema: ./dev-test/test-schema/schema-text.js
+    plugins:
+      - python
+  ./dev-test/test-schema/resolvers-root.py:
+    schema: ./dev-test/test-schema/schema-with-root.graphql
+    plugins:
+      - python
+  ./dev-test/star-wars/types.py:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    plugins:
+      - python

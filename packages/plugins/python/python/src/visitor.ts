@@ -7,6 +7,7 @@ import {
   DeclarationKind,
   buildScalars,
   ParsedScalarsMap,
+  getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { PythonPluginConfig } from './config';
@@ -33,6 +34,7 @@ const flatMap = require('array.prototype.flatmap');
 
 export interface PythonPluginParsedConfig extends ParsedTypesConfig {
   scalars: ParsedScalarsMap;
+  typenameAsString: boolean;
 }
 
 export class PyVisitor<
@@ -51,6 +53,7 @@ export class PyVisitor<
       {
         ...additionalConfig,
         scalars: buildScalars(schema, pluginConfig.scalars, PythonScalars, 'Any'),
+        typenameAsString: getConfigValue(pluginConfig.typenameAsString, false),
       } as PyParsedConfig,
       PythonScalars
     );
@@ -80,11 +83,11 @@ export class PyVisitor<
   }
 
   public getScalarsImports(): string[] {
-    return [
-      'from typing import Optional, List, Literal, Union, Any',
-      'from enum import Enum',
-      ...super.getScalarsImports(),
-    ];
+    let typingImport = `from typing import Optional, List, Union, Any`;
+    if (!this.config.typenameAsString) {
+      typingImport += ', Literal';
+    }
+    return [typingImport, 'from enum import Enum', ...super.getScalarsImports()];
   }
 
   protected _getScalar(name: string): string {
@@ -159,8 +162,8 @@ export class PyVisitor<
     const allFields = ([...node.fields] as unknown) as string[];
     if (this.config.addTypename) {
       const typename = node.name;
-      const literal = `Literal["${typename}"]`;
-      const type = this.config.nonOptionalTypename ? literal : `Optional[${literal}]`;
+      const typeString = this.config.typenameAsString ? 'Scalars.String' : `Literal["${typename}"]`;
+      const type = this.config.nonOptionalTypename ? typeString : `Optional[${typeString}]`;
 
       allFields.unshift(indent(`__typename: ${type}`));
     }
