@@ -29,6 +29,19 @@ The following options are available to use:
 - `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).
 
 
+### `exposeDocument`
+
+type: `boolean`
+default: `false`
+
+For each generate query hook adds `document` field with a
+correspoding GraphQL query. Useful for `queryClient.fetchQuery`. Example:
+queryClient.fetchQuery(
+useUserDetailsQuery.getKey(variables),
+() => gqlRequest(useUserDetailsQuery.document, variables),
+)
+
+
 ### `exposeQueryKeys`
 
 type: `boolean`
@@ -128,6 +141,37 @@ default: `false`
 
 If set to true, it will enable support for parsing variables on fragments.
 
+
+### `strictScalars`
+
+type: `boolean`
+default: `false`
+
+Makes scalars strict.
+
+If scalars are found in the schema that are not defined in `scalars`
+an error will be thrown during codegen.
+
+#### Usage Examples
+
+```yml
+config:
+  strictScalars: true
+```
+
+### `defaultScalarType`
+
+type: `string`
+default: `any`
+
+Allows you to override the type that unknown scalars will have.
+
+#### Usage Examples
+
+```yml
+config:
+  defaultScalarType: unknown
+```
 
 ### `scalars`
 

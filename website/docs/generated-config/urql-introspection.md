@@ -47,16 +47,3 @@ default: `false`
 
 Will use `import type {}` rather than `import {}` when importing only types. This gives
 compatibility with TypeScript's "importsNotUsedAsValues": "error" option
-
-Note that `useTypeImports` would only work on `TypeScript` environments, on every other it would errors out during config validation.
-
-#### Usage Examples
-
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - urql-introspection
- config:
-   useTypeImports: true
-```

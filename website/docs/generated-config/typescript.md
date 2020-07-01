@@ -288,6 +288,23 @@ path/to/file.ts:
    useImplementingTypes: true
 ```
 
+### `wrapEntireFieldDefinitions`
+
+type: `boolean`
+default: `true`
+
+Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+This is useful to allow return types such as Promises and functions for fields.
+Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+`wrapFieldDefinitions` will wrap every single value inside the array.
+
+
+### `entireFieldWrapperValue`
+
+type: `string`
+
+
+
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
@@ -405,6 +422,37 @@ path/to/file.ts:
    - typescript
  config:
    ignoreEnumValuesFromSchema: true
+```
+
+### `strictScalars`
+
+type: `boolean`
+default: `false`
+
+Makes scalars strict.
+
+If scalars are found in the schema that are not defined in `scalars`
+an error will be thrown during codegen.
+
+#### Usage Examples
+
+```yml
+config:
+  strictScalars: true
+```
+
+### `defaultScalarType`
+
+type: `string`
+default: `any`
+
+Allows you to override the type that unknown scalars will have.
+
+#### Usage Examples
+
+```yml
+config:
+  defaultScalarType: unknown
 ```
 
 ### `scalars`

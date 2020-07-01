@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/python",
-  "version": "1.15.3",
+  "version": "0.0.0",
   "description": "GraphQL Code Generator plugin for generating typed Python classes",
   "repository": {
     "type": "git",
