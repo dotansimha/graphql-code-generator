@@ -85,6 +85,47 @@ path/to/file.ts:
    reactApolloVersion: 3
 ```
 
+
+### `withHOC`
+
+type: `boolean`
+default: `true`
+
+Customized the output by enabling/disabling the HOC.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-apollo
+ config:
+   withHOC: false
+```
+
+### `withHooks`
+
+type: `boolean`
+default: `false`
+
+Customized the output by enabling/disabling the generated React Hooks.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-apollo
+ config:
+   withHooks: false
+```
+
 ### `excludePatterns`
 
 type: `string`
