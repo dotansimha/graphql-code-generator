@@ -40,7 +40,8 @@ module.exports = {
           'plugins/typescript-urql',
           'plugins/typescript-oclif',
           'plugins/named-operations-object',
-          'plugins/typescript-type-graphql'
+          'plugins/typescript-type-graphql',
+          'plugins/typescript-apollo-next',
         ],
       },
       {
