@@ -49,13 +49,13 @@ export type ReferenceResolver<TResult, TReference, TContext> = (
   context: TContext,
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
-export type RecursivePick<T, S> = Pick<
+
+type scalarCheck<T, S> = S extends true ? T : nullableCheck<T, S>;
+type nullableCheck<T, S> = Maybe<T> extends T ? Maybe<listCheck<NonNullable<T>, S>> : listCheck<T, S>;
+type listCheck<T, S> = T extends (infer U)[] ? nullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+export type GraphQLRecursivePick<T, S> = Pick<
   {
-    [K in keyof T & keyof S]: S[K] extends true
-      ? T[K]
-      : Maybe<T[K]> extends T[K]
-      ? Maybe<RecursivePick<NonNullable<T[K]>, S[K]>>
-      : RecursivePick<T[K], S[K]>;
+    [K in keyof T & keyof S]: scalarCheck<T[K], S[K]>;
   },
   keyof T & keyof S
 >;
@@ -135,22 +135,28 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  String: ResolverTypeWrapper<Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Address: ResolverTypeWrapper<Address>;
+  Lines: ResolverTypeWrapper<Lines>;
   Book: ResolverTypeWrapper<Book>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  String: Scalars['String'];
+  Boolean: Scalars['Boolean'];
   Query: {};
   User: User;
-  ID: Scalars['ID'];
-  String: Scalars['String'];
+  Int: Scalars['Int'];
+  Address: Address;
+  Lines: Lines;
   Book: Book;
-  Boolean: Scalars['Boolean'];
+  ID: Scalars['ID'];
 };
 
 export type QueryResolvers<
@@ -166,14 +172,20 @@ export type UserResolvers<
 > = {
   __resolveReference?: ReferenceResolver<
     Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & (RecursivePick<ParentType, { id: true }> | RecursivePick<ParentType, { name: true }>),
+    { __typename: 'User' } & (
+      | GraphQLRecursivePick<ParentType, { id: true }>
+      | GraphQLRecursivePick<ParentType, { name: true }>
+    ),
     ContextType
   >;
 
   email?: Resolver<
     ResolversTypes['String'],
-    { __typename: 'User' } & (RecursivePick<ParentType, { id: true }> | RecursivePick<ParentType, { name: true }>) &
-      RecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
+    { __typename: 'User' } & (
+      | GraphQLRecursivePick<ParentType, { id: true }>
+      | GraphQLRecursivePick<ParentType, { name: true }>
+    ) &
+      GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;
 
