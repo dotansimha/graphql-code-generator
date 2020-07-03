@@ -2,10 +2,9 @@ import gql from 'graphql-tag';
 import { FeedEntryFragmentDoc } from './feed-entry.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type FeedQueryVariables = Exact<{
+  export type FeedQueryVariables = Types.Exact<{
     type: Types.FeedType;
     offset?: Types.Maybe<Types.Scalars['Int']>;
     limit?: Types.Maybe<Types.Scalars['Int']>;

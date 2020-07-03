@@ -38,6 +38,8 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   noExport: boolean;
 }
 
+export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };`;
+
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
   TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
@@ -80,13 +82,17 @@ export class TsVisitor<
   }
 
   public getWrapperDefinitions(): string[] {
-    const definitions: string[] = [this.getMaybeValue()];
+    const definitions: string[] = [this.getMaybeValue(), this.getExactDefinition()];
 
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
     }
 
     return definitions;
+  }
+
+  public getExactDefinition(): string {
+    return `${this.getExportPrefix()}${EXACT_SIGNATURE}`;
   }
 
   public getMaybeValue(): string {

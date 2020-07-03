@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
-describe('JSDoc Operations Plugin', () => {
+describe('JSDoc Plugin', () => {
   describe('description', () => {
     it('Should work with described schemas', async () => {
       const schema = buildSchema(/* Graphql */ `
@@ -40,7 +40,6 @@ describe('JSDoc Operations Plugin', () => {
         multiline test
         """
         union TestU = Foo
-
     `);
 
       const config = {};

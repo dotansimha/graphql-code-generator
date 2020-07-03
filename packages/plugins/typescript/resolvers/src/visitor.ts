@@ -46,7 +46,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.convertName,
         this.config.avoidOptionals,
         this.config.immutableTypes,
-        null,
+        this.config.namespacedImportName,
         [],
         this.config.enumPrefix,
         this.config.enumValues

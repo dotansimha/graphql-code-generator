@@ -115,7 +115,7 @@ path/to/file.ts:
 ### `apolloReactCommonImportFrom`
 
 type: `string`
-default: ``
+default: `"`
 
 Customize the package where apollo-react common lib is loaded from.
 
@@ -123,7 +123,7 @@ Customize the package where apollo-react common lib is loaded from.
 ### `apolloReactComponentsImportFrom`
 
 type: `string`
-default: ``
+default: `"`
 
 Customize the package where apollo-react component lib is loaded from.
 
@@ -131,7 +131,7 @@ Customize the package where apollo-react component lib is loaded from.
 ### `apolloReactHocImportFrom`
 
 type: `string`
-default: ``
+default: `"`
 
 Customize the package where apollo-react HOC lib is loaded from.
 
@@ -139,7 +139,7 @@ Customize the package where apollo-react HOC lib is loaded from.
 ### `apolloReactHooksImportFrom`
 
 type: `string`
-default: ``
+default: `"`
 
 Customize the package where apollo-react hooks lib is loaded from.
 
@@ -236,80 +236,140 @@ path/to/file.ts:
 ### `noGraphQLTag`
 
 type: `boolean`
+default: `false`
 
+Deprecated. Changes the documentMode to `documentNode`.
 
 
 ### `gqlImport`
 
 type: `string`
+default: `gql#graphql-tag`
 
+Customize from which module will `gql` be imported from.
+This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
 
+#### Usage Examples
+
+##### graphql.macro
+```yml
+config:
+  gqlImport: graphql.macro#gql
+```
+
+##### Gatsby
+```yml
+config:
+  gqlImport: gatsby#graphql
+```
 
 ### `noExport`
 
 type: `boolean`
+default: `false`
 
+Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.
 
 
 ### `dedupeOperationSuffix`
 
 type: `boolean`
+default: `false`
 
+Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
 
 
 ### `omitOperationSuffix`
 
 type: `boolean`
+default: `false`
 
+Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
 
 
 ### `operationResultSuffix`
 
 type: `string`
+default: ``
 
+Adds a suffix to generated operation result type names
 
 
 ### `documentVariablePrefix`
 
 type: `string`
+default: ``
 
+Changes the GraphQL operations variables prefix.
 
 
 ### `documentVariableSuffix`
 
 type: `string`
+default: `Document`
 
+Changes the GraphQL operations variables suffix.
 
 
 ### `fragmentVariablePrefix`
 
 type: `string`
+default: ``
 
+Changes the GraphQL fragments variables prefix.
 
 
 ### `fragmentVariableSuffix`
 
 type: `string`
+default: `FragmentDoc`
 
+Changes the GraphQL fragments variables suffix.
 
 
 ### `documentMode`
 
 type: `DocumentMode`
+default: `graphQLTag`
 
+Declares how DocumentNode are created:
+- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
+- `documentNode`: document nodes will be generated as objects when we generate the templates.
+- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
+- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
 
 
 ### `importOperationTypesFrom`
 
 type: `string`
+default: ``
 
+This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
+This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
 
 
 ### `importDocumentNodeExternallyFrom`
 
 type: `string`
+default: ``
 
+This config should be used if `documentMode` is `external`. This has 2 usage:
+- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
+- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
 
+#### Usage Examples
+
+```yml
+config:
+  documentMode: external
+  importDocumentNodeExternallyFrom: path/to/document-node-file
+```
+
+```yml
+config:
+  documentMode: external
+  importDocumentNodeExternallyFrom: near-operation-file
+```
 
 ### `scalars`
 

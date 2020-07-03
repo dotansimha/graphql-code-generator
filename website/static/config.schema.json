@@ -417,42 +417,68 @@
           "type": "string"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -670,42 +696,68 @@
           "type": "boolean"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1009,42 +1061,68 @@
           "type": "string"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1093,42 +1171,68 @@
           "type": "string"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1188,22 +1292,22 @@
         },
         "apolloReactCommonImportFrom": {
           "description": "Customize the package where apollo-react common lib is loaded from.",
-          "default": "",
+          "default": "\"",
           "type": "string"
         },
         "apolloReactComponentsImportFrom": {
           "description": "Customize the package where apollo-react component lib is loaded from.",
-          "default": "",
+          "default": "\"",
           "type": "string"
         },
         "apolloReactHocImportFrom": {
           "description": "Customize the package where apollo-react HOC lib is loaded from.",
-          "default": "",
+          "default": "\"",
           "type": "string"
         },
         "apolloReactHooksImportFrom": {
           "description": "Customize the package where apollo-react hooks lib is loaded from.",
-          "default": "",
+          "default": "\"",
           "type": "string"
         },
         "componentSuffix": {
@@ -1236,42 +1340,68 @@
           "type": "boolean"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1319,42 +1449,68 @@
           "type": "boolean"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1393,42 +1549,68 @@
           "default": "functional"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {
@@ -1487,42 +1669,68 @@
           "type": "string"
         },
         "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.",
+          "default": false,
           "type": "boolean"
         },
         "gqlImport": {
+          "default": "gql#graphql-tag",
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
         "noExport": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.",
           "type": "boolean"
         },
         "omitOperationSuffix": {
+          "default": false,
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.",
           "type": "boolean"
         },
         "operationResultSuffix": {
+          "default": "",
+          "description": "Adds a suffix to generated operation result type names",
           "type": "string"
         },
         "documentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL operations variables prefix.",
           "type": "string"
         },
         "documentVariableSuffix": {
+          "default": "Document",
+          "description": "Changes the GraphQL operations variables suffix.",
           "type": "string"
         },
         "fragmentVariablePrefix": {
+          "default": "",
+          "description": "Changes the GraphQL fragments variables prefix.",
           "type": "string"
         },
         "fragmentVariableSuffix": {
+          "default": "FragmentDoc",
+          "description": "Changes the GraphQL fragments variables suffix.",
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode"
+          "$ref": "#/definitions/DocumentMode",
+          "default": "graphQLTag",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`"
         },
         "importOperationTypesFrom": {
+          "default": "",
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.",
           "type": "string"
         },
         "importDocumentNodeExternallyFrom": {
+          "default": "",
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
         "scalars": {

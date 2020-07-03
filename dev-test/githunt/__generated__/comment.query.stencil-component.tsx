@@ -1,10 +1,10 @@
 import gql from 'graphql-tag';
+import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 
 declare global {
-  export type CommentQueryVariables = Exact<{
+  export type CommentQueryVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     limit?: Types.Maybe<Types.Scalars['Int']>;
     offset?: Types.Maybe<Types.Scalars['Int']>;
@@ -23,24 +23,8 @@ declare global {
         }
     >;
   };
-
-  export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<
-    Types.Comment,
-    'id' | 'createdAt' | 'content'
-  > & { postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'> };
 }
 
-export const CommentsPageCommentFragmentDoc = gql`
-  fragment CommentsPageComment on Comment {
-    id
-    postedBy {
-      login
-      html_url
-    }
-    createdAt
-    content
-  }
-`;
 const CommentDocument = gql`
   query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
     currentUser {

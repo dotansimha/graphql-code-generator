@@ -160,9 +160,8 @@ describe('Flow Resolvers Plugin', () => {
     expect(result.content).toBeSimilarStringTo(`
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
-        String: $ElementType<Scalars, 'String'>,
-        Boolean: $ElementType<Scalars, 'Boolean'>,
         MyType: MyType,
+        String: $ElementType<Scalars, 'String'>,
         MyOtherType: MyOtherType,
         Query: {},
         Subscription: {},
@@ -172,6 +171,7 @@ describe('Flow Resolvers Plugin', () => {
         MyUnion: $ElementType<ResolversParentTypes, 'MyType'> | $ElementType<ResolversParentTypes, 'MyOtherType'>,
         MyScalar: $ElementType<Scalars, 'MyScalar'>,
         Int: $ElementType<Scalars, 'Int'>,
+        Boolean: $ElementType<Scalars, 'Boolean'>,
       };
     `);
   });
