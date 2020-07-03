@@ -73,21 +73,14 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
       info: GraphQLResolveInfo
     ) => Promise<TResult> | TResult;`);
 
-    defsToInclude.push(`export type RecursivePick<T, S> = Pick<
-      {
-        [K in keyof T & keyof S]: 
-          S[K] extends true ? 
-            T[K]
-            : Maybe<T[K]> extends T[K] ?
-              NonNullable<T[K]> extends (infer U)[] ?
-                Maybe<RecursivePick<NonNullable<U>, S[K]>>[]
-                : Maybe<RecursivePick<NonNullable<T[K]>, S[K]>>
-              : T[K] extends (infer U)[] ?
-                RecursivePick<U, S[K]>[]
-                : RecursivePick<T[K], S[K]>;
-      },
-      keyof T & keyof S
-    >;`);
+    defsToInclude.push(`
+      type scalarCheck<T, S> = S extends true ? T : nullableCheck<T, S>;
+      type nullableCheck<T, S> = Maybe<T> extends T ? Maybe<listCheck<NonNullable<T>, S>> : listCheck<T, S>;
+      type listCheck<T, S> = T extends (infer U)[] ? nullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+      export type GraphQLRecursivePick<T, S> = Pick<{ 
+        [K in keyof T & keyof S]: scalarCheck<T[K], S[K]> 
+      }, keyof T & keyof S>;
+    `);
   }
 
   if (noSchemaStitching) {

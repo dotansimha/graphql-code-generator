@@ -218,7 +218,7 @@ export class ApolloFederation {
   }
 
   private translateFieldSet(fields: any, parentTypeRef: string): string {
-    return `RecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
+    return `GraphQLRecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
   }
 
   private extractKeyOrRequiresFieldSet(directive: DirectiveNode): any {
