@@ -53,12 +53,7 @@ export type ReferenceResolver<TResult, TReference, TContext> = (
 type scalarCheck<T, S> = S extends true ? T : nullableCheck<T, S>;
 type nullableCheck<T, S> = Maybe<T> extends T ? Maybe<listCheck<NonNullable<T>, S>> : listCheck<T, S>;
 type listCheck<T, S> = T extends (infer U)[] ? nullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
-export type GraphQLRecursivePick<T, S> = Pick<
-  {
-    [K in keyof T & keyof S]: scalarCheck<T[K], S[K]>;
-  },
-  keyof T & keyof S
->;
+export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: scalarCheck<T[K], S[K]> };
 
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
