@@ -10,6 +10,13 @@ declare module '*/comment.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const Comment: DocumentNode;
+
+  export default defaultDocument;
+}
+
+declare module '*/comments-page-comment.fragment.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
   export const CommentsPageComment: DocumentNode;
 
   export default defaultDocument;
