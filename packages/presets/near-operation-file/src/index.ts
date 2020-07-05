@@ -161,7 +161,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        if (!overrideResult) {
+        if (overrideResult) {
           return overrideResult;
         }
 
