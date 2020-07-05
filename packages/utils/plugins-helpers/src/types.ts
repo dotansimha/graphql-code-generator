@@ -19,8 +19,8 @@ export namespace Types {
     filename: string;
     content: string;
     hooks?: {
-      beforeOneFileWrite?: LifecycleHooksDefinition<string | string[]>['beforeOneFileWrite'];
-      afterOneFileWrite?: LifecycleHooksDefinition<string | string[]>['afterOneFileWrite'];
+      beforeOneFileWrite?: LifecycleHooksDefinition['beforeOneFileWrite'];
+      afterOneFileWrite?: LifecycleHooksDefinition['afterOneFileWrite'];
     };
   };
 
@@ -213,7 +213,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
      */
-    hooks?: LifecycleHooksDefinition<string | string[]>;
+    hooks?: LifecycleHooksDefinition;
   }
 
   /* Output Builder Preset */
@@ -371,17 +371,18 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
      */
-    hooks?: LifecycleHooksDefinition<string | string[]>;
+    hooks?: LifecycleHooksDefinition;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
   export type PluginOutput = string | ComplexPluginOutput;
+  export type HookFunction = (...args: any[]) => void | Promise<void>;
 
   /**
    * @description All available lifecycle hooks
    * @additionalProperties false
    */
-  export type LifecycleHooksDefinition<T = string | string[]> = {
+  export type LifecycleHooksDefinition<T = string | HookFunction | (string | HookFunction)[]> = {
     /**
      * @description Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).
      *
