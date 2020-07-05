@@ -147,8 +147,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const sources = resolveDocumentImports(options, schemaObject, {
       baseDir,
-      generateFilePath(location: string) {
-        if (importAllFragmentsFrom) {
+      generateFilePath(location: string, isExternalFragment) {
+        if (importAllFragmentsFrom && isExternalFragment) {
           return importAllFragmentsFrom;
         }
 
