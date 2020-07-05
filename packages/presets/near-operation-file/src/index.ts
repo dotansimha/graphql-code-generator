@@ -12,6 +12,8 @@ export type NearOperationFileConfig = {
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
+   * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
+   *
    * @exampleMarkdown
    * ```yml
    * generates:

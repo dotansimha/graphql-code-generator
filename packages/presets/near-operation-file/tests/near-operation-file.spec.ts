@@ -405,6 +405,32 @@ describe('near-operation-file preset', () => {
     );
   });
 
+  it('Should prepend the "add" plugin with the correct import when used with package name', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: '~@custom-package/types',
+      },
+      schema: schemaDocumentNode,
+      schemaAst: schemaNode,
+      documents: testDocuments.slice(0, 2),
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '@custom-package/types';\n`,
+          },
+        },
+      ])
+    );
+  });
+
   it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
