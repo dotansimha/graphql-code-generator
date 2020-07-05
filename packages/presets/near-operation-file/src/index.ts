@@ -27,6 +27,24 @@ export type NearOperationFileConfig = {
    */
   baseTypesPath: string;
   /**
+   * @description Overrides all external fragments import types by using a specific file path or a package name.
+   *
+   * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    baseTypesPath: types.ts
+   *    importAllFragmentsFrom: '@fragments'
+   *  plugins:
+   *    - typescript-operations
+   * ```
+   */
+  importAllFragmentsFrom?: string;
+  /**
    * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
    * @default .generates.ts
    *
@@ -110,6 +128,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
+    const importAllFragmentsFrom: string | null = options.presetConfig.importAllFragmentsFrom || null;
 
     const baseTypesPath = options.presetConfig.baseTypesPath;
 
@@ -129,6 +148,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const sources = resolveDocumentImports(options, schemaObject, {
       baseDir,
       generateFilePath(location: string) {
+        if (importAllFragmentsFrom) {
+          return importAllFragmentsFrom;
+        }
+
         const newFilePath = defineFilepathSubfolder(location, folder);
         return appendExtensionToFilePath(newFilePath, extension);
       },

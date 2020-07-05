@@ -738,6 +738,40 @@ describe('near-operation-file preset', () => {
     );
   });
 
+  it('Should allow external fragments to be imported from packages', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: '~@types',
+        importAllFragmentsFrom: `~@fragments`,
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: testDocuments.slice(0, 2),
+      plugins: [{ 'typescript-react-apollo': {} }],
+      pluginMap: { 'typescript-react-apollo': {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import * as Types from '@types';\n`,
+          },
+        },
+        {
+          'typescript-react-apollo': {},
+        },
+      ])
+    );
+
+    expect(getFragmentImportsFromResult(result)).toContain(
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from '@fragments';`
+    );
+  });
+
   it('Should add import to external fragment when its in use (long path)', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
