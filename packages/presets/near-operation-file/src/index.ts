@@ -150,13 +150,19 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const sources = resolveDocumentImports(options, schemaObject, {
       baseDir,
-      generateFilePath(location: string, isExternalFragment) {
+      generateFilePath(location: string, isExternalFragment: boolean) {
+        let overrideResult = null;
+
         if (importAllFragmentsFrom && isExternalFragment) {
           if (typeof importAllFragmentsFrom === 'function') {
-            return importAllFragmentsFrom(location);
+            overrideResult = importAllFragmentsFrom(location);
           } else {
             return importAllFragmentsFrom;
           }
+        }
+
+        if (!overrideResult) {
+          return overrideResult;
         }
 
         const newFilePath = defineFilepathSubfolder(location, folder);
