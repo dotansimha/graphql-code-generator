@@ -7,6 +7,8 @@ import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
+export type FragmentImportFromFn = (location: string) => string;
+
 export type NearOperationFileConfig = {
   /**
    * @description Required, should point to the base schema types file.
@@ -43,7 +45,7 @@ export type NearOperationFileConfig = {
    *    - typescript-operations
    * ```
    */
-  importAllFragmentsFrom?: string;
+  importAllFragmentsFrom?: string | FragmentImportFromFn;
   /**
    * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
    * @default .generates.ts
@@ -128,7 +130,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
-    const importAllFragmentsFrom: string | null = options.presetConfig.importAllFragmentsFrom || null;
+    const importAllFragmentsFrom: FragmentImportFromFn | string | null =
+      options.presetConfig.importAllFragmentsFrom || null;
 
     const baseTypesPath = options.presetConfig.baseTypesPath;
 
@@ -149,7 +152,11 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       baseDir,
       generateFilePath(location: string, isExternalFragment) {
         if (importAllFragmentsFrom && isExternalFragment) {
-          return importAllFragmentsFrom;
+          if (typeof importAllFragmentsFrom === 'function') {
+            return importAllFragmentsFrom(location);
+          } else {
+            return importAllFragmentsFrom;
+          }
         }
 
         const newFilePath = defineFilepathSubfolder(location, folder);
