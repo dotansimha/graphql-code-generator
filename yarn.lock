@@ -2843,10 +2843,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.26.tgz#a8a119960bff16b823be4c617da028570779bcfd"
   integrity sha512-myMwkO2Cr82kirHY8uknNRHEVtn0wV3DTQfkrjx17jmkstDRZ24gNUdl8AHXVyVclTYI/bNjgTPTAWvWLqXqkw==
 
-"@types/node@13.13.12":
-  version "13.13.12"
-  resolved "https://registry.npmjs.org/@types/node/-/node-13.13.12.tgz#9c72e865380a7dc99999ea0ef20fc9635b503d20"
-  integrity sha512-zWz/8NEPxoXNT9YyF2osqyA9WjssZukYpgI4UYZpOjcyqwIUqWGkcCionaEb9Ki+FULyPyvNFpg/329Kd2/pbw==
+"@types/node@13.13.13":
+  version "13.13.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.13.tgz#71217d90fd9c9c937e28628772d5c0b432c79355"
+  integrity sha512-UfvBE9oRCAJVzfR+3eWm/sdLFe/qroAPEXP3GPJ1SehQiEVgZT6NQZWYbPMiJ3UdcKM06v4j+S1lTcdWCmw+3g==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
