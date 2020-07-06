@@ -15,7 +15,6 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
-import { plugin } from '@graphql-codegen/c-sharp';
 
 export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
