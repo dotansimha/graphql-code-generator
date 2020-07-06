@@ -23,6 +23,7 @@ export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
   useIndexSignature: boolean;
   wrapFieldDefinitions: boolean;
+  allowParentTypeOverride: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -36,6 +37,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
+        allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
@@ -60,6 +62,14 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         },
       };
     }
+  }
+
+  protected transformParentGenericType(parentType: string): string {
+    if (this.config.allowParentTypeOverride) {
+      return `ParentType = ${parentType}`;
+    }
+
+    return `ParentType extends ${parentType} = ${parentType}`;
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {

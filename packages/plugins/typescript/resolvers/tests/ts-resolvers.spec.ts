@@ -136,6 +136,34 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   describe('Config', () => {
+    it('allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        allowParentTypeOverride: true,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      const content = await validate(
+        result,
+        config,
+        schema,
+        `
+        export const myTypeResolvers: MyTypeResolvers<{}, { parentOverride: boolean }> = {
+          foo: (parentValue) => {
+            const a: boolean = parentValue.parentOverride;
+
+            return a.toString();
+          }
+        }; 
+      `
+      );
+
+      expect(content).not.toContain(`ParentType extends `);
+      expect(content).toContain(`ParentType = `);
+      expect(content).toMatchSnapshot();
+    });
+
     it('namespacedImportName - should work correctly with imported namespaced type', async () => {
       const config = {
         noSchemaStitching: true,
