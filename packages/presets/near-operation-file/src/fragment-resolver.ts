@@ -93,7 +93,7 @@ function buildFragmentRegistry(
         }
 
         const possibleTypes = getPossibleTypes(schemaObject, schemaType);
-        const filePath = generateFilePath(documentRecord.location, true);
+        const filePath = generateFilePath(documentRecord.location);
         const imports = getFragmentImports(
           possibleTypes.map(t => t.name),
           fragment.name.value

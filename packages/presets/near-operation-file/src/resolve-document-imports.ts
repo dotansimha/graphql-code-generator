@@ -20,7 +20,7 @@ export type DocumentImportResolverOptions = {
   /**
    * Generates a target file path from the source `document.location`
    */
-  generateFilePath: (location: string, isExternalFragment: boolean) => string;
+  generateFilePath: (location: string) => string;
   /**
    *  Schema base types source
    */
@@ -53,7 +53,7 @@ export function resolveDocumentImports<T>(
   const { generateFilePath, schemaTypesSource, baseDir } = importResolverOptions;
 
   return documents.map(documentFile => {
-    const generatedFilePath = generateFilePath(documentFile.location, false);
+    const generatedFilePath = generateFilePath(documentFile.location);
     const importStatements: string[] = [];
     const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
 

@@ -4,10 +4,11 @@ import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
 import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
+import { FragmentImport, ImportDeclaration, ImportSource } from '@graphql-codegen/visitor-plugin-common';
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
-export type FragmentImportFromFn = (location: string) => string;
+export type FragmentImportFromFn = (source: ImportSource<FragmentImport>) => ImportSource<FragmentImport>;
 
 export type NearOperationFileConfig = {
   /**
@@ -150,22 +151,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const sources = resolveDocumentImports(options, schemaObject, {
       baseDir,
-      generateFilePath(location: string, isExternalFragment: boolean) {
-        let overrideResult = null;
-
-        if (importAllFragmentsFrom && isExternalFragment) {
-          if (typeof importAllFragmentsFrom === 'function') {
-            overrideResult = importAllFragmentsFrom(location);
-          } else {
-            return importAllFragmentsFrom;
-          }
-        }
-
-        if (overrideResult) {
-          return overrideResult;
-        }
-
+      generateFilePath(location: string) {
         const newFilePath = defineFilepathSubfolder(location, folder);
+
         return appendExtensionToFilePath(newFilePath, extension);
       },
       schemaTypesSource: {
@@ -175,6 +163,22 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     });
 
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
+      let fragmentImportsArr = fragmentImports;
+
+      if (importAllFragmentsFrom) {
+        fragmentImportsArr = fragmentImports.map<ImportDeclaration<FragmentImport>>(t => {
+          const newImportSource: ImportSource<FragmentImport> =
+            typeof importAllFragmentsFrom === 'string'
+              ? { ...t.importSource, path: importAllFragmentsFrom }
+              : importAllFragmentsFrom(t.importSource);
+
+          return {
+            ...t,
+            importSource: newImportSource || t.importSource,
+          };
+        });
+      }
+
       const plugins = [
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
         ...(options.config.globalNamespace
@@ -189,7 +193,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         exportFragmentSpreadSubTypes: true,
         namespacedImportName: importTypesNamespace,
         externalFragments,
-        fragmentImports,
+        fragmentImports: fragmentImportsArr,
       };
 
       return {
