@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "1.16.2",
+  "version": "1.16.3",
   "description": "GraphQL Code Generator common utils and types",
   "repository": {
     "type": "git",
