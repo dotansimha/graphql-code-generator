@@ -34,10 +34,6 @@ GraphQL Code Generator lets you setup everything by simply running the following
 
     $ yarn graphql-codegen init
 
-Or, with `npx`:
-
-    $ npx graphql-codegen init
-
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 
 If you don't want to use the wizard, install it by yourself and create a basic `codegen.yml` configuration file, point to your schema, and pick the plugins you wish to use. 
