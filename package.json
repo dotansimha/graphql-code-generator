@@ -96,7 +96,7 @@
     "jest-docblock": "26.0.0",
     "jest-junit": "11.0.1",
     "lint-staged": "10.2.11",
-    "lodash": "4.17.15",
+    "lodash": "4.17.18",
     "rimraf": "3.0.2",
     "ts-jest": "26.1.1",
     "stencil-apollo": "0.1.5",
