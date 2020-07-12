@@ -24,6 +24,7 @@ export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   useIndexSignature: boolean;
   wrapFieldDefinitions: boolean;
   allowParentTypeOverride: boolean;
+  optionalInfoArgument: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -38,6 +39,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
         allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
+        optionalInfoArgument: getConfigValue(pluginConfig.optionalInfoArgument, false),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
