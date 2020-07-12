@@ -113,4 +113,15 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    */
   allowParentTypeOverride?: boolean;
+  /**
+   * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     optionalInfoArgument: true
+   * ```
+   *
+   */
+  optionalInfoArgument?: boolean;
 }

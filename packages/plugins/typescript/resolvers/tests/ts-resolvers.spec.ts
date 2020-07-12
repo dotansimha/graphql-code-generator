@@ -136,6 +136,21 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   describe('Config', () => {
+    it('optionalInfoArgument - should allow to have optional info argument', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        optionalInfoArgument: true,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      const content = await validate(result, config, schema);
+
+      expect(content).not.toContain(`info: `);
+      expect(content).toContain(`info?: `);
+      expect(content).toMatchSnapshot();
+    });
+
     it('allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type', async () => {
       const config = {
         noSchemaStitching: true,
