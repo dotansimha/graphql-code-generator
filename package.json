@@ -90,7 +90,7 @@
     "flow-parser": "0.129.0",
     "fs-extra": "9.0.1",
     "graphql": "15.3.0",
-    "graphql-tag": "2.10.3",
+    "graphql-tag": "2.10.4",
     "husky": "4.2.5",
     "java-ast": "0.1.0",
     "jest": "26.1.0",
