@@ -61,7 +61,7 @@
     "@graphql-codegen/typescript-type-graphql": "1.16.3",
     "@graphql-codegen/typescript-urql": "1.16.3",
     "@graphql-codegen/typescript-vue-apollo": "1.16.3",
-    "react-monaco-editor": "0.37.0",
+    "react-monaco-editor": "0.39.0",
     "js-yaml": "3.14.0"
   },
   "browserslist": {
