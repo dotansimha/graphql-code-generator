@@ -146,6 +146,11 @@ export function buildOptions() {
       describe: 'Overwrites existing files',
       type: 'boolean' as const,
     },
+    s: {
+      alias: 'silent',
+      describe: 'Suppresses printing errors',
+      type: 'boolean' as const,
+    },
     p: {
       alias: 'project',
       describe: 'Name of a project in GraphQL Config',
