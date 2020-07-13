@@ -31,7 +31,11 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
     super(schema, fragments, rawConfig, {});
     this._info = info;
 
-    const { handlerPath = '../../handler' } = rawConfig;
+    const { handlerPath } = rawConfig;
+
+    if (!handlerPath) {
+      throw new Error('Missing configuration value `handlerPath` from `typescript-oclif` plugin');
+    }
 
     autoBind(this);
     this._additionalImports.push(`import { Command, flags } from '@oclif/command'`);
