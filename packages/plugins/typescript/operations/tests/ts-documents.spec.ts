@@ -702,6 +702,111 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('__typename', () => {
+    it('Should ignore __typename for root types with skipTypeNameForRoot = true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = { test?: Maybe<(
+          { __typename?: 'Test' }
+          & Pick<Test, 'foo'>
+        )> };`
+      );
+      await validate(content, config, testSchema);
+    });
+
+    it('Should ignore __typename for root types with skipTypeNameForRoot = true, and with nonOptionalTypename = true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        nonOptionalTypename: true,
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = { test?: Maybe<(
+          { __typename: 'Test' }
+          & Pick<Test, 'foo'>
+        )> };`
+      );
+      await validate(content, config, testSchema);
+    });
+
+    it('Should ignore skipTypeNameForRoot = true when __typename is specified manually', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          __typename
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        nonOptionalTypename: true,
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = (
+          { __typename: 'Query' }
+          & { test?: Maybe<(
+            { __typename: 'Test' }
+            & Pick<Test, 'foo'>
+          )> }
+        );`
+      );
+      await validate(content, config, testSchema);
+    });
+
     it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Search {
