@@ -3474,10 +3474,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
-antlr4ts@^0.4.1-alpha.0:
-  version "0.4.1-alpha.0"
-  resolved "https://registry.npmjs.org/antlr4ts/-/antlr4ts-0.4.1-alpha.0.tgz#ac5717f30f3efa3617b004e8ff4f860b9c7d4d20"
-  integrity sha1-rFcX8w8++jYXsATo/0+GC5x9TSA=
+antlr4ts@^0.5.0-alpha.3:
+  version "0.5.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/antlr4ts/-/antlr4ts-0.5.0-alpha.3.tgz#fa6d39d88d6b96341a8afef45867af9abcb38766"
+  integrity sha512-La89tKkGcHFIVuruv4Bm1esc3zLmES2NOTEwwNS1pudz+zx/0FNqQeUu9p48i9/QHKPVqjN87LB+q3buTg7oDQ==
 
 any-observable@^0.3.0:
   version "0.3.0"
@@ -8897,12 +8897,12 @@ iterall@^1.1.3, iterall@^1.2.1:
   resolved "https://registry.npmjs.org/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
   integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
 
-java-ast@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/java-ast/-/java-ast-0.1.0.tgz#1b7ea2addbe18f60ccc3f33f1d58f96b7df22fad"
-  integrity sha512-xa0fksWutSf2cDlhbd6yztYbDB7cChFAk5qZcN7onsOIPxT/xUtIJy3v9wgsUhiIi5+Q4vZg0lFIr7SAkkxADg==
+java-ast@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/java-ast/-/java-ast-0.2.0.tgz#286cf63b2b810440ac50f94661cd98859db1f9c4"
+  integrity sha512-Vd5UwCSuebRUom0ZK2A0QWEbVS9oyggJISB+vcrrR+Eh1xW7qAzW2rmHVBArkPcF5/uOVRgn7WMPWwXLBJU/Hw==
   dependencies:
-    antlr4ts "^0.4.1-alpha.0"
+    antlr4ts "^0.5.0-alpha.3"
 
 jest-changed-files@^26.1.0:
   version "26.1.0"
