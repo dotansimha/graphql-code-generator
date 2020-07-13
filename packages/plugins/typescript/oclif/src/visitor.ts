@@ -33,11 +33,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
 
     const { handlerPath = '../../handler' } = rawConfig;
 
-    // FIXME: This is taken in part from
-    //  presets/near-operation-file/src/index.ts:139. How do I build a path relative to the outputFile in the same way?
-    //  A plugin doesn't appear to have access to the same "options.baseOutputDir" that the preset does.
-    // const absClientPath = resolve(info.outputFile, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
-
     autoBind(this);
     this._additionalImports.push(`import { Command, flags } from '@oclif/command'`);
     this._additionalImports.push(`import handler from '${handlerPath}'`);
