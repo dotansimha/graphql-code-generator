@@ -366,7 +366,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         name: this._processor.config.formatNamedField(field.name.value, selectedFieldType),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
-          selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
+          selectionSet
+            .transformSelectionSet()
+            .split(`\n`)
+            .join(`\n  `),
           selectedFieldType
         ),
       });
@@ -376,7 +379,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       parentSchemaType,
       this._config.nonOptionalTypename,
       this._config.addTypename,
-      requireTypename
+      requireTypename,
+      this._config.skipTypeNameForRoot
     );
     const transformed: ProcessResult = [
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
@@ -409,12 +413,25 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return this._processor.buildSelectionSetFromStrings(fields);
   }
 
+  protected isRootType(type: GraphQLObjectType): boolean {
+    const rootType = [this._schema.getQueryType(), this._schema.getMutationType(), this._schema.getSubscriptionType()]
+      .filter(Boolean)
+      .map(t => t.name);
+
+    return rootType.includes(type.name);
+  }
+
   protected buildTypeNameField(
     type: GraphQLObjectType,
     nonOptionalTypename: boolean = this._config.nonOptionalTypename,
     addTypename: boolean = this._config.addTypename,
-    queriedForTypename: boolean = this._queriedForTypename
+    queriedForTypename: boolean = this._queriedForTypename,
+    skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
   ): { name: string; type: string } {
+    if (this.isRootType(type) && skipTypeNameForRoot && !queriedForTypename) {
+      return null;
+    }
+
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
 

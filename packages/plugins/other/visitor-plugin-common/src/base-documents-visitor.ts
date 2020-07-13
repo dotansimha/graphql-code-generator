@@ -36,6 +36,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   omitOperationSuffix: boolean;
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
+  skipTypeNameForRoot: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -51,6 +52,18 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   preResolveTypes?: boolean;
+  /**
+   * @default false
+   * @description Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * plugins
+   *   config:
+   *     skipTypeNameForRoot: true
+   * ```
+   */
+  skipTypeNameForRoot?: boolean;
   /**
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
@@ -112,6 +125,7 @@ export class BaseDocumentsVisitor<
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
+      skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
