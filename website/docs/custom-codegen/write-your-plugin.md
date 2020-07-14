@@ -75,7 +75,7 @@ module.exports = {
 
 The third argument of your function is `config` and it includes an object with the configuration passed to your plugin.
 
-You can use it to tweak the behavior of your plugin and allow develoeprs to customize the output easily.
+You can use it to tweak the behavior of your plugin and allow developers to customize the output easily.
 
 You can pass configuration to your plugin in the following this way:
 
