@@ -31,23 +31,21 @@ We can use the generated code like this in Vue 2 ([with composition api plugin](
 ```vue
 <template>
   <div>
-    {{ result.feed.id }}
+    <div v-if="loading">Loading...</div>
+    <div v-else>{{ result.feed.id }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { createComponent } from "@vue/composition-api";
-import {
-  useTestQuery,
-} from "../generated/graphqlOperations";
+import { createComponent } from "@vue/composition-api"
+import { useTestQuery } from "../generated/graphqlOperations"
 
 export default createComponent({
   setup() {
-    const { result } = useMessagesQuery();
-
-    return { result };
+    const { result, loading } = useTestQuery()
+    return { result, loading }
   }
-});
+})
 </script>
 ```
 
