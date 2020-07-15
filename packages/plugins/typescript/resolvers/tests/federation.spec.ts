@@ -194,6 +194,50 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
   });
 
+  it.skip('should handle interface types', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        people: [Person]
+      }
+
+      extend interface Person @key(fields: "name { first last }") {
+        name: Name! @external
+        age: Int @requires(fields: "name")
+      }
+
+      extend type User implements Person @key(fields: "name { first last }") {
+        name: Name! @external
+        age: Int @requires(fields: "name { first last }")
+        username: String
+      }
+
+      type Admin implements Person @key(fields: "name { first last }") {
+        name: Name! @external
+        age: Int @requires(fields: "name { first last }")
+        permissions: [String!]!
+      }
+
+      extend type Name {
+        first: String! @external
+        last: String! @external
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+    export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = {
+      __resolveType: TypeResolveFn<'User' | 'Admin', ParentType, ContextType>;
+      age?: Resolver<Maybe<ResolversTypes['Int']>, { __typename: 'User' | 'Admin' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+    };
+    `);
+  });
+
   it('should skip to generate resolvers of fields with @external directive', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
