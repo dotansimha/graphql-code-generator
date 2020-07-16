@@ -303,9 +303,9 @@ export class ClientSideBaseVisitor<
     const isDocumentNode =
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments;
-    return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} ${
-      this.config.pureMagicComment ? '/*#__PURE__*/ ' : ''
-    }= ${this._gql(fragmentDocument)};`;
+    return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} =${
+      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+    } ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -452,7 +452,7 @@ export class ClientSideBaseVisitor<
         this.config.documentMode === DocumentMode.documentNodeImportFragments;
       documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
         isDocumentNode ? ': DocumentNode' : ''
-      } = ${this.config.pureMagicComment ? '/*#__PURE__*/' : ''} ${this._gql(node)};`;
+      } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
     }
 
     const operationType: string = pascalCase(node.operation);
