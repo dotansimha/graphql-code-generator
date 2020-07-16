@@ -3,10 +3,10 @@ import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type VoteMutationVariables = {
+  export type VoteMutationVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     type: Types.VoteType;
-  };
+  }>;
 
   export type VoteMutation = { __typename?: 'Mutation' } & {
     vote?: Types.Maybe<

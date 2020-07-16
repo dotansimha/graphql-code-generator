@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
   { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -111,22 +112,22 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   User: ResolverTypeWrapper<User>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   QueryRoot: ResolverTypeWrapper<{}>;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  String: Scalars['String'];
-  Boolean: Scalars['Boolean'];
   User: User;
   Int: Scalars['Int'];
+  String: Scalars['String'];
   QueryRoot: {};
   SubscriptionRoot: {};
+  Boolean: Scalars['Boolean'];
 };
 
 export type UserResolvers<

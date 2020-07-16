@@ -7,9 +7,9 @@ import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type HeroDetailsQueryVariables = {
+export type HeroDetailsQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
-};
+}>;
 
 export type HeroDetailsQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<

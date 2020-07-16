@@ -4,6 +4,7 @@ import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { schema, validate } from './common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
@@ -132,6 +133,297 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
 
     await validate(result);
+  });
+
+  describe('Config', () => {
+    it('optionalInfoArgument - should allow to have optional info argument', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        optionalInfoArgument: true,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      const content = await validate(result, config, schema);
+
+      expect(content).not.toContain(`info: `);
+      expect(content).toContain(`info?: `);
+      expect(content).toMatchSnapshot();
+    });
+
+    it('allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        allowParentTypeOverride: true,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      const content = await validate(
+        result,
+        config,
+        schema,
+        `
+        export const myTypeResolvers: MyTypeResolvers<{}, { parentOverride: boolean }> = {
+          foo: (parentValue) => {
+            const a: boolean = parentValue.parentOverride;
+
+            return a.toString();
+          }
+        }; 
+      `
+      );
+
+      expect(content).not.toContain(`ParentType extends `);
+      expect(content).toContain(`ParentType = `);
+      expect(content).toMatchSnapshot();
+    });
+
+    it('namespacedImportName - should work correctly with imported namespaced type', async () => {
+      const config = {
+        noSchemaStitching: true,
+        useIndexSignature: true,
+        namespacedImportName: 'Types',
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+      const content = mergeOutputs([result]);
+      expect(content).toMatchSnapshot();
+    });
+  });
+
+  describe('Enums', () => {
+    it('Should not generate enum internal values resolvers when enum doesnt have enumValues set', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        export const resolvers: Resolvers = {
+          Query: {
+            v: () => 'A',
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).not.toContain('EnumResolverSignature');
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set as object with explicit values', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: {
+          MyEnum: {
+            A: 'val_1',
+            B: 'val_2',
+            C: 'val_3',
+          },
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: 'val_1',
+            B: 'val_2',
+            C: 'val_3',
+          },
+          Query: {
+            v: () => 'val_1',
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).not.toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B: 'val_2', C: 'val_3' };`);
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: {
+          MyEnum: 'MyCustomEnum',
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        enum MyCustomEnum {
+          CUSTOM_A,
+          CUSTOM_B,
+          CUSTOM_C
+        }
+
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: MyCustomEnum.CUSTOM_A,
+            B: MyCustomEnum.CUSTOM_B,
+            C: MyCustomEnum.CUSTOM_C,
+          },
+          Query: {
+            v: () => MyCustomEnum.CUSTOM_A,
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has mappers pointing to external enum', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        mappers: {
+          MyEnum: 'MyCustomEnum',
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        enum MyCustomEnum {
+          CUSTOM_A,
+          CUSTOM_B,
+          CUSTOM_C
+        }
+
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: MyCustomEnum.CUSTOM_A,
+            B: MyCustomEnum.CUSTOM_B,
+            C: MyCustomEnum.CUSTOM_C,
+          },
+          Query: {
+            v: () => MyCustomEnum.CUSTOM_A,
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
+      );
+    });
+
+    it('Should generate enum internal values resolvers when enum has enumValues set on a global level of all enums', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: './enums',
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await validate(
+        result,
+        config,
+        testSchema,
+        `
+        enum MyCustomEnum {
+          CUSTOM_A,
+          CUSTOM_B,
+          CUSTOM_C
+        }
+
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: MyCustomEnum.CUSTOM_A,
+            B: MyCustomEnum.CUSTOM_B,
+            C: MyCustomEnum.CUSTOM_C,
+          },
+          Query: {
+            v: () => MyCustomEnum.CUSTOM_A,
+          }
+        }; 
+      `
+      );
+
+      expect(mergedOutput).toContain(`import { MyEnum } from './enums'`);
+      expect(mergedOutput).toContain(`export { MyEnum }`);
+      expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(
+        `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
+      );
+    });
   });
 
   it('Should warn when noSchemaStitching is set to false (deprecated)', async () => {
@@ -283,7 +575,7 @@ describe('TypeScript Resolvers Plugin', () => {
     })) as Types.ComplexPluginOutput;
     const mergedOutputs = mergeOutputs([result, tsContent]);
 
-    expect(mergedOutputs).toContain(`A: A;`);
+    expect(mergedOutputs).not.toContain(`A: A;`);
     expect(mergedOutputs).not.toContain(`A: GQL_A;`);
     expect(mergedOutputs).toContain(`NotMapped: GQL_NotMapped;`);
     expect(mergedOutputs).not.toContain(`NotMapped: NotMapped;`);
@@ -1087,12 +1379,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
         Subscription: ResolverTypeWrapper<{}>;
         Query: ResolverTypeWrapper<{}>;
         Mutation: ResolverTypeWrapper<{}>;
+        String: ResolverTypeWrapper<Scalars['String']>;
         Post: ResolverTypeWrapper<Post>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
       };
     `);
   });
@@ -1120,12 +1412,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        String: Scalars['String'];
-        Boolean: Scalars['Boolean'];
         Subscription: {};
         Query: {};
         Mutation: {};
+        String: Scalars['String'];
         Post: Post;
+        Boolean: Scalars['Boolean'];
       };
     `);
   });
@@ -1160,12 +1452,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
         Subscription: ResolverTypeWrapper<RootValueType>;
         Query: ResolverTypeWrapper<RootValueType>;
         Mutation: ResolverTypeWrapper<RootValueType>;
+        String: ResolverTypeWrapper<Scalars['String']>;
         Post: ResolverTypeWrapper<Post>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
       };
     `);
 
@@ -1208,12 +1500,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        String: ResolverTypeWrapper<Scalars['String']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
         MySubscription: ResolverTypeWrapper<MyRoot>;
         MyQuery: ResolverTypeWrapper<MyRoot>;
         MyMutation: ResolverTypeWrapper<MyRoot>;
+        String: ResolverTypeWrapper<Scalars['String']>;
         Post: ResolverTypeWrapper<Post>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
       };
     `);
   });
@@ -1629,11 +1921,11 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         C = 'C'
       };`);
       expect(o).toBeSimilarStringTo(`
-      export type IResolversParentTypes = {
-        String: Scalars['String'];
-        Boolean: Scalars['Boolean'];
-        Query: {};
+      export type IResolversTypes = {
+        Query: ResolverTypeWrapper<{}>;
         Test: Test;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        String: ResolverTypeWrapper<Scalars['String']>;
       };`);
     });
 
@@ -1719,7 +2011,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       })) as Types.ComplexPluginOutput;
       const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
 
-      expect(output.prepend.length).toBe(2);
+      expect(output.prepend.filter(t => t.includes('import')).length).toBe(2);
       expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
       expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
       expect(tsContent.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeTruthy();

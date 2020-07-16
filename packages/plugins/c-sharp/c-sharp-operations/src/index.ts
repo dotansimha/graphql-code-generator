@@ -11,25 +11,25 @@ export const plugin: PluginFunction<CSharpOperationsRawPluginConfig> = (
   documents: Types.DocumentFile[],
   config
 ) => {
-  const openNameSpace = 'namespace GraphQLCodeGen {';
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(
-      d => d.kind === Kind.FRAGMENT_DEFINITION
-    ) as FragmentDefinitionNode[]).map(fragmentDef => ({
-      node: fragmentDef,
-      name: fragmentDef.name.value,
-      onType: fragmentDef.typeCondition.name.value,
-      isExternal: false,
-    })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
+      })
+    ),
     ...(config.externalFragments || []),
   ];
 
   const visitor = new CSharpOperationsVisitor(schema, allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
+  const openNameSpace = `namespace ${visitor.config.namespaceName} {`;
   return {
     prepend: [],
-    content: [openNameSpace, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), '}']
+    content: [openNameSpace, ...visitorResult.definitions.filter(t => typeof t === 'string'), '}']
       .filter(a => a)
       .join('\n'),
   };

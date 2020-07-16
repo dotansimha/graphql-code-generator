@@ -63,9 +63,8 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
-  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
   MyType: ResolverTypeWrapper<MyType>,
+  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
   MyOtherType: ResolverTypeWrapper<MyOtherType>,
   Query: ResolverTypeWrapper<{}>,
   Subscription: ResolverTypeWrapper<{}>,
@@ -75,13 +74,13 @@ export type ResolversTypes = {
   MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
   MyScalar: ResolverTypeWrapper<$ElementType<Scalars, 'MyScalar'>>,
   Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  String: $ElementType<Scalars, 'String'>,
-  Boolean: $ElementType<Scalars, 'Boolean'>,
   MyType: MyType,
+  String: $ElementType<Scalars, 'String'>,
   MyOtherType: MyOtherType,
   Query: {},
   Subscription: {},
@@ -91,6 +90,7 @@ export type ResolversParentTypes = {
   MyUnion: $ElementType<ResolversParentTypes, 'MyType'> | $ElementType<ResolversParentTypes, 'MyOtherType'>,
   MyScalar: $ElementType<Scalars, 'MyScalar'>,
   Int: $ElementType<Scalars, 'Int'>,
+  Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
 export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,

@@ -7,7 +7,7 @@ import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type TwoHeroesQueryVariables = {};
+export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type TwoHeroesQuery = { __typename?: 'Query' } & {
   r2?: Types.Maybe<

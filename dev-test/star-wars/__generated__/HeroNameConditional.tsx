@@ -7,10 +7,10 @@ import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type HeroNameConditionalInclusionQueryVariables = {
+export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
   includeName: Types.Scalars['Boolean'];
-};
+}>;
 
 export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
@@ -18,10 +18,10 @@ export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type HeroNameConditionalExclusionQueryVariables = {
+export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
   skipName: Types.Scalars['Boolean'];
-};
+}>;
 
 export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<

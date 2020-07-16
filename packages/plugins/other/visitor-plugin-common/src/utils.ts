@@ -219,13 +219,15 @@ export class DeclarationBlock {
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {
-      result += '{}';
+      result += this._config.blockTransformer('{}');
     }
 
     return (
       (this._comment ? this._comment : '') +
       result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') +
+      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+        ? ''
+        : ';') +
       '\n'
     );
   }

@@ -5,7 +5,6 @@
 [![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/xud7bH9)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![renovate-app badge][renovate-badge]][renovate-app]
-[![Netlify Status](https://api.netlify.com/api/v1/badges/beb4a802-e080-469d-82d6-e83a3d108a40/deploy-status)](https://app.netlify.com/sites/graphql-code-generator/deploys)
 
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
@@ -34,10 +33,6 @@ Start by installing the basic deps of GraphQL Codegen;
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
     $ yarn graphql-codegen init
-
-Or, with `npx`:
-
-    $ npx graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 

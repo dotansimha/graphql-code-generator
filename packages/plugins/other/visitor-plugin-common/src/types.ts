@@ -1,19 +1,39 @@
 import { ASTNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedMapper } from './mappers';
 
+/**
+ * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used
+ */
 export type ScalarsMap = string | { [name: string]: string };
+/**
+ * A normalized map between GraphQL scalar name and the identifier name
+ */
 export type NormalizedScalarsMap = { [name: string]: string };
+/**
+ * Parsed scalars map - a mapping between GraphQL scalar name and the parsed mapper object,
+ * including all required information for generting code for that mapping.
+ */
 export type ParsedScalarsMap = { [name: string]: ParsedMapper };
+/**
+ * A raw configuration for enumValues map - can be represented with a single string value for a file path,
+ * a map between enum name and a file path, or a map between enum name and an object with explicit enum values.
+ */
 export type EnumValuesMap<AdditionalProps = {}> =
   | string
   | { [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps) };
 export type ParsedEnumValuesMap = {
   [enumName: string]: {
+    // If values are explictly set, this will include the mapped values
     mappedValues?: { [valueName: string]: string | number };
+    // The GraphQL enum name
     typeIdentifier: string;
+    // The actual identifier that you should use in the code (original or aliased)
     sourceIdentifier?: string;
+    // In case of external enum, this will contain the source file path
     sourceFile?: string;
+    // If the identifier is external (imported) - this will contain the imported expression (including alias), otherwise null
     importIdentifier?: string;
+    // Is defualt import is used to import the enum
     isDefault?: boolean;
   };
 };

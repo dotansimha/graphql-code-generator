@@ -9,20 +9,24 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   rawDocuments: Types.DocumentFile[],
   config: FlowDocumentsPluginConfig
 ) => {
-  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
-  const prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
+  const documents = config.flattenGeneratedTypes
+    ? optimizeOperations(schema, rawDocuments, { includeFragments: true })
+    : rawDocuments;
+
+  const prefix = config.preResolveTypes
+    ? ''
+    : `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
   const allAst = concatAST(documents.map(v => v.document));
+  const includedFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION);
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      fragmentDef => ({
-        node: fragmentDef,
-        name: fragmentDef.name.value,
-        onType: fragmentDef.typeCondition.name.value,
-        isExternal: false,
-      })
-    ),
+    ...(includedFragments as FragmentDefinitionNode[]).map(fragmentDef => ({
+      node: fragmentDef,
+      name: fragmentDef.name.value,
+      onType: fragmentDef.typeCondition.name.value,
+      isExternal: false,
+    })),
     ...(config.externalFragments || []),
   ];
 
@@ -30,5 +34,8 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
     leave: new FlowDocumentsVisitor(schema, config, allFragments),
   });
 
-  return [prefix, ...visitorResult.definitions].join('\n');
+  return {
+    prepend: ['// @flow \n'],
+    content: [prefix, ...visitorResult.definitions].join('\n'),
+  };
 };

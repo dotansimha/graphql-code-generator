@@ -21,7 +21,6 @@ export interface TypeScriptFilesModulesPluginConfig {
    * generates: src/api/user-service/queries.d.ts
    *  documents: src/api/user-service/queries.graphql
    *  plugins:
-   *    - typescript
    *    - typescript-graphql-files-modules
    *  config:
    *    # resulting module definition path glob: "*\/api/user-service/queries.graphql"

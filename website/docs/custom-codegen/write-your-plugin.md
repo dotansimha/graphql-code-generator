@@ -62,7 +62,7 @@ module.exports = {
   plugin: (schema, documents, config, info) => {
     return documents
       .map(doc => {
-        const docsNames = doc.content.definitions.map(def => def.name.value);
+        const docsNames = doc.document.definitions.map(def => def.name.value);
 
         return `File ${doc.location} contains: ${docsNames.join(', ')}`;
       })
@@ -75,7 +75,7 @@ module.exports = {
 
 The third argument of your function is `config` and it includes an object with the configuration passed to your plugin.
 
-You can use it to tweak the behavior of your plugin and allow develoeprs to customize the output easily.
+You can use it to tweak the behavior of your plugin and allow developers to customize the output easily.
 
 You can pass configuration to your plugin in the following this way:
 

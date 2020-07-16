@@ -100,4 +100,28 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   customResolverFn?: string;
+  /**
+   * @description Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.
+   *
+   * This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     allowParentTypeOverride: true
+   * ```
+   *
+   */
+  allowParentTypeOverride?: boolean;
+  /**
+   * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     optionalInfoArgument: true
+   * ```
+   *
+   */
+  optionalInfoArgument?: boolean;
 }

@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
-describe('JSDoc Operations Plugin', () => {
+describe('JSDoc Plugin', () => {
   describe('description', () => {
     it('Should work with described schemas', async () => {
       const schema = buildSchema(/* Graphql */ `
@@ -40,7 +40,6 @@ describe('JSDoc Operations Plugin', () => {
         multiline test
         """
         union TestU = Foo
-
     `);
 
       const config = {};
@@ -187,7 +186,7 @@ describe('JSDoc Operations Plugin', () => {
 
     it('should generate a typedef for enums', async () => {
       const schema = buildSchema(/* Graphql */ `
-        enum FooOrBar{
+        enum FooOrBar {
             FOO
             BAR
         }
@@ -197,6 +196,21 @@ describe('JSDoc Operations Plugin', () => {
       const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toEqual(expect.stringContaining('* @typedef {("FOO"|"BAR")} FooOrBar'));
+    });
+
+    it('should generate an annotation for deprecated fields', async () => {
+      const warning = 'the field foo is no longer supported, prefer bar';
+      const schema = buildSchema(/* Graphql */ `
+        type Query {
+            foo: String! @deprecated(reason: "${warning}")
+            bar: String!
+        }
+    `);
+
+      const config = {};
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      expect(result).toEqual(expect.stringContaining(`* @property {string} foo - DEPRECATED: ${warning}`));
     });
   });
 });

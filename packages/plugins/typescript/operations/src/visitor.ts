@@ -107,4 +107,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return ';';
   }
+
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
+
+    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>`;
+  }
 }

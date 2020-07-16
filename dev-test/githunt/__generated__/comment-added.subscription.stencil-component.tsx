@@ -3,9 +3,9 @@ import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type OnCommentAddedSubscriptionVariables = {
+  export type OnCommentAddedSubscriptionVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
-  };
+  }>;
 
   export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
     commentAdded?: Types.Maybe<

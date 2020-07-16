@@ -137,7 +137,7 @@ describe('Apollo Angular', () => {
       expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
       expect(content.content).not.toContain('@NgModule');
       expect(content.content).toContain('@client');
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
 
     it('Should import namedClient and remove namedClient directive', async () => {
@@ -168,7 +168,7 @@ describe('Apollo Angular', () => {
         client = 'custom';
       `);
       expect(content.content).not.toContain('@namedClient');
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
   });
 
@@ -199,7 +199,7 @@ describe('Apollo Angular', () => {
         })
         export class TestGQL extends Apollo.Query
       `);
-      validateTypeScript(content, rootSchema, docs, {});
+      await validateTypeScript(content, rootSchema, docs, {});
     });
 
     it('Should handle @client', async () => {
@@ -223,7 +223,7 @@ describe('Apollo Angular', () => {
 
       expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
 
-      validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -283,7 +283,7 @@ describe('Apollo Angular', () => {
       expect(content.content).toBeSimilarStringTo(`client = 'extra';`);
       expect(content.content).not.toContain('@namedClient');
 
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
     it('should be allowed to define custom operation suffixes in config', async () => {
       const modifiedSchema = extendSchema(schema, addToSchema);
@@ -294,26 +294,34 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const upVotePost = gql(`
-        mutation upVotePost($postId: Int!) {
-          upVotePost(postId: $postId) {
-            id
-            votes
-          }
-        }
+      const vote = gql(`
+      mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
       `);
-      const newPost = gql(`
-        subscription newPost {
-          newPost {
-            id
-            title
+      const commentAdded = gql(`
+        subscription onCommentAdded($repoFullName: String!) {
+        commentAdded(repoFullName: $repoFullName) {
+          id
+          postedBy {
+            login
+            html_url
           }
+          createdAt
+          content
         }
+      }
       `);
       const docs = [
         { location: '', document: myFeed },
-        { location: '', document: upVotePost },
-        { location: '', document: newPost },
+        { location: '', document: commentAdded },
+        { location: '', document: vote },
       ];
       const content = (await plugin(
         modifiedSchema,
@@ -329,9 +337,9 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export class MyFeedQueryService`);
-      expect(content.content).toContain(`export class UpVotePostMutationService`);
-      expect(content.content).toContain(`export class NewPostSubscriptionService`);
-      validateTypeScript(content, modifiedSchema, docs, {});
+      expect(content.content).toContain(`export class OnCommentAddedSubscriptionService`);
+      expect(content.content).toContain(`export class VoteMutationService`);
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
   });
 
@@ -357,7 +365,6 @@ describe('Apollo Angular', () => {
 
       // NgModule
       expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
-      // console.log('content.content', content.content);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({ providedIn: 'root' })
         export class ApolloAngularSDK {
@@ -374,7 +381,7 @@ describe('Apollo Angular', () => {
         }
         }
       `);
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
     it('should generate a SDK service with custom settings', async () => {
       const modifiedSchema = extendSchema(schema, addToSchema);
@@ -418,7 +425,7 @@ describe('Apollo Angular', () => {
         }
         }
       `);
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
   });
 
@@ -447,7 +454,7 @@ describe('Apollo Angular', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 });

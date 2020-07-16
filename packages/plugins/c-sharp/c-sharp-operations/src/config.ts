@@ -5,6 +5,17 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
+   * @default GraphQLCodeGen
+   * @description Allow you to customize the namespace name.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   namespaceName: MyCompany.MyNamespace
+   * ```
+   */
+  namespaceName?: string;
+  /**
    * @description Defined the global value of `namedClient`.
    *
    * @exampleMarkdown
@@ -14,16 +25,6 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * ```
    */
   namedClient?: string;
-  /**
-   * @description Defined the global value of `serviceName`.
-   *
-   * @exampleMarkdown
-   * ```yml
-   * config:
-   *   serviceName: 'MySDK'
-   * ```
-   */
-  serviceName?: string;
   /**
    * @description Allows to define a custom suffix for query operations.
    * @default GQL

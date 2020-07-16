@@ -36,6 +36,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   omitOperationSuffix: boolean;
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
+  skipTypeNameForRoot: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -51,6 +52,18 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   preResolveTypes?: boolean;
+  /**
+   * @default false
+   * @description Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * plugins
+   *   config:
+   *     skipTypeNameForRoot: true
+   * ```
+   */
+  skipTypeNameForRoot?: boolean;
   /**
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
@@ -98,6 +111,7 @@ export class BaseDocumentsVisitor<
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
+  protected _globalDeclarations: Set<string> = new Set<string>();
 
   constructor(
     rawConfig: TRawConfig,
@@ -111,6 +125,7 @@ export class BaseDocumentsVisitor<
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
+      skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
@@ -127,7 +142,11 @@ export class BaseDocumentsVisitor<
     );
   }
 
-  setSelectionSetHandler(handler: SelectionSetToObject) {
+  public getGlobalDeclarations(noExport = false): string[] {
+    return Array.from(this._globalDeclarations).map(t => (noExport ? t : `export ${t}`));
+  }
+
+  setSelectionSetHandler(handler: SelectionSetToObject): void {
     this._selectionSetToObject = handler;
   }
 
@@ -147,7 +166,7 @@ export class BaseDocumentsVisitor<
     return this._parsedConfig.addTypename;
   }
 
-  private handleAnonymouseOperation(node: OperationDefinitionNode): string {
+  private handleAnonymousOperation(node: OperationDefinitionNode): string {
     const name = node.name && node.name.value;
 
     if (name) {
@@ -175,8 +194,12 @@ export class BaseDocumentsVisitor<
     );
   }
 
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    return variablesBlock;
+  }
+
   OperationDefinition(node: OperationDefinitionNode): string {
-    const name = this.handleAnonymouseOperation(node);
+    const name = this.handleAnonymousOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
 
     if (!operationRootType) {
@@ -200,7 +223,10 @@ export class BaseDocumentsVisitor<
       )
       .withContent(selectionSet.transformSelectionSet()).string;
 
-    const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
+    const operationVariables = new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer: t => this.applyVariablesWrapper(t),
+    })
       .export()
       .asKind('type')
       .withName(

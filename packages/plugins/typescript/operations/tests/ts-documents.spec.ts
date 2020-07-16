@@ -317,7 +317,9 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type NotificationsQueryVariables = {};`);
+      expect(content).toBeSimilarStringTo(
+        `export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;`
+      );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQueryResult = (
           { __typename?: 'Query' }
@@ -408,7 +410,9 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
+      expect(content).toBeSimilarStringTo(
+        `export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;`
+      );
       expect(content).toBeSimilarStringTo(`
         export type inotificationsquery = (
           { __typename?: 'Query' }
@@ -698,6 +702,111 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('__typename', () => {
+    it('Should ignore __typename for root types with skipTypeNameForRoot = true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = { test?: Maybe<(
+          { __typename?: 'Test' }
+          & Pick<Test, 'foo'>
+        )> };`
+      );
+      await validate(content, config, testSchema);
+    });
+
+    it('Should ignore __typename for root types with skipTypeNameForRoot = true, and with nonOptionalTypename = true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        nonOptionalTypename: true,
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = { test?: Maybe<(
+          { __typename: 'Test' }
+          & Pick<Test, 'foo'>
+        )> };`
+      );
+      await validate(content, config, testSchema);
+    });
+
+    it('Should ignore skipTypeNameForRoot = true when __typename is specified manually', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Test {
+          foo: String
+        }
+
+        type Query {
+          test: Test
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query q1 {
+          __typename
+          test {
+            foo
+          }
+        }
+      `);
+      const config = {
+        nonOptionalTypename: true,
+        skipTypeNameForRoot: true,
+      };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type Q1Query = (
+          { __typename: 'Query' }
+          & { test?: Maybe<(
+            { __typename: 'Test' }
+            & Pick<Test, 'foo'>
+          )> }
+        );`
+      );
+      await validate(content, config, testSchema);
+    });
+
     it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Search {
@@ -1104,7 +1213,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = {};
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       await validate(content, config);
     });
@@ -1128,13 +1237,13 @@ describe('TypeScript Operations Plugin', () => {
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = {};
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_2_Query = Pick<Query, 'dummy'>;
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_2_QueryVariables = {};
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
       await validate(content, config);
     });
@@ -2005,9 +2114,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type MeQueryVariables = {
+        `export type MeQueryVariables = Exact<{
           repoFullName: Scalars['String'];
-        };`
+        }>;`
       );
       expect(content).toBeSimilarStringTo(`
         export type MeQuery = { currentUser?: Maybe<Pick<User, 'login' | 'html_url'>>, entry?: Maybe<(
@@ -2134,9 +2243,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       const o = await validate(content, config, testSchema);
-      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = {
+      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = Exact<{
         e: Information_EntryType;
-      };`);
+      }>;`);
       expect(o).toContain(`export type IQuery = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
@@ -2320,7 +2429,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = {
+        `export type TestQueryQueryVariables = Exact<{
           username?: Maybe<Scalars['String']>;
           email?: Maybe<Scalars['String']>;
           password: Scalars['String'];
@@ -2329,7 +2438,7 @@ describe('TypeScript Operations Plugin', () => {
           testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
           requireString: Array<Maybe<Scalars['String']>>;
           innerRequired: Array<Scalars['String']>;
-        };`
+        }>;`
       );
       await validate(content, config);
     });
@@ -2346,9 +2455,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = {
+        `export type TestQueryQueryVariables = Exact<{
           test?: Maybe<Scalars['DateTime']>;
-        };`
+        }>;`
       );
       await validate(content, config);
     });
@@ -2364,7 +2473,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
+      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`);
       await validate(content, config);
     });
 
@@ -2658,9 +2767,9 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type PREFIX_UsersQueryVariables = {
+        export type PREFIX_UsersQueryVariables = Exact<{
           filter: PREFIX_Filter;
-        };
+        }>;
       `);
       expect(content).toBeSimilarStringTo(`
         export type PREFIX_UsersQuery = (
@@ -2700,9 +2809,9 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UsersQueryVariables = {
+        export type UsersQueryVariables = Exact<{
           reverse?: Maybe<Scalars['Boolean']>;
-        };
+        }>;
       `);
     });
   });

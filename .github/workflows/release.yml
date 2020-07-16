@@ -1,14 +1,14 @@
 name: NPM Release
 on:
   release:
-    types: [created]
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
-      - name: Configure Git Credientials
+      - name: Configure Git Credentials
         run: |
           git config --global user.email "theguild-bot@users.noreply.github.com"
           git config --global user.name "theguild-bot"
