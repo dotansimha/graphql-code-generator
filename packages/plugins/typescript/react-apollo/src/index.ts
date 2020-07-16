@@ -24,6 +24,10 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPlu
     ...(config.externalFragments || []),
   ];
 
+  config.reactApolloVersion = config.reactApolloVersion || 3;
+  if (config.reactApolloVersion === 3) {
+    config.gqlImport = config.gqlImport || '@apollo/client';
+  }
   const visitor = new ReactApolloVisitor(schema, allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 

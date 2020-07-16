@@ -49,21 +49,21 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),
       apolloReactCommonImportFrom: getConfigValue(
         rawConfig.apolloReactCommonImportFrom,
-        rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-common'
+        rawConfig.reactApolloVersion === 2 ? '@apollo/react-common' : '@apollo/client'
       ),
       apolloReactComponentsImportFrom: getConfigValue(
         rawConfig.apolloReactComponentsImportFrom,
-        rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-components'
+        rawConfig.reactApolloVersion === 2 ? '@apollo/react-components' : '@apollo/client/react/components'
       ),
       apolloReactHocImportFrom: getConfigValue(
         rawConfig.apolloReactHocImportFrom,
-        rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-hoc'
+        rawConfig.reactApolloVersion === 2 ? '@apollo/react-hoc' : '@apollo/client/react/hoc'
       ),
       apolloReactHooksImportFrom: getConfigValue(
         rawConfig.apolloReactHooksImportFrom,
-        rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-hooks'
+        rawConfig.reactApolloVersion === 2 ? '@apollo/react-hooks' : '@apollo/client'
       ),
-      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
+      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 3),
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
