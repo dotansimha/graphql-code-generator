@@ -351,7 +351,7 @@ export class ClientSideBaseVisitor<
     return localFragments.join('\n');
   }
 
-  protected _parseImport(importStr: string) {
+  protected _parseImport(importStr: string): { moduleName: string; propName: string } {
     const [moduleName, propName] = importStr.split('#');
 
     return {
