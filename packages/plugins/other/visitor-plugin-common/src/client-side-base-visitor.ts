@@ -43,6 +43,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
+  pureMagicComment?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -135,6 +136,11 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    *
    */
   importDocumentNodeExternallyFrom?: 'near-operation-file' | string;
+  /**
+   * @default false
+   * @description This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
+   */
+  pureMagicComment: boolean;
 
   // The following are internal, and used by presets
   /**
@@ -181,6 +187,7 @@ export class ClientSideBaseVisitor<
         return getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag);
       })(rawConfig),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
+      pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
       ...additionalConfig,
     } as any);
 
@@ -257,7 +264,11 @@ export class ClientSideBaseVisitor<
     const fragments = this._transformFragments(node);
 
     const doc = this._prepareDocument(`
-    ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
+    ${
+      print(node)
+        .split('\\')
+        .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
+    }
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
@@ -291,7 +302,9 @@ export class ClientSideBaseVisitor<
     const isDocumentNode =
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments;
-    return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
+    return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} ${
+      this.config.pureMagicComment ? '/*#__PURE__*/' : ''
+    } = ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -438,7 +451,7 @@ export class ClientSideBaseVisitor<
         this.config.documentMode === DocumentMode.documentNodeImportFragments;
       documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
         isDocumentNode ? ': DocumentNode' : ''
-      } = ${this._gql(node)};`;
+      } = ${this.config.pureMagicComment ? '/*#__PURE__*/' : ''} ${this._gql(node)};`;
     }
 
     const operationType: string = pascalCase(node.operation);
