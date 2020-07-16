@@ -134,7 +134,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @default false
    * @description This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
    */
-  pureMagicComment: boolean;
+  pureMagicComment?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
