@@ -43,7 +43,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     super(schema, fragments, rawConfig, {
       componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
       withHOC: getConfigValue(rawConfig.withHOC, true),
-      withComponent: getConfigValue(rawConfig.withComponent, true),
+      withComponent: getConfigValue(rawConfig.withComponent, false),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
       withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),

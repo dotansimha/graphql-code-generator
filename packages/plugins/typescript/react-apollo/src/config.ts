@@ -8,7 +8,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Component.
-   * @default true
+   * @default false
    *
    * @exampleMarkdown
    * ```yml
@@ -19,7 +19,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withComponent: false
+   *    withComponent: true
    * ```
    */
   withComponent?: boolean;
