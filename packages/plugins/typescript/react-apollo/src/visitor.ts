@@ -61,7 +61,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       ),
       apolloReactHooksImportFrom: getConfigValue(
         rawConfig.apolloReactHooksImportFrom,
-        rawConfig.reactApolloVersion === 3 ? '@apollo/client/react' : '@apollo/react-hooks'
+        rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-hooks'
       ),
       reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
       withResultType: getConfigValue(rawConfig.withResultType, true),
