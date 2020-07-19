@@ -10,6 +10,20 @@ This plugin generates C# `class` based on your GraphQL operations.
 
 ## API Reference
 
+### `namespaceName`
+
+type: `string`
+default: `GraphQLCodeGen`
+
+Allow you to customize the namespace name.
+
+#### Usage Examples
+
+```yml
+config:
+  namespaceName: MyCompany.MyNamespace
+```
+
 ### `namedClient`
 
 type: `string`
@@ -21,19 +35,6 @@ Defined the global value of `namedClient`.
 ```yml
 config:
   namedClient: 'customName'
-```
-
-### `serviceName`
-
-type: `string`
-
-Defined the global value of `serviceName`.
-
-#### Usage Examples
-
-```yml
-config:
-  serviceName: 'MySDK'
 ```
 
 ### `querySuffix`

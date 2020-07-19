@@ -48,6 +48,7 @@
     "@graphql-codegen/schema-ast": "1.17.0",
     "@graphql-codegen/time": "1.17.0",
     "@graphql-codegen/typescript": "1.17.0",
+    "@graphql-codegen/typed-document-node": "1.17.0",
     "@graphql-codegen/typescript-apollo-angular": "1.17.0",
     "@graphql-codegen/typescript-compatibility": "1.17.0",
     "@graphql-codegen/typescript-generic-sdk": "1.17.0",

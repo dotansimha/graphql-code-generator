@@ -254,6 +254,11 @@
           "description": "Avoid using `Pick` and resolve the actual primitive type of all selection set.",
           "type": "boolean"
         },
+        "skipTypeNameForRoot": {
+          "default": false,
+          "description": "Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.",
+          "type": "boolean"
+        },
         "operationResultSuffix": {
           "default": "",
           "description": "Adds a suffix to generated operation result type names",
@@ -353,6 +358,11 @@
           "$ref": "#/definitions/EnumValuesMap",
           "description": "Overrides the default value of enum values declared in your GraphQL schema."
         },
+        "namespaceName": {
+          "default": "GraphQLCodeGen",
+          "description": "Allow you to customize the namespace name.",
+          "type": "string"
+        },
         "className": {
           "default": "Types",
           "description": "Allow you to customize the parent class name.",
@@ -393,12 +403,13 @@
       "description": "This plugin generates C# `class` based on your GraphQL operations.",
       "type": "object",
       "properties": {
-        "namedClient": {
-          "description": "Defined the global value of `namedClient`.",
+        "namespaceName": {
+          "default": "GraphQLCodeGen",
+          "description": "Allow you to customize the namespace name.",
           "type": "string"
         },
-        "serviceName": {
-          "description": "Defined the global value of `serviceName`.",
+        "namedClient": {
+          "description": "Defined the global value of `namedClient`.",
           "type": "string"
         },
         "querySuffix": {
@@ -919,6 +930,14 @@
           "default": "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult",
           "type": "string"
         },
+        "allowParentTypeOverride": {
+          "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\n\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
+          "type": "boolean"
+        },
+        "optionalInfoArgument": {
+          "description": "Sets `info` argument of resolver function to be optional field. Useful for testing.",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -988,6 +1007,21 @@
           "default": false,
           "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
           "type": "boolean"
+        },
+        "namespacedImportName": {
+          "default": "''",
+          "description": "Prefixes all GraphQL related generated types with that value, as namespaces import.\nYou can use this featuere to allow seperation of plugins to different files.",
+          "type": "string"
+        },
+        "resolverTypeSuffix": {
+          "default": "Resolvers",
+          "description": "Suffix we add to each generated type resolver.",
+          "type": "string"
+        },
+        "allResolversTypeName": {
+          "default": "Resolvers",
+          "description": "The type name to use when exporting all resolvers signature as unified type.",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2060,6 +2094,21 @@
           "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.",
           "type": "boolean"
         },
+        "namespacedImportName": {
+          "default": "''",
+          "description": "Prefixes all GraphQL related generated types with that value, as namespaces import.\nYou can use this featuere to allow seperation of plugins to different files.",
+          "type": "string"
+        },
+        "resolverTypeSuffix": {
+          "default": "Resolvers",
+          "description": "Suffix we add to each generated type resolver.",
+          "type": "string"
+        },
+        "allResolversTypeName": {
+          "default": "Resolvers",
+          "description": "The type name to use when exporting all resolvers signature as unified type.",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2108,6 +2157,11 @@
         "preResolveTypes": {
           "default": false,
           "description": "Avoid using `Pick` and resolve the actual primitive type of all selection set.",
+          "type": "boolean"
+        },
+        "skipTypeNameForRoot": {
+          "default": false,
+          "description": "Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.",
           "type": "boolean"
         },
         "globalNamespace": {
@@ -3032,11 +3086,17 @@
         {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": [
+              "string",
+              "object"
+            ]
           }
         },
         {
-          "type": "string"
+          "type": [
+            "string",
+            "object"
+          ]
         }
       ]
     },
@@ -3314,7 +3374,7 @@
       "type": "string"
     },
     "Source": {
-      "description": "A representation of source input to GraphQL.\n`name` and `locationOffset` are optional. They are useful for clients who\nstore GraphQL documents in source files; for example, if the GraphQL input\nstarts at line 40 in a file named Foo.graphql, it might be useful for name to\nbe \"Foo.graphql\" and location to be `{ line: 40, column: 0 }`.\nline and column in locationOffset are 1-indexed",
+      "description": "A representation of source input to GraphQL. The `name` and `locationOffset` parameters are\noptional, but they are useful for clients who store GraphQL documents in source files.\nFor example, if the GraphQL input starts at line 40 in a file named `Foo.graphql`, it might\nbe useful for `name` to be `\"Foo.graphql\"` and location to be `{ line: 40, column: 1 }`.\nThe `line` and `column` properties in `locationOffset` are 1-indexed.",
       "type": "object",
       "properties": {
         "body": {

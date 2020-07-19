@@ -120,6 +120,34 @@ path/to/file.ts:
      ) => Promise<TResult> | TResult;
 ```
 
+### `allowParentTypeOverride`
+
+type: `boolean`
+
+Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.
+
+This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
+
+#### Usage Examples
+
+```yml
+  config:
+    allowParentTypeOverride: true
+```
+
+### `optionalInfoArgument`
+
+type: `boolean`
+
+Sets `info` argument of resolver function to be optional field. Useful for testing.
+
+#### Usage Examples
+
+```yml
+  config:
+    optionalInfoArgument: true
+```
+
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
@@ -371,6 +399,31 @@ type: `boolean`
 default: `false`
 
 Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
+
+
+### `namespacedImportName`
+
+type: `string`
+default: `''`
+
+Prefixes all GraphQL related generated types with that value, as namespaces import.
+You can use this featuere to allow seperation of plugins to different files.
+
+
+### `resolverTypeSuffix`
+
+type: `string`
+default: `Resolvers`
+
+Suffix we add to each generated type resolver.
+
+
+### `allResolversTypeName`
+
+type: `string`
+default: `Resolvers`
+
+The type name to use when exporting all resolvers signature as unified type.
 
 
 ### `scalars`

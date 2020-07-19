@@ -91,7 +91,7 @@ export const LiveDemo = () => {
               menu: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               control: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               container: styles => ({ ...styles, display: 'inline-block', width: '100%', textAlign: 'left' }),
-              option: styles => ({ ...styles, fontSize: 13 }),
+              option: (styles, { isFocused }) => ({ ...styles, fontSize: 13, ...(isDarkTheme && isFocused ? { backgroundColor: 'gray' } : {}) }),
               singleValue: styles => ({ ...styles, width: '100%', ...(isDarkTheme ? { color: 'white' } : {}) }),
             }}
             isMulti={false}
