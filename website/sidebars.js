@@ -28,6 +28,7 @@ module.exports = {
           'plugins/typescript',
           'plugins/typescript-operations',
           'plugins/typescript-resolvers',
+          'plugins/typed-document-node',
           'plugins/typescript-graphql-request',
           'plugins/typescript-react-apollo',
           'plugins/typescript-vue-apollo',

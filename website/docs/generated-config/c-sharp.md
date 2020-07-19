@@ -26,6 +26,24 @@ Overrides the default value of enum values declared in your GraphQL schema.
         A: 'foo'
 ```
 
+### `namespaceName`
+
+type: `string`
+default: `GraphQLCodeGen`
+
+Allow you to customize the namespace name.
+
+#### Usage Examples
+
+```yml
+generates:
+  src/main/c-sharp/my-org/my-app/MyTypes.cs:
+    plugins:
+      - c-sharp
+    config:
+      namespaceName: MyCompany.MyNamespace
+```
+
 ### `className`
 
 type: `string`

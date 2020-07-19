@@ -84,6 +84,21 @@ plugins
     preResolveTypes: true
 ```
 
+### `skipTypeNameForRoot`
+
+type: `boolean`
+default: `false`
+
+Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.
+
+#### Usage Examples
+
+```yml
+plugins
+  config:
+    skipTypeNameForRoot: true
+```
+
 ### `globalNamespace`
 
 type: `boolean`
