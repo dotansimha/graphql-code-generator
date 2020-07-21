@@ -11,6 +11,7 @@ export interface ExecutePluginOptions {
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
   skipDocumentsValidation?: boolean;
+  pluginContext?: { [key: string]: any };
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -33,10 +34,19 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
 
   const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema, options.config as any);
   const documents = options.documents || [];
+  const pluginContext = options.pluginContext || {};
 
   if (plugin.validate && typeof plugin.validate === 'function') {
     try {
-      await plugin.validate(outputSchema, documents, options.config, options.outputFilename, options.allPlugins);
+      // FIXME: Sync validate signature with plugin signature
+      await plugin.validate(
+        outputSchema,
+        documents,
+        options.config,
+        options.outputFilename,
+        options.allPlugins,
+        pluginContext
+      );
     } catch (e) {
       throw new DetailedError(
         `Plugin "${options.name}" validation failed:`,
@@ -55,6 +65,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
       {
         outputFile: options.outputFilename,
         allPlugins: options.allPlugins,
+        pluginContext,
       }
     )
   );

@@ -13,6 +13,7 @@ export namespace Types {
       [name: string]: CodegenPlugin;
     };
     skipDocumentsValidation?: boolean;
+    pluginContext?: { [key: string]: any };
   }
 
   export type FileOutput = {
@@ -233,6 +234,9 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
+    pluginContext?: {
+      [name: string]: any;
+    };
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -337,6 +341,10 @@ export namespace Types {
      * @description If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than require.
      */
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;
+    /**
+     * @description Additional context passed to plugins
+     */
+    pluginContext?: { [key: string]: any };
     /**
      * @description Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.
      *
@@ -444,6 +452,7 @@ export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.P
   info?: {
     outputFile?: string;
     allPlugins?: Types.ConfiguredPlugin[];
+    pluginContext?: { [key: string]: any };
     [key: string]: any;
   }
 ) => Types.Promisable<TOutput>;
@@ -453,7 +462,8 @@ export type PluginValidateFn<T = any> = (
   documents: Types.DocumentFile[],
   config: T,
   outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[]
+  allPlugins: Types.ConfiguredPlugin[],
+  pluginContext?: { [key: string]: any }
 ) => Types.Promisable<void>;
 
 export type AddToSchemaResult = string | DocumentNode | undefined;

@@ -35,6 +35,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const context = ensureContext(input);
   const config = context.getConfig();
+  const pluginContext = context.getPluginContext();
   const result: Types.FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true,
@@ -254,6 +255,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
+                          pluginContext,
                         });
                       } else {
                         outputs = [
@@ -265,6 +267,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,
+                            pluginContext,
                           },
                         ];
                       }
