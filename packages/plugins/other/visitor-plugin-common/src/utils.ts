@@ -225,7 +225,9 @@ export class DeclarationBlock {
     return (
       (this._comment ? this._comment : '') +
       result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === "function" ? '' : ';') +
+      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+        ? ''
+        : ';') +
       '\n'
     );
   }
