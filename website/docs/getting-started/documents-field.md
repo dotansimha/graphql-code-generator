@@ -191,7 +191,7 @@ If your schema has a different or complicated way of loading, you can specify a 
 
 ```yml
 documents:
-    - "**/*.graphql"
+    - "**/*.graphql":
         loader: my-documents-loader.js
 ```
 
