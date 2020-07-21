@@ -466,6 +466,20 @@ query MyFeed {
       expect(content.content).not.toContain(`export class ITestComponent`);
     });
 
+    it('should respect omitOperationSuffix for Component', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toContain(`export class TestComponent`);
+    });
+
     it('should add three generics if operation type is subscription', async () => {
       const documents = parse(/* GraphQL */ `
         subscription ListenToComments($name: String) {
@@ -600,6 +614,20 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export function useTestQuery`);
+    });
+
+    it('Should respect omitOperationSuffix for hooks', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export function useTest(`);
     });
   });
 });
