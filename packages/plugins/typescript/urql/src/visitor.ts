@@ -84,7 +84,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationVariablesTypes: string
   ): string {
     const operationName: string = this.convertName(node.name.value, {
-      suffix: pascalCase(operationType),
+      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
       useTypesPrefix: false,
     });
 
