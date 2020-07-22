@@ -12,7 +12,9 @@ Steps to reproduce the behavior:
 <!--
 #############
 #############
-PLEASE READ THE FOLLOWING:
+🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 🛑 STOP! 
+
+PLEASE READ THE FOLLOWING: 
 You can use this template to create a live sandbox of the issue: 
 https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template
 Make sure sure fork this template, and run `yarn generate` in the terminal. 
@@ -20,6 +22,7 @@ Please make sure the Codegen and plugins version under `package.json` matches yo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~ ISSUES WITH A LIVE REPRODUCTION WILL BE ANSWERED QUICKLY ~~~~~~~
+~~~~~~ ISSUES WITHOUT REPRODUCTION MIGHT GET CLOSED WITHOUT RESPONSE ~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #############
