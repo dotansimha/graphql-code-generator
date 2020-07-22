@@ -143,9 +143,9 @@ export type Resolvers<ContextType = any> = {
   MyOtherType?: MyOtherTypeResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
-  Node?: NodeResolvers<>,
+  Node?: NodeResolvers<ContextType>,
   SomeNode?: SomeNodeResolvers<ContextType>,
-  MyUnion?: MyUnionResolvers<>,
+  MyUnion?: MyUnionResolvers<ContextType>,
   MyScalar?: GraphQLScalarType<>,
 };
 
