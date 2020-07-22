@@ -340,7 +340,7 @@ export const OnCommentAddedDocument = gql`
  * When your component renders, `useOnCommentAddedSubscription` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
- * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
  *
  * @example
  * const { result, loading, error } = useOnCommentAddedSubscription(

@@ -119,7 +119,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  *${operationType === 'Mutation' ? mutationDescription : queryDescription}
  *
  * @param options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/${
-      operationType === 'Mutation' ? 'mutation' : 'query'
+      operationType === 'Mutation' ? 'mutation' : operationType === 'Subscription' ? 'subscription' : 'query'
     }.html#options;
  *
  * @example${operationType === 'Mutation' ? mutationExample : queryExample}
