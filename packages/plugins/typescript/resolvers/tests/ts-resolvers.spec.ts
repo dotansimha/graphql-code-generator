@@ -1211,8 +1211,8 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       export type Resolvers<ContextType = any> = {
         Date?: GraphQLScalarType;
         Query?: QueryResolvers<ContextType>;
-        Node?: NodeResolvers;
-        PostOrUser?: PostOrUserResolvers;
+        Node?: NodeResolvers<ContextType>;
+        PostOrUser?: PostOrUserResolvers<ContextType>;
         Post?: PostResolvers<ContextType>;
         User?: UserResolvers<ContextType>;
       };

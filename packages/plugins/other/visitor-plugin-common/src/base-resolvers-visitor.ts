@@ -1027,7 +1027,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .map(f => `'${f}'`)
       .join(' | ');
 
-    this._collectedResolvers[node.name as any] = name;
+    this._collectedResolvers[node.name as any] = name + '<ContextType>';
     const parentType = this.getParentTypeToUse((node.name as any) as string);
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -1164,7 +1164,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 
-    this._collectedResolvers[node.name as any] = name;
+    this._collectedResolvers[node.name as any] = name + '<ContextType>';
 
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
