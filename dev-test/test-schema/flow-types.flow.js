@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 
 import { type GraphQLResolveInfo } from 'graphql';
 export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> &
