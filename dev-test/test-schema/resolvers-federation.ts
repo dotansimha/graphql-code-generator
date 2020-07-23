@@ -18,9 +18,23 @@ export type Query = {
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+  address?: Maybe<Address>;
+};
+
+export type Address = {
+  __typename?: 'Address';
+  lines: Lines;
+  city?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+};
+
+export type Lines = {
+  __typename?: 'Lines';
+  line1: Scalars['String'];
+  line2?: Maybe<Scalars['String']>;
 };
 
 export type Book = {
@@ -35,6 +49,11 @@ export type ReferenceResolver<TResult, TReference, TContext> = (
   context: TContext,
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
+
+type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
 
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -113,9 +132,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Address: ResolverTypeWrapper<Address>;
+  Lines: ResolverTypeWrapper<Lines>;
   Book: ResolverTypeWrapper<Book>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -123,9 +145,12 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {};
   User: User;
-  ID: Scalars['ID'];
+  Int: Scalars['Int'];
   String: Scalars['String'];
+  Address: Address;
+  Lines: Lines;
   Book: Book;
+  ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
 };
 
@@ -142,12 +167,42 @@ export type UserResolvers<
 > = {
   __resolveReference?: ReferenceResolver<
     Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & Pick<ParentType, 'id'>,
+    { __typename: 'User' } & (
+      | GraphQLRecursivePick<ParentType, { id: true }>
+      | GraphQLRecursivePick<ParentType, { name: true }>
+    ),
     ContextType
   >;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+
+  email?: Resolver<
+    ResolversTypes['String'],
+    { __typename: 'User' } & (
+      | GraphQLRecursivePick<ParentType, { id: true }>
+      | GraphQLRecursivePick<ParentType, { name: true }>
+    ) &
+      GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
+    ContextType
+  >;
+
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type AddressResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']
+> = {
+  lines?: Resolver<ResolversTypes['Lines'], ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type LinesResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Lines'] = ResolversParentTypes['Lines']
+> = {
+  line1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  line2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -162,6 +217,8 @@ export type BookResolvers<
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  Address?: AddressResolvers<ContextType>;
+  Lines?: LinesResolvers<ContextType>;
   Book?: BookResolvers<ContextType>;
 };
 

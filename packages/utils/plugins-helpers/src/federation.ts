@@ -7,17 +7,15 @@ import {
   StringValueNode,
   GraphQLObjectType,
   isObjectType,
-  isNonNullType,
   GraphQLNamedType,
   printType,
   Kind,
+  visit,
+  DefinitionNode,
+  OperationDefinitionNode,
 } from 'graphql';
+import { merge } from 'lodash';
 import { getBaseType } from './utils';
-
-interface FieldSetItem {
-  name: string;
-  required: boolean;
-}
 
 /**
  * Federation Spec
@@ -168,8 +166,7 @@ export class ApolloFederation {
     if (
       this.enabled &&
       isObjectType(parentType) &&
-      isFederationObjectType(parentType) &&
-      fieldNode.name.value === resolveReferenceFieldName
+      isFederationObjectType(parentType)
     ) {
       const keys = getDirectivesByName('key', parentType);
 
@@ -177,17 +174,12 @@ export class ApolloFederation {
         const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
 
         // Look for @requires and see what the service needs and gets
-        const requires = getDirectivesByName('requires', fieldNode)
-          .map(this.extractFieldSet)
-          .reduce((prev, curr) => [...prev, ...curr], [])
-          .map(name => {
-            return { name, required: isNonNullType(parentType.getFields()[name].type) };
-          });
-        const requiredFields = this.translateFieldSet(requires, parentTypeSignature);
+        const requires = getDirectivesByName('requires', fieldNode).map(this.extractKeyOrRequiresFieldSet);
+        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
 
         // @key() @key() - "primary keys" in Federation
         const primaryKeys = keys.map(def => {
-          const fields = this.extractFieldSet(def).map(name => ({ name, required: true }));
+          const fields = this.extractKeyOrRequiresFieldSet(def);
           return this.translateFieldSet(fields, parentTypeSignature);
         });
 
@@ -225,21 +217,52 @@ export class ApolloFederation {
     return false;
   }
 
-  private translateFieldSet(fields: FieldSetItem[], parentTypeRef: string): string {
-    // TODO: support other things than fields separated by a whitespace (fields: "fieldA fieldB fieldC")
-    const keys = fields.map(field => `'${field.name}'`).join(' | ');
-    return `Pick<${parentTypeRef}, ${keys}>`;
+  private translateFieldSet(fields: any, parentTypeRef: string): string {
+    return `GraphQLRecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
   }
 
-  private extractFieldSet(directive: DirectiveNode): string[] {
+  private extractKeyOrRequiresFieldSet(directive: DirectiveNode): any {
+    const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+    const value = (arg.value as StringValueNode).value;
+
+    type SelectionSetField = {
+      name: string,
+      selection: boolean | SelectionSetField[],
+    }
+
+    return visit(parse(`{${value}}`), {
+      leave: {
+        SelectionSet(node) {
+          return ((node.selections as any) as SelectionSetField[]).reduce((accum, field) => {
+            accum[field.name] = field.selection;
+            return accum;
+          }, {});
+        },
+        Field(node) {
+          return {
+            name: node.name.value,
+            selection: node.selectionSet ? node.selectionSet : true,
+          } as SelectionSetField;
+        },
+        Document(node) {
+          return node.definitions.find(
+            (def: DefinitionNode): def is OperationDefinitionNode =>
+              def.kind === 'OperationDefinition' && def.operation === 'query'
+          ).selectionSet;
+        },
+      },
+    });
+  }
+
+  private extractProvidesFieldSet(directive: DirectiveNode): string[] {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
     const value = (arg.value as StringValueNode).value;
 
     if (/[{}]/gi.test(value)) {
-      throw new Error('Nested fields in _FieldSet is not supported');
+      throw new Error('Nested fields in _FieldSet is not supported in the @provides directive');
     }
 
-    return deduplicate(value.split(/\s+/g));
+    return value.split(/\s+/g);
   }
 
   private createMapOfProvides() {
@@ -251,7 +274,7 @@ export class ApolloFederation {
       if (isObjectType(objectType)) {
         Object.values(objectType.getFields()).forEach(field => {
           const provides = getDirectivesByName('provides', field.astNode)
-            .map(this.extractFieldSet)
+            .map(this.extractProvidesFieldSet)
             .reduce((prev, curr) => [...prev, ...curr], []);
           const ofType = getBaseType(field.type);
 
@@ -285,10 +308,6 @@ function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectTy
   const hasKeyDirective = directives.some(d => d.name.value === 'key');
 
   return isNotRoot && isNotIntrospection && hasKeyDirective;
-}
-
-function deduplicate<T>(items: T[]): T[] {
-  return items.filter((item, i) => items.indexOf(item) === i);
 }
 
 /**
