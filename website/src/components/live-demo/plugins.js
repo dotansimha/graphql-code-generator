@@ -29,6 +29,7 @@ export const pluginLoaderMap = {
   'c-sharp-operations': () => import('@graphql-codegen/c-sharp-operations'),
   'c-sharp': () => import('@graphql-codegen/c-sharp'),
   'typescript-urql': () => import('@graphql-codegen/typescript-urql'),
+  'typed-document-node': () => import('@graphql-codegen/typed-document-node'),
   add: () => import('@graphql-codegen/add'),
   time: () => import('@graphql-codegen/time'),
   introspection: () => import('@graphql-codegen/introspection'),
