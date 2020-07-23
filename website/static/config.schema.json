@@ -492,6 +492,11 @@
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -770,6 +775,11 @@
           "default": "",
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
+        },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1159,6 +1169,11 @@
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1268,6 +1283,11 @@
           "default": "",
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
+        },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1438,6 +1458,11 @@
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1547,6 +1572,11 @@
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
         },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1646,6 +1676,11 @@
           "default": "",
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
+        },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1766,6 +1801,11 @@
           "default": "",
           "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.",
           "type": "string"
+        },
+        "pureMagicComment": {
+          "default": false,
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.",
+          "type": "boolean"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",

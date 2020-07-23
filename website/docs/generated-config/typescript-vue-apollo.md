@@ -196,6 +196,14 @@ config:
   importDocumentNodeExternallyFrom: near-operation-file
 ```
 
+### `pureMagicComment`
+
+type: `boolean`
+default: `false`
+
+This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
