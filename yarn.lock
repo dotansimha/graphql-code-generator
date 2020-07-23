@@ -1936,6 +1936,11 @@
     aggregate-error "3.0.1"
     tslib "~2.0.0"
 
+"@graphql-typed-document-node/core@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-0.0.1.tgz#f5cd1a0e75abe8a07a855c463a2ba947fe5913ec"
+  integrity sha512-NqQFW+ZN1wPZjrHGRzLlP2qEisXaDITp21FIuWmsMnP1ed76XI69LT4mv1QF+gWL3SWKgKS3gK8fsTeQUR3Swg==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npmjs.org/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
