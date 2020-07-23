@@ -250,11 +250,11 @@ describe('TypeScript Mongo', () => {
       expect(result).toBeSimilarStringTo(`
       nullableColumnMap: {
         level?: Maybe<string>,
-      },`); // map with ;
+      },`); // map with nullable field;
       expect(result).toBeSimilarStringTo(`
       nonNullableColumnMap: {
         level: string,
-      },`);
+      },`); // map with non-nullable field
       await validate(result, schema, {});
     });
 
