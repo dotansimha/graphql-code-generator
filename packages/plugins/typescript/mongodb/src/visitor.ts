@@ -168,7 +168,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
     tree.addField(
-      mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
       this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type)
     );
   }
@@ -197,7 +197,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     }
 
     tree.addField(
-      mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
       overrideType || this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type)
     );
   }
@@ -212,7 +212,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
     tree.addField(
-      mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
       this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type)
     );
   }
