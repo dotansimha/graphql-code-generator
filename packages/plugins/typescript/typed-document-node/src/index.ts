@@ -1,24 +1,34 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { parse, GraphQLSchema, OperationDefinitionNode } from 'graphql';
-import { pascalCase } from 'change-case';
+import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { extname } from 'path';
+import { LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { TypeScriptDocumentNodesVisitor } from './visitor';
 
-export const plugin: PluginFunction<{}> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
-  return {
-    prepend: [`import { TypedDocumentNode } from '@graphql-typed-document-node/core';`],
-    content: documents
-      .map(docFile => {
-        const operation = docFile.document.definitions[0] as OperationDefinitionNode;
-        const resultTypeName = pascalCase(operation.name.value) + pascalCase(operation.operation);
-        const variablesTypeName = pascalCase(operation.name.value) + pascalCase(operation.operation) + 'Variables';
+export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: RawClientSideBasePluginConfig
+) => {
+  const allAst = concatAST(documents.map(v => v.document));
 
-        return `export const ${operation.name.value}${pascalCase(
-          operation.operation
-        )}: TypedDocumentNode<${resultTypeName}, ${variablesTypeName}> = ${JSON.stringify(
-          parse(docFile.rawSDL, { noLocation: true })
-        )};`;
+  const allFragments: LoadedFragment[] = [
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
       })
-      .join('\n'),
+    ),
+    ...(config.externalFragments || []),
+  ];
+
+  const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
+  const visitorResult = visit(allAst, { leave: visitor });
+
+  return {
+    prepend: visitor.getImports(),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
   };
 };
 

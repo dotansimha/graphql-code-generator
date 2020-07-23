@@ -432,6 +432,10 @@ export class ClientSideBaseVisitor<
     return null;
   }
 
+  protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node: OperationDefinitionNode) {
+    return `DocumentNode`;
+  }
+
   public OperationDefinition(node: OperationDefinitionNode): string {
     if (!node.name || !node.name.value) {
       return null;
@@ -445,16 +449,6 @@ export class ClientSideBaseVisitor<
       useTypesPrefix: false,
     });
 
-    let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      const isDocumentNode =
-        this.config.documentMode === DocumentMode.documentNode ||
-        this.config.documentMode === DocumentMode.documentNodeImportFragments;
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
-        isDocumentNode ? ': DocumentNode' : ''
-      } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
-    }
-
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
 
@@ -464,6 +458,16 @@ export class ClientSideBaseVisitor<
     const operationVariablesTypes: string = this.convertName(node, {
       suffix: operationTypeSuffix + 'Variables',
     });
+
+    let documentString = '';
+    if (this.config.documentMode !== DocumentMode.external) {
+      const isDocumentNode =
+        this.config.documentMode === DocumentMode.documentNode ||
+        this.config.documentMode === DocumentMode.documentNodeImportFragments;
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
+        isDocumentNode ? `: ${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)}` : ''
+      } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+    }
 
     const additional = this.buildOperation(
       node,
