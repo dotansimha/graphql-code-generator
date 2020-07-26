@@ -96,7 +96,7 @@
     "java-ast": "0.3.0",
     "jest": "26.1.0",
     "jest-docblock": "26.0.0",
-    "jest-junit": "11.0.1",
+    "jest-junit": "11.1.0",
     "lint-staged": "10.2.11",
     "lodash": "4.17.19",
     "rimraf": "3.0.2",
