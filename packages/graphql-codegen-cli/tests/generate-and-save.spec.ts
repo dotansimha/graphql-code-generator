@@ -161,42 +161,38 @@ describe('generate-and-save', () => {
   });
 
   test.only('should override generated files', async () => {
-    try {
-      jest.unmock('fs');
-      const fs = await import('fs');
+    jest.unmock('fs');
+    const fs = await import('fs');
 
-      makeDir.sync(dirname(outputFile));
-      if (fs.existsSync(outputFile)) {
-        fs.unlinkSync(outputFile);
-      }
-      fs.writeFileSync(
-        inputFile,
-        `
+    makeDir.sync(dirname(outputFile));
+    if (fs.existsSync(outputFile)) {
+      fs.unlinkSync(outputFile);
+    }
+    fs.writeFileSync(
+      inputFile,
+      `
     import gql from 'graphql-tag';
     const MyQuery = gql\`query MyQuery { f }\`;
   `,
-        {}
-      );
-      const generateOnce: () => Promise<Types.FileOutput[]> = () =>
-        generate(
-          {
-            schema: SIMPLE_TEST_SCHEMA,
-            documents: inputFile,
-            generates: {
-              [outputFile]: {
-                plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
-              },
+      {}
+    );
+    const generateOnce: () => Promise<Types.FileOutput[]> = () =>
+      generate(
+        {
+          schema: SIMPLE_TEST_SCHEMA,
+          documents: inputFile,
+          generates: {
+            [outputFile]: {
+              plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
             },
           },
-          true
-        );
-      const [firstOutput] = await generateOnce();
-      fs.writeFileSync(firstOutput.filename, firstOutput.content);
+        },
+        true
+      );
+    const [firstOutput] = await generateOnce();
+    fs.writeFileSync(firstOutput.filename, firstOutput.content);
 
-      await generateOnce();
-    } catch (e) {
-      console.log(e);
-    }
+    await generateOnce();
   });
   test('should extract a document from the gql tag (imported from apollo-server)', async () => {
     const filename = 'overwrite.ts';

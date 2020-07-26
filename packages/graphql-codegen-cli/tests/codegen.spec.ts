@@ -973,7 +973,6 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (e) {
-      console.log(e);
       expect(e).toBeFalsy();
     }
   });
