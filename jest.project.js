@@ -16,6 +16,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     rootDir: dirname,
     globals: {
       'ts-jest': {
+        packageJson: 'package.json',
         diagnostics: false,
         tsConfig: 'tsconfig.json',
       },

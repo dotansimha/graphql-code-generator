@@ -25,7 +25,8 @@
     "tslib": "~2.0.0"
   },
   "devDependencies": {
-    "@oclif/command": "1.7.0"
+    "@oclif/command": "1.7.0",
+    "graphql": "15.3.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

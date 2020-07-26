@@ -192,7 +192,9 @@ describe('CLI Flags', () => {
       await createContext(parseArgv(args));
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e.message).toContain(`Cannot find module 'my-extension'`);
+      expect(e.message).toContain(
+        `Your application tried to access my-extension, but it isn't declared in your dependencies;`
+      );
     }
   });
 });

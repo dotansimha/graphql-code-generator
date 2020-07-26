@@ -14,12 +14,14 @@
     "prepack": "bob prepack"
   },
   "devDependencies": {
-    "@types/parse-filepath": "1.0.0"
+    "@types/parse-filepath": "1.0.0",
+    "graphql": "15.3.0"
   },
   "dependencies": {
     "@graphql-codegen/add": "1.17.4",
     "@graphql-codegen/plugin-helpers": "1.17.4",
     "@graphql-codegen/visitor-plugin-common": "1.17.4",
+    "@graphql-tools/utils": "^6.0.0",
     "parse-filepath": "1.0.2",
     "tslib": "~2.0.0"
   },

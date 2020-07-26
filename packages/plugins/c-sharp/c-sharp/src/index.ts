@@ -1,7 +1,7 @@
 import { parse, GraphQLSchema, printSchema, visit } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { CSharpResolversVisitor } from './visitor';
-import { buildPackageNameFromPath } from '../../common/common';
+import { buildPackageNameFromPath } from '@graphql-codegen/c-sharp-common';
 import { dirname, normalize } from 'path';
 import { CSharpResolversPluginRawConfig } from './config';
 

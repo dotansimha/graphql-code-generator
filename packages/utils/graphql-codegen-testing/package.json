@@ -33,6 +33,10 @@
     "open": "7.1.0",
     "tslib": "~2.0.0"
   },
+  "devDependencies": {
+    "jest-diff": "26.1.0",
+    "typescript": "3.9.7"
+  },
   "publishConfig": {
     "access": "public"
   }

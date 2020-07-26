@@ -91,7 +91,9 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     const fieldObj = schemaType.getFields();
     return [
       `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`)
+        .map(
+          fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`
+        )
         .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
     ];
   }

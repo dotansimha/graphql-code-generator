@@ -217,7 +217,7 @@ generates:
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    preset: near-operation-file
+    preset: near-operation-file-preset
     presetConfig:
       extension: .stencil-component.tsx
       folder: __generated__
@@ -287,7 +287,7 @@ generates:
   ./dev-test/star-wars:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
-    preset: near-operation-file
+    preset: near-operation-file-preset
     presetConfig:
       extension: .tsx
       folder: __generated__

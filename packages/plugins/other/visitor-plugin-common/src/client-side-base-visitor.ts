@@ -265,11 +265,7 @@ export class ClientSideBaseVisitor<
     const fragments = this._transformFragments(node);
 
     const doc = this._prepareDocument(`
-    ${
-      print(node)
-        .split('\\')
-        .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
-    }
+    ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {

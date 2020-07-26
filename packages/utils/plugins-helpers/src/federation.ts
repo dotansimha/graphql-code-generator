@@ -163,11 +163,7 @@ export class ApolloFederation {
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
   }) {
-    if (
-      this.enabled &&
-      isObjectType(parentType) &&
-      isFederationObjectType(parentType)
-    ) {
+    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType)) {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
@@ -226,9 +222,9 @@ export class ApolloFederation {
     const value = (arg.value as StringValueNode).value;
 
     type SelectionSetField = {
-      name: string,
-      selection: boolean | SelectionSetField[],
-    }
+      name: string;
+      selection: boolean | SelectionSetField[];
+    };
 
     return visit(parse(`{${value}}`), {
       leave: {

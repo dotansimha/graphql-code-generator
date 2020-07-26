@@ -19,7 +19,12 @@ import {
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { getListInnerTypeNode, C_SHARP_SCALARS, getListTypeField, getListTypeDepth } from '../../common/common';
+import {
+  getListInnerTypeNode,
+  C_SHARP_SCALARS,
+  getListTypeField,
+  getListTypeDepth,
+} from '@graphql-codegen/c-sharp-common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;

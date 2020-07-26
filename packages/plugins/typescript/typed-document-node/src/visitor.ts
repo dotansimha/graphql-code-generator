@@ -7,8 +7,7 @@ import {
   DocumentMode,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { OperationDefinitionNode , GraphQLSchema } from 'graphql';
-
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 
 export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
   RawClientSideBasePluginConfig,

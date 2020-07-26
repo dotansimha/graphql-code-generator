@@ -17,6 +17,7 @@
     "moment": "~2.27.0"
   },
   "devDependencies": {
+    "graphql": "15.3.0",
     "moment": "2.27.0"
   },
   "peerDependencies": {

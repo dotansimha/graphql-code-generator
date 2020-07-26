@@ -37,7 +37,7 @@ import {
   csharpKeywords,
   wrapFieldType,
   getListTypeField,
-} from '../../common/common';
+} from '@graphql-codegen/c-sharp-common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;

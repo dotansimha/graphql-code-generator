@@ -1,5 +1,8 @@
 {
-    "yaml.schemas": {
-      "./website/static/config.schema.json": "*codegen.*"
-    }
-  }
+  "yaml.schemas": {
+    "./website/static/config.schema.json": "*codegen.*"
+  },
+  "eslint.nodePath": ".yarn/sdks",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

@@ -525,7 +525,7 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
-            plugins: ['./tests/custom-plugins/basic.js'],
+            plugins: ['cli/tests/custom-plugins/basic.js'],
           },
         },
       });
@@ -540,7 +540,7 @@ describe('Codegen Executor', () => {
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
             'out1.ts': {
-              plugins: ['./tests/custom-plugins/invalid.js'],
+              plugins: ['cli/tests/custom-plugins/invalid.js'],
             },
           },
         });
@@ -558,7 +558,7 @@ describe('Codegen Executor', () => {
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
             'out1.ts': {
-              plugins: ['./tests/custom-plugins/validation.js'],
+              plugins: ['cli/tests/custom-plugins/validation.js'],
             },
           },
         });
@@ -575,7 +575,10 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
-            plugins: ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+            plugins: [
+              'cli/tests/custom-plugins/extends-schema.js',
+              'cli/tests/custom-plugins/checks-extended-schema.js',
+            ],
           },
         },
       });
@@ -593,7 +596,7 @@ describe('Codegen Executor', () => {
         },
         generates: {
           'out1.ts': {
-            plugins: ['./tests/custom-plugins/extends-schema-fn.js'],
+            plugins: ['cli/tests/custom-plugins/extends-schema-fn.js'],
           },
         },
       });
@@ -970,6 +973,7 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (e) {
+      console.log(e);
       expect(e).toBeFalsy();
     }
   });

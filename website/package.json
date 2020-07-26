@@ -10,26 +10,23 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
-    "worker-loader": "2.0.0",
-    "file-loader": "6.0.0",
-    "style-loader": "1.2.1",
-    "monaco-editor-webpack-plugin": "1.9.0",
     "@docusaurus/core": "2.0.0-alpha.59",
     "@docusaurus/preset-classic": "2.0.0-alpha.59",
     "@graphql-codegen/config-schema": "1.17.4",
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
+    "file-loader": "6.0.0",
+    "monaco-editor-webpack-plugin": "1.9.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "remark-code-import": "0.2.0",
     "remark-import-partial": "0.0.2",
+    "style-loader": "1.2.1",
     "ts-node": "8.10.2",
-    "vscode-languageserver-types": "3.15.1"
+    "vscode-languageserver-types": "3.15.1",
+    "worker-loader": "2.0.0"
   },
   "dependencies": {
-    "react-markdown": "4.3.1",
-    "monaco-yaml": "2.4.1",
-    "react-select": "3.1.0",
     "@graphql-codegen/add": "1.17.4",
     "@graphql-codegen/c-sharp": "1.17.4",
     "@graphql-codegen/c-sharp-operations": "1.17.4",
@@ -47,8 +44,8 @@
     "@graphql-codegen/near-operation-file-preset": "1.17.4",
     "@graphql-codegen/schema-ast": "1.17.4",
     "@graphql-codegen/time": "1.17.4",
-    "@graphql-codegen/typescript": "1.17.4",
     "@graphql-codegen/typed-document-node": "1.17.4",
+    "@graphql-codegen/typescript": "1.17.4",
     "@graphql-codegen/typescript-apollo-angular": "1.17.4",
     "@graphql-codegen/typescript-compatibility": "1.17.4",
     "@graphql-codegen/typescript-generic-sdk": "1.17.4",
@@ -62,8 +59,11 @@
     "@graphql-codegen/typescript-type-graphql": "1.17.4",
     "@graphql-codegen/typescript-urql": "1.17.4",
     "@graphql-codegen/typescript-vue-apollo": "1.17.4",
+    "js-yaml": "3.14.0",
+    "monaco-yaml": "2.4.1",
+    "react-markdown": "4.3.1",
     "react-monaco-editor": "0.39.1",
-    "js-yaml": "3.14.0"
+    "react-select": "3.1.0"
   },
   "browserslist": {
     "production": [

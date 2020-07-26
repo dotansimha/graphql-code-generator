@@ -13,11 +13,17 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
     "graphql-tag": "2.10.4"
   },
+  "devDependencies": {
+    "graphql": "15.3.0",
+    "graphql-tag": "2.10.4"
+  },
   "dependencies": {
+    "@graphql-codegen/c-sharp-common": "1.17.4",
     "@graphql-codegen/plugin-helpers": "1.17.4",
     "@graphql-codegen/visitor-plugin-common": "1.17.4",
     "auto-bind": "4.0.0",
     "camel-case": "4.1.1",
+    "strip-indent": "3.0.0",
     "tslib": "2.0.0"
   },
   "sideEffects": false,

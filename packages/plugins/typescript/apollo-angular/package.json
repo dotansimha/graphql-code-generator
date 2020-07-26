@@ -24,6 +24,10 @@
     "camel-case": "4.1.1",
     "tslib": "~2.0.0"
   },
+  "devDependencies": {
+    "graphql": "15.3.0",
+    "graphql-tag": "2.10.4"
+  },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",

@@ -7,7 +7,6 @@ import {
   normalizeConfig,
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
-
 import { Renderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
 import { getPluginByName } from './plugins';
@@ -16,7 +15,13 @@ import { debugLog } from './utils/debugging';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { CodegenContext, ensureContext } from './config';
 
-export const defaultLoader = (mod: string) => import(mod);
+export const defaultLoader = (mod: string) => {
+  if ((process.versions as any).pnp) {
+    return require(require('pnpapi').resolveRequest(mod, process.cwd() + '/', { considerBuiltins: false }));
+  } else {
+    return import(mod);
+  }
+};
 
 export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source: string) {
