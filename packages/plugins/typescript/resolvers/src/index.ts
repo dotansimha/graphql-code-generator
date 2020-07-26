@@ -105,16 +105,17 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
   if (config.customResolverFn) {
     const parsedMapper = parseMapper(config.customResolverFn);
     if (parsedMapper.isExternal) {
+      const importType = config.useTypeImports ? 'import type' : 'import';
       if (parsedMapper.default) {
-        prepend.push(`import ResolverFn from '${parsedMapper.source}';`);
+        prepend.push(`${importType} ResolverFn from '${parsedMapper.source}';`);
       } else {
         prepend.push(
-          `import { ${parsedMapper.import} ${parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''}} from '${
-            parsedMapper.source
-          }';`
+          `${importType} { ${parsedMapper.import} ${
+            parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''
+          }} from '${parsedMapper.source}';`
         );
       }
-      prepend.push(`export { ResolverFn };`);
+      prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
     } else {
       prepend.push(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
     }

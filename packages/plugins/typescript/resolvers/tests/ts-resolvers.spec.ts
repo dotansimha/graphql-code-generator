@@ -973,6 +973,78 @@ describe('TypeScript Resolvers Plugin', () => {
 
     await validate(result);
   });
+  it('Should allow to override context with mapped context type as default export with type import', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        contextType: './my-file#default',
+        useTypeImports: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import type { default as ContextType } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = ContextType, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyOtherTypeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
+        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyUnionResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn<ParentType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>,
+      };
+    `);
+
+    await validate(result);
+  });
 
   it('should generate named custom field level context type', async () => {
     const result = (await plugin(
@@ -1462,6 +1534,49 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     expect(content.prepend).toContain(`import RootValueType from 'my-file';`);
+  });
+
+  it('should use correct value when rootValueType mapped as default with type import', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Mutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+    const content = (await plugin(
+      testSchema,
+      [],
+      {
+        rootValueType: 'my-file#default',
+        useTypeImports: true,
+      },
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        Query: ResolverTypeWrapper<RootValueType>,
+        Post: ResolverTypeWrapper<Post>,
+        String: ResolverTypeWrapper<Scalars['String']>,
+        Mutation: ResolverTypeWrapper<RootValueType>,
+        Subscription: ResolverTypeWrapper<RootValueType>,
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+      };
+    `);
+
+    expect(content.prepend).toContain(`import type { default as RootValueType } from 'my-file';`);
   });
 
   it('should use rootValueType in Query, Mutation and Subscription', async () => {

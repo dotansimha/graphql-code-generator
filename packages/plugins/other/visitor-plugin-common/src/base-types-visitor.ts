@@ -408,10 +408,14 @@ export class BaseTypesVisitor<
   }
 
   protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
+    const { useTypeImports } = this.config;
     if (asDefault) {
+      if (useTypeImports) {
+        return `import type { default as ${identifier} } from '${source}';`;
+      }
       return `import ${identifier} from '${source}';`;
     }
-    return `import { ${identifier} } from '${source}';`;
+    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
   }
 
   protected handleEnumValueMapper(

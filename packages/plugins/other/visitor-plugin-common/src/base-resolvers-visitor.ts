@@ -729,7 +729,19 @@ export class BaseResolversVisitor<
     }
 
     const defaultType = types.find(t => t.asDefault === true);
-    const namedTypes = types.filter(t => !t.asDefault);
+    let namedTypes = types.filter(t => !t.asDefault);
+
+    if (this.config.useTypeImports) {
+      if (defaultType) {
+        // default as Baz
+        namedTypes = [{ identifier: `default as ${defaultType.identifier}` }, ...namedTypes];
+      }
+      // { Foo, Bar as BarModel }
+      const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
+
+      // { default as Baz, Foo, Bar as BarModel }
+      return `import type ${[namedImports].filter(Boolean).join(', ')} from '${source}';`;
+    }
 
     // { Foo, Bar as BarModel }
     const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
