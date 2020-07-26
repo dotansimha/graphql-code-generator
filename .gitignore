@@ -19,8 +19,12 @@ dist
 out.txt
 .cache
 tsconfig.tsbuildinfo
-.yarn
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
 .pnp.*
+!.yarn/releases/*
+!.yarn/plugins/*
+.yarn/cache
+.yarn/unplugged
+.yarn/sdks
+.yarn/build-state.yml
+.yarn/install-state.gz
+
