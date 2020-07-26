@@ -498,18 +498,18 @@ describe('ResolversTypes', () => {
     );
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: ResolverTypeWrapper<{}>,
-      MyType: ResolverTypeWrapper<DatabaseMyType>,
-      String: ResolverTypeWrapper<Scalars['String']>,
-      MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>,
-      Subscription: ResolverTypeWrapper<{}>,
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-      Node: ResolversTypes['SomeNode'],
-      ID: ResolverTypeWrapper<Scalars['ID']>,
-      SomeNode: ResolverTypeWrapper<SomeNode>,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
-      Int: ResolverTypeWrapper<Scalars['Int']>,
+       MyType: ResolverTypeWrapper<DatabaseMyType>;
+       String: ResolverTypeWrapper<Scalars['String']>;
+       MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>;
+       Query: ResolverTypeWrapper<{}>;
+       Subscription: ResolverTypeWrapper<{}>;
+       Node: ResolversTypes['SomeNode'];
+       ID: ResolverTypeWrapper<Scalars['ID']>;
+       SomeNode: ResolverTypeWrapper<SomeNode>;
+       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
+       Int: ResolverTypeWrapper<Scalars['Int']>;
+       Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
     };`);
   });
 
