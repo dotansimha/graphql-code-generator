@@ -18,14 +18,15 @@ module.exports = {
     algolia: {
       apiKey: 'dc81d9e0ead1aecb5e776d262181ceeb',
       indexName: 'graphql-code-generator',
-      algoliaOptions: {},
+      searchParameters: {},
     },
     navbar: {
+      title: 'GraphQL Code Generator',
       logo: {
         alt: 'GraphQL Code Generator',
-        src: 'img/gql-codegen-horizontal.svg'
+        src: 'img/gql-codegen-icon.svg'
       },
-      links: [
+      items: [
         {
           to: 'docs/getting-started/index',
           activeBasePath: 'docs',
@@ -77,17 +78,8 @@ module.exports = {
     }
   },
   scripts: [
-    {
-      src: '/js/fix-location.js',
-      async: false,
-      defer: false,
-    },
-    {
-      src: 'https://the-guild.dev/static/banner.js',
-      // we may want to load it ASAP
-      async: true,
-      defer: true,
-    }
+    '/js/fix-location.js',
+    'https://the-guild.dev/static/banner.js'
   ],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
