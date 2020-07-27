@@ -132,7 +132,7 @@ export const plugin: PluginFunction<Partial<MyPluginConfig>, MyPluginConfig> = (
 
 > `config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
 
-You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Validate Configuration](./validate-configuration) and [Using Visitor](./using-visitor) sections.
+You can follow the plugin tips in [Write Your Plugin](write-your-plugin.md), [Validate Configuration](validate-configuration.md) and [Using Visitor](using-visitor.md) sections.
 
 ## 7. Test your plugin
 

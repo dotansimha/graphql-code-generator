@@ -73,9 +73,9 @@ export type Query = {
 
 ## What's next?
 
-Start by [installing GraphQL Code Generator](./installation) in your project, and use the basic plugins to generate some code. 
+Start by [installing GraphQL Code Generator](installation.md) in your project, and use the basic plugins to generate some code. 
 
-You can go over [the list of available plugins](../plugins/index) and find more plugins that matches your needs. 
+You can go over [the list of available plugins](../plugins/index.md) and find more plugins that matches your needs. 
 
 If you are having issues, you can reach us this the following:
 

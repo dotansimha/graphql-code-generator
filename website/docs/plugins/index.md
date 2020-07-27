@@ -42,7 +42,7 @@ Below is a table that lists all available plugins which can be installed via NPM
 | Scala Plugins                      | generates types for schema and operations, maintained by [`aappddeevv`](https://github.com/aappddeevv) | [`@aappddeevvv/graphql-code-scala-operations`,`@aappddeevvv/graphql-code-scala-schema`](https://github.com/aappddeevv/graphql-codegen-scala) |
 | `apollo-typed-documents`           | Generates `declare module` for `.graphql` files with generic `TypedDocumentNode<TVariables, TData>`. Also generates helper function to create mocks for Apollo Client `MockedProvider`. Maintained by [`rubengrill`](https://github.com/rubengrill/apollo-typed-documents) | [`apollo-typed-documents/lib/codegenTypedDocuments`,`apollo-typed-documents/lib/codegenApolloMock`](https://github.com/rubengrill/apollo-typed-documents) |
 
-In addition, you can build your own code generating plugins based on your specific needs. For more information, check [this doc page](../custom-codegen/index).
+In addition, you can build your own code generating plugins based on your specific needs. For more information, check [this doc page](../custom-codegen/index.md).
 
 ## How to use Plugins
 
