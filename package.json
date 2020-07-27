@@ -66,7 +66,7 @@
     "@types/node": "14.0.26",
     "@types/react": "16.9.43",
     "@types/request": "2.48.5",
-    "@vue/apollo-composable": "4.0.0-alpha.8",
+    "@vue/apollo-composable": "4.0.0-alpha.10",
     "@vue/composition-api": "0.6.7",
     "bob-the-bundler": "1.0.2",
     "graphql-config": "^3.0.2",
