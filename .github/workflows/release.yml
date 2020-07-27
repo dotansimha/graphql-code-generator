@@ -46,11 +46,3 @@ jobs:
         run: npm run release
         env:
           RELEASE_VERSION: ${{ github.event.release.tag_name }}
-      - name: Commit updated package.json files
-        run: |
-          git add .
-          git commit -m "${{ github.event.release.tag_name }}"
-      - name: Push all the changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,5 @@
 {
   "name": "graphql-code-generator",
-  "version": "1.17.4",
   "private": true,
   "scripts": {
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
@@ -41,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "npm": "6.14.7",
     "@graphql-typed-document-node/core": "0.0.1",
     "auto-bind": "4.0.0",
     "@graphql-tools/apollo-engine-loader": "6.0.15",
