@@ -41,7 +41,7 @@ jobs:
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'release:canary'
-      - uses: 'dotansimha/upload-artifact@master'
+      - uses: 'dotansimha/upload-artifact@3eefc7a3e6622e6283b494cac1d2e399e0a7c6d1'
         with:
           path: '*.tgz'
           skipArchive: true
