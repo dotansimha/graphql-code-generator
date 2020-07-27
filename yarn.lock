@@ -3366,12 +3366,13 @@
   dependencies:
     wonka "^4.0.14"
 
-"@vue/apollo-composable@4.0.0-alpha.8":
-  version "4.0.0-alpha.8"
-  resolved "https://registry.npmjs.org/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.8.tgz#6e82a64b1f9637941579aa560defbca3765401ba"
-  integrity sha512-d+9Uigio43C13ex/FfvJ6oaB3YjNUvIc91jSix4PfJERcCPtCeLlVHYinX2MMv40va6gY9sC6GN6QzL5o/80uQ==
+"@vue/apollo-composable@4.0.0-alpha.10":
+  version "4.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.10.tgz#17ad81552f55adde205cad982560ff120e92da87"
+  integrity sha512-PfbUFC+vCjtaRlhYJXekBD9x8yq/JGc/l0J9pEqvE5ZNAE5t6xUsSSdxiWt5bGo08slcdvVno7btydUWnIddBg==
   dependencies:
     throttle-debounce "^2.1.0"
+    vue-demi latest
 
 "@vue/composition-api@0.6.7":
   version "0.6.7"
@@ -17020,6 +17021,11 @@ vscode-uri@^2.1.1, vscode-uri@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-2.1.2.tgz#c8d40de93eb57af31f3c715dd650e2ca2c096f1c"
   integrity sha512-8TEXQxlldWAuIODdukIb+TR5s+9Ds40eSJrw+1iDDA9IFORPjMELarNQE3myz5XIkWWpdprmJjm1/SxMlWOC8A==
+
+vue-demi@latest:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.1.4.tgz#640207ebc8244cd994ddc06c86ad3bfc16b4b7f4"
+  integrity sha512-8Hu4A9jLGK+SIIetMamf81eT2m9QUsiPaXSkiDTuPo9qEhSt56OCH/X+kmmg5Pg6kfzdTzKvvjlDBKWd41A7pg==
 
 vue-template-compiler@^2.6.11:
   version "2.6.11"
