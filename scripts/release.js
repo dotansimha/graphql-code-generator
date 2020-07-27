@@ -5,6 +5,7 @@ const { join } = require('path');
 const semver = require('semver');
 const cp = require('child_process');
 const npm = require('npm');
+const limit = require('p-limit')(5);
 
 function readWorkspaceInfo() {
   const rawOutput = cp.execSync(`yarn workspaces info`).toString();
@@ -32,7 +33,7 @@ async function writePackage(path, content) {
 }
 
 async function getNewVersion() {
-  let version = argv._[0] ||  process.env.RELEASE_VERSION || await getMostRecentStable();
+  let version = argv._[0] || process.env.RELEASE_VERSION || await getMostRecentStable();
 
   if (version.startsWith('v')) {
     version = version.replace('v', '')
@@ -66,7 +67,11 @@ async function bumpDependencies(availableSiblings, newVersion, dependencies = {}
   }));
 }
 
-async function publishDirectory(directory, attempt = 0) {
+async function publishDirectory(directory) {
+  if (argv.dryrun) {
+    return;
+  }
+
   return new Promise((resolve, reject) => {
     npm.publish(directory, (err, result) => {
       if (err) {
@@ -114,20 +119,20 @@ async function release() {
   // Bump all package.json files and publish
   const availableSiblings = Array.from(packages.keys());
   await Promise.all(
-    Array.from(packages.entries()).map(async ([packageName, { path, content }]) => {
+    Array.from(packages.entries()).map(([packageName, { path, content }]) => limit(async () => {
       console.info(`Updating and publishing package: ${packageName} from package; ${path}`)
       content.version = version;
       content.publishConfig = { access: 'public', tag: content.version.includes('alpha') ? 'alpha' : 'latest' };
 
       bumpDependencies(availableSiblings, version, content.dependencies);
-      
+
       if (content.devDependencies) {
         delete content.devDependencies;
       }
 
       await writePackage(path, content);
       await publishDirectory(path);
-    })
+    }))
   );
 
   return version;
