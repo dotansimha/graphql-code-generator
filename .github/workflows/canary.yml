@@ -41,9 +41,10 @@ jobs:
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'release:canary'
-      - uses: actions/upload-artifact@v2
+      - uses: 'dotansimha/upload-artifact@master'
         with:
           path: '*.tgz'
+          skipArchive: true
       - name: Publish a message
         if: steps.canary.outputs.released
         uses: 'kamilkisiela/pr-comment@master'
