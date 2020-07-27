@@ -13,7 +13,7 @@
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
     "release": "node scripts/release.js",
-    "release:canary": "node scripts/release.js --canary",
+    "release:canary": "node scripts/release.js --canary --pack",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
   "husky": {

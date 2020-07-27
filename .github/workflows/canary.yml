@@ -41,6 +41,10 @@ jobs:
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'release:canary'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: canary-release
+          path: '*.tgz'
       - name: Publish a message
         if: steps.canary.outputs.released
         uses: 'kamilkisiela/pr-comment@master'

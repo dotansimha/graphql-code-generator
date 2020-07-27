@@ -10,11 +10,16 @@ const limit = require('p-limit')(5);
 function readWorkspaceInfo() {
   const rawOutput = cp.execSync(`yarn workspaces info`).toString();
   const lines = rawOutput.split('\n');
-  lines.shift();
-  lines.pop();
   lines.pop();
 
-  return JSON.parse(lines.join('\n'));
+  try {
+    return JSON.parse(lines.join('\n'));
+  } catch (e) {
+    lines.shift();
+    lines.pop();
+
+    return JSON.parse(lines.join('\n'));
+  }
 }
 
 async function readPackage(path) {
@@ -73,17 +78,31 @@ async function publishDirectory(directory) {
   }
 
   return new Promise((resolve, reject) => {
-    npm.publish(directory, (err, result) => {
-      if (err) {
-        if (err.toString().includes('You cannot publish over the previously published versions')) {
-          resolve({});
-        } else {
+    if (argv.pack) {
+      npm.pack(directory, (err, result) => {
+        if (err) {
           reject(err);
+        } else {
+          resolve({
+            package: result[0].name,
+            version: result[0].version,
+            file: result[0].filename,
+          });
         }
-      } else {
-        resolve(result);
-      }
-    })
+      })
+    } else {
+      npm.publish(directory, (err, result) => {
+        if (err) {
+          if (err.toString().includes('You cannot publish over the previously published versions')) {
+            resolve({});
+          } else {
+            reject(err);
+          }
+        } else {
+          resolve(result);
+        }
+      })
+    }
   });
 }
 
