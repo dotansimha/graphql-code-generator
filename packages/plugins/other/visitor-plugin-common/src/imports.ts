@@ -6,6 +6,7 @@ export type ImportDeclaration<T = string> = {
   importSource: ImportSource<T>;
   baseOutputDir: string;
   baseDir: string;
+  typesImport: boolean;
 };
 
 export type ImportSource<T = string> = {
@@ -41,16 +42,23 @@ export function generateFragmentImportStatement(
     path,
     namespace,
   };
-  return generateImportStatement({ importSource, ...rest });
+  return generateImportStatement({
+    importSource,
+    ...rest,
+    typesImport: kind === 'type' ? statement.typesImport : false,
+  });
 }
 
 export function generateImportStatement(statement: ImportDeclaration): string {
-  const { baseDir, importSource, outputPath } = statement;
+  const { baseDir, importSource, outputPath, typesImport } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames =
-    importSource.identifiers && importSource.identifiers.length ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }` : '*';
+    importSource.identifiers && importSource.identifiers.length
+      ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
+      : '*';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-  return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+  const importStatement = typesImport ? 'import type' : 'import';
+  return `${importStatement} ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
 }
 
 function resolveImportPath(baseDir: string, outputPath: string, sourcePath: string) {

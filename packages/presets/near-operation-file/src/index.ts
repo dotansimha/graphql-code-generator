@@ -160,6 +160,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
         namespace: importTypesNamespace,
       },
+      typesImport: options.config.useTypeImports ?? false,
     });
 
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {

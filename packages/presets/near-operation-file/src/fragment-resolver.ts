@@ -132,7 +132,7 @@ export default function buildFragmentResolver<T>(
 ) {
   const fragmentRegistry = buildFragmentRegistry(collectorOptions, presetOptions, schemaObject);
   const { baseOutputDir } = presetOptions;
-  const { baseDir } = collectorOptions;
+  const { baseDir, typesImport } = collectorOptions;
 
   function resolveFragments(generatedFilePath: string, documentFileContent: DocumentNode) {
     const fragmentsInUse = extractExternalFragmentsInUse(documentFileContent, fragmentRegistry);
@@ -175,6 +175,7 @@ export default function buildFragmentResolver<T>(
             path: fragmentsFilePath,
             identifiers,
           },
+          typesImport,
         })
       ),
     };
