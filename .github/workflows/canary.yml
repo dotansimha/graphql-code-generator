@@ -10,7 +10,6 @@ on:
 jobs:
   publish-canary:
     name: Publish Canary
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: contains(github.actor, 'renovate') == false
     steps:

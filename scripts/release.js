@@ -1,116 +1,151 @@
 /* eslint-disable no-console */
 const { argv } = require('yargs');
-const { sync: glob } = require('globby');
-const { writeFile, readJSON, writeJSON } = require('fs-extra');
-const { resolve, dirname, join } = require('path');
+const { writeJSON, readJSON, existsSync } = require('fs-extra');
+const { join } = require('path');
 const semver = require('semver');
 const cp = require('child_process');
-const { cwd } = require('process');
+const npm = require('npm');
 
-const pLimit = require('p-limit');
- 
-const limit = pLimit(5);
+function readWorkspaceInfo() {
+  const rawOutput = cp.execSync(`yarn workspaces info`).toString();
+  const lines = rawOutput.split('\n');
+  lines.shift();
+  lines.pop();
+  lines.pop();
 
-async function release() {
-
-    const rootPackageJson = await readJSON(join(__dirname, '../package.json'));
-
-    let version = process.env.RELEASE_VERSION || rootPackageJson.version;
-    if(version.startsWith('v')) {
-        version = version.replace('v', '')
-    }
-    let tag = argv.tag || 'latest';
-    if (argv.canary) {
-        const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-        version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
-        tag = 'canary';
-    }
-
-    console.info(`Version: ${version}`);
-    console.info(`Tag: ${tag}`);
-
-    const workspacePackageGlobs = Array.isArray(rootPackageJson.workspaces) ? rootPackageJson.workspaces : rootPackageJson.workspaces.packages;
-    
-    const workspacePackageJsonGlobs = workspacePackageGlobs.map(workspace => workspace + '/package.json');
-
-    // Deduplicate using set
-    const packageJsonPaths = glob(workspacePackageJsonGlobs).map(packageJsonPath => resolve(cwd(), packageJsonPath));
-    
-    const packageNames = new Set();
-    const arr = [];
-    const packageJsons = await Promise.all(packageJsonPaths.map(async packageJsonPath => {
-        const json = await readJSON(packageJsonPath);
-        if(packageNames.has(json.name)) {
-            throw new Error(`You have ${json.name} package more then once!`)
-        }
-        packageNames.add(json.name);
-        arr.push(json.name)
-        return {
-            path: packageJsonPath,
-            content: json,
-        };
-    }));
-
-    rootPackageJson.version = version;
-    await writeFile(resolve(__dirname, '../package.json'), JSON.stringify(rootPackageJson, null, 2));
-
-    async function handleDependencies(dependencies = {}) {
-        return Promise.all(Object.keys(dependencies).map(async dependency => {
-            if (packageNames.has(dependency)) {
-                dependencies[dependency] = version;
-            }
-        }));
-    }
-
-    await Promise.all(packageJsons.map(({ path: packageJsonPath, content: packageJson }) => limit(async () => {
-        packageJson.version = version;
-        await Promise.all([
-            handleDependencies(packageJson.dependencies),
-            handleDependencies(packageJson.devDependencies),
-        ]);
-        await writeJSON(packageJsonPath, packageJson, {
-            spaces: 2,
-        });
-        if (!packageJson.private) {
-            const distDirName = (packageJson.publishConfig && packageJson.publishConfig.directory) || 'dist';
-            const distPath = join(dirname(packageJsonPath), distDirName);
-
-            // Fix package.json in dist directory
-            const distPackageJsonPath = join(distPath, 'package.json');
-            const distPackageJson = await readJSON(distPackageJsonPath);
-            distPackageJson.name = packageJson.name;
-            distPackageJson.version = packageJson.version;
-            distPackageJson.dependencies = packageJson.dependencies;
-            distPackageJson.devDependencies = packageJson.devDependencies;
-            distPackageJson.publishConfig = {
-                access: (packageJson.publishConfig && packageJson.publishConfig.access) || 'public'
-            }
-            await writeJSON(distPackageJsonPath, distPackageJson, {
-                spaces: 2,
-            });
-            return new Promise((resolve, reject) => {
-                const publishSpawn = cp.spawn('npm', ['publish', distPath, '--tag', tag, '--access', distPackageJson.publishConfig.access]);
-                publishSpawn.stdout.on('data', (data) => {
-                    console.info(data.toString('utf8'));
-                })
-                publishSpawn.stderr.on('data', function(message) {
-                    console.error(message.toString('utf8'));
-                })
-                publishSpawn.on("exit", function(code, signal) {
-                    if (code !== 0) {
-                        reject(new Error(`npm publish exited with code: ${code} and signal: ${signal}`));
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        }
-    })));
-    console.info(`Released successfully!`);
-    console.info(`${tag} => ${version}`);
+  return JSON.parse(lines.join('\n'));
 }
 
-release().catch(err => {
-    console.error(err);
-    process.exit(1);
+async function readPackage(path) {
+  const packagePath = join(path, './package.json');
+
+  return readJSON(packagePath);
+}
+
+async function writePackage(path, content) {
+  if (argv.dryrun) {
+    return;
+  }
+
+  const packagePath = join(path, './package.json');
+  await writeJSON(packagePath, content, { spaces: 2, replacer: null });
+}
+
+async function getNewVersion() {
+  let version = argv._[0] ||  process.env.RELEASE_VERSION || await getMostRecentStable();
+
+  if (version.startsWith('v')) {
+    version = version.replace('v', '')
+  }
+
+  if (argv.canary) {
+    const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
+    version = semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
+  }
+
+  return version;
+}
+
+async function getMostRecentStable() {
+  return new Promise((resolve, reject) => {
+    npm.view(`@graphql-codegen/cli`, 'version', (err, res) => {
+      if (err) {
+        return reject(err)
+      } else {
+        resolve(Object.keys(res)[0]);
+      }
+    })
+  })
+}
+
+async function bumpDependencies(availableSiblings, newVersion, dependencies = {}) {
+  return Promise.all(Object.keys(dependencies).map(async dependency => {
+    if (availableSiblings.includes(dependency)) {
+      dependencies[dependency] = newVersion;
+    }
+  }));
+}
+
+async function publishDirectory(directory, attempt = 0) {
+  return new Promise((resolve, reject) => {
+    npm.publish(directory, (err, result) => {
+      if (err) {
+        if (err.toString().includes('You cannot publish over the previously published versions')) {
+          resolve({});
+        } else {
+          reject(err);
+        }
+      } else {
+        resolve(result);
+      }
+    })
+  });
+}
+
+async function release() {
+  const version = await getNewVersion();
+  const workspaceInfo = readWorkspaceInfo();
+  const packages = new Map();
+
+  // Get all package.json content from dist/
+  await Promise.all(
+    Object.keys(workspaceInfo).map(async packageName => {
+      const distPath = join(workspaceInfo[packageName].location, `./dist/`);
+      const packagePath = existsSync(distPath) ? distPath : workspaceInfo[packageName].location;
+      const packageContent = await readPackage(packagePath);
+
+      if (!packageContent.private) {
+
+        if (packages.has(packageName)) {
+          throw new Error(`Package ${packageName} seems to be duplicated! Locations: ${[
+            packages.get(packageName).path,
+            packagePath,
+          ].join('\n')}`)
+        }
+
+        packages.set(packageName, {
+          path: packagePath,
+          content: packageContent,
+        });
+      }
+    })
+  );
+
+  // Bump all package.json files and publish
+  const availableSiblings = Array.from(packages.keys());
+  await Promise.all(
+    Array.from(packages.entries()).map(async ([packageName, { path, content }]) => {
+      console.info(`Updating and publishing package: ${packageName} from package; ${path}`)
+      content.version = version;
+      content.publishConfig = { access: 'public', tag: content.version.includes('alpha') ? 'alpha' : 'latest' };
+
+      bumpDependencies(availableSiblings, version, content.dependencies);
+      
+      if (content.devDependencies) {
+        delete content.devDependencies;
+      }
+
+      await writePackage(path, content);
+      await publishDirectory(path);
+    })
+  );
+
+  return version;
+}
+
+const initNpm = new Promise((resolve, reject) => {
+  npm.load({}, err => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve();
+    }
+  })
+});
+
+initNpm.then(() => release()).then(version => {
+  console.info(`Published => ${version}`)
+}).catch(err => {
+  console.error(err);
+  process.exit(1);
 });
