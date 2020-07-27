@@ -102,10 +102,11 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
     );
   }
 
+  const importType = config.useTypeImports ? 'import type' : 'import';
+
   if (config.customResolverFn) {
     const parsedMapper = parseMapper(config.customResolverFn);
     if (parsedMapper.isExternal) {
-      const importType = config.useTypeImports ? 'import type' : 'import';
       if (parsedMapper.default) {
         prepend.push(`${importType} ResolverFn from '${parsedMapper.source}';`);
       } else {
@@ -202,7 +203,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   }
 
   if (imports.length) {
-    prepend.push(`import { ${imports.join(', ')} } from 'graphql';`);
+    prepend.push(`${importType} { ${imports.join(', ')} } from 'graphql';`);
   }
 
   if (config.customResolveInfo) {
