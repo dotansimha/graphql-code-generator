@@ -66,11 +66,15 @@ async function bumpDependencies(availableSiblings, newVersion, dependencies = {}
   }));
 }
 
-async function publishDirectory(directory, tag) {
+async function publishDirectory(directory, attempt = 0) {
   return new Promise((resolve, reject) => {
     npm.publish(directory, (err, result) => {
       if (err) {
-        reject(err);
+        if (err.toString().includes('You cannot publish over the previously published versions')) {
+          resolve({});
+        } else {
+          reject(err);
+        }
       } else {
         resolve(result);
       }
