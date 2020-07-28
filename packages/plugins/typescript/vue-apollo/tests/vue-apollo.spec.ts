@@ -594,7 +594,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+        `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
            return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, options);
         }`
       );
@@ -622,7 +622,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptionsNoVariables<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {}) {
+        `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {}) {
            return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, options);
         }`
       );
