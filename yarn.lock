@@ -3359,10 +3359,10 @@
   dependencies:
     eslint-visitor-keys "^1.1.0"
 
-"@urql/core@^1.12.0":
-  version "1.12.1"
-  resolved "https://registry.npmjs.org/@urql/core/-/core-1.12.1.tgz#9ed26d05255f0c08f638ad2b9ad6d176cb0bf88d"
-  integrity sha512-mu0xHbbMWU7RDkHawCNvHKEfDtQT0dfHPD2KXMMv9ibxp0CNdvQ00hppvf6C9j2WuPxGn2NadIjVg51vGCYr5w==
+"@urql/core@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.12.3.tgz#74f7b8e073cf706380bb3dd28484b8136cc96905"
+  integrity sha512-e4IXXQ4nes3KyusgYV925DuzfDAfo4ex7Ls3tZfOExkxEcXh0i0XnizXp0rvZmWRch69YCkc+Lh1Gy2aY49HTQ==
   dependencies:
     wonka "^4.0.14"
 
@@ -16765,12 +16765,12 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.9.8:
-  version "1.9.8"
-  resolved "https://registry.npmjs.org/urql/-/urql-1.9.8.tgz#07d76efdc698205a55724a2acd2640f7706a036d"
-  integrity sha512-AMikyJ9ldVvFVRND7AjgHJ3dBZXH2ygTM9bj4BwQzE9gfJfWA1wK+dXffV1WTOdOoCRngIxGWgZIzSkoLGBpbw==
+urql@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.10.0.tgz#609f13891d3c5345635764b71b072edd88a1ae7e"
+  integrity sha512-Cxx1INTWNUMg9A2gyltqNqukOLFVtztkHxFGfv01OvsFAtR+wCmLyJqIzGUZRKVbKepTLocGbelS7QDxtjcqtg==
   dependencies:
-    "@urql/core" "^1.12.0"
+    "@urql/core" "^1.12.3"
     wonka "^4.0.14"
 
 use@^3.1.0:
