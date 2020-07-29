@@ -4717,10 +4717,10 @@ bn.js@^5.1.1:
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-5.1.2.tgz#c9686902d3c9a27729f43ab10f9d79c2004da7b0"
   integrity sha512-40rZaf3bUNKTVYu9sIeeEGOg7g14Yvnj9kH7b50EiwX0Q7A6umbvfI5tvHaOERH0XigqKkfLkFQxzb4e6CIXnA==
 
-bob-the-bundler@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/bob-the-bundler/-/bob-the-bundler-1.0.2.tgz#f44e7315ead242e328171fcba42e9bcc1a457c31"
-  integrity sha512-tBLAekXApxF4yiIt26orEAzo1DM4ESnKGaTcGLjez7XlGbCqMJqzo1dBiohiNkv6qZJ1YoxLqZS16RNiSft/Aw==
+bob-the-bundler@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.1.0.tgz#fd7cd427f754bf95826055ee356d64a67406387f"
+  integrity sha512-qqstwyxR7YX3Im8jY3vTV4FwnpuRS8AQclZwR9kg3SaWqZnzvEfJKO+JOf3Kbr1/48Zu6O1qPeKmEHesAyR3uw==
   dependencies:
     "@rollup/plugin-node-resolve" "7.1.1"
     consola "2.11.3"
@@ -4730,6 +4730,7 @@ bob-the-bundler@1.0.2:
     globby "11.0.0"
     lodash.get "4.4.2"
     minimatch "3.0.4"
+    mkdirp "1.0.4"
     p-limit "2.2.2"
     rollup "2.3.2"
     rollup-plugin-auto-external "2.0.0"
