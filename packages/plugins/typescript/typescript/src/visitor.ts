@@ -38,7 +38,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   noExport: boolean;
 }
 
-export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };`;
+export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
