@@ -1,5 +1,5 @@
 type Maybe<T> = T | null;
-type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 type Scalars = {
   ID: string;
