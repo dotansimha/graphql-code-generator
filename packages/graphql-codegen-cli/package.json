@@ -58,7 +58,7 @@
     "chokidar": "3.4.1",
     "common-tags": "1.8.0",
     "constant-case": "3.0.3",
-    "cosmiconfig": "6.0.0",
+    "cosmiconfig": "7.0.0",
     "debounce": "1.2.0",
     "dependency-graph": "0.9.0",
     "detect-indent": "6.0.0",
