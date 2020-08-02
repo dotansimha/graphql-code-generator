@@ -83,3 +83,8 @@ export interface AvoidOptionalsConfig {
   object?: boolean;
   inputValue?: boolean;
 }
+
+export interface ParsedImport {
+  moduleName: string;
+  propName: string;
+}

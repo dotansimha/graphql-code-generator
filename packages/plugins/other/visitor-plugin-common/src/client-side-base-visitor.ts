@@ -13,7 +13,7 @@ import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue, buildScalars } from './utils';
-import { LoadedFragment } from './types';
+import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
 import { pascalCase } from 'pascal-case';
@@ -54,6 +54,12 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * ```
    */
   gqlImport?: string;
+  /**
+   * @default graphql#DocumentNode
+   * @description Customize from which module will `DocumentNode` be imported from.
+   * This is useful if you want to use modules other than `graphql`, e.g. `@graphql-typed-document-node`.
+   */
+  documentNodeImport?: string;
   /**
    * @default false
    * @description Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.
@@ -139,6 +145,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
   gqlImport: string;
+  documentNodeImport: string;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
   omitOperationSuffix: boolean;
@@ -174,6 +181,7 @@ export class ClientSideBaseVisitor<
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
+      documentNodeImport: rawConfig.documentNodeImport || null,
       noExport: !!rawConfig.noExport,
       importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
@@ -351,13 +359,19 @@ export class ClientSideBaseVisitor<
     return localFragments.join('\n');
   }
 
-  protected _parseImport(importStr: string): { moduleName: string; propName: string } {
+  protected _parseImport(importStr: string): ParsedImport {
     const [moduleName, propName] = importStr.split('#');
 
     return {
       moduleName,
       propName,
     };
+  }
+
+  protected _generateImport({ moduleName, propName }: ParsedImport, varName: string, isTypeImport: boolean): string {
+    const typeImport = isTypeImport && this.config.useTypeImports ? 'import type' : 'import';
+    const propAlias = propName === varName ? '' : ` as ${varName}`;
+    return `${typeImport} ${propName ? `{ ${propName}${propAlias} }` : varName} from '${moduleName}';`;
   }
 
   private clearExtension(path: string): string {
@@ -373,21 +387,16 @@ export class ClientSideBaseVisitor<
   public getImports(options: { excludeFragments?: boolean } = {}): string[] {
     const imports = [...this._additionalImports];
 
-    const typeImport = this.config.useTypeImports ? 'import type' : 'import';
-
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
       case DocumentMode.documentNodeImportFragments: {
-        imports.push(`${typeImport} { DocumentNode } from 'graphql';`);
+        const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
+        imports.push(this._generateImport(documentNodeImport, 'DocumentNode', true));
         break;
       }
       case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-        imports.push(
-          `import ${
-            gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-          } from '${gqlImport.moduleName}';`
-        );
+        imports.push(this._generateImport(gqlImport, 'gql', false));
         break;
       }
       case DocumentMode.external: {

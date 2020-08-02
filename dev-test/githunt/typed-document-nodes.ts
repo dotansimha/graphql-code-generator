@@ -1,5 +1,4 @@
-import { DocumentNode } from 'graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -419,10 +418,7 @@ export const FeedEntryFragmentDoc: DocumentNode = {
     ...RepoInfoFragmentDoc.definitions,
   ],
 };
-export const OnCommentAddedDocument: TypedDocumentNode<
-  OnCommentAddedSubscription,
-  OnCommentAddedSubscriptionVariables
-> = {
+export const OnCommentAddedDocument: DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> = {
   kind: 'Document',
   definitions: [
     {
@@ -479,7 +475,7 @@ export const OnCommentAddedDocument: TypedDocumentNode<
     },
   ],
 };
-export const CommentDocument: TypedDocumentNode<CommentQuery, CommentQueryVariables> = {
+export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> = {
   kind: 'Document',
   definitions: [
     {
@@ -626,7 +622,7 @@ export const CommentDocument: TypedDocumentNode<CommentQuery, CommentQueryVariab
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
 };
-export const CurrentUserForProfileDocument: TypedDocumentNode<
+export const CurrentUserForProfileDocument: DocumentNode<
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables
 > = {
@@ -659,7 +655,7 @@ export const CurrentUserForProfileDocument: TypedDocumentNode<
     },
   ],
 };
-export const FeedDocument: TypedDocumentNode<FeedQuery, FeedQueryVariables> = {
+export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = {
   kind: 'Document',
   definitions: [
     {
@@ -732,10 +728,7 @@ export const FeedDocument: TypedDocumentNode<FeedQuery, FeedQueryVariables> = {
     ...FeedEntryFragmentDoc.definitions,
   ],
 };
-export const SubmitRepositoryDocument: TypedDocumentNode<
-  SubmitRepositoryMutation,
-  SubmitRepositoryMutationVariables
-> = {
+export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {
   kind: 'Document',
   definitions: [
     {
@@ -777,7 +770,7 @@ export const SubmitRepositoryDocument: TypedDocumentNode<
     },
   ],
 };
-export const SubmitCommentDocument: TypedDocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = {
+export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = {
   kind: 'Document',
   definitions: [
     {
@@ -831,7 +824,7 @@ export const SubmitCommentDocument: TypedDocumentNode<SubmitCommentMutation, Sub
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
 };
-export const VoteDocument: TypedDocumentNode<VoteMutation, VoteMutationVariables> = {
+export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = {
   kind: 'Document',
   definitions: [
     {
