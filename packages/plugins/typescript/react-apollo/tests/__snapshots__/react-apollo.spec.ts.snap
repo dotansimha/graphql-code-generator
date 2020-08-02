@@ -2,7 +2,7 @@
 
 exports[`React Apollo Issues Issue #2742 - Incorrect import prefix 1`] = `
 "export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
@@ -192,7 +192,7 @@ export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<Types.Get_S
 
 exports[`React Apollo Issues Issue #2826 - Incorrect prefix 1`] = `
 "export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
@@ -382,7 +382,7 @@ export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<GQLGet_Some
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 1`] = `
 "export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
@@ -572,7 +572,7 @@ export type GetSomethingQueryResult = ApolloReactCommon.QueryResult<GetSomething
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 2`] = `
 "export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
