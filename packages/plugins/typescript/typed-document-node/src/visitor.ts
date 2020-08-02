@@ -7,7 +7,7 @@ import {
   DocumentMode,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 
 export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
   RawClientSideBasePluginConfig,
@@ -34,7 +34,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     autoBind(this);
   }
 
-  protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node: OperationDefinitionNode) {
+  protected getDocumentNodeSignature(resultType: string, variablesTypes: string) {
     return `DocumentNode<${resultType}, ${variablesTypes}>`;
   }
 }

@@ -311,9 +311,13 @@ export class ClientSideBaseVisitor<
     const isDocumentNode =
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments;
-    return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} =${
-      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-    } ${this._gql(fragmentDocument)};`;
+    const fragmentResultType = this.convertName(fragmentDocument.name.value, {
+      useTypesPrefix: true,
+      suffix: this.getFragmentSuffix(fragmentDocument),
+    });
+    return `export const ${name}${
+      isDocumentNode ? `: ${this.getDocumentNodeSignature(fragmentResultType, 'unknown', fragmentDocument)}` : ''
+    } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -443,7 +447,11 @@ export class ClientSideBaseVisitor<
     return null;
   }
 
-  protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node: OperationDefinitionNode) {
+  protected getDocumentNodeSignature(
+    resultType: string,
+    variablesTypes: string,
+    node: FragmentDefinitionNode | OperationDefinitionNode
+  ) {
     return `DocumentNode`;
   }
 
