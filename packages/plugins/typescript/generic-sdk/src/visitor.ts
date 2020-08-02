@@ -33,7 +33,8 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
       this._additionalImports.push(this.config.usingObservableFrom);
     }
     if (this.config.documentMode !== DocumentMode.string) {
-      this._additionalImports.push(`import { DocumentNode } from 'graphql';`);
+      const importType = this.config.useTypeImports ? 'import type' : 'import';
+      this._additionalImports.push(`${importType} { DocumentNode } from 'graphql';`);
     }
   }
 
