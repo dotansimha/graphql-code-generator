@@ -266,7 +266,7 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc: DocumentNode = {
+export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFragment, unknown> = {
   kind: 'Document',
   definitions: [
     {
@@ -298,7 +298,7 @@ export const CommentsPageCommentFragmentDoc: DocumentNode = {
     },
   ],
 };
-export const VoteButtonsFragmentDoc: DocumentNode = {
+export const VoteButtonsFragmentDoc: DocumentNode<VoteButtonsFragment, unknown> = {
   kind: 'Document',
   definitions: [
     {
@@ -327,7 +327,7 @@ export const VoteButtonsFragmentDoc: DocumentNode = {
     },
   ],
 };
-export const RepoInfoFragmentDoc: DocumentNode = {
+export const RepoInfoFragmentDoc: DocumentNode<RepoInfoFragment, unknown> = {
   kind: 'Document',
   definitions: [
     {
@@ -371,7 +371,7 @@ export const RepoInfoFragmentDoc: DocumentNode = {
     },
   ],
 };
-export const FeedEntryFragmentDoc: DocumentNode = {
+export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = {
   kind: 'Document',
   definitions: [
     {
