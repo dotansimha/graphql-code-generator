@@ -17,10 +17,10 @@
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "1.17.7",
-    "@graphql-codegen/plugin-helpers": "1.17.7",
-    "@graphql-codegen/visitor-plugin-common": "1.17.7",
-    "parse-filepath": "1.0.2",
+    "@graphql-codegen/add": "^1.17.7",
+    "@graphql-codegen/plugin-helpers": "^1.17.7",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.7",
+    "parse-filepath": "^1.0.2",
     "tslib": "~2.0.0"
   },
   "peerDependencies": {

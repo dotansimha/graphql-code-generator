@@ -18,8 +18,8 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.17.7",
-    "change-case": "4.1.1",
+    "@graphql-codegen/plugin-helpers": "^1.17.7",
+    "change-case": "^4.1.1",
     "tslib": "~2.0.0"
   },
   "main": "dist/index.cjs.js",
