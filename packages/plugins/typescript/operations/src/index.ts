@@ -34,6 +34,18 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   let content = visitorResult.definitions.join('\n');
 
+  if (config.addOperationExport) {
+    const exportConsts = [];
+
+    allAst.definitions.forEach(d => {
+      if ('name' in d) {
+        exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`)
+      }
+    })
+
+    content = visitorResult.definitions.concat(exportConsts).join('\n');
+  }
+
   if (config.globalNamespace) {
     content = `
     declare global { 

@@ -3593,6 +3593,65 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
+    it('Should add operation name when addOperationExport is true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+          login: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query UserIdQuery {
+          user {
+            id
+          }
+        }
+        query UserLoginQuery {
+          user {
+            login
+          }
+        }
+      `);
+
+      const config = {
+        addOperationExport: true,
+      };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserIdQueryQueryVariables = {};
+
+      export type UserIdQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: (
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) }
+      );
+      
+      export type UserLoginQueryQueryVariables = {};
+
+      export type UserLoginQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: (
+          { __typename?: 'User' }
+          & Pick<User, 'login'>
+        ) }
+      );
+      
+      export declare const UserIdQuery: import("graphql").DocumentNode;
+      export declare const UserLoginQuery: import("graphql").DocumentNode;
+      `);
+    });
+
     it('Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Error {
