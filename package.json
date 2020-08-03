@@ -13,7 +13,8 @@
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
-    "release": "node scripts/release.js",
+    "prerelease": "yarn build",
+    "release": "changeset publish",
     "release:canary": "node scripts/release.js --canary",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
