@@ -3095,10 +3095,12 @@
   resolved "https://registry.npmjs.org/@types/debounce/-/debounce-1.2.0.tgz#9ee99259f41018c640b3929e1bb32c3dcecdb192"
   integrity sha512-bWG5wapaWgbss9E238T0R6bfo5Fh3OkeoSt245CM7JJwVwpw6MEBCbIxLq5z8KzsE3uJhzcIuQkyiZmzV3M/Dw==
 
-"@types/detect-indent@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/@types/detect-indent/-/detect-indent-5.0.0.tgz#8b1bbd7891268d5ed20d23ecd23ae333d33934cd"
-  integrity sha512-eOFBOFCqusnH0i1s9XoURksqTZbsv5vbMMgOBKgSt67TsOw6ViaHO0Ii5DMhRoiU5TJ51uf9NsOpnxXsN96ywg==
+"@types/detect-indent@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@types/detect-indent/-/detect-indent-6.0.0.tgz#5ff60617bfa71950694f53bcca86309414534f19"
+  integrity sha512-KeE9HzRWAoOy/YPEMzNbljqTmDR7JXCD8NpOwSjta9oWoL8+i9E2KzwUX0nb1b78iB481RSJ5XIxHfjaJnUtvA==
+  dependencies:
+    detect-indent "*"
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
@@ -6905,15 +6907,15 @@ detab@2.0.3, detab@^2.0.0:
   dependencies:
     repeat-string "^1.5.4"
 
+detect-indent@*, detect-indent@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/detect-indent/-/detect-indent-6.0.0.tgz#0abd0f549f69fc6659a254fe96786186b6f528fd"
+  integrity sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA==
+
 detect-indent@^5.0.0, detect-indent@~5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/detect-indent/-/detect-indent-5.0.0.tgz#3871cc0a6a002e8c3e5b3cf7f336264675f06b9d"
   integrity sha1-OHHMCmoALow+Wzz38zYmRnXwa50=
-
-detect-indent@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/detect-indent/-/detect-indent-6.0.0.tgz#0abd0f549f69fc6659a254fe96786186b6f528fd"
-  integrity sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA==
 
 detect-newline@^2.1.0:
   version "2.1.0"
