@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -14,13 +12,13 @@ export type HeroNameQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroNameDocument = gql`
-  query HeroName($episode: Episode) {
-    hero(episode: $episode) {
-      name
-    }
+export const HeroNameDocument = Apollo.gql`
+    query HeroName($episode: Episode) {
+  hero(episode: $episode) {
+    name
   }
-`;
+}
+    `;
 
 /**
  * __useHeroNameQuery__
@@ -38,16 +36,12 @@ export const HeroNameDocument = gql`
  *   },
  * });
  */
-export function useHeroNameQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+export function useHeroNameQuery(baseOptions?: Apollo.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
 }
-export function useHeroNameLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+export function useHeroNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
 }
 export type HeroNameQueryHookResult = ReturnType<typeof useHeroNameQuery>;
 export type HeroNameLazyQueryHookResult = ReturnType<typeof useHeroNameLazyQuery>;
-export type HeroNameQueryResult = ApolloReactCommon.QueryResult<HeroNameQuery, HeroNameQueryVariables>;
+export type HeroNameQueryResult = Apollo.QueryResult<HeroNameQuery, HeroNameQueryVariables>;

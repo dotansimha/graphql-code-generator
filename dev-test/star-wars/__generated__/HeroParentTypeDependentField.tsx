@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -33,29 +31,29 @@ export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroParentTypeDependentFieldDocument = gql`
-  query HeroParentTypeDependentField($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        friends {
-          name
-          ... on Human {
-            height(unit: FOOT)
-          }
+export const HeroParentTypeDependentFieldDocument = Apollo.gql`
+    query HeroParentTypeDependentField($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      friends {
+        name
+        ... on Human {
+          height(unit: FOOT)
         }
       }
-      ... on Droid {
-        friends {
-          name
-          ... on Human {
-            height(unit: METER)
-          }
+    }
+    ... on Droid {
+      friends {
+        name
+        ... on Human {
+          height(unit: METER)
         }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroParentTypeDependentFieldQuery__
@@ -74,23 +72,20 @@ export const HeroParentTypeDependentFieldDocument = gql`
  * });
  */
 export function useHeroParentTypeDependentFieldQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+  return Apollo.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
     HeroParentTypeDependentFieldDocument,
     baseOptions
   );
 }
 export function useHeroParentTypeDependentFieldLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+  return Apollo.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
     HeroParentTypeDependentFieldDocument,
     baseOptions
   );
@@ -99,7 +94,7 @@ export type HeroParentTypeDependentFieldQueryHookResult = ReturnType<typeof useH
 export type HeroParentTypeDependentFieldLazyQueryHookResult = ReturnType<
   typeof useHeroParentTypeDependentFieldLazyQuery
 >;
-export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroParentTypeDependentFieldQueryResult = Apollo.QueryResult<
   HeroParentTypeDependentFieldQuery,
   HeroParentTypeDependentFieldQueryVariables
 >;

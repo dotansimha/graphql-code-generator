@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -33,16 +31,16 @@ export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroAndFriendsNamesDocument = gql`
-  query HeroAndFriendsNames($episode: Episode) {
-    hero(episode: $episode) {
+export const HeroAndFriendsNamesDocument = Apollo.gql`
+    query HeroAndFriendsNames($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    friends {
       name
-      friends {
-        name
-      }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroAndFriendsNamesQuery__
@@ -61,24 +59,24 @@ export const HeroAndFriendsNamesDocument = gql`
  * });
  */
 export function useHeroAndFriendsNamesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+  return Apollo.useQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
     HeroAndFriendsNamesDocument,
     baseOptions
   );
 }
 export function useHeroAndFriendsNamesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+  return Apollo.useLazyQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
     HeroAndFriendsNamesDocument,
     baseOptions
   );
 }
 export type HeroAndFriendsNamesQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesQuery>;
 export type HeroAndFriendsNamesLazyQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesLazyQuery>;
-export type HeroAndFriendsNamesQueryResult = ApolloReactCommon.QueryResult<
+export type HeroAndFriendsNamesQueryResult = Apollo.QueryResult<
   HeroAndFriendsNamesQuery,
   HeroAndFriendsNamesQueryVariables
 >;

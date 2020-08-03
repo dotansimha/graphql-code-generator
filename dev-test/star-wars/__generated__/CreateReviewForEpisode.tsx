@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
@@ -13,15 +11,15 @@ export type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
   createReview?: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;
 };
 
-export const CreateReviewForEpisodeDocument = gql`
-  mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
-    createReview(episode: $episode, review: $review) {
-      stars
-      commentary
-    }
+export const CreateReviewForEpisodeDocument = Apollo.gql`
+    mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
+  createReview(episode: $episode, review: $review) {
+    stars
+    commentary
   }
-`;
-export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunction<
+}
+    `;
+export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;
@@ -45,19 +43,16 @@ export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunctio
  * });
  */
 export function useCreateReviewForEpisodeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables
-  >
+  baseOptions?: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
+  return Apollo.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
     CreateReviewForEpisodeDocument,
     baseOptions
   );
 }
 export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateReviewForEpisodeMutationResult = Apollo.MutationResult<CreateReviewForEpisodeMutation>;
+export type CreateReviewForEpisodeMutationOptions = Apollo.BaseMutationOptions<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;

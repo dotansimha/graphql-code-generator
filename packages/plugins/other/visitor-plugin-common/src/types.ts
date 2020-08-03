@@ -85,6 +85,6 @@ export interface AvoidOptionalsConfig {
 }
 
 export interface ParsedImport {
-  moduleName: string;
+  moduleName: string | null;
   propName: string;
 }

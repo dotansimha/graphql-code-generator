@@ -1,10 +1,8 @@
 import * as Types from '../types.d';
 
 import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
-import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -16,14 +14,13 @@ export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroDetailsWithFragmentDocument = gql`
-  query HeroDetailsWithFragment($episode: Episode) {
-    hero(episode: $episode) {
-      ...HeroDetails
-    }
+export const HeroDetailsWithFragmentDocument = Apollo.gql`
+    query HeroDetailsWithFragment($episode: Episode) {
+  hero(episode: $episode) {
+    ...HeroDetails
   }
-  ${HeroDetailsFragmentDoc}
-`;
+}
+    ${HeroDetailsFragmentDoc}`;
 
 /**
  * __useHeroDetailsWithFragmentQuery__
@@ -42,27 +39,24 @@ export const HeroDetailsWithFragmentDocument = gql`
  * });
  */
 export function useHeroDetailsWithFragmentQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+  return Apollo.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
     baseOptions
   );
 }
 export function useHeroDetailsWithFragmentLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    HeroDetailsWithFragmentQuery,
-    HeroDetailsWithFragmentQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+  return Apollo.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
     baseOptions
   );
 }
 export type HeroDetailsWithFragmentQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentQuery>;
 export type HeroDetailsWithFragmentLazyQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentLazyQuery>;
-export type HeroDetailsWithFragmentQueryResult = ApolloReactCommon.QueryResult<
+export type HeroDetailsWithFragmentQueryResult = Apollo.QueryResult<
   HeroDetailsWithFragmentQuery,
   HeroDetailsWithFragmentQueryVariables
 >;

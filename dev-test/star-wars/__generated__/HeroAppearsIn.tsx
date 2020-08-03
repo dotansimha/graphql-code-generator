@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -13,14 +11,14 @@ export type HeroAppearsInQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroAppearsInDocument = gql`
-  query HeroAppearsIn {
-    hero {
-      name
-      appearsIn
-    }
+export const HeroAppearsInDocument = Apollo.gql`
+    query HeroAppearsIn {
+  hero {
+    name
+    appearsIn
   }
-`;
+}
+    `;
 
 /**
  * __useHeroAppearsInQuery__
@@ -38,18 +36,15 @@ export const HeroAppearsInDocument = gql`
  * });
  */
 export function useHeroAppearsInQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+  return Apollo.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
 }
 export function useHeroAppearsInLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(
-    HeroAppearsInDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
 }
 export type HeroAppearsInQueryHookResult = ReturnType<typeof useHeroAppearsInQuery>;
 export type HeroAppearsInLazyQueryHookResult = ReturnType<typeof useHeroAppearsInLazyQuery>;
-export type HeroAppearsInQueryResult = ApolloReactCommon.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+export type HeroAppearsInQueryResult = Apollo.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;

@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type HeroDetailsQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -15,19 +13,19 @@ export type HeroDetailsQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroDetailsDocument = gql`
-  query HeroDetails($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        height
-      }
-      ... on Droid {
-        primaryFunction
-      }
+export const HeroDetailsDocument = Apollo.gql`
+    query HeroDetails($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroDetailsQuery__
@@ -46,15 +44,15 @@ export const HeroDetailsDocument = gql`
  * });
  */
 export function useHeroDetailsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
+  return Apollo.useQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
 export function useHeroDetailsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
+  return Apollo.useLazyQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
 export type HeroDetailsQueryHookResult = ReturnType<typeof useHeroDetailsQuery>;
 export type HeroDetailsLazyQueryHookResult = ReturnType<typeof useHeroDetailsLazyQuery>;
-export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
+export type HeroDetailsQueryResult = Apollo.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;

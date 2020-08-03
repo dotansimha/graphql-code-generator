@@ -1,4 +1,6 @@
-import * as Apollo from '@apollo/client';
+import gql from 'graphql-tag';
+import * as ApolloReactCommon from '@apollo/react-common';
+import * as ApolloReactHooks from '@apollo/react-hooks';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -266,58 +268,8 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc = Apollo.gql`
-    fragment CommentsPageComment on Comment {
-  id
-  postedBy {
-    login
-    html_url
-  }
-  createdAt
-  content
-}
-    `;
-export const VoteButtonsFragmentDoc = Apollo.gql`
-    fragment VoteButtons on Entry {
-  score
-  vote {
-    vote_value
-  }
-}
-    `;
-export const RepoInfoFragmentDoc = Apollo.gql`
-    fragment RepoInfo on Entry {
-  createdAt
-  repository {
-    description
-    stargazers_count
-    open_issues_count
-  }
-  postedBy {
-    html_url
-    login
-  }
-}
-    `;
-export const FeedEntryFragmentDoc = Apollo.gql`
-    fragment FeedEntry on Entry {
-  id
-  commentCount
-  repository {
-    full_name
-    html_url
-    owner {
-      avatar_url
-    }
-  }
-  ...VoteButtons
-  ...RepoInfo
-}
-    ${VoteButtonsFragmentDoc}
-${RepoInfoFragmentDoc}`;
-export const OnCommentAddedDocument = Apollo.gql`
-    subscription onCommentAdded($repoFullName: String!) {
-  commentAdded(repoFullName: $repoFullName) {
+export const CommentsPageCommentFragmentDoc = gql`
+  fragment CommentsPageComment on Comment {
     id
     postedBy {
       login
@@ -326,8 +278,59 @@ export const OnCommentAddedDocument = Apollo.gql`
     createdAt
     content
   }
-}
-    `;
+`;
+export const VoteButtonsFragmentDoc = gql`
+  fragment VoteButtons on Entry {
+    score
+    vote {
+      vote_value
+    }
+  }
+`;
+export const RepoInfoFragmentDoc = gql`
+  fragment RepoInfo on Entry {
+    createdAt
+    repository {
+      description
+      stargazers_count
+      open_issues_count
+    }
+    postedBy {
+      html_url
+      login
+    }
+  }
+`;
+export const FeedEntryFragmentDoc = gql`
+  fragment FeedEntry on Entry {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+    ...VoteButtons
+    ...RepoInfo
+  }
+  ${VoteButtonsFragmentDoc}
+  ${RepoInfoFragmentDoc}
+`;
+export const OnCommentAddedDocument = gql`
+  subscription onCommentAdded($repoFullName: String!) {
+    commentAdded(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
 
 /**
  * __useOnCommentAddedSubscription__
@@ -346,44 +349,48 @@ export const OnCommentAddedDocument = Apollo.gql`
  * });
  */
 export function useOnCommentAddedSubscription(
-  baseOptions?: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
+  baseOptions?: ApolloReactHooks.SubscriptionHookOptions<
+    OnCommentAddedSubscription,
+    OnCommentAddedSubscriptionVariables
+  >
 ) {
-  return Apollo.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
+  return ApolloReactHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
     OnCommentAddedDocument,
     baseOptions
   );
 }
 export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
-export type OnCommentAddedSubscriptionResult = Apollo.SubscriptionResult<OnCommentAddedSubscription>;
-export const CommentDocument = Apollo.gql`
-    query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
-  currentUser {
-    login
-    html_url
-  }
-  entry(repoFullName: $repoFullName) {
-    id
-    postedBy {
+export type OnCommentAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnCommentAddedSubscription>;
+export const CommentDocument = gql`
+  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+    currentUser {
       login
       html_url
     }
-    createdAt
-    comments(limit: $limit, offset: $offset) {
-      ...CommentsPageComment
-    }
-    commentCount
-    repository {
-      full_name
-      html_url
-      ... on Repository {
-        description
-        open_issues_count
-        stargazers_count
+    entry(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments(limit: $limit, offset: $offset) {
+        ...CommentsPageComment
+      }
+      commentCount
+      repository {
+        full_name
+        html_url
+        ... on Repository {
+          description
+          open_issues_count
+          stargazers_count
+        }
       }
     }
   }
-}
-    ${CommentsPageCommentFragmentDoc}`;
+  ${CommentsPageCommentFragmentDoc}
+`;
 
 /**
  * __useCommentQuery__
@@ -403,23 +410,25 @@ export const CommentDocument = Apollo.gql`
  *   },
  * });
  */
-export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
-  return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+export function useCommentQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+  return ApolloReactHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
-export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
-  return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+export function useCommentLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>
+) {
+  return ApolloReactHooks.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
-export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
-export const CurrentUserForProfileDocument = Apollo.gql`
-    query CurrentUserForProfile {
-  currentUser {
-    login
-    avatar_url
+export type CommentQueryResult = ApolloReactCommon.QueryResult<CommentQuery, CommentQueryVariables>;
+export const CurrentUserForProfileDocument = gql`
+  query CurrentUserForProfile {
+    currentUser {
+      login
+      avatar_url
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useCurrentUserForProfileQuery__
@@ -437,37 +446,38 @@ export const CurrentUserForProfileDocument = Apollo.gql`
  * });
  */
 export function useCurrentUserForProfileQuery(
-  baseOptions?: Apollo.QueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+  baseOptions?: ApolloReactHooks.QueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
 ) {
-  return Apollo.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+  return ApolloReactHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
     baseOptions
   );
 }
 export function useCurrentUserForProfileLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
 ) {
-  return Apollo.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+  return ApolloReactHooks.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
     baseOptions
   );
 }
 export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
 export type CurrentUserForProfileLazyQueryHookResult = ReturnType<typeof useCurrentUserForProfileLazyQuery>;
-export type CurrentUserForProfileQueryResult = Apollo.QueryResult<
+export type CurrentUserForProfileQueryResult = ApolloReactCommon.QueryResult<
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables
 >;
-export const FeedDocument = Apollo.gql`
-    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-  currentUser {
-    login
+export const FeedDocument = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      ...FeedEntry
+    }
   }
-  feed(type: $type, offset: $offset, limit: $limit) {
-    ...FeedEntry
-  }
-}
-    ${FeedEntryFragmentDoc}`;
+  ${FeedEntryFragmentDoc}
+`;
 
 /**
  * __useFeedQuery__
@@ -487,23 +497,23 @@ export const FeedDocument = Apollo.gql`
  *   },
  * });
  */
-export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
-  return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
-export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
-  return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+export function useFeedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
-export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
-export const SubmitRepositoryDocument = Apollo.gql`
-    mutation submitRepository($repoFullName: String!) {
-  submitRepository(repoFullName: $repoFullName) {
-    createdAt
+export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
   }
-}
-    `;
-export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
+`;
+export type SubmitRepositoryMutationFn = ApolloReactCommon.MutationFunction<
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables
 >;
@@ -526,27 +536,31 @@ export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSubmitRepositoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
 ) {
-  return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
+  return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
     baseOptions
   );
 }
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
-export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
-export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
+export type SubmitRepositoryMutationResult = ApolloReactCommon.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables
 >;
-export const SubmitCommentDocument = Apollo.gql`
-    mutation submitComment($repoFullName: String!, $commentContent: String!) {
-  submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-    ...CommentsPageComment
+export const SubmitCommentDocument = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      ...CommentsPageComment
+    }
   }
-}
-    ${CommentsPageCommentFragmentDoc}`;
-export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;
+  ${CommentsPageCommentFragmentDoc}
+`;
+export type SubmitCommentMutationFn = ApolloReactCommon.MutationFunction<
+  SubmitCommentMutation,
+  SubmitCommentMutationVariables
+>;
 
 /**
  * __useSubmitCommentMutation__
@@ -567,28 +581,31 @@ export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutat
  * });
  */
 export function useSubmitCommentMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
 ) {
-  return Apollo.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
+  return ApolloReactHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(
+    SubmitCommentDocument,
+    baseOptions
+  );
 }
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
-export type SubmitCommentMutationResult = Apollo.MutationResult<SubmitCommentMutation>;
-export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
+export type SubmitCommentMutationResult = ApolloReactCommon.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SubmitCommentMutation,
   SubmitCommentMutationVariables
 >;
-export const VoteDocument = Apollo.gql`
-    mutation vote($repoFullName: String!, $type: VoteType!) {
-  vote(repoFullName: $repoFullName, type: $type) {
-    score
-    id
-    vote {
-      vote_value
+export const VoteDocument = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
     }
   }
-}
-    `;
-export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
+`;
+export type VoteMutationFn = ApolloReactCommon.MutationFunction<VoteMutation, VoteMutationVariables>;
 
 /**
  * __useVoteMutation__
@@ -608,9 +625,11 @@ export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationV
  *   },
  * });
  */
-export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
-  return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
+export function useVoteMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>
+) {
+  return ApolloReactHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
-export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
-export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
+export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutation>;
+export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutation, VoteMutationVariables>;

@@ -1,6 +1,4 @@
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -238,32 +236,32 @@ export type ColorInput = {
   blue: Scalars['Int'];
 };
 
-export const HeroDetailsFragmentDoc = gql`
-  fragment HeroDetails on Character {
-    name
-    ... on Human {
-      height
-    }
-    ... on Droid {
-      primaryFunction
-    }
+export const HeroDetailsFragmentDoc = Apollo.gql`
+    fragment HeroDetails on Character {
+  name
+  ... on Human {
+    height
   }
-`;
-export const HumanFieldsFragmentDoc = gql`
-  fragment HumanFields on Human {
-    name
-    mass
+  ... on Droid {
+    primaryFunction
   }
-`;
-export const CreateReviewForEpisodeDocument = gql`
-  mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
-    createReview(episode: $episode, review: $review) {
-      stars
-      commentary
-    }
+}
+    `;
+export const HumanFieldsFragmentDoc = Apollo.gql`
+    fragment HumanFields on Human {
+  name
+  mass
+}
+    `;
+export const CreateReviewForEpisodeDocument = Apollo.gql`
+    mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
+  createReview(episode: $episode, review: $review) {
+    stars
+    commentary
   }
-`;
-export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunction<
+}
+    `;
+export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;
@@ -287,32 +285,29 @@ export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunctio
  * });
  */
 export function useCreateReviewForEpisodeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables
-  >
+  baseOptions?: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
+  return Apollo.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
     CreateReviewForEpisodeDocument,
     baseOptions
   );
 }
 export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateReviewForEpisodeMutationResult = Apollo.MutationResult<CreateReviewForEpisodeMutation>;
+export type CreateReviewForEpisodeMutationOptions = Apollo.BaseMutationOptions<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;
-export const HeroAndFriendsNamesDocument = gql`
-  query HeroAndFriendsNames($episode: Episode) {
-    hero(episode: $episode) {
+export const HeroAndFriendsNamesDocument = Apollo.gql`
+    query HeroAndFriendsNames($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    friends {
       name
-      friends {
-        name
-      }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroAndFriendsNamesQuery__
@@ -331,38 +326,38 @@ export const HeroAndFriendsNamesDocument = gql`
  * });
  */
 export function useHeroAndFriendsNamesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+  return Apollo.useQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
     HeroAndFriendsNamesDocument,
     baseOptions
   );
 }
 export function useHeroAndFriendsNamesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+  return Apollo.useLazyQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
     HeroAndFriendsNamesDocument,
     baseOptions
   );
 }
 export type HeroAndFriendsNamesQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesQuery>;
 export type HeroAndFriendsNamesLazyQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesLazyQuery>;
-export type HeroAndFriendsNamesQueryResult = ApolloReactCommon.QueryResult<
+export type HeroAndFriendsNamesQueryResult = Apollo.QueryResult<
   HeroAndFriendsNamesQuery,
   HeroAndFriendsNamesQueryVariables
 >;
 export function refetchHeroAndFriendsNamesQuery(variables?: HeroAndFriendsNamesQueryVariables) {
   return { query: HeroAndFriendsNamesDocument, variables: variables };
 }
-export const HeroAppearsInDocument = gql`
-  query HeroAppearsIn {
-    hero {
-      name
-      appearsIn
-    }
+export const HeroAppearsInDocument = Apollo.gql`
+    query HeroAppearsIn {
+  hero {
+    name
+    appearsIn
   }
-`;
+}
+    `;
 
 /**
  * __useHeroAppearsInQuery__
@@ -380,37 +375,34 @@ export const HeroAppearsInDocument = gql`
  * });
  */
 export function useHeroAppearsInQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+  return Apollo.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
 }
 export function useHeroAppearsInLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(
-    HeroAppearsInDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
 }
 export type HeroAppearsInQueryHookResult = ReturnType<typeof useHeroAppearsInQuery>;
 export type HeroAppearsInLazyQueryHookResult = ReturnType<typeof useHeroAppearsInLazyQuery>;
-export type HeroAppearsInQueryResult = ApolloReactCommon.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+export type HeroAppearsInQueryResult = Apollo.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
 export function refetchHeroAppearsInQuery(variables?: HeroAppearsInQueryVariables) {
   return { query: HeroAppearsInDocument, variables: variables };
 }
-export const HeroDetailsDocument = gql`
-  query HeroDetails($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        height
-      }
-      ... on Droid {
-        primaryFunction
-      }
+export const HeroDetailsDocument = Apollo.gql`
+    query HeroDetails($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroDetailsQuery__
@@ -429,29 +421,28 @@ export const HeroDetailsDocument = gql`
  * });
  */
 export function useHeroDetailsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
+  return Apollo.useQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
 export function useHeroDetailsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
+  return Apollo.useLazyQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
 export type HeroDetailsQueryHookResult = ReturnType<typeof useHeroDetailsQuery>;
 export type HeroDetailsLazyQueryHookResult = ReturnType<typeof useHeroDetailsLazyQuery>;
-export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
+export type HeroDetailsQueryResult = Apollo.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
 export function refetchHeroDetailsQuery(variables?: HeroDetailsQueryVariables) {
   return { query: HeroDetailsDocument, variables: variables };
 }
-export const HeroDetailsWithFragmentDocument = gql`
-  query HeroDetailsWithFragment($episode: Episode) {
-    hero(episode: $episode) {
-      ...HeroDetails
-    }
+export const HeroDetailsWithFragmentDocument = Apollo.gql`
+    query HeroDetailsWithFragment($episode: Episode) {
+  hero(episode: $episode) {
+    ...HeroDetails
   }
-  ${HeroDetailsFragmentDoc}
-`;
+}
+    ${HeroDetailsFragmentDoc}`;
 
 /**
  * __useHeroDetailsWithFragmentQuery__
@@ -470,40 +461,37 @@ export const HeroDetailsWithFragmentDocument = gql`
  * });
  */
 export function useHeroDetailsWithFragmentQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+  return Apollo.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
     baseOptions
   );
 }
 export function useHeroDetailsWithFragmentLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    HeroDetailsWithFragmentQuery,
-    HeroDetailsWithFragmentQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+  return Apollo.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
     baseOptions
   );
 }
 export type HeroDetailsWithFragmentQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentQuery>;
 export type HeroDetailsWithFragmentLazyQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentLazyQuery>;
-export type HeroDetailsWithFragmentQueryResult = ApolloReactCommon.QueryResult<
+export type HeroDetailsWithFragmentQueryResult = Apollo.QueryResult<
   HeroDetailsWithFragmentQuery,
   HeroDetailsWithFragmentQueryVariables
 >;
 export function refetchHeroDetailsWithFragmentQuery(variables?: HeroDetailsWithFragmentQueryVariables) {
   return { query: HeroDetailsWithFragmentDocument, variables: variables };
 }
-export const HeroNameDocument = gql`
-  query HeroName($episode: Episode) {
-    hero(episode: $episode) {
-      name
-    }
+export const HeroNameDocument = Apollo.gql`
+    query HeroName($episode: Episode) {
+  hero(episode: $episode) {
+    name
   }
-`;
+}
+    `;
 
 /**
  * __useHeroNameQuery__
@@ -521,29 +509,25 @@ export const HeroNameDocument = gql`
  *   },
  * });
  */
-export function useHeroNameQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+export function useHeroNameQuery(baseOptions?: Apollo.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
 }
-export function useHeroNameLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+export function useHeroNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
 }
 export type HeroNameQueryHookResult = ReturnType<typeof useHeroNameQuery>;
 export type HeroNameLazyQueryHookResult = ReturnType<typeof useHeroNameLazyQuery>;
-export type HeroNameQueryResult = ApolloReactCommon.QueryResult<HeroNameQuery, HeroNameQueryVariables>;
+export type HeroNameQueryResult = Apollo.QueryResult<HeroNameQuery, HeroNameQueryVariables>;
 export function refetchHeroNameQuery(variables?: HeroNameQueryVariables) {
   return { query: HeroNameDocument, variables: variables };
 }
-export const HeroNameConditionalInclusionDocument = gql`
-  query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
-    hero(episode: $episode) {
-      name @include(if: $includeName)
-    }
+export const HeroNameConditionalInclusionDocument = Apollo.gql`
+    query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
+  hero(episode: $episode) {
+    name @include(if: $includeName)
   }
-`;
+}
+    `;
 
 /**
  * __useHeroNameConditionalInclusionQuery__
@@ -563,23 +547,20 @@ export const HeroNameConditionalInclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalInclusionQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+  return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
     baseOptions
   );
 }
 export function useHeroNameConditionalInclusionLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+  return Apollo.useLazyQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
     baseOptions
   );
@@ -588,20 +569,20 @@ export type HeroNameConditionalInclusionQueryHookResult = ReturnType<typeof useH
 export type HeroNameConditionalInclusionLazyQueryHookResult = ReturnType<
   typeof useHeroNameConditionalInclusionLazyQuery
 >;
-export type HeroNameConditionalInclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalInclusionQuery,
   HeroNameConditionalInclusionQueryVariables
 >;
 export function refetchHeroNameConditionalInclusionQuery(variables?: HeroNameConditionalInclusionQueryVariables) {
   return { query: HeroNameConditionalInclusionDocument, variables: variables };
 }
-export const HeroNameConditionalExclusionDocument = gql`
-  query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
-    hero(episode: $episode) {
-      name @skip(if: $skipName)
-    }
+export const HeroNameConditionalExclusionDocument = Apollo.gql`
+    query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
+  hero(episode: $episode) {
+    name @skip(if: $skipName)
   }
-`;
+}
+    `;
 
 /**
  * __useHeroNameConditionalExclusionQuery__
@@ -621,23 +602,20 @@ export const HeroNameConditionalExclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalExclusionQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+  return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,
     baseOptions
   );
 }
 export function useHeroNameConditionalExclusionLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+  return Apollo.useLazyQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,
     baseOptions
   );
@@ -646,36 +624,36 @@ export type HeroNameConditionalExclusionQueryHookResult = ReturnType<typeof useH
 export type HeroNameConditionalExclusionLazyQueryHookResult = ReturnType<
   typeof useHeroNameConditionalExclusionLazyQuery
 >;
-export type HeroNameConditionalExclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalExclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalExclusionQuery,
   HeroNameConditionalExclusionQueryVariables
 >;
 export function refetchHeroNameConditionalExclusionQuery(variables?: HeroNameConditionalExclusionQueryVariables) {
   return { query: HeroNameConditionalExclusionDocument, variables: variables };
 }
-export const HeroParentTypeDependentFieldDocument = gql`
-  query HeroParentTypeDependentField($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        friends {
-          name
-          ... on Human {
-            height(unit: FOOT)
-          }
+export const HeroParentTypeDependentFieldDocument = Apollo.gql`
+    query HeroParentTypeDependentField($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      friends {
+        name
+        ... on Human {
+          height(unit: FOOT)
         }
       }
-      ... on Droid {
-        friends {
-          name
-          ... on Human {
-            height(unit: METER)
-          }
+    }
+    ... on Droid {
+      friends {
+        name
+        ... on Human {
+          height(unit: METER)
         }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroParentTypeDependentFieldQuery__
@@ -694,23 +672,20 @@ export const HeroParentTypeDependentFieldDocument = gql`
  * });
  */
 export function useHeroParentTypeDependentFieldQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+  return Apollo.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
     HeroParentTypeDependentFieldDocument,
     baseOptions
   );
 }
 export function useHeroParentTypeDependentFieldLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+  return Apollo.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
     HeroParentTypeDependentFieldDocument,
     baseOptions
   );
@@ -719,25 +694,25 @@ export type HeroParentTypeDependentFieldQueryHookResult = ReturnType<typeof useH
 export type HeroParentTypeDependentFieldLazyQueryHookResult = ReturnType<
   typeof useHeroParentTypeDependentFieldLazyQuery
 >;
-export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroParentTypeDependentFieldQueryResult = Apollo.QueryResult<
   HeroParentTypeDependentFieldQuery,
   HeroParentTypeDependentFieldQueryVariables
 >;
 export function refetchHeroParentTypeDependentFieldQuery(variables?: HeroParentTypeDependentFieldQueryVariables) {
   return { query: HeroParentTypeDependentFieldDocument, variables: variables };
 }
-export const HeroTypeDependentAliasedFieldDocument = gql`
-  query HeroTypeDependentAliasedField($episode: Episode) {
-    hero(episode: $episode) {
-      ... on Human {
-        property: homePlanet
-      }
-      ... on Droid {
-        property: primaryFunction
-      }
+export const HeroTypeDependentAliasedFieldDocument = Apollo.gql`
+    query HeroTypeDependentAliasedField($episode: Episode) {
+  hero(episode: $episode) {
+    ... on Human {
+      property: homePlanet
+    }
+    ... on Droid {
+      property: primaryFunction
     }
   }
-`;
+}
+    `;
 
 /**
  * __useHeroTypeDependentAliasedFieldQuery__
@@ -756,23 +731,20 @@ export const HeroTypeDependentAliasedFieldDocument = gql`
  * });
  */
 export function useHeroTypeDependentAliasedFieldQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+  return Apollo.useQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
     HeroTypeDependentAliasedFieldDocument,
     baseOptions
   );
 }
 export function useHeroTypeDependentAliasedFieldLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+  return Apollo.useLazyQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
     HeroTypeDependentAliasedFieldDocument,
     baseOptions
   );
@@ -781,21 +753,20 @@ export type HeroTypeDependentAliasedFieldQueryHookResult = ReturnType<typeof use
 export type HeroTypeDependentAliasedFieldLazyQueryHookResult = ReturnType<
   typeof useHeroTypeDependentAliasedFieldLazyQuery
 >;
-export type HeroTypeDependentAliasedFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroTypeDependentAliasedFieldQueryResult = Apollo.QueryResult<
   HeroTypeDependentAliasedFieldQuery,
   HeroTypeDependentAliasedFieldQueryVariables
 >;
 export function refetchHeroTypeDependentAliasedFieldQuery(variables?: HeroTypeDependentAliasedFieldQueryVariables) {
   return { query: HeroTypeDependentAliasedFieldDocument, variables: variables };
 }
-export const HumanWithNullHeightDocument = gql`
-  query HumanWithNullHeight {
-    human(id: 1004) {
-      ...HumanFields
-    }
+export const HumanWithNullHeightDocument = Apollo.gql`
+    query HumanWithNullHeight {
+  human(id: 1004) {
+    ...HumanFields
   }
-  ${HumanFieldsFragmentDoc}
-`;
+}
+    ${HumanFieldsFragmentDoc}`;
 
 /**
  * __useHumanWithNullHeightQuery__
@@ -813,40 +784,40 @@ export const HumanWithNullHeightDocument = gql`
  * });
  */
 export function useHumanWithNullHeightQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+  return Apollo.useQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
     HumanWithNullHeightDocument,
     baseOptions
   );
 }
 export function useHumanWithNullHeightLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+  return Apollo.useLazyQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
     HumanWithNullHeightDocument,
     baseOptions
   );
 }
 export type HumanWithNullHeightQueryHookResult = ReturnType<typeof useHumanWithNullHeightQuery>;
 export type HumanWithNullHeightLazyQueryHookResult = ReturnType<typeof useHumanWithNullHeightLazyQuery>;
-export type HumanWithNullHeightQueryResult = ApolloReactCommon.QueryResult<
+export type HumanWithNullHeightQueryResult = Apollo.QueryResult<
   HumanWithNullHeightQuery,
   HumanWithNullHeightQueryVariables
 >;
 export function refetchHumanWithNullHeightQuery(variables?: HumanWithNullHeightQueryVariables) {
   return { query: HumanWithNullHeightDocument, variables: variables };
 }
-export const TwoHeroesDocument = gql`
-  query TwoHeroes {
-    r2: hero {
-      name
-    }
-    luke: hero(episode: EMPIRE) {
-      name
-    }
+export const TwoHeroesDocument = Apollo.gql`
+    query TwoHeroes {
+  r2: hero {
+    name
   }
-`;
+  luke: hero(episode: EMPIRE) {
+    name
+  }
+}
+    `;
 
 /**
  * __useTwoHeroesQuery__
@@ -863,19 +834,17 @@ export const TwoHeroesDocument = gql`
  *   },
  * });
  */
-export function useTwoHeroesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+export function useTwoHeroesQuery(baseOptions?: Apollo.QueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>) {
+  return Apollo.useQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
 }
 export function useTwoHeroesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+  return Apollo.useLazyQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
 }
 export type TwoHeroesQueryHookResult = ReturnType<typeof useTwoHeroesQuery>;
 export type TwoHeroesLazyQueryHookResult = ReturnType<typeof useTwoHeroesLazyQuery>;
-export type TwoHeroesQueryResult = ApolloReactCommon.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
+export type TwoHeroesQueryResult = Apollo.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
 export function refetchTwoHeroesQuery(variables?: TwoHeroesQueryVariables) {
   return { query: TwoHeroesDocument, variables: variables };
 }

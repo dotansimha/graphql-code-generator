@@ -1,8 +1,6 @@
 import * as Types from '../types.d';
 
-import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -15,16 +13,16 @@ export type TwoHeroesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const TwoHeroesDocument = gql`
-  query TwoHeroes {
-    r2: hero {
-      name
-    }
-    luke: hero(episode: EMPIRE) {
-      name
-    }
+export const TwoHeroesDocument = Apollo.gql`
+    query TwoHeroes {
+  r2: hero {
+    name
   }
-`;
+  luke: hero(episode: EMPIRE) {
+    name
+  }
+}
+    `;
 
 /**
  * __useTwoHeroesQuery__
@@ -41,16 +39,14 @@ export const TwoHeroesDocument = gql`
  *   },
  * });
  */
-export function useTwoHeroesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+export function useTwoHeroesQuery(baseOptions?: Apollo.QueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>) {
+  return Apollo.useQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
 }
 export function useTwoHeroesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+  return Apollo.useLazyQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
 }
 export type TwoHeroesQueryHookResult = ReturnType<typeof useTwoHeroesQuery>;
 export type TwoHeroesLazyQueryHookResult = ReturnType<typeof useTwoHeroesLazyQuery>;
-export type TwoHeroesQueryResult = ApolloReactCommon.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
+export type TwoHeroesQueryResult = Apollo.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
