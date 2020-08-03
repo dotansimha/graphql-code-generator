@@ -27,10 +27,10 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.17.7",
-    "common-tags": "1.8.0",
-    "lz-string": "1.4.4",
-    "open": "7.1.0",
+    "@graphql-codegen/plugin-helpers": "^1.17.7",
+    "common-tags": "^1.8.0",
+    "lz-string": "^1.4.4",
+    "open": "^7.1.0",
     "tslib": "~2.0.0"
   },
   "publishConfig": {
