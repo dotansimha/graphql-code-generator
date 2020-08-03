@@ -1,0 +1,34 @@
+diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
+index 271af46..6be01db 100644
+--- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
++++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
+@@ -23,6 +23,7 @@ var applyReleasePlan = _interopDefault(require('@changesets/apply-release-plan')
+ var readChangesets = _interopDefault(require('@changesets/read'));
+ var assembleReleasePlan = _interopDefault(require('@changesets/assemble-release-plan'));
+ var pre$1 = require('@changesets/pre');
++const { join } = require('path');
+ var pLimit = _interopDefault(require('p-limit'));
+ var preferredPM = _interopDefault(require('preferred-pm'));
+ var spawn = _interopDefault(require('spawndamnit'));
+@@ -683,7 +684,7 @@ async function publishAPackage(pkg, access, twoFactorState, tag) {
+   } = pkg.packageJson;
+   const localAccess = publishConfig && publishConfig.access;
+   logger.info(`Publishing ${chalk.cyan(`"${name}"`)} at ${chalk.green(`"${version}"`)}`);
+-  const publishDir = pkg.dir;
++  const publishDir = publishConfig && publishConfig.directory ? path.join(pkg.dir, publishConfig.directory) : pkg.dir;
+   const publishConfirmation = await publish(name, {
+     cwd: publishDir,
+     access: localAccess || access,
+diff --git a/node_modules/@changesets/cli/dist/cli.cjs.prod.js b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
+index 0be38b2..c89bcc6 100644
+--- a/node_modules/@changesets/cli/dist/cli.cjs.prod.js
++++ b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
+@@ -417,7 +417,7 @@ async function publishPackages({packages: packages, access: access, otp: otp, pr
+ async function publishAPackage(pkg, access, twoFactorState, tag) {
+   const {name: name, version: version, publishConfig: publishConfig} = pkg.packageJson, localAccess = publishConfig && publishConfig.access;
+   logger.info(`Publishing ${chalk.cyan(`"${name}"`)} at ${chalk.green(`"${version}"`)}`);
+-  const publishDir = pkg.dir;
++  const publishDir = publishConfig && publishConfig.directory ? path.join(pkg.dir, publishConfig.directory) : pkg.dir;
+   return {
+     name: name,
+     newVersion: version,

@@ -366,10 +366,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         name: this._processor.config.formatNamedField(field.name.value, selectedFieldType),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
-          selectionSet
-            .transformSelectionSet()
-            .split(`\n`)
-            .join(`\n  `),
+          selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
           selectedFieldType
         ),
       });

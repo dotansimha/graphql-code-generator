@@ -43,7 +43,9 @@
       "@graphql-codegen/typescript-compatibility": ["packages/plugins/typescript/compatibility/src/index.ts"],
       "@graphql-codegen/typescript-document-nodes": ["packages/plugins/typescript/document-nodes/src/index.ts"],
       "@graphql-codegen/typescript-generic-sdk": ["packages/plugins/typescript/generic-sdk/src/index.ts"],
-      "@graphql-codegen/typescript-graphql-files-modules": ["packages/plugins/typescript/graphql-files-modules/src/index.ts"],
+      "@graphql-codegen/typescript-graphql-files-modules": [
+        "packages/plugins/typescript/graphql-files-modules/src/index.ts"
+      ],
       "@graphql-codegen/typescript-graphql-request": ["packages/plugins/typescript/graphql-request/src/index.ts"],
       "@graphql-codegen/typescript-mongodb": ["packages/plugins/typescript/mongodb/src/index.ts"],
       "@graphql-codegen/typescript-oclif": ["packages/plugins/typescript/oclif/src/index.ts"],
@@ -67,10 +69,5 @@
     }
   },
   "include": ["packages"],
-  "exclude": [
-    "**/tests/test-files",
-    "**/tests/test-documents",
-    "**/dist",
-    "**/temp"
-  ]
+  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"]
 }
