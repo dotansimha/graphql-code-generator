@@ -36,6 +36,7 @@
     "definition": "dist/index.d.ts"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

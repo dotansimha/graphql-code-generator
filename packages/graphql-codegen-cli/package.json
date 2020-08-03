@@ -120,6 +120,7 @@
     }
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

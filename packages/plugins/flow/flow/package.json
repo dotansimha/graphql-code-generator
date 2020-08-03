@@ -32,6 +32,7 @@
     "input": "./src/index.ts"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

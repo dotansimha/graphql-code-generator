@@ -17,10 +17,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
   if (isStringValueNode(comment)) {
     comment = comment.value;
   }
-  comment = comment
-    .trimStart()
-    .split('*/')
-    .join('*\\/');
+  comment = comment.trimStart().split('*/').join('*\\/');
   let lines = comment.split('\n');
   lines = ['/// <summary>', ...lines.map(line => `/// ${line}`), '/// </summary>'];
   return lines

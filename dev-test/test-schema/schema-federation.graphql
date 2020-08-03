@@ -5,7 +5,12 @@ extend type Query {
 extend type User @key(fields: "id") @key(fields: "name") {
   id: Int! @external
   name: String! @external
-  email: String! @requires(fields: """address(works: "with params!") { city lines { line2 } }""")
+  email: String!
+    @requires(
+      fields: """
+      address(works: "with params!") { city lines { line2 } }
+      """
+    )
   address: Address @external
 }
 

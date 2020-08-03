@@ -91,8 +91,8 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
    * @name addOperationExport
    * @type boolean
-   * @description Add const export of the operation name to output file. Pay attention that the file should be `d.ts`. 
-   * You can combine it with `near-operation-file preset` and therefore the types will be generated along with graphql file. Then you need to set extension in `presetConfig` to be `.gql.d.ts` and by that you can import `gql` file in `ts` files. 
+   * @description Add const export of the operation name to output file. Pay attention that the file should be `d.ts`.
+   * You can combine it with `near-operation-file preset` and therefore the types will be generated along with graphql file. Then you need to set extension in `presetConfig` to be `.gql.d.ts` and by that you can import `gql` file in `ts` files.
    * It will allow you to get everything with one import: ```import { GetClient, GetClientQuery, GetClientQueryVariables, } from "./GetClient.gql";```.
    * @default false
    * @see https://github.com/dotansimha/graphql-code-generator/issues/3949

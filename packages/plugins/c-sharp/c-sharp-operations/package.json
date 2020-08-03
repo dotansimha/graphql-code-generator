@@ -31,6 +31,7 @@
     "outputDirectory": "../../../../test-results/c-sharp-operations"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }
