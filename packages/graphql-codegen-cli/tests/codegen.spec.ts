@@ -989,4 +989,24 @@ describe('Codegen Executor', () => {
       expect(e.errors[0].message).not.toBe('Query root type must be provided.');
     }
   });
+
+  it('Should allow plugin context to be accessed and modified', async () => {
+    const output = await executeCodegen({
+      schema: [
+        {
+          './tests/test-documents/schema.graphql': {
+            loader: './tests/custom-loaders/custom-schema-loader-with-context.js',
+          },
+        },
+      ],
+      generates: {
+        'out1.ts': {
+          plugins: ['./tests/custom-plugins/context.js'],
+        },
+      },
+    });
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toContain('Hello world!');
+  });
 });

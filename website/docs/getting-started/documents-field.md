@@ -205,3 +205,5 @@ module.exports = function(docString, config) {
   return parse(readFileSync(docString, { encoding: 'utf-8' }));;
 };
 ```
+
+> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.
