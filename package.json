@@ -57,7 +57,7 @@
     "tslib": "2.0.0",
     "@apollo/react-common": "3.1.4",
     "@apollo/react-components": "3.1.5",
-    "@apollo/react-hoc": "3.1.5",
+    "@apollo/react-hoc": "4.0.0",
     "@apollo/react-hooks": "3.1.5",
     "@babel/preset-typescript": "7.10.4",
     "@types/common-tags": "1.8.0",
