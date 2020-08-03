@@ -3,9 +3,7 @@
 exports[`React Apollo Issues Issue #2742 - Incorrect import prefix 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -172,30 +170,28 @@ export type Get_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type Get_SomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const Get_SomethingDocument = gql\`
+export const Get_SomethingDocument = Apollo.gql\`
     query GET_SOMETHING {
   feed {
     id
   }
 }
     \`;
-export function useGet_SomethingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>) {
-        return ApolloReactHooks.useQuery<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
+export function useGet_SomethingQuery(baseOptions?: Apollo.QueryHookOptions<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>) {
+        return Apollo.useQuery<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
       }
-export function useGet_SomethingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
+export function useGet_SomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>) {
+          return Apollo.useLazyQuery<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
         }
 export type Get_SomethingQueryHookResult = ReturnType<typeof useGet_SomethingQuery>;
 export type Get_SomethingLazyQueryHookResult = ReturnType<typeof useGet_SomethingLazyQuery>;
-export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;"
+export type Get_SomethingQueryResult = Apollo.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;"
 `;
 
 exports[`React Apollo Issues Issue #2826 - Incorrect prefix 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -362,30 +358,28 @@ export type GQLGet_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GQLGet_SomethingQuery = { feed?: Maybe<Array<Maybe<Pick<GQLEntry, 'id'>>>> };
 
-export const Get_SomethingDocument = gql\`
+export const Get_SomethingDocument = Apollo.gql\`
     query GET_SOMETHING {
   feed {
     id
   }
 }
     \`;
-export function useGet_SomethingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>) {
-        return ApolloReactHooks.useQuery<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
+export function useGet_SomethingQuery(baseOptions?: Apollo.QueryHookOptions<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>) {
+        return Apollo.useQuery<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
       }
-export function useGet_SomethingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
+export function useGet_SomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>) {
+          return Apollo.useLazyQuery<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>(Get_SomethingDocument, baseOptions);
         }
 export type Get_SomethingQueryHookResult = ReturnType<typeof useGet_SomethingQuery>;
 export type Get_SomethingLazyQueryHookResult = ReturnType<typeof useGet_SomethingLazyQuery>;
-export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;"
+export type Get_SomethingQueryResult = Apollo.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;"
 `;
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -552,30 +546,28 @@ export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const GetSomethingDocument = gql\`
+export const GetSomethingDocument = Apollo.gql\`
     query GET_SOMETHING {
   feed {
     id
   }
 }
     \`;
-export function useGetSomethingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
+export function useGetSomethingQuery(baseOptions?: Apollo.QueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+        return Apollo.useQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
       }
-export function useGetSomethingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
+export function useGetSomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+          return Apollo.useLazyQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
         }
 export type GetSomethingQueryHookResult = ReturnType<typeof useGetSomethingQuery>;
 export type GetSomethingLazyQueryHookResult = ReturnType<typeof useGetSomethingLazyQuery>;
-export type GetSomethingQueryResult = ApolloReactCommon.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
+export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
 `;
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 2`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -742,22 +734,22 @@ export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const GetSomethingDocument = gql\`
+export const GetSomethingDocument = Apollo.gql\`
     query GET_SOMETHING {
   feed {
     id
   }
 }
     \`;
-export function useGetSomethingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
+export function useGetSomethingQuery(baseOptions?: Apollo.QueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+        return Apollo.useQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
       }
-export function useGetSomethingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
+export function useGetSomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+          return Apollo.useLazyQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
         }
 export type GetSomethingQueryHookResult = ReturnType<typeof useGetSomethingQuery>;
 export type GetSomethingLazyQueryHookResult = ReturnType<typeof useGetSomethingLazyQuery>;
-export type GetSomethingQueryResult = ApolloReactCommon.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
+export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
 `;
 
 exports[`React Apollo documentMode and importDocumentNodeExternallyFrom should generate definitions Document variable when documentMode is "documentNode" and nested fragments 1`] = `
@@ -765,5 +757,5 @@ exports[`React Apollo documentMode and importDocumentNodeExternallyFrom should g
 export const BFieldsFragmentDoc: DocumentNode = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"},\\"arguments\\":[],\\"directives\\":[]}]}}]};
 export const AFieldsFragmentDoc: DocumentNode = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"bs\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"},\\"arguments\\":[],\\"directives\\":[]}]}}]};
 export const TestDocument: DocumentNode = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"Test\\"},\\"variableDefinitions\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"bs\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"arguments\\":[],\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"directives\\":[]}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"directives\\":[],\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"},\\"arguments\\":[],\\"directives\\":[]}]}}]};
-export type TestQueryResult = ApolloReactCommon.QueryResult<TestQuery, TestQueryVariables>;"
+export type TestQueryResult = Apollo.QueryResult<TestQuery, TestQueryVariables>;"
 `;

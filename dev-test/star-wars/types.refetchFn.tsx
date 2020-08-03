@@ -1,11 +1,6 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as React from 'react';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -241,8 +236,163 @@ export type ColorInput = {
   blue: Scalars['Int'];
 };
 
-export const HeroDetailsFragmentDoc = gql`
-  fragment HeroDetails on Character {
+export const HeroDetailsFragmentDoc = Apollo.gql`
+    fragment HeroDetails on Character {
+  name
+  ... on Human {
+    height
+  }
+  ... on Droid {
+    primaryFunction
+  }
+}
+    `;
+export const HumanFieldsFragmentDoc = Apollo.gql`
+    fragment HumanFields on Human {
+  name
+  mass
+}
+    `;
+export const CreateReviewForEpisodeDocument = Apollo.gql`
+    mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
+  createReview(episode: $episode, review: $review) {
+    stars
+    commentary
+  }
+}
+    `;
+export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
+  CreateReviewForEpisodeMutation,
+  CreateReviewForEpisodeMutationVariables
+>;
+
+/**
+ * __useCreateReviewForEpisodeMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewForEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewForEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewForEpisodeMutation, { data, loading, error }] = useCreateReviewForEpisodeMutation({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      review: // value for 'review'
+ *   },
+ * });
+ */
+export function useCreateReviewForEpisodeMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
+) {
+  return Apollo.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
+    CreateReviewForEpisodeDocument,
+    baseOptions
+  );
+}
+export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;
+export type CreateReviewForEpisodeMutationResult = Apollo.MutationResult<CreateReviewForEpisodeMutation>;
+export type CreateReviewForEpisodeMutationOptions = Apollo.BaseMutationOptions<
+  CreateReviewForEpisodeMutation,
+  CreateReviewForEpisodeMutationVariables
+>;
+export const HeroAndFriendsNamesDocument = Apollo.gql`
+    query HeroAndFriendsNames($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    friends {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useHeroAndFriendsNamesQuery__
+ *
+ * To run a query within a React component, call `useHeroAndFriendsNamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroAndFriendsNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroAndFriendsNamesQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroAndFriendsNamesQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+) {
+  return Apollo.useQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+    HeroAndFriendsNamesDocument,
+    baseOptions
+  );
+}
+export function useHeroAndFriendsNamesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+) {
+  return Apollo.useLazyQuery<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>(
+    HeroAndFriendsNamesDocument,
+    baseOptions
+  );
+}
+export type HeroAndFriendsNamesQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesQuery>;
+export type HeroAndFriendsNamesLazyQueryHookResult = ReturnType<typeof useHeroAndFriendsNamesLazyQuery>;
+export type HeroAndFriendsNamesQueryResult = Apollo.QueryResult<
+  HeroAndFriendsNamesQuery,
+  HeroAndFriendsNamesQueryVariables
+>;
+export function refetchHeroAndFriendsNamesQuery(variables?: HeroAndFriendsNamesQueryVariables) {
+  return { query: HeroAndFriendsNamesDocument, variables: variables };
+}
+export const HeroAppearsInDocument = Apollo.gql`
+    query HeroAppearsIn {
+  hero {
+    name
+    appearsIn
+  }
+}
+    `;
+
+/**
+ * __useHeroAppearsInQuery__
+ *
+ * To run a query within a React component, call `useHeroAppearsInQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroAppearsInQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroAppearsInQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHeroAppearsInQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+) {
+  return Apollo.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+}
+export function useHeroAppearsInLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
+) {
+  return Apollo.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+}
+export type HeroAppearsInQueryHookResult = ReturnType<typeof useHeroAppearsInQuery>;
+export type HeroAppearsInLazyQueryHookResult = ReturnType<typeof useHeroAppearsInLazyQuery>;
+export type HeroAppearsInQueryResult = Apollo.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
+export function refetchHeroAppearsInQuery(variables?: HeroAppearsInQueryVariables) {
+  return { query: HeroAppearsInDocument, variables: variables };
+}
+export const HeroDetailsDocument = Apollo.gql`
+    query HeroDetails($episode: Episode) {
+  hero(episode: $episode) {
     name
     ... on Human {
       height
@@ -251,634 +401,450 @@ export const HeroDetailsFragmentDoc = gql`
       primaryFunction
     }
   }
-`;
-export const HumanFieldsFragmentDoc = gql`
-  fragment HumanFields on Human {
-    name
-    mass
-  }
-`;
-export const CreateReviewForEpisodeDocument = gql`
-  mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
-    createReview(episode: $episode, review: $review) {
-      stars
-      commentary
-    }
-  }
-`;
-export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunction<
-  CreateReviewForEpisodeMutation,
-  CreateReviewForEpisodeMutationVariables
->;
-export type CreateReviewForEpisodeComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables
-  >,
-  'mutation'
->;
+}
+    `;
 
-export const CreateReviewForEpisodeComponent = (props: CreateReviewForEpisodeComponentProps) => (
-  <ApolloReactComponents.Mutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
-    mutation={CreateReviewForEpisodeDocument}
-    {...props}
-  />
-);
-
-export type CreateReviewForEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-  [key in TDataName]: ApolloReactCommon.MutationFunction<
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables
-  >;
-} &
-  TChildProps;
-export function withCreateReviewForEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps, TDataName>
-  >
+/**
+ * __useHeroDetailsQuery__
+ *
+ * To run a query within a React component, call `useHeroDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroDetailsQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroDetailsQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps, TDataName>
-  >(CreateReviewForEpisodeDocument, {
-    alias: 'createReviewForEpisode',
-    ...operationOptions,
-  });
+  return Apollo.useQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
-export type CreateReviewForEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateReviewForEpisodeMutation,
-  CreateReviewForEpisodeMutationVariables
->;
-export const HeroAndFriendsNamesDocument = gql`
-  query HeroAndFriendsNames($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      friends {
-        name
-      }
-    }
-  }
-`;
-export type HeroAndFriendsNamesComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>,
-  'query'
->;
-
-export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponentProps) => (
-  <ApolloReactComponents.Query<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
-    query={HeroAndFriendsNamesDocument}
-    {...props}
-  />
-);
-
-export type HeroAndFriendsNamesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
-} &
-  TChildProps;
-export function withHeroAndFriendsNames<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroAndFriendsNamesQuery,
-    HeroAndFriendsNamesQueryVariables,
-    HeroAndFriendsNamesProps<TChildProps, TDataName>
-  >
+export function useHeroDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsQuery, HeroDetailsQueryVariables>
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroAndFriendsNamesQuery,
-    HeroAndFriendsNamesQueryVariables,
-    HeroAndFriendsNamesProps<TChildProps, TDataName>
-  >(HeroAndFriendsNamesDocument, {
-    alias: 'heroAndFriendsNames',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroDetailsQuery, HeroDetailsQueryVariables>(HeroDetailsDocument, baseOptions);
 }
-export type HeroAndFriendsNamesQueryResult = ApolloReactCommon.QueryResult<
-  HeroAndFriendsNamesQuery,
-  HeroAndFriendsNamesQueryVariables
->;
-export function refetchHeroAndFriendsNamesQuery(variables?: HeroAndFriendsNamesQueryVariables) {
-  return { query: HeroAndFriendsNamesDocument, variables: variables };
-}
-export const HeroAppearsInDocument = gql`
-  query HeroAppearsIn {
-    hero {
-      name
-      appearsIn
-    }
-  }
-`;
-export type HeroAppearsInComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>,
-  'query'
->;
-
-export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => (
-  <ApolloReactComponents.Query<HeroAppearsInQuery, HeroAppearsInQueryVariables>
-    query={HeroAppearsInDocument}
-    {...props}
-  />
-);
-
-export type HeroAppearsInProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
-} &
-  TChildProps;
-export function withHeroAppearsIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroAppearsInQuery,
-    HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroAppearsInQuery,
-    HeroAppearsInQueryVariables,
-    HeroAppearsInProps<TChildProps, TDataName>
-  >(HeroAppearsInDocument, {
-    alias: 'heroAppearsIn',
-    ...operationOptions,
-  });
-}
-export type HeroAppearsInQueryResult = ApolloReactCommon.QueryResult<HeroAppearsInQuery, HeroAppearsInQueryVariables>;
-export function refetchHeroAppearsInQuery(variables?: HeroAppearsInQueryVariables) {
-  return { query: HeroAppearsInDocument, variables: variables };
-}
-export const HeroDetailsDocument = gql`
-  query HeroDetails($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        height
-      }
-      ... on Droid {
-        primaryFunction
-      }
-    }
-  }
-`;
-export type HeroDetailsComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroDetailsQuery, HeroDetailsQueryVariables>,
-  'query'
->;
-
-export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
-  <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />
-);
-
-export type HeroDetailsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsQuery, HeroDetailsQueryVariables>;
-} &
-  TChildProps;
-export function withHeroDetails<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroDetailsQuery,
-    HeroDetailsQueryVariables,
-    HeroDetailsProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroDetailsQuery,
-    HeroDetailsQueryVariables,
-    HeroDetailsProps<TChildProps, TDataName>
-  >(HeroDetailsDocument, {
-    alias: 'heroDetails',
-    ...operationOptions,
-  });
-}
-export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
+export type HeroDetailsQueryHookResult = ReturnType<typeof useHeroDetailsQuery>;
+export type HeroDetailsLazyQueryHookResult = ReturnType<typeof useHeroDetailsLazyQuery>;
+export type HeroDetailsQueryResult = Apollo.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;
 export function refetchHeroDetailsQuery(variables?: HeroDetailsQueryVariables) {
   return { query: HeroDetailsDocument, variables: variables };
 }
-export const HeroDetailsWithFragmentDocument = gql`
-  query HeroDetailsWithFragment($episode: Episode) {
-    hero(episode: $episode) {
-      ...HeroDetails
-    }
+export const HeroDetailsWithFragmentDocument = Apollo.gql`
+    query HeroDetailsWithFragment($episode: Episode) {
+  hero(episode: $episode) {
+    ...HeroDetails
   }
-  ${HeroDetailsFragmentDoc}
-`;
-export type HeroDetailsWithFragmentComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>,
-  'query'
->;
-
-export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentComponentProps) => (
-  <ApolloReactComponents.Query<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
-    query={HeroDetailsWithFragmentDocument}
-    {...props}
-  />
-);
-
-export type HeroDetailsWithFragmentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
-} &
-  TChildProps;
-export function withHeroDetailsWithFragment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroDetailsWithFragmentQuery,
-    HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroDetailsWithFragmentQuery,
-    HeroDetailsWithFragmentQueryVariables,
-    HeroDetailsWithFragmentProps<TChildProps, TDataName>
-  >(HeroDetailsWithFragmentDocument, {
-    alias: 'heroDetailsWithFragment',
-    ...operationOptions,
-  });
 }
-export type HeroDetailsWithFragmentQueryResult = ApolloReactCommon.QueryResult<
+    ${HeroDetailsFragmentDoc}`;
+
+/**
+ * __useHeroDetailsWithFragmentQuery__
+ *
+ * To run a query within a React component, call `useHeroDetailsWithFragmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroDetailsWithFragmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroDetailsWithFragmentQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroDetailsWithFragmentQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
+) {
+  return Apollo.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+    HeroDetailsWithFragmentDocument,
+    baseOptions
+  );
+}
+export function useHeroDetailsWithFragmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
+) {
+  return Apollo.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
+    HeroDetailsWithFragmentDocument,
+    baseOptions
+  );
+}
+export type HeroDetailsWithFragmentQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentQuery>;
+export type HeroDetailsWithFragmentLazyQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentLazyQuery>;
+export type HeroDetailsWithFragmentQueryResult = Apollo.QueryResult<
   HeroDetailsWithFragmentQuery,
   HeroDetailsWithFragmentQueryVariables
 >;
 export function refetchHeroDetailsWithFragmentQuery(variables?: HeroDetailsWithFragmentQueryVariables) {
   return { query: HeroDetailsWithFragmentDocument, variables: variables };
 }
-export const HeroNameDocument = gql`
-  query HeroName($episode: Episode) {
-    hero(episode: $episode) {
-      name
-    }
+export const HeroNameDocument = Apollo.gql`
+    query HeroName($episode: Episode) {
+  hero(episode: $episode) {
+    name
   }
-`;
-export type HeroNameComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroNameQuery, HeroNameQueryVariables>,
-  'query'
->;
-
-export const HeroNameComponent = (props: HeroNameComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameQuery, HeroNameQueryVariables> query={HeroNameDocument} {...props} />
-);
-
-export type HeroNameProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroNameQuery, HeroNameQueryVariables>;
-} &
-  TChildProps;
-export function withHeroName<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameQuery,
-    HeroNameQueryVariables,
-    HeroNameProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps, TDataName>>(
-    HeroNameDocument,
-    {
-      alias: 'heroName',
-      ...operationOptions,
-    }
-  );
 }
-export type HeroNameQueryResult = ApolloReactCommon.QueryResult<HeroNameQuery, HeroNameQueryVariables>;
+    `;
+
+/**
+ * __useHeroNameQuery__
+ *
+ * To run a query within a React component, call `useHeroNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroNameQuery(baseOptions?: Apollo.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+}
+export function useHeroNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
+  return Apollo.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+}
+export type HeroNameQueryHookResult = ReturnType<typeof useHeroNameQuery>;
+export type HeroNameLazyQueryHookResult = ReturnType<typeof useHeroNameLazyQuery>;
+export type HeroNameQueryResult = Apollo.QueryResult<HeroNameQuery, HeroNameQueryVariables>;
 export function refetchHeroNameQuery(variables?: HeroNameQueryVariables) {
   return { query: HeroNameDocument, variables: variables };
 }
-export const HeroNameConditionalInclusionDocument = gql`
-  query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
-    hero(episode: $episode) {
-      name @include(if: $includeName)
-    }
+export const HeroNameConditionalInclusionDocument = Apollo.gql`
+    query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
+  hero(episode: $episode) {
+    name @include(if: $includeName)
   }
-`;
-export type HeroNameConditionalInclusionComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroNameConditionalInclusionQuery__
+ *
+ * To run a query within a React component, call `useHeroNameConditionalInclusionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameConditionalInclusionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameConditionalInclusionQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      includeName: // value for 'includeName'
+ *   },
+ * });
+ */
+export function useHeroNameConditionalInclusionQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
+) {
+  return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+    HeroNameConditionalInclusionDocument,
+    baseOptions
+  );
+}
+export function useHeroNameConditionalInclusionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables
-  >,
-  'query'
-> &
-  ({ variables: HeroNameConditionalInclusionQueryVariables; skip?: boolean } | { skip: boolean });
-
-export const HeroNameConditionalInclusionComponent = (props: HeroNameConditionalInclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
-    query={HeroNameConditionalInclusionDocument}
-    {...props}
-  />
-);
-
-export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroNameConditionalInclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps, TDataName>
-  >(HeroNameConditionalInclusionDocument, {
-    alias: 'heroNameConditionalInclusion',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+    HeroNameConditionalInclusionDocument,
+    baseOptions
+  );
 }
-export type HeroNameConditionalInclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalInclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalInclusionQuery>;
+export type HeroNameConditionalInclusionLazyQueryHookResult = ReturnType<
+  typeof useHeroNameConditionalInclusionLazyQuery
+>;
+export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalInclusionQuery,
   HeroNameConditionalInclusionQueryVariables
 >;
 export function refetchHeroNameConditionalInclusionQuery(variables?: HeroNameConditionalInclusionQueryVariables) {
   return { query: HeroNameConditionalInclusionDocument, variables: variables };
 }
-export const HeroNameConditionalExclusionDocument = gql`
-  query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
-    hero(episode: $episode) {
-      name @skip(if: $skipName)
-    }
+export const HeroNameConditionalExclusionDocument = Apollo.gql`
+    query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
+  hero(episode: $episode) {
+    name @skip(if: $skipName)
   }
-`;
-export type HeroNameConditionalExclusionComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroNameConditionalExclusionQuery__
+ *
+ * To run a query within a React component, call `useHeroNameConditionalExclusionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameConditionalExclusionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameConditionalExclusionQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      skipName: // value for 'skipName'
+ *   },
+ * });
+ */
+export function useHeroNameConditionalExclusionQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
+) {
+  return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+    HeroNameConditionalExclusionDocument,
+    baseOptions
+  );
+}
+export function useHeroNameConditionalExclusionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables
-  >,
-  'query'
-> &
-  ({ variables: HeroNameConditionalExclusionQueryVariables; skip?: boolean } | { skip: boolean });
-
-export const HeroNameConditionalExclusionComponent = (props: HeroNameConditionalExclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
-    query={HeroNameConditionalExclusionDocument}
-    {...props}
-  />
-);
-
-export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroNameConditionalExclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps, TDataName>
-  >(HeroNameConditionalExclusionDocument, {
-    alias: 'heroNameConditionalExclusion',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+    HeroNameConditionalExclusionDocument,
+    baseOptions
+  );
 }
-export type HeroNameConditionalExclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalExclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalExclusionQuery>;
+export type HeroNameConditionalExclusionLazyQueryHookResult = ReturnType<
+  typeof useHeroNameConditionalExclusionLazyQuery
+>;
+export type HeroNameConditionalExclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalExclusionQuery,
   HeroNameConditionalExclusionQueryVariables
 >;
 export function refetchHeroNameConditionalExclusionQuery(variables?: HeroNameConditionalExclusionQueryVariables) {
   return { query: HeroNameConditionalExclusionDocument, variables: variables };
 }
-export const HeroParentTypeDependentFieldDocument = gql`
-  query HeroParentTypeDependentField($episode: Episode) {
-    hero(episode: $episode) {
-      name
-      ... on Human {
-        friends {
-          name
-          ... on Human {
-            height(unit: FOOT)
-          }
+export const HeroParentTypeDependentFieldDocument = Apollo.gql`
+    query HeroParentTypeDependentField($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      friends {
+        name
+        ... on Human {
+          height(unit: FOOT)
         }
       }
-      ... on Droid {
-        friends {
-          name
-          ... on Human {
-            height(unit: METER)
-          }
+    }
+    ... on Droid {
+      friends {
+        name
+        ... on Human {
+          height(unit: METER)
         }
       }
     }
   }
-`;
-export type HeroParentTypeDependentFieldComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroParentTypeDependentFieldQuery__
+ *
+ * To run a query within a React component, call `useHeroParentTypeDependentFieldQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroParentTypeDependentFieldQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroParentTypeDependentFieldQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroParentTypeDependentFieldQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
+) {
+  return Apollo.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+    HeroParentTypeDependentFieldDocument,
+    baseOptions
+  );
+}
+export function useHeroParentTypeDependentFieldLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
-  >,
-  'query'
->;
-
-export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDependentFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
-    query={HeroParentTypeDependentFieldDocument}
-    {...props}
-  />
-);
-
-export type HeroParentTypeDependentFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroParentTypeDependentField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps, TDataName>
-  >(HeroParentTypeDependentFieldDocument, {
-    alias: 'heroParentTypeDependentField',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+    HeroParentTypeDependentFieldDocument,
+    baseOptions
+  );
 }
-export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroParentTypeDependentFieldQueryHookResult = ReturnType<typeof useHeroParentTypeDependentFieldQuery>;
+export type HeroParentTypeDependentFieldLazyQueryHookResult = ReturnType<
+  typeof useHeroParentTypeDependentFieldLazyQuery
+>;
+export type HeroParentTypeDependentFieldQueryResult = Apollo.QueryResult<
   HeroParentTypeDependentFieldQuery,
   HeroParentTypeDependentFieldQueryVariables
 >;
 export function refetchHeroParentTypeDependentFieldQuery(variables?: HeroParentTypeDependentFieldQueryVariables) {
   return { query: HeroParentTypeDependentFieldDocument, variables: variables };
 }
-export const HeroTypeDependentAliasedFieldDocument = gql`
-  query HeroTypeDependentAliasedField($episode: Episode) {
-    hero(episode: $episode) {
-      ... on Human {
-        property: homePlanet
-      }
-      ... on Droid {
-        property: primaryFunction
-      }
+export const HeroTypeDependentAliasedFieldDocument = Apollo.gql`
+    query HeroTypeDependentAliasedField($episode: Episode) {
+  hero(episode: $episode) {
+    ... on Human {
+      property: homePlanet
+    }
+    ... on Droid {
+      property: primaryFunction
     }
   }
-`;
-export type HeroTypeDependentAliasedFieldComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroTypeDependentAliasedFieldQuery__
+ *
+ * To run a query within a React component, call `useHeroTypeDependentAliasedFieldQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroTypeDependentAliasedFieldQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroTypeDependentAliasedFieldQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroTypeDependentAliasedFieldQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
+) {
+  return Apollo.useQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+    HeroTypeDependentAliasedFieldDocument,
+    baseOptions
+  );
+}
+export function useHeroTypeDependentAliasedFieldLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables
-  >,
-  'query'
->;
-
-export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentAliasedFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
-    query={HeroTypeDependentAliasedFieldDocument}
-    {...props}
-  />
-);
-
-export type HeroTypeDependentAliasedFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
-  >(HeroTypeDependentAliasedFieldDocument, {
-    alias: 'heroTypeDependentAliasedField',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+    HeroTypeDependentAliasedFieldDocument,
+    baseOptions
+  );
 }
-export type HeroTypeDependentAliasedFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroTypeDependentAliasedFieldQueryHookResult = ReturnType<typeof useHeroTypeDependentAliasedFieldQuery>;
+export type HeroTypeDependentAliasedFieldLazyQueryHookResult = ReturnType<
+  typeof useHeroTypeDependentAliasedFieldLazyQuery
+>;
+export type HeroTypeDependentAliasedFieldQueryResult = Apollo.QueryResult<
   HeroTypeDependentAliasedFieldQuery,
   HeroTypeDependentAliasedFieldQueryVariables
 >;
 export function refetchHeroTypeDependentAliasedFieldQuery(variables?: HeroTypeDependentAliasedFieldQueryVariables) {
   return { query: HeroTypeDependentAliasedFieldDocument, variables: variables };
 }
-export const HumanWithNullHeightDocument = gql`
-  query HumanWithNullHeight {
-    human(id: 1004) {
-      ...HumanFields
-    }
+export const HumanWithNullHeightDocument = Apollo.gql`
+    query HumanWithNullHeight {
+  human(id: 1004) {
+    ...HumanFields
   }
-  ${HumanFieldsFragmentDoc}
-`;
-export type HumanWithNullHeightComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>,
-  'query'
->;
-
-export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => (
-  <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
-    query={HumanWithNullHeightDocument}
-    {...props}
-  />
-);
-
-export type HumanWithNullHeightProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
-} &
-  TChildProps;
-export function withHumanWithNullHeight<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HumanWithNullHeightQuery,
-    HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HumanWithNullHeightQuery,
-    HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps, TDataName>
-  >(HumanWithNullHeightDocument, {
-    alias: 'humanWithNullHeight',
-    ...operationOptions,
-  });
 }
-export type HumanWithNullHeightQueryResult = ApolloReactCommon.QueryResult<
+    ${HumanFieldsFragmentDoc}`;
+
+/**
+ * __useHumanWithNullHeightQuery__
+ *
+ * To run a query within a React component, call `useHumanWithNullHeightQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHumanWithNullHeightQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHumanWithNullHeightQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHumanWithNullHeightQuery(
+  baseOptions?: Apollo.QueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+) {
+  return Apollo.useQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+    HumanWithNullHeightDocument,
+    baseOptions
+  );
+}
+export function useHumanWithNullHeightLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+) {
+  return Apollo.useLazyQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+    HumanWithNullHeightDocument,
+    baseOptions
+  );
+}
+export type HumanWithNullHeightQueryHookResult = ReturnType<typeof useHumanWithNullHeightQuery>;
+export type HumanWithNullHeightLazyQueryHookResult = ReturnType<typeof useHumanWithNullHeightLazyQuery>;
+export type HumanWithNullHeightQueryResult = Apollo.QueryResult<
   HumanWithNullHeightQuery,
   HumanWithNullHeightQueryVariables
 >;
 export function refetchHumanWithNullHeightQuery(variables?: HumanWithNullHeightQueryVariables) {
   return { query: HumanWithNullHeightDocument, variables: variables };
 }
-export const TwoHeroesDocument = gql`
-  query TwoHeroes {
-    r2: hero {
-      name
-    }
-    luke: hero(episode: EMPIRE) {
-      name
-    }
+export const TwoHeroesDocument = Apollo.gql`
+    query TwoHeroes {
+  r2: hero {
+    name
   }
-`;
-export type TwoHeroesComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<TwoHeroesQuery, TwoHeroesQueryVariables>,
-  'query'
->;
-
-export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => (
-  <ApolloReactComponents.Query<TwoHeroesQuery, TwoHeroesQueryVariables> query={TwoHeroesDocument} {...props} />
-);
-
-export type TwoHeroesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<TwoHeroesQuery, TwoHeroesQueryVariables>;
-} &
-  TChildProps;
-export function withTwoHeroes<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    TwoHeroesQuery,
-    TwoHeroesQueryVariables,
-    TwoHeroesProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    TwoHeroesQuery,
-    TwoHeroesQueryVariables,
-    TwoHeroesProps<TChildProps, TDataName>
-  >(TwoHeroesDocument, {
-    alias: 'twoHeroes',
-    ...operationOptions,
-  });
+  luke: hero(episode: EMPIRE) {
+    name
+  }
 }
-export type TwoHeroesQueryResult = ApolloReactCommon.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
+    `;
+
+/**
+ * __useTwoHeroesQuery__
+ *
+ * To run a query within a React component, call `useTwoHeroesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTwoHeroesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTwoHeroesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTwoHeroesQuery(baseOptions?: Apollo.QueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>) {
+  return Apollo.useQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+}
+export function useTwoHeroesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<TwoHeroesQuery, TwoHeroesQueryVariables>
+) {
+  return Apollo.useLazyQuery<TwoHeroesQuery, TwoHeroesQueryVariables>(TwoHeroesDocument, baseOptions);
+}
+export type TwoHeroesQueryHookResult = ReturnType<typeof useTwoHeroesQuery>;
+export type TwoHeroesLazyQueryHookResult = ReturnType<typeof useTwoHeroesLazyQuery>;
+export type TwoHeroesQueryResult = Apollo.QueryResult<TwoHeroesQuery, TwoHeroesQueryVariables>;
 export function refetchTwoHeroesQuery(variables?: TwoHeroesQueryVariables) {
   return { query: TwoHeroesDocument, variables: variables };
 }

@@ -3627,7 +3627,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(`
-      export type UserIdQueryQueryVariables = {};
+      export type UserIdQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
       export type UserIdQueryQuery = (
         { __typename?: 'Query' }
@@ -3637,7 +3637,7 @@ describe('TypeScript Operations Plugin', () => {
         ) }
       );
       
-      export type UserLoginQueryQueryVariables = {};
+      export type UserLoginQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
       export type UserLoginQueryQuery = (
         { __typename?: 'Query' }

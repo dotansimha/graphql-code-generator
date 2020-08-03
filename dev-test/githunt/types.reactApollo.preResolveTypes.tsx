@@ -1,11 +1,6 @@
-import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -298,8 +293,58 @@ export type VoteMutation = {
   vote?: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
 };
 
-export const CommentsPageCommentFragmentDoc = gql`
-  fragment CommentsPageComment on Comment {
+export const CommentsPageCommentFragmentDoc = Apollo.gql`
+    fragment CommentsPageComment on Comment {
+  id
+  postedBy {
+    login
+    html_url
+  }
+  createdAt
+  content
+}
+    `;
+export const VoteButtonsFragmentDoc = Apollo.gql`
+    fragment VoteButtons on Entry {
+  score
+  vote {
+    vote_value
+  }
+}
+    `;
+export const RepoInfoFragmentDoc = Apollo.gql`
+    fragment RepoInfo on Entry {
+  createdAt
+  repository {
+    description
+    stargazers_count
+    open_issues_count
+  }
+  postedBy {
+    html_url
+    login
+  }
+}
+    `;
+export const FeedEntryFragmentDoc = Apollo.gql`
+    fragment FeedEntry on Entry {
+  id
+  commentCount
+  repository {
+    full_name
+    html_url
+    owner {
+      avatar_url
+    }
+  }
+  ...VoteButtons
+  ...RepoInfo
+}
+    ${VoteButtonsFragmentDoc}
+${RepoInfoFragmentDoc}`;
+export const OnCommentAddedDocument = Apollo.gql`
+    subscription onCommentAdded($repoFullName: String!) {
+  commentAdded(repoFullName: $repoFullName) {
     id
     postedBy {
       login
@@ -308,384 +353,291 @@ export const CommentsPageCommentFragmentDoc = gql`
     createdAt
     content
   }
-`;
-export const VoteButtonsFragmentDoc = gql`
-  fragment VoteButtons on Entry {
-    score
-    vote {
-      vote_value
-    }
+}
+    `;
+
+/**
+ * __useOnCommentAddedSubscription__
+ *
+ * To run a query within a React component, call `useOnCommentAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnCommentAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnCommentAddedSubscription({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *   },
+ * });
+ */
+export function useOnCommentAddedSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
+) {
+  return Apollo.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
+    OnCommentAddedDocument,
+    baseOptions
+  );
+}
+export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
+export type OnCommentAddedSubscriptionResult = Apollo.SubscriptionResult<OnCommentAddedSubscription>;
+export const CommentDocument = Apollo.gql`
+    query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+  currentUser {
+    login
+    html_url
   }
-`;
-export const RepoInfoFragmentDoc = gql`
-  fragment RepoInfo on Entry {
-    createdAt
-    repository {
-      description
-      stargazers_count
-      open_issues_count
-    }
-    postedBy {
-      html_url
-      login
-    }
-  }
-`;
-export const FeedEntryFragmentDoc = gql`
-  fragment FeedEntry on Entry {
+  entry(repoFullName: $repoFullName) {
     id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    comments(limit: $limit, offset: $offset) {
+      ...CommentsPageComment
+    }
     commentCount
     repository {
       full_name
       html_url
-      owner {
-        avatar_url
+      ... on Repository {
+        description
+        open_issues_count
+        stargazers_count
       }
     }
-    ...VoteButtons
-    ...RepoInfo
   }
-  ${VoteButtonsFragmentDoc}
-  ${RepoInfoFragmentDoc}
-`;
-export const OnCommentAddedDocument = gql`
-  subscription onCommentAdded($repoFullName: String!) {
-    commentAdded(repoFullName: $repoFullName) {
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      content
-    }
-  }
-`;
-export type OnCommentAddedComponentProps = Omit<
-  ApolloReactComponents.SubscriptionComponentOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>,
-  'subscription'
->;
-
-export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => (
-  <ApolloReactComponents.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
-    subscription={OnCommentAddedDocument}
-    {...props}
-  />
-);
-
-export type OnCommentAddedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
-} &
-  TChildProps;
-export function withOnCommentAdded<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    OnCommentAddedSubscription,
-    OnCommentAddedSubscriptionVariables,
-    OnCommentAddedProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withSubscription<
-    TProps,
-    OnCommentAddedSubscription,
-    OnCommentAddedSubscriptionVariables,
-    OnCommentAddedProps<TChildProps, TDataName>
-  >(OnCommentAddedDocument, {
-    alias: 'onCommentAdded',
-    ...operationOptions,
-  });
 }
-export type OnCommentAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnCommentAddedSubscription>;
-export const CommentDocument = gql`
-  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
-    currentUser {
-      login
-      html_url
-    }
-    entry(repoFullName: $repoFullName) {
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      comments(limit: $limit, offset: $offset) {
-        ...CommentsPageComment
-      }
-      commentCount
-      repository {
-        full_name
-        html_url
-        ... on Repository {
-          description
-          open_issues_count
-          stargazers_count
-        }
-      }
-    }
+    ${CommentsPageCommentFragmentDoc}`;
+
+/**
+ * __useCommentQuery__
+ *
+ * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuery({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+  return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+}
+export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+  return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+}
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
+export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
+export const CurrentUserForProfileDocument = Apollo.gql`
+    query CurrentUserForProfile {
+  currentUser {
+    login
+    avatar_url
   }
-  ${CommentsPageCommentFragmentDoc}
-`;
-export type CommentComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<CommentQuery, CommentQueryVariables>,
-  'query'
-> &
-  ({ variables: CommentQueryVariables; skip?: boolean } | { skip: boolean });
+}
+    `;
 
-export const CommentComponent = (props: CommentComponentProps) => (
-  <ApolloReactComponents.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
-);
-
-export type CommentProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<CommentQuery, CommentQueryVariables>;
-} &
-  TChildProps;
-export function withComment<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CommentQuery,
-    CommentQueryVariables,
-    CommentProps<TChildProps, TDataName>
-  >
+/**
+ * __useCurrentUserForProfileQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserForProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserForProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserForProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentUserForProfileQuery(
+  baseOptions?: Apollo.QueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
 ) {
-  return ApolloReactHoc.withQuery<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps, TDataName>>(
-    CommentDocument,
-    {
-      alias: 'comment',
-      ...operationOptions,
-    }
+  return Apollo.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+    CurrentUserForProfileDocument,
+    baseOptions
   );
 }
-export type CommentQueryResult = ApolloReactCommon.QueryResult<CommentQuery, CommentQueryVariables>;
-export const CurrentUserForProfileDocument = gql`
-  query CurrentUserForProfile {
-    currentUser {
-      login
-      avatar_url
-    }
-  }
-`;
-export type CurrentUserForProfileComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>,
-  'query'
->;
-
-export const CurrentUserForProfileComponent = (props: CurrentUserForProfileComponentProps) => (
-  <ApolloReactComponents.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
-    query={CurrentUserForProfileDocument}
-    {...props}
-  />
-);
-
-export type CurrentUserForProfileProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
-} &
-  TChildProps;
-export function withCurrentUserForProfile<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CurrentUserForProfileQuery,
-    CurrentUserForProfileQueryVariables,
-    CurrentUserForProfileProps<TChildProps, TDataName>
-  >
+export function useCurrentUserForProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    CurrentUserForProfileQuery,
-    CurrentUserForProfileQueryVariables,
-    CurrentUserForProfileProps<TChildProps, TDataName>
-  >(CurrentUserForProfileDocument, {
-    alias: 'currentUserForProfile',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+    CurrentUserForProfileDocument,
+    baseOptions
+  );
 }
-export type CurrentUserForProfileQueryResult = ApolloReactCommon.QueryResult<
+export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
+export type CurrentUserForProfileLazyQueryHookResult = ReturnType<typeof useCurrentUserForProfileLazyQuery>;
+export type CurrentUserForProfileQueryResult = Apollo.QueryResult<
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables
 >;
-export const FeedDocument = gql`
-  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-    currentUser {
-      login
-    }
-    feed(type: $type, offset: $offset, limit: $limit) {
-      ...FeedEntry
-    }
+export const FeedDocument = Apollo.gql`
+    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+  currentUser {
+    login
   }
-  ${FeedEntryFragmentDoc}
-`;
-export type FeedComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<FeedQuery, FeedQueryVariables>,
-  'query'
-> &
-  ({ variables: FeedQueryVariables; skip?: boolean } | { skip: boolean });
-
-export const FeedComponent = (props: FeedComponentProps) => (
-  <ApolloReactComponents.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
-);
-
-export type FeedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<FeedQuery, FeedQueryVariables>;
-} &
-  TChildProps;
-export function withFeed<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    FeedQuery,
-    FeedQueryVariables,
-    FeedProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps, TDataName>>(
-    FeedDocument,
-    {
-      alias: 'feed',
-      ...operationOptions,
-    }
-  );
+  feed(type: $type, offset: $offset, limit: $limit) {
+    ...FeedEntry
+  }
 }
-export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>;
-export const SubmitRepositoryDocument = gql`
-  mutation submitRepository($repoFullName: String!) {
-    submitRepository(repoFullName: $repoFullName) {
-      createdAt
-    }
+    ${FeedEntryFragmentDoc}`;
+
+/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+}
+export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+}
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
+export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = Apollo.gql`
+    mutation submitRepository($repoFullName: String!) {
+  submitRepository(repoFullName: $repoFullName) {
+    createdAt
   }
-`;
-export type SubmitRepositoryMutationFn = ApolloReactCommon.MutationFunction<
+}
+    `;
+export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables
 >;
-export type SubmitRepositoryComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>,
-  'mutation'
->;
 
-export const SubmitRepositoryComponent = (props: SubmitRepositoryComponentProps) => (
-  <ApolloReactComponents.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
-    mutation={SubmitRepositoryDocument}
-    {...props}
-  />
-);
-
-export type SubmitRepositoryProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-  [key in TDataName]: ApolloReactCommon.MutationFunction<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-} &
-  TChildProps;
-export function withSubmitRepository<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    SubmitRepositoryMutation,
-    SubmitRepositoryMutationVariables,
-    SubmitRepositoryProps<TChildProps, TDataName>
-  >
+/**
+ * __useSubmitRepositoryMutation__
+ *
+ * To run a mutation, you first call `useSubmitRepositoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitRepositoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitRepositoryMutation, { data, loading, error }] = useSubmitRepositoryMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *   },
+ * });
+ */
+export function useSubmitRepositoryMutation(
+  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
 ) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    SubmitRepositoryMutation,
-    SubmitRepositoryMutationVariables,
-    SubmitRepositoryProps<TChildProps, TDataName>
-  >(SubmitRepositoryDocument, {
-    alias: 'submitRepository',
-    ...operationOptions,
-  });
+  return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
+    SubmitRepositoryDocument,
+    baseOptions
+  );
 }
-export type SubmitRepositoryMutationResult = ApolloReactCommon.MutationResult<SubmitRepositoryMutation>;
-export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
+export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables
 >;
-export const SubmitCommentDocument = gql`
-  mutation submitComment($repoFullName: String!, $commentContent: String!) {
-    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-      ...CommentsPageComment
-    }
+export const SubmitCommentDocument = Apollo.gql`
+    mutation submitComment($repoFullName: String!, $commentContent: String!) {
+  submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+    ...CommentsPageComment
   }
-  ${CommentsPageCommentFragmentDoc}
-`;
-export type SubmitCommentMutationFn = ApolloReactCommon.MutationFunction<
+}
+    ${CommentsPageCommentFragmentDoc}`;
+export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;
+
+/**
+ * __useSubmitCommentMutation__
+ *
+ * To run a mutation, you first call `useSubmitCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitCommentMutation, { data, loading, error }] = useSubmitCommentMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      commentContent: // value for 'commentContent'
+ *   },
+ * });
+ */
+export function useSubmitCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+) {
+  return Apollo.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
+}
+export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
+export type SubmitCommentMutationResult = Apollo.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
   SubmitCommentMutation,
   SubmitCommentMutationVariables
 >;
-export type SubmitCommentComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<SubmitCommentMutation, SubmitCommentMutationVariables>,
-  'mutation'
->;
-
-export const SubmitCommentComponent = (props: SubmitCommentComponentProps) => (
-  <ApolloReactComponents.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables>
-    mutation={SubmitCommentDocument}
-    {...props}
-  />
-);
-
-export type SubmitCommentProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-  [key in TDataName]: ApolloReactCommon.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;
-} &
-  TChildProps;
-export function withSubmitComment<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    SubmitCommentMutation,
-    SubmitCommentMutationVariables,
-    SubmitCommentProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    SubmitCommentMutation,
-    SubmitCommentMutationVariables,
-    SubmitCommentProps<TChildProps, TDataName>
-  >(SubmitCommentDocument, {
-    alias: 'submitComment',
-    ...operationOptions,
-  });
-}
-export type SubmitCommentMutationResult = ApolloReactCommon.MutationResult<SubmitCommentMutation>;
-export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SubmitCommentMutation,
-  SubmitCommentMutationVariables
->;
-export const VoteDocument = gql`
-  mutation vote($repoFullName: String!, $type: VoteType!) {
-    vote(repoFullName: $repoFullName, type: $type) {
-      score
-      id
-      vote {
-        vote_value
-      }
+export const VoteDocument = Apollo.gql`
+    mutation vote($repoFullName: String!, $type: VoteType!) {
+  vote(repoFullName: $repoFullName, type: $type) {
+    score
+    id
+    vote {
+      vote_value
     }
   }
-`;
-export type VoteMutationFn = ApolloReactCommon.MutationFunction<VoteMutation, VoteMutationVariables>;
-export type VoteComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<VoteMutation, VoteMutationVariables>,
-  'mutation'
->;
-
-export const VoteComponent = (props: VoteComponentProps) => (
-  <ApolloReactComponents.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...props} />
-);
-
-export type VoteProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-  [key in TDataName]: ApolloReactCommon.MutationFunction<VoteMutation, VoteMutationVariables>;
-} &
-  TChildProps;
-export function withVote<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    VoteMutation,
-    VoteMutationVariables,
-    VoteProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withMutation<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps, TDataName>>(
-    VoteDocument,
-    {
-      alias: 'vote',
-      ...operationOptions,
-    }
-  );
 }
-export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutation>;
-export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
+    `;
+export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
+
+/**
+ * __useVoteMutation__
+ *
+ * To run a mutation, you first call `useVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteMutation, { data, loading, error }] = useVoteMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+  return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
+}
+export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;

@@ -1,11 +1,6 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+import * as Apollo from '@apollo/client';
 
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -29,107 +24,107 @@ export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroNameConditionalInclusionDocument = gql`
-  query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
-    hero(episode: $episode) {
-      name @include(if: $includeName)
-    }
+export const HeroNameConditionalInclusionDocument = Apollo.gql`
+    query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
+  hero(episode: $episode) {
+    name @include(if: $includeName)
   }
-`;
-export type HeroNameConditionalInclusionComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroNameConditionalInclusionQuery__
+ *
+ * To run a query within a React component, call `useHeroNameConditionalInclusionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameConditionalInclusionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameConditionalInclusionQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      includeName: // value for 'includeName'
+ *   },
+ * });
+ */
+export function useHeroNameConditionalInclusionQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
+) {
+  return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+    HeroNameConditionalInclusionDocument,
+    baseOptions
+  );
+}
+export function useHeroNameConditionalInclusionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalInclusionQuery,
     HeroNameConditionalInclusionQueryVariables
-  >,
-  'query'
-> &
-  ({ variables: HeroNameConditionalInclusionQueryVariables; skip?: boolean } | { skip: boolean });
-
-export const HeroNameConditionalInclusionComponent = (props: HeroNameConditionalInclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
-    query={HeroNameConditionalInclusionDocument}
-    {...props}
-  />
-);
-
-export type HeroNameConditionalInclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroNameConditionalInclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroNameConditionalInclusionQuery,
-    HeroNameConditionalInclusionQueryVariables,
-    HeroNameConditionalInclusionProps<TChildProps, TDataName>
-  >(HeroNameConditionalInclusionDocument, {
-    alias: 'heroNameConditionalInclusion',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
+    HeroNameConditionalInclusionDocument,
+    baseOptions
+  );
 }
-export type HeroNameConditionalInclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalInclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalInclusionQuery>;
+export type HeroNameConditionalInclusionLazyQueryHookResult = ReturnType<
+  typeof useHeroNameConditionalInclusionLazyQuery
+>;
+export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalInclusionQuery,
   HeroNameConditionalInclusionQueryVariables
 >;
-export const HeroNameConditionalExclusionDocument = gql`
-  query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
-    hero(episode: $episode) {
-      name @skip(if: $skipName)
-    }
+export const HeroNameConditionalExclusionDocument = Apollo.gql`
+    query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
+  hero(episode: $episode) {
+    name @skip(if: $skipName)
   }
-`;
-export type HeroNameConditionalExclusionComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroNameConditionalExclusionQuery__
+ *
+ * To run a query within a React component, call `useHeroNameConditionalExclusionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameConditionalExclusionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameConditionalExclusionQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      skipName: // value for 'skipName'
+ *   },
+ * });
+ */
+export function useHeroNameConditionalExclusionQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
+) {
+  return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+    HeroNameConditionalExclusionDocument,
+    baseOptions
+  );
+}
+export function useHeroNameConditionalExclusionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroNameConditionalExclusionQuery,
     HeroNameConditionalExclusionQueryVariables
-  >,
-  'query'
-> &
-  ({ variables: HeroNameConditionalExclusionQueryVariables; skip?: boolean } | { skip: boolean });
-
-export const HeroNameConditionalExclusionComponent = (props: HeroNameConditionalExclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
-    query={HeroNameConditionalExclusionDocument}
-    {...props}
-  />
-);
-
-export type HeroNameConditionalExclusionProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroNameConditionalExclusion<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroNameConditionalExclusionQuery,
-    HeroNameConditionalExclusionQueryVariables,
-    HeroNameConditionalExclusionProps<TChildProps, TDataName>
-  >(HeroNameConditionalExclusionDocument, {
-    alias: 'heroNameConditionalExclusion',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
+    HeroNameConditionalExclusionDocument,
+    baseOptions
+  );
 }
-export type HeroNameConditionalExclusionQueryResult = ApolloReactCommon.QueryResult<
+export type HeroNameConditionalExclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalExclusionQuery>;
+export type HeroNameConditionalExclusionLazyQueryHookResult = ReturnType<
+  typeof useHeroNameConditionalExclusionLazyQuery
+>;
+export type HeroNameConditionalExclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalExclusionQuery,
   HeroNameConditionalExclusionQueryVariables
 >;

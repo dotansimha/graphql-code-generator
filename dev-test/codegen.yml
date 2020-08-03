@@ -157,6 +157,15 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
+  ./dev-test/githunt/types.reactApollo.v2.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      reactApolloVersion: 2
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
   ./dev-test/githunt/types.reactApollo.customSuffix.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -182,8 +191,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
-    config:
-      withHooks: true
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -347,7 +354,4 @@ generates:
       reactApolloVersion: 3
       gqlImport: graphql-tag
       hooksImportFrom: '@apollo/react-hooks'
-      withHooks: true
-      withHOC: false
-      withComponent: false
       withMutationFn: false

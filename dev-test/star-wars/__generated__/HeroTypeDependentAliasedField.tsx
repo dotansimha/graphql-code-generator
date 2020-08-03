@@ -1,11 +1,6 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+import * as Apollo from '@apollo/client';
 
 export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -18,59 +13,59 @@ export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroTypeDependentAliasedFieldDocument = gql`
-  query HeroTypeDependentAliasedField($episode: Episode) {
-    hero(episode: $episode) {
-      ... on Human {
-        property: homePlanet
-      }
-      ... on Droid {
-        property: primaryFunction
-      }
+export const HeroTypeDependentAliasedFieldDocument = Apollo.gql`
+    query HeroTypeDependentAliasedField($episode: Episode) {
+  hero(episode: $episode) {
+    ... on Human {
+      property: homePlanet
+    }
+    ... on Droid {
+      property: primaryFunction
     }
   }
-`;
-export type HeroTypeDependentAliasedFieldComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+}
+    `;
+
+/**
+ * __useHeroTypeDependentAliasedFieldQuery__
+ *
+ * To run a query within a React component, call `useHeroTypeDependentAliasedFieldQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroTypeDependentAliasedFieldQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroTypeDependentAliasedFieldQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroTypeDependentAliasedFieldQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
+) {
+  return Apollo.useQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+    HeroTypeDependentAliasedFieldDocument,
+    baseOptions
+  );
+}
+export function useHeroTypeDependentAliasedFieldLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroTypeDependentAliasedFieldQuery,
     HeroTypeDependentAliasedFieldQueryVariables
-  >,
-  'query'
->;
-
-export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentAliasedFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
-    query={HeroTypeDependentAliasedFieldDocument}
-    {...props}
-  />
-);
-
-export type HeroTypeDependentAliasedFieldProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables
-  >;
-} &
-  TChildProps;
-export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroTypeDependentAliasedFieldQuery,
-    HeroTypeDependentAliasedFieldQueryVariables,
-    HeroTypeDependentAliasedFieldProps<TChildProps, TDataName>
-  >(HeroTypeDependentAliasedFieldDocument, {
-    alias: 'heroTypeDependentAliasedField',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
+    HeroTypeDependentAliasedFieldDocument,
+    baseOptions
+  );
 }
-export type HeroTypeDependentAliasedFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroTypeDependentAliasedFieldQueryHookResult = ReturnType<typeof useHeroTypeDependentAliasedFieldQuery>;
+export type HeroTypeDependentAliasedFieldLazyQueryHookResult = ReturnType<
+  typeof useHeroTypeDependentAliasedFieldLazyQuery
+>;
+export type HeroTypeDependentAliasedFieldQueryResult = Apollo.QueryResult<
   HeroTypeDependentAliasedFieldQuery,
   HeroTypeDependentAliasedFieldQueryVariables
 >;

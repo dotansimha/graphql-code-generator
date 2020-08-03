@@ -1,13 +1,8 @@
 import * as Types from '../types.d';
 
 import { HumanFieldsFragment } from './HumanFields';
-import gql from 'graphql-tag';
 import { HumanFieldsFragmentDoc } from './HumanFields';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+import * as Apollo from '@apollo/client';
 
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -15,49 +10,48 @@ export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
   human?: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
 };
 
-export const HumanWithNullHeightDocument = gql`
-  query HumanWithNullHeight {
-    human(id: 1004) {
-      ...HumanFields
-    }
+export const HumanWithNullHeightDocument = Apollo.gql`
+    query HumanWithNullHeight {
+  human(id: 1004) {
+    ...HumanFields
   }
-  ${HumanFieldsFragmentDoc}
-`;
-export type HumanWithNullHeightComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>,
-  'query'
->;
-
-export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => (
-  <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
-    query={HumanWithNullHeightDocument}
-    {...props}
-  />
-);
-
-export type HumanWithNullHeightProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
-} &
-  TChildProps;
-export function withHumanWithNullHeight<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HumanWithNullHeightQuery,
-    HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps, TDataName>
-  >
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HumanWithNullHeightQuery,
-    HumanWithNullHeightQueryVariables,
-    HumanWithNullHeightProps<TChildProps, TDataName>
-  >(HumanWithNullHeightDocument, {
-    alias: 'humanWithNullHeight',
-    ...operationOptions,
-  });
 }
-export type HumanWithNullHeightQueryResult = ApolloReactCommon.QueryResult<
+    ${HumanFieldsFragmentDoc}`;
+
+/**
+ * __useHumanWithNullHeightQuery__
+ *
+ * To run a query within a React component, call `useHumanWithNullHeightQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHumanWithNullHeightQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHumanWithNullHeightQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHumanWithNullHeightQuery(
+  baseOptions?: Apollo.QueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+) {
+  return Apollo.useQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+    HumanWithNullHeightDocument,
+    baseOptions
+  );
+}
+export function useHumanWithNullHeightLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+) {
+  return Apollo.useLazyQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
+    HumanWithNullHeightDocument,
+    baseOptions
+  );
+}
+export type HumanWithNullHeightQueryHookResult = ReturnType<typeof useHumanWithNullHeightQuery>;
+export type HumanWithNullHeightLazyQueryHookResult = ReturnType<typeof useHumanWithNullHeightLazyQuery>;
+export type HumanWithNullHeightQueryResult = Apollo.QueryResult<
   HumanWithNullHeightQuery,
   HumanWithNullHeightQueryVariables
 >;

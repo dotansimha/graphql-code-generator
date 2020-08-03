@@ -273,11 +273,7 @@ export class ClientSideBaseVisitor<
     const fragments = this._transformFragments(node);
 
     const doc = this._prepareDocument(`
-    ${
-      print(node)
-        .split('\\')
-        .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
-    }
+    ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
@@ -303,7 +299,9 @@ export class ClientSideBaseVisitor<
       return '`' + doc + '`';
     }
 
-    return 'gql`' + doc + '`';
+    const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
+
+    return (gqlImport.propName || 'gql') + '`' + doc + '`';
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
@@ -364,6 +362,15 @@ export class ClientSideBaseVisitor<
   }
 
   protected _parseImport(importStr: string): ParsedImport {
+    // This is a special use case, when we don't want this plugin to manage the import statement
+    // of the gql tag. In this case, we provide something like `Namespace.gql` and it will be used instead.
+    if (importStr.includes('.gql')) {
+      return {
+        moduleName: null,
+        propName: importStr,
+      };
+    }
+
     const [moduleName, propName] = importStr.split('#');
 
     return {
@@ -372,10 +379,19 @@ export class ClientSideBaseVisitor<
     };
   }
 
-  protected _generateImport({ moduleName, propName }: ParsedImport, varName: string, isTypeImport: boolean): string {
+  protected _generateImport(
+    { moduleName, propName }: ParsedImport,
+    varName: string,
+    isTypeImport: boolean
+  ): string | null {
     const typeImport = isTypeImport && this.config.useTypeImports ? 'import type' : 'import';
     const propAlias = propName === varName ? '' : ` as ${varName}`;
-    return `${typeImport} ${propName ? `{ ${propName}${propAlias} }` : varName} from '${moduleName}';`;
+
+    if (moduleName) {
+      return `${typeImport} ${propName ? `{ ${propName}${propAlias} }` : varName} from '${moduleName}';`;
+    }
+
+    return null;
   }
 
   private clearExtension(path: string): string {
@@ -395,12 +411,22 @@ export class ClientSideBaseVisitor<
       case DocumentMode.documentNode:
       case DocumentMode.documentNodeImportFragments: {
         const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
-        imports.push(this._generateImport(documentNodeImport, 'DocumentNode', true));
+        const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
+
+        if (tagImport) {
+          imports.push(tagImport);
+        }
+
         break;
       }
       case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-        imports.push(this._generateImport(gqlImport, 'gql', false));
+        const tagImport = this._generateImport(gqlImport, 'gql', false);
+
+        if (tagImport) {
+          imports.push(tagImport);
+        }
+
         break;
       }
       case DocumentMode.external: {
