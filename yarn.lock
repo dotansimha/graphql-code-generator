@@ -106,10 +106,10 @@
     "@algolia/logger-common" "4.3.1"
     "@algolia/requester-common" "4.3.1"
 
-"@apollo/client@3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@apollo/client/-/client-3.1.1.tgz#7d57d037be8ee93694fbf82579f703e635c836c1"
-  integrity sha512-c5DxrU81p0B5BsyBXm+5uPJqLCX2epnBsd87PXfRwzDLbp/NiqnWp6a6c5vT5EV2LwJuCq1movmKthoy0gFb0w==
+"@apollo/client@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.1.2.tgz#e384f691706c46aef4d9234b63a03ccc06e9c33c"
+  integrity sha512-GaA/J0CDSSNe0HVm1abeOIJA3M4fs9Ih7wF2z1AI2SLqv5TBLvwBxh0+0+jCSntPZ3gnDQvR7MHjmXota5V1LQ==
   dependencies:
     "@types/zen-observable" "^0.8.0"
     "@wry/context" "^0.5.2"
@@ -8766,15 +8766,10 @@ graphql-subscriptions@1.1.0, graphql-subscriptions@^1.0.0:
   dependencies:
     iterall "^1.2.1"
 
-graphql-tag@2.11.0, graphql-tag@^2.11.0:
+graphql-tag@2.11.0, graphql-tag@^2.11.0, graphql-tag@^2.9.2:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
   integrity sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
-
-graphql-tag@^2.9.2:
-  version "2.10.3"
-  resolved "https://registry.npmjs.org/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
-  integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
 
 graphql-tools@^4.0.0:
   version "4.0.8"
