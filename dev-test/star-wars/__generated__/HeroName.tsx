@@ -1,11 +1,8 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+import { gql } from '@apollo/client';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client';
 
 export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -24,33 +21,33 @@ export const HeroNameDocument = gql`
     }
   }
 `;
-export type HeroNameComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<HeroNameQuery, HeroNameQueryVariables>,
-  'query'
->;
 
-export const HeroNameComponent = (props: HeroNameComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameQuery, HeroNameQueryVariables> query={HeroNameDocument} {...props} />
-);
-
-export type HeroNameProps<TChildProps = {}, TDataName extends string = 'data'> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<HeroNameQuery, HeroNameQueryVariables>;
-} &
-  TChildProps;
-export function withHeroName<TProps, TChildProps = {}, TDataName extends string = 'data'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroNameQuery,
-    HeroNameQueryVariables,
-    HeroNameProps<TChildProps, TDataName>
-  >
+/**
+ * __useHeroNameQuery__
+ *
+ * To run a query within a React component, call `useHeroNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroNameQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroNameQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameQuery, HeroNameQueryVariables, HeroNameProps<TChildProps, TDataName>>(
-    HeroNameDocument,
-    {
-      alias: 'heroName',
-      ...operationOptions,
-    }
-  );
+  return ApolloReactHooks.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
 }
+export function useHeroNameLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>
+) {
+  return ApolloReactHooks.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+}
+export type HeroNameQueryHookResult = ReturnType<typeof useHeroNameQuery>;
+export type HeroNameLazyQueryHookResult = ReturnType<typeof useHeroNameLazyQuery>;
 export type HeroNameQueryResult = ApolloReactCommon.QueryResult<HeroNameQuery, HeroNameQueryVariables>;

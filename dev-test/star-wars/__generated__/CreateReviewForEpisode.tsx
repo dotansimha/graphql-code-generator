@@ -1,11 +1,8 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as React from 'react';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+import { gql } from '@apollo/client';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client';
 
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
@@ -28,46 +25,37 @@ export type CreateReviewForEpisodeMutationFn = ApolloReactCommon.MutationFunctio
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;
-export type CreateReviewForEpisodeComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<
+
+/**
+ * __useCreateReviewForEpisodeMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewForEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewForEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewForEpisodeMutation, { data, loading, error }] = useCreateReviewForEpisodeMutation({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *      review: // value for 'review'
+ *   },
+ * });
+ */
+export function useCreateReviewForEpisodeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     CreateReviewForEpisodeMutation,
     CreateReviewForEpisodeMutationVariables
-  >,
-  'mutation'
->;
-
-export const CreateReviewForEpisodeComponent = (props: CreateReviewForEpisodeComponentProps) => (
-  <ApolloReactComponents.Mutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
-    mutation={CreateReviewForEpisodeDocument}
-    {...props}
-  />
-);
-
-export type CreateReviewForEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-  [key in TDataName]: ApolloReactCommon.MutationFunction<
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables
-  >;
-} &
-  TChildProps;
-export function withCreateReviewForEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps, TDataName>
   >
 ) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    CreateReviewForEpisodeMutation,
-    CreateReviewForEpisodeMutationVariables,
-    CreateReviewForEpisodeProps<TChildProps, TDataName>
-  >(CreateReviewForEpisodeDocument, {
-    alias: 'createReviewForEpisode',
-    ...operationOptions,
-  });
+  return ApolloReactHooks.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
+    CreateReviewForEpisodeDocument,
+    baseOptions
+  );
 }
+export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;
 export type CreateReviewForEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateReviewForEpisodeMutation>;
 export type CreateReviewForEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateReviewForEpisodeMutation,

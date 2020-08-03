@@ -264,16 +264,16 @@ describe('React Apollo', () => {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        { withComponent: true },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
-      expect(content.prepend).toContain(`import * as ApolloReactComponents from '@apollo/react-components';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/client';`);
+      expect(content.prepend).toContain(`import * as ApolloReactComponents from '@apollo/client/react/components';`);
       expect(content.prepend).toContain(`import * as React from 'react';`);
-      expect(content.prepend).toContain(`import gql from 'graphql-tag';`);
+      expect(content.prepend).toContain(`import { gql } from '@apollo/client';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -427,7 +427,7 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactHooks from '@apollo/react-hooks';`);
+      expect(content.prepend).toContain(`import * as ApolloReactHooks from '@apollo/client';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -764,7 +764,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        { withComponent: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -788,7 +788,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { componentSuffix: 'Element' },
+        { componentSuffix: 'Element', withComponent: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -806,12 +806,12 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, { componentSuffix: 'Element' });
     });
 
-    it('should not generate Component', async () => {
+    it('should not generate Component by default', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        { withComponent: false },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -840,7 +840,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        { withComponent: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -878,7 +878,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        { withComponent: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -910,12 +910,12 @@ query MyFeed {
   });
 
   describe('HOC', () => {
-    it('should generate HOCs', async () => {
+    it('should generate HOCs correctly', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        {},
+        { withHOC: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -946,7 +946,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { operationResultSuffix: 'Response' },
+        { operationResultSuffix: 'Response', withHOC: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -961,12 +961,12 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should not generate HOCs', async () => {
+    it('should not generate HOCs by default', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        { withHOC: false },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -982,7 +982,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { typesPrefix: 'I' },
+        { typesPrefix: 'I', withHOC: true },
         {
           outputFile: 'graphql.tsx',
         }
@@ -991,6 +991,7 @@ query MyFeed {
       expect(content.content).toContain(`export type ITestProps`);
       expect(content.content).toContain(`export function withTest`);
     });
+
     it('should generate mutation function signature correctly', async () => {
       const docs = [
         {
@@ -1359,7 +1360,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/client';`);
       expect(content.content).toContain(
         `export type TestQueryResult = ApolloReactCommon.QueryResult<TestQuery, TestQueryVariables>;`
       );
@@ -1396,7 +1397,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/client';`);
       expect(content.content).toContain(
         `export type TestMutationResult = ApolloReactCommon.MutationResult<TestMutation>;`
       );
@@ -1434,7 +1435,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/client';`);
       expect(content.content).toContain(
         `export type TestSubscriptionResult = ApolloReactCommon.SubscriptionResult<TestSubscription>;`
       );
@@ -1516,7 +1517,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/client';`);
       expect(content.content).toContain(
         `export type TestMutationOptions = ApolloReactCommon.BaseMutationOptions<TestMutation, TestMutationVariables>;`
       );

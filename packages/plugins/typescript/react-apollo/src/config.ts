@@ -7,41 +7,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @description Customized the output by enabling/disabling the generated Component.
-   * @default true
-   *
-   * @exampleMarkdown
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withComponent: false
-   * ```
-   */
-  withComponent?: boolean;
-  /**
-   * @description Customized the output by enabling/disabling the HOC.
-   * @default true
-   *
-   * @exampleMarkdown
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withHOC: false
-   * ```
-   */
-  withHOC?: boolean;
-  /**
-   * @description Customized the output by enabling/disabling the generated React Hooks.
+   * @description Customize the output by enabling/disabling the generated Component (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/components/
    * @default false
    *
    * @exampleMarkdown
@@ -53,7 +19,41 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withHooks: false
+   *    withComponent: true
+   * ```
+   */
+  withComponent?: boolean;
+  /**
+   * @description Customize the output by enabling/disabling the HOC (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/hoc/
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withHOC: true
+   * ```
+   */
+  withHOC?: boolean;
+  /**
+   * @description Customized the output by enabling/disabling the generated React Hooks. For more details: https://www.apollographql.com/docs/react/api/react/hooks/
+   * @default true
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withHooks: true
    * ```
    */
   withHooks?: boolean;
@@ -118,7 +118,9 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   componentSuffix?: string;
   /**
    * @description Sets the version of react-apollo.
-   * @default 2
+   * If you are using the old (deprecated) package of `react-apollo`, please set this configuration to `2`.
+   * If you are using Apollo-Client v3, please set this to `3`.
+   * @default 3
    *
    * @exampleMarkdown
    * ```yml
@@ -129,7 +131,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    reactApolloVersion: 3
+   *    reactApolloVersion: 2
    * ```
    */
   reactApolloVersion?: 2 | 3;
