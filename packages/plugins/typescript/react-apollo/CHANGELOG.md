@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.0.2
+
+### Patch Changes
+
+- bccfd28c: Enforce `.tsx` extension only when withComponent: true is set
+- e6ad5398: apollo v3 should not use type import
+- bccfd28c: Use gql as-is instead of Apollo.gql for the generated graphql-tag, to make sure it's compatible with IDEs and prettier
+- Updated dependencies [bccfd28c]
+  - @graphql-codegen/visitor-plugin-common@1.17.9
+
 ## 2.0.1
 
 ### Patch Changes
