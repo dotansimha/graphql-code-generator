@@ -1,5 +1,5 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index 271af46..6be01db 100644
+index 271af46..0ab6f5b 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 @@ -23,6 +23,7 @@ var applyReleasePlan = _interopDefault(require('@changesets/apply-release-plan')
@@ -10,6 +10,15 @@ index 271af46..6be01db 100644
  var pLimit = _interopDefault(require('p-limit'));
  var preferredPM = _interopDefault(require('preferred-pm'));
  var spawn = _interopDefault(require('spawndamnit'));
+@@ -473,7 +474,7 @@ async function version(cwd, options, config) {
+ // @ts-ignore
+ var isCI = !!(isCI$1 || process.env.GITHUB_ACTIONS);
+ 
+-const npmRequestLimit = pLimit(40);
++const npmRequestLimit = pLimit(5);
+ 
+ function jsonParse(input) {
+   try {
 @@ -683,7 +684,7 @@ async function publishAPackage(pkg, access, twoFactorState, tag) {
    } = pkg.packageJson;
    const localAccess = publishConfig && publishConfig.access;
@@ -20,9 +29,18 @@ index 271af46..6be01db 100644
      cwd: publishDir,
      access: localAccess || access,
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.prod.js b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
-index 0be38b2..c89bcc6 100644
+index 0be38b2..2c24094 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.prod.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
+@@ -300,7 +300,7 @@ async function version(cwd, options, config) {
+ 
+ var isCI = !(!isCI$1 && !process.env.GITHUB_ACTIONS);
+ 
+-const npmRequestLimit = pLimit(40);
++const npmRequestLimit = pLimit(5);
+ 
+ function jsonParse(input) {
+   try {
 @@ -417,7 +417,7 @@ async function publishPackages({packages: packages, access: access, otp: otp, pr
  async function publishAPackage(pkg, access, twoFactorState, tag) {
    const {name: name, version: version, publishConfig: publishConfig} = pkg.packageJson, localAccess = publishConfig && publishConfig.access;
