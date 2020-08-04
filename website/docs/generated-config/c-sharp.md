@@ -2,10 +2,14 @@ This plugin generates C# `class` identifier for your schema types.
 
 ## Installation
 
+
+
+<img alt="c-sharp plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/c-sharp?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/c-sharp
-
 :::
 
 ## API Reference

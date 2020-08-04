@@ -9,6 +9,8 @@ title: TypeScript React Apollo
 
 ## Usage Example
 
+### With React Hooks
+
 For the given input:
 
 ```graphql
@@ -27,16 +29,48 @@ query Test {
 }
 ```
 
-We can use the generated code like this:
+And the following configuration:
 
-```tsx
-  <TestComponent variables={...}>
-    ...
-  </TestComponent>
+```yaml
+schema: YOUR_SCHEMA_HERE
+documents: "./src/**/*.graphql"
+generates:
+  ./generated-types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
 ```
 
-Or if you prefer:
+Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a ready-to-use React Hook for each operation you have.
+
+In you application code, you can import it from the generated file, and use the React Hook in your component code: 
+
 
 ```tsx
-  const withTestData = withTestQuery(...);
+import { useTest } from './generated-types';
+
+export const MyComponent: React.FC = () => {
+  const { data, error, loading } = useTest();
+
+  return (<div> ... </div>)
+};
+```
+
+### Generate Data Component
+
+Codegen also supports generating data Components (deprecated in `@apollo/client` v3), you can turn it on this way:
+
+```yaml
+config:
+  withComponent: true
+```
+
+### Generate HOC
+
+Codegen also supports generating High-Order-Components (deprecated in `@apollo/client` v3), you can turn it on this way:
+
+```yaml
+config:
+  withHOC: true
 ```

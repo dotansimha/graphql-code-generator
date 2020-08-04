@@ -4,10 +4,14 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
 ## Installation
 
+
+
+<img alt="typescript-react-apollo plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-react-apollo?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/typescript-react-apollo
-
 :::
 
 ## API Reference
@@ -15,9 +19,9 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 ### `withComponent`
 
 type: `boolean`
-default: `true`
+default: `false`
 
-Customized the output by enabling/disabling the generated Component.
+Customize the output by enabling/disabling the generated Component (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/components/
 
 #### Usage Examples
 
@@ -29,15 +33,15 @@ path/to/file.ts:
    - typescript-operations
    - typescript-react-apollo
  config:
-   withComponent: false
+   withComponent: true
 ```
 
 ### `withHOC`
 
 type: `boolean`
-default: `true`
+default: `false`
 
-Customized the output by enabling/disabling the HOC.
+Customize the output by enabling/disabling the HOC (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/hoc/
 
 #### Usage Examples
 
@@ -49,15 +53,15 @@ path/to/file.ts:
    - typescript-operations
    - typescript-react-apollo
  config:
-   withHOC: false
+   withHOC: true
 ```
 
 ### `withHooks`
 
 type: `boolean`
-default: `false`
+default: `true`
 
-Customized the output by enabling/disabling the generated React Hooks.
+Customized the output by enabling/disabling the generated React Hooks. For more details: https://www.apollographql.com/docs/react/api/react/hooks/
 
 #### Usage Examples
 
@@ -69,7 +73,7 @@ path/to/file.ts:
    - typescript-operations
    - typescript-react-apollo
  config:
-   withHooks: false
+   withHooks: true
 ```
 
 ### `withMutationFn`
@@ -155,9 +159,11 @@ You can specify a suffix that gets attached to the name of the generated compone
 ### `reactApolloVersion`
 
 type: `number (values: 2, 3)`
-default: `2`
+default: `3`
 
 Sets the version of react-apollo.
+If you are using the old (deprecated) package of `react-apollo`, please set this configuration to `2`.
+If you are using Apollo-Client v3, please set this to `3`.
 
 #### Usage Examples
 
@@ -169,7 +175,7 @@ path/to/file.ts:
    - typescript-operations
    - typescript-react-apollo
  config:
-   reactApolloVersion: 3
+   reactApolloVersion: 2
 ```
 
 ### `withResultType`
@@ -262,6 +268,15 @@ config:
 config:
   gqlImport: gatsby#graphql
 ```
+
+### `documentNodeImport`
+
+type: `string`
+default: `graphql#DocumentNode`
+
+Customize from which module will `DocumentNode` be imported from.
+This is useful if you want to use modules other than `graphql`, e.g. `@graphql-typed-document-node`.
+
 
 ### `noExport`
 

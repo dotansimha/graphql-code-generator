@@ -6,10 +6,14 @@ This plugin requires you to use `@graphql-codegen/flow` as well, because it depe
 
 ## Installation
 
+
+
+<img alt="flow-resolvers plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/flow-resolvers?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/flow-resolvers
-
 :::
 
 ## API Reference
@@ -166,7 +170,8 @@ plugins
  plugins:
    - "typescript"
    - "typescript-resolvers"
-   - add: "import { DeepPartial } from 'utility-types';"
+   - add:
+       content: "import { DeepPartial } from 'utility-types';"
  config:
    defaultMapper: DeepPartial<{T}>
 ```

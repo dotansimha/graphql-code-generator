@@ -6,10 +6,14 @@ This plugin also handles `.graphql` files containing multiple GraphQL documents,
 
 ## Installation
 
+
+
+<img alt="typescript-graphql-files-modules plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-graphql-files-modules?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/typescript-graphql-files-modules
-
 :::
 
 ## API Reference

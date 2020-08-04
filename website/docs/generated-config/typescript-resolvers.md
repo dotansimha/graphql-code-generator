@@ -5,10 +5,14 @@ You can find a blog post explaining the usage of this plugin here: https://the-g
 
 ## Installation
 
+
+
+<img alt="typescript-resolvers plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-resolvers?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/typescript-resolvers
-
 :::
 
 ## API Reference
@@ -107,7 +111,8 @@ path/to/file.ts:
 generates:
 path/to/file.ts:
  plugins:
-   - add: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   - add:
+       content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
    - typescript
    - typescript-resolvers
  config:
@@ -300,7 +305,8 @@ plugins
  plugins:
    - "typescript"
    - "typescript-resolvers"
-   - add: "import { DeepPartial } from 'utility-types';"
+   - add:
+       content: "import { DeepPartial } from 'utility-types';"
  config:
    defaultMapper: DeepPartial<{T}>
 ```
