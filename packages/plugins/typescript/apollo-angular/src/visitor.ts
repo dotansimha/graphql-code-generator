@@ -244,6 +244,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }`;
 
     return content;
