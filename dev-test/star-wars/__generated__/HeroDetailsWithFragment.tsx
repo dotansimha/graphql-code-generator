@@ -3,6 +3,7 @@ import * as Types from '../types.d';
 import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -14,13 +15,14 @@ export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroDetailsWithFragmentDocument = Apollo.gql`
-    query HeroDetailsWithFragment($episode: Episode) {
-  hero(episode: $episode) {
-    ...HeroDetails
+export const HeroDetailsWithFragmentDocument = gql`
+  query HeroDetailsWithFragment($episode: Episode) {
+    hero(episode: $episode) {
+      ...HeroDetails
+    }
   }
-}
-    ${HeroDetailsFragmentDoc}`;
+  ${HeroDetailsFragmentDoc}
+`;
 
 /**
  * __useHeroDetailsWithFragmentQuery__

@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -24,13 +25,13 @@ export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroNameConditionalInclusionDocument = Apollo.gql`
-    query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
-  hero(episode: $episode) {
-    name @include(if: $includeName)
+export const HeroNameConditionalInclusionDocument = gql`
+  query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
+    hero(episode: $episode) {
+      name @include(if: $includeName)
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameConditionalInclusionQuery__
@@ -76,13 +77,13 @@ export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalInclusionQuery,
   HeroNameConditionalInclusionQueryVariables
 >;
-export const HeroNameConditionalExclusionDocument = Apollo.gql`
-    query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
-  hero(episode: $episode) {
-    name @skip(if: $skipName)
+export const HeroNameConditionalExclusionDocument = gql`
+  query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
+    hero(episode: $episode) {
+      name @skip(if: $skipName)
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameConditionalExclusionQuery__

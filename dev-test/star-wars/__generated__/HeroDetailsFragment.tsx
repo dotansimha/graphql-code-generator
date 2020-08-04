@@ -6,14 +6,14 @@ export type HeroDetails_Droid_Fragment = { __typename?: 'Droid' } & Pick<Types.D
 
 export type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
 
-export const HeroDetailsFragmentDoc = Apollo.gql`
-    fragment HeroDetails on Character {
-  name
-  ... on Human {
-    height
+export const HeroDetailsFragmentDoc = gql`
+  fragment HeroDetails on Character {
+    name
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
+    }
   }
-  ... on Droid {
-    primaryFunction
-  }
-}
-    `;
+`;

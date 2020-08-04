@@ -1,6 +1,7 @@
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -266,58 +267,8 @@ export type VoteMutationMyOperation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc = Apollo.gql`
-    fragment CommentsPageComment on Comment {
-  id
-  postedBy {
-    login
-    html_url
-  }
-  createdAt
-  content
-}
-    `;
-export const VoteButtonsFragmentDoc = Apollo.gql`
-    fragment VoteButtons on Entry {
-  score
-  vote {
-    vote_value
-  }
-}
-    `;
-export const RepoInfoFragmentDoc = Apollo.gql`
-    fragment RepoInfo on Entry {
-  createdAt
-  repository {
-    description
-    stargazers_count
-    open_issues_count
-  }
-  postedBy {
-    html_url
-    login
-  }
-}
-    `;
-export const FeedEntryFragmentDoc = Apollo.gql`
-    fragment FeedEntry on Entry {
-  id
-  commentCount
-  repository {
-    full_name
-    html_url
-    owner {
-      avatar_url
-    }
-  }
-  ...VoteButtons
-  ...RepoInfo
-}
-    ${VoteButtonsFragmentDoc}
-${RepoInfoFragmentDoc}`;
-export const OnCommentAddedDocument = Apollo.gql`
-    subscription onCommentAdded($repoFullName: String!) {
-  commentAdded(repoFullName: $repoFullName) {
+export const CommentsPageCommentFragmentDoc = gql`
+  fragment CommentsPageComment on Comment {
     id
     postedBy {
       login
@@ -326,8 +277,59 @@ export const OnCommentAddedDocument = Apollo.gql`
     createdAt
     content
   }
-}
-    `;
+`;
+export const VoteButtonsFragmentDoc = gql`
+  fragment VoteButtons on Entry {
+    score
+    vote {
+      vote_value
+    }
+  }
+`;
+export const RepoInfoFragmentDoc = gql`
+  fragment RepoInfo on Entry {
+    createdAt
+    repository {
+      description
+      stargazers_count
+      open_issues_count
+    }
+    postedBy {
+      html_url
+      login
+    }
+  }
+`;
+export const FeedEntryFragmentDoc = gql`
+  fragment FeedEntry on Entry {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+    ...VoteButtons
+    ...RepoInfo
+  }
+  ${VoteButtonsFragmentDoc}
+  ${RepoInfoFragmentDoc}
+`;
+export const OnCommentAddedDocument = gql`
+  subscription onCommentAdded($repoFullName: String!) {
+    commentAdded(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
 
 /**
  * __useOnCommentAddedSubscription__
@@ -358,35 +360,36 @@ export function useOnCommentAddedSubscription(
 }
 export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
 export type OnCommentAddedSubscriptionResult = Apollo.SubscriptionResult<OnCommentAddedSubscriptionMyOperation>;
-export const CommentDocument = Apollo.gql`
-    query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
-  currentUser {
-    login
-    html_url
-  }
-  entry(repoFullName: $repoFullName) {
-    id
-    postedBy {
+export const CommentDocument = gql`
+  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+    currentUser {
       login
       html_url
     }
-    createdAt
-    comments(limit: $limit, offset: $offset) {
-      ...CommentsPageComment
-    }
-    commentCount
-    repository {
-      full_name
-      html_url
-      ... on Repository {
-        description
-        open_issues_count
-        stargazers_count
+    entry(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments(limit: $limit, offset: $offset) {
+        ...CommentsPageComment
+      }
+      commentCount
+      repository {
+        full_name
+        html_url
+        ... on Repository {
+          description
+          open_issues_count
+          stargazers_count
+        }
       }
     }
   }
-}
-    ${CommentsPageCommentFragmentDoc}`;
+  ${CommentsPageCommentFragmentDoc}
+`;
 
 /**
  * __useCommentQuery__
@@ -417,14 +420,14 @@ export function useCommentLazyQuery(
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
 export type CommentQueryResult = Apollo.QueryResult<CommentQueryMyOperation, CommentQueryVariables>;
-export const CurrentUserForProfileDocument = Apollo.gql`
-    query CurrentUserForProfile {
-  currentUser {
-    login
-    avatar_url
+export const CurrentUserForProfileDocument = gql`
+  query CurrentUserForProfile {
+    currentUser {
+      login
+      avatar_url
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useCurrentUserForProfileQuery__
@@ -463,16 +466,17 @@ export type CurrentUserForProfileQueryResult = Apollo.QueryResult<
   CurrentUserForProfileQueryMyOperation,
   CurrentUserForProfileQueryVariables
 >;
-export const FeedDocument = Apollo.gql`
-    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-  currentUser {
-    login
+export const FeedDocument = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      ...FeedEntry
+    }
   }
-  feed(type: $type, offset: $offset, limit: $limit) {
-    ...FeedEntry
-  }
-}
-    ${FeedEntryFragmentDoc}`;
+  ${FeedEntryFragmentDoc}
+`;
 
 /**
  * __useFeedQuery__
@@ -501,13 +505,13 @@ export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQ
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedQueryMyOperation, FeedQueryVariables>;
-export const SubmitRepositoryDocument = Apollo.gql`
-    mutation submitRepository($repoFullName: String!) {
-  submitRepository(repoFullName: $repoFullName) {
-    createdAt
+export const SubmitRepositoryDocument = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
   }
-}
-    `;
+`;
 export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
   SubmitRepositoryMutationMyOperation,
   SubmitRepositoryMutationVariables
@@ -544,13 +548,14 @@ export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
   SubmitRepositoryMutationMyOperation,
   SubmitRepositoryMutationVariables
 >;
-export const SubmitCommentDocument = Apollo.gql`
-    mutation submitComment($repoFullName: String!, $commentContent: String!) {
-  submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-    ...CommentsPageComment
+export const SubmitCommentDocument = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      ...CommentsPageComment
+    }
   }
-}
-    ${CommentsPageCommentFragmentDoc}`;
+  ${CommentsPageCommentFragmentDoc}
+`;
 export type SubmitCommentMutationFn = Apollo.MutationFunction<
   SubmitCommentMutationMyOperation,
   SubmitCommentMutationVariables
@@ -588,17 +593,17 @@ export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
   SubmitCommentMutationMyOperation,
   SubmitCommentMutationVariables
 >;
-export const VoteDocument = Apollo.gql`
-    mutation vote($repoFullName: String!, $type: VoteType!) {
-  vote(repoFullName: $repoFullName, type: $type) {
-    score
-    id
-    vote {
-      vote_value
+export const VoteDocument = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
     }
   }
-}
-    `;
+`;
 export type VoteMutationFn = Apollo.MutationFunction<VoteMutationMyOperation, VoteMutationVariables>;
 
 /**

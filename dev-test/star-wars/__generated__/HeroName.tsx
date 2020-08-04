@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -12,13 +13,13 @@ export type HeroNameQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroNameDocument = Apollo.gql`
-    query HeroName($episode: Episode) {
-  hero(episode: $episode) {
-    name
+export const HeroNameDocument = gql`
+  query HeroName($episode: Episode) {
+    hero(episode: $episode) {
+      name
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameQuery__
