@@ -48,6 +48,8 @@ jobs:
         uses: changesets/action@master
         with:
           publish: yarn release
+          commit: 'chore(release): changed monorepo packages'
+          title: 'Packages Releases'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
