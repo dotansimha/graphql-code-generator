@@ -534,7 +534,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).not.toEqual(
-      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+      expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
     );
   });
 

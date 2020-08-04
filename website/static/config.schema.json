@@ -125,7 +125,7 @@
         },
         "message": {
           "description": "Customize the comment message",
-          "default": "Generated on",
+          "default": "'Generated on'",
           "type": "string"
         }
       }

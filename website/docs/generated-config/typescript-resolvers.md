@@ -111,7 +111,8 @@ path/to/file.ts:
 generates:
 path/to/file.ts:
  plugins:
-   - add: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   - add:
+       content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
    - typescript
    - typescript-resolvers
  config:
@@ -304,7 +305,8 @@ plugins
  plugins:
    - "typescript"
    - "typescript-resolvers"
-   - add: "import { DeepPartial } from 'utility-types';"
+   - add:
+       content: "import { DeepPartial } from 'utility-types';"
  config:
    defaultMapper: DeepPartial<{T}>
 ```

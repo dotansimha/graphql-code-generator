@@ -198,7 +198,8 @@ export interface RawResolversConfig extends RawConfig {
    *  plugins:
    *    - "typescript"
    *    - "typescript-resolvers"
-   *    - add: "import { DeepPartial } from 'utility-types';"
+   *    - add:
+   *        content: "import { DeepPartial } from 'utility-types';"
    *  config:
    *    defaultMapper: DeepPartial<{T}>
    * ```

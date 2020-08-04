@@ -32,7 +32,7 @@ path/to/file.ts:
 ### `message`
 
 type: `string`
-default: `Generated on`
+default: `'Generated on'`
 
 Customize the comment message
 

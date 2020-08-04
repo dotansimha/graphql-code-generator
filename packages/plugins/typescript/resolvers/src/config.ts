@@ -86,7 +86,8 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * generates:
    * path/to/file.ts:
    *  plugins:
-   *    - add: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   *    - add:
+   *        content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
    *    - typescript
    *    - typescript-resolvers
    *  config:
