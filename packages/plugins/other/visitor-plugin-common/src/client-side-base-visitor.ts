@@ -362,6 +362,15 @@ export class ClientSideBaseVisitor<
   }
 
   protected _parseImport(importStr: string): ParsedImport {
+    // This is a special case when we want to ignore importing, and just use `gql` provided from somewhere else
+    // Plugins that uses that will need to ensure to add import/declaration for the gql identifier
+    if (importStr === 'gql') {
+      return {
+        moduleName: null,
+        propName: 'gql',
+      };
+    }
+
     // This is a special use case, when we don't want this plugin to manage the import statement
     // of the gql tag. In this case, we provide something like `Namespace.gql` and it will be used instead.
     if (importStr.includes('.gql')) {

@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -31,29 +32,29 @@ export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroParentTypeDependentFieldDocument = Apollo.gql`
-    query HeroParentTypeDependentField($episode: Episode) {
-  hero(episode: $episode) {
-    name
-    ... on Human {
-      friends {
-        name
-        ... on Human {
-          height(unit: FOOT)
+export const HeroParentTypeDependentFieldDocument = gql`
+  query HeroParentTypeDependentField($episode: Episode) {
+    hero(episode: $episode) {
+      name
+      ... on Human {
+        friends {
+          name
+          ... on Human {
+            height(unit: FOOT)
+          }
         }
       }
-    }
-    ... on Droid {
-      friends {
-        name
-        ... on Human {
-          height(unit: METER)
+      ... on Droid {
+        friends {
+          name
+          ... on Human {
+            height(unit: METER)
+          }
         }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroParentTypeDependentFieldQuery__

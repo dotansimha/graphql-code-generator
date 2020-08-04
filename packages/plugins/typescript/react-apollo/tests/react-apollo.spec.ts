@@ -161,7 +161,7 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.content).toBeSimilarStringTo(`    export const FeedDocument = Apollo.gql\`
+      expect(result.content).toBeSimilarStringTo(`    export const FeedDocument = gql\`
       query Feed {
     feed {
       ...Feed
@@ -326,13 +326,13 @@ describe('React Apollo', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Apollo from '@apollo/client';`);
+      expect(content.prepend).toContain(`const gql = Apollo.gql;`);
       expect(content.prepend).toContain(`import * as ApolloReactComponents from '@apollo/client/react/components';`);
       expect(content.prepend).toContain(`import * as React from 'react';`);
 
       // To make sure all imports are unified correctly under Apollo namespaced import
       expect(content.prepend).not.toContain(`import { gql } from '@apollo/client';`);
-      expect(content.content).not.toContain(` gql\``);
-      expect(content.content).toContain(`Apollo.gql\``);
+      expect(content.content).toContain(` gql\``);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -558,7 +558,7 @@ describe('React Apollo', () => {
       const result = await plugin(schema, docs, {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-      export const MyFragmentFragmentDoc = Apollo.gql\`
+      export const MyFragmentFragmentDoc = gql\`
       fragment MyFragment on Repository {
         full_name
       }
@@ -608,7 +608,7 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = Apollo.gql\`
+      expect(content.content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = gql\`
 fragment FeedWithRepository on Entry {
   id
   commentCount
@@ -617,7 +617,7 @@ fragment FeedWithRepository on Entry {
   }
 }
 \${RepositoryWithOwnerFragmentDoc}\`;`);
-      expect(content.content).toBeSimilarStringTo(`export const RepositoryWithOwnerFragmentDoc = Apollo.gql\`
+      expect(content.content).toBeSimilarStringTo(`export const RepositoryWithOwnerFragmentDoc = gql\`
 fragment RepositoryWithOwner on Repository {
   full_name
   html_url
@@ -627,7 +627,7 @@ fragment RepositoryWithOwner on Repository {
 }
 \`;`);
 
-      expect(content.content).toBeSimilarStringTo(`export const MyFeedDocument = Apollo.gql\`
+      expect(content.content).toBeSimilarStringTo(`export const MyFeedDocument = gql\`
 query MyFeed {
   feed {
     ...FeedWithRepository
@@ -665,7 +665,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-        export const MyFeedDocument = Apollo.gql\`
+        export const MyFeedDocument = gql\`
         query MyFeed {
             feed {
               ...Item
@@ -676,7 +676,7 @@ query MyFeed {
           }
           \${ItemFragmentDoc}\``);
       expect(content.content).toBeSimilarStringTo(`
-        export const ItemFragmentDoc = Apollo.gql\`
+        export const ItemFragmentDoc = gql\`
         fragment Item on Entry {
           id
         }
@@ -734,7 +734,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-          export const TestDocument = Apollo.gql\`
+          export const TestDocument = gql\`
           query test {
             feed {
               id
@@ -800,7 +800,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-          export const TestDocument = Apollo.gql\`
+          export const TestDocument = gql\`
             mutation Test {
               submitRepository(repoFullName: "\\\\"REPONAME\\\\"") {
                 createdAt

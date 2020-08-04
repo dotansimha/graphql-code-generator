@@ -1,6 +1,7 @@
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -236,31 +237,31 @@ export type ColorInput = {
   blue: Scalars['Int'];
 };
 
-export const HeroDetailsFragmentDoc = Apollo.gql`
-    fragment HeroDetails on Character {
-  name
-  ... on Human {
-    height
+export const HeroDetailsFragmentDoc = gql`
+  fragment HeroDetails on Character {
+    name
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
+    }
   }
-  ... on Droid {
-    primaryFunction
+`;
+export const HumanFieldsFragmentDoc = gql`
+  fragment HumanFields on Human {
+    name
+    mass
   }
-}
-    `;
-export const HumanFieldsFragmentDoc = Apollo.gql`
-    fragment HumanFields on Human {
-  name
-  mass
-}
-    `;
-export const CreateReviewForEpisodeDocument = Apollo.gql`
-    mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
-  createReview(episode: $episode, review: $review) {
-    stars
-    commentary
+`;
+export const CreateReviewForEpisodeDocument = gql`
+  mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
+    createReview(episode: $episode, review: $review) {
+      stars
+      commentary
+    }
   }
-}
-    `;
+`;
 export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
@@ -298,16 +299,16 @@ export type CreateReviewForEpisodeMutationOptions = Apollo.BaseMutationOptions<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables
 >;
-export const HeroAndFriendsNamesDocument = Apollo.gql`
-    query HeroAndFriendsNames($episode: Episode) {
-  hero(episode: $episode) {
-    name
-    friends {
+export const HeroAndFriendsNamesDocument = gql`
+  query HeroAndFriendsNames($episode: Episode) {
+    hero(episode: $episode) {
       name
+      friends {
+        name
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroAndFriendsNamesQuery__
@@ -350,14 +351,14 @@ export type HeroAndFriendsNamesQueryResult = Apollo.QueryResult<
 export function refetchHeroAndFriendsNamesQuery(variables?: HeroAndFriendsNamesQueryVariables) {
   return { query: HeroAndFriendsNamesDocument, variables: variables };
 }
-export const HeroAppearsInDocument = Apollo.gql`
-    query HeroAppearsIn {
-  hero {
-    name
-    appearsIn
+export const HeroAppearsInDocument = gql`
+  query HeroAppearsIn {
+    hero {
+      name
+      appearsIn
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroAppearsInQuery__
@@ -390,19 +391,19 @@ export type HeroAppearsInQueryResult = Apollo.QueryResult<HeroAppearsInQuery, He
 export function refetchHeroAppearsInQuery(variables?: HeroAppearsInQueryVariables) {
   return { query: HeroAppearsInDocument, variables: variables };
 }
-export const HeroDetailsDocument = Apollo.gql`
-    query HeroDetails($episode: Episode) {
-  hero(episode: $episode) {
-    name
-    ... on Human {
-      height
-    }
-    ... on Droid {
-      primaryFunction
+export const HeroDetailsDocument = gql`
+  query HeroDetails($episode: Episode) {
+    hero(episode: $episode) {
+      name
+      ... on Human {
+        height
+      }
+      ... on Droid {
+        primaryFunction
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroDetailsQuery__
@@ -436,13 +437,14 @@ export type HeroDetailsQueryResult = Apollo.QueryResult<HeroDetailsQuery, HeroDe
 export function refetchHeroDetailsQuery(variables?: HeroDetailsQueryVariables) {
   return { query: HeroDetailsDocument, variables: variables };
 }
-export const HeroDetailsWithFragmentDocument = Apollo.gql`
-    query HeroDetailsWithFragment($episode: Episode) {
-  hero(episode: $episode) {
-    ...HeroDetails
+export const HeroDetailsWithFragmentDocument = gql`
+  query HeroDetailsWithFragment($episode: Episode) {
+    hero(episode: $episode) {
+      ...HeroDetails
+    }
   }
-}
-    ${HeroDetailsFragmentDoc}`;
+  ${HeroDetailsFragmentDoc}
+`;
 
 /**
  * __useHeroDetailsWithFragmentQuery__
@@ -485,13 +487,13 @@ export type HeroDetailsWithFragmentQueryResult = Apollo.QueryResult<
 export function refetchHeroDetailsWithFragmentQuery(variables?: HeroDetailsWithFragmentQueryVariables) {
   return { query: HeroDetailsWithFragmentDocument, variables: variables };
 }
-export const HeroNameDocument = Apollo.gql`
-    query HeroName($episode: Episode) {
-  hero(episode: $episode) {
-    name
+export const HeroNameDocument = gql`
+  query HeroName($episode: Episode) {
+    hero(episode: $episode) {
+      name
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameQuery__
@@ -521,13 +523,13 @@ export type HeroNameQueryResult = Apollo.QueryResult<HeroNameQuery, HeroNameQuer
 export function refetchHeroNameQuery(variables?: HeroNameQueryVariables) {
   return { query: HeroNameDocument, variables: variables };
 }
-export const HeroNameConditionalInclusionDocument = Apollo.gql`
-    query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
-  hero(episode: $episode) {
-    name @include(if: $includeName)
+export const HeroNameConditionalInclusionDocument = gql`
+  query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
+    hero(episode: $episode) {
+      name @include(if: $includeName)
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameConditionalInclusionQuery__
@@ -576,13 +578,13 @@ export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
 export function refetchHeroNameConditionalInclusionQuery(variables?: HeroNameConditionalInclusionQueryVariables) {
   return { query: HeroNameConditionalInclusionDocument, variables: variables };
 }
-export const HeroNameConditionalExclusionDocument = Apollo.gql`
-    query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
-  hero(episode: $episode) {
-    name @skip(if: $skipName)
+export const HeroNameConditionalExclusionDocument = gql`
+  query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
+    hero(episode: $episode) {
+      name @skip(if: $skipName)
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroNameConditionalExclusionQuery__
@@ -631,29 +633,29 @@ export type HeroNameConditionalExclusionQueryResult = Apollo.QueryResult<
 export function refetchHeroNameConditionalExclusionQuery(variables?: HeroNameConditionalExclusionQueryVariables) {
   return { query: HeroNameConditionalExclusionDocument, variables: variables };
 }
-export const HeroParentTypeDependentFieldDocument = Apollo.gql`
-    query HeroParentTypeDependentField($episode: Episode) {
-  hero(episode: $episode) {
-    name
-    ... on Human {
-      friends {
-        name
-        ... on Human {
-          height(unit: FOOT)
+export const HeroParentTypeDependentFieldDocument = gql`
+  query HeroParentTypeDependentField($episode: Episode) {
+    hero(episode: $episode) {
+      name
+      ... on Human {
+        friends {
+          name
+          ... on Human {
+            height(unit: FOOT)
+          }
         }
       }
-    }
-    ... on Droid {
-      friends {
-        name
-        ... on Human {
-          height(unit: METER)
+      ... on Droid {
+        friends {
+          name
+          ... on Human {
+            height(unit: METER)
+          }
         }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroParentTypeDependentFieldQuery__
@@ -701,18 +703,18 @@ export type HeroParentTypeDependentFieldQueryResult = Apollo.QueryResult<
 export function refetchHeroParentTypeDependentFieldQuery(variables?: HeroParentTypeDependentFieldQueryVariables) {
   return { query: HeroParentTypeDependentFieldDocument, variables: variables };
 }
-export const HeroTypeDependentAliasedFieldDocument = Apollo.gql`
-    query HeroTypeDependentAliasedField($episode: Episode) {
-  hero(episode: $episode) {
-    ... on Human {
-      property: homePlanet
-    }
-    ... on Droid {
-      property: primaryFunction
+export const HeroTypeDependentAliasedFieldDocument = gql`
+  query HeroTypeDependentAliasedField($episode: Episode) {
+    hero(episode: $episode) {
+      ... on Human {
+        property: homePlanet
+      }
+      ... on Droid {
+        property: primaryFunction
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroTypeDependentAliasedFieldQuery__
@@ -760,13 +762,14 @@ export type HeroTypeDependentAliasedFieldQueryResult = Apollo.QueryResult<
 export function refetchHeroTypeDependentAliasedFieldQuery(variables?: HeroTypeDependentAliasedFieldQueryVariables) {
   return { query: HeroTypeDependentAliasedFieldDocument, variables: variables };
 }
-export const HumanWithNullHeightDocument = Apollo.gql`
-    query HumanWithNullHeight {
-  human(id: 1004) {
-    ...HumanFields
+export const HumanWithNullHeightDocument = gql`
+  query HumanWithNullHeight {
+    human(id: 1004) {
+      ...HumanFields
+    }
   }
-}
-    ${HumanFieldsFragmentDoc}`;
+  ${HumanFieldsFragmentDoc}
+`;
 
 /**
  * __useHumanWithNullHeightQuery__
@@ -808,16 +811,16 @@ export type HumanWithNullHeightQueryResult = Apollo.QueryResult<
 export function refetchHumanWithNullHeightQuery(variables?: HumanWithNullHeightQueryVariables) {
   return { query: HumanWithNullHeightDocument, variables: variables };
 }
-export const TwoHeroesDocument = Apollo.gql`
-    query TwoHeroes {
-  r2: hero {
-    name
+export const TwoHeroesDocument = gql`
+  query TwoHeroes {
+    r2: hero {
+      name
+    }
+    luke: hero(episode: EMPIRE) {
+      name
+    }
   }
-  luke: hero(episode: EMPIRE) {
-    name
-  }
-}
-    `;
+`;
 
 /**
  * __useTwoHeroesQuery__

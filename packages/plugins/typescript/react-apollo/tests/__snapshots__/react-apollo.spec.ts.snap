@@ -3,6 +3,7 @@
 exports[`React Apollo Issues Issue #2742 - Incorrect import prefix 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -170,7 +171,7 @@ export type Get_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type Get_SomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const Get_SomethingDocument = Apollo.gql\`
+export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
   feed {
     id
@@ -191,6 +192,7 @@ export type Get_SomethingQueryResult = Apollo.QueryResult<Types.Get_SomethingQue
 exports[`React Apollo Issues Issue #2826 - Incorrect prefix 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -358,7 +360,7 @@ export type GQLGet_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GQLGet_SomethingQuery = { feed?: Maybe<Array<Maybe<Pick<GQLEntry, 'id'>>>> };
 
-export const Get_SomethingDocument = Apollo.gql\`
+export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
   feed {
     id
@@ -379,6 +381,7 @@ export type Get_SomethingQueryResult = Apollo.QueryResult<GQLGet_SomethingQuery,
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -546,7 +549,7 @@ export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const GetSomethingDocument = Apollo.gql\`
+export const GetSomethingDocument = gql\`
     query GET_SOMETHING {
   feed {
     id
@@ -567,6 +570,7 @@ export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetS
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 2`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 import * as Apollo from '@apollo/client';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -734,7 +738,7 @@ export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const GetSomethingDocument = Apollo.gql\`
+export const GetSomethingDocument = gql\`
     query GET_SOMETHING {
   feed {
     id

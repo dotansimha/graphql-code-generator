@@ -72,16 +72,17 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
-      gqlImport: getConfigValue(
-        rawConfig.gqlImport,
-        rawConfig.reactApolloVersion === 2 ? null : `${GROUPED_APOLLO_CLIENT_3_IDENTIFIER}.gql`
-      ),
+      gqlImport: getConfigValue(rawConfig.gqlImport, rawConfig.reactApolloVersion === 2 ? null : `gql`),
     });
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
 
     autoBind(this);
+
+    if (this.config.reactApolloVersion === 3 && this.config.gqlImport === 'gql') {
+      this.imports.add(`const gql = Apollo.gql;`);
+    }
   }
 
   private getImportStatement(isTypeImport: boolean): string {

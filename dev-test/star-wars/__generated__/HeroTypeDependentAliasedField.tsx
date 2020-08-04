@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
@@ -13,18 +14,18 @@ export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const HeroTypeDependentAliasedFieldDocument = Apollo.gql`
-    query HeroTypeDependentAliasedField($episode: Episode) {
-  hero(episode: $episode) {
-    ... on Human {
-      property: homePlanet
-    }
-    ... on Droid {
-      property: primaryFunction
+export const HeroTypeDependentAliasedFieldDocument = gql`
+  query HeroTypeDependentAliasedField($episode: Episode) {
+    hero(episode: $episode) {
+      ... on Human {
+        property: homePlanet
+      }
+      ... on Droid {
+        property: primaryFunction
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useHeroTypeDependentAliasedFieldQuery__

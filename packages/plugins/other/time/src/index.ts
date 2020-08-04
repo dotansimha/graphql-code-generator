@@ -1,6 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import moment from 'moment';
+import { extname } from 'path';
 
 export type TimePluginConfig =
   | string
@@ -38,7 +39,8 @@ export type TimePluginConfig =
 export const plugin: PluginFunction<TimePluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: TimePluginConfig
+  config: TimePluginConfig,
+  { outputFile }
 ): Promise<string> => {
   let format;
   let message = 'Generated on ';
@@ -55,5 +57,12 @@ export const plugin: PluginFunction<TimePluginConfig> = async (
     }
   }
 
-  return '// ' + message + moment().format(format) + '\n';
+  const outputFileExtension = outputFile && extname(outputFile);
+  let commentPrefix = '//';
+
+  if ((outputFileExtension || '').toLowerCase() === '.graphql') {
+    commentPrefix = '#';
+  }
+
+  return commentPrefix + ' ' + message + moment().format(format) + '\n';
 };

@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
@@ -11,14 +12,14 @@ export type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
   createReview?: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;
 };
 
-export const CreateReviewForEpisodeDocument = Apollo.gql`
-    mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
-  createReview(episode: $episode, review: $review) {
-    stars
-    commentary
+export const CreateReviewForEpisodeDocument = gql`
+  mutation CreateReviewForEpisode($episode: Episode!, $review: ReviewInput!) {
+    createReview(episode: $episode, review: $review) {
+      stars
+      commentary
+    }
   }
-}
-    `;
+`;
 export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
   CreateReviewForEpisodeMutation,
   CreateReviewForEpisodeMutationVariables

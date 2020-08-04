@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import * as Apollo from '@apollo/client';
+const gql = Apollo.gql;
 
 export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -13,16 +14,16 @@ export type TwoHeroesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const TwoHeroesDocument = Apollo.gql`
-    query TwoHeroes {
-  r2: hero {
-    name
+export const TwoHeroesDocument = gql`
+  query TwoHeroes {
+    r2: hero {
+      name
+    }
+    luke: hero(episode: EMPIRE) {
+      name
+    }
   }
-  luke: hero(episode: EMPIRE) {
-    name
-  }
-}
-    `;
+`;
 
 /**
  * __useTwoHeroesQuery__
