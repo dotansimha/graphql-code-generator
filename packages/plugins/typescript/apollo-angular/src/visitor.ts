@@ -65,7 +65,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
         apolloAngularPackage: rawConfig.apolloAngularPackage || 'apollo-angular',
-        apolloAngularVersion: rawConfig.apolloAngularVersion || 1,
+        apolloAngularVersion: rawConfig.apolloAngularVersion || 2,
       },
       documents
     );

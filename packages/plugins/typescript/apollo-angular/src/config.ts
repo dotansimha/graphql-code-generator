@@ -12,12 +12,12 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Version of `apollo-angular` package
-   * @default 1
+   * @default 2
    *
    * @exampleMarkdown
    * ```yml
    * config:
-   *   apolloAngularVersion: 2
+   *   apolloAngularVersion: 1
    * ```
    */
   apolloAngularVersion?: number;

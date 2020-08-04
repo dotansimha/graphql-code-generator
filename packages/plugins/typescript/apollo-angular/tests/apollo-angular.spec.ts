@@ -427,7 +427,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
+      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
       // console.log('content.content', content.content);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable()
@@ -447,7 +447,8 @@ describe('Apollo Angular', () => {
       `);
       await validateTypeScript(content, modifiedSchema, docs, {});
     });
-    it('should generate a SDK service for Apollo Angular 2.0', async () => {
+
+    it('should generate a SDK service for Apollo Angular 1.0 on demand', async () => {
       const modifiedSchema = extendSchema(schema, addToSchema);
       const myFeed = gql(`
         query MyFeed {
@@ -462,7 +463,7 @@ describe('Apollo Angular', () => {
         docs,
         {
           sdkClass: true,
-          apolloAngularVersion: 2,
+          apolloAngularVersion: 1,
         },
         {
           outputFile: 'graphql.ts',
@@ -470,7 +471,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
+      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
     });
   });
 
