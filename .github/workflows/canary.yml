@@ -19,6 +19,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+      - name: Configure Git Credentials
+        run: |
+          git config --global user.email "theguild-bot@users.noreply.github.com"
+          git config --global user.name "theguild-bot"
+          echo "machine github.com login theguild-bot password ${{secrets.GH_API_TOKEN}}" > ~/.netrc
+      - name: Setup NPM credentials
+        run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
