@@ -11,11 +11,7 @@ const { getPackages } = require("@manypkg/get-packages");
 function getNewVersion(version, type) {
   const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
   
-  if (type === 'major' || type === 'minor') {
-    version = semver.inc(version, type);
-  }
-
-  return semver.inc(version, 'prerelease', true, 'alpha-' + gitHash);
+  return semver.inc(version, `pre${type}`, true, 'alpha-' + gitHash);
 }
 
 async function updateVersions() {
