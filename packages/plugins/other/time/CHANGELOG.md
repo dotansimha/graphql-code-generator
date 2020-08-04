@@ -1,5 +1,11 @@
 # @graphql-codegen/time
 
+## 1.17.10
+
+### Patch Changes
+
+- ee2b01a3: Fixes for issues with publish command
+
 ## 1.17.9
 
 ### Patch Changes
