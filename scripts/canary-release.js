@@ -39,21 +39,20 @@ async function release() {
       for (const release of releasePlan.releases) {
         if (release.type !== 'none') {
           release.newVersion = getNewVersion(release.oldVersion, release.type);
+
         }
       }
 
-      console.log(releasePlan.releases);
-
-      // await applyReleasePlan(
-      //   releasePlan,
-      //   packages,
-      //   {
-      //     ...config,
-      //     commit: false,
-      //     changelog: false,
-      //   },
-      //   false
-      // );
+      await applyReleasePlan(
+        releasePlan,
+        packages,
+        {
+          ...config,
+          commit: false,
+        },
+        false,
+        true
+      );
     }
   }
   process.exit();
