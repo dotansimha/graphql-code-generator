@@ -384,7 +384,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
+      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({ providedIn: 'root' })
         export class ApolloAngularSDK {
