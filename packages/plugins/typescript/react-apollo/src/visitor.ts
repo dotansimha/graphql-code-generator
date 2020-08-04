@@ -109,9 +109,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getApolloReactCommonImport(isTypeImport: boolean): string {
-    return `${this.getImportStatement(isTypeImport)} * as ${this.getApolloReactCommonIdentifier()} from '${
-      this.config.apolloReactCommonImportFrom
-    }';`;
+    const apolloReactCommonIdentifier = this.getApolloReactCommonIdentifier();
+
+    return `${this.getImportStatement(
+      isTypeImport && apolloReactCommonIdentifier !== GROUPED_APOLLO_CLIENT_3_IDENTIFIER
+    )} * as ${apolloReactCommonIdentifier} from '${this.config.apolloReactCommonImportFrom}';`;
   }
 
   private getApolloReactComponentsImport(isTypeImport: boolean): string {
