@@ -19,6 +19,7 @@ function R_DEF(directive: string) {
 }
 
 export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
+  apolloAngularVersion: number;
   ngModule?: string;
   namedClient?: string;
   serviceName?: string;
@@ -64,6 +65,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
         apolloAngularPackage: rawConfig.apolloAngularPackage || 'apollo-angular',
+        apolloAngularVersion: rawConfig.apolloAngularVersion || 1,
       },
       documents
     );
@@ -85,7 +87,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     ];
 
     if (this.config.sdkClass) {
-      imports.push(`import * as ApolloCore from 'apollo-client';`);
+      const corePackage = this.config.apolloAngularVersion > 1 ? '@apollo/client/core' : 'apollo-client';
+      imports.push(`import * as ApolloCore from '${corePackage}';`);
     }
 
     const defs: Record<string, { path: string; module: string }> = {};

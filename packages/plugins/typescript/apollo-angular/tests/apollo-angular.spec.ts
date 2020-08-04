@@ -447,6 +447,31 @@ describe('Apollo Angular', () => {
       `);
       await validateTypeScript(content, modifiedSchema, docs, {});
     });
+    it('should generate a SDK service for Apollo Angular 2.0', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          apolloAngularVersion: 2,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule
+      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
+    });
   });
 
   describe('others', () => {

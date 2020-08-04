@@ -11,6 +11,17 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
+   * @description Version of `apollo-angular` package
+   * @default 1
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   apolloAngularVersion: 2
+   * ```
+   */
+  apolloAngularVersion?: number;
+  /**
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
    * @exampleMarkdown
