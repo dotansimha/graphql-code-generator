@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.10
+
+### Patch Changes
+
+- 6cb9c96d: Fixes issues with previous release
+
 ## 1.17.9
 
 ### Patch Changes
