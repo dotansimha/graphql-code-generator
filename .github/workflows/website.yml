@@ -2,8 +2,6 @@ name: Website
 
 on:
   push:
-    tags:
-      - 'v*'
     branches:
       - master
 
@@ -11,7 +9,7 @@ jobs:
   test:
     name: Deploy Website
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.ref, 'refs/tags/')
+    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.event.head_commit.message, 'update monorepo packages versions')
     steps:
       - name: Checkout
         uses: actions/checkout@v1
