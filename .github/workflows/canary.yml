@@ -53,9 +53,7 @@ jobs:
         uses: 'kamilkisiela/pr-comment@master'
         with:
           message: |
-            The latest changes of this PR are available as alpha in npm!
-
-            Based on the `changesets` published for this PR, the following alpha versions are published:
+            The latest changes of this PR are available as alpha in npm (based on the declared `changesets`):
 
             ```
             ${{ steps.canary.outputs.changesetsPublishedPackages}}
