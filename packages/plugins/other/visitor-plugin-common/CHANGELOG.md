@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.11
+
+### Patch Changes
+
+- ee2b01a3: Fixes for issues with publish command
+
 ## 1.17.10
 
 ### Patch Changes

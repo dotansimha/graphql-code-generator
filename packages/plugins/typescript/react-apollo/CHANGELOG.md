@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.0.4
+
+### Patch Changes
+
+- ee2b01a3: Fixes for issues with publish command
+- Updated dependencies [ee2b01a3]
+  - @graphql-codegen/visitor-plugin-common@1.17.11
+
 ## 2.0.3
 
 ### Patch Changes
