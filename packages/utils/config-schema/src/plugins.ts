@@ -2,6 +2,16 @@ export type PluginConfig = { file: string; identifier: string; pluginName: strin
 
 export const relevantConfigurations: PluginConfig[] = [
   {
+    file: '../../plugins/other/add/src/config.ts',
+    identifier: 'AddPluginConfig',
+    pluginName: 'add',
+  },
+  {
+    file: '../../plugins/other/time/src/config.ts',
+    identifier: 'TimePluginConfig',
+    pluginName: 'time',
+  },
+  {
     file: '../../plugins/typescript/typescript/src/config.ts',
     identifier: 'TypeScriptPluginConfig',
     pluginName: 'typescript',

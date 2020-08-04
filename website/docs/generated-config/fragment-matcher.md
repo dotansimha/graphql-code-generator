@@ -12,10 +12,14 @@ Both in TypeScript and JavaScript a default export is being used.
 
 ## Installation
 
+
+
+<img alt="fragment-matcher plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/fragment-matcher?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/fragment-matcher
-
 :::
 
 ## API Reference

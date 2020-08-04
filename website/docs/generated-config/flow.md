@@ -4,10 +4,14 @@ It generates types for your entire schema: types, input types, enum, interface, 
 
 ## Installation
 
+
+
+<img alt="flow plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/flow?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/flow
-
 :::
 
 ## API Reference

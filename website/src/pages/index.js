@@ -114,7 +114,7 @@ function ProjectTitle() {
       <h3 className={styles.projectTitle}>Generate code from your GraphQL schema and operations with a simple CLI</h3>
       <img
         alt="npm"
-        src="https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=stable&style=for-the-badge"
+        src="https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=cli&nbsp;version&style=for-the-badge"
       />
     </div>
   );

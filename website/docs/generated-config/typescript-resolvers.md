@@ -5,10 +5,14 @@ You can find a blog post explaining the usage of this plugin here: https://the-g
 
 ## Installation
 
+
+
+<img alt="typescript-resolvers plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-resolvers?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/typescript-resolvers
-
 :::
 
 ## API Reference

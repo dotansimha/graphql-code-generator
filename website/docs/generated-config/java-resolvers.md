@@ -1,9 +1,13 @@
 ## Installation
 
+
+
+<img alt="java-resolvers plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/java-resolvers?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/java-resolvers
-
 :::
 
 ## API Reference

@@ -2,10 +2,14 @@ This plugin prints the merged schema as string. If multiple schemas are provided
 
 ## Installation
 
+
+
+<img alt="schema-ast plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/schema-ast?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/schema-ast
-
 :::
 
 ## API Reference

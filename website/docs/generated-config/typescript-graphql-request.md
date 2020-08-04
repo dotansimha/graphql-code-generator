@@ -2,10 +2,14 @@ This plugin generates [`graphql-request`](https://www.npmjs.com/package/graphql-
 
 ## Installation
 
+
+
+<img alt="typescript-graphql-request plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-graphql-request?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/typescript-graphql-request
-
 :::
 
 ## API Reference
@@ -59,6 +63,15 @@ config:
 config:
   gqlImport: gatsby#graphql
 ```
+
+### `documentNodeImport`
+
+type: `string`
+default: `graphql#DocumentNode`
+
+Customize from which module will `DocumentNode` be imported from.
+This is useful if you want to use modules other than `graphql`, e.g. `@graphql-typed-document-node`.
+
 
 ### `noExport`
 

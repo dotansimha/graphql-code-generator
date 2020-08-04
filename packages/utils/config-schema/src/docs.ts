@@ -13,10 +13,13 @@ export function generateDocs(schema: TJS.Definition, types: PluginConfig[]): Rec
       content += `${subSchema.description}\n\n`;
     }
 
-    content += `## Installation\n\n:::shell Using \`yarn\`
+    content += ``;
+    content += `## Installation\n\n
 
+<img alt="${p.pluginName} plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/${p.pluginName}?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>\n\n
+    
+:::shell Using \`yarn\`
     $ yarn add -D @graphql-codegen/${p.pluginName}
-
 :::\n\n`;
     content += `## API Reference\n\n${apiDocs}`;
 
@@ -48,6 +51,10 @@ function printType(def: TJS.Definition): string {
   if (def.type) {
     if (def.enum) {
       return `${def.type} (values: ${def.enum.join(', ')})`;
+    }
+
+    if (def.type === 'array') {
+      return `${printType(def.items as TJS.Definition)}[]`;
     }
 
     return def.type as string;

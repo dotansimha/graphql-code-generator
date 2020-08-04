@@ -1,49 +1,30 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-
-export type ContentType = string | string[] | { [index: string]: string };
-export interface AddPluginParams {
-  placement: string;
-  content: ContentType;
-}
-export type AddPluginConfig = string | AddPluginParams;
-
-const asFileString = (content: ContentType) => {
-  const asArray = Array.isArray(content)
-    ? content
-    : typeof content === 'object'
-    ? Object.keys(content).map(k => content[k])
-    : [content];
-  return asArray.filter(a => typeof a === 'string');
-};
+import { AddPluginConfig, VALID_PLACEMENTS } from './config';
 
 export const plugin: PluginFunction<AddPluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: AddPluginConfig
 ): Promise<Types.PluginOutput> => {
-  // Will always be object if specified as array or object
-  if (typeof config !== 'object') {
-    return { content: null, prepend: asFileString(config) };
-  }
-
-  let placement = config.placement;
+  const placement: AddPluginConfig['placement'] = config.placement || 'prepend';
   const content = config.content;
 
-  if (placement && placement !== 'prepend' && placement !== 'content' && placement !== 'append') {
-    throw Error('Add plugin, faulty placement option');
-  }
-  if (!placement) {
-    placement = 'prepend';
+  if (!VALID_PLACEMENTS.includes(placement)) {
+    throw Error(
+      `Configuration provided for 'add' plugin is invalid: value of 'placement' field is not valid (valid values are: ${VALID_PLACEMENTS.join(
+        ', '
+      )})`
+    );
   }
 
   if (!content) {
-    throw Error('Add plugin, missing content');
+    throw Error(`Configuration provided for 'add' plugin is invalid`);
   }
 
   return {
-    content: null,
-    [placement]: asFileString(content),
+    content: '',
+    [placement]: Array.isArray(content) ? content : [content],
   };
 };
 

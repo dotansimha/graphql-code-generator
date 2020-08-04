@@ -1,9 +1,13 @@
 ## Installation
 
+
+
+<img alt="kotlin plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/kotlin?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+
+
+    
 :::shell Using `yarn`
-
     $ yarn add -D @graphql-codegen/kotlin
-
 :::
 
 ## API Reference
