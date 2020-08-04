@@ -37,17 +37,20 @@ jobs:
         if: github.repository == 'dotansimha/graphql-code-generator'
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
-          npm-script: 'release:canary'
+          npm-script: 'yarn release:canary'
+          changesets: true
       - name: Publish a message
         if: steps.canary.outputs.released
         uses: 'kamilkisiela/pr-comment@master'
         with:
           message: |
-            The latest changes of this PR are available as alpha in npm: `${{ steps.canary.outputs.version }}`
+            The latest changes of this PR are available as alpha in npm!
 
-            Quickly update your package.json by running:
+            Based on the `changesets` published for this PR, the following alpha versions are published:
 
-                npx match-version @graphql-codegen ${{ steps.canary.outputs.version }}
+            ```
+            ${{ steps.canary.outputs.changesetsPublishedPackages}}
+            ```
           bot-token: ${{ secrets.GH_API_TOKEN }}
           bot: 'theguild-bot'
           github-token: ${{ secrets.GITHUB_TOKEN }}
