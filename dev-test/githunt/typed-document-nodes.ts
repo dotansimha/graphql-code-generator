@@ -1,4 +1,5 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -266,627 +267,147 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFragment, unknown> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CommentsPageComment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'content' }, arguments: [], directives: [] },
-        ],
-      },
-    },
-  ],
-};
-export const VoteButtonsFragmentDoc: DocumentNode<VoteButtonsFragment, unknown> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'VoteButtons' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'score' }, arguments: [], directives: [] },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vote' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'vote_value' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const RepoInfoFragmentDoc: DocumentNode<RepoInfoFragment, unknown> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'RepoInfo' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'repository' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'description' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FeedEntry' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' }, arguments: [], directives: [] },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'repository' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'full_name' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'owner' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'avatar_url' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' }, directives: [] },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' }, directives: [] },
-        ],
-      },
-    },
-    ...VoteButtonsFragmentDoc.definitions,
-    ...RepoInfoFragmentDoc.definitions,
-  ],
-};
-export const OnCommentAddedDocument: DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'subscription',
-      name: { kind: 'Name', value: 'onCommentAdded' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'commentAdded' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'postedBy' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'content' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Comment' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'entry' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'postedBy' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'comments' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-                    },
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'offset' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-                    },
-                  ],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' }, directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'commentCount' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'repository' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'full_name' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Repository' } },
-                        directives: [],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'description' },
-                              arguments: [],
-                              directives: [],
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'open_issues_count' },
-                              arguments: [],
-                              directives: [],
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'stargazers_count' },
-                              arguments: [],
-                              directives: [],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...CommentsPageCommentFragmentDoc.definitions,
-  ],
-};
+export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFragment, unknown> = gql`
+  fragment CommentsPageComment on Comment {
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    content
+  }
+`;
+export const VoteButtonsFragmentDoc: DocumentNode<VoteButtonsFragment, unknown> = gql`
+  fragment VoteButtons on Entry {
+    score
+    vote {
+      vote_value
+    }
+  }
+`;
+export const RepoInfoFragmentDoc: DocumentNode<RepoInfoFragment, unknown> = gql`
+  fragment RepoInfo on Entry {
+    createdAt
+    repository {
+      description
+      stargazers_count
+      open_issues_count
+    }
+    postedBy {
+      html_url
+      login
+    }
+  }
+`;
+export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = gql`
+  fragment FeedEntry on Entry {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+    ...VoteButtons
+    ...RepoInfo
+  }
+  ${VoteButtonsFragmentDoc}
+  ${RepoInfoFragmentDoc}
+`;
+export const OnCommentAddedDocument: DocumentNode<
+  OnCommentAddedSubscription,
+  OnCommentAddedSubscriptionVariables
+> = gql`
+  subscription onCommentAdded($repoFullName: String!) {
+    commentAdded(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> = gql`
+  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+    currentUser {
+      login
+      html_url
+    }
+    entry(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments(limit: $limit, offset: $offset) {
+        ...CommentsPageComment
+      }
+      commentCount
+      repository {
+        full_name
+        html_url
+        ... on Repository {
+          description
+          open_issues_count
+          stargazers_count
+        }
+      }
+    }
+  }
+  ${CommentsPageCommentFragmentDoc}
+`;
 export const CurrentUserForProfileDocument: DocumentNode<
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables
-> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'CurrentUserForProfile' },
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'avatar_url' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Feed' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'FeedType' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] }],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'feed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FeedEntry' }, directives: [] }],
-            },
-          },
-        ],
-      },
-    },
-    ...FeedEntryFragmentDoc.definitions,
-  ],
-};
-export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'submitRepository' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'submitRepository' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'submitComment' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'submitComment' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'commentContent' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' }, directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...CommentsPageCommentFragmentDoc.definitions,
-  ],
-};
-export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'vote' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'VoteType' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vote' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'score' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'vote' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'vote_value' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
+> = gql`
+  query CurrentUserForProfile {
+    currentUser {
+      login
+      avatar_url
+    }
+  }
+`;
+export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      ...FeedEntry
+    }
+  }
+  ${FeedEntryFragmentDoc}
+`;
+export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
+  }
+`;
+export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      ...CommentsPageComment
+    }
+  }
+  ${CommentsPageCommentFragmentDoc}
+`;
+export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
+`;
