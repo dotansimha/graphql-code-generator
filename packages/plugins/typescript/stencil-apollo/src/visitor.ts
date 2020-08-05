@@ -9,6 +9,7 @@ import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { paramCase } from 'param-case';
 import { pascalCase } from 'pascal-case';
+import { PluginContext } from '@graphql-codegen/plugin-helpers';
 
 export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
   componentType: StencilComponentType;
@@ -18,11 +19,23 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<
   StencilApolloRawPluginConfig,
   StencilApolloPluginConfig
 > {
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: StencilApolloRawPluginConfig) {
-    super(schema, fragments, rawConfig, {
-      componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
-      noExport: rawConfig.componentType === StencilComponentType.class,
-    } as any);
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: StencilApolloRawPluginConfig,
+    pluginContext?: PluginContext
+  ) {
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
+        noExport: rawConfig.componentType === StencilComponentType.class,
+      } as any,
+      [],
+      pluginContext
+    );
 
     autoBind(this);
   }

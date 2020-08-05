@@ -1,5 +1,5 @@
 import autoBind from 'auto-bind';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import {
   LoadedFragment,
   ClientSideBaseVisitor,
@@ -17,7 +17,8 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     rawConfig: RawClientSideBasePluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
+    pluginContext: PluginContext
   ) {
     super(
       schema,
@@ -28,7 +29,8 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         ...rawConfig,
       },
       {},
-      documents
+      documents,
+      pluginContext
     );
 
     autoBind(this);

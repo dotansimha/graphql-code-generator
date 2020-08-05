@@ -35,7 +35,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const context = ensureContext(input);
   const config = context.getConfig();
-  const pluginContext = context.getPluginContext();
+  const globalContext = context.getGlobalContext();
   const result: Types.FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true,
@@ -246,17 +246,19 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       let outputs: Types.GenerateOptions[] = [];
 
                       if (hasPreset) {
-                        outputs = await preset.buildGeneratesSection({
-                          baseOutputDir: filename,
-                          presetConfig: outputConfig.presetConfig || {},
-                          plugins: normalizedPluginsArray,
-                          schema: outputSchema,
-                          schemaAst: outputSchemaAst,
-                          documents: outputDocuments,
-                          config: mergedConfig,
-                          pluginMap,
-                          pluginContext,
-                        });
+                        outputs = (
+                          await preset.buildGeneratesSection({
+                            baseOutputDir: filename,
+                            presetConfig: outputConfig.presetConfig || {},
+                            plugins: normalizedPluginsArray,
+                            schema: outputSchema,
+                            schemaAst: outputSchemaAst,
+                            documents: outputDocuments,
+                            config: mergedConfig,
+                            pluginMap,
+                            globalContext,
+                          })
+                        ).map(args => ({ ...args, pluginContext: {} }));
                       } else {
                         outputs = [
                           {
@@ -267,7 +269,10 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,
-                            pluginContext,
+                            globalContext,
+                            // Plugin context should be created per output file, so this is a
+                            // good chance to create it here
+                            pluginContext: {},
                           },
                         ];
                       }

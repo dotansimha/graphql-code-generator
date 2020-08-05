@@ -8,7 +8,7 @@ import {
 import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
@@ -39,13 +39,24 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     rawConfig: VueApolloRawPluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
+    pluginContext: PluginContext
   ) {
-    super(schema, fragments, rawConfig, {
-      withCompositionFunctions: getConfigValue(rawConfig.withCompositionFunctions, true),
-      vueApolloComposableImportFrom: getConfigValue(rawConfig.vueApolloComposableImportFrom, '@vue/apollo-composable'),
-      addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
-    });
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        withCompositionFunctions: getConfigValue(rawConfig.withCompositionFunctions, true),
+        vueApolloComposableImportFrom: getConfigValue(
+          rawConfig.vueApolloComposableImportFrom,
+          '@vue/apollo-composable'
+        ),
+        addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
+      },
+      [],
+      pluginContext
+    );
 
     this.externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;

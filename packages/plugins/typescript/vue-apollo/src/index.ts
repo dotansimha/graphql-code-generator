@@ -8,7 +8,8 @@ import { VueApolloRawPluginConfig } from './config';
 export const plugin: PluginFunction<VueApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: VueApolloRawPluginConfig
+  config: VueApolloRawPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(s => s.document));
 
@@ -24,7 +25,7 @@ export const plugin: PluginFunction<VueApolloRawPluginConfig, Types.ComplexPlugi
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new VueApolloVisitor(schema, allFragments, config, documents);
+  const visitor = new VueApolloVisitor(schema, allFragments, config, documents, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

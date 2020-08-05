@@ -11,7 +11,7 @@ import {
 } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue, buildScalars } from './utils';
 import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
@@ -161,6 +161,15 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   pureMagicComment?: boolean;
 }
 
+export type ClientSideBaseVisitorPluginContext = PluginContext<{
+  /**
+   * A map between the GraphQL operation name and the generated variable name for it.
+   * This is currently used to avoid duplicates while using multiple plugins that extends
+   * the basic ClientSideBaseVisitor.
+   */
+  operationsDocumentsVariablesNames?: { [operationName: string]: string };
+}>;
+
 export class ClientSideBaseVisitor<
   TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
   TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig
@@ -174,7 +183,8 @@ export class ClientSideBaseVisitor<
     protected _fragments: LoadedFragment[],
     rawConfig: TRawConfig,
     additionalConfig: Partial<TPluginConfig>,
-    documents?: Types.DocumentFile[]
+    documents?: Types.DocumentFile[],
+    protected pluginContext?: ClientSideBaseVisitorPluginContext
   ) {
     super(rawConfig, {
       scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
@@ -199,6 +209,10 @@ export class ClientSideBaseVisitor<
       pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
       ...additionalConfig,
     } as any);
+
+    if (this.pluginContext && !this.pluginContext.operationsDocumentsVariablesNames) {
+      this.pluginContext.operationsDocumentsVariablesNames = {};
+    }
 
     this._documents = documents;
 
@@ -490,6 +504,38 @@ export class ClientSideBaseVisitor<
     return `DocumentNode`;
   }
 
+  protected getDocumentVariableInfo(
+    node: FragmentDefinitionNode | OperationDefinitionNode
+  ): { name: string; shouldGenerate: boolean } {
+    const expectedName = this.convertName(node, {
+      suffix: this.config.documentVariableSuffix,
+      prefix: this.config.documentVariablePrefix,
+      useTypesPrefix: false,
+    });
+
+    if (this.pluginContext) {
+      const key = node.name.value;
+
+      if (this.pluginContext.operationsDocumentsVariablesNames[key]) {
+        return {
+          name: this.pluginContext.operationsDocumentsVariablesNames[key],
+          shouldGenerate: false,
+        };
+      } else {
+        this.pluginContext.operationsDocumentsVariablesNames[key] = expectedName;
+        return {
+          name: expectedName,
+          shouldGenerate: true,
+        };
+      }
+    }
+
+    return {
+      name: expectedName,
+      shouldGenerate: true,
+    };
+  }
+
   public OperationDefinition(node: OperationDefinitionNode): string {
     if (!node.name || !node.name.value) {
       return null;
@@ -497,12 +543,7 @@ export class ClientSideBaseVisitor<
 
     this._collectedOperations.push(node);
 
-    const documentVariableName = this.convertName(node, {
-      suffix: this.config.documentVariableSuffix,
-      prefix: this.config.documentVariablePrefix,
-      useTypesPrefix: false,
-    });
-
+    const { name: documentVariableName, shouldGenerate } = this.getDocumentVariableInfo(node);
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
 
@@ -513,14 +554,17 @@ export class ClientSideBaseVisitor<
       suffix: operationTypeSuffix + 'Variables',
     });
 
-    let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      const isDocumentNode =
-        this.config.documentMode === DocumentMode.documentNode ||
-        this.config.documentMode === DocumentMode.documentNodeImportFragments;
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
-        isDocumentNode ? `: ${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)}` : ''
-      } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+    let documentString: string | null = null;
+
+    if (shouldGenerate) {
+      if (this.config.documentMode !== DocumentMode.external) {
+        const isDocumentNode =
+          this.config.documentMode === DocumentMode.documentNode ||
+          this.config.documentMode === DocumentMode.documentNodeImportFragments;
+        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
+          isDocumentNode ? `: ${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)}` : ''
+        } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+      }
     }
 
     const additional = this.buildOperation(
@@ -531,6 +575,6 @@ export class ClientSideBaseVisitor<
       operationVariablesTypes
     );
 
-    return [documentString, additional].filter(a => a).join('\n');
+    return [documentString, additional].filter(Boolean).join('\n');
   }
 }

@@ -8,7 +8,8 @@ import { ReactApolloRawPluginConfig } from './config';
 export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: ReactApolloRawPluginConfig
+  config: ReactApolloRawPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
 
@@ -24,7 +25,7 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPlu
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ReactApolloVisitor(schema, allFragments, config, documents);
+  const visitor = new ReactApolloVisitor(schema, allFragments, config, documents, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

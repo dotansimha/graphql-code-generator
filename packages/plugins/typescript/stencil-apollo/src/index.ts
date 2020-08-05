@@ -8,7 +8,8 @@ import { StencilApolloRawPluginConfig } from './config';
 export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: StencilApolloRawPluginConfig
+  config: StencilApolloRawPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
 
@@ -24,7 +25,7 @@ export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new StencilApolloVisitor(schema, allFragments, config) as any;
+  const visitor = new StencilApolloVisitor(schema, allFragments, config, pluginContext) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

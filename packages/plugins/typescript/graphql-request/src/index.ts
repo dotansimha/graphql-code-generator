@@ -8,7 +8,8 @@ import { RawGraphQLRequestPluginConfig } from './config';
 export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawGraphQLRequestPluginConfig
+  config: RawGraphQLRequestPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
@@ -22,7 +23,7 @@ export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new GraphQLRequestVisitor(schema, allFragments, config);
+  const visitor = new GraphQLRequestVisitor(schema, allFragments, config, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

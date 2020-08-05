@@ -13,7 +13,8 @@ export namespace Types {
       [name: string]: CodegenPlugin;
     };
     skipDocumentsValidation?: boolean;
-    pluginContext?: { [key: string]: any };
+    pluginContext?: PluginContext;
+    globalContext?: PluginContext;
   }
 
   export type FileOutput = {
@@ -234,9 +235,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    pluginContext?: {
-      [name: string]: any;
-    };
+    globalContext?: PluginContext;
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -344,7 +343,7 @@ export namespace Types {
     /**
      * @description Additional context passed to plugins
      */
-    pluginContext?: { [key: string]: any };
+    globalContext?: PluginContext;
     /**
      * @description Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.
      *
@@ -445,16 +444,20 @@ export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.Com
   return typeof obj === 'object' && obj.hasOwnProperty('content');
 }
 
+export type PluginContext<T extends {} = {}> = T & { [key: string]: any };
+export type PluginInfo = {
+  outputFile?: string;
+  allPlugins?: Types.ConfiguredPlugin[];
+  globalContext?: PluginContext;
+  pluginContext?: PluginContext;
+  [key: string]: any;
+};
+
 export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.PluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
-  info?: {
-    outputFile?: string;
-    allPlugins?: Types.ConfiguredPlugin[];
-    pluginContext?: { [key: string]: any };
-    [key: string]: any;
-  }
+  info?: PluginInfo
 ) => Types.Promisable<TOutput>;
 
 export type PluginValidateFn<T = any> = (
@@ -463,7 +466,8 @@ export type PluginValidateFn<T = any> = (
   config: T,
   outputFile: string,
   allPlugins: Types.ConfiguredPlugin[],
-  pluginContext?: { [key: string]: any }
+  pluginContext?: { [key: string]: any },
+  globalContext?: { [key: string]: any }
 ) => Types.Promisable<void>;
 
 export type AddToSchemaResult = string | DocumentNode | undefined;

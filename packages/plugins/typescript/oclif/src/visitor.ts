@@ -7,8 +7,9 @@ import {
 import autoBind from 'auto-bind';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
 
-import { Config, Info } from '.';
+import { Config } from '.';
 import { getFlagConfigForVariableDefinition, omitOclifDirectives } from './utils';
+import { PluginInfo } from '@graphql-codegen/plugin-helpers';
 
 interface Operation {
   node: OperationDefinitionNode;
@@ -23,12 +24,12 @@ interface OclifDirectiveValues {
   examples?: string[];
 }
 
-export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientSideBasePluginConfig> {
+export class OclifVisitor extends ClientSideBaseVisitor<Config, ClientSideBasePluginConfig> {
   private _operationsToInclude: Operation[] = [];
-  private _info: Info;
+  private _info: PluginInfo;
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: Config, info: Info) {
-    super(schema, fragments, rawConfig, {});
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: Config, info: PluginInfo) {
+    super(schema, fragments, rawConfig, {}, [], info.pluginContext);
     this._info = info;
 
     const { handlerPath = '../../handler' } = rawConfig;

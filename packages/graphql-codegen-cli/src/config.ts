@@ -203,7 +203,7 @@ export class CodegenContext {
   private _graphqlConfig?: GraphQLConfig;
   private config: Types.Config;
   private _project?: string;
-  private _pluginContext: { [key: string]: any } = {};
+  private _pluginGlobalContext: { [key: string]: any } = {};
   cwd: string;
   filepath: string;
 
@@ -235,10 +235,10 @@ export class CodegenContext {
           ...project.extension('codegen'),
           schema: project.schema,
           documents: project.documents,
-          pluginContext: this._pluginContext,
+          globalContext: this._pluginGlobalContext,
         };
       } else {
-        this.config = { ...this._config, pluginContext: this._pluginContext };
+        this.config = { ...this._config, globalContext: this._pluginGlobalContext };
       }
     }
 
@@ -252,8 +252,8 @@ export class CodegenContext {
     };
   }
 
-  getPluginContext(): { [key: string]: any } {
-    return this._pluginContext;
+  getGlobalContext(): { [key: string]: any } {
+    return this._pluginGlobalContext;
   }
 
   async loadSchema(pointer: Types.Schema) {

@@ -1,4 +1,4 @@
-import { DetailedError, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, CodegenPlugin, PluginContext } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
 
 export interface ExecutePluginOptions {
@@ -11,7 +11,8 @@ export interface ExecutePluginOptions {
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
   skipDocumentsValidation?: boolean;
-  pluginContext?: { [key: string]: any };
+  pluginContext?: PluginContext;
+  globalContext?: PluginContext;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -34,7 +35,6 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
 
   const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema, options.config as any);
   const documents = options.documents || [];
-  const pluginContext = options.pluginContext || {};
 
   if (plugin.validate && typeof plugin.validate === 'function') {
     try {
@@ -45,7 +45,8 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
         options.config,
         options.outputFilename,
         options.allPlugins,
-        pluginContext
+        options.pluginContext,
+        options.globalContext
       );
     } catch (e) {
       throw new DetailedError(
@@ -65,7 +66,8 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
       {
         outputFile: options.outputFilename,
         allPlugins: options.allPlugins,
-        pluginContext,
+        pluginContext: options.pluginContext,
+        globalContext: options.globalContext,
       }
     )
   );

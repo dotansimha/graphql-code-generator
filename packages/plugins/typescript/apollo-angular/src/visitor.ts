@@ -9,7 +9,7 @@ import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 
 const R_MOD = /module:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name:\s*"([^"]+)"/; // matches: name: "..."
@@ -48,7 +48,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     fragments: LoadedFragment[],
     private _allOperations: OperationDefinitionNode[],
     rawConfig: ApolloAngularRawPluginConfig,
-    documents?: Types.DocumentFile[]
+    documents?: Types.DocumentFile[],
+    pluginContext?: PluginContext
   ) {
     super(
       schema,
@@ -65,7 +66,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         subscriptionSuffix: rawConfig.subscriptionSuffix,
         apolloAngularPackage: rawConfig.apolloAngularPackage || 'apollo-angular',
       },
-      documents
+      documents,
+      pluginContext
     );
 
     autoBind(this);

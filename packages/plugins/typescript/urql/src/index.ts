@@ -8,7 +8,8 @@ import { UrqlRawPluginConfig } from './config';
 export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: UrqlRawPluginConfig
+  config: UrqlRawPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
@@ -22,7 +23,7 @@ export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutp
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new UrqlVisitor(schema, allFragments, config) as any;
+  const visitor = new UrqlVisitor(schema, allFragments, config, pluginContext) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

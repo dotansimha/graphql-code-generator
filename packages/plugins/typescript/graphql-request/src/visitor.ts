@@ -10,6 +10,7 @@ import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
 
 import { RawGraphQLRequestPluginConfig } from './config';
+import { PluginContext } from '@graphql-codegen/plugin-helpers';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
@@ -31,10 +32,22 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     operationVariablesTypes: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGraphQLRequestPluginConfig) {
-    super(schema, fragments, rawConfig, {
-      rawRequest: getConfigValue(rawConfig.rawRequest, false),
-    });
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: RawGraphQLRequestPluginConfig,
+    pluginContext: PluginContext
+  ) {
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        rawRequest: getConfigValue(rawConfig.rawRequest, false),
+      },
+      [],
+      pluginContext
+    );
 
     autoBind(this);
 

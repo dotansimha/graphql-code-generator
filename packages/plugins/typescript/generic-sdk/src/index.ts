@@ -8,7 +8,8 @@ import { GenericSdkVisitor } from './visitor';
 export const plugin: PluginFunction<RawGenericSdkPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawGenericSdkPluginConfig
+  config: RawGenericSdkPluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
@@ -26,7 +27,7 @@ export const plugin: PluginFunction<RawGenericSdkPluginConfig> = (
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new GenericSdkVisitor(schema, allFragments, config);
+  const visitor = new GenericSdkVisitor(schema, allFragments, config, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

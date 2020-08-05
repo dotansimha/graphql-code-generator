@@ -1,23 +1,18 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLRequestVisitor } from './visitor';
+import { OclifVisitor } from './visitor';
 import { extname } from 'path';
 
 export interface Config extends RawClientSideBasePluginConfig {
   handlerPath?: string;
 }
 
-export interface Info {
-  outputFile: string;
-  allPlugins: any[];
-}
-
-export const plugin: PluginFunction = (
+export const plugin: PluginFunction<Config> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: Config,
-  info: Info
+  config,
+  info
 ) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
@@ -35,7 +30,7 @@ export const plugin: PluginFunction = (
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new GraphQLRequestVisitor(schema, allFragments, config, info);
+  const visitor = new OclifVisitor(schema, allFragments, config, info);
   visit(allAst, { leave: visitor });
 
   return {
@@ -55,4 +50,4 @@ export const validate: PluginValidateFn<any> = async (
   }
 };
 
-export { GraphQLRequestVisitor };
+export { OclifVisitor };

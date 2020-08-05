@@ -9,7 +9,8 @@ import { ApolloAngularRawPluginConfig } from './config';
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config
+  config,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
   const operations = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
@@ -25,7 +26,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents);
+  const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

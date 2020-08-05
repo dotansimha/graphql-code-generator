@@ -7,7 +7,8 @@ import { TypeScriptDocumentNodesVisitor } from './visitor';
 export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawClientSideBasePluginConfig
+  config: RawClientSideBasePluginConfig,
+  { pluginContext }
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
 
@@ -23,7 +24,7 @@ export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
+  const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents, pluginContext);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

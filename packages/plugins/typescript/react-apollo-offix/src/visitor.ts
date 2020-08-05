@@ -7,7 +7,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {}
@@ -20,9 +20,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     rawConfig: RawClientSideBasePluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
+    pluginContext: PluginContext
   ) {
-    super(schema, fragments, rawConfig, {});
+    super(schema, fragments, rawConfig, {}, [], pluginContext);
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;

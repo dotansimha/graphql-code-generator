@@ -8,6 +8,7 @@ import {
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
 import { RawGenericSdkPluginConfig } from './config';
+import { PluginContext } from '@graphql-codegen/plugin-helpers';
 
 export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
   usingObservableFrom: string;
@@ -22,10 +23,22 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     operationVariablesTypes: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGenericSdkPluginConfig) {
-    super(schema, fragments, rawConfig, {
-      usingObservableFrom: rawConfig.usingObservableFrom,
-    });
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: RawGenericSdkPluginConfig,
+    pluginContext: PluginContext
+  ) {
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        usingObservableFrom: rawConfig.usingObservableFrom,
+      },
+      [],
+      pluginContext
+    );
 
     autoBind(this);
 

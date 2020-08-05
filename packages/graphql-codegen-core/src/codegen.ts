@@ -115,6 +115,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           allPlugins: options.plugins,
           skipDocumentsValidation: options.skipDocumentsValidation,
           pluginContext: options.pluginContext,
+          globalContext: options.globalContext,
         },
         pluginPackage
       );

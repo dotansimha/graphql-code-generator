@@ -1,6 +1,6 @@
 import { TypeScriptDocumentNodesRawPluginConfig } from '.';
 import autoBind from 'auto-bind';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import {
   getConfigValue,
   LoadedFragment,
@@ -23,7 +23,8 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     rawConfig: TypeScriptDocumentNodesRawPluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
+    pluginContext: PluginContext
   ) {
     const additionalConfig = {
       documentVariablePrefix: getConfigValue(rawConfig.namePrefix, ''),
@@ -31,7 +32,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       fragmentVariablePrefix: getConfigValue(rawConfig.fragmentPrefix, ''),
       fragmentVariableSuffix: getConfigValue(rawConfig.fragmentSuffix, ''),
     };
-    super(schema, fragments, rawConfig, additionalConfig, documents);
+    super(schema, fragments, rawConfig, additionalConfig, documents, pluginContext);
     autoBind(this);
   }
 }

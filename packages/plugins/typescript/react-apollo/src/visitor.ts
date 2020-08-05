@@ -9,7 +9,7 @@ import {
 import { ReactApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginContext } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
 import { camelCase } from 'camel-case';
 
@@ -41,39 +41,47 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     protected rawConfig: ReactApolloRawPluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
+    pluginContext: PluginContext
   ) {
-    super(schema, fragments, rawConfig, {
-      componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
-      withHOC: getConfigValue(rawConfig.withHOC, false),
-      withComponent: getConfigValue(rawConfig.withComponent, false),
-      withHooks: getConfigValue(rawConfig.withHooks, true),
-      withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
-      withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),
-      apolloReactCommonImportFrom: getConfigValue(
-        rawConfig.apolloReactCommonImportFrom,
-        rawConfig.reactApolloVersion === 2 ? '@apollo/react-common' : APOLLO_CLIENT_3_UNIFIED_PACKAGE
-      ),
-      apolloReactComponentsImportFrom: getConfigValue(
-        rawConfig.apolloReactComponentsImportFrom,
-        rawConfig.reactApolloVersion === 2
-          ? '@apollo/react-components'
-          : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}/react/components`
-      ),
-      apolloReactHocImportFrom: getConfigValue(
-        rawConfig.apolloReactHocImportFrom,
-        rawConfig.reactApolloVersion === 2 ? '@apollo/react-hoc' : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}/react/hoc`
-      ),
-      apolloReactHooksImportFrom: getConfigValue(
-        rawConfig.apolloReactHooksImportFrom,
-        rawConfig.reactApolloVersion === 2 ? '@apollo/react-hooks' : APOLLO_CLIENT_3_UNIFIED_PACKAGE
-      ),
-      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 3),
-      withResultType: getConfigValue(rawConfig.withResultType, true),
-      withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
-      addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
-      gqlImport: getConfigValue(rawConfig.gqlImport, rawConfig.reactApolloVersion === 2 ? null : `gql`),
-    });
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
+        withHOC: getConfigValue(rawConfig.withHOC, false),
+        withComponent: getConfigValue(rawConfig.withComponent, false),
+        withHooks: getConfigValue(rawConfig.withHooks, true),
+        withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
+        withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),
+        apolloReactCommonImportFrom: getConfigValue(
+          rawConfig.apolloReactCommonImportFrom,
+          rawConfig.reactApolloVersion === 2 ? '@apollo/react-common' : APOLLO_CLIENT_3_UNIFIED_PACKAGE
+        ),
+        apolloReactComponentsImportFrom: getConfigValue(
+          rawConfig.apolloReactComponentsImportFrom,
+          rawConfig.reactApolloVersion === 2
+            ? '@apollo/react-components'
+            : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}/react/components`
+        ),
+        apolloReactHocImportFrom: getConfigValue(
+          rawConfig.apolloReactHocImportFrom,
+          rawConfig.reactApolloVersion === 2 ? '@apollo/react-hoc' : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}/react/hoc`
+        ),
+        apolloReactHooksImportFrom: getConfigValue(
+          rawConfig.apolloReactHooksImportFrom,
+          rawConfig.reactApolloVersion === 2 ? '@apollo/react-hooks' : APOLLO_CLIENT_3_UNIFIED_PACKAGE
+        ),
+        reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 3),
+        withResultType: getConfigValue(rawConfig.withResultType, true),
+        withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
+        addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
+        gqlImport: getConfigValue(rawConfig.gqlImport, rawConfig.reactApolloVersion === 2 ? null : `gql`),
+      },
+      [],
+      pluginContext
+    );
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;

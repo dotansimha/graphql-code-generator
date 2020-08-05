@@ -9,6 +9,7 @@ import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'pascal-case';
+import { PluginContext } from '@graphql-codegen/plugin-helpers';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -17,12 +18,24 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
-    super(schema, fragments, rawConfig, {
-      withComponent: getConfigValue(rawConfig.withComponent, true),
-      withHooks: getConfigValue(rawConfig.withHooks, false),
-      urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
-    });
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: UrqlRawPluginConfig,
+    pluginContext: PluginContext
+  ) {
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        withComponent: getConfigValue(rawConfig.withComponent, true),
+        withHooks: getConfigValue(rawConfig.withHooks, false),
+        urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
+      },
+      [],
+      pluginContext
+    );
 
     autoBind(this);
   }

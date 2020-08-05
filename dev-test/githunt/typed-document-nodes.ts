@@ -1,6 +1,8 @@
+import * as Apollo from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const gql = Apollo.gql;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -266,6 +268,358 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
+export const CommentsPageCommentFragmentDoc = gql`
+  fragment CommentsPageComment on Comment {
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    content
+  }
+`;
+export const VoteButtonsFragmentDoc = gql`
+  fragment VoteButtons on Entry {
+    score
+    vote {
+      vote_value
+    }
+  }
+`;
+export const RepoInfoFragmentDoc = gql`
+  fragment RepoInfo on Entry {
+    createdAt
+    repository {
+      description
+      stargazers_count
+      open_issues_count
+    }
+    postedBy {
+      html_url
+      login
+    }
+  }
+`;
+export const FeedEntryFragmentDoc = gql`
+  fragment FeedEntry on Entry {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+    ...VoteButtons
+    ...RepoInfo
+  }
+  ${VoteButtonsFragmentDoc}
+  ${RepoInfoFragmentDoc}
+`;
+export const OnCommentAddedDocument = gql`
+  subscription onCommentAdded($repoFullName: String!) {
+    commentAdded(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+
+/**
+ * __useOnCommentAddedSubscription__
+ *
+ * To run a query within a React component, call `useOnCommentAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnCommentAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnCommentAddedSubscription({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *   },
+ * });
+ */
+export function useOnCommentAddedSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
+) {
+  return Apollo.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
+    OnCommentAddedDocument,
+    baseOptions
+  );
+}
+export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
+export type OnCommentAddedSubscriptionResult = Apollo.SubscriptionResult<OnCommentAddedSubscription>;
+export const CommentDocument = gql`
+  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+    currentUser {
+      login
+      html_url
+    }
+    entry(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments(limit: $limit, offset: $offset) {
+        ...CommentsPageComment
+      }
+      commentCount
+      repository {
+        full_name
+        html_url
+        ... on Repository {
+          description
+          open_issues_count
+          stargazers_count
+        }
+      }
+    }
+  }
+  ${CommentsPageCommentFragmentDoc}
+`;
+
+/**
+ * __useCommentQuery__
+ *
+ * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuery({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+  return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+}
+export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+  return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+}
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
+export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
+export const CurrentUserForProfileDocument = gql`
+  query CurrentUserForProfile {
+    currentUser {
+      login
+      avatar_url
+    }
+  }
+`;
+
+/**
+ * __useCurrentUserForProfileQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserForProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserForProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserForProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentUserForProfileQuery(
+  baseOptions?: Apollo.QueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+) {
+  return Apollo.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+    CurrentUserForProfileDocument,
+    baseOptions
+  );
+}
+export function useCurrentUserForProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+) {
+  return Apollo.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+    CurrentUserForProfileDocument,
+    baseOptions
+  );
+}
+export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
+export type CurrentUserForProfileLazyQueryHookResult = ReturnType<typeof useCurrentUserForProfileLazyQuery>;
+export type CurrentUserForProfileQueryResult = Apollo.QueryResult<
+  CurrentUserForProfileQuery,
+  CurrentUserForProfileQueryVariables
+>;
+export const FeedDocument = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      ...FeedEntry
+    }
+  }
+  ${FeedEntryFragmentDoc}
+`;
+
+/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+}
+export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+}
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
+export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
+  }
+`;
+export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
+  SubmitRepositoryMutation,
+  SubmitRepositoryMutationVariables
+>;
+
+/**
+ * __useSubmitRepositoryMutation__
+ *
+ * To run a mutation, you first call `useSubmitRepositoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitRepositoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitRepositoryMutation, { data, loading, error }] = useSubmitRepositoryMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *   },
+ * });
+ */
+export function useSubmitRepositoryMutation(
+  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+) {
+  return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
+    SubmitRepositoryDocument,
+    baseOptions
+  );
+}
+export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
+export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
+  SubmitRepositoryMutation,
+  SubmitRepositoryMutationVariables
+>;
+export const SubmitCommentDocument = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      ...CommentsPageComment
+    }
+  }
+  ${CommentsPageCommentFragmentDoc}
+`;
+export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;
+
+/**
+ * __useSubmitCommentMutation__
+ *
+ * To run a mutation, you first call `useSubmitCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitCommentMutation, { data, loading, error }] = useSubmitCommentMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      commentContent: // value for 'commentContent'
+ *   },
+ * });
+ */
+export function useSubmitCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+) {
+  return Apollo.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
+}
+export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
+export type SubmitCommentMutationResult = Apollo.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
+  SubmitCommentMutation,
+  SubmitCommentMutationVariables
+>;
+export const VoteDocument = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
+`;
+export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
+
+/**
+ * __useVoteMutation__
+ *
+ * To run a mutation, you first call `useVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteMutation, { data, loading, error }] = useVoteMutation({
+ *   variables: {
+ *      repoFullName: // value for 'repoFullName'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+  return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
+}
+export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
 export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFragment, unknown> = {
   kind: 'Document',
   definitions: [
@@ -416,477 +770,5 @@ export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = {
     },
     ...VoteButtonsFragmentDoc.definitions,
     ...RepoInfoFragmentDoc.definitions,
-  ],
-};
-export const OnCommentAddedDocument: DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'subscription',
-      name: { kind: 'Name', value: 'onCommentAdded' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'commentAdded' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'postedBy' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'content' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Comment' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'entry' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'postedBy' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'comments' },
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-                    },
-                    {
-                      kind: 'Argument',
-                      name: { kind: 'Name', value: 'offset' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-                    },
-                  ],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' }, directives: [] },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'commentCount' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'repository' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'full_name' }, arguments: [], directives: [] },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Repository' } },
-                        directives: [],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'description' },
-                              arguments: [],
-                              directives: [],
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'open_issues_count' },
-                              arguments: [],
-                              directives: [],
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'stargazers_count' },
-                              arguments: [],
-                              directives: [],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...CommentsPageCommentFragmentDoc.definitions,
-  ],
-};
-export const CurrentUserForProfileDocument: DocumentNode<
-  CurrentUserForProfileQuery,
-  CurrentUserForProfileQueryVariables
-> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'CurrentUserForProfile' },
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'avatar_url' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Feed' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'FeedType' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'currentUser' },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] }],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'feed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FeedEntry' }, directives: [] }],
-            },
-          },
-        ],
-      },
-    },
-    ...FeedEntryFragmentDoc.definitions,
-  ],
-};
-export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'submitRepository' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'submitRepository' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'submitComment' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'submitComment' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'commentContent' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' }, directives: [] },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...CommentsPageCommentFragmentDoc.definitions,
-  ],
-};
-export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'vote' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-          directives: [],
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'VoteType' } } },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vote' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'score' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'vote' },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'vote_value' }, arguments: [], directives: [] },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
   ],
 };
