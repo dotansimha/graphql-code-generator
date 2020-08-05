@@ -11,6 +11,17 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
+   * @description Version of `apollo-angular` package
+   * @default 2
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   apolloAngularVersion: 1
+   * ```
+   */
+  apolloAngularVersion?: number;
+  /**
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
    * @exampleMarkdown
@@ -50,6 +61,16 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   serviceProvidedInRoot?: boolean;
+  /**
+   * @description Define the Injector of the SDK class.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   serviceProvidedIn: ./path/to/module#MyModule
+   * ```
+   */
+  serviceProvidedIn?: string;
   /**
    * @description Set to `true` in order to generate a SDK service class that uses all generated services.
    * @default false

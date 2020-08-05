@@ -45,16 +45,16 @@ async function updateVersions() {
         }
       }
 
-      // await applyReleasePlan(
-      //   releasePlan,
-      //   packages,
-      //   {
-      //     ...config,
-      //     commit: false,
-      //   },
-      //   false,
-      //   true
-      // );
+      await applyReleasePlan(
+        releasePlan,
+        packages,
+        {
+          ...config,
+          commit: false,
+        },
+        false,
+        true
+      );
     }
   }
 }
