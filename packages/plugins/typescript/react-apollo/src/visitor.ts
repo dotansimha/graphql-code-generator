@@ -80,7 +80,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     autoBind(this);
 
-    if (this.config.reactApolloVersion === 3 && this.config.gqlImport === 'gql') {
+    if (
+      this.config.reactApolloVersion === 3 &&
+      this.config.gqlImport === 'gql' &&
+      this.config.documentMode !== DocumentMode.external
+    ) {
       this.imports.add(`const gql = Apollo.gql;`);
     }
   }
