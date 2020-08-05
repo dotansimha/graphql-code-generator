@@ -470,8 +470,38 @@ describe('Apollo Angular', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      // NgModule
       expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
+    });
+
+    it('should generate a SDK service with a requested providedIn value', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          serviceProvidedIn: '../app.module#AppModule',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule import
+      expect(content.prepend).toContain(`import { AppModule } from '../app.module';`);
+      // NgModule in `providedIn`
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable({ providedIn: AppModule })
+        export class ApolloAngularSDK {
+      `);
     });
   });
 
