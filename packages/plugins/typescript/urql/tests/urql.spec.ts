@@ -47,12 +47,14 @@ describe('urql', () => {
   };
 
   describe('Imports', () => {
-    it('should import Urql dependencies', async () => {
+    it('should import Urql and React dependencies when components are used', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -353,7 +355,7 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Component', async () => {
+    it('should not generate Component by default', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
@@ -364,7 +366,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`
+      expect(content.content).not.toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) =>
       (
           <Urql.Query {...props} query={TestDocument} />
@@ -407,7 +409,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -439,7 +443,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
