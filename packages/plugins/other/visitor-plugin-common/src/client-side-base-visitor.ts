@@ -201,7 +201,6 @@ export class ClientSideBaseVisitor<
       ...additionalConfig,
     } as any);
 
-    (this._additionalImports || []).forEach(i => this._imports.add(i));
     this._documents = documents;
 
     autoBind(this);
@@ -413,6 +412,8 @@ export class ClientSideBaseVisitor<
   }
 
   public getImports(options: { excludeFragments?: boolean } = {}): string[] {
+    (this._additionalImports || []).forEach(i => this._imports.add(i));
+
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
       case DocumentMode.documentNodeImportFragments: {
