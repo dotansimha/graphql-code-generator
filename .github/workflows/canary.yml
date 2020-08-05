@@ -9,7 +9,7 @@ jobs:
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: contains(github.actor, 'dependabot') == false
+    if: contains(github.actor, 'dependabot') == false && github.repository == 'dotansimha/graphql-code-generator'
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
@@ -41,7 +41,6 @@ jobs:
       - name: Release Canary
         id: canary
         uses: 'kamilkisiela/release-canary@master'
-        if: github.repository == 'dotansimha/graphql-code-generator'
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'yarn release:canary'
