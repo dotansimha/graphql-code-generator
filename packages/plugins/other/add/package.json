@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/add",
-  "version": "1.17.7",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator plugin for adding custom content to your output file",
   "repository": {
     "type": "git",

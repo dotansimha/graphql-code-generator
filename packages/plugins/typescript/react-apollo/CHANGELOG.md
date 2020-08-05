@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.0.5
+
+### Patch Changes
+
+- 2c3f0728: prevent adding aliased gql tag when documentMode is set to "external"
+- Updated dependencies [4266a15f]
+  - @graphql-codegen/visitor-plugin-common@1.17.12
+
 ## 2.0.4
 
 ### Patch Changes
