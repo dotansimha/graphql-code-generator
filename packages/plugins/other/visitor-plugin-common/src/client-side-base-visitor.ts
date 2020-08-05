@@ -168,6 +168,7 @@ export class ClientSideBaseVisitor<
   protected _collectedOperations: OperationDefinitionNode[] = [];
   protected _documents: Types.DocumentFile[] = [];
   protected _additionalImports: string[] = [];
+  protected _imports = new Set<string>();
 
   constructor(
     protected _schema: GraphQLSchema,
@@ -306,16 +307,13 @@ export class ClientSideBaseVisitor<
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this.getFragmentVariableName(fragmentDocument);
-    const isDocumentNode =
-      this.config.documentMode === DocumentMode.documentNode ||
-      this.config.documentMode === DocumentMode.documentNodeImportFragments;
     const fragmentResultType = this.convertName(fragmentDocument.name.value, {
       useTypesPrefix: true,
       suffix: this.getFragmentSuffix(fragmentDocument),
     });
-    return `export const ${name}${
-      isDocumentNode ? `: ${this.getDocumentNodeSignature(fragmentResultType, 'unknown', fragmentDocument)}` : ''
-    } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(fragmentDocument)};`;
+    return `export const ${name}${this.getDocumentNodeSignature(fragmentResultType, 'unknown', fragmentDocument)} =${
+      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+    } ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -414,7 +412,7 @@ export class ClientSideBaseVisitor<
   }
 
   public getImports(options: { excludeFragments?: boolean } = {}): string[] {
-    const imports = [...this._additionalImports];
+    (this._additionalImports || []).forEach(i => this._imports.add(i));
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
@@ -423,7 +421,7 @@ export class ClientSideBaseVisitor<
         const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
 
         if (tagImport) {
-          imports.push(tagImport);
+          this._imports.add(tagImport);
         }
 
         break;
@@ -433,7 +431,7 @@ export class ClientSideBaseVisitor<
         const tagImport = this._generateImport(gqlImport, 'gql', false);
 
         if (tagImport) {
-          imports.push(tagImport);
+          this._imports.add(tagImport);
         }
 
         break;
@@ -441,11 +439,11 @@ export class ClientSideBaseVisitor<
       case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-            imports.push(
+            this._imports.add(
               `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
             );
           } else {
-            imports.push(
+            this._imports.add(
               `import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`
             );
           }
@@ -463,13 +461,13 @@ export class ClientSideBaseVisitor<
         documentMode === DocumentMode.string ||
         documentMode === DocumentMode.documentNodeImportFragments
       ) {
-        imports.push(
-          ...fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'document'))
-        );
+        fragmentImports.forEach(fragmentImport => {
+          this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+        });
       }
     }
 
-    return imports;
+    return Array.from(this._imports);
   }
 
   protected buildOperation(
@@ -486,8 +484,15 @@ export class ClientSideBaseVisitor<
     resultType: string,
     variablesTypes: string,
     node: FragmentDefinitionNode | OperationDefinitionNode
-  ) {
-    return `DocumentNode`;
+  ): string {
+    if (
+      this.config.documentMode === DocumentMode.documentNode ||
+      this.config.documentMode === DocumentMode.documentNodeImportFragments
+    ) {
+      return `: DocumentNode`;
+    }
+
+    return '';
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
@@ -515,12 +520,13 @@ export class ClientSideBaseVisitor<
 
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
-      const isDocumentNode =
-        this.config.documentMode === DocumentMode.documentNode ||
-        this.config.documentMode === DocumentMode.documentNodeImportFragments;
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${
-        isDocumentNode ? `: ${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)}` : ''
-      } =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+      documentString = `${
+        this.config.noExport ? '' : 'export'
+      } const ${documentVariableName}${this.getDocumentNodeSignature(
+        operationResultType,
+        operationVariablesTypes,
+        node
+      )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
     }
 
     const additional = this.buildOperation(
