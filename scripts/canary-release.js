@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const semver = require('semver');
 const cp = require('child_process');
+const { basename } = require('path');
 
 const { read: readConfig } = require("@changesets/config");
 const readChangesets = require("@changesets/read").default;
@@ -14,19 +15,29 @@ function getNewVersion(version, type) {
   return semver.inc(version, `pre${type}`, true, 'alpha-' + gitHash);
 }
 
+function getRelevantChangesets(baseBranch) {
+  const comparePoint = cp.spawnSync('git', ['merge-base', `origin/${baseBranch}`, 'HEAD']).stdout.toString().trim();
+  const listModifiedFiles = cp.spawnSync('git', ['diff', '--name-only', comparePoint]).stdout.toString().trim().split('\n');
+
+  return listModifiedFiles.filter(f => f.startsWith('.changeset')).map(f => basename(f, '.md'));
+}
+
 async function updateVersions() {
   const cwd = process.cwd();
   const packages = await getPackages(cwd);
   const config = await readConfig(cwd, packages);
-  const changesets = await readChangesets(cwd);
-
+  const modifiedChangesets = getRelevantChangesets(config.baseBranch);
+  const changesets = (await readChangesets(cwd)).filter(change => modifiedChangesets.includes(change.id));
+  
   if (changesets.length === 0) {
     console.warn(`Unable to find any relevant package for canary publishing. Please make sure changesets exists!`);
+    process.exit(1);
   } else {
     const releasePlan = assembleReleasePlan(changesets, packages, config, [], false);
     
     if (releasePlan.releases.length === 0) {
       console.warn(`Unable to find any relevant package for canary releasing. Please make sure changesets exists!`);
+      process.exit(1);
     } else {
       for (const release of releasePlan.releases) {
         if (release.type !== 'none') {
@@ -34,16 +45,16 @@ async function updateVersions() {
         }
       }
 
-      await applyReleasePlan(
-        releasePlan,
-        packages,
-        {
-          ...config,
-          commit: false,
-        },
-        false,
-        true
-      );
+      // await applyReleasePlan(
+      //   releasePlan,
+      //   packages,
+      //   {
+      //     ...config,
+      //     commit: false,
+      //   },
+      //   false,
+      //   true
+      // );
     }
   }
 }
