@@ -649,6 +649,16 @@ describe('Flow Plugin', () => {
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
     });
+
+    it('Should add custom suffix for mutation arguments', async () => {
+      const schema = buildSchema(
+        `input Input { name: String } type Mutation { foo(id: String, input: Input): String }`
+      );
+      const result = await plugin(schema, [], { typesSuffix: 'T' }, { outputFile: '' });
+
+      expect(result.content).toMatchSnapshot();
+      validateFlow(result);
+    });
   });
 
   describe('Enum', () => {

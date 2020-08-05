@@ -925,14 +925,16 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
               parentName,
               {
                 useTypesPrefix: true,
+                useTypesSuffix: true,
               },
               true
             ) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
+              appendArgsSuffix: true,
               useTypesPrefix: false,
-            }) +
-            'Args'
+              useTypesSuffix: false,
+            })
           }`
         : null;
 
