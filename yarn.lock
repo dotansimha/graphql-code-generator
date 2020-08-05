@@ -2277,13 +2277,10 @@
     aggregate-error "3.0.1"
     tslib "~2.0.0"
 
-"@graphql-typed-document-node/core@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-2.1.0.tgz#c260394cf33100f895074115c60947613094edcb"
-  integrity sha512-1XyAFfIGj5KVX99z83GatkvLJV9QyA4jR8gJMHfBdr8boiQltdyPyF0akKNVKGyJ8s/rJpoZp13QoMqQgxp5vQ==
-  dependencies:
-    patch-package "6.2.2"
-    semver "7.3.2"
+"@graphql-typed-document-node/core@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.0.0.tgz#a234ad8550e753b5659b420184031b8ac40d89da"
+  integrity sha512-lLAVh3eCxIrJLZjbgZYcKeRsXe7hWsyCLTdDzniLh/DOsAX41JgX/qXPpq9j7yoFKfUi8a+1EXWzC5Dxj9LisA==
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -13145,7 +13142,7 @@ pascalcase@^0.1.1:
   resolved "https://registry.npmjs.org/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-patch-package@6.2.2, patch-package@^6.2.2:
+patch-package@^6.2.2:
   version "6.2.2"
   resolved "https://registry.npmjs.org/patch-package/-/patch-package-6.2.2.tgz#71d170d650c65c26556f0d0fbbb48d92b6cc5f39"
   integrity sha512-YqScVYkVcClUY0v8fF0kWOjDYopzIM8e3bj/RU1DPeEF14+dCGm6UeOYm4jvCyxqIEQ5/eJzmbWfDWnUleFNMg==
@@ -15495,7 +15492,7 @@ semver@7.0.0:
   resolved "https://registry.npmjs.org/semver/-/semver-7.0.0.tgz#5f3ca35761e47e05b206c6daff2cf814f0316b8e"
   integrity sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
 
-semver@7.3.2, semver@7.x, semver@^7.2.1, semver@^7.3.2:
+semver@7.x, semver@^7.2.1, semver@^7.3.2:
   version "7.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz#604962b052b81ed0786aae84389ffba70ffd3938"
   integrity sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==
