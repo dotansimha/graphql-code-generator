@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.12
+
+### Patch Changes
+
+- 4266a15f: Allow getDocumentNodeSignature to control the entire generation flow of the typed documents
+
 ## 1.17.11
 
 ### Patch Changes
