@@ -6,12 +6,12 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Component.
-   * @default true
+   * @default false
    */
   withComponent?: boolean;
   /**
    * @description Customized the output by enabling/disabling the generated React Hooks.
-   * @default false
+   * @default true
    *
    */
   withHooks?: boolean;
