@@ -9,7 +9,7 @@ jobs:
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: contains(github.actor, 'renovate') == false
+    if: contains(github.actor, 'dependabot') == false
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
