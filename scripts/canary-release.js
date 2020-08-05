@@ -31,11 +31,13 @@ async function updateVersions() {
   
   if (changesets.length === 0) {
     console.warn(`Unable to find any relevant package for canary publishing. Please make sure changesets exists!`);
+    process.exit(1);
   } else {
     const releasePlan = assembleReleasePlan(changesets, packages, config, [], false);
     
     if (releasePlan.releases.length === 0) {
       console.warn(`Unable to find any relevant package for canary releasing. Please make sure changesets exists!`);
+      process.exit(1);
     } else {
       for (const release of releasePlan.releases) {
         if (release.type !== 'none') {
@@ -43,16 +45,16 @@ async function updateVersions() {
         }
       }
 
-      await applyReleasePlan(
-        releasePlan,
-        packages,
-        {
-          ...config,
-          commit: false,
-        },
-        false,
-        true
-      );
+      // await applyReleasePlan(
+      //   releasePlan,
+      //   packages,
+      //   {
+      //     ...config,
+      //     commit: false,
+      //   },
+      //   false,
+      //   true
+      // );
     }
   }
 }
