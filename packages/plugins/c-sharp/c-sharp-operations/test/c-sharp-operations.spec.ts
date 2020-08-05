@@ -74,6 +74,27 @@ describe('C# Operations', () => {
       expect(result.content).toContain('public class FindYouGQL {');
     });
 
+    it('Should escape string constants in c#', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me(a: String!): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me(a: "test")
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        {},
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toContain('me(a: ""test"")');
+    });
+
     it('Should generate a document string containing original query operation', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {

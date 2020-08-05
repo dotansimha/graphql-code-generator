@@ -131,7 +131,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     const fragments = this._transformFragments(node);
     const doc = this._prepareDocument([print(node), this._includeFragments(fragments)].join('\n'));
 
-    return doc.replace(/"/g, '"""');
+    return doc.replace(/"/g, '""');
   }
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
