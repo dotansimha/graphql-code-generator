@@ -920,22 +920,20 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${
-            this.convertName(
-              parentName,
-              {
-                useTypesPrefix: true,
-                useTypesSuffix: true,
-              },
-              true
-            ) +
+        ? `${this.convertName(
+            parentName,
+            {
+              useTypesPrefix: true,
+              useTypesSuffix: true,
+            },
+            true
+          ) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
-              appendArgsSuffix: true,
               useTypesPrefix: false,
               useTypesSuffix: false,
-            })
-          }`
+            }) +
+            'Args'}`
         : null;
 
       if (argsType !== null) {

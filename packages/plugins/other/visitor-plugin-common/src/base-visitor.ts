@@ -15,7 +15,6 @@ import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphq
 import { ImportDeclaration, FragmentImport } from './imports';
 
 export interface BaseVisitorConvertOptions {
-  appendArgsSuffix?: boolean;
   useTypesPrefix?: boolean;
   useTypesSuffix?: boolean;
 }
@@ -210,10 +209,6 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     }
 
     convertedName += this.config.convert(node, options);
-
-    if (options && options.appendArgsSuffix) {
-      convertedName += 'Args';
-    }
 
     if (useTypesSuffix) {
       convertedName += this.config.typesSuffix;

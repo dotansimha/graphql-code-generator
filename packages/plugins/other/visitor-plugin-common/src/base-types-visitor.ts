@@ -533,10 +533,10 @@ export class BaseTypesVisitor<
           node.name.value +
           (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
-            appendArgsSuffix: true,
             useTypesPrefix: false,
             useTypesSuffix: false,
-          });
+          }) +
+          'Args';
 
         return this.getArgumentsObjectTypeDefinition(node, name, field);
       })
