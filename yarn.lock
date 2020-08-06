@@ -1944,21 +1944,12 @@
     "@graphql-tools/load" "^6.0.0"
     tslib "^2.0.0"
 
-"@graphql-tools/apollo-engine-loader@6.0.15":
-  version "6.0.15"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.0.15.tgz#05ceca3ba024b5fbd4ac4366cf0cfc88e0fd7ef4"
-  integrity sha512-9SwaZZPr03dZh3rqmpw6GG2S+SzSuBCfYgx/cY37TPPB+wTJjBzZSzRGrC8hsUlbGLF7Qzq7rFYxfl0zGYpxXg==
+"@graphql-tools/apollo-engine-loader@6.0.16", "@graphql-tools/apollo-engine-loader@^6.0.16":
+  version "6.0.16"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.0.16.tgz#ff2d4fba293b1aa150f6294c9d7b4e29aa27e6d9"
+  integrity sha512-MSiI3AVRPrO3fNA/uIWe6zM1IPUXipobEKYLd3C1bQiFCof+r3oAsfrpQyb5543C1wL5VgWxx3CPKaj26Pj2dA==
   dependencies:
-    "@graphql-tools/utils" "6.0.15"
-    cross-fetch "3.0.5"
-    tslib "~2.0.0"
-
-"@graphql-tools/apollo-engine-loader@^6.0.0":
-  version "6.0.11"
-  resolved "https://registry.npmjs.org/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.0.11.tgz#3df54ace40918e7a96f7ac13ea8e570a0319c1a9"
-  integrity sha512-M2mgq/6DjzxEfkIi32ypIg9xHGBxzJfuCKh8Wi6Qo0Jl16e3IC3WNI9yeHezHNAEq1/OUTxKVcfvGhaNZ4LVLQ==
-  dependencies:
-    "@graphql-tools/utils" "6.0.11"
+    "@graphql-tools/utils" "6.0.16"
     cross-fetch "3.0.5"
     tslib "~2.0.0"
 
@@ -2239,7 +2230,7 @@
     valid-url "1.0.9"
     websocket "1.0.31"
 
-"@graphql-tools/utils@6.0.11", "@graphql-tools/utils@^6.0.0":
+"@graphql-tools/utils@6.0.11":
   version "6.0.11"
   resolved "https://registry.npmjs.org/@graphql-tools/utils/-/utils-6.0.11.tgz#c394201c992dbc8f3644b9ad71411fdd55832f2d"
   integrity sha512-BK6HO73FbB/Ufac6XX5H0O2q4tEZi//HaQ7DgmHFoda53GZSZ/ZckJ59wh/tUvHykEaSFUSmMBVQxKbXBhGhyg==
@@ -2251,6 +2242,14 @@
   version "6.0.15"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.15.tgz#6d54d383285bea3c22797531933b62a408e78e49"
   integrity sha512-VG5cMLPgh9RDLGHamGpXVnBrNw7bZGT46LrxK7IIqDZI9H0GPsRCo8+p+CfDkw0IlDiEECb624WVCpm9IYNecA==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.1"
+    camel-case "4.1.1"
+
+"@graphql-tools/utils@6.0.16", "@graphql-tools/utils@^6.0.0":
+  version "6.0.16"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.16.tgz#f36cadb2638771ff111270711b30daa31be5d6d6"
+  integrity sha512-WSYVqiIpda0CzXgHuKBJkqE0zZs4aruoVxn5KVMmqDoZbPVJ4f/pATVgKYyelOlBlx5gOfs8PCFpWcQhDB39LA==
   dependencies:
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"

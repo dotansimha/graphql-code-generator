@@ -45,7 +45,7 @@
     "@apollo/client": "3.1.2",
     "@babel/preset-typescript": "7.10.4",
     "@changesets/cli": "2.9.2",
-    "@graphql-tools/apollo-engine-loader": "6.0.15",
+    "@graphql-tools/apollo-engine-loader": "6.0.16",
     "@graphql-tools/code-file-loader": "6.0.15",
     "@graphql-tools/git-loader": "6.0.15",
     "@graphql-tools/github-loader": "6.0.15",

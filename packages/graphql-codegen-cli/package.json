@@ -42,7 +42,7 @@
   "dependencies": {
     "@graphql-codegen/core": "1.17.7",
     "@graphql-codegen/plugin-helpers": "^1.17.7",
-    "@graphql-tools/apollo-engine-loader": "^6.0.0",
+    "@graphql-tools/apollo-engine-loader": "^6.0.16",
     "@graphql-tools/code-file-loader": "^6.0.0",
     "@graphql-tools/git-loader": "^6.0.0",
     "@graphql-tools/github-loader": "^6.0.0",
