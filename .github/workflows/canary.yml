@@ -9,7 +9,7 @@ jobs:
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: contains(github.actor, 'dependabot') == false && github.repository == 'dotansimha/graphql-code-generator'
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
