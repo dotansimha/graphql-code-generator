@@ -51,6 +51,8 @@ export interface ParsedResolversConfig extends ParsedConfig {
   mappers: {
     [typeName: string]: ParsedMapper;
   };
+  applyMappersOverInterfaces: boolean;
+  applyMappersOverEnums: boolean;
   defaultMapper: ParsedMapper | null;
   avoidOptionals: boolean;
   addUnderscoreToArgsType: boolean;
@@ -164,6 +166,34 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   mappers?: { [typeName: string]: string };
+  /**
+   * @description Replace GraphQL type with custom mapper, even if it's an interface.
+   *
+   * @exampleMarkdown
+   * ## Allow interfaces to be mapped over
+   * ```yml
+   * plugins
+   *   config:
+   *     mappers:
+   *       SomeInterface: ./my-models#SomeInterface
+   *     applyMappersOverInterfaces: true
+   * ```
+   */
+  applyMappersOverInterfaces?: boolean;
+  /**
+   * @description Replace GraphQL type with custom mapper, even if it's an enum.
+   *
+   * @exampleMarkdown
+   * ## Allow enums to be mapped over
+   * ```yml
+   * plugins
+   *   config:
+   *     mappers:
+   *       SomeEnum: ./my-models#SomeEnum
+   *     applyMappersOverEnums: true
+   * ```
+   */
+  applyMappersOverEnums?: boolean;
   /**
    * @description Allow you to set the default mapper when it's not being override by `mappers` or generics.
    * You can specify a type name, or specify a string in `module#type` or `module#namespace#type` format.
@@ -344,6 +374,8 @@ export class BaseResolversVisitor<
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
+      applyMappersOverInterfaces: getConfigValue(rawConfig.applyMappersOverInterfaces, false),
+      applyMappersOverEnums: getConfigValue(rawConfig.applyMappersOverEnums, false),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       ...(additionalConfig || {}),
     } as TPluginConfig);
@@ -463,36 +495,49 @@ export class BaseResolversVisitor<
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
+      const hasMapper = !!(isMapped && this.config.mappers[typeName].type);
+
+      const applyMapper = () => {
+        this.markMapperAsUsed(typeName);
+        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
+      };
 
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
       } else if (isInterfaceType(schemaType)) {
-        const allTypesMap = this._schema.getTypeMap();
-        const implementingTypes: string[] = [];
+        if (hasMapper && this.config.applyMappersOverInterfaces) {
+          applyMapper();
+        } else {
+          const allTypesMap = this._schema.getTypeMap();
+          const implementingTypes: string[] = [];
 
-        for (const graphqlType of Object.values(allTypesMap)) {
-          if (graphqlType instanceof GraphQLObjectType) {
-            const allInterfaces = graphqlType.getInterfaces();
+          for (const graphqlType of Object.values(allTypesMap)) {
+            if (graphqlType instanceof GraphQLObjectType) {
+              const allInterfaces = graphqlType.getInterfaces();
 
-            if (allInterfaces.some(int => int.name === schemaType.name)) {
-              implementingTypes.push(graphqlType.name);
+              if (allInterfaces.some(int => int.name === schemaType.name)) {
+                implementingTypes.push(graphqlType.name);
+              }
             }
           }
+
+          const possibleTypes = implementingTypes.map(name => getTypeToUse(name)).join(' | ') || 'never';
+
+          prev[typeName] = possibleTypes;
+          return prev;
         }
-
-        const possibleTypes = implementingTypes.map(name => getTypeToUse(name)).join(' | ') || 'never';
-
-        prev[typeName] = possibleTypes;
-        return prev;
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-        prev[typeName] =
-          this.config.enumValues[typeName].sourceIdentifier ||
-          this.convertName(this.config.enumValues[typeName].typeIdentifier);
-      } else if (isMapped && this.config.mappers[typeName].type) {
-        this.markMapperAsUsed(typeName);
-        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
+        if (hasMapper && this.config.applyMappersOverEnums) {
+          applyMapper();
+        } else {
+          prev[typeName] =
+            this.config.enumValues[typeName].sourceIdentifier ||
+            this.convertName(this.config.enumValues[typeName].typeIdentifier);
+        }
+      } else if (hasMapper) {
+        applyMapper();
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
