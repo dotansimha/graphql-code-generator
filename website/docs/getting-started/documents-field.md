@@ -47,7 +47,7 @@ You can tell it to find documents in TypeScript files:
 
 ```yml
 schema: http://server1.com/graphql
-documents: "src/**/*.{ts,tsx}"
+documents: "src/**/!(*.d).{ts,tsx}"
 ```
 
 ## Available Formats
