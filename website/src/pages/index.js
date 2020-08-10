@@ -19,7 +19,7 @@ const features = [
     imageUrl: 'img/gear.svg',
     description: (
       <>
-        Generate code from of your GraphQL schema and GraphQL operations with a single function call regardless of your
+        Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your
         environment or code format.
       </>
     ),
@@ -49,7 +49,7 @@ const features = [
     imageUrl: 'img/more-options.svg',
     description: (
       <>
-        You can generate you resolvers signature, dump schemas, types models, query builders, React Hooks, Angular
+        You can generate your resolvers' signatures, dump schemas, model types, query builders, React Hooks, Angular
         Services, and much more!
       </>
     ),
