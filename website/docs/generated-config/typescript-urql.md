@@ -17,7 +17,7 @@ This plugin generates `urql` (https://github.com/FormidableLabs/urql) components
 ### `withComponent`
 
 type: `boolean`
-default: `true`
+default: `false`
 
 Customized the output by enabling/disabling the generated Component.
 
@@ -25,7 +25,7 @@ Customized the output by enabling/disabling the generated Component.
 ### `withHooks`
 
 type: `boolean`
-default: `false`
+default: `true`
 
 Customized the output by enabling/disabling the generated React Hooks.
 
@@ -265,6 +265,20 @@ Prefixes all the generated types.
 ```yml
 config:
   typesPrefix: I
+```
+
+### `typesSuffix`
+
+type: `string`
+default: ``
+
+Suffixes all the generated types.
+
+#### Usage Examples
+
+```yml
+config:
+  typesSuffix: I
 ```
 
 ### `skipTypename`

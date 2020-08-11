@@ -20,6 +20,20 @@ To shed some more light regards this template, it's recommended to go through th
 
 ## API Reference
 
+### `apolloAngularVersion`
+
+type: `number`
+default: `2`
+
+Version of `apollo-angular` package
+
+#### Usage Examples
+
+```yml
+config:
+  apolloAngularVersion: 1
+```
+
 ### `ngModule`
 
 type: `string`
@@ -70,6 +84,19 @@ Defined the global value of `serviceProvidedInRoot`.
 ```yml
 config:
   serviceProvidedInRoot: false
+```
+
+### `serviceProvidedIn`
+
+type: `string`
+
+Define the Injector of the SDK class.
+
+#### Usage Examples
+
+```yml
+config:
+  serviceProvidedIn: ./path/to/module#MyModule
 ```
 
 ### `sdkClass`
@@ -355,6 +382,20 @@ Prefixes all the generated types.
 ```yml
 config:
   typesPrefix: I
+```
+
+### `typesSuffix`
+
+type: `string`
+default: ``
+
+Suffixes all the generated types.
+
+#### Usage Examples
+
+```yml
+config:
+  typesSuffix: I
 ```
 
 ### `skipTypename`
