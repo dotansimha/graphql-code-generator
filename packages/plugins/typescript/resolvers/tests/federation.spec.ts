@@ -139,8 +139,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
 
       extend type Address {
-        street: String!
-        zip: Int!
+        street: String! @external
+        zip: Int! @external
       }
     `;
 
@@ -167,6 +167,39 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
 
       type User @key(fields: "name { first last }") {
+        name: Name! @external
+        username: String
+      }
+
+      type Name {
+        first: String! @external
+        last: String! @external
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+      };
+    `);
+  });
+
+  it('should not apply key/requires fields restriction for base federated types', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      type User @key(fields: "name { first last }") {
         name: Name!
         username: String
       }
@@ -186,9 +219,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
-        name?: Resolver<ResolversTypes['Name'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+        name?: Resolver<ResolversTypes['Name'], ParentType, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType>;
       };
     `);
