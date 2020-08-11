@@ -2,7 +2,6 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
   review: Types.ReviewInput;

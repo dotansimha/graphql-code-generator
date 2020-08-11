@@ -4,7 +4,6 @@ import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDe
 import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
-
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;

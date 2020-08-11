@@ -19,11 +19,11 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   }
 
   if (!content) {
-    throw Error(`Configuration provided for 'add' plugin is invalid`);
+    throw Error(`Configuration provided for 'add' plugin is invalid: "content" is missing!`);
   }
 
   return {
-    content: '',
+    content: null,
     [placement]: Array.isArray(content) ? content : [content],
   };
 };
