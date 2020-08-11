@@ -326,12 +326,11 @@ describe('React Apollo', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Apollo from '@apollo/client';`);
-      expect(content.prepend).toContain(`const gql = Apollo.gql;`);
+      expect(content.prepend).toContain(`import { gql } from '@apollo/client';`);
       expect(content.prepend).toContain(`import * as ApolloReactComponents from '@apollo/client/react/components';`);
       expect(content.prepend).toContain(`import * as React from 'react';`);
 
       // To make sure all imports are unified correctly under Apollo namespaced import
-      expect(content.prepend).not.toContain(`import { gql } from '@apollo/client';`);
       expect(content.content).toContain(` gql\``);
       await validateTypeScript(content, schema, docs, {});
     });
