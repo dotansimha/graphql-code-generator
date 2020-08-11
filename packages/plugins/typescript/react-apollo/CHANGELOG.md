@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.0.6
+
+### Patch Changes
+
+- 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
+- 1d7c6432: Bump versions of @graphql-tools/ packages to fix issues with loading schemas and SDL comments
+- ac067ea0: Improve output reliability by using separate import for gql tag, ensuring it will be there also for fragments when presets are used. This will bring back the separate import for gql tag (and remove the aliased one)
+- Updated dependencies [1d7c6432]
+- Updated dependencies [1d7c6432]
+  - @graphql-codegen/visitor-plugin-common@1.17.13
+  - @graphql-codegen/plugin-helpers@1.17.8
+
 ## 2.0.5
 
 ### Patch Changes
