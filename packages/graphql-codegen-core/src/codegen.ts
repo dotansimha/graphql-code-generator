@@ -124,13 +124,17 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       } else if (isComplexPluginOutput(result)) {
         if (result.append && result.append.length > 0) {
           for (const item of result.append) {
-            append.add(item);
+            if (item) {
+              append.add(item);
+            }
           }
         }
 
         if (result.prepend && result.prepend.length > 0) {
           for (const item of result.prepend) {
-            prepend.add(item);
+            if (item) {
+              prepend.add(item);
+            }
           }
         }
         return result.content || '';
@@ -140,7 +144,9 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     })
   );
 
-  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...Array.from(append.values())].join('\n');
+  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...Array.from(append.values())]
+    .filter(Boolean)
+    .join('\n');
 }
 
 function resolveCompareValue(a: string) {

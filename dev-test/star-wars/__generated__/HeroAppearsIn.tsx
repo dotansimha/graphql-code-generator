@@ -1,8 +1,7 @@
 import * as Types from '../types.d';
 
+import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const gql = Apollo.gql;
-
 export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = { __typename?: 'Query' } & {

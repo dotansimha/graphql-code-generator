@@ -4,6 +4,7 @@ import {
   DocumentMode,
   LoadedFragment,
   indentMultiline,
+  getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
@@ -66,8 +67,12 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
-        apolloAngularPackage: rawConfig.apolloAngularPackage || 'apollo-angular',
-        apolloAngularVersion: rawConfig.apolloAngularVersion || 2,
+        apolloAngularPackage: getConfigValue(rawConfig.apolloAngularPackage, 'apollo-angular'),
+        apolloAngularVersion: getConfigValue(rawConfig.apolloAngularVersion, 2),
+        gqlImport: getConfigValue(
+          rawConfig.gqlImport,
+          !rawConfig.apolloAngularVersion || rawConfig.apolloAngularVersion === 2 ? `apollo-angular#gql` : null
+        ),
       },
       documents
     );
