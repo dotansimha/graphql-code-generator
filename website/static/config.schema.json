@@ -240,6 +240,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -380,6 +385,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -432,6 +442,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -566,6 +581,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -716,6 +736,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -862,6 +887,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -910,6 +940,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -974,6 +1009,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -1129,6 +1169,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -1150,6 +1195,11 @@
       "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12",
       "type": "object",
       "properties": {
+        "apolloAngularVersion": {
+          "description": "Version of `apollo-angular` package",
+          "default": 2,
+          "type": "number"
+        },
         "ngModule": {
           "description": "Allows to define `ngModule` as part of the plugin's config so it's globally available.",
           "type": "string"
@@ -1165,6 +1215,10 @@
         "serviceProvidedInRoot": {
           "description": "Defined the global value of `serviceProvidedInRoot`.",
           "type": "boolean"
+        },
+        "serviceProvidedIn": {
+          "description": "Define the Injector of the SDK class.",
+          "type": "string"
         },
         "sdkClass": {
           "description": "Set to `true` in order to generate a SDK service class that uses all generated services.",
@@ -1280,6 +1334,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -1303,12 +1362,12 @@
       "properties": {
         "withComponent": {
           "description": "Customized the output by enabling/disabling the generated Component.",
-          "default": true,
+          "default": false,
           "type": "boolean"
         },
         "withHooks": {
           "description": "Customized the output by enabling/disabling the generated React Hooks.",
-          "default": false,
+          "default": true,
           "type": "boolean"
         },
         "urqlImportFrom": {
@@ -1403,6 +1462,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -1586,6 +1650,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -1710,6 +1779,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -1823,6 +1897,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -1955,6 +2034,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -2003,6 +2087,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -2065,6 +2154,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -2115,6 +2209,11 @@
         "typesPrefix": {
           "default": "",
           "description": "Prefixes all the generated types.",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
           "type": "string"
         },
         "skipTypename": {
@@ -2327,6 +2426,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -2452,6 +2556,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",
@@ -2521,6 +2630,9 @@
           "$ref": "#/definitions/Types.UrlSchemaWithOptions"
         },
         {
+          "$ref": "#/definitions/Types.LocalSchemaPathWithOptions"
+        },
+        {
           "type": "array",
           "items": {
             "anyOf": [
@@ -2532,6 +2644,9 @@
               },
               {
                 "$ref": "#/definitions/Types.UrlSchemaWithOptions"
+              },
+              {
+                "$ref": "#/definitions/Types.LocalSchemaPathWithOptions"
               },
               {
                 "type": "string"
@@ -2611,6 +2726,59 @@
         "method": {
           "description": "HTTP Method to use, either POST (default) or GET.",
           "type": "string"
+        }
+      }
+    },
+    "Types.LocalSchemaPathWithOptions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.LocalSchemaPathOptions"
+      }
+    },
+    "Types.LocalSchemaPathOptions": {
+      "additionalProperties": false,
+      "description": "Loads a schema a local file or files, with customized options for parsing/loading.",
+      "type": "object",
+      "properties": {
+        "skipGraphQLImport": {
+          "description": "Skips checks for graphql-import syntax and loads the file as-is, without imports support.",
+          "default": true,
+          "type": "boolean"
+        },
+        "commentDescriptions": {
+          "description": "Converts all GraphQL comments (`#` sign) to descriptions during the parse phase, to make it available\nfor plugins later.",
+          "default": false,
+          "type": "boolean"
+        },
+        "assumeValid": {
+          "description": "When building a schema from a GraphQL service's introspection result, it\nmight be safe to assume the schema is valid. Set to true to assume the\nproduced schema is valid.",
+          "default": false,
+          "type": "boolean"
+        },
+        "assumeValidSDL": {
+          "description": "Set to true to assume the SDL is valid.",
+          "default": false,
+          "type": "boolean"
+        },
+        "noLocation": {
+          "description": "By default, the parser creates AST nodes that know the location\nin the source that they correspond to. This configuration flag\ndisables that behavior for performance or testing.",
+          "default": false,
+          "type": "boolean"
+        },
+        "allowLegacySDLEmptyFields": {
+          "description": "If enabled, the parser will parse empty fields sets in the Schema\nDefinition Language. Otherwise, the parser will follow the current\nspecification.\n\nThis option is provided to ease adoption of the final SDL specification\nand will be removed in v16.",
+          "default": false,
+          "type": "boolean"
+        },
+        "allowLegacySDLImplementsInterfaces": {
+          "description": "If enabled, the parser will parse implemented interfaces with no `&`\ncharacter between each interface. Otherwise, the parser will follow the\ncurrent specification.\n\nThis option is provided to ease adoption of the final SDL specification\nand will be removed in v16.",
+          "default": false,
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "EXPERIMENTAL:\n\nIf enabled, the parser will understand and parse variable definitions\ncontained in a fragment definition. They'll be represented in the\n`variableDefinitions` field of the FragmentDefinitionNode.\n\nThe syntax is identical to normal, query-defined variables. For example:\n\n   fragment A($var: Boolean = false) on T  {\n     ...\n   }\n\nNote: this feature is experimental and may change or be removed in the\nfuture.",
+          "default": false,
+          "type": "boolean"
         }
       }
     },

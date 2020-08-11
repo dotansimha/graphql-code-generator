@@ -177,6 +177,20 @@ config:
   typesPrefix: I
 ```
 
+### `typesSuffix`
+
+type: `string`
+default: ``
+
+Suffixes all the generated types.
+
+#### Usage Examples
+
+```yml
+config:
+  typesSuffix: I
+```
+
 ### `skipTypename`
 
 type: `boolean`
