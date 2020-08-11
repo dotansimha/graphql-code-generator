@@ -2202,6 +2202,11 @@
           "description": "Prefixes all the generated types.",
           "type": "string"
         },
+        "typesSuffix": {
+          "default": "",
+          "description": "Suffixes all the generated types.",
+          "type": "string"
+        },
         "skipTypename": {
           "default": false,
           "description": "Does not add __typename to the generated types, unless it was specified in the selection set.",

@@ -27,6 +27,33 @@ export type TMutationFooArgs = {|
 "
 `;
 
+exports[`Flow Plugin Arguments Should add custom suffix for mutation arguments 1`] = `
+"/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {|
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+|};
+
+export type InputT = {|
+  name?: ?$ElementType<Scalars, 'String'>,
+|};
+
+export type MutationT = {|
+  __typename?: 'Mutation',
+  foo?: ?$ElementType<Scalars, 'String'>,
+|};
+
+
+export type MutationFooArgsT = {|
+  id?: ?$ElementType<Scalars, 'String'>,
+  input?: ?InputT,
+|};
+"
+`;
+
 exports[`Flow Plugin Arguments Should generate correctly types for field arguments - with basic fields 1`] = `
 "/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {|

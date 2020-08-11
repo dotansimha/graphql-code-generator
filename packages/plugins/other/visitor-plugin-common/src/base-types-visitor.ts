@@ -534,6 +534,7 @@ export class BaseTypesVisitor<
           (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
+            useTypesSuffix: false,
           }) +
           'Args';
 
