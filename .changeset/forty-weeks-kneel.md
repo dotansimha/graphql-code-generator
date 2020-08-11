@@ -7,7 +7,6 @@
 '@graphql-codegen/typescript-mongodb': patch
 '@graphql-codegen/typescript-resolvers': patch
 '@graphql-codegen/plugin-helpers': patch
-'@graphql-codegen/website': patch
 '@graphql-cli/codegen': patch
 '@graphql-codegen/c-sharp': patch
 '@graphql-codegen/c-sharp-operations': patch
@@ -43,7 +42,6 @@
 '@graphql-codegen/import-types-preset': patch
 '@graphql-codegen/near-operation-file-preset': patch
 '@graphql-codegen/config-schema': patch
-'@graphql-codegen/testing': patch
 ---
 
 Bump all packages to allow "^" in deps and fix compatibility issues
