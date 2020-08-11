@@ -36,7 +36,7 @@ const createDocBlock = (lines: Array<string>) => {
 
 const createDescriptionBlock = (nodeWithDesc: any | { description?: StringValueNode }): string => {
   if (nodeWithDesc?.description?.value) {
-    return `@description ${nodeWithDesc.description.value}`;
+    return nodeWithDesc.description.value;
   }
 
   return '';
@@ -58,8 +58,8 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         const typedNode = node as { name: string; fields: Array<string> };
 
         return createDocBlock([
-          `@typedef {Object} ${typedNode.name}`,
           createDescriptionBlock(node),
+          `@typedef {Object} ${typedNode.name}`,
           ...typedNode.fields,
         ]);
       },
@@ -69,8 +69,8 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         const typedNode = node as { name: string; fields: Array<string> };
 
         return createDocBlock([
-          `@typedef {Object} ${typedNode.name}`,
           createDescriptionBlock(node),
+          `@typedef {Object} ${typedNode.name}`,
           ...typedNode.fields,
         ]);
       },
@@ -80,8 +80,8 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         const typedNode = node as { name: string; fields: Array<string> };
 
         return createDocBlock([
-          `@typedef {Object} ${typedNode.name}`,
           createDescriptionBlock(node),
+          `@typedef {Object} ${typedNode.name}`,
           ...typedNode.fields,
         ]);
       },
@@ -89,7 +89,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     UnionTypeDefinition: {
       leave(node) {
         if (node.types !== undefined) {
-          return createDocBlock([`@typedef {(${node.types.join('|')})} ${node.name}`, createDescriptionBlock(node)]);
+          return createDocBlock([createDescriptionBlock(node), `@typedef {(${node.types.join('|')})} ${node.name}`]);
         }
 
         return node;
@@ -177,7 +177,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     },
     ScalarTypeDefinition: {
       leave(node) {
-        return createDocBlock([`@typedef {*} ${node.name}`, createDescriptionBlock(node)]);
+        return createDocBlock([createDescriptionBlock(node), `@typedef {*} ${node.name}`]);
       },
     },
     EnumTypeDefinition: {
@@ -187,7 +187,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         /** If for some reason the enum does not contain any values we fallback to "any" or "*" */
         const valueType = values ? `(${values})` : '*';
 
-        return createDocBlock([`@typedef {${valueType}} ${node.name}`, createDescriptionBlock(node)]);
+        return createDocBlock([createDescriptionBlock(node), `@typedef {${valueType}} ${node.name}`]);
       },
     },
     OperationDefinition: {
