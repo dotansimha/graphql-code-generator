@@ -26,12 +26,12 @@ Then we can install GraphQL Code Generator using `yarn` (or `npm`):
 :::
 
 :::caution Global Installation
-Please avoid installing `graphql`, `@graphql-codegen/cli` and it's plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
+Please avoid installing `graphql`, `@graphql-codegen/cli` and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
 :::
 
 ## Initialization Wizard
 
-GraphQL Code Generator lets you setup everything by simply running the following command:
+GraphQL Code Generator lets you set up everything by simply running the following command:
 
 :::shell With `yarn`
     yarn graphql-codegen init
@@ -41,7 +41,7 @@ GraphQL Code Generator lets you setup everything by simply running the following
     npx graphql-codegen init
 :::
 
-Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to generated your files to and a lot more.
+Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
 
 If you don't want to use the wizard, we've got you covered, just continue reading the next sections.
 
@@ -67,7 +67,15 @@ Although this can be used directly, it's recommended to add the code generation 
 }
 ```
 
-This will simplify your usage, and you'll be able to run the codegen with the following command:
+This will simplify its usage, and you'll be able to run the codegen with the following command:
+
+:::shell With `yarn`
+    yarn generate
+:::
+
+:::shell With `npm`
+    npm run generate
+:::
 
 GraphQL Code Generator looks for `codegen.yml` and `codegen.json` files by default. An example can be seen below:
 
@@ -81,7 +89,7 @@ generates:
 
 ## Running the codegen
 
-By running the following command the GraphQL schema will be fetched from the route endpoint and the typescript definitions will be generated in the specified destination:
+By running the following command, the GraphQL schema will be fetched from the route endpoint and the typescript definitions will be generated in the specified destination:
 
 :::shell With `yarn`
     yarn generate
