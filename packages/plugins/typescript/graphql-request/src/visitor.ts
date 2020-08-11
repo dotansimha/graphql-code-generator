@@ -1,14 +1,13 @@
 import {
-  ClientSideBaseVisitor,
   ClientSideBasePluginConfig,
-  LoadedFragment,
+  ClientSideBaseVisitor,
+  DocumentMode,
   getConfigValue,
   indentMultiline,
-  DocumentMode,
+  LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
-
 import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
@@ -47,7 +46,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     }
 
     if (this.config.rawRequest) {
-      this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/src/types';`);
+      this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
     }
   }
 
