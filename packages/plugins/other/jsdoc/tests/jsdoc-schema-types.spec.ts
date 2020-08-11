@@ -6,30 +6,30 @@ describe('JSDoc Plugin', () => {
   describe('description', () => {
     it('Should work with described schemas', async () => {
       const schema = buildSchema(/* Graphql */ `
-        """ type desc """
+        """type desc"""
         type Foo {
-          """ type field desc """
+          """type field desc"""
             foo: Int!
         }
 
-        """ input desc """
+        """input desc"""
         input FooInput {
-            """ input field desc """
+            """input field desc"""
             foo: Int!
         }
 
-        """ enum desc """
+        """enum desc"""
         enum Test {
             A
             B
-            """ enum value desc """
+            """enum value desc"""
             C
         }
 
-        """ scalar desc """
+        """scalar desc"""
         scalar Date
 
-        """ interface desc """
+        """interface desc"""
         interface Node {
           """ interface field desc """
           id: ID!
@@ -46,26 +46,26 @@ describe('JSDoc Plugin', () => {
       const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`/**
+      * enum desc
       * @typedef {("A"|"B"|"C")} Test
-      * @description  enum desc
       */`);
       expect(result).toBeSimilarStringTo(`/**
-      * @typedef {(Foo)} TestU
-      * @description union desc
+      * union desc
       * multiline test
+      * @typedef {(Foo)} TestU
       */`);
       expect(result).toBeSimilarStringTo(`/**
+      * scalar desc 
       * @typedef {*} Date
-      * @description  scalar desc 
       */`);
       expect(result).toBeSimilarStringTo(`/**
+      * input desc 
       * @typedef {Object} FooInput
-      * @description  input desc 
       * @property {number} foo -  input field desc 
       */`);
       expect(result).toBeSimilarStringTo(`/**
+      * type desc 
       * @typedef {Object} Foo
-      * @description  type desc 
       * @property {number} foo -  type field desc 
       */`);
     });
