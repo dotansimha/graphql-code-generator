@@ -1,9 +1,9 @@
 import * as Types from '../types.d';
 
 import { HumanFieldsFragment } from './HumanFields';
+import { gql } from '@apollo/client';
 import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as Apollo from '@apollo/client';
-const gql = Apollo.gql;
 
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
