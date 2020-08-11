@@ -163,7 +163,12 @@ export class ApolloFederation {
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
   }) {
-    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType)) {
+    if (
+      this.enabled &&
+      isObjectType(parentType) &&
+      isFederationObjectType(parentType) &&
+      (isTypeExtension(parentType) || fieldNode.name.value === resolveReferenceFieldName)
+    ) {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
@@ -328,4 +333,16 @@ function getDirectivesByName(
   }
 
   return [];
+}
+
+/**
+ * Checks if the Object Type extends a federated type from a remote schema.
+ * Based on if any of its fields contain the `@external` directive
+ * @param node Type
+ */
+function isTypeExtension(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
+  const definition = isObjectType(node)
+    ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode)
+    : node;
+  return definition.fields?.some(field => getDirectivesByName('external', field).length);
 }
