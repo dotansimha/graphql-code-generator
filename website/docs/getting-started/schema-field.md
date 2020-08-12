@@ -239,12 +239,46 @@ module.exports = buildSchema(/* GraphQL */ `
 
 > You can also import from TypeScript files, but don't forget to specify [require field](require-field.md).
 
-- ### String
+### String
 
 You can specify your schema directly as an AST string in your config file. It's very useful for testing.
 
 ```yml
 schema: 'type MyType { foo: String }    type Query { myType: MyType }'
+```
+
+### GitHub
+
+You can load your schema file from a remote GitHub file, using the following syntax:
+
+```yml
+schema: github:user/repo#branchName:path/to/file.graphql
+```
+
+> You can load from a JSON file, `.graphql` file or from a code file containing `gql` tag syntax.
+
+### Git
+
+You can load your schema file from a Git repository, using the following syntax:
+
+```yml
+schema: git:branch:path/to/file.graphql
+```
+
+> You can load from a JSON file, `.graphql` file or from a code file containing `gql` tag syntax.
+
+
+### Apollo Engine
+
+You can load your schema from Apollo Engine, with the following syntax:
+
+```yml
+schema:
+  - apollo-engine: 
+      engine:
+        apiKey: APOLLO_ENGINE_KEY_ID
+      graph: GRAPH_ID
+      variant: current
 ```
 
 ## Custom Schema Loader
