@@ -2750,11 +2750,6 @@
           "default": false,
           "type": "boolean"
         },
-        "assumeValid": {
-          "description": "When building a schema from a GraphQL service's introspection result, it\nmight be safe to assume the schema is valid. Set to true to assume the\nproduced schema is valid.",
-          "default": false,
-          "type": "boolean"
-        },
         "assumeValidSDL": {
           "description": "Set to true to assume the SDL is valid.",
           "default": false,

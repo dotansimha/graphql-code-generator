@@ -57,13 +57,17 @@ generates:
 
 The following can be specified as a single value, or as an array with mixed values.
 
-- ### URL
+### URL
 
 You can specify a URL to load your `GraphQLSchema` from:
 
 ```yml
 schema: http://localhost:3000/graphql
 ```
+
+#### Supported Configuration
+
+##### `headers`
 
 You can also specify custom HTTP headers to be sent with the request:
 
@@ -74,7 +78,29 @@ schema:
         Authorization: YOUR-TOKEN-HERE
 ```
 
-- ### JSON
+> Note that spacing and indentation is very important in YAML, so please make sure it matches the examples above.
+
+##### `customFetch`
+
+You can specify a custom fetch function for the HTTP request, using the module name you wish to use:
+
+```yml
+schema:
+  - http://localhost:3000/graphql:
+      customFetch: 'my-custom-fetch'
+```
+
+##### `method`
+
+You can specify a HTTP method to use for the introspection query. default is `POST`.
+
+```yml
+schema:
+  - http://localhost:3000/graphql:
+      method: GET
+```
+
+### JSON
 
 You can point to a local `.json` file that contains [GraphQL Introspection](https://graphql.org/learn/introspection/) JSON.
 
@@ -82,7 +108,7 @@ You can point to a local `.json` file that contains [GraphQL Introspection](http
 schema: schema.json
 ```
 
-- ### `.graphql` file
+### Local `.graphql` files
 
 You can point to a single `.graphql` file that contains AST string of your schema:
 
@@ -90,25 +116,21 @@ You can point to a single `.graphql` file that contains AST string of your schem
 schema: schema.graphql
 ```
 
-> It also supports [`graphql-import`](https://github.com/prisma/graphql-import) syntax, so you can point to a single `schema.graphql` file that imports other files.
-
-- ### Glob Expression
-
-You can also point to multiple `.graphql` files, and the Code Generator will merge and build your GraphQL schema from those files.
+Or, you can point to multiple files using a glob expression (codegen will merge the schema files for you):
 
 ```yml
-schema: src/**/*.graphql
+schema: 'src/**/*.graphql'
 ```
 
 You can also specify multiple patterns:
 
 ```yml
 schema:
-  - src/dir1/**/*.graphql
-  - src/dir2/**/*.graphql
+  - 'src/dir1/**/*.graphql'
+  - 'src/dir2/**/*.graphql'
 ```
 
-And, you can specify files to exclude: 
+And, you can specify files to exclude/ignore, using the `!` sign: 
 
 ```yml
 schema:
@@ -118,7 +140,43 @@ schema:
 
 > All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
 
-Additionally, you can use code files and the codegen will try to extract the GraphQL schema from it:
+#### Supported Configuration
+
+##### `skipGraphQLImport`
+
+By default, codegen skips `graphql-import` in favor of loading all files using glob expressions.
+
+If you are using `graphql-import` syntax in your schema definitions, you can tell codegen to use those import statements:
+
+```yml
+schema:
+  - 'src/dir1/**/*.graphql':
+      skipGraphQLImport: false
+```
+
+##### `commentDescriptions`
+
+This will convert all deprecated form of Graphql comments (marked with `#`) into a GraphQL descriptions (marked with `"`) during the parsing phase.
+
+```yml
+schema:
+  - 'src/dir1/**/*.graphql':
+      commentDescriptions: true
+```
+
+##### `assumeValidSDL`
+
+Set to true to assume the SDL is valid, and skip any SDL syntax validations.
+
+```yml
+schema:
+  - 'src/dir1/**/*.graphql':
+      assumeValidSDL: true
+```
+
+### Code Files
+
+You can use code files and the codegen will try to extract the GraphQL schema from it, based on `gql` tag:
 
 ```yml
 schema: './src/**/*.ts'
@@ -126,15 +184,38 @@ schema: './src/**/*.ts'
 
 The codegen will try to load the file as an AST and look for explicit GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
 
+#### Supported Configuration
+
+##### `noRequire`
+
 You can disable the `require` if it causes errors for you (for example, because of different module system or missing deps):
 
 ```yml
 schema:
-  './src/**/*.ts':
-    noRequire: true
+  - './src/**/*.ts':
+      noRequire: true
 ```
 
-- ### JavaScript export
+##### `noPluck`
+
+You can disable the AST lookup phase, and tell codegen to skip and directly try to `require` each file:
+
+```yml
+schema:
+  - './src/**/*.ts':
+      noPluck: true
+```
+##### `assumeValid`
+
+Set this to `true` in order to tell codegen to skip AST validation.
+
+```yml
+schema:
+  - './src/**/*.ts':
+      assumeValid: true
+```
+
+### JavaScript export
 
 You can also specify a code file that exports your `GraphQLSchema` object as named export `schema` or as default export.
 

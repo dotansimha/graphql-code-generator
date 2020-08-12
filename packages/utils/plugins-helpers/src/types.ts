@@ -108,15 +108,6 @@ export namespace Types {
     commentDescriptions?: boolean;
 
     /**
-     * When building a schema from a GraphQL service's introspection result, it
-     * might be safe to assume the schema is valid. Set to true to assume the
-     * produced schema is valid.
-     *
-     * @default false
-     */
-    assumeValid?: boolean;
-
-    /**
      * Set to true to assume the SDL is valid.
      *
      * @default false

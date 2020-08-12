@@ -17,7 +17,7 @@ You can specify the `documents` field in your root level config:
 
 ```yml
 schema: http://localhost:3000/graphql
-documents: src/**/*.graphql
+documents: 'src/**/*.graphql'
 generates:
   ./src/types.ts:
     plugins:
@@ -33,7 +33,7 @@ You can also specify the `documents` field in your generated file config:
 schema: http://server1.com/graphql
 generates:
   ./src/types1.ts:
-    documents: src/**/*.graphql
+    documents: 'src/**/*.graphql'
     plugins:
       - typescript
       - typescript-operations
@@ -54,7 +54,7 @@ documents: "src/**/!(*.d).{ts,tsx}"
 
 The following can be specified as a single value or as an array with mixed values.
 
-- ### Filename
+- ### Local File
 
 You can specify a `string` to point to a single file:
 
@@ -72,7 +72,7 @@ documents:
 
 - ### Glob Expression
 
-You can specify a Glob expresion in order to load multiple files:
+You can specify a Glob expression in order to load multiple files:
 
 ```yml
 documents: './src/**/*.graphql'
