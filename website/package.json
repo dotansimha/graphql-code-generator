@@ -44,7 +44,7 @@
     "@graphql-codegen/java-apollo-android": "1.17.8",
     "@graphql-codegen/java-resolvers": "1.17.8",
     "@graphql-codegen/jsdoc": "1.17.8",
-    "@graphql-codegen/near-operation-file-preset": "1.17.9",
+    "@graphql-codegen/near-operation-file-preset": "1.17.10",
     "@graphql-codegen/schema-ast": "1.17.8",
     "@graphql-codegen/time": "2.0.1",
     "@graphql-codegen/typescript": "1.17.8",
