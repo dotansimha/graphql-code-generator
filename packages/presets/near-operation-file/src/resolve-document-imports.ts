@@ -1,4 +1,4 @@
-import { isUsingTypes, Types } from '@graphql-codegen/plugin-helpers';
+import { isUsingTypes, Types, DetailedError } from '@graphql-codegen/plugin-helpers';
 import {
   generateImportStatement,
   ImportSource,
@@ -57,33 +57,44 @@ export function resolveDocumentImports<T>(
   const { generateFilePath, schemaTypesSource, baseDir, typesImport } = importResolverOptions;
 
   return documents.map(documentFile => {
-    const generatedFilePath = generateFilePath(documentFile.location);
-    const importStatements: string[] = [];
-    const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
+    try {
+      const generatedFilePath = generateFilePath(documentFile.location);
+      const importStatements: string[] = [];
+      const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
 
-    if (
-      isUsingTypes(
-        documentFile.document,
-        externalFragments.map(m => m.name),
-        schemaObject
-      )
-    ) {
-      const schemaTypesImportStatement = generateImportStatement({
-        baseDir,
-        importSource: resolveImportSource(schemaTypesSource),
-        baseOutputDir,
-        outputPath: generatedFilePath,
-        typesImport,
-      });
-      importStatements.unshift(schemaTypesImportStatement);
+      if (
+        isUsingTypes(
+          documentFile.document,
+          externalFragments.map(m => m.name),
+          schemaObject
+        )
+      ) {
+        const schemaTypesImportStatement = generateImportStatement({
+          baseDir,
+          importSource: resolveImportSource(schemaTypesSource),
+          baseOutputDir,
+          outputPath: generatedFilePath,
+          typesImport,
+        });
+        importStatements.unshift(schemaTypesImportStatement);
+      }
+
+      return {
+        filename: generatedFilePath,
+        documents: [documentFile],
+        importStatements,
+        fragmentImports,
+        externalFragments,
+      };
+    } catch (e) {
+      throw new DetailedError(
+        `Unable to validate GraphQL document!`,
+        `
+  File ${documentFile.location} caused error:
+    ${e.message || e.toString()}
+        `,
+        documentFile.location
+      );
     }
-
-    return {
-      filename: generatedFilePath,
-      documents: [documentFile],
-      importStatements,
-      fragmentImports,
-      externalFragments,
-    };
   });
 }
