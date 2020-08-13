@@ -47,7 +47,15 @@ export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(value: string | number | NameNode): string {
+export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
+  if (skipNumericCheck) {
+    if (typeof value === 'number') {
+      return `${value}`;
+    } else {
+      return `'${value}'`;
+    }
+  }
+
   if (
     typeof value === 'number' ||
     (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
