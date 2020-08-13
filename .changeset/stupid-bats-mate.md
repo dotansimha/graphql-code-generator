@@ -3,4 +3,4 @@
 '@graphql-codegen/website': patch
 ---
 
-Added configuration option to allow interfaces to be mapped with custom types
+bugfix: allow to specify mappers for GraphQL `interface` and override the default behaviour. 
