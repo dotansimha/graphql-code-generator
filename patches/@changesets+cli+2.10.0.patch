@@ -7,7 +7,7 @@ index 5d48c11..e139e62 100644
  var isCI = !!(isCI$1 || process.env.GITHUB_ACTIONS);
  
 -const npmRequestLimit = pLimit(40);
-+const npmRequestLimit = pLimit(1);
++const npmRequestLimit = pLimit(3);
  
  function jsonParse(input) {
    try {
@@ -20,7 +20,7 @@ index 0fb53aa..1eb6886 100644
  var isCI = !(!isCI$1 && !process.env.GITHUB_ACTIONS);
  
 -const npmRequestLimit = pLimit(40);
-+const npmRequestLimit = pLimit(1);
++const npmRequestLimit = pLimit(3);
  
  function jsonParse(input) {
    try {
