@@ -90,7 +90,7 @@
     "graphql-tag": "2.11.0",
     "husky": "4.2.5",
     "java-ast": "0.3.0",
-    "jest": "26.2.2",
+    "jest": "26.4.0",
     "jest-docblock": "26.0.0",
     "jest-junit": "11.1.0",
     "lint-staged": "10.2.11",
