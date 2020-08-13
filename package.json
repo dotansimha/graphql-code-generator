@@ -100,7 +100,7 @@
     "react-dom": "16.13.1",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.5",
-    "ts-jest": "26.1.4",
+    "ts-jest": "26.2.0",
     "tslib": "2.0.0",
     "typescript": "3.9.7",
     "urql": "1.10.0",
