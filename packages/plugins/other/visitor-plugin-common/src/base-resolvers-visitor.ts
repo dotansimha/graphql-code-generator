@@ -468,6 +468,9 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
+      } else if (isMapped && this.config.mappers[typeName].type) {
+        this.markMapperAsUsed(typeName);
+        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
         const allTypesMap = this._schema.getTypeMap();
         const implementingTypes: string[] = [];
@@ -490,9 +493,6 @@ export class BaseResolversVisitor<
         prev[typeName] =
           this.config.enumValues[typeName].sourceIdentifier ||
           this.convertName(this.config.enumValues[typeName].typeIdentifier);
-      } else if (isMapped && this.config.mappers[typeName].type) {
-        this.markMapperAsUsed(typeName);
-        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
