@@ -24,7 +24,7 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "nock": "13.0.3"
+    "nock": "13.0.4"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
