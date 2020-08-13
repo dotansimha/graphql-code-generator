@@ -1,5 +1,11 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 1.17.10
+
+### Patch Changes
+
+- ac6039da: Improve error messages when document validation fails
+
 ## 1.17.9
 
 ### Patch Changes
