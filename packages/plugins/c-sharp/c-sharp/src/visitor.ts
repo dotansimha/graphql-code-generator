@@ -49,7 +49,7 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
   private readonly keywords = new Set(csharpKeywords);
 
-  constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
+  constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'List',
