@@ -87,11 +87,10 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
     if (directive) {
       directiveValues.examples = [];
       directive.arguments.forEach(arg => {
-        // @ts-ignore ts doesn't like arg.value.value, there's a mis-typing in there to address
-        const { value } = arg.value;
+        const value = 'value' in arg.value ? arg.value.value.toString() : null;
         const { value: name } = arg.name;
         if (name === 'description') {
-          directiveValues[name] = value;
+          directiveValues.description = value;
         } else if (name === 'example') {
           directiveValues.examples.push(value);
         } else {

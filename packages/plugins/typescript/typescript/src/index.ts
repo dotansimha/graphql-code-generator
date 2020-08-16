@@ -19,11 +19,10 @@ import { TypeScriptPluginConfig } from './config';
 
 export * from './typescript-variables-to-object';
 export * from './visitor';
-export * from './types';
 export * from './config';
 export * from './introspection-visitor';
 
-export const plugin: PluginFunction<TypeScriptPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig

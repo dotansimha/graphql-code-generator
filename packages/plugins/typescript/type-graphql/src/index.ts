@@ -10,7 +10,7 @@ const TYPE_GRAPHQL_IMPORT = `import * as TypeGraphQL from 'type-graphql';`;
 const DECORATOR_FIX = `type FixDecorator<T> = T;`;
 const isDefinitionInterface = (definition: string) => definition.includes('@TypeGraphQL.InterfaceType()');
 
-export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (
+export const plugin: PluginFunction<TypeGraphQLPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeGraphQLPluginConfig
@@ -35,4 +35,4 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (
   };
 };
 
-export { TypeGraphQLVisitor, TsIntrospectionVisitor };
+export { TsIntrospectionVisitor };

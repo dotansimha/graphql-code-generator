@@ -1,6 +1,6 @@
 import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { parse, visit, GraphQLSchema } from 'graphql';
-import { printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { extname } from 'path';
 import gql from 'graphql-tag';
 import { TsMongoVisitor } from './visitor';

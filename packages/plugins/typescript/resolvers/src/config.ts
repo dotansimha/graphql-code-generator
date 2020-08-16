@@ -1,13 +1,18 @@
 import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.
+ * You can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).
+ *
+ * You can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen
+ *
+ */
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   /**
-   * @name useIndexSignature
-   * @type boolean
    * @description Adds an index signature to any generates resolver.
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -20,13 +25,12 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   useIndexSignature?: boolean;
   /**
-   * @name noSchemaStitching
-   * @type boolean
-   * @description Disables Schema Stitching support
-   * @default false
-   * @warning The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
+   * @description Disables Schema Stitching support.
    *
-   * @example
+   * Note: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
+   * @default false
+   *
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -39,31 +43,17 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   noSchemaStitching?: boolean;
   /**
-   * @name wrapFieldDefinitions
-   * @type boolean
    * @description Set to `true` in order to wrap field definitions with `FieldWrapper`.
    * This is useful to allow return types such as Promises and functions. Needed for
    * compatibility with `federation: true` when
    * @default true
-   *
-   * @example Enable wrapping fields
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: false
-   * ```
    */
   wrapFieldDefinitions?: boolean;
   /**
-   * @name customResolveInfo
-   * @type string
    * @description You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
    * @default "graphql#GraphQLResolveInfo"
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -76,12 +66,11 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   customResolveInfo?: string;
   /**
-   * @name customResolverFn
-   * @type string
    * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
    * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
    *
-   * @example
+   * @exampleMarkdown
+   * ## Custom Signature
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -92,12 +81,13 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *    customResolverFn: ./my-types#MyResolveFn
    * ```
    *
-   * @example
+   * ## With Graphile
    * ```yml
    * generates:
    * path/to/file.ts:
    *  plugins:
-   *    - add: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   *    - add:
+   *        content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
    *    - typescript
    *    - typescript-resolvers
    *  config:
@@ -111,4 +101,28 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   customResolverFn?: string;
+  /**
+   * @description Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.
+   *
+   * This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     allowParentTypeOverride: true
+   * ```
+   *
+   */
+  allowParentTypeOverride?: boolean;
+  /**
+   * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     optionalInfoArgument: true
+   * ```
+   *
+   */
+  optionalInfoArgument?: boolean;
 }

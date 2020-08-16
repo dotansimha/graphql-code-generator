@@ -1,8 +1,8 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "1.13.0",
+  "version": "1.17.7",
   "description": "GraphQL Codegen Testing Utils",
-  "main": "./dist/index.cjs.js",
+  "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
   "typescript": {
@@ -13,8 +13,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob"
+    "prepack": "bob prepack"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",
@@ -24,20 +23,18 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "peerDependencies": {
+    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.0",
-    "common-tags": "1.8.0",
-    "lz-string": "1.4.4",
-    "open": "7.0.3",
-    "tslib": "1.11.1"
-  },
-  "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "typescript": "3.8.3"
+    "@graphql-codegen/plugin-helpers": "^1.17.8",
+    "common-tags": "^1.8.0",
+    "lz-string": "^1.4.4",
+    "open": "^7.1.0",
+    "tslib": "~2.0.0"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

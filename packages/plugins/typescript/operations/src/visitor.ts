@@ -1,30 +1,25 @@
 import {
-  GraphQLSchema,
-  isListType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isEnumType,
-  isNonNullType,
-} from 'graphql';
-import {
-  PreResolveTypesProcessor,
-  ParsedDocumentsConfig,
+  AvoidOptionalsConfig,
   BaseDocumentsVisitor,
-  LoadedFragment,
+  DeclarationKind,
+  generateFragmentImportStatement,
   getConfigValue,
+  LoadedFragment,
+  normalizeAvoidOptionals,
+  ParsedDocumentsConfig,
+  PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
-  DeclarationKind,
+  wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
-import { TypeScriptDocumentsPluginConfig } from './config';
-
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 import autoBind from 'auto-bind';
+import { GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
+import { TypeScriptDocumentsPluginConfig } from './config';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
+import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
-  avoidOptionals: boolean;
+  avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
 }
@@ -38,8 +33,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       config,
       {
         noExport: getConfigValue(config.noExport, false),
-        avoidOptionals:
-          typeof config.avoidOptionals === 'boolean' ? getConfigValue(config.avoidOptionals, false) : false,
+        avoidOptionals: normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false)),
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
       } as TypeScriptDocumentsParsedConfig,
@@ -48,32 +42,18 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     autoBind(this);
 
-    const clearOptional = (str: string): string => {
+    const wrapOptional = (type: string) => {
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-      const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'is');
-
-      if (str.startsWith(`${this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''}Maybe`)) {
-        return str.replace(rgx, '$1');
-      }
-
-      return str;
+      return `${prefix}Maybe<${type}>`;
+    };
+    const wrapArray = (type: string) => {
+      const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+      return `${listModifier}<${type}>`;
     };
 
-    const wrapTypeWithModifiers = (
-      baseType: string,
-      type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-    ): string => {
-      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-
-      if (isNonNullType(type)) {
-        return clearOptional(wrapTypeWithModifiers(baseType, type.ofType));
-      } else if (isListType(type)) {
-        const innerType = wrapTypeWithModifiers(baseType, type.ofType);
-
-        return `${prefix}Maybe<${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
-      } else {
-        return `${prefix}Maybe<${baseType}>`;
-      }
+    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+      const optional = !this.config.avoidOptionals.field && !!type && !isNonNullType(type);
+      return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 
     const processorConfig: SelectionSetProcessorConfig = {
@@ -81,8 +61,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
       scalars: this.scalars,
-      formatNamedField: (name: string): string => (this.config.immutableTypes ? `readonly ${name}` : name),
-      wrapTypeWithModifiers,
+      formatNamedField,
+      wrapTypeWithModifiers(baseType, type) {
+        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+      },
     };
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
@@ -103,7 +85,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName.bind(this),
-        this.config.avoidOptionals,
+        this.config.avoidOptionals.object,
         this.config.immutableTypes,
         this.config.namespacedImportName,
         enumsNames,
@@ -116,7 +98,19 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     };
   }
 
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
+  }
+
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return ';';
+  }
+
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
+
+    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>`;
   }
 }

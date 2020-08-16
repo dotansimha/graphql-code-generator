@@ -1,14 +1,23 @@
-import { validateTs, compileTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
 
 describe('urql', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  let spyConsoleError: jest.SpyInstance;
+  beforeEach(() => {
+    spyConsoleError = jest.spyOn(console, 'warn');
+    spyConsoleError.mockImplementation();
+  });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -37,25 +46,15 @@ describe('urql', () => {
     await validateTs(merged, undefined, true);
   };
 
-  const compileTypeScript = async (
-    output: Types.PluginOutput,
-    testSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    config: any
-  ) => {
-    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
-    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
-    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    await compileTs(merged, undefined, true);
-  };
-
   describe('Imports', () => {
-    it('should import Urql dependencies', async () => {
+    it('should import Urql and React dependencies when components are used', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -134,7 +133,7 @@ describe('urql', () => {
           `),
         },
       ];
-      const result = (await plugin(schema, docs, {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, docs, {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export const MyFragmentFragmentDoc = gql\`
@@ -356,7 +355,7 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Component', async () => {
+    it('should not generate Component by default', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
@@ -367,7 +366,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`
+      expect(content.content).not.toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) =>
       (
           <Urql.Query {...props} query={TestDocument} />
@@ -410,7 +409,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -442,7 +443,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -467,6 +470,20 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).not.toContain(`export class ITestComponent`);
+    });
+
+    it('should respect omitOperationSuffix for Component', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toContain(`export class TestComponent`);
     });
 
     it('should add three generics if operation type is subscription', async () => {
@@ -584,10 +601,11 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export function useListenToCommentsSubscription<TData = any>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
+      export function useListenToCommentsSubscription<TData = ListenToCommentsSubscription>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
         return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
       };`);
-      await compileTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
+      expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
     it('should correctly generate additionalTypenames', async () => {
@@ -743,6 +761,20 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export function useTestQuery`);
+    });
+
+    it('Should respect omitOperationSuffix for hooks', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export function useTest(`);
     });
   });
 });

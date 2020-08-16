@@ -8,7 +8,7 @@ describe('TypeScript', () => {
     const schema = buildSchema(/* GraphQL */ `
       scalar A
     `);
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
     expect(result.prepend).toBeSimilarStringTo('export type Maybe<T> =');
   });
 
@@ -18,7 +18,7 @@ describe('TypeScript', () => {
         "My custom scalar"
         scalar A
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       /** All built-in and custom scalars, mapped to their actual values */
@@ -41,7 +41,7 @@ describe('TypeScript', () => {
           f: String
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
@@ -56,7 +56,7 @@ describe('TypeScript', () => {
           f: String!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
@@ -76,7 +76,7 @@ describe('TypeScript', () => {
           f: String!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** 
@@ -98,7 +98,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** my union */
@@ -116,7 +116,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         /** this is b */
@@ -134,7 +134,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type B = {
@@ -151,7 +151,7 @@ describe('TypeScript', () => {
           id: ID!
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {
@@ -170,7 +170,7 @@ describe('TypeScript', () => {
           B
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       /** custom enum */
@@ -191,7 +191,7 @@ describe('TypeScript', () => {
           My_Value
         }
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export enum MyEnum {
@@ -249,13 +249,70 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        'A' |
+        | 'A' 
         /** this is b */
-        'B';`);
+        | 'B';`);
     });
   });
 
   describe('Issues', () => {
+    it('#4564 - numeric enum values set on schema level', async () => {
+      const testSchema = new GraphQLSchema({
+        types: [
+          new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLEnumType({
+                  name: 'MyEnum',
+                  values: {
+                    missing: {
+                      value: 0,
+                    },
+                  },
+                }),
+              },
+            },
+          }),
+        ],
+      });
+
+      const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain(`Missing = 'missing'`);
+      expect(output).toContain(`Missing = 0`);
+    });
+
+    it('#4564 - numeric enum values set on schema level - complex numeric', async () => {
+      const testSchema = new GraphQLSchema({
+        types: [
+          new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLEnumType({
+                  name: 'MyEnum',
+                  values: {
+                    available: {
+                      value: '01',
+                    },
+                    somethingElse: {
+                      value: '99',
+                    },
+                  },
+                }),
+              },
+            },
+          }),
+        ],
+      });
+
+      const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).toContain(`Available = '01'`);
+      expect(output).toContain(`SomethingElse = '99'`);
+    });
+
     it('#3137 - numeric enum value', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
@@ -287,8 +344,39 @@ describe('TypeScript', () => {
       expect(output).toBeSimilarStringTo(`export enum Test {
         A = 0,
         B = 'test',
-        C = 2
+        C = '2'
       }`);
+    });
+
+    it('#4157 - Should generate numeric values for enums if numericEnums is set to true', async () => {
+      const testSchema = buildSchema(/* GraphQl */ `
+        enum Status {
+            Idle
+            Running
+            Error
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          numericEnums: true,
+        },
+        {
+          outputFile: '',
+        }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      validateTs(output);
+
+      expect(output).toBeSimilarStringTo(`
+        export enum Status {
+            Idle = 0,
+            Running = 1,
+            Error = 2
+        }
+      `);
     });
 
     it('#2679 - incorrect prefix for enums', async () => {
@@ -465,7 +553,7 @@ describe('TypeScript', () => {
         firstName: String! @deprecated(reason: "Field \`fullName\` has been superseded by \`firstName\`.")
       }`);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
       export type User = {
         __typename?: 'User';
@@ -488,7 +576,7 @@ describe('TypeScript', () => {
         count: Int! @default(value: 1)
       }`);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(
         `export type Any = Scalars['String'] | Scalars['Int'] | Scalars['Float'] | Scalars['ID'];`
       );
@@ -656,7 +744,7 @@ describe('TypeScript', () => {
       enum MyEnum {
         A
       }`);
-      const result = (await plugin(schema, [], { constEnums: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { constEnums: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export const enum MyEnum {
@@ -680,8 +768,10 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 'A' | 'B';
-    `);
+        export type MyEnum = 
+          | 'A' 
+          | 'B';
+      `);
       validateTs(result);
     });
 
@@ -699,7 +789,53 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 'BOOP' | 'B';
+        export type MyEnum = 
+          | 'BOOP' 
+          | 'B';
+      `);
+      validateTs(result);
+    });
+
+    it('Should add `%future added value` to enum when futureProofEnums is set and also enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true, futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyEnum = 
+        | 'A' 
+        | 'B' 
+        | '%future added value'
+    `);
+      validateTs(result);
+    });
+
+    it('Should not add `%future added value` to enum when futureProofEnums is set, but not enumAsTypes', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { futureProofEnums: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        B = 'B'
+      }
     `);
       validateTs(result);
     });
@@ -867,7 +1003,7 @@ describe('TypeScript', () => {
         Scalar = 'SCALAR',
         /** Indicates this type is an object. \`fields\` and \`interfaces\` are valid fields. */
         Object = 'OBJECT',
-        /** Indicates this type is an interface. \`fields\` and \`possibleTypes\` are valid fields. */
+        /** Indicates this type is an interface. \`fields\`, \`interfaces\`, and \`possibleTypes\` are valid fields. */
         Interface = 'INTERFACE',
         /** Indicates this type is a union. \`possibleTypes\` is a valid field. */
         Union = 'UNION',
@@ -1201,7 +1337,7 @@ describe('TypeScript', () => {
         foo: String
         bar: String!
       }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
@@ -1318,7 +1454,7 @@ describe('TypeScript', () => {
         foo: String
         bar: MyScalar!
       }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
@@ -1411,7 +1547,7 @@ describe('TypeScript', () => {
           foo: String
           bar: String!
         }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
@@ -1433,7 +1569,7 @@ describe('TypeScript', () => {
           foo: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
@@ -1464,7 +1600,7 @@ describe('TypeScript', () => {
           bar: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
@@ -1494,7 +1630,7 @@ describe('TypeScript', () => {
 
         type MyType implements MyInterface
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
@@ -1519,7 +1655,7 @@ describe('TypeScript', () => {
           bar: String!
         }
         `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
@@ -1567,6 +1703,40 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build list type correctly when wrapping field definitions', async () => {
+      const schema = buildSchema(`
+        type ListOfStrings {
+          foo: [String!]!
+        }
+
+        type ListOfMaybeStrings {
+          foo: [String]!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { wrapFieldDefinitions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfStrings = {
+          __typename?: 'ListOfStrings';
+          foo: Array<FieldWrapper<Scalars['String']>>;
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfMaybeStrings = {
+          __typename?: 'ListOfMaybeStrings';
+          foo: Array<Maybe<FieldWrapper<Scalars['String']>>>;
+        };
+      `);
+
+      validateTs(result);
+    });
+
     it('Should not wrap input type fields', async () => {
       const schema = buildSchema(`
         input MyInput {
@@ -1602,7 +1772,7 @@ describe('TypeScript', () => {
 
       union MyUnion = MyType | MyOtherType
       `);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyUnion = MyType | MyOtherType;
@@ -1618,7 +1788,7 @@ describe('TypeScript', () => {
           foo: String
           bar: String!
         }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
@@ -1639,7 +1809,7 @@ describe('TypeScript', () => {
         directive @universal on OBJECT | FIELD_DEFINITION | ENUM_VALUE
       `);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).not.toContain('simple');
       expect(result.content).not.toContain('withArguments');
@@ -1722,7 +1892,7 @@ describe('TypeScript', () => {
 
     it('Should enable typesPrefix for enums by default', async () => {
       const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
-      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result.content).toContain(`export enum IE {`);
       expect(result.content).toContain(`e?: Maybe<IE>;`);
@@ -1840,7 +2010,7 @@ describe('TypeScript', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default)', async () => {
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export enum MyEnum {
@@ -1902,7 +2072,7 @@ describe('TypeScript', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default) with custom prefix', async () => {
-      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export enum IMyEnum {
@@ -1965,7 +2135,7 @@ describe('TypeScript', () => {
     it('Should generate correctly types for field arguments - with basic fields', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
 
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
@@ -1983,7 +2153,7 @@ describe('TypeScript', () => {
       const schema = buildSchema(
         `type MyType { foo(a: String = "default", b: String! = "default", c: String, d: String!): String }`
       );
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
@@ -2024,7 +2194,7 @@ describe('TypeScript', () => {
       const schema = buildSchema(
         `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
       );
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
@@ -2041,7 +2211,7 @@ describe('TypeScript', () => {
 
     it('Should add custom prefix for mutation arguments', async () => {
       const schema = buildSchema(`input Input { name: String } type Mutation { foo(id: ID, input: Input): String }`);
-      const result = (await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type TInput = {
@@ -2079,7 +2249,7 @@ describe('TypeScript', () => {
           books: [Book!]!
         }
       `);
-      const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type NodeTextArgs = {
@@ -2094,7 +2264,7 @@ describe('TypeScript', () => {
   describe('Enum', () => {
     it('Should build basic enum correctly', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export enum MyEnum {
@@ -2142,8 +2312,42 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should build enum correctly with custom imported enum with different name', async () => {
+    it('Should build enum correctly with custom imported enum from namspace with different name', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#NS.ETest' } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).toContain(`export { MyEnum }`);
+      expect(result.prepend).toContain(`import MyEnum = NS.ETest;`);
+      expect(result.prepend).toContain(`import { NS } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum from namspace with same name', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#NS.MyEnum' } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.prepend).toContain(`import MyEnum = NS.MyEnum;`);
+      expect(result.prepend).toContain(`import { NS } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum with different name', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } type Query { t: MyEnum }`);
       const result = (await plugin(
         schema,
         [],
@@ -2152,7 +2356,9 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.prepend).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyCustomEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import MyEnum = MyCustomEnum;`);
+      expect(result.content).toContain(`export { MyEnum };`);
 
       validateTs(result);
     });
@@ -2185,6 +2391,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
+      expect(result.prepend).toContain(`import MyEnum2 = MyEnum2X;`);
 
       validateTs(result);
     });
@@ -2231,7 +2438,7 @@ describe('TypeScript', () => {
       }
     `);
 
-    const content = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const content = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(content).not.toContainEqual('[object Object]');
 
@@ -2260,7 +2467,7 @@ describe('TypeScript', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
     expect(result.content).toContain('__typename');
 
     validateTs(result);
@@ -2288,7 +2495,7 @@ describe('TypeScript', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], { skipTypename: true }, { outputFile: '' });
     expect(result.content).not.toContain('__typename');
 
     validateTs(result);
@@ -2316,7 +2523,7 @@ describe('TypeScript', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], { noExport: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], { noExport: true }, { outputFile: '' });
     expect(result.content).not.toContain('export');
 
     validateTs(result);
@@ -2391,7 +2598,7 @@ describe('TypeScript', () => {
         },
       }),
     });
-    const output = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const output = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(output.content).toBeSimilarStringTo(`
       export enum Foo {

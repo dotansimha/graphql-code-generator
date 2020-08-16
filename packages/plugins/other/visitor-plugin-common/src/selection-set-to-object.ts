@@ -362,15 +362,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
 
       linkFields.push({
-        alias: field.alias ? field.alias.value : undefined,
-        name: field.name.value,
+        alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
+        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
-          selectionSet
-            .transformSelectionSet()
-            .split(`\n`)
-            .join(`\n  `),
-          selectedFieldType as any
+          selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
+          selectedFieldType
         ),
       });
     }
@@ -379,7 +376,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       parentSchemaType,
       this._config.nonOptionalTypename,
       this._config.addTypename,
-      requireTypename
+      requireTypename,
+      this._config.skipTypeNameForRoot
     );
     const transformed: ProcessResult = [
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
@@ -412,12 +410,25 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return this._processor.buildSelectionSetFromStrings(fields);
   }
 
+  protected isRootType(type: GraphQLObjectType): boolean {
+    const rootType = [this._schema.getQueryType(), this._schema.getMutationType(), this._schema.getSubscriptionType()]
+      .filter(Boolean)
+      .map(t => t.name);
+
+    return rootType.includes(type.name);
+  }
+
   protected buildTypeNameField(
     type: GraphQLObjectType,
     nonOptionalTypename: boolean = this._config.nonOptionalTypename,
     addTypename: boolean = this._config.addTypename,
-    queriedForTypename: boolean = this._queriedForTypename
+    queriedForTypename: boolean = this._queriedForTypename,
+    skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
   ): { name: string; type: string } {
+    if (this.isRootType(type) && skipTypeNameForRoot && !queriedForTypename) {
+      return null;
+    }
+
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
 

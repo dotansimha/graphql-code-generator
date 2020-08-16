@@ -3,10 +3,10 @@ import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type CurrentUserForProfileQueryVariables = {};
+  export type CurrentUserForProfileQueryVariables = Types.Exact<{ [key: string]: never }>;
 
   export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
-    currentUser: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>>;
+    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>>;
   };
 }
 

@@ -5,7 +5,7 @@ import { VueApolloVisitor } from './visitor';
 import { extname } from 'path';
 import { VueApolloRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<VueApolloRawPluginConfig> = (
+export const plugin: PluginFunction<VueApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: VueApolloRawPluginConfig

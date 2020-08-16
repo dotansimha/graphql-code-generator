@@ -1,15 +1,16 @@
 import gql from 'graphql-tag';
+import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type SubmitCommentMutationVariables = {
+  export type SubmitCommentMutationVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     commentContent: Types.Scalars['String'];
-  };
+  }>;
 
   export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
-    submitComment: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+    submitComment?: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
   };
 }
 

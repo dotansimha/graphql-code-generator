@@ -1,38 +1,34 @@
 {
   "name": "@graphql-codegen/typescript-mongodb",
-  "version": "1.13.0",
+  "version": "1.17.8",
   "description": "GraphQL Code Generator plugin for generting a ready-to-use ORM types for MongoDB",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/mongodb"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.0",
-    "@graphql-codegen/typescript": "1.13.0",
-    "@graphql-codegen/visitor-plugin-common": "1.13.0",
-    "@graphql-toolkit/common": "0.9.7",
-    "auto-bind": "4.0.0",
-    "lodash": "4.17.15",
-    "tslib": "1.11.1"
+    "@graphql-codegen/plugin-helpers": "^1.17.8",
+    "@graphql-codegen/typescript": "^1.17.8",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
+    "@graphql-tools/utils": "^6.0.18",
+    "auto-bind": "~4.0.0",
+    "lodash": "~4.17.20",
+    "tslib": "~2.0.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.13.0",
-    "@types/lodash": "4.14.149",
-    "graphql": "14.6.0",
-    "jest": "25.1.0",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "@types/lodash": "4.14.159"
   },
-  "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
@@ -42,10 +38,8 @@
   "buildOptions": {
     "input": "./src/index.ts"
   },
-  "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-mongodb"
-  },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

@@ -1,37 +1,34 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "1.13.0",
+  "version": "1.17.8",
   "description": "GraphQL Code Generator common utils and types",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/utils/plugins-helpers"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
     "test": "jest --no-watchman --config ../../../jest.config.js",
-    "build": "bob"
+    "prepack": "bob prepack"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "dependencies": {
-    "@graphql-toolkit/common": "0.9.7",
+    "@graphql-tools/utils": "^6.0.18",
     "camel-case": "4.1.1",
     "common-tags": "1.8.0",
     "constant-case": "3.0.3",
     "import-from": "3.0.0",
+    "lodash": "~4.17.20",
     "lower-case": "2.0.1",
     "param-case": "3.0.3",
     "pascal-case": "3.1.1",
-    "tslib": "1.11.1",
+    "tslib": "~2.0.0",
     "upper-case": "2.0.1"
   },
-  "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "jest": "25.1.0",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
-  },
-  "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
@@ -42,6 +39,7 @@
     "input": "./src/index.ts"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

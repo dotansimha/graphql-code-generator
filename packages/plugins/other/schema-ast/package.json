@@ -1,33 +1,26 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "1.13.0",
+  "version": "1.17.8",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/other/schema-ast"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.0",
-    "@graphql-toolkit/common": "0.9.7",
-    "tslib": "1.11.1"
-  },
-  "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "graphql": "14.6.0",
-    "graphql-tag": "2.10.3",
-    "jest": "25.1.0",
-    "ts-jest": "25.2.1",
-    "tslib": "1.11.1",
-    "typescript": "3.8.3"
+    "@graphql-codegen/plugin-helpers": "^1.17.8",
+    "@graphql-tools/utils": "^6.0.18",
+    "tslib": "~2.0.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
@@ -37,10 +30,8 @@
   "buildOptions": {
     "input": "./src/index.ts"
   },
-  "jest-junit": {
-    "outputDirectory": "../../../../test-results/schema-ast"
-  },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

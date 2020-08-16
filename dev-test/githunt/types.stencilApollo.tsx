@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import * as StencilApollo from 'stencil-apollo';
 import { h } from '@stencil/core';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -11,20 +12,35 @@ export type Scalars = {
   Float: number;
 };
 
-/** A comment about an entry, submitted by a user */
-export type Comment = {
-  __typename?: 'Comment';
-  /** The SQL ID of this entry */
-  id: Scalars['Int'];
-  /** The GitHub user who posted the comment */
-  postedBy: User;
-  /** A timestamp of when the comment was posted */
-  createdAt: Scalars['Float'];
-  /** The text of the comment */
-  content: Scalars['String'];
-  /** The repository which this comment is about */
-  repoName: Scalars['String'];
+export type Query = {
+  __typename?: 'Query';
+  /** A feed of repository submissions */
+  feed?: Maybe<Array<Maybe<Entry>>>;
+  /** A single entry */
+  entry?: Maybe<Entry>;
+  /** Return the currently logged in user, or null if nobody is logged in */
+  currentUser?: Maybe<User>;
 };
+
+export type QueryFeedArgs = {
+  type: FeedType;
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+export type QueryEntryArgs = {
+  repoFullName: Scalars['String'];
+};
+
+/** A list of options for the sort order of the feed */
+export enum FeedType {
+  /** Sort by a combination of freshness and score, using Reddit's algorithm */
+  Hot = 'HOT',
+  /** Newest entries first */
+  New = 'NEW',
+  /** Highest score entries first */
+  Top = 'TOP',
+}
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
@@ -55,15 +71,59 @@ export type EntryCommentsArgs = {
   offset?: Maybe<Scalars['Int']>;
 };
 
-/** A list of options for the sort order of the feed */
-export enum FeedType {
-  /** Sort by a combination of freshness and score, using Reddit's algorithm */
-  Hot = 'HOT',
-  /** Newest entries first */
-  New = 'NEW',
-  /** Highest score entries first */
-  Top = 'TOP',
-}
+/**
+ * A repository object from the GitHub API. This uses the exact field names returned by the
+ * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
+ */
+export type Repository = {
+  __typename?: 'Repository';
+  /** Just the name of the repository, e.g. GitHunt-API */
+  name: Scalars['String'];
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  full_name: Scalars['String'];
+  /** The description of the repository */
+  description?: Maybe<Scalars['String']>;
+  /** The link to the repository on GitHub */
+  html_url: Scalars['String'];
+  /** The number of people who have starred this repository on GitHub */
+  stargazers_count: Scalars['Int'];
+  /** The number of open issues on this repository on GitHub */
+  open_issues_count?: Maybe<Scalars['Int']>;
+  /** The owner of this repository on GitHub, e.g. apollostack */
+  owner?: Maybe<User>;
+};
+
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export type User = {
+  __typename?: 'User';
+  /** The name of the user, e.g. apollostack */
+  login: Scalars['String'];
+  /** The URL to a directly embeddable image for this user's avatar */
+  avatar_url: Scalars['String'];
+  /** The URL of this user's GitHub page */
+  html_url: Scalars['String'];
+};
+
+/** A comment about an entry, submitted by a user */
+export type Comment = {
+  __typename?: 'Comment';
+  /** The SQL ID of this entry */
+  id: Scalars['Int'];
+  /** The GitHub user who posted the comment */
+  postedBy: User;
+  /** A timestamp of when the comment was posted */
+  createdAt: Scalars['Float'];
+  /** The text of the comment */
+  content: Scalars['String'];
+  /** The repository which this comment is about */
+  repoName: Scalars['String'];
+};
+
+/** XXX to be removed */
+export type Vote = {
+  __typename?: 'Vote';
+  vote_value: Scalars['Int'];
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -89,47 +149,12 @@ export type MutationSubmitCommentArgs = {
   commentContent: Scalars['String'];
 };
 
-export type Query = {
-  __typename?: 'Query';
-  /** A feed of repository submissions */
-  feed?: Maybe<Array<Maybe<Entry>>>;
-  /** A single entry */
-  entry?: Maybe<Entry>;
-  /** Return the currently logged in user, or null if nobody is logged in */
-  currentUser?: Maybe<User>;
-};
-
-export type QueryFeedArgs = {
-  type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-export type QueryEntryArgs = {
-  repoFullName: Scalars['String'];
-};
-
-/**
- * A repository object from the GitHub API. This uses the exact field names returned by the
- * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
-export type Repository = {
-  __typename?: 'Repository';
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: Scalars['String'];
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: Scalars['String'];
-  /** The description of the repository */
-  description?: Maybe<Scalars['String']>;
-  /** The link to the repository on GitHub */
-  html_url: Scalars['String'];
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: Scalars['Int'];
-  /** The number of open issues on this repository on GitHub */
-  open_issues_count?: Maybe<Scalars['Int']>;
-  /** The owner of this repository on GitHub, e.g. apollostack */
-  owner?: Maybe<User>;
-};
+/** The type of vote to record, when submitting a vote */
+export enum VoteType {
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL',
+}
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -141,51 +166,27 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
-/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
-export type User = {
-  __typename?: 'User';
-  /** The name of the user, e.g. apollostack */
-  login: Scalars['String'];
-  /** The URL to a directly embeddable image for this user's avatar */
-  avatar_url: Scalars['String'];
-  /** The URL of this user's GitHub page */
-  html_url: Scalars['String'];
-};
-
-/** XXX to be removed */
-export type Vote = {
-  __typename?: 'Vote';
-  vote_value: Scalars['Int'];
-};
-
-/** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
-  Cancel = 'CANCEL',
-}
-
-export type OnCommentAddedSubscriptionVariables = {
+export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
-  commentAdded: Maybe<
+  commentAdded?: Maybe<
     { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
         postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
       }
   >;
 };
 
-export type CommentQueryVariables = {
+export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type CommentQuery = { __typename?: 'Query' } & {
-  currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
-  entry: Maybe<
+  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
+  entry?: Maybe<
     { __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
         postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
         comments: Array<Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
@@ -201,36 +202,36 @@ export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comm
     postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
   };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
-  currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
 };
 
 export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
     repository: { __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
-        owner: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>>;
+        owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>>;
       };
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   type: FeedType;
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
-  feed: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
+  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
+  feed?: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
-export type SubmitRepositoryMutationVariables = {
+export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
-  submitRepository: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+  submitRepository?: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
 };
 
 export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
@@ -241,26 +242,26 @@ export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt
     postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
-export type SubmitCommentMutationVariables = {
+export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
-};
+}>;
 
 export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
-  submitComment: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+  submitComment?: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
 };
 
 export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'> & {
     vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
   };
 
-export type VoteMutationVariables = {
+export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
-};
+}>;
 
 export type VoteMutation = { __typename?: 'Mutation' } & {
-  vote: Maybe<
+  vote?: Maybe<
     { __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
         vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
       }

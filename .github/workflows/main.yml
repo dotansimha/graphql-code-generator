@@ -9,21 +9,38 @@ on:
       - master
 
 jobs:
-
   test:
     name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
     runs-on: ${{matrix.os}}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node_version: [10, 12, 13]
+        os: [ubuntu-latest, windows-latest]
+        node_version: [10, 14]
     steps:
-      - name: Checkout Master
+      - name: Checkout
         uses: actions/checkout@v1
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
-          version: ${{ matrix.node_version }}
+          node-version: ${{ matrix.node_version }}
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Yarn
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{matrix.node_version}}-yarn-
+      - name: Cache Jest
+        uses: actions/cache@v1
+        with:
+          path: .cache/jest
+          key: ${{ runner.os }}-${{matrix.node_version}}-jest-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{matrix.node_version}}-jest-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Lint
@@ -31,45 +48,10 @@ jobs:
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test
+        run: yarn test --logHeapUsage
+        env:
+          CI: true
       - name: Test dev-tests
         run: |
-          dev-test/generate-all.sh
+          yarn run generate:examples
           git diff --exit-code -- dev-test/
-
-  publish-canary:
-    name: Publish Canary
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Master
-        uses: actions/checkout@v1
-      - name: Use Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '13.x'
-      - name: Install Dependencies using Yarn
-        run: yarn install && git checkout yarn.lock
-      - name: Build
-        run: yarn build
-      - name: Release Canary
-        run: |
-          echo "Source Repo: ${{github.repository}}"
-          if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
-          then
-              echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
-              rm -rf out.txt
-              npm run ci:release:canary > out.txt
-              export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=`echo $GITHUB_REF | grep -Eo '[0-9]{1,4}'`
-
-              if [ "$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" != "" ]
-              then
-                npm install -g dfds-github-scripts
-                export BUILD_REPOSITORY_NAME="${{github.repository}}"
-                export ALPHA_VERSION=`cat out.txt | sed -n 's/.*cli => //p' | sed -n 's/+.*//p'`
-                export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
-                export COMMENT_BODY="The latest changes of this PR are available as alpha in npm: \`$ALPHA_VERSION\`"
-                pr-comment
-              fi
-          else    
-              echo "Skipping canary publish due to a fork/PR..."
-          fi

@@ -52,7 +52,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
               ? `'${schemaType.name}'`
               : `${parentName}['${aliasedField.fieldName}']`;
 
-          return `${this.config.formatNamedField(aliasedField.alias)}: ${value}`;
+          return `${aliasedField.alias}: ${value}`;
         })
         .join(', ')} }`,
     ];
@@ -63,10 +63,6 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       return [];
     }
 
-    return [
-      `{ ${fields
-        .map(field => `${this.config.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`)
-        .join(', ')} }`,
-    ];
+    return [`{ ${fields.map(field => `${field.alias || field.name}: ${field.selectionSet}`).join(', ')} }`];
   }
 }

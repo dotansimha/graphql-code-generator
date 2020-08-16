@@ -15,14 +15,14 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition<string[]> = {
 };
 
 function normalizeHooks(
-  _hooks: Partial<Types.LifecycleHooksDefinition<string | string[]>>
-): Types.LifecycleHooksDefinition<string[]> {
+  _hooks: Partial<Types.LifecycleHooksDefinition>
+): Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]> {
   const keys = Object.keys({
     ...DEFAULT_HOOKS,
     ...(_hooks || {}),
   });
 
-  return keys.reduce((prev: Types.LifecycleHooksDefinition<string[]>, hookName: string) => {
+  return keys.reduce((prev: Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>, hookName: string) => {
     if (typeof _hooks[hookName] === 'string') {
       return {
         ...prev,
@@ -36,7 +36,7 @@ function normalizeHooks(
     } else {
       return prev;
     }
-  }, {} as Types.LifecycleHooksDefinition<string[]>);
+  }, {} as Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>);
 }
 
 function execShellCommand(cmd: string): Promise<string> {
@@ -60,16 +60,25 @@ function execShellCommand(cmd: string): Promise<string> {
   });
 }
 
-async function executeHooks(hookName: string, scripts: string[] = [], args: string[] = []): Promise<void> {
+async function executeHooks(
+  hookName: string,
+  scripts: (string | Types.HookFunction)[] = [],
+  args: string[] = []
+): Promise<void> {
   debugLog(`Running lifecycle hook "${hookName}" scripts...`);
 
   for (const script of scripts) {
-    debugLog(`Running lifecycle hook "${hookName}" script: ${script} with args: ${args.join(' ')}...`);
-    await execShellCommand(`${script} ${args.join(' ')}`);
+    if (typeof script === 'string') {
+      debugLog(`Running lifecycle hook "${hookName}" script: ${script} with args: ${args.join(' ')}...`);
+      await execShellCommand(`${script} ${args.join(' ')}`);
+    } else {
+      debugLog(`Running lifecycle hook "${hookName}" script: ${script.name} with args: ${args.join(' ')}...`);
+      await script(...args);
+    }
   }
 }
 
-export const lifecycleHooks = (_hooks: Partial<Types.LifecycleHooksDefinition<string | string[]>> = {}) => {
+export const lifecycleHooks = (_hooks: Partial<Types.LifecycleHooksDefinition> = {}) => {
   const hooks = normalizeHooks(_hooks);
 
   return {

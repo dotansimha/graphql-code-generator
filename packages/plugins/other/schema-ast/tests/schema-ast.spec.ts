@@ -1,5 +1,5 @@
 import { validate, plugin } from '../src/index';
-import { buildSchema, buildASTSchema, parse } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -188,15 +188,15 @@ describe('Schema AST', () => {
           id: ID
           name: String
         }
+
+        type Jedi {
+          id: ID
+          side: String
+        }
         
         type Droid {
           id: ID
           model: String
-        }
-        
-        type Jedi {
-          id: ID
-          side: String
         }
         
         union People = Character | Jedi | Droid

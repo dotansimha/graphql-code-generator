@@ -1,16 +1,9 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import {
-  GraphQLSchema,
-  isListType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isEnumType,
-  isNonNullType,
-} from 'graphql';
+import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
+  wrapTypeWithModifiers,
   PreResolveTypesProcessor,
   ParsedDocumentsConfig,
   BaseDocumentsVisitor,
@@ -41,27 +34,12 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
     autoBind(this);
 
-    const clearOptional = (str: string): string => {
-      if (str.startsWith('?')) {
-        return str.substring(1);
-      }
+    const wrapArray = (type: string) => `Array<${type}>`;
+    const wrapOptional = (type: string) => `?${type}`;
 
-      return str;
-    };
-
-    const wrapTypeWithModifiers = (
-      baseType: string,
-      type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-    ): string => {
-      if (isNonNullType(type)) {
-        return clearOptional(wrapTypeWithModifiers(baseType, type.ofType));
-      } else if (isListType(type)) {
-        const innerType = wrapTypeWithModifiers(baseType, type.ofType);
-
-        return `?Array<${innerType}>`;
-      } else {
-        return `?${baseType}`;
-      }
+    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+      const optional = !!type && !isNonNullType(type);
+      return `${name}${optional ? '?' : ''}`;
     };
 
     const processorConfig: SelectionSetProcessorConfig = {
@@ -69,8 +47,10 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
       scalars: this.scalars,
-      formatNamedField: (name: string): string => name,
-      wrapTypeWithModifiers,
+      formatNamedField,
+      wrapTypeWithModifiers(baseType, type) {
+        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+      },
     };
     const processor = config.preResolveTypes
       ? new PreResolveTypesProcessor(processorConfig)

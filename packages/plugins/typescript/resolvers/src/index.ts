@@ -1,11 +1,11 @@
-import { printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
-export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptResolversPluginConfig
@@ -33,6 +33,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
+  const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const printedSchema = config.federation
     ? printSchemaWithDirectives(transformedSchema)
@@ -41,14 +42,20 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
 
+  const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
-  const stitchingResolverType = `
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+  const legacyStitchingResolverType = `
+export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-`;
+};`;
+  const newStitchingResolverType = `
+export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  selectionSet: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};`;
+  const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
   const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
@@ -64,8 +71,15 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     defsToInclude.push(`export type ReferenceResolver<TResult, TReference, TContext> = (
       reference: TReference,
       context: TContext,
-      info: GraphQLResolveInfo
+      info${optionalSignForInfoArg}: GraphQLResolveInfo
     ) => Promise<TResult> | TResult;`);
+
+    defsToInclude.push(`
+      type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+      type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+      type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+      export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+    `);
   }
 
   if (noSchemaStitching) {
@@ -77,23 +91,32 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     // | ResolverFn
     // | StitchingResolver;
     defsToInclude.push(
-      [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n')
+      [
+        legacyStitchingResolverType,
+        newStitchingResolverType,
+        stitchingResolverType,
+        resolverType,
+        `  | ${resolverFnUsage}`,
+        `  | ${stitchingResolverUsage};`,
+      ].join('\n')
     );
   }
+
+  const importType = config.useTypeImports ? 'import type' : 'import';
 
   if (config.customResolverFn) {
     const parsedMapper = parseMapper(config.customResolverFn);
     if (parsedMapper.isExternal) {
       if (parsedMapper.default) {
-        prepend.push(`import ResolverFn from '${parsedMapper.source}';`);
+        prepend.push(`${importType} ResolverFn from '${parsedMapper.source}';`);
       } else {
         prepend.push(
-          `import { ${parsedMapper.import} ${parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''}} from '${
-            parsedMapper.source
-          }';`
+          `${importType} { ${parsedMapper.import} ${
+            parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''
+          }} from '${parsedMapper.source}';`
         );
       }
-      prepend.push(`export { ResolverFn };`);
+      prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
     } else {
       prepend.push(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
     }
@@ -103,7 +126,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;`;
 
     defsToInclude.push(defaultResolverFn);
@@ -119,14 +142,14 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
@@ -150,10 +173,10 @@ export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TCo
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo
-) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
+  info${optionalSignForInfoArg}: GraphQLResolveInfo
+) => ${namespacedImportPrefix}Maybe<TTypes> | Promise<${namespacedImportPrefix}Maybe<TTypes>>;
 
-export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}> = (obj: T, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -162,7 +185,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
 
@@ -180,7 +203,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   }
 
   if (imports.length) {
-    prepend.push(`import { ${imports.join(', ')} } from 'graphql';`);
+    prepend.push(`${importType} { ${imports.join(', ')} } from 'graphql';`);
   }
 
   if (config.customResolveInfo) {

@@ -1,18 +1,18 @@
 type Query {
-    fieldA(a: String): String
-    fieldB: MyType
-    fieldC: CType
+  fieldA(a: String): String
+  fieldB: MyType
+  fieldC: CType
 }
 
 type MyType {
-    fieldC: Int
+  fieldC: Int
 }
 
 type CType {
-    item: DType
+  item: DType
 }
 
 type DType {
-    field1: String
-    field2: Int
+  field1: String
+  field2: Int
 }

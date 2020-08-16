@@ -1,4 +1,9 @@
-import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
+import {
+  transformComment,
+  indent,
+  DeclarationBlock,
+  AvoidOptionalsConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import {
@@ -16,7 +21,6 @@ import {
   TypeScriptOperationVariablesToObject,
   TypeScriptPluginParsedConfig,
   TsVisitor,
-  AvoidOptionalsConfig,
 } from '@graphql-codegen/typescript';
 
 export type DecoratorConfig = {
@@ -242,10 +246,14 @@ export class TypeGraphQLVisitor<
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(typeString);
+
+    const maybeType = type.type.match(MAYBE_REGEX);
+    const arrayType = `[${maybeType ? this.clearOptional(type.type) : type.type}]`;
+
     const decorator =
       '\n' +
       indent(
-        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${
+        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? arrayType : type.type}${
           type.isNullable ? ', { nullable: true }' : ''
         })`
       ) +
@@ -290,5 +298,13 @@ export class TypeGraphQLVisitor<
       super.EnumTypeDefinition(node) +
       `TypeGraphQL.registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`
     );
+  }
+
+  protected clearOptional(str: string): string {
+    if (str.startsWith('Maybe')) {
+      return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+
+    return str;
   }
 }

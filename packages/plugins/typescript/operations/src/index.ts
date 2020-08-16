@@ -4,7 +4,9 @@ import { TypeScriptDocumentsVisitor } from './visitor';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config';
 
-export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
+export { TypeScriptDocumentsPluginConfig } from './config';
+
+export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
@@ -24,21 +26,37 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+
   const visitorResult = visit(allAst, {
-    leave: new TypeScriptDocumentsVisitor(schema, config, allFragments),
+    leave: visitor,
   });
 
-  const result = visitorResult.definitions.join('\n');
+  let content = visitorResult.definitions.join('\n');
+
+  if (config.addOperationExport) {
+    const exportConsts = [];
+
+    allAst.definitions.forEach(d => {
+      if ('name' in d) {
+        exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
+      }
+    });
+
+    content = visitorResult.definitions.concat(exportConsts).join('\n');
+  }
 
   if (config.globalNamespace) {
-    return `
+    content = `
     declare global { 
-      ${result} 
-    }
-          `;
-  } else {
-    return result;
+      ${content} 
+    }`;
   }
+
+  return {
+    prepend: [...visitor.getImports(), ...visitor.getGlobalDeclarations(visitor.config.noExport)],
+    content,
+  };
 };
 
 export { TypeScriptDocumentsVisitor };

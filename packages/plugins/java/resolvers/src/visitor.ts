@@ -32,14 +32,14 @@ export interface JavaResolverParsedConfig extends ParsedConfig {
 export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConfig, JavaResolverParsedConfig> {
   private _includeTypeResolverImport = false;
 
-  constructor(rawConfig: JavaResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
+  constructor(rawConfig: JavaResolversPluginRawConfig, _schema: GraphQLSchema, defaultPackageName: string) {
     super(rawConfig, {
       mappers: transformMappers(rawConfig.mappers || {}),
       package: rawConfig.package || defaultPackageName,
       defaultMapper: parseMapper(rawConfig.defaultMapper || 'Object'),
       className: rawConfig.className || 'Resolvers',
       listType: rawConfig.listType || 'Iterable',
-      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS),
+      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
     });
   }
 

@@ -8,7 +8,7 @@ describe('type-graphql', () => {
     const schema = buildSchema(/* GraphQL */ `
       scalar A
     `);
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.prepend).toContainEqual(`import * as TypeGraphQL from 'type-graphql';`);
   });
@@ -23,7 +23,7 @@ describe('type-graphql', () => {
         B
       }
     `);
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       /** custom enum */
@@ -59,7 +59,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType()
@@ -108,7 +108,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType({ implements: ITest })
@@ -154,7 +154,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InputType()
@@ -231,7 +231,7 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ArgsType()
@@ -347,5 +347,53 @@ describe('type-graphql', () => {
         mandatoryDate!: Scalars['DateTime'];
       }
     `);
+  });
+
+  it('should fix `Maybe` only refers to a type, but is being used as a value here for array return type', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Guest {
+        id: ID!
+        name: String!
+        phone: String!
+      }
+
+      type Query {
+        guests: [Guest]
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+  /** All built-in and custom scalars, mapped to their actual values */
+  export type Scalars = {
+    ID: string;
+    String: string;
+    Boolean: boolean;
+    Int: number;
+    Float: number;
+  };
+  
+  @TypeGraphQL.ObjectType()
+  export class Guest {
+    __typename?: 'Guest';
+  
+    @TypeGraphQL.Field(type => TypeGraphQL.ID)
+    id!: Scalars['ID'];
+  
+    @TypeGraphQL.Field(type => String)
+    name!: Scalars['String'];
+  
+    @TypeGraphQL.Field(type => String)
+    phone!: Scalars['String'];
+  };
+  
+  export class Query {
+    __typename?: 'Query';
+  
+    @TypeGraphQL.Field(type => [Guest], { nullable: true })
+    guests!: Maybe<Array<Maybe<Guest>>>;
+  };
+  `);
   });
 });

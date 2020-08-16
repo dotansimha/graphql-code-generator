@@ -1,7 +1,6 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-
+import { gql } from '@apollo/client';
 export type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Types.Human, 'name' | 'mass'>;
 
 export const HumanFieldsFragmentDoc = gql`

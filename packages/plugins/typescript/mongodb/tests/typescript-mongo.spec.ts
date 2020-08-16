@@ -32,6 +32,10 @@ describe('TypeScript Mongo', () => {
       nullableEmbedded: [EmbeddedType] @embedded
       mappedEmbedded: EmbeddedType @embedded @map(path: "innerEmbedded.moreLevel")
       changeName: String @column @map(path: "other_name")
+      nonNullableColumnMap: String! @column @map(path: "nonNullableColumn")
+      nullableLinkMap: LinkType @link @map(path: "nullableLinkId")
+      nullableColumnMapPath: String @column @map(path: "nullableColumnMap.level")
+      nonNullableColumnMapPath: String! @column @map(path: "nonNullableColumnMap.level")
     }
 
     type EmbeddedType @entity {
@@ -229,18 +233,28 @@ describe('TypeScript Mongo', () => {
 
     it('Should output the correct values for @map directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toContain(`myInnerArray: Maybe<Array<Maybe<number>>>`); // simple @column with array and @map
-      expect(result).toContain(`other_name: Maybe<string>`); // simple @map scalar
+      expect(result).toContain(`myInnerArray?: Maybe<Array<Maybe<number>>>`); // simple @column with array and @map
+      expect(result).toContain(`other_name?: Maybe<string>`); // simple @map scalar
       expect(result).toBeSimilarStringTo(`
       profile: {
         inner: {
-          field: Maybe<string>,
+          field?: Maybe<string>,
         },
       },`); // custom @map with inner fields
       expect(result).toBeSimilarStringTo(`
       innerEmbedded: {
-        moreLevel: Maybe<EmbeddedTypeDbObject>,
+        moreLevel?: Maybe<EmbeddedTypeDbObject>,
       },`); // embedded with @map
+      expect(result).toContain(`nonNullableColumn: string`); // simple @column with @map
+      expect(result).toContain(`nullableLinkId?: Maybe<LinkTypeDbObject['_id']>`); // nullable @link with @map
+      expect(result).toBeSimilarStringTo(`
+      nullableColumnMap: {
+        level?: Maybe<string>,
+      },`); // map with nullable field;
+      expect(result).toBeSimilarStringTo(`
+      nonNullableColumnMap: {
+        level: string,
+      },`); // map with non-nullable field
       await validate(result, schema, {});
     });
 

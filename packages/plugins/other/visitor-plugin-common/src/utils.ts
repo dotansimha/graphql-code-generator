@@ -19,6 +19,7 @@ import {
   isObjectType,
   isListType,
   isAbstractType,
+  GraphQLOutputType,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
@@ -46,7 +47,15 @@ export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(value: string | number | NameNode): string {
+export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
+  if (skipNumericCheck) {
+    if (typeof value === 'number') {
+      return `${value}`;
+    } else {
+      return `'${value}'`;
+    }
+  }
+
   if (
     typeof value === 'number' ||
     (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
@@ -139,7 +148,9 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null): DeclarationBlock {
-    if (comment) {
+    const nonEmptyComment = isStringValueNode(comment) ? !!comment.value : !!comment;
+
+    if (nonEmptyComment) {
       this._comment = transformComment(comment, 0);
     }
 
@@ -216,13 +227,15 @@ export class DeclarationBlock {
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {
-      result += '{}';
+      result += this._config.blockTransformer('{}');
     }
 
     return (
       (this._comment ? this._comment : '') +
       result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') +
+      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+        ? ''
+        : ';') +
       '\n'
     );
   }
@@ -250,7 +263,8 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
 export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
-  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
+  defaultScalarType = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -280,7 +294,7 @@ export function buildScalars(
         } else if (!defaultScalarsMapping[name]) {
           result[name] = {
             isExternal: false,
-            type: 'any',
+            type: defaultScalarType,
           };
         }
       });
@@ -305,7 +319,7 @@ export function buildScalars(
 }
 
 function isStringValueNode(node: any): node is StringValueNode {
-  return node && typeof node === 'object' && node.kind === 'StringValue';
+  return node && typeof node === 'object' && node.kind === Kind.STRING;
 }
 
 export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
@@ -386,4 +400,33 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   }
 
   return [];
+}
+
+type WrapModifiersOptions = {
+  wrapOptional(type: string): string;
+  wrapArray(type: string): string;
+};
+export function wrapTypeWithModifiers(
+  baseType: string,
+  type: GraphQLOutputType,
+  options: WrapModifiersOptions
+): string {
+  let currentType = type;
+  const modifiers: Array<(type: string) => string> = [];
+  while (currentType) {
+    if (isNonNullType(currentType)) {
+      currentType = currentType.ofType;
+    } else {
+      modifiers.push(options.wrapOptional);
+    }
+
+    if (isListType(currentType)) {
+      modifiers.push(options.wrapArray);
+      currentType = currentType.ofType;
+    } else {
+      break;
+    }
+  }
+
+  return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
 }

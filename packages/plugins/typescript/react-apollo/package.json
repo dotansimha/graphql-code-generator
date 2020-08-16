@@ -1,36 +1,30 @@
 {
   "name": "@graphql-codegen/typescript-react-apollo",
-  "version": "1.13.0",
+  "version": "2.0.6",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use React Components/HOC/Hooks based on GraphQL operations",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/react-apollo"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "prepack": "bob-update-version",
-    "build": "bob",
-    "test": "jest --no-watchman --config ../../../../jest.config.js --forceExit"
+    "test": "jest --no-watchman --config ../../../../jest.config.js --forceExit",
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.13.0",
-    "@graphql-codegen/visitor-plugin-common": "1.13.0",
-    "auto-bind": "4.0.0",
-    "camel-case": "4.1.1",
-    "pascal-case": "3.1.1",
-    "tslib": "1.11.1"
+    "@graphql-codegen/plugin-helpers": "^1.17.8",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
+    "auto-bind": "~4.0.0",
+    "camel-case": "^4.1.1",
+    "pascal-case": "^3.1.1",
+    "tslib": "~2.0.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
     "graphql-tag": "^2.0.0"
   },
-  "devDependencies": {
-    "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.13.0",
-    "graphql": "14.6.0",
-    "jest": "25.1.0",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
-  },
-  "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
@@ -40,10 +34,8 @@
   "buildOptions": {
     "input": "./src/index.ts"
   },
-  "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-react-apollo"
-  },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

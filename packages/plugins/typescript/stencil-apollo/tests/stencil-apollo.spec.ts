@@ -3,11 +3,10 @@ import { StencilComponentType } from '../src/config';
 import { plugin } from '../src';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
-import { readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('Components', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   it('should import dependencies if class components are generated', async () => {
     const documents = gql`
       query Feed {

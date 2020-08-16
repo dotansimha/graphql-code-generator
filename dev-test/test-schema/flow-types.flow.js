@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 
 import { type GraphQLResolveInfo } from 'graphql';
 export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> &
@@ -74,7 +74,7 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => ?Types | Promise<?Types>;
 
-export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -91,8 +91,8 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>,
-  User: ResolverTypeWrapper<User>,
   Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  User: ResolverTypeWrapper<User>,
   String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
   Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
 };
@@ -100,8 +100,8 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {},
-  User: User,
   Int: $ElementType<Scalars, 'Int'>,
+  User: User,
   String: $ElementType<Scalars, 'String'>,
   Boolean: $ElementType<Scalars, 'Boolean'>,
 };
@@ -120,7 +120,7 @@ export type UserResolvers<ContextType = any, ParentType = $ElementType<Resolvers
   id?: Resolver<$ElementType<ResolversTypes, 'Int'>, ParentType, ContextType>,
   name?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>,
 };
 
 export type Resolvers<ContextType = any> = {

@@ -1,20 +1,15 @@
 import * as Types from '../types.d';
 
-import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
-export type HeroParentTypeDependentFieldQueryVariables = {
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
-};
+}>;
 
 export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
-  hero: Types.Maybe<
+  hero?: Types.Maybe<
     | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends: Types.Maybe<
+          friends?: Types.Maybe<
             Array<
               Types.Maybe<
                 | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
@@ -24,7 +19,7 @@ export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
           >;
         })
     | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
-          friends: Types.Maybe<
+          friends?: Types.Maybe<
             Array<
               Types.Maybe<
                 | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
@@ -59,45 +54,47 @@ export const HeroParentTypeDependentFieldDocument = gql`
     }
   }
 `;
-export type HeroParentTypeDependentFieldComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
+
+/**
+ * __useHeroParentTypeDependentFieldQuery__
+ *
+ * To run a query within a React component, call `useHeroParentTypeDependentFieldQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeroParentTypeDependentFieldQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeroParentTypeDependentFieldQuery({
+ *   variables: {
+ *      episode: // value for 'episode'
+ *   },
+ * });
+ */
+export function useHeroParentTypeDependentFieldQuery(
+  baseOptions?: Apollo.QueryHookOptions<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
+) {
+  return Apollo.useQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+    HeroParentTypeDependentFieldDocument,
+    baseOptions
+  );
+}
+export function useHeroParentTypeDependentFieldLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
     HeroParentTypeDependentFieldQuery,
     HeroParentTypeDependentFieldQueryVariables
-  >,
-  'query'
->;
-
-export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDependentFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
-    query={HeroParentTypeDependentFieldDocument}
-    {...props}
-  />
-);
-
-export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  HeroParentTypeDependentFieldQuery,
-  HeroParentTypeDependentFieldQueryVariables
-> &
-  TChildProps;
-export function withHeroParentTypeDependentField<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    HeroParentTypeDependentFieldQuery,
-    HeroParentTypeDependentFieldQueryVariables,
-    HeroParentTypeDependentFieldProps<TChildProps>
-  >(HeroParentTypeDependentFieldDocument, {
-    alias: 'heroParentTypeDependentField',
-    ...operationOptions,
-  });
+  return Apollo.useLazyQuery<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>(
+    HeroParentTypeDependentFieldDocument,
+    baseOptions
+  );
 }
-export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<
+export type HeroParentTypeDependentFieldQueryHookResult = ReturnType<typeof useHeroParentTypeDependentFieldQuery>;
+export type HeroParentTypeDependentFieldLazyQueryHookResult = ReturnType<
+  typeof useHeroParentTypeDependentFieldLazyQuery
+>;
+export type HeroParentTypeDependentFieldQueryResult = Apollo.QueryResult<
   HeroParentTypeDependentFieldQuery,
   HeroParentTypeDependentFieldQueryVariables
 >;

@@ -1,5 +1,12 @@
 import { TypeScriptResolversPluginConfig } from './config';
-import { FieldDefinitionNode, ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
+import {
+  FieldDefinitionNode,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  GraphQLSchema,
+  EnumTypeDefinitionNode,
+} from 'graphql';
 import autoBind from 'auto-bind';
 import {
   ParsedResolversConfig,
@@ -9,10 +16,15 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
+
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
   useIndexSignature: boolean;
   wrapFieldDefinitions: boolean;
+  allowParentTypeOverride: boolean;
+  optionalInfoArgument: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -26,6 +38,8 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
+        allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
+        optionalInfoArgument: getConfigValue(pluginConfig.optionalInfoArgument, false),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
@@ -36,7 +50,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.convertName,
         this.config.avoidOptionals,
         this.config.immutableTypes,
-        null,
+        this.config.namespacedImportName,
         [],
         this.config.enumPrefix,
         this.config.enumValues
@@ -52,8 +66,18 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     }
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType},`;
+  protected transformParentGenericType(parentType: string): string {
+    if (this.config.allowParentTypeOverride) {
+      return `ParentType = ${parentType}`;
+    }
+
+    return `ParentType extends ${parentType} = ${parentType}`;
+  }
+
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   private clearOptional(str: string): string {
@@ -91,5 +115,29 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return ';';
+  }
+
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    const valuesMap = `{ ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .join(', ')} }`;
+
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+
+    return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
+  }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{ ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} }`;
   }
 }

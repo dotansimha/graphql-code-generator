@@ -1,59 +1,79 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { compileTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
+import { RawGenericSdkPluginConfig } from '../src/config';
 import { plugin } from '../src/index';
-import { parse, buildClientSchema } from 'graphql';
+import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '@graphql-codegen/typescript';
-import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
-import { readFileSync } from 'fs';
+import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
+import { plugin as tsDocumentsPlugin, TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
-describe('generic-sdk', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
-  const basicDoc = parse(/* GraphQL */ `
-    query feed {
-      feed {
-        id
-        commentCount
-        repository {
-          owner {
-            avatar_url
-          }
+const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+const basicDoc = parse(/* GraphQL */ `
+  query feed {
+    feed {
+      id
+      commentCount
+      repository {
+        owner {
+          avatar_url
         }
       }
     }
+  }
 
-    query feed2($v: String!) {
-      feed {
-        id
-      }
+  query feed2($v: String!) {
+    feed {
+      id
     }
+  }
 
-    query feed3($v: String) {
-      feed {
-        id
-      }
+  query feed3($v: String) {
+    feed {
+      id
     }
+  }
 
-    query feed4($v: String! = "TEST") {
-      feed {
-        id
-      }
+  query feed4($v: String! = "TEST") {
+    feed {
+      id
     }
-  `);
+  }
+`);
 
-  const validateAndCompile = async (content: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
-    const m = mergeOutputs([
-      await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
-      await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
-      content,
-      usage,
-    ]);
+const docWithSubscription = parse(/* GraphQL */ `
+  query feed {
+    feed {
+      id
+    }
+  }
 
-    await compileTs(m);
+  subscription commentAdded {
+    commentAdded {
+      id
+    }
+  }
+`);
 
-    return m;
-  };
+const validate = async (
+  content: Types.PluginOutput,
+  config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawGenericSdkPluginConfig,
+  docs: Types.DocumentFile[],
+  pluginSchema: GraphQLSchema,
+  usage: string
+) => {
+  const m = mergeOutputs([
+    await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+    await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+    content,
+    usage,
+  ]);
 
+  await validateTs(m);
+
+  return m;
+};
+
+describe('generic-sdk', () => {
   describe('sdk', () => {
     it('Should generate a correct wrap method', async () => {
       const config = {};
@@ -64,9 +84,9 @@ describe('generic-sdk', () => {
 
       const usage = `
 async function test() {
-  const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+  const requester = <R, V> (doc: DocumentNode, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -79,7 +99,7 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
     });
@@ -95,7 +115,7 @@ async function test() {
 async function test() {
   const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -108,8 +128,17 @@ async function test() {
     }
   }
 }`;
-      const output = await validateAndCompile(result, config, docs, schema, usage);
+      const output = await validate(result, config, docs, schema, usage);
 
+      expect(output).toMatchSnapshot();
+    });
+
+    it('Should generate a correct wrap method when usingObservableFrom is set', async () => {
+      const config = { usingObservableFrom: "import Observable from 'zen-observable';" };
+      const docs = [{ filePath: '', document: docWithSubscription }];
+      const result = (await plugin(schema, docs, config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+      const output = await validate(result, config, docs, schema, '');
       expect(output).toMatchSnapshot();
     });
   });

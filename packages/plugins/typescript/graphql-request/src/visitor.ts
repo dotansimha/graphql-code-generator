@@ -1,19 +1,22 @@
 import {
-  ClientSideBaseVisitor,
   ClientSideBasePluginConfig,
-  LoadedFragment,
+  ClientSideBaseVisitor,
+  DocumentMode,
   getConfigValue,
   indentMultiline,
-  DocumentMode,
+  LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
-
 import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
 }
+
+const additionalExportedTypes = `
+export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+`;
 
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   RawGraphQLRequestPluginConfig,
@@ -34,19 +37,17 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     autoBind(this);
 
-    this._additionalImports.push(`import { GraphQLClient } from 'graphql-request';`);
+    const typeImport = this.config.useTypeImports ? 'import type' : 'import';
+
+    this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
 
     if (this.config.documentMode !== DocumentMode.string) {
       this._additionalImports.push(`import { print } from 'graphql';`);
     }
 
     if (this.config.rawRequest) {
-      this._additionalImports.push(`import { GraphQLError } from 'graphql-request/dist/src/types';`);
+      this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
     }
-
-    this._additionalImports.push(
-      `import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';`
-    );
   }
 
   protected buildOperation(
@@ -96,10 +97,14 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       })
       .map(s => indentMultiline(s, 2));
 
-    return `export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+    return `${additionalExportedTypes}
+
+const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
 ${allPossibleActions.join(',\n')}
   };
-}`;
+}
+export type Sdk = ReturnType<typeof getSdk>;`;
   }
 }

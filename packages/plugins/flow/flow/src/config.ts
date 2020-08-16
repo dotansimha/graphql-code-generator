@@ -1,37 +1,38 @@
 import { RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 
+/**
+ * @description This plugin generates Flow types based on your `GraphQLSchema`.
+ *
+ * It generates types for your entire schema: types, input types, enum, interface, scalar and union.
+ */
 export interface FlowPluginConfig extends RawTypesConfig {
   /**
-   * @name useFlowExactObjects
-   * @type boolean
    * @description Generates Flow types as Exact types.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowExactObjects: false
+   *   path/to/file.ts:
+   *     plugins:
+   *       - flow
+   *     config:
+   *       useFlowExactObjects: false
    * ```
    */
   useFlowExactObjects?: boolean;
   /**
-   * @name useFlowReadOnlyTypes
-   * @type boolean
    * @description Generates read-only Flow types
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowReadOnlyTypes: true
+   *   path/to/file.ts:
+   *    plugins:
+   *      - flow
+   *    config:
+   *      useFlowReadOnlyTypes: true
    * ```
    */
   useFlowReadOnlyTypes?: boolean;

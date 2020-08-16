@@ -60,8 +60,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return comment + indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return `?${super.NamedType(node)}`;
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `?${super.NamedType(node, key, parent, path, ancestors)}`;
   }
 
   ListType(node: ListTypeNode): string {
@@ -130,6 +130,21 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return `...{${this.config.useFlowExactObjects ? '|' : ''}\n${allFields.map(s => indent(s)).join('\n')}\n  ${
       this.config.useFlowExactObjects ? '|' : ''
     }}`;
+  }
+
+  handleEnumValueMapper(
+    typeIdentifier: string,
+    importIdentifier: string | null,
+    sourceIdentifier: string | null,
+    sourceFile: string | null
+  ): string[] {
+    let identifier = sourceIdentifier;
+
+    if (sourceIdentifier !== typeIdentifier && !sourceIdentifier.includes(' as ')) {
+      identifier = `${sourceIdentifier} as ${typeIdentifier}`;
+    }
+
+    return [this._buildTypeImport(identifier, sourceFile)];
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

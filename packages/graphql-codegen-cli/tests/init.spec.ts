@@ -113,7 +113,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -129,7 +129,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-apollo-angular');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use react related plugins when react is found', async () => {
@@ -156,7 +156,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
@@ -172,7 +172,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-react-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use stencil related plugins when @stencil/core is found', async () => {
@@ -199,7 +199,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
@@ -215,7 +215,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-stencil-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use typescript related plugins when typescript is found (node)', async () => {
@@ -241,7 +241,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -255,7 +255,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-resolvers');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3); // 3 - because we have typescript package in devDeps
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4); // 3 - because we have typescript package in devDeps
   });
 
   it('should have few default values', async () => {
@@ -285,7 +285,7 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
     expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config ${defaults.config}`);
@@ -325,7 +325,7 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
     expect(pkg.scripts[options.script]).toEqual(`graphql-codegen --config ${options.config}`);
@@ -362,7 +362,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // config
     // should overwrite
@@ -424,6 +424,7 @@ describe('init', () => {
         [Tags.node]: targets.includes(Tags.node),
         [Tags.typescript]: targets.includes(Tags.typescript),
         [Tags.flow]: targets.includes(Tags.flow),
+        [Tags.vue]: targets.includes(Tags.vue),
       })
         .filter(c => c.checked)
         .reduce((all, choice) => all.concat(choice.value), []);

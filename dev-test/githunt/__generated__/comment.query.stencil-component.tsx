@@ -1,17 +1,18 @@
 import gql from 'graphql-tag';
+import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type CommentQueryVariables = {
+  export type CommentQueryVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
     limit?: Types.Maybe<Types.Scalars['Int']>;
     offset?: Types.Maybe<Types.Scalars['Int']>;
-  };
+  }>;
 
   export type CommentQuery = { __typename?: 'Query' } & {
-    currentUser: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
-    entry: Types.Maybe<
+    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
+    entry?: Types.Maybe<
       { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'createdAt' | 'commentCount'> & {
           postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
           comments: Array<Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;

@@ -5,9 +5,6 @@ import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
 import { RawGraphQLRequestPluginConfig } from './config';
 
-export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
-
 export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],

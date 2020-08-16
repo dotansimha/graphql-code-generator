@@ -7,68 +7,65 @@ import { OperationVisitor } from './operation-visitor';
 import { FileType } from './file-type';
 import { CustomTypeClassVisitor } from './custom-type-class';
 
+/**
+ * @description This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.
+ */
 export interface JavaApolloAndroidPluginConfig extends RawConfig {
   /**
-   * @name package
-   * @type string
    * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * ./app/src/main/java/:
    *   preset: java-apollo-android
    *   config:
-   *     package: "com.my.paackage.generated.graphql"
+   *     package: "com.my.package.generated.graphql"
    *   plugins:
    *     - java-apollo-android
    * ```
    */
   package?: string;
   /**
-   * @name typePackage
-   * @type string
    * @description Customize the Java package name for the types generated based on input types.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * ./app/src/main/java/:
    *   preset: java-apollo-android
    *   config:
-   *     typePackage: "com.my.paackage.generated.graphql"
+   *     typePackage: "com.my.package.generated.graphql"
    *   plugins:
    *     - java-apollo-android
    * ```
    */
   typePackage?: string;
   /**
-   * @name fragmentPackage
-   * @type string
    * @description Customize the Java package name for the fragments generated classes.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * ./app/src/main/java/:
    *   preset: java-apollo-android
    *   config:
-   *     fragmentPackage: "com.my.paackage.generated.graphql"
+   *     fragmentPackage: "com.my.package.generated.graphql"
    *   plugins:
    *     - java-apollo-android
    * ```
    */
   fragmentPackage?: string;
 
-  // This is an internal configuration, that allow the preset to comunicate with the plugin.
+  // This is an internal configuration, that allow the preset to communicate with the plugin.
   fileType: FileType;
 }
 
-export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (
+export const plugin: PluginFunction<JavaApolloAndroidPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: JavaApolloAndroidPluginConfig
-): Types.PluginOutput => {
+) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
@@ -100,7 +97,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (
   }
 
   if (!visitor) {
-    return '';
+    return { content: '' };
   }
 
   const visitResult = visit(allAst, visitor as any);
