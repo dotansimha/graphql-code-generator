@@ -548,7 +548,11 @@ export const SubmitRepositoryDocument = gql`
  * });
  */
 export function useSubmitRepositoryMutation(
-  options: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  options:
+    | VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+      >
 ) {
   return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
@@ -587,7 +591,9 @@ export const SubmitCommentDocument = gql`
  * });
  */
 export function useSubmitCommentMutation(
-  options: VueApolloComposable.UseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+  options:
+    | VueApolloComposable.UseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>>
 ) {
   return VueApolloComposable.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(
     SubmitCommentDocument,
@@ -628,7 +634,11 @@ export const VoteDocument = gql`
  *   },
  * });
  */
-export function useVoteMutation(options: VueApolloComposable.UseMutationOptions<VoteMutation, VoteMutationVariables>) {
+export function useVoteMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<VoteMutation, VoteMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<VoteMutation, VoteMutationVariables>>
+) {
   return VueApolloComposable.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, options);
 }
 export type VoteMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
