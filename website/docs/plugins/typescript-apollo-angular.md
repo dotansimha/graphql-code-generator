@@ -36,6 +36,9 @@ Then, use it:
 
 ```ts
 import { MyFeedGQL, MyFeedQuery } from './graphql';
+//BE SURE TO USE Observable from rxjs and not from @apollo/client/core when using map
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'feed',
