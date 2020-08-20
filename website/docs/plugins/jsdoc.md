@@ -11,7 +11,7 @@ This plugin generates types in the form of JSDoc comments based on your GraphQLS
 
 :::shell Using `yarn`
 
-    $ yarn add -D @graphql-codegen/jsdoc
+    yarn add -D @graphql-codegen/jsdoc
 
 :::
 
