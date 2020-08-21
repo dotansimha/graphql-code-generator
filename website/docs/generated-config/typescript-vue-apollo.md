@@ -9,7 +9,7 @@ This plugin generates
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-vue-apollo
+    yarn add -D @graphql-codegen/typescript-vue-apollo
 :::
 
 ## API Reference

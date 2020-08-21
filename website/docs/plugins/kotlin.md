@@ -17,8 +17,8 @@ To get started with this plugins and preset, make sure you have the following in
 Run the following in your Android project:
 
 ```
-  $ yarn init --yes
-  $ yarn add @graphql-codegen/cli graphql @graphql-codegen/kotlin
+  yarn init --yes
+  yarn add @graphql-codegen/cli graphql @graphql-codegen/kotlin
 ```
 
 Then, create `codegen.yml` with the following configuration:
