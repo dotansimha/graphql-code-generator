@@ -47,7 +47,7 @@ Deprecated. Changes the documentMode to `documentNode`.
 ### `gqlImport`
 
 type: `string`
-default: `gql#graphql-tag`
+default: `graphql-tag#gql`
 
 Customize from which module will `gql` be imported from.
 This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.

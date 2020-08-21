@@ -49,10 +49,7 @@
               }
             },
             {
-              "type": [
-                "string",
-                "boolean"
-              ]
+              "type": ["string", "boolean"]
             }
           ]
         },
@@ -99,11 +96,7 @@
         "placement": {
           "default": "prepend",
           "description": "Allow you to choose where to add the content.",
-          "enum": [
-            "append",
-            "content",
-            "prepend"
-          ],
+          "enum": ["append", "content", "prepend"],
           "type": "string"
         },
         "content": {
@@ -213,12 +206,7 @@
               "$ref": "#/definitions/DeclarationKindConfig"
             },
             {
-              "enum": [
-                "abstract class",
-                "class",
-                "interface",
-                "type"
-              ],
+              "enum": ["abstract class", "class", "interface", "type"],
               "type": "string"
             }
           ]
@@ -358,12 +346,7 @@
               "$ref": "#/definitions/DeclarationKindConfig"
             },
             {
-              "enum": [
-                "abstract class",
-                "class",
-                "interface",
-                "type"
-              ],
+              "enum": ["abstract class", "class", "interface", "type"],
               "type": "string"
             }
           ]
@@ -517,7 +500,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -719,12 +702,7 @@
               "$ref": "#/definitions/DeclarationKindConfig"
             },
             {
-              "enum": [
-                "abstract class",
-                "class",
-                "interface",
-                "type"
-              ],
+              "enum": ["abstract class", "class", "interface", "type"],
               "type": "string"
             }
           ]
@@ -826,7 +804,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1273,7 +1251,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1403,7 +1381,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1565,10 +1543,7 @@
         "reactApolloVersion": {
           "description": "Sets the version of react-apollo.\nIf you are using the old (deprecated) package of `react-apollo`, please set this configuration to `2`.\nIf you are using Apollo-Client v3, please set this to `3`.",
           "default": 3,
-          "enum": [
-            2,
-            3
-          ],
+          "enum": [2, 3],
           "type": "number"
         },
         "withResultType": {
@@ -1592,7 +1567,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1721,7 +1696,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1841,7 +1816,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -1981,7 +1956,7 @@
           "type": "boolean"
         },
         "gqlImport": {
-          "default": "gql#graphql-tag",
+          "default": "graphql-tag#gql",
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.",
           "type": "string"
         },
@@ -2287,12 +2262,7 @@
               "$ref": "#/definitions/DeclarationKindConfig"
             },
             {
-              "enum": [
-                "abstract class",
-                "class",
-                "interface",
-                "type"
-              ],
+              "enum": ["abstract class", "class", "interface", "type"],
               "type": "string"
             }
           ]
@@ -2547,12 +2517,7 @@
               "$ref": "#/definitions/DeclarationKindConfig"
             },
             {
-              "enum": [
-                "abstract class",
-                "class",
-                "interface",
-                "type"
-              ],
+              "enum": ["abstract class", "class", "interface", "type"],
               "type": "string"
             }
           ]
@@ -2634,19 +2599,13 @@
         "module": {
           "description": "Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.",
           "default": "es2015",
-          "enum": [
-            "commonjs",
-            "es2015"
-          ],
+          "enum": ["commonjs", "es2015"],
           "type": "string"
         },
         "apolloClientVersion": {
           "description": "Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.",
           "default": 2,
-          "enum": [
-            2,
-            3
-          ],
+          "enum": [2, 3],
           "type": "number"
         },
         "useExplicitTyping": {
@@ -3531,17 +3490,11 @@
         {
           "type": "array",
           "items": {
-            "type": [
-              "string",
-              "object"
-            ]
+            "type": ["string", "object"]
           }
         },
         {
-          "type": [
-            "string",
-            "object"
-          ]
+          "type": ["string", "object"]
         }
       ]
     },
@@ -3596,10 +3549,7 @@
                   {
                     "type": "object",
                     "additionalProperties": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
+                      "type": ["string", "number"]
                     }
                   },
                   {
@@ -3642,12 +3592,7 @@
       }
     },
     "DeclarationKind": {
-      "enum": [
-        "abstract class",
-        "class",
-        "interface",
-        "type"
-      ],
+      "enum": ["abstract class", "class", "interface", "type"],
       "type": "string"
     },
     "ScalarsMap": {
@@ -3670,10 +3615,7 @@
           "$ref": "#/definitions/NamingConventionMap"
         },
         {
-          "type": [
-            "string",
-            "object"
-          ]
+          "type": ["string", "object"]
         }
       ]
     },
@@ -3682,16 +3624,10 @@
       "type": "object",
       "properties": {
         "enumValues": {
-          "type": [
-            "string",
-            "object"
-          ]
+          "type": ["string", "object"]
         },
         "typeNames": {
-          "type": [
-            "string",
-            "object"
-          ]
+          "type": ["string", "object"]
         },
         "transformUnderscore": {
           "type": "boolean"
@@ -3703,9 +3639,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "FragmentDefinition"
-          ]
+          "enum": ["FragmentDefinition"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3849,9 +3783,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "Name"
-          ]
+          "enum": ["Name"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3872,9 +3804,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "VariableDefinition"
-          ]
+          "enum": ["VariableDefinition"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3898,9 +3828,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "Variable"
-          ]
+          "enum": ["Variable"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3928,9 +3856,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "NamedType"
-          ]
+          "enum": ["NamedType"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3945,9 +3871,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "ListType"
-          ]
+          "enum": ["ListType"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -3962,9 +3886,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "NonNullType"
-          ]
+          "enum": ["NonNullType"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4017,9 +3939,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "IntValue"
-          ]
+          "enum": ["IntValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4034,9 +3954,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "FloatValue"
-          ]
+          "enum": ["FloatValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4051,9 +3969,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "StringValue"
-          ]
+          "enum": ["StringValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4071,9 +3987,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "BooleanValue"
-          ]
+          "enum": ["BooleanValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4088,9 +4002,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "NullValue"
-          ]
+          "enum": ["NullValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4102,9 +4014,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "EnumValue"
-          ]
+          "enum": ["EnumValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4119,9 +4029,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "ListValue"
-          ]
+          "enum": ["ListValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4170,9 +4078,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "ObjectValue"
-          ]
+          "enum": ["ObjectValue"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4193,9 +4099,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "ObjectField"
-          ]
+          "enum": ["ObjectField"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4219,9 +4123,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "Directive"
-          ]
+          "enum": ["Directive"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4245,9 +4147,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "Argument"
-          ]
+          "enum": ["Argument"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4265,9 +4165,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "SelectionSet"
-          ]
+          "enum": ["SelectionSet"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4298,9 +4196,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "Field"
-          ]
+          "enum": ["Field"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4327,9 +4223,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "FragmentSpread"
-          ]
+          "enum": ["FragmentSpread"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4347,9 +4241,7 @@
       "properties": {
         "kind": {
           "type": "string",
-          "enum": [
-            "InlineFragment"
-          ]
+          "enum": ["InlineFragment"]
         },
         "loc": {
           "$ref": "#/definitions/Location"
@@ -4386,10 +4278,7 @@
                 "type": "string"
               },
               "kind": {
-                "enum": [
-                  "document",
-                  "type"
-                ],
+                "enum": ["document", "type"],
                 "type": "string"
               }
             }
@@ -4401,13 +4290,7 @@
       "$ref": "#/definitions/__type_3"
     },
     "DocumentMode": {
-      "enum": [
-        "documentNode",
-        "documentNodeImportFragments",
-        "external",
-        "graphQLTag",
-        "string"
-      ],
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
     },
     "__type_4": {
@@ -4440,19 +4323,11 @@
       }
     },
     "StencilComponentType": {
-      "enum": [
-        "class",
-        "functional"
-      ],
+      "enum": ["class", "functional"],
       "type": "string"
     },
     "FileType": {
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
+      "enum": [0, 1, 2, 3],
       "type": "number"
     },
     "GeneratedPluginsMap": {
