@@ -104,7 +104,7 @@
     "tslib": "2.0.0",
     "typescript": "3.9.7",
     "urql": "1.10.0",
-    "vue": "2.6.11"
+    "vue": "2.6.12"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
