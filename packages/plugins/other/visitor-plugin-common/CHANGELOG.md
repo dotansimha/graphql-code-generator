@@ -1,5 +1,12 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.14
+
+### Patch Changes
+
+- 07f9b1b2: Fix a bug caused numeric enum values defined in the GraphQLSchema to be printed incorrectly
+- 35f67120: bugfix: allow to specify mappers for GraphQL `interface` and override the default behaviour.
+
 ## 1.17.13
 
 ### Patch Changes

@@ -1,6 +1,16 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 1.17.9
+
+### Patch Changes
+
+- d8f63b0d: Fix useMutation options. (#4540)
+- Updated dependencies [07f9b1b2]
+- Updated dependencies [35f67120]
+  - @graphql-codegen/visitor-plugin-common@1.17.14
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues

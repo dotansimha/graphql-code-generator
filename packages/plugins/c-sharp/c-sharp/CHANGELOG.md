@@ -1,6 +1,16 @@
 # @graphql-codegen/c-sharp
 
+## 1.17.9
+
+### Patch Changes
+
+- f92c5245: Remove unused c-sharp code
+- Updated dependencies [07f9b1b2]
+- Updated dependencies [35f67120]
+  - @graphql-codegen/visitor-plugin-common@1.17.14
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
