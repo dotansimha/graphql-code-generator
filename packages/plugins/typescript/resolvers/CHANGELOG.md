@@ -1,6 +1,13 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.17.9
+
+### Patch Changes
+
+- ed7f6b97: Fix issues with mappers not being applied for interfaces or unions
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
