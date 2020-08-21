@@ -36,7 +36,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    */
   noGraphQLTag?: boolean;
   /**
-   * @default gql#graphql-tag
+   * @default graphql-tag#gql
    * @description Customize from which module will `gql` be imported from.
    * This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
    *
