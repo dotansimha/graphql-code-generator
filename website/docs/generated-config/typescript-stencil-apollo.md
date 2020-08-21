@@ -11,7 +11,7 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
+    yarn add -D @graphql-codegen/typescript-stencil-apollo
 :::
 
 ## API Reference

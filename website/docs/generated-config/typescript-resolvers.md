@@ -12,7 +12,7 @@ You can find a blog post explaining the usage of this plugin here: https://the-g
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-resolvers
+    yarn add -D @graphql-codegen/typescript-resolvers
 :::
 
 ## API Reference

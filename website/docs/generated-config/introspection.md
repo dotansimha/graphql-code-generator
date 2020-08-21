@@ -9,7 +9,7 @@ This plugin generates a GraphQL introspection file based on your GraphQL schema.
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/introspection
+    yarn add -D @graphql-codegen/introspection
 :::
 
 ## API Reference

@@ -7,7 +7,7 @@ This preset generates a file per each operation file, and allow to import types 
 
 ## Installation
 
-    $ yarn add @graphql-codegen/import-types-preset
+    yarn add @graphql-codegen/import-types-preset
 
 ## Configuration
 

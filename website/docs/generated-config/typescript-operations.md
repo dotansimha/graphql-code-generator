@@ -12,7 +12,7 @@ Note: In most configurations, this plugin requires you to use `typescript as wel
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-operations
+    yarn add -D @graphql-codegen/typescript-operations
 :::
 
 ## API Reference

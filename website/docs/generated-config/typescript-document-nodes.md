@@ -9,7 +9,7 @@ This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graph
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-document-nodes
+    yarn add -D @graphql-codegen/typescript-document-nodes
 :::
 
 ## API Reference

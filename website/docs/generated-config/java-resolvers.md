@@ -7,7 +7,7 @@
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/java-resolvers
+    yarn add -D @graphql-codegen/java-resolvers
 :::
 
 ## API Reference
