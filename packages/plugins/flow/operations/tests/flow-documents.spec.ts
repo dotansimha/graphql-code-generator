@@ -976,7 +976,7 @@ describe('Flow Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type DummyQuery = ({
-        ...{| customName: $ElementType<Query, 'dummy'> |},
+        ...{| customName?: $ElementType<Query, 'dummy'> |},
       ...{| customName2?: ?$Pick<Profile, {| age?: * |}> |}
     });
       `);
@@ -1247,7 +1247,7 @@ describe('Flow Operations Plugin', () => {
           me {
             id
             username
-            role
+            adminRole: role(id: 1)
             profile {
               age
             }
@@ -1268,8 +1268,9 @@ describe('Flow Operations Plugin', () => {
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
       export type CurrentUserQuery = {| +me?: ?({
-        ...$Pick<User, {| +id: *, +username: *, +role?: * |}>,
-      ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
+        ...$Pick<User, {| +id: *, +username: * |}>,
+        ...{| +adminRole?: $ElementType<User, 'role'> |},
+        ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
     }) |};
       `);
 
