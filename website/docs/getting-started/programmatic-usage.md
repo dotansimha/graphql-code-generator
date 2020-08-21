@@ -3,7 +3,7 @@ id: programmatic-usage
 title: Programmatic Usage
 ---
 
-The Codegen has also a complete programmatic, you can use it if you need to customize the execution flow, or if you are writing a tool that uses the codegen.
+The codegen has also a complete programmatic API. You can use it if you need to customize the execution flow, or if you are writing a tool that uses the codegen.
 
 ### Basic Programmatic Usage
 
@@ -55,7 +55,7 @@ fs.writeFile(path.join(__dirname, outputFile), output, () => {
 ```
 
 :::info
-We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
+We are using this API in the live demo in GraphQL Code Generator website. [The code is here](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
 :::
 
 :::tip Loading schema and documents
@@ -64,7 +64,7 @@ You can use one of the tools from [`@graphql-toolkit`](https://github.com/ardata
 
 ## Using the CLI instead of `core`
 
-If you with to have the benefits that `cli` package has (like loading schema and document files, parsing endpoints and more), you can use `require()` (or `import`) for `@graphql-codegen/cli` directly with Node.JS:
+If you wish to have the benefits that `cli` package has (like loading schema and document files, parsing endpoints and more), you can use `require()` (or `import`) for `@graphql-codegen/cli` directly with Node.JS:
 
 ```js
 import { generate } from '@graphql-codegen/cli';
@@ -88,5 +88,5 @@ async function doSomething() {
 The return value should be of type `Promise<FileOutput[]>`.
 
 :::caution
-This usage will not work in a browser environment, because the `cli` package depends on NodeJS internals and file-system.
+This usage will not work in a browser environment, because the `cli` package depends on NodeJS internals and the file system.
 ::: 

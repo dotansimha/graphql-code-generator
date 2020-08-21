@@ -7,7 +7,7 @@
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/named-operations-object
+    yarn add -D @graphql-codegen/named-operations-object
 :::
 
 ## API Reference

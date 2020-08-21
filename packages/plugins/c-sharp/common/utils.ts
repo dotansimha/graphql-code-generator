@@ -3,13 +3,6 @@ import { indent } from '@graphql-codegen/visitor-plugin-common';
 import { csharpNativeValueTypes } from './scalars';
 import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
 
-export function buildPackageNameFromPath(path: string): string {
-  const unixify = require('unixify');
-  return unixify(path || '')
-    .replace(/src\/main\/.*?\//, '')
-    .replace(/\//g, '.');
-}
-
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment) {
     return '';

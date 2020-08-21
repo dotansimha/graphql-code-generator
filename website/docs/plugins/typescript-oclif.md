@@ -11,7 +11,7 @@ This plugin generates [`oclif`](https://www.npmjs.com/package/oclif) CLI command
 
 [You can find a working example of this plugin here](https://github.com/kalzoo/graphql-codegen-oclif-example/)
 
-    $ yarn add @graphql-codegen/typescript @graphql-codegen/typescript-oclif
+    yarn add @graphql-codegen/typescript @graphql-codegen/typescript-oclif
 
 The, make sure you have `typescript` plugin as well in your configuration:
 

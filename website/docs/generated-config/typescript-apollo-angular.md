@@ -15,7 +15,7 @@ To shed some more light regards this template, it's recommended to go through th
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-apollo-angular
+    yarn add -D @graphql-codegen/typescript-apollo-angular
 :::
 
 ## API Reference

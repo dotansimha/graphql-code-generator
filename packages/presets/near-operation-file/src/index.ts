@@ -8,7 +8,10 @@ import { FragmentImport, ImportDeclaration, ImportSource } from '@graphql-codege
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
-export type FragmentImportFromFn = (source: ImportSource<FragmentImport>) => ImportSource<FragmentImport>;
+export type FragmentImportFromFn = (
+  source: ImportSource<FragmentImport>,
+  sourceFilePath: string
+) => ImportSource<FragmentImport>;
 
 export type NearOperationFileConfig = {
   /**
@@ -171,7 +174,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const newImportSource: ImportSource<FragmentImport> =
             typeof importAllFragmentsFrom === 'string'
               ? { ...t.importSource, path: importAllFragmentsFrom }
-              : importAllFragmentsFrom(t.importSource);
+              : importAllFragmentsFrom(t.importSource, source.filename);
 
           return {
             ...t,
