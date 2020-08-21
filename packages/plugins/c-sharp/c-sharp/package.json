@@ -13,7 +13,7 @@
     "@graphql-codegen/plugin-helpers": "^1.17.8",
     "@graphql-codegen/visitor-plugin-common": "^1.17.13",
     "strip-indent": "^3.0.0",
-    "tslib": "~2.0.0",
+    "tslib": "~2.0.1",
     "unixify": "^1.0.0"
   },
   "peerDependencies": {
