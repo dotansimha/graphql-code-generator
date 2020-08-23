@@ -37,10 +37,10 @@ We can use the generated code like this in Vue 2 ([with composition api plugin](
 </template>
 
 <script lang="ts">
-import { createComponent } from "@vue/composition-api"
+import { defineComponent } from "@vue/composition-api"
 import { useTestQuery } from "../generated/graphqlOperations"
 
-export default createComponent({
+export default defineComponent({
   setup() {
     const { result, loading } = useTestQuery()
     return { result, loading }
