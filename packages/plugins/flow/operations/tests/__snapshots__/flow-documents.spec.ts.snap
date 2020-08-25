@@ -7,7 +7,8 @@ export type CurrentUserQueryVariables = {};
 
 
 export type CurrentUserQuery = {| +me?: ?({
-      ...$Pick<User, {| +id: *, +username: *, +role?: * |}>,
+      ...$Pick<User, {| +id: *, +username: * |}>,
+    ...{| +adminRole?: $ElementType<User, 'role'> |},
     ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
   }) |};
 "

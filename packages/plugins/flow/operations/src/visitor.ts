@@ -34,12 +34,13 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
     autoBind(this);
 
-    const wrapArray = (type: string) => `Array<${type}>`;
+    const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
     const wrapOptional = (type: string) => `?${type}`;
 
+    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
     const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
       const optional = !!type && !isNonNullType(type);
-      return `${name}${optional ? '?' : ''}`;
+      return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };
 
     const processorConfig: SelectionSetProcessorConfig = {
@@ -52,12 +53,12 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
     };
+
     const processor = config.preResolveTypes
       ? new PreResolveTypesProcessor(processorConfig)
       : new FlowWithPickSelectionSetProcessor({
           ...processorConfig,
           useFlowExactObjects: this.config.useFlowExactObjects,
-          useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(

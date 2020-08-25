@@ -10,7 +10,7 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
-    "worker-loader": "3.0.1",
+    "worker-loader": "3.0.2",
     "file-loader": "6.0.0",
     "style-loader": "1.2.1",
     "monaco-editor-webpack-plugin": "1.9.0",
@@ -23,7 +23,7 @@
     "react-dom": "16.13.1",
     "remark-code-import": "0.2.0",
     "remark-import-partial": "0.0.2",
-    "ts-node": "8.10.2",
+    "ts-node": "9.0.0",
     "vscode-languageserver-types": "3.15.1"
   },
   "dependencies": {
