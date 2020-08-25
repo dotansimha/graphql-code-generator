@@ -263,4 +263,42 @@ describe('Flow Resolvers Plugin', () => {
       export type ResolverTypeWrapper<T> = Promise<T> | T;
     `);
   });
+
+  it('should use interface in Resolvers', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type MyQuery {
+        posts: [Post]
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+
+      schema {
+        query: MyQuery
+      }
+    `);
+    const content = (await plugin(
+      testSchema,
+      [],
+      {
+        declarationKindResolvers: 'interface',
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+    expect(content.content).toBeSimilarStringTo(`export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
+      ) => Promise<Result> | Result;
+    `);
+    expect(content.content)
+      .toBeSimilarStringTo(`export interface PostResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Post'>> {
+        author?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        comment?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+      }
+    `);
+  });
 });

@@ -46,12 +46,22 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
     defsToInclude.push(`export type RecursivePick<T, U> = T`);
   }
 
-  const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  // ES6 class resolvers methods only contain 3 argument (args, context, info). see https://github.com/apollographql/apollo-server/issues/1996
+  const resolverType =
+    config.declarationKindResolvers === 'interface'
+      ? `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;`
+      : `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
   context: Context,
   info: GraphQLResolveInfo
-) => Promise<Result> | Result;
+) => Promise<Result> | Result;`;
+
+  const header = `${resolverType}
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
   parent: Parent,

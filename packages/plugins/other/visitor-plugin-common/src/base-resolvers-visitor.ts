@@ -63,6 +63,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   namespacedImportName: string;
   resolverTypeSuffix: string;
   allResolversTypeName: string;
+  declarationKindResolvers: DeclarationKind;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -293,6 +294,17 @@ export interface RawResolversConfig extends RawConfig {
    * @description The type name to use when exporting all resolvers signature as unified type.
    */
   allResolversTypeName?: string;
+  /**
+   * @default 'type'
+   * @description  Overrides the default output for resolvers.
+   * @exampleMarkdown
+   * ## overrides resolvers as interface
+   * ```yml
+   *   config:
+   *     declarationKindResolvers: interface
+   * ```
+   */
+  declarationKindResolvers?: DeclarationKind;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -343,6 +355,7 @@ export class BaseResolversVisitor<
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
+      declarationKindResolvers: getConfigValue(rawConfig.declarationKindResolvers, 'type'),
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       ...(additionalConfig || {}),
@@ -773,7 +786,6 @@ export class BaseResolversVisitor<
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
-
     // This is here because we don't want to break IResolvers, so there is a mapping by default,
     // and if the developer is overriding typesPrefix, it won't get generated at all.
     const deprecatedIResolvers = !this.config.typesPrefix
@@ -920,20 +932,22 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${this.convertName(
-            parentName,
-            {
-              useTypesPrefix: true,
-              useTypesSuffix: true,
-            },
-            true
-          ) +
+        ? `${
+            this.convertName(
+              parentName,
+              {
+                useTypesPrefix: true,
+                useTypesSuffix: true,
+              },
+              true
+            ) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
               useTypesSuffix: false,
             }) +
-            'Args'}`
+            'Args'
+          }`
         : null;
 
       if (argsType !== null) {
@@ -1002,7 +1016,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const declarationKind = 'type';
+    const declarationKind = this.config.declarationKindResolvers;
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
