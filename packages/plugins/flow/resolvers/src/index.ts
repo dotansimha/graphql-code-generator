@@ -47,14 +47,13 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
   }
 
   // ES6 class resolvers methods only contain 3 argument (args, context, info). see https://github.com/apollographql/apollo-server/issues/1996
-  const resolverType =
-    config.declarationKindResolvers === 'interface'
-      ? `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  const resolverType = config.supportES6Classes
+    ? `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   args: Args,
   context: Context,
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;`
-      : `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+    : `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
   context: Context,

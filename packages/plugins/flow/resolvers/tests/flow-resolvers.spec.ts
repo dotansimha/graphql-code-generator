@@ -283,7 +283,7 @@ describe('Flow Resolvers Plugin', () => {
       testSchema,
       [],
       {
-        declarationKindResolvers: 'interface',
+        supportES6Classes: 'true',
       } as any,
       { outputFile: 'graphql.ts' }
     )) as Types.ComplexPluginOutput;

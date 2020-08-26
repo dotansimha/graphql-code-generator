@@ -63,7 +63,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   namespacedImportName: string;
   resolverTypeSuffix: string;
   allResolversTypeName: string;
-  declarationKindResolvers: DeclarationKind;
+  supportES6Classes: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -295,16 +295,10 @@ export interface RawResolversConfig extends RawConfig {
    */
   allResolversTypeName?: string;
   /**
-   * @default 'type'
-   * @description  Overrides the default output for resolvers.
-   * @exampleMarkdown
-   * ## overrides resolvers as interface
-   * ```yml
-   *   config:
-   *     declarationKindResolvers: interface
-   * ```
+   * @default false
+   * @description  Overrides the default output for resolvers to support ES6 classes style resolvers.
    */
-  declarationKindResolvers?: DeclarationKind;
+  supportES6Classes?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -355,7 +349,7 @@ export class BaseResolversVisitor<
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
-      declarationKindResolvers: getConfigValue(rawConfig.declarationKindResolvers, 'type'),
+      supportES6Classes: getConfigValue(rawConfig.supportES6Classes, false),
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       ...(additionalConfig || {}),
@@ -1016,7 +1010,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const declarationKind = this.config.declarationKindResolvers;
+    const declarationKind = this.config.supportES6Classes ? 'interface' : 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
