@@ -1036,10 +1036,84 @@ describe('Compatibility Plugin', () => {
           export type Variables = MultipleSpreadsQueryVariables;
           export type Query = MultipleSpreadsQuery;
           export type Me = MultipleSpreadsQuery['me'];
-          export type SocialUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>);
-          export type Friends = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>)['friends'][0];
-          export type WorkplaceUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>);
-          export type Colleagues = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>)['colleagues'][0];
+          export type SocialUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'SocialUser' }>);
+          export type Friends = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'SocialUser' }>)['friends'][0];
+          export type WorkplaceUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'WorkplaceUser' }>);
+          export type Colleagues = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'WorkplaceUser' }>)['colleagues'][0];
+        }
+      `);
+    });
+
+    it('supports inline fragments on unions and interfaces with nonOptionalTypename:true', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface User {
+          id: ID!
+          name: String
+        }
+        type SocialUser implements User {
+          id: ID!
+          name: String
+          friends: [User!]!
+        }
+        type WorkplaceUser implements User {
+          id: ID!
+          name: String
+          colleagues: [User!]!
+        }
+
+        type Query {
+          me: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            id
+            ... on SocialUser {
+              friends {
+                ...UserBasics
+              }
+            }
+            ... on WorkplaceUser {
+              colleagues {
+                ...UserBasics
+              }
+            }
+          }
+        }
+
+        fragment UserBasics on User {
+          id
+          name
+        }
+
+        fragment UserNetwork on User {
+          ... on SocialUser {
+            friends {
+              ...UserBasics
+            }
+          }
+          ... on WorkplaceUser {
+            colleagues {
+              ...UserBasics
+            }
+          }
+        }
+      `);
+
+      const ast = [{ location: '', document: query }];
+      const result = await plugin(schema, ast, { nonOptionalTypename: true });
+
+      expect(result).toBeSimilarStringTo(`
+        export namespace MultipleSpreads {
+          export type Variables = MultipleSpreadsQueryVariables;
+          export type Query = MultipleSpreadsQuery;
+          export type Me = MultipleSpreadsQuery['me'];
+          export type SocialUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'SocialUser' }>);
+          export type Friends = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'SocialUser' }>)['friends'][0];
+          export type WorkplaceUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'WorkplaceUser' }>);
+          export type Colleagues = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'WorkplaceUser' }>)['colleagues'][0];
         }
       `);
     });

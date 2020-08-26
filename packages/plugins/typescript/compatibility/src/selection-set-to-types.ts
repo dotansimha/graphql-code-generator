@@ -89,7 +89,9 @@ export function selectionSetToTypes(
           let inlineFragmentValue;
 
           if (isUnionType(parentType) || isInterfaceType(parentType)) {
-            inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
+            inlineFragmentValue = `DiscriminateUnion<${stack}, { __typename${
+              baseVisitor.config.nonOptionalTypename ? '' : '?'
+            }: '${typeCondition}' }>`;
           } else {
             let encounteredNestedInlineFragment = false;
             const subSelections = selection.selectionSet.selections

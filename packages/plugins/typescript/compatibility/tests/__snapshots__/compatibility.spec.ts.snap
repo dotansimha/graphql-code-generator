@@ -3,8 +3,6 @@
 exports[`Compatibility Plugin Issues Issue #1762 - __typename issues 1`] = `
 "type DiscriminateUnion<T, U> = T extends U ? T : never;
 
-type RequireField<T, TNames extends string> = T & { [P in TNames]: (T & { [name: string]: never })[P] };
-
 export namespace GetMachineActiveEvents {
   export type Variables = GetMachineActiveEventsQueryVariables;
   export type Query = GetMachineActiveEventsQuery;
@@ -12,20 +10,18 @@ export namespace GetMachineActiveEvents {
   export type Unit = GetMachineActiveEventsQuery['machine']['unit'];
   export type Events = GetMachineActiveEventsQuery['machine']['unit']['events'][0];
   export type Details = GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'];
-  export type CanErrorEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'CanErrorEvent' }>);
-  export type DamageReportEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'DamageReportEvent' }>);
-  export type PrecheckEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'PrecheckEvent' }>);
-  export type ServiceKmEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'ServiceKmEvent' }>);
-  export type ServiceHourEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'ServiceHourEvent' }>);
-  export type ServiceCalendarEventInlineFragment = (DiscriminateUnion<RequireField<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], '__typename'>, { __typename: 'ServiceCalendarEvent' }>);
+  export type CanErrorEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'CanErrorEvent' }>);
+  export type DamageReportEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'DamageReportEvent' }>);
+  export type PrecheckEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'PrecheckEvent' }>);
+  export type ServiceKmEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'ServiceKmEvent' }>);
+  export type ServiceHourEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'ServiceHourEvent' }>);
+  export type ServiceCalendarEventInlineFragment = (DiscriminateUnion<GetMachineActiveEventsQuery['machine']['unit']['events'][0]['details'], { __typename?: 'ServiceCalendarEvent' }>);
 }
 "
 `;
 
 exports[`Compatibility Plugin Issues Issue #1775 - Inline fragments 1`] = `
 "type DiscriminateUnion<T, U> = T extends U ? T : never;
-
-type RequireField<T, TNames extends string> = T & { [P in TNames]: (T & { [name: string]: never })[P] };
 
 export namespace FetchServerAnalyticsData {
   export type Variables = FetchServerAnalyticsDataQueryVariables;
@@ -34,11 +30,11 @@ export namespace FetchServerAnalyticsData {
   export type Servers = FetchServerAnalyticsDataQuery['process']['servers'][0];
   export type GetHostVirtualMachines = FetchServerAnalyticsDataQuery['process']['servers'][0]['getHostVirtualMachines'][0];
   export type Imacs = FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0];
-  export type ServerChangeImacInlineFragment = (DiscriminateUnion<RequireField<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], '__typename'>, { __typename: 'ServerChangeImac' }>);
-  export type ServerDecomImacInlineFragment = (DiscriminateUnion<RequireField<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], '__typename'>, { __typename: 'ServerDecomImac' }>);
-  export type ServerSetupImacInlineFragment = (DiscriminateUnion<RequireField<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], '__typename'>, { __typename: 'ServerSetupImac' }>);
-  export type ServerSize = (DiscriminateUnion<RequireField<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], '__typename'>, { __typename: 'ServerSetupImac' }>)['serverSize'];
-  export type Sla = (DiscriminateUnion<RequireField<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], '__typename'>, { __typename: 'ServerSetupImac' }>)['sla'];
+  export type ServerChangeImacInlineFragment = (DiscriminateUnion<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], { __typename?: 'ServerChangeImac' }>);
+  export type ServerDecomImacInlineFragment = (DiscriminateUnion<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], { __typename?: 'ServerDecomImac' }>);
+  export type ServerSetupImacInlineFragment = (DiscriminateUnion<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], { __typename?: 'ServerSetupImac' }>);
+  export type ServerSize = (DiscriminateUnion<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], { __typename?: 'ServerSetupImac' }>)['serverSize'];
+  export type Sla = (DiscriminateUnion<FetchServerAnalyticsDataQuery['process']['servers'][0]['imacs'][0], { __typename?: 'ServerSetupImac' }>)['sla'];
 }
 "
 `;
@@ -46,12 +42,10 @@ export namespace FetchServerAnalyticsData {
 exports[`Compatibility Plugin Issues Issue #1943 - Missing DiscriminateUnion on interface types with strict mode 1`] = `
 "type DiscriminateUnion<T, U> = T extends U ? T : never;
 
-type RequireField<T, TNames extends string> = T & { [P in TNames]: (T & { [name: string]: never })[P] };
-
 export type GetBooksVariables = GetBooksQueryVariables;
 export type GetBooksSchoolBooks = (NonNullable<(NonNullable<GetBooksQuery['schoolBooks']>)[0]>);
-export type GetBooksTextBookInlineFragment = (DiscriminateUnion<RequireField<(NonNullable<(NonNullable<GetBooksQuery['schoolBooks']>)[0]>), '__typename'>, { __typename: 'TextBook' }>);
-export type GetBooksColoringBookInlineFragment = (DiscriminateUnion<RequireField<(NonNullable<(NonNullable<GetBooksQuery['schoolBooks']>)[0]>), '__typename'>, { __typename: 'ColoringBook' }>);"
+export type GetBooksTextBookInlineFragment = (DiscriminateUnion<(NonNullable<(NonNullable<GetBooksQuery['schoolBooks']>)[0]>), { __typename?: 'TextBook' }>);
+export type GetBooksColoringBookInlineFragment = (DiscriminateUnion<(NonNullable<(NonNullable<GetBooksQuery['schoolBooks']>)[0]>), { __typename?: 'ColoringBook' }>);"
 `;
 
 exports[`Compatibility Plugin React Apollo Issue #1876 - should produce valid ts code with react-apollo 1`] = `
@@ -208,14 +202,12 @@ export namespace Me5 {
 exports[`Compatibility Plugin Should work with interfaces and inline fragments 1`] = `
 "type DiscriminateUnion<T, U> = T extends U ? T : never;
 
-type RequireField<T, TNames extends string> = T & { [P in TNames]: (T & { [name: string]: never })[P] };
-
 export namespace Something {
   export type Variables = SomethingQueryVariables;
   export type Query = SomethingQuery;
   export type Node = SomethingQuery['node'];
-  export type AInlineFragment = (DiscriminateUnion<RequireField<SomethingQuery['node'], '__typename'>, { __typename: 'A' }>);
-  export type BInlineFragment = (DiscriminateUnion<RequireField<SomethingQuery['node'], '__typename'>, { __typename: 'B' }>);
+  export type AInlineFragment = (DiscriminateUnion<SomethingQuery['node'], { __typename?: 'A' }>);
+  export type BInlineFragment = (DiscriminateUnion<SomethingQuery['node'], { __typename?: 'B' }>);
 }
 "
 `;
