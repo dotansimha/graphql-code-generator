@@ -49,7 +49,7 @@
     "@graphql-tools/code-file-loader": "6.0.18",
     "@graphql-tools/git-loader": "6.0.18",
     "@graphql-tools/github-loader": "6.0.18",
-    "@graphql-tools/graphql-file-loader": "6.0.18",
+    "@graphql-tools/graphql-file-loader": "6.1.0",
     "@graphql-tools/json-file-loader": "6.0.18",
     "@graphql-tools/load": "6.0.18",
     "@graphql-tools/prisma-loader": "6.0.18",
