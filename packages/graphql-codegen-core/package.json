@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^1.17.8",
-    "@graphql-tools/merge": "^6.0.18",
+    "@graphql-tools/merge": "^6.1.0",
     "@graphql-tools/utils": "^6.0.18",
     "tslib": "~2.0.1"
   },
