@@ -14,19 +14,23 @@ title: TypeScript Vue Apollo
   yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable@4.0.0-alpha.8 @vue/composition-api
 ```
 
-## Usage Example
+## Usage examples
+
+The examples below use Vue 2 with the ([composition api plugin](https://github.com/vuejs/composition-api)).
+
+### Example: Using the generated query code
 
 For the given input:
 
 ```graphql
-query Test {
+query Message {
   feed {
     id
   }
 }
 ```
 
-We can use the generated code like this in Vue 2 ([with composition api plugin](https://github.com/vuejs/composition-api)):
+We can use the generated code like this:
 
 ```vue
 <template>
@@ -38,12 +42,56 @@ We can use the generated code like this in Vue 2 ([with composition api plugin](
 
 <script lang="ts">
 import { createComponent } from "@vue/composition-api"
-import { useTestQuery } from "../generated/graphqlOperations"
+import { useMessageQuery } from "../generated/graphqlOperations"
 
 export default createComponent({
   setup() {
-    const { result, loading } = useTestQuery()
+    const { result, loading } = useMessageQuery()
     return { result, loading }
+  }
+})
+</script>
+```
+
+### Example: Select a single property with useResult and add an error message
+
+For the given input:
+
+```graphql
+query allAccounts {
+  accounts {
+    accountID
+    givenName
+    age
+  }
+}
+```
+
+We can use the generated code with `useResult` like this:
+
+```vue
+<template>
+  <div>
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">Error: {{ error.message }}</div>
+    <div v-else-if="allAccounts">
+      <div v-for="account in allAccounts" :key="account.accountID">
+        {{ account.accountID }}  {{ account.givenName }}  {{ account.age }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { createComponent } from "@vue/composition-api"
+import { useAllAccountsQuery } from "../generated/graphqlOperations"
+
+export default createComponent({
+  setup() {
+    const { result, loading, error } = useAllAccountsQuery()
+    // Only select the peroperty 'accounts' for use in the template
+    const allAccounts = useResult(result, null, (data) => data.accounts)
+    return { allAccounts, loading, error }
   }
 })
 </script>
