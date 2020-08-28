@@ -2200,7 +2200,7 @@
     valid-url "1.0.9"
     websocket "1.0.31"
 
-"@graphql-tools/utils@6.0.11", "@graphql-tools/utils@^6.0.0":
+"@graphql-tools/utils@6.0.11":
   version "6.0.11"
   resolved "https://registry.npmjs.org/@graphql-tools/utils/-/utils-6.0.11.tgz#c394201c992dbc8f3644b9ad71411fdd55832f2d"
   integrity sha512-BK6HO73FbB/Ufac6XX5H0O2q4tEZi//HaQ7DgmHFoda53GZSZ/ZckJ59wh/tUvHykEaSFUSmMBVQxKbXBhGhyg==
@@ -2208,10 +2208,18 @@
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
 
-"@graphql-tools/utils@6.0.18", "@graphql-tools/utils@^6.0.18":
+"@graphql-tools/utils@6.0.18":
   version "6.0.18"
   resolved "https://registry.npmjs.org/@graphql-tools/utils/-/utils-6.0.18.tgz#bba960f0ab327c8304089d41da0b7a3e00fe430f"
   integrity sha512-8ntYuXJucBtjViOYljeKBzScfpVTnv7BfqIPU/WJ65h6nXD+qf8fMUR1C4MpCUeFvSjMiDSB5Z4enJmau/9D3A==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.1"
+    camel-case "4.1.1"
+
+"@graphql-tools/utils@6.1.0", "@graphql-tools/utils@^6.0.0", "@graphql-tools/utils@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.1.0.tgz#a8ab67bb8d8a879f40d29b334f48de6e6be71c41"
+  integrity sha512-YcyslZ/8rk5nQOGnkEDp/xi6Xphu0mgjh5LTZ1qUio5P+d95/9MW44cPdmi3Feg4kO8u+1GcPC+685hFpJlZJw==
   dependencies:
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
