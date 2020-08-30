@@ -41,10 +41,10 @@ We can use the generated code like this:
 </template>
 
 <script lang="ts">
-import { createComponent } from "@vue/composition-api"
+import { defineComponent } from "@vue/composition-api"
 import { useMessageQuery } from "../generated/graphqlOperations"
 
-export default createComponent({
+export default defineComponent({
   setup() {
     const { result, loading } = useMessageQuery()
     return { result, loading }
@@ -83,10 +83,10 @@ We can use the generated code with `useResult` like this:
 </template>
 
 <script lang="ts">
-import { createComponent } from "@vue/composition-api"
+import { defineComponent } from "@vue/composition-api"
 import { useAllAccountsQuery } from "../generated/graphqlOperations"
 
-export default createComponent({
+export default defineComponent({
   setup() {
     const { result, loading, error } = useAllAccountsQuery()
     // Only select the peroperty 'accounts' for use in the template
