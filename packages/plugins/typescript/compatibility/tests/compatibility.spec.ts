@@ -494,8 +494,8 @@ describe('Compatibility Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`export namespace MoreUserFields {
       export type Fragment = MoreUserFieldsFragment;
-      export type Friends = MoreUserFieldsFragment['friends'][0];
-      export type _Friends = MoreUserFieldsFragment['friends'][0]['friends'][0];
+      export type Friends = MoreUserFieldsFragment['friends'][number];
+      export type _Friends = MoreUserFieldsFragment['friends'][number]['friends'][number];
     }`);
 
     await validate(result, schema, ast, {});
@@ -604,7 +604,7 @@ describe('Compatibility Plugin', () => {
 
     expect(result).toContain('export type Query = MeQuery;');
     expect(result).toContain(`export type Me = MeQuery['me'];`);
-    expect(result).toContain(`export type Friends = MeQuery['me']['friends'][0];`);
+    expect(result).toContain(`export type Friends = MeQuery['me']['friends'][number];`);
   });
 
   it('Should generate mapping to 1.0 types according to fields usage and selection set when array is in use and have duplicate names', async () => {
@@ -613,9 +613,11 @@ describe('Compatibility Plugin', () => {
 
     expect(result).toContain('export type Query = MeQuery;');
     expect(result).toContain(`export type Me = MeQuery['me'];`);
-    expect(result).toContain(`export type Friends = MeQuery['me']['friends'][0];`);
-    expect(result).toContain(`export type _Friends = MeQuery['me']['friends'][0]['friends'][0];`);
-    expect(result).toContain(`export type __Friends = MeQuery['me']['friends'][0]['friends'][0]['friends'][0];`);
+    expect(result).toContain(`export type Friends = MeQuery['me']['friends'][number];`);
+    expect(result).toContain(`export type _Friends = MeQuery['me']['friends'][number]['friends'][number];`);
+    expect(result).toContain(
+      `export type __Friends = MeQuery['me']['friends'][number]['friends'][number]['friends'][number];`
+    );
     await validate(result, schema, ast);
     expect(mergeOutputs([result])).toMatchSnapshot();
   });
@@ -637,7 +639,7 @@ describe('Compatibility Plugin', () => {
       `export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`
     );
     expect(result).toContain(
-      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`
+      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][number];`
     );
     await validate(result, schema, ast, {});
   });
@@ -651,10 +653,10 @@ describe('Compatibility Plugin', () => {
       `export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`
     );
     expect(result).toContain(
-      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`
+      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][number];`
     );
     expect(result).toContain(
-      `export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+      `export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);`
     );
     await validate(result, schema, ast, {});
   });
@@ -711,10 +713,10 @@ describe('Compatibility Plugin', () => {
         `export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`
       );
       expect(result).toContain(
-        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`
+        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number];`
       );
       expect(result).toContain(
-        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);`
       );
 
       await validate(result, schema, ast, config);
@@ -764,8 +766,8 @@ describe('Compatibility Plugin', () => {
         export type Query = Me4Query;
         export type Me = Me4Query['me'];
         export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
-        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
-        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);
         export const Document = Me4Document;
         export type Props = Me4Props;
         export const HOC = withMe4;
@@ -793,10 +795,10 @@ describe('Compatibility Plugin', () => {
         `export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`
       );
       expect(result).toContain(
-        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`
+        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number];`
       );
       expect(result).toContain(
-        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);`
       );
       expect(result).toContain(`export const Me4HOC = withMe4;`);
       expect(result).toContain(`export const useMe4 = useMe4Query;`);
@@ -823,8 +825,8 @@ describe('Compatibility Plugin', () => {
         export type Query = Me4Query;
         export type Me = Me4Query['me'];
         export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
-        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
-        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);
         export const Document = Me4Document;
         export type Props = Me4Props;
         export const HOC = withMe4;
@@ -854,8 +856,8 @@ describe('Compatibility Plugin', () => {
         export type Query = Me4Query;
         export type Me = Me4Query['me'];
         export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
-        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
-        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][number], 'id' | 'name'>);
         export const Document = Me4Document;
         export const Component = Me4Component;
       }`);
@@ -1036,10 +1038,84 @@ describe('Compatibility Plugin', () => {
           export type Variables = MultipleSpreadsQueryVariables;
           export type Query = MultipleSpreadsQuery;
           export type Me = MultipleSpreadsQuery['me'];
-          export type SocialUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>);
-          export type Friends = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>)['friends'][0];
-          export type WorkplaceUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>);
-          export type Colleagues = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>)['colleagues'][0];
+          export type SocialUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'SocialUser' }>);
+          export type Friends = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'SocialUser' }>)['friends'][number];
+          export type WorkplaceUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'WorkplaceUser' }>);
+          export type Colleagues = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename?: 'WorkplaceUser' }>)['colleagues'][number];
+        }
+      `);
+    });
+
+    it('supports inline fragments on unions and interfaces with nonOptionalTypename:true', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface User {
+          id: ID!
+          name: String
+        }
+        type SocialUser implements User {
+          id: ID!
+          name: String
+          friends: [User!]!
+        }
+        type WorkplaceUser implements User {
+          id: ID!
+          name: String
+          colleagues: [User!]!
+        }
+
+        type Query {
+          me: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            id
+            ... on SocialUser {
+              friends {
+                ...UserBasics
+              }
+            }
+            ... on WorkplaceUser {
+              colleagues {
+                ...UserBasics
+              }
+            }
+          }
+        }
+
+        fragment UserBasics on User {
+          id
+          name
+        }
+
+        fragment UserNetwork on User {
+          ... on SocialUser {
+            friends {
+              ...UserBasics
+            }
+          }
+          ... on WorkplaceUser {
+            colleagues {
+              ...UserBasics
+            }
+          }
+        }
+      `);
+
+      const ast = [{ location: '', document: query }];
+      const result = await plugin(schema, ast, { nonOptionalTypename: true });
+
+      expect(result).toBeSimilarStringTo(`
+        export namespace MultipleSpreads {
+          export type Variables = MultipleSpreadsQueryVariables;
+          export type Query = MultipleSpreadsQuery;
+          export type Me = MultipleSpreadsQuery['me'];
+          export type SocialUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'SocialUser' }>);
+          export type Friends = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'SocialUser' }>)['friends'][number];
+          export type WorkplaceUserInlineFragment = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'WorkplaceUser' }>);
+          export type Colleagues = (DiscriminateUnion<MultipleSpreadsQuery['me'], { __typename: 'WorkplaceUser' }>)['colleagues'][number];
         }
       `);
     });
