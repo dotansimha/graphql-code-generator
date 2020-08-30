@@ -305,7 +305,7 @@ export namespace Comment {
   export type CurrentUser = NonNullable<CommentQuery['currentUser']>;
   export type Entry = NonNullable<CommentQuery['entry']>;
   export type PostedBy = NonNullable<NonNullable<CommentQuery['entry']>['postedBy']>;
-  export type Comments = NonNullable<NonNullable<CommentQuery['entry']>['comments']>[number];
+  export type Comments = NonNullable<NonNullable<NonNullable<CommentQuery['entry']>['comments']>[number]>;
   export type Repository = NonNullable<NonNullable<CommentQuery['entry']>['repository']>;
   export type RepositoryInlineFragment = { __typename: 'Repository' } & Pick<
     NonNullable<NonNullable<CommentQuery['entry']>['repository']>,
@@ -334,7 +334,7 @@ export namespace Feed {
   export type Variables = FeedQueryVariables;
   export type Query = FeedQuery;
   export type CurrentUser = NonNullable<FeedQuery['currentUser']>;
-  export type Feed = NonNullable<FeedQuery['feed']>[number];
+  export type Feed = NonNullable<NonNullable<FeedQuery['feed']>[number]>;
 }
 
 export namespace SubmitRepository {

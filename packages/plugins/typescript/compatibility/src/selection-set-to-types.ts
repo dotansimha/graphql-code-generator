@@ -33,7 +33,9 @@ const handleTypeNameDuplicates = (result: SelectionSetToObjectResult, name: stri
 
 function transformNestedAst(type: GraphQLOutputType, base: string, applyNonNullable: boolean): string {
   if (isListType(type)) {
-    return `${transformNestedAst(type.ofType, base, applyNonNullable)}[number]`;
+    return applyNonNullable
+      ? `NonNullable<${transformNestedAst(type.ofType, base, applyNonNullable)}[number]>`
+      : `${transformNestedAst(type.ofType, base, applyNonNullable)}[number]`;
   } else if (isNonNullType(type)) {
     return transformNestedAst(type.ofType, base, applyNonNullable);
   } else {
