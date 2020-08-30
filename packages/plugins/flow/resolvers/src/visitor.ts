@@ -8,9 +8,10 @@ import {
   EnumTypeDefinitionNode,
 } from 'graphql';
 import autoBind from 'auto-bind';
+import { FlowResolversPluginConfig } from './config';
 import {
-  RawResolversConfig,
   indent,
+  getConfigValue,
   ParsedResolversConfig,
   BaseResolversVisitor,
   DeclarationBlock,
@@ -22,11 +23,19 @@ import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = $ObjMap<T, () => AllowedValues>;';
 
-export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
+export interface ParsedFlorResolversConfig extends ParsedResolversConfig {
+  resolverReadOnly: boolean;
+}
 
-export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfig, ParsedFlorResolversConfig> {
-  constructor(pluginConfig: RawResolversConfig, schema: GraphQLSchema) {
-    super(pluginConfig, null, schema);
+export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPluginConfig, ParsedFlorResolversConfig> {
+  constructor(pluginConfig: FlowResolversPluginConfig, schema: GraphQLSchema) {
+    super(
+      pluginConfig,
+      {
+        resolverReadOnly: getConfigValue(pluginConfig.resolverReadOnly, false),
+      } as ParsedFlorResolversConfig,
+      schema
+    );
     autoBind(this);
     this.setVariablesTransformer(
       new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName)
@@ -113,6 +122,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `$Diff<${typeName}, { ${relevantFields
       .map(f => `${f.fieldName}: * `)
       .join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  }
+
+  protected fieldPrefix(): string {
+    return this.config.resolverReadOnly ? `+` : ``;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {

@@ -63,7 +63,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   namespacedImportName: string;
   resolverTypeSuffix: string;
   allResolversTypeName: string;
-  supportES6Classes: boolean;
+  resolverDeclarationKind: DeclarationKind;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -295,10 +295,16 @@ export interface RawResolversConfig extends RawConfig {
    */
   allResolversTypeName?: string;
   /**
-   * @default false
-   * @description  Overrides the default output for resolvers to support ES6 classes style resolvers.
+   * @default 'type'
+   * @description  Overrides the default output for resolvers.
+   * @exampleMarkdown
+   * ## overrides resolvers as interface
+   * ```yml
+   *   config:
+   *     declarationKindResolvers: interface
+   * ```
    */
-  supportES6Classes?: boolean;
+  resolverDeclarationKind?: DeclarationKind;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -349,7 +355,7 @@ export class BaseResolversVisitor<
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
-      supportES6Classes: getConfigValue(rawConfig.supportES6Classes, false),
+      resolverDeclarationKind: getConfigValue(rawConfig.resolverDeclarationKind, 'type'),
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       ...(additionalConfig || {}),
@@ -907,6 +913,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
+  protected fieldPrefix(): string {
+    return ``;
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): (parentName: string) => string | null {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
@@ -992,7 +1002,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       }
 
       return indent(
-        `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
+        `${this.fieldPrefix()}${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
           ', '
         )}>${this.getPunctuation(declarationKind)}`
       );
@@ -1010,7 +1020,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    const declarationKind = this.config.supportES6Classes ? 'interface' : 'type';
+    const declarationKind = this.config.resolverDeclarationKind;
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });

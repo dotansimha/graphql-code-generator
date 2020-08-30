@@ -283,7 +283,13 @@ describe('Flow Resolvers Plugin', () => {
       testSchema,
       [],
       {
-        supportES6Classes: 'true',
+        resolverDeclarationKind: 'interface',
+        resolverReadOnly: true,
+        customResolverFn: `(
+           args: Args,
+           context: Context,
+           info: GraphQLResolveInfo
+         ) => Promise<Result> | Result;`,
       } as any,
       { outputFile: 'graphql.ts' }
     )) as Types.ComplexPluginOutput;
@@ -295,8 +301,8 @@ describe('Flow Resolvers Plugin', () => {
     `);
     expect(content.content)
       .toBeSimilarStringTo(`export interface PostResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Post'>> {
-        author?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
-        comment?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        +author?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        +comment?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType>;
       }
     `);

@@ -1,8 +1,8 @@
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
+import { FlowResolversPluginConfig } from './config';
 
 /**
  * @description This plugin generates resolvers signature based on your `GraphQLSchema`.
@@ -11,12 +11,11 @@ import { FlowResolversVisitor } from './visitor';
  *
  * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
  */
-export interface RawFlowResolversConfig extends RawResolversConfig {}
 
-export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<FlowResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawFlowResolversConfig
+  config: FlowResolversPluginConfig
 ) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
@@ -46,14 +45,18 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
     defsToInclude.push(`export type RecursivePick<T, U> = T`);
   }
 
-  // ES6 class resolvers methods only contain 3 argument (args, context, info). see https://github.com/apollographql/apollo-server/issues/1996
-
-  const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
-  ${config.supportES6Classes ? `` : `parent: Parent,`}
+  let resolverDef = '';
+  if (config.customResolverFn) {
+    resolverDef = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = ${config.customResolverFn}`;
+  } else {
+    resolverDef = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  parent: Parent,
   args: Args,
   context: Context,
   info: GraphQLResolveInfo
-) => Promise<Result> | Result;
+) => Promise<Result> | Result;`;
+  }
+  const header = `${resolverDef}
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
   parent: Parent,
