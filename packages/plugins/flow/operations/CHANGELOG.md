@@ -1,6 +1,13 @@
 # @graphql-codegen/flow-operations
 
+## 1.18.0
+
+### Minor Changes
+
+- 4e3df8f2: Fix bug with read-only type generation when using preResolveTypes flag
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues

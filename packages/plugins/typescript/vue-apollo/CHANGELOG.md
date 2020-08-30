@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 2.0.0
+
+### Major Changes
+
+- 868249a6: Address composition api changes
+
 ## 1.17.9
 
 ### Patch Changes

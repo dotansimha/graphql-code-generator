@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-compatibility",
-  "version": "1.17.8",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator plugin for TypeScript plugins backward compatibility for <1.0",
   "repository": {
     "type": "git",
