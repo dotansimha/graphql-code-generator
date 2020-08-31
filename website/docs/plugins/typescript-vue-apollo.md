@@ -84,6 +84,7 @@ We can use the generated code with `useResult` like this:
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api"
+import { useResult } from '@vue/apollo-composable'
 import { useAllAccountsQuery } from "../generated/graphqlOperations"
 
 export default defineComponent({
