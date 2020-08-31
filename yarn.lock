@@ -1394,26 +1394,26 @@
     resolve-from "^5.0.0"
     semver "^5.4.1"
 
-"@changesets/assemble-release-plan@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/@changesets/assemble-release-plan/-/assemble-release-plan-3.0.0.tgz#23c280b0ea352003302b0c262b8dadb8bda517ed"
-  integrity sha512-TvcqUhNhKoqwE+L8dFtcwwAmos4+fqwmSkOWP3TSjw7K/inz2wjC46bA7IFtbx2hrwEq1iG0RCweQZTS2vrx1w==
+"@changesets/assemble-release-plan@^3.0.0", "@changesets/assemble-release-plan@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@changesets/assemble-release-plan/-/assemble-release-plan-3.0.1.tgz#cd501d0c57d435a594fc7bb630fa589d5b75c2a0"
+  integrity sha512-PChmYuibH8RPiebMIzuYZ/DFS8ehf7yq+X5X0rJklg2njP3zYWJX7nlctpnBhZ0zpgvP2IgrtUigoVGNkv5m/Q==
   dependencies:
-    "@babel/runtime" "^7.4.4"
+    "@babel/runtime" "^7.10.4"
     "@changesets/errors" "^0.1.4"
     "@changesets/get-dependents-graph" "^1.1.3"
     "@changesets/types" "^3.1.0"
     "@manypkg/get-packages" "^1.0.1"
     semver "^5.4.1"
 
-"@changesets/cli@2.10.1":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.10.1.tgz#b97c50c6405fb4a24108bb0a2ed155ea07e2d7bd"
-  integrity sha512-l/Uxon6/zMyj+BPrgeq6SwAwgukH4PlN4+Y6Tp4mWuXjDcDOZdtEae3AEomWdNlaoOPidw8KcqVxjZu9k3KVNA==
+"@changesets/cli@2.10.2":
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.10.2.tgz#85a7a8d8aca2ef682c671f352645bc75c72f9b85"
+  integrity sha512-m4YwTmT0ElOuBD3GCbbT75EWmdU4uCFARE4X+Ml1/knc4Z/MEzOjV0bi0/9eHACcQIMNg7rdB6f4vXtHiQU6bA==
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@changesets/apply-release-plan" "^4.0.0"
-    "@changesets/assemble-release-plan" "^3.0.0"
+    "@changesets/assemble-release-plan" "^3.0.1"
     "@changesets/config" "^1.3.0"
     "@changesets/errors" "^0.1.4"
     "@changesets/get-dependents-graph" "^1.1.3"
