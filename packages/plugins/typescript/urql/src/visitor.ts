@@ -56,7 +56,10 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const componentName: string = this.convertName(node.name.value, { suffix: 'Component', useTypesPrefix: false });
+    const componentName: string = this.convertName(node.name?.value ?? '', {
+      suffix: 'Component',
+      useTypesPrefix: false,
+    });
 
     const isVariablesRequired =
       operationType === 'Query' &&
@@ -83,7 +86,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const operationName: string = this.convertName(node.name.value, {
+    const operationName: string = this.convertName(node.name?.value ?? '', {
       suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
       useTypesPrefix: false,
     });

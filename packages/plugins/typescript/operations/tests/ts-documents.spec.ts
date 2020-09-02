@@ -4435,4 +4435,30 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
   });
+
+  it('handles unnamed queries', async () => {
+    const ast = parse(/* GraphQL */ `
+      query {
+        notifications {
+          id
+        }
+      }
+    `);
+
+    const result = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
+    expect(result.content).toBeSimilarStringTo(`
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+      export type Unnamed_1_Query = (
+          { __typename?: 'Query' }
+        & { notifications: Array<(
+            { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'id'>
+        ) | (
+            { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'id'>
+        )> }
+      );
+    `);
+  });
 });
