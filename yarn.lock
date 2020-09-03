@@ -1949,12 +1949,12 @@
     "@graphql-tools/load" "^6.0.0"
     tslib "^2.0.0"
 
-"@graphql-tools/apollo-engine-loader@6.1.0", "@graphql-tools/apollo-engine-loader@^6":
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.1.0.tgz#e1cf25a85bbc7a95e05c28c09a4d7aee04b8e8d1"
-  integrity sha512-0O/gwpGmICYrZdWifeLPC+qQ43xaZfCvlELiqmEL2hhisB/ptWdT5/8Sr10TJWPQ0/r4w7b+Y1wrcBV0dASNTg==
+"@graphql-tools/apollo-engine-loader@6.2.0", "@graphql-tools/apollo-engine-loader@^6":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.2.0.tgz#7e0ee836e7c940f1086ec9467008b9584b9b0667"
+  integrity sha512-uKDf+yaXq496RrTgQ/ZkEuk1YU7S0wDyuFknRtTCENW3e+joUVQhiXx20sbo7ZaXI/6zBwIUCWzX3zjgtR53NA==
   dependencies:
-    "@graphql-tools/utils" "6.1.0"
+    "@graphql-tools/utils" "6.2.0"
     cross-fetch "3.0.5"
     tslib "~2.0.1"
 
@@ -2212,10 +2212,18 @@
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
 
-"@graphql-tools/utils@6.1.0", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+"@graphql-tools/utils@6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.1.0.tgz#a8ab67bb8d8a879f40d29b334f48de6e6be71c41"
   integrity sha512-YcyslZ/8rk5nQOGnkEDp/xi6Xphu0mgjh5LTZ1qUio5P+d95/9MW44cPdmi3Feg4kO8u+1GcPC+685hFpJlZJw==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.1"
+    camel-case "4.1.1"
+
+"@graphql-tools/utils@6.2.0", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.0.tgz#5dc2ccec9d7fa098b9c76bddfd8a7ca64fc3fe9c"
+  integrity sha512-Z5ONje6tGNvBzGwo/8eIafr98mwuvWpi3IwPp8CKHKjTBAKlUxY8hlwSn+bEMPyuA9uH/7nHWz4lamRQQEHAhg==
   dependencies:
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
