@@ -2054,23 +2054,14 @@
     fs-extra "9.0.1"
     resolve-from "5.0.0"
 
-"@graphql-tools/json-file-loader@6.1.0", "@graphql-tools/json-file-loader@^6":
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/@graphql-tools/json-file-loader/-/json-file-loader-6.1.0.tgz#1112dffa2936fb157185afd693e3de6a1805705c"
-  integrity sha512-U5+aU4Bi9Se2+rFE0lwARHii1TyKtVG+WPNtBM1YJdgQ800/jrgjSCBl2Js/bd2YkICMLz++lCehyQSgrLpIsg==
+"@graphql-tools/json-file-loader@6.2.0", "@graphql-tools/json-file-loader@^6", "@graphql-tools/json-file-loader@^6.0.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/json-file-loader/-/json-file-loader-6.2.0.tgz#e206cd9663fbd02613bba504526d6446be930a9d"
+  integrity sha512-kpvYLGuxcq3V9cr996YOCAkw7F/4pC1JY1KxvI3360G0mYVVZcA8Q/XcxcwPwPZrBHDJMHhXvTRZD+svQ49Rxw==
   dependencies:
-    "@graphql-tools/utils" "6.1.0"
+    "@graphql-tools/utils" "6.2.0"
     fs-extra "9.0.1"
     tslib "~2.0.1"
-
-"@graphql-tools/json-file-loader@^6.0.0":
-  version "6.0.11"
-  resolved "https://registry.npmjs.org/@graphql-tools/json-file-loader/-/json-file-loader-6.0.11.tgz#1ef4095261bda0358032109c84bfded2142d1ec1"
-  integrity sha512-PExlGMP7R+GIaU2svB/vJS4vRsMFxIJyYLm5G/0iHRKuvn36XOq2mid93darD3zzJqY8JDJ71RHt8+5xv+t5AQ==
-  dependencies:
-    "@graphql-tools/utils" "6.0.11"
-    fs-extra "9.0.1"
-    tslib "~2.0.0"
 
 "@graphql-tools/load@6.1.0", "@graphql-tools/load@^6":
   version "6.1.0"
@@ -2212,10 +2203,18 @@
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
 
-"@graphql-tools/utils@6.1.0", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+"@graphql-tools/utils@6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.1.0.tgz#a8ab67bb8d8a879f40d29b334f48de6e6be71c41"
   integrity sha512-YcyslZ/8rk5nQOGnkEDp/xi6Xphu0mgjh5LTZ1qUio5P+d95/9MW44cPdmi3Feg4kO8u+1GcPC+685hFpJlZJw==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.1"
+    camel-case "4.1.1"
+
+"@graphql-tools/utils@6.2.0", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.0.tgz#5dc2ccec9d7fa098b9c76bddfd8a7ca64fc3fe9c"
+  integrity sha512-Z5ONje6tGNvBzGwo/8eIafr98mwuvWpi3IwPp8CKHKjTBAKlUxY8hlwSn+bEMPyuA9uH/7nHWz4lamRQQEHAhg==
   dependencies:
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
