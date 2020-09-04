@@ -53,7 +53,7 @@
     "@graphql-tools/json-file-loader": "6.1.0",
     "@graphql-tools/load": "6.1.0",
     "@graphql-tools/prisma-loader": "6.1.0",
-    "@graphql-tools/url-loader": "6.1.0",
+    "@graphql-tools/url-loader": "6.2.0",
     "@graphql-tools/utils": "6.1.0",
     "@graphql-typed-document-node/core": "3.1.0",
     "@types/common-tags": "1.8.0",
