@@ -1563,10 +1563,10 @@
     "@francoischalifour/autocomplete-preset-algolia" "^1.0.0-alpha.28"
     algoliasearch "^4.0.0"
 
-"@docusaurus/core@2.0.0-alpha.62", "@docusaurus/core@^2.0.0-alpha.62":
-  version "2.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@docusaurus/core/-/core-2.0.0-alpha.62.tgz#d95eaea49a558616e10bbbdb415cb0419f7a5787"
-  integrity sha512-6Mk9kisCx54oyvgLm74tBeNWBwwrLBNTMU0X4+xoq34QHhtyJW0/fhIZoH+/JcmIrONhAyqckF6ZAhn4rGNpVg==
+"@docusaurus/core@2.0.0-alpha.63", "@docusaurus/core@^2.0.0-alpha.62":
+  version "2.0.0-alpha.63"
+  resolved "https://registry.yarnpkg.com/@docusaurus/core/-/core-2.0.0-alpha.63.tgz#e0b1db9b7a14773c6e0a56d48ba9ab85fe322ee4"
+  integrity sha512-IVSL29ZQAB7wuBTPgtJAvHUfmQRBY/MS2ypxPTwlhPqTORPIqeEaLFgyeWQ0RgZ5iqzB5WVQiEUk2Kx0WI3/Qw==
   dependencies:
     "@babel/core" "^7.9.0"
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.10.1"
@@ -1578,9 +1578,9 @@
     "@babel/preset-typescript" "^7.9.0"
     "@babel/runtime" "^7.9.2"
     "@babel/runtime-corejs3" "^7.10.4"
-    "@docusaurus/types" "^2.0.0-alpha.62"
-    "@docusaurus/utils" "^2.0.0-alpha.62"
-    "@docusaurus/utils-validation" "^2.0.0-alpha.62"
+    "@docusaurus/types" "2.0.0-alpha.63"
+    "@docusaurus/utils" "2.0.0-alpha.63"
+    "@docusaurus/utils-validation" "2.0.0-alpha.63"
     "@endiliey/static-site-generator-webpack-plugin" "^4.0.0"
     "@hapi/joi" "^17.1.1"
     "@svgr/webpack" "^5.4.0"
@@ -1813,28 +1813,29 @@
     eta "^1.1.1"
     lodash "^4.17.19"
 
-"@docusaurus/types@^2.0.0-alpha.62":
-  version "2.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.0.0-alpha.62.tgz#b030344d90de51a8dcf36bfaab7f8df9b597bd1e"
-  integrity sha512-Gzx5SKt/sqcUXzLPDuFuTZNqs1jfoO3Q4L+ZRVIj3/yai5bbmIDJqRZlfeGkAFPyhFWSBfakwAM1MvJR/3/KWQ==
+"@docusaurus/types@2.0.0-alpha.63", "@docusaurus/types@^2.0.0-alpha.62":
+  version "2.0.0-alpha.63"
+  resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.0.0-alpha.63.tgz#6733479ba8e0aebba183da510e7d74e3cdf45356"
+  integrity sha512-rzCYQKrB8xArXfSoad0RM1VtGfhmsSC3wXLVNrCFXp3F9sPTgRuev5jfEfvMWbJdkLZasNA4eNbMJ6JlrnfE4Q==
   dependencies:
     "@types/webpack" "^4.41.0"
     commander "^4.0.1"
     querystring "0.2.0"
     webpack-merge "^4.2.2"
 
-"@docusaurus/utils-validation@^2.0.0-alpha.62":
-  version "2.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@docusaurus/utils-validation/-/utils-validation-2.0.0-alpha.62.tgz#aeaf6d7ff4c9730ef5b818d3cbd0716c2e4833ea"
-  integrity sha512-YTr1qF6yDn0aIN7gfx7Emy5oGZ2mbk81T9E37zcZdiXpRfY5lOt8HSWhd4qfe9u1kYSZX+zqEytWl79VV3aMWw==
+"@docusaurus/utils-validation@2.0.0-alpha.63", "@docusaurus/utils-validation@^2.0.0-alpha.62":
+  version "2.0.0-alpha.63"
+  resolved "https://registry.yarnpkg.com/@docusaurus/utils-validation/-/utils-validation-2.0.0-alpha.63.tgz#78e31bfa289a5c310a018465f232e4c7e369cff8"
+  integrity sha512-q+bHBobym6nFiK4nkJEIoPsIdHQDEatHYxv5MU1mzd8jZ2ajHYbvqjA2DWCSEZ4wrkJa0RwoP+9HUKdr3ZAPrA==
   dependencies:
+    "@docusaurus/utils" "2.0.0-alpha.63"
     "@hapi/joi" "17.1.1"
     chalk "^3.0.0"
 
-"@docusaurus/utils@^2.0.0-alpha.62":
-  version "2.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@docusaurus/utils/-/utils-2.0.0-alpha.62.tgz#88fa372d73e4b2aba32c75ebeda9cad49e72b145"
-  integrity sha512-71sw0xycKYupxyYtZmQr0he5me15DgNSHW12Yd50QM27SCGct8Gki1nASvFcFqeLbd0gqnXm7nV5Jk5XWTokHw==
+"@docusaurus/utils@2.0.0-alpha.63", "@docusaurus/utils@^2.0.0-alpha.62":
+  version "2.0.0-alpha.63"
+  resolved "https://registry.yarnpkg.com/@docusaurus/utils/-/utils-2.0.0-alpha.63.tgz#a33b10ae8f4920cba7cbc55566ad1c8abd716442"
+  integrity sha512-QrRuZAoj11cFgQMvjeNK12ds6y3VvPnYKu0mDpUp6jzB1fSlvIeKdnGR5Ju81LJ1CCXojNQkR8PtNK6kp1+KaA==
   dependencies:
     escape-string-regexp "^2.0.0"
     fs-extra "^8.1.0"
