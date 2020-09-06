@@ -304,7 +304,7 @@ generates:
       - typescript-react-apollo
   ./dev-test/modules/:
     schema: ./dev-test/modules/*/types/*.graphql
-    preset: modules
+    preset: graphql-modules
     presetConfig:
       baseTypesPath: types.ts
       filename: generated.ts
