@@ -18,19 +18,19 @@ export interface Resolvers {
   Query?: QueryResolvers;
 }
 
-export interface ResolveMiddlewareMap {
+export interface MiddlewareMap {
   '*'?: {
-    '*'?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
   };
   User?: {
-    '*'?: gm.ResolveMiddleware[];
-    id?: gm.ResolveMiddleware[];
-    firstName?: gm.ResolveMiddleware[];
-    lastName?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    firstName?: gm.Middleware[];
+    lastName?: gm.Middleware[];
   };
   Query?: {
-    '*'?: gm.ResolveMiddleware[];
-    users?: gm.ResolveMiddleware[];
-    userById?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    users?: gm.Middleware[];
+    userById?: gm.Middleware[];
   };
 }

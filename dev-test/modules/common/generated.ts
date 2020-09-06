@@ -18,16 +18,16 @@ export interface Resolvers {
   Mutation?: MutationResolvers;
 }
 
-export interface ResolveMiddlewareMap {
+export interface MiddlewareMap {
   '*'?: {
-    '*'?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
   };
   Query?: {
-    '*'?: gm.ResolveMiddleware[];
-    ping?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    ping?: gm.Middleware[];
   };
   Mutation?: {
-    '*'?: gm.ResolveMiddleware[];
-    pong?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    pong?: gm.Middleware[];
   };
 }

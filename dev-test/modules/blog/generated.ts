@@ -19,21 +19,21 @@ export interface Resolvers {
   Query?: QueryResolvers;
 }
 
-export interface ResolveMiddlewareMap {
+export interface MiddlewareMap {
   '*'?: {
-    '*'?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
   };
   Article?: {
-    '*'?: gm.ResolveMiddleware[];
-    id?: gm.ResolveMiddleware[];
-    title?: gm.ResolveMiddleware[];
-    text?: gm.ResolveMiddleware[];
-    author?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    title?: gm.Middleware[];
+    text?: gm.Middleware[];
+    author?: gm.Middleware[];
   };
   Query?: {
-    '*'?: gm.ResolveMiddleware[];
-    articles?: gm.ResolveMiddleware[];
-    articleById?: gm.ResolveMiddleware[];
-    articlesByUser?: gm.ResolveMiddleware[];
+    '*'?: gm.Middleware[];
+    articles?: gm.Middleware[];
+    articleById?: gm.Middleware[];
+    articlesByUser?: gm.Middleware[];
   };
 }
