@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "worker-loader": "3.0.2",
-    "file-loader": "6.0.0",
+    "file-loader": "6.1.0",
     "style-loader": "1.2.1",
     "monaco-editor-webpack-plugin": "1.9.0",
     "@docusaurus/core": "2.0.0-alpha.62",
