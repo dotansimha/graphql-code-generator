@@ -233,13 +233,13 @@ export function buildModule(
     }
 
     return buildBlock({
-      name: 'export interface ResolveMiddlewareMap',
+      name: 'export interface MiddlewareMap',
       lines: blocks,
     });
   }
 
   function printResolveMiddlewareRecord(path: string): string {
-    return `${path}?: gm.ResolveMiddleware[];`;
+    return `${path}?: gm.Middleware[];`;
   }
 
   function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {

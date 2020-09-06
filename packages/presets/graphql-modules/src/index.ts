@@ -145,10 +145,12 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         documents: [],
         plugins: [
           {
-            add: buildModule(moduleDocument, {
-              importNamespace: importTypesNamespace,
-              importPath,
-            }),
+            add: {
+              content: buildModule(moduleDocument, {
+                importNamespace: importTypesNamespace,
+                importPath,
+              }),
+            },
           },
         ],
         pluginMap: {

@@ -1,11 +1,11 @@
 {
   "name": "@graphql-codegen/graphql-modules-preset",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "GraphQL Code Generator preset for modularized schema",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/presets/modules"
+    "directory": "packages/presets/graphql-modules"
   },
   "license": "MIT",
   "scripts": {
