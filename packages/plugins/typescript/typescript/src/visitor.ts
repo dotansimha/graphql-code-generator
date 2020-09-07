@@ -21,7 +21,7 @@ import {
   Kind,
   InputValueDefinitionNode,
   GraphQLSchema,
-  GraphQLEnumType,
+  isEnumType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -29,13 +29,16 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  futureProofEnums: boolean;
   enumsAsConst: boolean;
-  fieldWrapperValue: string;
+  numericEnums: boolean;
+  onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
   noExport: boolean;
-  wrapFieldDefinitions: boolean;
 }
+
+export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
@@ -46,19 +49,20 @@ export class TsVisitor<
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
-      fieldWrapperValue: getConfigValue(pluginConfig.fieldWrapperValue, 'T'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      numericEnums: getConfigValue(pluginConfig.numericEnums, false),
+      onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
-      wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
-      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
-      .filter(t => t);
+      .filter(isEnumType)
+      .map(type => type.name);
     this.setArgumentsTransformer(
       new TypeScriptOperationVariablesToObject(
         this.scalars,
@@ -78,19 +82,21 @@ export class TsVisitor<
   }
 
   public getWrapperDefinitions(): string[] {
-    const definitions: string[] = [this.getMaybeValue()];
+    const definitions: string[] = [this.getMaybeValue(), this.getExactDefinition()];
+
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
     }
+
     return definitions;
   }
 
-  public getMaybeValue(): string {
-    return `${this.config.noExport ? '' : 'export '}type Maybe<T> = ${this.config.maybeValue};`;
+  public getExactDefinition(): string {
+    return `${this.getExportPrefix()}${EXACT_SIGNATURE}`;
   }
 
-  public getFieldWrapperValue(): string {
-    return `${this.config.noExport ? '' : 'export '}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+  public getMaybeValue(): string {
+    return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
   }
 
   protected clearOptional(str: string): string {
@@ -101,8 +107,16 @@ export class TsVisitor<
     return str;
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return `Maybe<${super.NamedType(node)}>`;
+  protected getExportPrefix(): string {
+    if (this.config.noExport) {
+      return '';
+    }
+
+    return super.getExportPrefix();
+  }
+
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `Maybe<${super.NamedType(node, key, parent, path, ancestors)}>`;
   }
 
   ListType(node: ListTypeNode): string {
@@ -120,7 +134,7 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
+    const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);
@@ -160,6 +174,21 @@ export class TsVisitor<
       return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
+    const getValueFromConfig = (enumValue: string | number) => {
+      if (
+        this.config.enumValues[enumName] &&
+        this.config.enumValues[enumName].mappedValues &&
+        typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+      ) {
+        return this.config.enumValues[enumName].mappedValues[enumValue];
+      }
+      return null;
+    };
+
+    const withFutureAddedValue = [
+      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
+    ];
+
     const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
 
     if (this.config.enumsAsTypes) {
@@ -172,21 +201,37 @@ export class TsVisitor<
           '\n' +
             node.values
               .map(enumOption => {
-                let enumValue: string | number = (enumOption.name as any) as string;
+                const name = (enumOption.name as unknown) as string;
+                const enumValue: string | number = getValueFromConfig(name) || name;
                 const comment = transformComment((enumOption.description as any) as string, 1);
 
-                if (
-                  this.config.enumValues[enumName] &&
-                  this.config.enumValues[enumName].mappedValues &&
-                  typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-                ) {
-                  enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-                }
-
-                return comment + indent(wrapWithSingleQuotes(enumValue));
+                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
-              .join(' |\n')
+              .concat(...withFutureAddedValue)
+              .join('\n')
         ).string;
+    }
+
+    if (this.config.numericEnums) {
+      const block = new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .withComment((node.description as any) as string)
+        .withName(enumTypeName)
+        .asKind('enum')
+        .withBlock(
+          node.values
+            .map((enumOption, i) => {
+              const valueFromConfig = getValueFromConfig((enumOption.name as unknown) as string);
+              const enumValue: string | number = valueFromConfig || i;
+              const comment = transformComment((enumOption.description as any) as string, 1);
+
+              return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
+            })
+            .concat(...withFutureAddedValue)
+            .join(',\n')
+        ).string;
+
+      return block;
     }
 
     if (this.config.enumsAsConst) {
@@ -206,15 +251,8 @@ export class TsVisitor<
             .map(enumOption => {
               const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
               const comment = transformComment((enumOption.description as any) as string, 1);
-              let enumValue: string | number = enumOption.name as any;
-
-              if (
-                this.config.enumValues[enumName] &&
-                this.config.enumValues[enumName].mappedValues &&
-                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-              ) {
-                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
-              }
+              const name = (enumOption.name as unknown) as string;
+              const enumValue: string | number = getValueFromConfig(name) || name;
 
               return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
             })

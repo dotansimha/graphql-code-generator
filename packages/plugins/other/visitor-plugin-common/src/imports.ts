@@ -1,11 +1,12 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
 
-export type ImportDecleration<T = string> = {
+export type ImportDeclaration<T = string> = {
   outputPath: string;
   importSource: ImportSource<T>;
   baseOutputDir: string;
   baseDir: string;
+  typesImport: boolean;
 };
 
 export type ImportSource<T = string> = {
@@ -29,7 +30,7 @@ export type FragmentImport = {
 };
 
 export function generateFragmentImportStatement(
-  statement: ImportDecleration<FragmentImport>,
+  statement: ImportDeclaration<FragmentImport>,
   kind: 'type' | 'document' | 'both'
 ): string {
   const { importSource: fragmentImportSource, ...rest } = statement;
@@ -41,16 +42,23 @@ export function generateFragmentImportStatement(
     path,
     namespace,
   };
-  return generateImportStatement({ importSource, ...rest });
+  return generateImportStatement({
+    importSource,
+    ...rest,
+    typesImport: kind === 'type' ? statement.typesImport : false,
+  });
 }
 
-export function generateImportStatement(statement: ImportDecleration): string {
-  const { baseDir, importSource, outputPath } = statement;
+export function generateImportStatement(statement: ImportDeclaration): string {
+  const { baseDir, importSource, outputPath, typesImport } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames =
-    importSource.identifiers && importSource.identifiers.length ? `{ ${importSource.identifiers.join(', ')} }` : '*';
+    importSource.identifiers && importSource.identifiers.length
+      ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
+      : '*';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-  return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+  const importStatement = typesImport ? 'import type' : 'import';
+  return `${importStatement} ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
 }
 
 function resolveImportPath(baseDir: string, outputPath: string, sourcePath: string) {

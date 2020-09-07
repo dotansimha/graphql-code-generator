@@ -22,23 +22,56 @@ import {
   isScalarType,
   isInputObjectType,
   isEnumType,
+  DirectiveNode,
+  StringValueNode,
+  NameNode,
+  NamedTypeNode,
 } from 'graphql';
-import { C_SHARP_SCALARS, CSharpDeclarationBlock, wrapTypeWithModifiers } from './common/common';
+import {
+  C_SHARP_SCALARS,
+  CSharpDeclarationBlock,
+  transformComment,
+  isValueType,
+  getListInnerTypeNode,
+  CSharpFieldType,
+  csharpKeywords,
+  wrapFieldType,
+  getListTypeField,
+} from '../../common/common';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
+  namespaceName: string;
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
+  private readonly keywords = new Set(csharpKeywords);
+
+  constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'List',
+      namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
       scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
     });
+  }
+
+  /**
+   * Checks name against list of keywords. If it is, will prefix value with @
+   *
+   * Note:
+   * This class should first invoke the convertName from base-visitor to convert the string or node
+   * value according the naming configuration, eg upper or lower case. Then resulting string checked
+   * against the list or keywords.
+   * However the generated C# code is not yet able to handle fields that are in a different case so
+   * the invocation of convertName is omitted purposely.
+   */
+  private convertSafeName(node: NameNode | string): string {
+    const name = typeof node === 'string' ? node : node.value;
+    return this.keywords.has(name) ? `@${name}` : name;
   }
 
   public getImports(): string {
@@ -46,11 +79,18 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return allImports.map(i => `using ${i};`).join('\n') + '\n';
   }
 
+  public wrapWithNamespace(content: string): string {
+    return new CSharpDeclarationBlock()
+      .asKind('namespace')
+      .withName(this.config.namespaceName)
+      .withBlock(indentMultiline(content)).string;
+  }
+
   public wrapWithClass(content: string): string {
     return new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.config.className)
+      .withName(this.convertSafeName(this.config.className))
       .withBlock(indentMultiline(content)).string;
   }
 
@@ -68,7 +108,9 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
-      return indent(`${this.getEnumValue(enumName, node.name.value)}`);
+      const enumHeader = this.getFieldHeader(node);
+      const enumOption = this.convertSafeName(node.name);
+      return enumHeader + indent(this.getEnumValue(enumName, enumOption));
     };
   }
 
@@ -85,145 +127,227 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(
-    typeNode: TypeNode
-  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
+  getFieldHeader(
+    node: InputValueDefinitionNode | FieldDefinitionNode | EnumValueDefinitionNode,
+    fieldType?: CSharpFieldType
+  ): string {
+    const attributes = [];
+    const commentText = transformComment(node.description?.value);
+
+    const deprecationDirective = node.directives.find(v => v.name?.value === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      attributes.push(`[Obsolete("${deprecationReason}")]`);
+    }
+
+    if (node.kind === Kind.FIELD_DEFINITION) {
+      attributes.push(`[JsonProperty("${node.name.value}")]`);
+    }
+
+    if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
+      attributes.push(`[JsonRequired]`);
+    }
+
+    if (commentText || attributes.length > 0) {
+      const summary = commentText ? indentMultiline(commentText.trimRight()) + '\n' : '';
+      const attributeLines =
+        attributes.length > 0
+          ? attributes
+              .map(attr => indent(attr))
+              .concat('')
+              .join('\n')
+          : '';
+      return summary + attributeLines;
+    }
+    return '';
+  }
+
+  getDeprecationReason(directive: DirectiveNode): string {
+    if (directive.name.value !== 'deprecated') {
+      return '';
+    }
+    const hasArguments = directive.arguments.length > 0;
+    let reason = 'Field no longer supported';
+    if (hasArguments && directive.arguments[0].value.kind === Kind.STRING) {
+      reason = directive.arguments[0].value.value;
+    }
+    return reason;
+  }
+
+  protected resolveInputFieldType(typeNode: TypeNode, hasDefaultValue: Boolean = false): CSharpFieldType {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
-    const isArray =
-      typeNode.kind === Kind.LIST_TYPE ||
-      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } = null;
+    const listType = getListTypeField(typeNode);
+    const required = getListInnerTypeNode(typeNode).kind === Kind.NON_NULL_TYPE;
+
+    let result: CSharpFieldType = null;
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
-        result = {
-          baseType: this.scalars[schemaType.name],
-          typeName: this.scalars[schemaType.name],
-          isScalar: true,
-          isArray,
-        };
+        const baseType = this.scalars[schemaType.name];
+        result = new CSharpFieldType({
+          baseType: {
+            type: baseType,
+            required,
+            valueType: isValueType(baseType),
+          },
+          listType,
+        });
       } else {
-        result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true };
+        result = new CSharpFieldType({
+          baseType: {
+            type: 'object',
+            required,
+            valueType: false,
+          },
+          listType,
+        });
       }
     } else if (isInputObjectType(schemaType)) {
-      result = {
-        baseType: `${this.convertName(schemaType.name)}`,
-        typeName: `${this.convertName(schemaType.name)}`,
-        isScalar: false,
-        isArray,
-      };
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${this.convertName(schemaType.name)}`,
+          required,
+          valueType: false,
+        },
+        listType,
+      });
     } else if (isEnumType(schemaType)) {
-      result = {
-        isArray,
-        baseType: this.convertName(schemaType.name),
-        typeName: this.convertName(schemaType.name),
-        isScalar: true,
-      };
+      result = new CSharpFieldType({
+        baseType: {
+          type: this.convertName(schemaType.name),
+          required,
+          valueType: true,
+        },
+        listType,
+      });
     } else {
-      result = {
-        baseType: `${schemaType.name}`,
-        typeName: `${schemaType.name}`,
-        isScalar: false,
-        isArray,
-      };
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${schemaType.name}`,
+          required,
+          valueType: false,
+        },
+        listType,
+      });
     }
 
-    if (result) {
-      result.typeName = wrapTypeWithModifiers(result.typeName, typeNode, this.config.listType);
+    if (hasDefaultValue) {
+      // Required field is optional when default value specified, see #4273
+      (result.listType || result.baseType).required = false;
     }
 
     return result;
   }
 
-  protected buildObject(name: string, inputValueArray: ReadonlyArray<FieldDefinitionNode>): string {
+  protected buildClass(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<FieldDefinitionNode>,
+    interfaces?: ReadonlyArray<NamedTypeNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
+    const interfaceImpl =
+      interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
     const classMembers = inputValueArray
       .map(arg => {
-        const typeToUse = this.resolveInputFieldType(arg.type);
-        return indent(`
-          [JsonProperty("${arg.name.value}")]
-          public ${typeToUse.typeName} ${arg.name.value} { get; set;}
-        `);
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(arg.name);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
-      .join('\n');
+      .join('\n\n');
 
     return `
 #region ${name}
-public class ${name} {
+${classSummary}public class ${this.convertSafeName(name)}${interfaceImpl} {
   #region members
-  ${classMembers}
+${classMembers}
   #endregion
 }
-#endregion
-`;
+#endregion`;
   }
 
-  protected buildInputTransfomer(name: string, inputValueArray: ReadonlyArray<InputValueDefinitionNode>): string {
+  protected buildInterface(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<FieldDefinitionNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
     const classMembers = inputValueArray
       .map(arg => {
-        const typeToUse = this.resolveInputFieldType(arg.type);
-
-        return indent(`public ${typeToUse.typeName} ${arg.name.value} { get; set;}`);
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(arg.name);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
-      .join('\n');
+      .join('\n\n');
 
-    const getInputObject = inputValueArray
+    return `
+${classSummary}public interface ${this.convertSafeName(name)} {
+${classMembers}
+}`;
+  }
+
+  protected buildInputTransformer(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<InputValueDefinitionNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
+    const classMembers = inputValueArray
       .map(arg => {
-        const typeToUse = this.resolveInputFieldType(arg.type);
-        if (typeToUse.typeName === 'DateTime') {
-          return indent(`
-            if (this.${arg.name.value} != default(DateTime))
-            {
-              d["${arg.name.value}"] = ${arg.name.value};
-            }`);
-        } else if (typeToUse.typeName === 'int' || typeToUse.typeName === 'float') {
-          return indent(`
-            if (this.${arg.name.value} != 0)
-            {
-              d["${arg.name.value}"] = ${arg.name.value};
-            }`);
-        } else {
-          return indent(`
-            if (this.${arg.name.value} != null)
-            {
-              d["${arg.name.value}"] = ${arg.name.value};
-            }`);
-        }
+        const fieldType = this.resolveInputFieldType(arg.type, !!arg.defaultValue);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(arg.name);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
-      .join('\n');
+      .join('\n\n');
 
     return `
 #region ${name}
-public class ${name} {
+${classSummary}public class ${this.convertSafeName(name)} {
   #region members
-  ${classMembers}
+${classMembers}
   #endregion
 
   #region methods
-  public System.Dynamic.ExpandoObject getInputObject(){
-    dynamic eo = new System.Dynamic.ExpandoObject();
-    IDictionary<string, object> d = (IDictionary<string, object>)eo;
-    ${getInputObject}
-    return eo;
+  public dynamic GetInputObject()
+  {
+    IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+
+    var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+    foreach (var propertyInfo in properties)
+    {
+      var value = propertyInfo.GetValue(this);
+      var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+
+      var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+      if (requiredProp || value != defaultValue)
+      {
+        d[propertyInfo.Name] = value;
+      }
+    }
+    return d;
   }
   #endregion
-
-
 }
-#endregion
-`;
+#endregion`;
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     const name = `${this.convertName(node)}`;
-    return this.buildInputTransfomer(name, node.fields);
+    return this.buildInputTransformer(name, node.description, node.fields);
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
-    return this.buildObject(node.name.value, node.fields);
+    return this.buildClass(node.name.value, node.description, node.fields, node.interfaces);
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
-    return this.buildObject(node.name.value, node.fields);
+    return this.buildInterface(node.name.value, node.description, node.fields);
   }
 }

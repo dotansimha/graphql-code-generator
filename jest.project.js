@@ -25,6 +25,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     modulePathIgnorePatterns: ['dist'],
     moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: `${ROOT_DIR}/` }),
     cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
+    setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
   };
 };

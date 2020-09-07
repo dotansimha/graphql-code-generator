@@ -2,24 +2,21 @@ name: Website
 
 on:
   push:
-    tags:
-      - 'v*'
     branches:
       - master
 
 jobs:
   test:
     name: Deploy Website
-    timeout-minutes: 10
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.ref, 'refs/tags/')
+    if: contains(github.event.head_commit.message, '[deploy_website]') || contains(github.event.head_commit.message, 'update monorepo packages versions')
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Use Node 13
+      - name: Use Node 14
         uses: actions/setup-node@master
         with:
-          node-version: 13
+          node-version: 14
       - name: Install Dependencies
         run: yarn install
       - name: Build Plugins
@@ -32,3 +29,5 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
           BRANCH: gh-pages
           FOLDER: website/build
+          CLEAN: true
+          SINGLE_COMMIT: true

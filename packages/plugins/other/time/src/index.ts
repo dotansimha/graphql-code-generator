@@ -1,63 +1,34 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import moment from 'moment';
-
-export type TimePluginConfig =
-  | string
-  | {
-      /**
-       * @name format
-       * @type string
-       * @description Customize the Moment format of the output time.
-       * @default YYYY-MM-DDTHH:mm:ssZ
-       *
-       * @example
-       * ```yml
-       * generates:
-       * path/to/file.ts:
-       *  plugins:
-       *    - time:
-       *        format: DD.MM.YY
-       * ```
-       */
-      format: string;
-      /**
-       * @name message
-       * @type string
-       * @description Customize the comment message
-       * @default Generated in
-       *
-       * @example
-       * ```yml
-       * generates:
-       * path/to/file.ts:
-       *  plugins:
-       *    - time:
-       *        message: "The file generated in: "
-       * ```
-       */
-      message: string;
-    };
+import { extname } from 'path';
+import { TimePluginConfig } from './config';
 
 export const plugin: PluginFunction<TimePluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: TimePluginConfig
+  config: TimePluginConfig,
+  { outputFile }
 ): Promise<string> => {
-  let format;
-  let message = 'Generated in ';
+  let format: string;
+  let message = 'Generated on ';
 
-  if (config && typeof config === 'string') {
-    format = config;
-  } else if (config && typeof config === 'object' && config.format) {
-    format = config.format;
+  if (config && typeof config === 'object') {
+    if (config.format) {
+      format = config.format;
+    }
 
     if (config.message) {
       message = config.message;
     }
-  } else {
-    config = null;
   }
 
-  return '// ' + message + moment().format(format) + '\n';
+  const outputFileExtension = outputFile && extname(outputFile);
+  let commentPrefix = '//';
+
+  if ((outputFileExtension || '').toLowerCase() === '.graphql') {
+    commentPrefix = '#';
+  }
+
+  return commentPrefix + ' ' + message + moment().format(format) + '\n';
 };

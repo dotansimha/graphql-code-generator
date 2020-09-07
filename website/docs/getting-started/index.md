@@ -32,7 +32,7 @@ schema {
 }
 ```
 
-GraphQL Code Generator can generate the following TypeScript typings:
+GraphQL Code Generator can generate the following TypeScript typings (this example is using `typescript` plugin):
 
 ```ts
 export type Maybe<T> = T | null;
@@ -71,86 +71,15 @@ export type Query = {
 };
 ```
 
-## Installation
+## What's next?
 
-First we gotta make sure that the basic GraphQL package is within our dependencies, since GraphQL Code Generator is dependent on it:
+Start by [installing GraphQL Code Generator](installation.md) in your project, and use the basic plugins to generate some code. 
 
-    $ yarn add graphql
+You can go over [the list of available plugins](../plugins/index.md) and find more plugins that matches your needs. 
 
-The we can install GraphQL Code Generator using `yarn` (or `npm`):
+If you are having issues, you can reach us this the following:
 
-    $ yarn add -D @graphql-codegen/cli
-
-## Initialization Wizard
-
-GraphQL Code Generator lets you setup everything by simply running the following command:
-
-    $ graphql-codegen init
-
-Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination of a generated file and a lot more.
-
-If you don't want to use the wizard, we've got you covered, just continue reading the next sections.
-
-## Setup
-
-GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them:
-
-    $ yarn add -D @graphql-codegen/typescript
-
-Although can be used directly, it's recommended to add the code generation task as an `npm` script in `package.json`. This way we won't have to install GraphQL Code Generator globally:
-
-```json
-{
-  "scripts": {
-    "generate": "graphql-codegen"
-  }
-}
-```
-
-GraphQL Code Generator looks for `codegen.yml` and `codegen.json` files by default, one might look like this:
-
-```yaml
-schema: http://localhost:3000/graphql
-generates:
-  ./src/types.d.ts:
-    plugins:
-      - typescript
-```
-
-By running the following command the GraphQL schema will be fetched from the route endpoint and the typescript definitions would be generated in the specified destination:
-
-    $ npm run generate
-
-## Usage
-
-There are different methods to use GraphQL Code Generator besides the [CLI](../cli/index). Here are other possible methods to do so which you might find useful:
-
-### Using in Runtime
-
-We can `require()` (or `import`) `@graphql-codegen/cli` directly with Node.JS:
-
-```js
-import { generate } from '@graphql-codegen/cli';
-
-async function doSomething() {
-  const generatedFiles = await generate(
-    {
-      schema: 'http://127.0.0.1:3000/graphql',
-      documents: './src/**/*.graphql',
-      generates: {
-        [process.cwd() + '/models/types.d.ts']: {
-          plugins: ['typescript'],
-        },
-      },
-    },
-    true
-  );
-}
-```
-
-The `generate` function accepts two parameters:
-
-- `options`
-- `saveToFile: boolean`
-
-The return value should be of type `Promise<FileOutput[]>`.
+- Found a bug? [report it in our GitHub repo](https://github.com/dotansimha/graphql-code-generator)
+- Need help or have a question? You can use the live chat box in the corner of the screen, [ask it in our GitHub Discussions page](https://github.com/dotansimha/graphql-code-generator/discussions) or [reach us directly in our Discord](http://bit.ly/guild-chat).
+- We have more awesome [open source tools](https://github.com/the-guild-org/Stack)!
+- You can [visit our website](http://the-guild.dev/) for more information about us and what we do  

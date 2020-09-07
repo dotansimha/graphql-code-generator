@@ -4,6 +4,7 @@ import {
   DocumentMode,
   LoadedFragment,
   indentMultiline,
+  getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
@@ -19,14 +20,17 @@ function R_DEF(directive: string) {
 }
 
 export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
+  apolloAngularVersion: number;
   ngModule?: string;
   namedClient?: string;
   serviceName?: string;
   serviceProvidedInRoot?: boolean;
+  serviceProvidedIn?: string;
   sdkClass?: boolean;
   querySuffix?: string;
   mutationSuffix?: string;
   subscriptionSuffix?: string;
+  apolloAngularPackage: string;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
@@ -58,10 +62,17 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         ngModule: rawConfig.ngModule,
         namedClient: rawConfig.namedClient,
         serviceName: rawConfig.serviceName,
+        serviceProvidedIn: rawConfig.serviceProvidedIn,
         serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
+        apolloAngularPackage: getConfigValue(rawConfig.apolloAngularPackage, 'apollo-angular'),
+        apolloAngularVersion: getConfigValue(rawConfig.apolloAngularVersion, 2),
+        gqlImport: getConfigValue(
+          rawConfig.gqlImport,
+          !rawConfig.apolloAngularVersion || rawConfig.apolloAngularVersion === 2 ? `apollo-angular#gql` : null
+        ),
       },
       documents
     );
@@ -77,10 +88,14 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       return baseImports;
     }
 
-    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
+    const imports = [
+      `import { Injectable } from '@angular/core';`,
+      `import * as Apollo from '${this.config.apolloAngularPackage}';`,
+    ];
 
     if (this.config.sdkClass) {
-      imports.push(`import * as ApolloCore from 'apollo-client';`);
+      const corePackage = this.config.apolloAngularVersion > 1 ? '@apollo/client/core' : 'apollo-client';
+      imports.push(`import * as ApolloCore from '${corePackage}';`);
     }
 
     const defs: Record<string, { path: string; module: string }> = {};
@@ -99,6 +114,15 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
           module: def.module,
         };
       });
+
+    if (this.config.serviceProvidedIn) {
+      const ngModule = this._parseNgModule(this.config.serviceProvidedIn);
+
+      defs[ngModule.link] = {
+        path: ngModule.path,
+        module: ngModule.module,
+      };
+    }
 
     Object.keys(defs).forEach(key => {
       const def = defs[key];
@@ -239,6 +263,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }`;
 
     return content;
@@ -275,7 +302,7 @@ ${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
   return this.${camelCase(o.serviceName)}.${actionType(o.operationType)}(variables, options)
 }`;
 
-        let watchMethod;
+        let watchMethod: string;
 
         if (o.operationType === 'Query') {
           watchMethod = `
@@ -298,7 +325,11 @@ ${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: $
       .join(',\n');
 
     const serviceName = this.config.serviceName || 'ApolloAngularSDK';
-    const providedIn = this.config.serviceProvidedInRoot === false ? '' : `{ providedIn: 'root' }`;
+    const providedIn = this.config.serviceProvidedIn
+      ? `{ providedIn: ${this._parseNgModule(this.config.serviceProvidedIn).module} }`
+      : this.config.serviceProvidedInRoot === false
+      ? ''
+      : `{ providedIn: 'root' }`;
 
     return `
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

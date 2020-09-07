@@ -47,12 +47,14 @@ describe('urql', () => {
   };
 
   describe('Imports', () => {
-    it('should import Urql dependencies', async () => {
+    it('should import Urql and React dependencies when components are used', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -353,7 +355,7 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Component', async () => {
+    it('should not generate Component by default', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
@@ -364,7 +366,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`
+      expect(content.content).not.toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) =>
       (
           <Urql.Query {...props} query={TestDocument} />
@@ -407,7 +409,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -439,7 +443,9 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {},
+        {
+          withComponent: true,
+        },
         {
           outputFile: 'graphql.tsx',
         }
@@ -464,6 +470,20 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).not.toContain(`export class ITestComponent`);
+    });
+
+    it('should respect omitOperationSuffix for Component', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toContain(`export class TestComponent`);
     });
 
     it('should add three generics if operation type is subscription', async () => {
@@ -581,7 +601,7 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export function useListenToCommentsSubscription<TData = any>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
+      export function useListenToCommentsSubscription<TData = ListenToCommentsSubscription>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
         return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
       };`);
       await validateTypeScript(content, schema, docs, {});
@@ -600,6 +620,20 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export function useTestQuery`);
+    });
+
+    it('Should respect omitOperationSuffix for hooks', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, omitOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export function useTest(`);
     });
   });
 });

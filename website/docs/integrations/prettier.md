@@ -5,7 +5,7 @@ title: Prettier & Linters
 
 The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other linters, to apply your custom code-style and formatting rules.
 
-[You can read the complete documentation of lifecycle hooks here](../getting-started/lifecycle-hooks)
+[You can read the complete documentation of lifecycle hooks here](../getting-started/lifecycle-hooks.md)
 
 ## Prettier
 

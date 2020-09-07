@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
-import * as React from 'react';
 import * as Urql from 'urql';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -166,9 +166,9 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscriptionVariables = {
+export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
   commentAdded?: Maybe<
@@ -178,11 +178,11 @@ export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
   >;
 };
 
-export type CommentQueryVariables = {
+export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type CommentQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
@@ -202,7 +202,7 @@ export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comm
     postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
   };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
@@ -215,20 +215,20 @@ export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Entry, 'id' | 'c
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   type: FeedType;
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type FeedQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
   feed?: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
 };
 
-export type SubmitRepositoryMutationVariables = {
+export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
   submitRepository?: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
@@ -242,10 +242,10 @@ export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt
     postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
-export type SubmitCommentMutationVariables = {
+export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
-};
+}>;
 
 export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
   submitComment?: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
@@ -255,10 +255,10 @@ export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'
     vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
   };
 
-export type VoteMutationVariables = {
+export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
-};
+}>;
 
 export type VoteMutation = { __typename?: 'Mutation' } & {
   vote?: Maybe<
@@ -332,13 +332,15 @@ export const OnCommentAddedDocument = gql`
   }
 `;
 
-export const OnCommentAddedComponent = (
-  props: Omit<
-    Urql.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>,
-    'query'
-  > & { variables?: OnCommentAddedSubscriptionVariables }
-) => <Urql.Subscription {...props} query={OnCommentAddedDocument} />;
-
+export function useOnCommentAddedSubscription<TData = OnCommentAddedSubscription>(
+  options: Omit<Urql.UseSubscriptionArgs<OnCommentAddedSubscriptionVariables>, 'query'> = {},
+  handler?: Urql.SubscriptionHandler<OnCommentAddedSubscription, TData>
+) {
+  return Urql.useSubscription<OnCommentAddedSubscription, TData, OnCommentAddedSubscriptionVariables>(
+    { query: OnCommentAddedDocument, ...options },
+    handler
+  );
+}
 export const CommentDocument = gql`
   query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
     currentUser {
@@ -370,10 +372,9 @@ export const CommentDocument = gql`
   ${CommentsPageCommentFragmentDoc}
 `;
 
-export const CommentComponent = (
-  props: Omit<Urql.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & { variables: CommentQueryVariables }
-) => <Urql.Query {...props} query={CommentDocument} />;
-
+export function useCommentQuery(options: Omit<Urql.UseQueryArgs<CommentQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CommentQuery>({ query: CommentDocument, ...options });
+}
 export const CurrentUserForProfileDocument = gql`
   query CurrentUserForProfile {
     currentUser {
@@ -383,12 +384,11 @@ export const CurrentUserForProfileDocument = gql`
   }
 `;
 
-export const CurrentUserForProfileComponent = (
-  props: Omit<Urql.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'> & {
-    variables?: CurrentUserForProfileQueryVariables;
-  }
-) => <Urql.Query {...props} query={CurrentUserForProfileDocument} />;
-
+export function useCurrentUserForProfileQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentUserForProfileQueryVariables>, 'query'> = {}
+) {
+  return Urql.useQuery<CurrentUserForProfileQuery>({ query: CurrentUserForProfileDocument, ...options });
+}
 export const FeedDocument = gql`
   query Feed($type: FeedType!, $offset: Int, $limit: Int) {
     currentUser {
@@ -401,10 +401,9 @@ export const FeedDocument = gql`
   ${FeedEntryFragmentDoc}
 `;
 
-export const FeedComponent = (
-  props: Omit<Urql.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & { variables: FeedQueryVariables }
-) => <Urql.Query {...props} query={FeedDocument} />;
-
+export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
+}
 export const SubmitRepositoryDocument = gql`
   mutation submitRepository($repoFullName: String!) {
     submitRepository(repoFullName: $repoFullName) {
@@ -413,12 +412,9 @@ export const SubmitRepositoryDocument = gql`
   }
 `;
 
-export const SubmitRepositoryComponent = (
-  props: Omit<Urql.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'query'> & {
-    variables?: SubmitRepositoryMutationVariables;
-  }
-) => <Urql.Mutation {...props} query={SubmitRepositoryDocument} />;
-
+export function useSubmitRepositoryMutation() {
+  return Urql.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument);
+}
 export const SubmitCommentDocument = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
     submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -428,12 +424,9 @@ export const SubmitCommentDocument = gql`
   ${CommentsPageCommentFragmentDoc}
 `;
 
-export const SubmitCommentComponent = (
-  props: Omit<Urql.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'query'> & {
-    variables?: SubmitCommentMutationVariables;
-  }
-) => <Urql.Mutation {...props} query={SubmitCommentDocument} />;
-
+export function useSubmitCommentMutation() {
+  return Urql.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument);
+}
 export const VoteDocument = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {
     vote(repoFullName: $repoFullName, type: $type) {
@@ -446,6 +439,6 @@ export const VoteDocument = gql`
   }
 `;
 
-export const VoteComponent = (
-  props: Omit<Urql.MutationProps<VoteMutation, VoteMutationVariables>, 'query'> & { variables?: VoteMutationVariables }
-) => <Urql.Mutation {...props} query={VoteDocument} />;
+export function useVoteMutation() {
+  return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+}

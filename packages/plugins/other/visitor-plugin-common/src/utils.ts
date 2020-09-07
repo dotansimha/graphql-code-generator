@@ -47,7 +47,15 @@ export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(value: string | number | NameNode): string {
+export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
+  if (skipNumericCheck) {
+    if (typeof value === 'number') {
+      return `${value}`;
+    } else {
+      return `'${value}'`;
+    }
+  }
+
   if (
     typeof value === 'number' ||
     (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
@@ -219,13 +227,15 @@ export class DeclarationBlock {
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {
-      result += '{}';
+      result += this._config.blockTransformer('{}');
     }
 
     return (
       (this._comment ? this._comment : '') +
       result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') +
+      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+        ? ''
+        : ';') +
       '\n'
     );
   }
@@ -253,7 +263,8 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
 export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
-  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
+  defaultScalarType = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -283,7 +294,7 @@ export function buildScalars(
         } else if (!defaultScalarsMapping[name]) {
           result[name] = {
             isExternal: false,
-            type: 'any',
+            type: defaultScalarType,
           };
         }
       });

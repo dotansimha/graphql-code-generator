@@ -3,16 +3,11 @@ id: typescript-stencil-apollo
 title: TypeScript Stencil Apollo
 ---
 
-This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
-
-
 {@import ../plugins/client-note.md}
 
-## Installation
+{@import ../generated-config/typescript-stencil-apollo.md}
 
-    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
-
-## Usage
+## Usage Example
 
 For the given input:
 
@@ -39,12 +34,3 @@ We can use the generated code like this:
     ...
   </TestComponent>
 ```
-
-## Configuration
-
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/client-side-base-visitor.md}
-
-{@import ../generated-config/typescript-stencil-apollo.md}

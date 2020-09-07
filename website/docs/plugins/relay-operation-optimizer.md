@@ -1,11 +1,11 @@
 ---
 id: relay-operation-optimizer
-title: Relay Operation Optimizer.
+title: Relay Operation Optimizer
 ---
 
 _Built and maintained by [n1ru4l](https://github.com/n1ru4l)_
 
-A GraphQL Codegen Plugin for bringing the benefits of Relay Compiler to any GraphQL Client.
+A GraphQL Codegen feature for bringing the benefits of Relay Compiler to any GraphQL Client using [Relay Operation Optimizer](https://www.graphql-tools.com/docs/relay-operation-optimizer)
 
 You can test how relay-compiler affects your queries over on the [Relay Compiler REPL](https://relay-compiler-repl.netlify.com/).
 
@@ -19,15 +19,9 @@ You can test how relay-compiler affects your queries over on the [Relay Compiler
   - [`@argumentsDefinition`](https://relay.dev/docs/en/graphql-in-relay#argumentdefinitions)
   - [`@arguments`](https://relay.dev/docs/en/graphql-in-relay#arguments)
 
-## Installation
-
-```shell
-yarn add -D @graphql-codegen/relay-operation-optimizer
-```
-
 ## Usage
 
-Set up your project per the GraphQL Codegen Docs, and specify this plugin in your codegen.yml:
+Set up your project per the GraphQL Codegen Docs, and add `flattenGeneratedTypes: true` in your codegen.yml:
 
 ```yaml
 overwrite: true
@@ -37,11 +31,13 @@ generates:
     documents: 'src/documents/**/*.graphql'
     config:
       skipDocumentsValidation: true
+      flattenGeneratedTypes: true
     plugins:
-      - 'relay-operation-optimizer'
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'
 ```
 
 Please notice that you have to skip the document validation - but no worries, relay-compiler will validate your documents instead!
+
+> [See Laurin Quast's blog post to learn how to use those directives in your operations](https://the-guild.dev/blog/graphql-codegen-relay-compiler)

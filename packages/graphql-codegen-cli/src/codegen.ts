@@ -13,7 +13,7 @@ import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
-import { printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { CodegenContext, ensureContext } from './config';
 
 export const defaultLoader = (mod: string) => import(mod);
@@ -35,6 +35,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const context = ensureContext(input);
   const config = context.getConfig();
+  const pluginContext = context.getPluginContext();
   const result: Types.FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true,
@@ -76,7 +77,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       await import(mod);
     }
 
-    /* Root templates-config */
+    /* Root plugin  config */
     rootConfig = config.config || {};
 
     /* Normalize root "schema" field */
@@ -86,7 +87,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
     /* Normalize "generators" field */
-    const generateKeys = Object.keys(config.generates);
+    const generateKeys = Object.keys(config.generates || {});
 
     if (generateKeys.length === 0) {
       throw new DetailedError(
@@ -254,6 +255,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
+                          pluginContext,
                         });
                       } else {
                         outputs = [
@@ -265,6 +267,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,
+                            pluginContext,
                           },
                         ];
                       }

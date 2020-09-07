@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -162,9 +163,9 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscriptionVariables = {
+export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
@@ -177,11 +178,11 @@ export type OnCommentAddedSubscription = {
   }>;
 };
 
-export type CommentQueryVariables = {
+export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type CommentQuery = {
   __typename?: 'Query';
@@ -212,18 +213,18 @@ export type CommentQuery = {
   }>;
 };
 
-export type CurrentUserForProfileQueryVariables = {};
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
   currentUser?: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
 };
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   type: FeedType;
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 export type FeedQuery = {
   __typename?: 'Query';
@@ -252,19 +253,19 @@ export type FeedQuery = {
   >;
 };
 
-export type SubmitRepositoryMutationVariables = {
+export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
-};
+}>;
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
   submitRepository?: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
 };
 
-export type SubmitCommentMutationVariables = {
+export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
-};
+}>;
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
@@ -277,10 +278,10 @@ export type SubmitCommentMutation = {
   }>;
 };
 
-export type VoteMutationVariables = {
+export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
-};
+}>;
 
 export type VoteMutation = {
   __typename?: 'Mutation';

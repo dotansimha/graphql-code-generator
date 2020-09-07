@@ -27,7 +27,7 @@ It's also useful to run the codegen during your continuous integration flow and 
 
 ### Watch Mode
 
-If you wish to run the codegen in watch mode, you can specify `--watch` when running it.
+If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
 
 You can either run it in a separate terminal session, or use tools like [`concurrently`](https://www.npmjs.com/package/concurrently) to run two scripts at the same time:
 
@@ -41,6 +41,14 @@ You can either run it in a separate terminal session, or use tools like [`concur
   }
 }
 ```
+
+If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
+
+:::shell ""
+    yarn graphql-codegen --watch "src/**/*.js"
+
+Use this when you are loading your schema or documents from a single code file, that depends on other files internally, because codegen can't tell that you using those files automatically.   
+:::
 
 ### Monorepo and Yarn Workspaces
 

@@ -3,60 +3,98 @@ id: typescript-vue-apollo
 title: TypeScript Vue Apollo
 ---
 
-This plugin generates @vue/apollo-composable composition functions with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
-
-
 {@import ../plugins/client-note.md}
+
+{@import ../generated-config/typescript-vue-apollo.md}
+
 
 ## Installation
 
 ```bash
-$ yarn add @graphql-codegen/typescript-vue-apollo
-$ yarn add @vue/apollo-composable@4.0.0-alpha.4
+  yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable@4.0.0-alpha.8 @vue/composition-api
 ```
 
-## Usage
+## Usage examples
+
+The examples below use Vue 2 with the ([composition api plugin](https://github.com/vuejs/composition-api)).
+
+### Example: Using the generated query code
 
 For the given input:
 
 ```graphql
-query Test {
+query Message {
   feed {
     id
   }
 }
 ```
 
-We can use the generated code like this in Vue 2 ([with composition api plugin](https://github.com/vuejs/composition-api)):
+We can use the generated code like this:
 
 ```vue
 <template>
   <div>
-    {{ result.feed.id }}
+    <div v-if="loading">Loading...</div>
+    <div v-else>{{ result.feed.id }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { createComponent } from "@vue/composition-api";
-import {
-  useTestQuery,
-} from "../generated/graphqlOperations";
+import { defineComponent } from "@vue/composition-api"
+import { useMessageQuery } from "../generated/graphqlOperations"
 
-export default createComponent({
+export default defineComponent({
   setup() {
-    const { result } = useMessagesQuery();
-
-    return { result };
+    const { result, loading } = useMessageQuery()
+    return { result, loading }
   }
-});
+})
 </script>
 ```
 
-## Configuration
+### Example: Select a single property with useResult and add an error message
 
+For the given input:
 
-{@import ../generated-config/base-visitor.md}
+```graphql
+query allAccounts {
+  accounts {
+    accountID
+    givenName
+    age
+  }
+}
+```
 
-{@import ../generated-config/client-side-base-visitor.md}
+We can use the generated code with `useResult` like this:
 
-{@import ../generated-config/typescript-vue-apollo.md}
+```vue
+<template>
+  <div>
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">Error: {{ error.message }}</div>
+    <div v-else-if="allAccounts">
+      <div v-for="account in allAccounts" :key="account.accountID">
+        {{ account.accountID }}  {{ account.givenName }}  {{ account.age }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api"
+import { useResult } from '@vue/apollo-composable'
+import { useAllAccountsQuery } from "../generated/graphqlOperations"
+
+export default defineComponent({
+  setup() {
+    const { result, loading, error } = useAllAccountsQuery()
+    // Only select the peroperty 'accounts' for use in the template
+    const allAccounts = useResult(result, null, (data) => data.accounts)
+    return { allAccounts, loading, error }
+  }
+})
+</script>
+```
+

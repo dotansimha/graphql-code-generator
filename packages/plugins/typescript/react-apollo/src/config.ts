@@ -1,12 +1,16 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+
+/**
+ * @description This plugin generates React Apollo components and HOC with TypeScript typings.
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ */
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name withComponent
-   * @type boolean
-   * @description Customized the output by enabling/disabling the generated Component.
-   * @default true
+   * @description Customize the output by enabling/disabling the generated Component (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/components/
+   * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -15,17 +19,15 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withComponent: false
+   *    withComponent: true
    * ```
    */
   withComponent?: boolean;
   /**
-   * @name withHOC
-   * @type boolean
-   * @description Customized the output by enabling/disabling the HOC.
-   * @default true
+   * @description Customize the output by enabling/disabling the HOC (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/hoc/
+   * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -34,17 +36,15 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withHOC: false
+   *    withHOC: true
    * ```
    */
   withHOC?: boolean;
   /**
-   * @name withHooks
-   * @type boolean
-   * @description Customized the output by enabling/disabling the generated React Hooks.
-   * @default false
+   * @description Customized the output by enabling/disabling the generated React Hooks. For more details: https://www.apollographql.com/docs/react/api/react/hooks/
+   * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -53,17 +53,15 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withHooks: false
+   *    withHooks: true
    * ```
    */
   withHooks?: boolean;
   /**
-   * @name withMutationFn
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated mutation function signature.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -77,12 +75,10 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   withMutationFn?: boolean;
   /**
-   * @name withRefetchFn
-   * @type boolean
    * @description Enable generating a function to be used with refetchQueries
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -96,43 +92,37 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   withRefetchFn?: boolean;
   /**
-   * @name apolloReactCommonImportFrom
-   * @type string
-   * @default @apollo/react-common
+   * @description Customize the package where apollo-react common lib is loaded from.
+   * @default "@apollo/react-common"
    */
   apolloReactCommonImportFrom?: string;
   /**
-   * @name apolloReactComponentsImportFrom
-   * @type string
-   * @default @apollo/react-components
+   * @description Customize the package where apollo-react component lib is loaded from.
+   * @default "@apollo/react-components"
    */
   apolloReactComponentsImportFrom?: string;
   /**
-   * @name apolloReactHocImportFrom
-   * @type string
-   * @default @apollo/react-hoc
+   * @description Customize the package where apollo-react HOC lib is loaded from.
+   * @default "@apollo/react-hoc"
    */
   apolloReactHocImportFrom?: string;
   /**
-   * @name apolloReactHooksImportFrom
-   * @type string
-   * @default @apollo/react-hooks
+   * @description Customize the package where apollo-react hooks lib is loaded from.
+   * @default "@apollo/react-hooks"
    */
   apolloReactHooksImportFrom?: string;
   /**
-   * @name componentSuffix
-   * @type string
    * @description You can specify a suffix that gets attached to the name of the generated component.
    * @default Component
    */
   componentSuffix?: string;
   /**
-   * @name reactApolloVersion
-   * @type 2 | 3
    * @description Sets the version of react-apollo.
-   * @default 2
+   * If you are using the old (deprecated) package of `react-apollo`, please set this configuration to `2`.
+   * If you are using Apollo-Client v3, please set this to `3`.
+   * @default 3
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -141,17 +131,15 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    reactApolloVersion: 3
+   *    reactApolloVersion: 2
    * ```
    */
   reactApolloVersion?: 2 | 3;
   /**
-   * @name withResultType
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated result type.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -165,12 +153,10 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   withResultType?: boolean;
   /**
-   * @name withMutationOptionsType
-   * @type boolean
    * @description Customized the output by enabling/disabling the generated mutation option type.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -184,13 +170,11 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   withMutationOptionsType?: boolean;
   /**
-   * @name addDocBlocks
-   * @type boolean
    * @description Allows you to enable/disable the generation of docblocks in generated code.
-   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
+   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.
    * @default true
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:

@@ -154,5 +154,34 @@ async function test() {
 
       expect(output).toMatchSnapshot();
     });
+
+    it('Should support useTypeImports', async () => {
+      const config = { useTypeImports: true };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+async function test() {
+  const client = new GraphQLClient('');
+  const sdk = getSdk(client);
+  
+  await sdk.feed();
+  await sdk.feed3();
+  await sdk.feed4();
+
+  const result = await sdk.feed2({ v: "1" });
+
+  if (result.feed) {
+    if (result.feed[0]) {
+      const id = result.feed[0].id
+    }
+  }
+}`;
+      const output = await validate(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
   });
 });

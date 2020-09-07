@@ -18,3 +18,6 @@ dist
 .bob
 out.txt
 .cache
+tsconfig.tsbuildinfo
+.yarn
+.yarnrc

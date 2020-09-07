@@ -17,6 +17,8 @@ import {
   StringValueNode,
   isEnumType,
   DirectiveNode,
+  Kind,
+  GraphQLEnumType,
 } from 'graphql';
 import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
@@ -45,30 +47,30 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyOperationTypes: boolean;
   enumPrefix: boolean;
+  fieldWrapperValue: string;
+  wrapFieldDefinitions: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
   /**
-   * @name addUnderscoreToArgsType
-   * @type boolean
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
-   * @example With Custom Values
+   * @exampleMarkdown
+   * ## With Custom Values
    * ```yml
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
-   *
    */
   addUnderscoreToArgsType?: boolean;
   /**
-   * @name enumValues
-   * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
    *
-   * @example With Custom Values
+   * @exampleMarkdown
+   * ## With Custom Values
    * ```yml
    *   config:
    *     enumValues:
@@ -76,14 +78,14 @@ export interface RawTypesConfig extends RawConfig {
    *         A: 'foo'
    * ```
    *
-   * @example With External Enum
+   * ## With External Enum
    * ```yml
    *   config:
    *     enumValues:
    *       MyEnum: ./my-file#MyCustomEnum
    * ```
    *
-   * @example Import All Enums from a file
+   * ## Import All Enums from a file
    * ```yml
    *   config:
    *     enumValues: ./my-file
@@ -91,17 +93,16 @@ export interface RawTypesConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
-   * @name declarationKind
-   * @type DeclarationKindConfig
    * @description Overrides the default output for various GraphQL elements.
    *
-   * @example Override all declarations
+   * @exampleMarkdown
+   * ## Override all declarations
    * ```yml
    *   config:
    *     declarationKind: 'interface'
    * ```
    *
-   * @example Override only specific declarations
+   * ## Override only specific declarations
    * ```yml
    *   config:
    *     declarationKind:
@@ -111,12 +112,11 @@ export interface RawTypesConfig extends RawConfig {
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
   /**
-   * @name enumPrefix
-   * @type boolean
    * @default true
    * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
-   * @example Disable enum prefixes
+   * @exampleMarkdown
+   * ## Disable enum prefixes
    * ```yml
    *   config:
    *     typesPrefix: I
@@ -124,6 +124,56 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
+   * @default T
+   *
+   * @exampleMarkdown
+   * ## Allow Promise
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   *    fieldWrapperValue: T | Promise<T>
+   * ```
+   */
+  fieldWrapperValue?: string;
+  /**
+   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
+   * This is useful to allow return types such as Promises and functions.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Enable wrapping fields
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   * ```
+   */
+  wrapFieldDefinitions?: boolean;
+  /**
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    onlyOperationTypes: true
+   * ```
+   */
+  onlyOperationTypes?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -140,14 +190,29 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
+      wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
       ...additionalConfig,
     });
 
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
+  }
+
+  protected getExportPrefix(): string {
+    return 'export ';
+  }
+
+  public getFieldWrapperValue(): string {
+    if (this.config.fieldWrapperValue) {
+      return `${this.getExportPrefix()}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+    }
+
+    return '';
   }
 
   public getScalarsImports(): string[] {
@@ -230,6 +295,7 @@ export class BaseTypesVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
@@ -262,7 +328,7 @@ export class BaseTypesVisitor<
       ...(this.config.addTypename
         ? [
             indent(
-              `${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(
+              `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'${this.getPunctuation(
                 type
               )}`
             ),
@@ -280,7 +346,7 @@ export class BaseTypesVisitor<
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
-        declarationBlock.withContent(' extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+        declarationBlock.withContent('extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
       }
 
       declarationBlock.withBlock(this.mergeAllFields(allFields, false));
@@ -307,6 +373,7 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -328,6 +395,7 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -341,10 +409,14 @@ export class BaseTypesVisitor<
   }
 
   protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
+    const { useTypeImports } = this.config;
     if (asDefault) {
+      if (useTypeImports) {
+        return `import type { default as ${identifier} } from '${source}';`;
+      }
       return `import ${identifier} from '${source}';`;
     }
-    return `import { ${identifier} } from '${source}';`;
+    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
   }
 
   protected handleEnumValueMapper(
@@ -405,11 +477,17 @@ export class BaseTypesVisitor<
   }
 
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
+    const schemaEnumType: GraphQLEnumType | undefined = this._schema
+      ? (this._schema.getType(typeName) as GraphQLEnumType)
+      : undefined;
+
     return values
       .map(enumOption => {
         const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
         const comment = transformComment((enumOption.description as any) as string, 1);
-        let enumValue: string | number = enumOption.name as any;
+        const schemaEnumValue = schemaEnumType ? schemaEnumType.getValue(enumOption.name as any).value : undefined;
+        let enumValue: string | number =
+          typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
 
         if (
           this.config.enumValues[typeName] &&
@@ -422,7 +500,10 @@ export class BaseTypesVisitor<
         return (
           comment +
           indent(
-            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`
+            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
+              enumValue,
+              typeof schemaEnumValue !== 'undefined'
+            )}`
           )
         );
       })
@@ -463,6 +544,7 @@ export class BaseTypesVisitor<
           (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
+            useTypesSuffix: false,
           }) +
           'Args';
 
@@ -493,8 +575,16 @@ export class BaseTypesVisitor<
     return this.convertName(node);
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return this._getTypeForNode(node);
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const typeToUse = this._getTypeForNode(node);
+
+    if (!isVisitingInputType && this.config.fieldWrapperValue && this.config.wrapFieldDefinitions) {
+      return `FieldWrapper<${typeToUse}>`;
+    }
+
+    return typeToUse;
   }
 
   ListType(node: ListTypeNode): string {

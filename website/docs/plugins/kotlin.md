@@ -7,7 +7,7 @@ The `kotlin` plugin generates Kotlin `classes` for Enums and Input types.
 
 You can use this plugin to generate Java enums based on your GraphQL schema, and it also generates a type-safe Kotlin transformer for GraphQL `input` types.
 
-## Installation
+## Prepare your environment
 
 To get started with this plugins and preset, make sure you have the following installed:
 
@@ -17,8 +17,8 @@ To get started with this plugins and preset, make sure you have the following in
 Run the following in your Android project:
 
 ```
-  $ yarn init --yes
-  $ yarn add @graphql-codegen/cli graphql @graphql-codegen/kotlin
+  yarn init --yes
+  yarn add @graphql-codegen/cli graphql @graphql-codegen/kotlin
 ```
 
 Then, create `codegen.yml` with the following configuration:
@@ -34,10 +34,4 @@ generates:
 
 > Also, make sure to add `node_modules` to your `.gitignore` file.
 
-
-## Configuration
-
-
 {@import ../generated-config/kotlin.md}
-
-{@import ../generated-config/base-visitor.md}

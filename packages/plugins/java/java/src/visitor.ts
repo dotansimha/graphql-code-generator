@@ -42,7 +42,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       listType: rawConfig.listType || 'Iterable',
       className: rawConfig.className || 'Types',
       package: rawConfig.package || defaultPackageName,
-      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS),
+      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
     });
   }
 
@@ -156,9 +156,11 @@ public static ${enumName} valueOfLabel(String label) {
         result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true, isEnum: false };
       }
     } else if (isInputObjectType(schemaType)) {
+      const convertedName = this.convertName(schemaType.name);
+      const typeName = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
       result = {
-        baseType: `${this.convertName(schemaType.name)}Input`,
-        typeName: `${this.convertName(schemaType.name)}Input`,
+        baseType: typeName,
+        typeName: typeName,
         isScalar: false,
         isEnum: false,
         isArray,
@@ -262,7 +264,8 @@ ${getters}
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    const name = `${this.convertName(node)}Input`;
+    const convertedName = this.convertName(node);
+    const name = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
 
     return this.buildInputTransfomer(name, node.fields);
   }

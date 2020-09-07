@@ -19,8 +19,8 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
-      withComponent: getConfigValue(rawConfig.withComponent, true),
-      withHooks: getConfigValue(rawConfig.withHooks, false),
+      withComponent: getConfigValue(rawConfig.withComponent, false),
+      withHooks: getConfigValue(rawConfig.withHooks, true),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
     });
 
@@ -84,7 +84,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationVariablesTypes: string
   ): string {
     const operationName: string = this.convertName(node.name.value, {
-      suffix: pascalCase(operationType),
+      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
       useTypesPrefix: false,
     });
 
@@ -97,7 +97,7 @@ export function use${operationName}() {
 
     if (operationType === 'Subscription') {
       return `
-export function use${operationName}<TData = any>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationName}, TData>) {
+export function use${operationName}<TData = ${operationResultType}>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
 };`;
     }

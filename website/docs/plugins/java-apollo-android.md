@@ -3,9 +3,9 @@ id: java-apollo-android
 title: Java Apollo Android
 ---
 
-The `java-apollo-android` plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.
+{@import ../generated-config/java-apollo-android.md}
 
-## Installation
+## Prepare your env
 
 To get started with this plugins and preset, make sure you have the following installed:
 
@@ -15,8 +15,8 @@ To get started with this plugins and preset, make sure you have the following in
 Run the following in your Android project:
 
 ```
-  $ yarn init --yes
-  $ yarn add @graphql-codegen/cli graphql @graphql-codegen/java-apollo-android
+  yarn init --yes
+  yarn add @graphql-codegen/cli graphql @graphql-codegen/java-apollo-android
 ```
 
 Then, create `codegen.yml` with the following configuration:
@@ -54,9 +54,3 @@ This will make sure to run and generate output before each time you build your p
 
 You can find a [repository with a working example using AppSync](https://github.com/dotansimha/graphql-codegen-appsync-android-example)
 
-## Configuration
-
-
-{@import ../generated-config/java-apollo-android.md}
-
-{@import ../generated-config/base-visitor.md}

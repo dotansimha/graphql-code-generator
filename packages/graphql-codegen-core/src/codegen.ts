@@ -1,9 +1,14 @@
 import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, parse, DefinitionNode, Kind, print } from 'graphql';
+import { visit, parse, DefinitionNode, Kind, print, NameNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
+import {
+  checkValidationErrors,
+  validateGraphQlDocuments,
+  printSchemaWithDirectives,
+  Source,
+} from '@graphql-tools/utils';
 
-import { mergeSchemas } from '@graphql-toolkit/schema-merging';
+import { mergeSchemas } from '@graphql-tools/merge';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -109,6 +114,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           outputFilename: options.filename,
           allPlugins: options.plugins,
           skipDocumentsValidation: options.skipDocumentsValidation,
+          pluginContext: options.pluginContext,
         },
         pluginPackage
       );
@@ -118,13 +124,17 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       } else if (isComplexPluginOutput(result)) {
         if (result.append && result.append.length > 0) {
           for (const item of result.append) {
-            append.add(item);
+            if (item) {
+              append.add(item);
+            }
           }
         }
 
         if (result.prepend && result.prepend.length > 0) {
           for (const item of result.prepend) {
-            prepend.add(item);
+            if (item) {
+              prepend.add(item);
+            }
           }
         }
         return result.content || '';
@@ -134,7 +144,9 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     })
   );
 
-  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...Array.from(append.values())].join('\n');
+  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...Array.from(append.values())]
+    .filter(Boolean)
+    .join('\n');
 }
 
 function resolveCompareValue(a: string) {
@@ -167,65 +179,96 @@ export function sortPrependValues(values: string[]): string[] {
 
 function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
-  const operationMap: {
-    [name: string]: {
-      paths: Set<string>;
-      contents: Set<string>;
+  const definitionMap: {
+    [kind: string]: {
+      [name: string]: {
+        paths: Set<string>;
+        contents: Set<string>;
+      };
     };
   } = {};
 
+  function addDefinition(
+    file: Source,
+    node: DefinitionNode & { name?: NameNode },
+    deduplicatedDefinitions: Set<DefinitionNode>
+  ) {
+    if (typeof node.name !== 'undefined') {
+      if (!definitionMap[node.kind]) {
+        definitionMap[node.kind] = {};
+      }
+      if (!definitionMap[node.kind][node.name.value]) {
+        definitionMap[node.kind][node.name.value] = {
+          paths: new Set(),
+          contents: new Set(),
+        };
+      }
+
+      const definitionKindMap = definitionMap[node.kind];
+
+      const length = definitionKindMap[node.name.value].contents.size;
+      definitionKindMap[node.name.value].paths.add(file.location);
+      definitionKindMap[node.name.value].contents.add(print(node));
+      if (length === definitionKindMap[node.name.value].contents.size) {
+        return null;
+      }
+    }
+    return deduplicatedDefinitions.add(node);
+  }
+
   files.forEach(file => {
+    const deduplicatedDefinitions = new Set<DefinitionNode>();
     visit(file.document, {
       OperationDefinition(node) {
-        if (typeof node.name !== 'undefined') {
-          if (!operationMap[node.name.value]) {
-            operationMap[node.name.value] = {
-              paths: new Set(),
-              contents: new Set(),
-            };
-          }
-
-          operationMap[node.name.value].paths.add(file.location);
-          operationMap[node.name.value].contents.add(print(node));
-        }
+        addDefinition(file, node, deduplicatedDefinitions);
+      },
+      FragmentDefinition(node) {
+        addDefinition(file, node, deduplicatedDefinitions);
       },
     });
+    (file.document as any).definitions = Array.from(deduplicatedDefinitions);
   });
 
-  const names = Object.keys(operationMap);
+  const kinds = Object.keys(definitionMap);
 
-  if (names.length) {
-    const duplicated = names.filter(name => operationMap[name].contents.size > 1);
+  kinds.forEach(kind => {
+    const definitionKindMap = definitionMap[kind];
+    const names = Object.keys(definitionKindMap);
+    if (names.length) {
+      const duplicated = names.filter(name => definitionKindMap[name].contents.size > 1);
 
-    if (!duplicated.length) {
-      return;
-    }
+      if (!duplicated.length) {
+        return;
+      }
 
-    const list = duplicated
-      .map(name =>
+      const list = duplicated
+        .map(name =>
+          `
+        * ${name} found in:
+          ${[...definitionKindMap[name].paths]
+            .map(filepath => {
+              return `
+              - ${filepath}
+            `.trimRight();
+            })
+            .join('')}
+    `.trimRight()
+        )
+        .join('');
+
+      const definitionKindName = kind.replace('Definition', '').toLowerCase();
+      throw new DetailedError(
+        `Not all ${definitionKindName}s have an unique name: ${duplicated.join(', ')}`,
         `
-      * ${name} found in:
-        ${[...operationMap[name].paths]
-          .map(filepath => {
-            return `
-            - ${filepath}
-          `.trimRight();
-          })
-          .join('')}
-  `.trimRight()
-      )
-      .join('');
-    throw new DetailedError(
-      `Not all operations have an unique name: ${duplicated.join(', ')}`,
-      `
-        Not all operations have an unique name
-        ${list}
-      `
-    );
-  }
+          Not all ${definitionKindName}s have an unique name
+          ${list}
+        `
+      );
+    }
+  });
 }
 
-function isObjectMap(obj: any): obj is Types.ObjectMap<any> {
+function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
   return obj && typeof obj === 'object' && !Array.isArray(obj);
 }
 

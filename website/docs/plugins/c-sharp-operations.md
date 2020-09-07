@@ -2,17 +2,21 @@
 id: c-sharp-operations
 title: C# Operations
 ---
+The `c-sharp-operations` plugin generates C# methods for the resolvers signature.
 
-The `c-sharp-operations` plugin generates C# `class` based on your GraphQL operations.
+It works with [GraphQL.Client](https://www.nuget.org/packages/GraphQL.Client/) library and methods can be invoked through the `GraphQLHttpClient`.
 
-## Installation
+Example code:
 
-    $ yarn add -D @graphql-codegen/c-sharp-operations
+```C#
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 
-## Configuration
+  ...
+  using var client = new GraphQLHttpClient("https://gqlserver", new NewtonsoftJsonSerializer());
+  var response = await client.SendQueryAsync<Types.Query>(UsersGQL.getUsersGQL());
+```
 
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/base-documents-visitor.md}
+{@import ../plugins/client-note.md}
 
 {@import ../generated-config/c-sharp-operations.md}

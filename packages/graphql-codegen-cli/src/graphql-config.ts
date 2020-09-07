@@ -1,9 +1,9 @@
 import { loadConfig, GraphQLExtensionDeclaration, GraphQLConfig } from 'graphql-config';
-import { ApolloEngineLoader } from '@graphql-toolkit/apollo-engine-loader';
-import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
-import { GitLoader } from '@graphql-toolkit/git-loader';
-import { GithubLoader } from '@graphql-toolkit/github-loader';
-import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
+import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
+import { CodeFileLoader } from '@graphql-tools/code-file-loader';
+import { GitLoader } from '@graphql-tools/git-loader';
+import { GithubLoader } from '@graphql-tools/github-loader';
+import { PrismaLoader } from '@graphql-tools/prisma-loader';
 
 export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   // Schema

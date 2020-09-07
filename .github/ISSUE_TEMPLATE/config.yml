@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Have a question?
+    url: https://github.com/dotansimha/graphql-code-generator/discussions/new
+    about: Not sure about something? need help from the community? have a question to our team? please ask and answer questions here.

@@ -11,7 +11,6 @@ import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 export interface FlowSelectionSetProcessorConfig extends SelectionSetProcessorConfig {
   useFlowExactObjects: boolean;
-  useFlowReadOnlyTypes: boolean;
 }
 
 export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor<FlowSelectionSetProcessorConfig> {
@@ -24,7 +23,8 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = this.config.formatNamedField;
+    const fieldObj = schemaType.getFields();
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
@@ -35,9 +35,10 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
       `{${useFlowExactObject ? '|' : ''} ${fields
         .map(
           aliasedField =>
-            `${useFlowReadOnlyTypes ? '+' : ''}${aliasedField.alias}: $ElementType<${parentName}, '${
-              aliasedField.fieldName
-            }'>`
+            `${formatNamedField(
+              aliasedField.alias,
+              fieldObj[aliasedField.fieldName].type
+            )}: $ElementType<${parentName}, '${aliasedField.fieldName}'>`
         )
         .join(', ')} ${useFlowExactObject ? '|' : ''}}`,
     ];
@@ -63,11 +64,9 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-
     return [
       `{${useFlowExactObject ? '|' : ''} ${fields
-        .map(field => `${useFlowReadOnlyTypes ? '+' : ''}${field.alias || field.name}: ${field.selectionSet}`)
+        .map(field => `${field.alias || field.name}: ${field.selectionSet}`)
         .join(', ')} ${useFlowExactObject ? '|' : ''}}`,
     ];
   }
@@ -81,16 +80,16 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = this.config.formatNamedField;
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
         useTypesPrefix: true,
       });
-
+    const fieldObj = schemaType.getFields();
     return [
       `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`)
+        .map(fieldName => `${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`)
         .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
     ];
   }

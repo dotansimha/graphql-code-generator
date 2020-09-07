@@ -1,5 +1,5 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isEnumType } from 'graphql';
+import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
@@ -34,25 +34,31 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
     autoBind(this);
 
-    const wrapArray = (type: string) => `Array<${type}>`;
+    const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
     const wrapOptional = (type: string) => `?${type}`;
+
+    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+      const optional = !!type && !isNonNullType(type);
+      return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
+    };
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
       scalars: this.scalars,
-      formatNamedField: (name: string): string => name,
+      formatNamedField,
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
     };
+
     const processor = config.preResolveTypes
       ? new PreResolveTypesProcessor(processorConfig)
       : new FlowWithPickSelectionSetProcessor({
           ...processorConfig,
           useFlowExactObjects: this.config.useFlowExactObjects,
-          useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(

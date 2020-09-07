@@ -1,11 +1,30 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+
+/**
+ * @description This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.
+ *
+ * It will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ *
+ * To shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
+ */
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name ngModule
-   * @type string
+   * @description Version of `apollo-angular` package
+   * @default 2
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   apolloAngularVersion: 1
+   * ```
+   */
+  apolloAngularVersion?: number;
+  /**
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   ngModule: ./path/to/module#MyModule
@@ -13,11 +32,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   ngModule?: string;
   /**
-   * @name namedClient
-   * @type string
    * @description Defined the global value of `namedClient`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   namedClient: 'customName'
@@ -25,11 +42,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   namedClient?: string;
   /**
-   * @name serviceName
-   * @type string
    * @description Defined the global value of `serviceName`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceName: 'MySDK'
@@ -37,11 +52,9 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   serviceName?: string;
   /**
-   * @name serviceProvidedInRoot
-   * @type string
    * @description Defined the global value of `serviceProvidedInRoot`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   serviceProvidedInRoot: false
@@ -49,20 +62,25 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   serviceProvidedInRoot?: boolean;
   /**
-   * @name sdkClass
-   * @type boolean
+   * @description Define the Injector of the SDK class.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   serviceProvidedIn: ./path/to/module#MyModule
+   * ```
+   */
+  serviceProvidedIn?: string;
+  /**
    * @description Set to `true` in order to generate a SDK service class that uses all generated services.
    * @default false
-   *
    */
   sdkClass?: boolean;
   /**
-   * @name querySuffix
-   * @type string
    * @description Allows to define a custom suffix for query operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   querySuffix: 'QueryService'
@@ -70,12 +88,10 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   querySuffix?: string;
   /**
-   * @name mutationSuffix
-   * @type string
    * @description Allows to define a custom suffix for mutation operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   mutationSuffix: 'MutationService'
@@ -83,16 +99,19 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   mutationSuffix?: string;
   /**
-   * @name subscriptionSuffix
-   * @type string
    * @description Allows to define a custom suffix for Subscription operations.
-   * @default 'GQL'
+   * @default GQL
    *
-   * @example graphql.macro
+   * @exampleMarkdown
    * ```yml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'
    * ```
    */
-  subscriptionSuffix?: string;
+  subscriptionSuffix?: 'GQL' | string;
+  /**
+   * @description Allows to define a custom Apollo-Angular package to import types from.
+   * @default 'apollo-angular'
+   */
+  apolloAngularPackage?: 'apollo-angular' | string;
 }

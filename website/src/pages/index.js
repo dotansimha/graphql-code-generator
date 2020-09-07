@@ -19,7 +19,7 @@ const features = [
     imageUrl: 'img/gear.svg',
     description: (
       <>
-        Generate code from of your GraphQL schema and GraphQL operations with a single function call regardless of your
+        Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your
         environment or code format.
       </>
     ),
@@ -49,7 +49,7 @@ const features = [
     imageUrl: 'img/more-options.svg',
     description: (
       <>
-        You can generate you resolvers signature, dump schemas, types models, query builders, React Hooks, Angular
+        You can generate your resolvers' signatures, dump schemas, model types, query builders, React Hooks, Angular
         Services, and much more!
       </>
     ),
@@ -114,7 +114,7 @@ function ProjectTitle() {
       <h3 className={styles.projectTitle}>Generate code from your GraphQL schema and operations with a simple CLI</h3>
       <img
         alt="npm"
-        src="https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=stable&style=for-the-badge"
+        src="https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=cli&nbsp;version&style=for-the-badge"
       />
     </div>
   );
@@ -128,7 +128,7 @@ function Home() {
           <div className={styles.inner}>
             <ProjectTitle />
             <div className={styles.buttonsWrapper}>
-              <Button mobileHide="true">
+              <Button mobileHide={true}>
                 <Link to={'#live-demo'}>Try It Out Live</Link>
               </Button>
               <Button>

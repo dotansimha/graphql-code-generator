@@ -11,12 +11,12 @@ on:
 jobs:
   test:
     name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
-    timeout-minutes: 10
     runs-on: ${{matrix.os}}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node_version: [10, 12, 13]
+        node_version: [10, 14]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -31,16 +31,16 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-${{matrix.node_version}}-yarn-
       - name: Cache Jest
         uses: actions/cache@v1
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-jest-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-jest-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-jest-
+            ${{ runner.os }}-${{matrix.node_version}}-jest-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Lint
@@ -55,51 +55,3 @@ jobs:
         run: |
           yarn run generate:examples
           git diff --exit-code -- dev-test/
-
-  publish-canary:
-    name: Publish Canary
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    if: contains(github.actor, 'renovate') == false
-    steps:
-      - name: Checkout Master
-        uses: actions/checkout@v1
-      - name: Use Node
-        uses: actions/setup-node@master
-        with:
-          node-version: '13.x'
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Cache Yarn
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install && git checkout yarn.lock
-      - name: Build
-        run: yarn build
-      - name: Release Canary
-        id: canary
-        uses: 'kamilkisiela/release-canary@master'
-        if: github.repository == 'dotansimha/graphql-code-generator'
-        with:
-          npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
-          npm-script: 'ci:release:canary'
-      - name: Publish a message
-        if: steps.canary.outputs.released
-        uses: 'kamilkisiela/pr-comment@master'
-        with:
-          message: |
-            The latest changes of this PR are available as alpha in npm: `${{ steps.canary.outputs.version }}`
-
-            Quickly update your package.json by running:
-
-                npx match-version @graphql-codegen ${{ steps.canary.outputs.version }}
-
-          bot-token: ${{ secrets.GH_API_TOKEN }}
-          bot: 'theguild-bot'
-          github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -4,12 +4,10 @@ import { FragmentDefinitionNode } from 'graphql';
 
 export type ImportTypesConfig = {
   /**
-   * @name baseTypesPath
-   * @type string
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -22,12 +20,10 @@ export type ImportTypesConfig = {
    */
   typesPath: string;
   /**
-   * @name importTypesNamespace
-   * @type string
    * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
    * @default Types
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * generates:
    * src/:
@@ -76,7 +72,11 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
           options.schemaAst
         )
       ) {
-        plugins.unshift({ add: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n` });
+        plugins.unshift({
+          add: {
+            content: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n`,
+          },
+        });
       }
     });
     return [

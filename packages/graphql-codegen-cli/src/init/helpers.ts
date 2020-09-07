@@ -66,6 +66,9 @@ export async function writePackage(answers: Answers, configLocation: string) {
     pkg.devDependencies['@graphql-codegen/introspection'] = version;
   }
 
+  // If cli haven't installed yet
+  pkg.devDependencies['@graphql-codegen/cli'] = version;
+
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }
 

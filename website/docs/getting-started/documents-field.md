@@ -17,7 +17,7 @@ You can specify the `documents` field in your root level config:
 
 ```yml
 schema: http://localhost:3000/graphql
-documents: src/**/*.graphql
+documents: 'src/**/*.graphql'
 generates:
   ./src/types.ts:
     plugins:
@@ -33,7 +33,7 @@ You can also specify the `documents` field in your generated file config:
 schema: http://server1.com/graphql
 generates:
   ./src/types1.ts:
-    documents: src/**/*.graphql
+    documents: 'src/**/*.graphql'
     plugins:
       - typescript
       - typescript-operations
@@ -47,14 +47,14 @@ You can tell it to find documents in TypeScript files:
 
 ```yml
 schema: http://server1.com/graphql
-documents: "src/**/*.{ts,tsx}"
+documents: "src/**/!(*.d).{ts,tsx}"
 ```
 
-## Available formats
+## Available Formats
 
 The following can be specified as a single value or as an array with mixed values.
 
-- ### Filename
+- ### Local File
 
 You can specify a `string` to point to a single file:
 
@@ -72,7 +72,7 @@ documents:
 
 - ### Glob Expression
 
-You can specify a Glob expresion in order to load multiple files:
+You can specify a Glob expression in order to load multiple files:
 
 ```yml
 documents: './src/**/*.graphql'
@@ -113,7 +113,7 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig`.
+> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig` (see below).
 
 - ### String
 
@@ -125,13 +125,73 @@ documents:
   - 'query { f2 }'
 ```
 
+## GraphQL Tag Pluck
+
+GraphQL Code Generator uses `graphql-tag-pluck` internally to extract GraphQL documents from your code file.
+
+If you are pointing to a code file (such as `.js` or `.jsx`), GraphQL will try to look for usages of `gql` tag, or string literals that are using magic GraphQL comment (`/* GraphQL */`), for example:
+
+
+```jsx
+import React from 'react';
+import { gql } from 'graphql-tag';
+
+// This will work
+const MY_QUERY = gql`
+  query myQuery {
+    getSomething {
+      id
+    }
+  }
+`;
+
+// This will also work
+const MY_QUERY = /* GraphQL */`
+  query myQuery {
+    getSomething {
+      id
+    }
+  }
+`;
+
+// ... some components code ...
+```
+
+By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-toolkit/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L13)
+
+You can add custom tags if you need, by using `pluckConfig` on the root level on your config file:
+
+```yaml
+pluckConfig:
+  modules:
+    - name: my-custom-module
+      identifier: gql
+```
+
+You can also customize globally used identifiers, like that:
+
+```yaml
+pluckConfig:
+  globalGqlIdentifierName:
+    - gql
+    - graphql
+    - myCustomGlobalGqlTag
+```
+
+And you can customize the magic GraphQL commend by doing:
+
+```yaml
+pluckConfig:
+  gqlMagicComment: customcomment
+```
+
 ## Custom Document Loader
 
 If your schema has a different or complicated way of loading, you can specify a custom loader with the `loader` field.
 
 ```yml
 documents:
-    - "**/*.graphql"
+    - "**/*.graphql":
         loader: my-documents-loader.js
 ```
 
@@ -145,3 +205,5 @@ module.exports = function(docString, config) {
   return parse(readFileSync(docString, { encoding: 'utf-8' }));;
 };
 ```
+
+> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.

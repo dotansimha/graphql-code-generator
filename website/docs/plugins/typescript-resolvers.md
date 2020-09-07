@@ -3,17 +3,15 @@ id: typescript-resolvers
 title: TypeScript Resolvers
 ---
 
-This plugin generates types for resolve functions. 
+{@import ../generated-config/typescript-resolvers.md}
 
-You can use this plugin as-is to generate simple resolvers signature based on your GraphQL types, or you can change it's behaviour be providing custom model types (`mappers`).
+## Usage Example
 
-## Installation
+:::info Quick Start with `typescript-resolvers`
+You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
+:::
 
-    $ yarn add -D @graphql-codegen/typescript-resolvers
-
-## Usage
-
-Run `graphql-codegen` as usual:
+Run `graphql-codegen` as usual, with this new plugin:
 
 ```yaml
 schema: schema.json
@@ -27,10 +25,12 @@ generates:
 Import the types from the generated file and use in the resolver:
 
 ```typescript
-import { QueryResolvers } from './resolvers-types';
+import { Resolvers } from './resolvers-types';
 
-export const resolvers: QueryResolvers = {
-  myQuery: (root, args, context) => {},
+export const resolvers: Resolvers = {
+  Query: {
+    myQuery: (root, args, context) => {},
+  }
 };
 ```
 
@@ -38,195 +38,127 @@ This will make the resolver fully typed and compatible with typescript compiler,
 
 Generated resolvers can be passed directly into [graphql-tools](https://www.npmjs.com/package/graphql-tools) `makeExecutableSchema` function.
 
-## Configuration
+## Integration with Apollo-Server
 
-
-{@import ../generated-config/base-visitor.md}
-
-{@import ../generated-config/base-resolvers-visitor.md}
-
-{@import ../generated-config/typescript-resolvers.md}
-
-## How It Works
-
-This plugin generated TypeScript resolvers signature based on your GraphQL schema.  It creates a default TypeScript resolvers signature, according to your GraphQL schema:
-
-```graphql
-type Query {
-  allUsers: [User]
-  userById(id: Int!): User
-}
-
-type User {
-  id: Int!
-  name: String!
-  email: String!
-}
-```
-
-Given the schema above, the output should be the following:
-
-```typescript
-export interface QueryResolvers<ContextType = any, ParentType = Query> {
-  allUsers?: Resolver<Array<Maybe<User>>, ParentType, ContextType>;
-  userById?: Resolver<Maybe<User>, ParentType, ContextType, QueryUserByIdArgs>;
-}
-
-export interface UserResolvers<ContextType = any, ParentType = User> {
-  id?: Resolver<number, ParentType, ContextType>;
-  name?: Resolver<string, ParentType, ContextType>;
-  email?: Resolver<string, ParentType, ContextType>;
-}
-
-export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-};
-```
-
-> You'll get a `TypeResolver` per each type/union/interface, and also a root `Resolvers` type that points to all resolvers.
-
-Let's talk what you get by default in each resolver function signature:
-
-- an object that its parent resolved, we call it Parent.
-- a value that resolver returns
-- arguments
-- a context
-
-By default, the context is just an empty object `{}`.
-
-Arguments are generated based on schema, so you don't have to think about them.
-Types of a parent and a returned value are pretty interesting. Given the example schema:
-
-```graphql
-type Query {
-  allUsers: [User]
-  userById(id: Int!): User
-}
-
-type Profile {
-  bio: String
-}
-
-type User {
-  id: Int!
-  name: String!
-  email: String!
-  profile: Profile
-}
-```
-
-By default:
-
-- all fields in `Profile` expects to get a `Profile` typed object as a parent
-- fields in `User` receives a `User` as a parent
-- `User.profile` returns `Profile`
-- `Query.userById` expects to returns `User` typed object
-
-This behavior might fit well with how your resolvers look like but in some cases you want to tweak it a bit.
-
-## Intergration with Apollo-Server
+By default `apollo-server` will not work with generated resolvers signature.
 
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
-If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial typse in your resolvers.
+```yml
+generates:
+  ./resolvers-types.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - typescript
+      - typescript-resolvers
+```
 
-## Plugin Customization
+If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial types in your resolvers.
 
-The generated resolver's signature type can be overridden or modified by taking advantage of the generic deceleration feature.
+## Use Your Model Types (`mappers`)
 
-## Mappers - overwrite parents and resolved values
+If you wish to use your custom model types, codegen allow you to use `mappers` feature to map GraphQL types to your custom model types. [You can find an article explaining how to use `mappers` here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).
 
-Remember the example we showed you, when the GraphQL type `User` expects to be resolved by `User` typed object? What if an object returned by `Query.userById` has `_id` property instead of `id`. It breaks the default behavior. Thats' why we implemented mappers.
+Here's the basic example of using it:
 
-The idea behind Mappers is to map a TypeScript model interface to a GraphQL Type so you overwrite that default generated code, because always there is a difference between what GraphQL exposes and how you data is structured internally.
+```yaml
+schema: schema.graphql
+generates:
+  ./resolvers-types.ts:
+    config:
+      contextType: models#MyContextType
+      mappers:
+        User: ./models#UserModel
+        Profile: ./models#UserProfile
+    plugins:
+      - typescript
+      - typescript-resolvers
+```
 
-The default implementation of `typescript-resolvers` plugin is using the GraphQL base types generated by `typeascript` plugin, and expect this as return value. We can't guess how your data is structured, and we don't attempt to, we just provide default types based on your schema.
+## Enum Resolvers
 
-You should use `mappers` to map the GraphQL types and your actual model types in order to tell the codegen to use your types instead of the default ones.
+[Apollo-Server](https://www.apollographql.com/docs/apollo-server/) and schemas built with [`graphql-tools`](https://www.graphql-tools.com/) supports creating resolvers for GraphQL `enum`s. 
 
-So let's define one. This is what `Query.userById` passes on to the `User` type:
+This is helpful because you can have internal values that are different from the public enum values, and you can use the internal values in your resolvers. 
 
-```typescript
-// src/types.ts
+Codegen allows you to specify either `mappers` or `enumValues` to map enums in your resolvers, and if you are using it for enums, you'll get a resolver signature for the enum resolvers as well.
 
-export interface UserModel {
-  _id: string;
-  name: string;
-  email: string;
-  profile: {
-    bio: text;
-  };
+#### Usage Example
+
+With the following schema:
+
+```graphql
+type Query {
+  favoriteColor: Color!
+}
+
+type Color {
+  RED,
+  BLUE
 }
 ```
 
-This is how to map that interface with the according type:
-
 ```yaml
-# ...
+schema: schema.graphql
 generates:
-  path/to/file.ts:
+  ./resolvers-types.ts:
     config:
-      mappers:
-        User: ./types#UserModel
+      enumValues:
+        Colors: ./enums#ColorsCode
     plugins:
+      - typescript
       - typescript-resolvers
 ```
 
-Inside of `config.mappers` we wired the `User` with `UserModel` from `./types.ts`. You can also define the interface inside of the config file or even use `any` and other primitive types.
-
-By creating a mapper for `User:UserModel` you basically telling the codegen that `UserModel` is the actual value that we expect to use, instead of the default structure, and then your implementation of resolver could be type-checked and use your own types. (a complete explaintation could be found [here](https://github.com/dotansimha/graphql-code-generator/issues/1219#issuecomment-549244957))
-
-> By typing `./types#UserModel` we tell codegen to create an import statement that includes `UserModel` and gets it from `./types` module
-> Remember! The path have to be relative to the generated file.
-
-Every other, not mapped type follows the default convention, so in order to overwrite it you can use the `defaultMapper` option:
-
-```yaml
-# ...
-generates:
-  path/to/file.ts:
-    config:
-      defaultMapper: any
-      mappers:
-        User: ./types#UserModel
-    plugins:
-      - typescript-resolvers
-```
-
-Given the above config, every other type then `User` will have `any` as its parent and resolved value. We don't recommend to do it but it might be very helpful when you try to slowly map all types.
-
-## Custom Context Type
-
-If you wish to use a custom type for your GraphQL context, yet you don't want to specify it each and every time you declare your resolvers, you can do it in the config file:
-
-```yaml
-# ...
-generates:
-  path/to/file.ts:
-    config:
-      contextType: ./context#MyContext
-    plugins:
-      - typescript-resolvers
-```
-
-```typescript
-export interface MyContext {
-  authToken: string;
+```ts
+// in your enums.ts
+export enum ColorsCode {
+  MY_RED = '#FF0000',
+  MY_BLUE = '#0000FF',
 }
-```
 
-The config above will make every resolver to have `MyContext` as a context type.
+// in your resolvers.ts
+import { Resolvers } from './resolvers-types';
+import { ColorsCode } from './enums';
 
-```typescript
-import { QueryResolvers } from './resolvers-types';
-
-export const resolvers: QueryResolvers = {
-  myQuery: (root, args, context) => {
-    const { authToken } = context;
-    // ...
+const resolvers: Resolvers = {
+  Colors: {
+    RED: ColorsCode.MY_RED,
+    BLUE: ColorsCode.MY_BLUE,
   },
-};
+  Query: {
+    favoriteColor: () => ColorsCode.MY_RED, // Now you cn return this, and it will be mapped to your actual GraphQL enum
+  }
+}
 ```
 
-Field resolvers will be modfied as well.
+You can also define the same with explicit enum values:
+
+```yaml
+schema: schema.graphql
+generates:
+  ./resolvers-types.ts:
+    config:
+      enumValues:
+        Colors: 
+          RED: '#FF0000'
+          BLUE: '#0000FF'
+    plugins:
+      - typescript
+      - typescript-resolvers
+```
+
+Or, with `mappers`:
+
+```yaml
+schema: schema.graphql
+generates:
+  ./resolvers-types.ts:
+    config:
+      mappers:
+        Colors: ./enums#ColorsCode
+    plugins:
+      - typescript
+      - typescript-resolvers
+```

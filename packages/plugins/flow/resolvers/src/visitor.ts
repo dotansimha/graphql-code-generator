@@ -5,6 +5,7 @@ import {
   GraphQLSchema,
   ScalarTypeDefinitionNode,
   InputValueDefinitionNode,
+  EnumTypeDefinitionNode,
 } from 'graphql';
 import autoBind from 'auto-bind';
 import {
@@ -18,13 +19,18 @@ import {
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = $ObjMap<T, () => AllowedValues>;';
+
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
 export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfig, ParsedFlorResolversConfig> {
   constructor(pluginConfig: RawResolversConfig, schema: GraphQLSchema) {
     super(pluginConfig, null, schema);
     autoBind(this);
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName));
+    this.setVariablesTransformer(
+      new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName)
+    );
   }
 
   protected _getScalar(name: string): string {
@@ -48,8 +54,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `import { ${types.map(t => `type ${t.identifier}`).join(', ')} } from '${source}';`;
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   protected transformParentGenericType(parentType: string): string {
@@ -131,5 +139,29 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return declarationKind === 'type' ? ',' : ';';
+  }
+
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    const valuesMap = `{| ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: *`)
+      .join(', ')} |}`;
+
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+
+    return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
+  }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{| ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} |}`;
   }
 }

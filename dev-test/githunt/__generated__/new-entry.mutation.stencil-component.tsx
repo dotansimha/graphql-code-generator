@@ -3,9 +3,9 @@ import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
 declare global {
-  export type SubmitRepositoryMutationVariables = {
+  export type SubmitRepositoryMutationVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
-  };
+  }>;
 
   export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
     submitRepository?: Types.Maybe<{ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>>;

@@ -1,5 +1,6 @@
-import { DocumentMode, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
+import { RawGenericSdkPluginConfig } from '../src/config';
 import { plugin } from '../src/index';
 import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
@@ -39,9 +40,23 @@ const basicDoc = parse(/* GraphQL */ `
   }
 `);
 
+const docWithSubscription = parse(/* GraphQL */ `
+  query feed {
+    feed {
+      id
+    }
+  }
+
+  subscription commentAdded {
+    commentAdded {
+      id
+    }
+  }
+`);
+
 const validate = async (
   content: Types.PluginOutput,
-  config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawClientSideBasePluginConfig,
+  config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawGenericSdkPluginConfig,
   docs: Types.DocumentFile[],
   pluginSchema: GraphQLSchema,
   usage: string
@@ -71,7 +86,7 @@ describe('generic-sdk', () => {
 async function test() {
   const requester = <R, V> (doc: DocumentNode, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -100,7 +115,7 @@ async function test() {
 async function test() {
   const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
   const sdk = getSdk(requester);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -115,6 +130,15 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
+      expect(output).toMatchSnapshot();
+    });
+
+    it('Should generate a correct wrap method when usingObservableFrom is set', async () => {
+      const config = { usingObservableFrom: "import Observable from 'zen-observable';" };
+      const docs = [{ filePath: '', document: docWithSubscription }];
+      const result = (await plugin(schema, docs, config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+      const output = await validate(result, config, docs, schema, '');
       expect(output).toMatchSnapshot();
     });
   });

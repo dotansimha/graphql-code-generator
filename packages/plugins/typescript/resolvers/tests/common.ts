@@ -37,8 +37,17 @@ export const schema = buildSchema(/* GraphQL */ `
   directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
 `);
 
-export const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => {
-  const mergedContent = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
+export const validate = async (
+  content: Types.PluginOutput,
+  config: any = {},
+  pluginSchema = schema,
+  additionalCode = ''
+) => {
+  const mergedContent = mergeOutputs([
+    await tsPlugin(pluginSchema, [], config, { outputFile: '' }),
+    content,
+    additionalCode,
+  ]);
 
   validateTs(mergedContent);
 

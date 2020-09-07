@@ -47,7 +47,7 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => ?Types | Promise<?Types>;
 
-export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -63,9 +63,8 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
-  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
   MyType: ResolverTypeWrapper<MyType>,
+  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
   MyOtherType: ResolverTypeWrapper<MyOtherType>,
   Query: ResolverTypeWrapper<{}>,
   Subscription: ResolverTypeWrapper<{}>,
@@ -75,13 +74,13 @@ export type ResolversTypes = {
   MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
   MyScalar: ResolverTypeWrapper<$ElementType<Scalars, 'MyScalar'>>,
   Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  String: $ElementType<Scalars, 'String'>,
-  Boolean: $ElementType<Scalars, 'Boolean'>,
   MyType: MyType,
+  String: $ElementType<Scalars, 'String'>,
   MyOtherType: MyOtherType,
   Query: {},
   Subscription: {},
@@ -91,6 +90,7 @@ export type ResolversParentTypes = {
   MyUnion: $ElementType<ResolversParentTypes, 'MyType'> | $ElementType<ResolversParentTypes, 'MyOtherType'>,
   MyScalar: $ElementType<Scalars, 'MyScalar'>,
   Int: $ElementType<Scalars, 'Int'>,
+  Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
 export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
@@ -103,12 +103,12 @@ export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<Resolve
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
   withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>,
 };
 
 export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
   bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>,
 };
 
 export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
@@ -126,11 +126,11 @@ export type NodeResolvers<ContextType = any, ParentType = $ElementType<Resolvers
 
 export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
   id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>,
 };
 
 export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
-  __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+  __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>,
 };
 
 export type MyScalarScalarConfig = {
@@ -143,9 +143,9 @@ export type Resolvers<ContextType = any> = {
   MyOtherType?: MyOtherTypeResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
-  Node?: NodeResolvers<>,
+  Node?: NodeResolvers<ContextType>,
   SomeNode?: SomeNodeResolvers<ContextType>,
-  MyUnion?: MyUnionResolvers<>,
+  MyUnion?: MyUnionResolvers<ContextType>,
   MyScalar?: GraphQLScalarType<>,
 };
 
@@ -153,7 +153,7 @@ export type Resolvers<ContextType = any> = {
 /**
  * @deprecated
  * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
-*/
+ */
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = {
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>,
@@ -161,9 +161,9 @@ export type DirectiveResolvers<ContextType = any> = {
 
 
 /**
-* @deprecated
-* Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
-*/
+ * @deprecated
+ * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
+ */
 export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;",
   "prepend": Array [
     "import { type GraphQLResolveInfo } from 'graphql';",

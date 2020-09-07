@@ -39,13 +39,15 @@ export const validate: PluginValidateFn<any> = async (
   config: ReactApolloRawPluginConfig,
   outputFile: string
 ) => {
-  if (config.withComponent === false) {
-    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);
+  if (config.withComponent === true) {
+    if (extname(outputFile) !== '.tsx') {
+      throw new Error(
+        `Plugin "typescript-react-apollo" requires extension to be ".tsx" when withComponent: true is set!`
+      );
     }
   } else {
-    if (extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
+    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+      throw new Error(`Plugin "typescript-react-apollo" requires extension to be ".ts" or ".tsx"!`);
     }
   }
 };
