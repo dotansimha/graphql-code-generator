@@ -163,6 +163,13 @@
   resolved "https://registry.npmjs.org/@ardatan/aggregate-error/-/aggregate-error-0.0.1.tgz#1403ac5de10d8ca689fc1f65844c27179ae1d44f"
   integrity sha512-UQ9BequOTIavs0pTHLMwQwKQF8tTV1oezY/H2O9chA+JNPFZSua55xpU5dPSjAU9/jLJ1VwU+HJuTVN8u7S6Fg==
 
+"@ardatan/aggregate-error@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@ardatan/aggregate-error/-/aggregate-error-0.0.6.tgz#fe6924771ea40fc98dc7a7045c2e872dc8527609"
+  integrity sha512-vyrkEHG1jrukmzTPtyWB4NLPauUw5bQeg4uhn8f+1SSynmrOcyvlb1GKQjjgoBzElLdfXCRYX8UnBlhklOHYRQ==
+  dependencies:
+    tslib "~2.0.1"
+
 "@babel/code-frame@7.8.3":
   version "7.8.3"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"
@@ -1966,12 +1973,12 @@
     "@graphql-tools/load" "^6.0.0"
     tslib "^2.0.0"
 
-"@graphql-tools/apollo-engine-loader@6.1.0", "@graphql-tools/apollo-engine-loader@^6":
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.1.0.tgz#e1cf25a85bbc7a95e05c28c09a4d7aee04b8e8d1"
-  integrity sha512-0O/gwpGmICYrZdWifeLPC+qQ43xaZfCvlELiqmEL2hhisB/ptWdT5/8Sr10TJWPQ0/r4w7b+Y1wrcBV0dASNTg==
+"@graphql-tools/apollo-engine-loader@6.2.1", "@graphql-tools/apollo-engine-loader@^6":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.2.1.tgz#0ac2de546b259f38040ad0703fdbadc09fc413a0"
+  integrity sha512-OjrwByHVfQ3Im8P9ASifVY6z9ah8Vad+Mei5uW/ABWw/jyJ0jBj0clzxZ//+7p+d7lizJKjJoOukCMzpPTuiEQ==
   dependencies:
-    "@graphql-tools/utils" "6.1.0"
+    "@graphql-tools/utils" "6.2.1"
     cross-fetch "3.0.5"
     tslib "~2.0.1"
 
@@ -2229,13 +2236,22 @@
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
 
-"@graphql-tools/utils@6.1.0", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+"@graphql-tools/utils@6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.1.0.tgz#a8ab67bb8d8a879f40d29b334f48de6e6be71c41"
   integrity sha512-YcyslZ/8rk5nQOGnkEDp/xi6Xphu0mgjh5LTZ1qUio5P+d95/9MW44cPdmi3Feg4kO8u+1GcPC+685hFpJlZJw==
   dependencies:
     "@ardatan/aggregate-error" "0.0.1"
     camel-case "4.1.1"
+
+"@graphql-tools/utils@6.2.1", "@graphql-tools/utils@^6", "@graphql-tools/utils@^6.0.0":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.1.tgz#07774dbcc7657d9f9b898721f10fc613ce116b56"
+  integrity sha512-DZ6a2bjOH4sWKhNUachvYy+3ocXDvDcTtComOD/z7ncszdlZPU6RXNOgBTxh/bMVHBPqlEh/VjCVMwBysZRbJw==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.6"
+    camel-case "4.1.1"
+    tslib "~2.0.1"
 
 "@graphql-tools/wrap@6.0.11":
   version "6.0.11"
