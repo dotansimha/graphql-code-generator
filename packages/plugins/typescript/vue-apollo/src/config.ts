@@ -22,10 +22,16 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
   withCompositionFunctions?: boolean;
   /**
    * @name vueApolloComposableImportFrom
-   * @type string
+   * @type 'vue' | '@vue/apollo-composable' | string;
    * @default @vue/apollo-composable
    */
-  vueApolloComposableImportFrom?: string;
+  vueApolloComposableImportFrom?: 'vue' | '@vue/apollo-composable' | string;
+  /**
+   * @name vueCompositionApiImportFrom
+   * @type 'vue' | '@vue/composition-api' | string;
+   * @default @vue/composition-api
+   */
+  vueCompositionApiImportFrom?: 'vue' | '@vue/composition-api' | string;
   /**
    * @name addDocBlocks
    * @type boolean
