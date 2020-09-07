@@ -40,6 +40,37 @@ type: `string`
 default: ``
 
 
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-vue-apollo
+ config:
+   vueApolloComposableImportFrom: vue
+```
+
+### `vueCompositionApiImportFrom`
+
+type: `string`
+default: ``
+
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-vue-apollo
+ config:
+   vueCompositionApiImportFrom: vue
+```
 
 ### `addDocBlocks`
 

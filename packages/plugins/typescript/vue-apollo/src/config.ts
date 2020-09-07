@@ -26,14 +26,36 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
   withCompositionFunctions?: boolean;
   /**
    * @name vueApolloComposableImportFrom
-   * @type 'vue' | '@vue/apollo-composable' | string;
    * @default @vue/apollo-composable
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-vue-apollo
+   *  config:
+   *    vueApolloComposableImportFrom: vue
+   * ```
    */
   vueApolloComposableImportFrom?: 'vue' | '@vue/apollo-composable' | string;
   /**
    * @name vueCompositionApiImportFrom
-   * @type 'vue' | '@vue/composition-api' | string;
    * @default @vue/composition-api
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-vue-apollo
+   *  config:
+   *    vueCompositionApiImportFrom: vue
+   * ```
    */
   vueCompositionApiImportFrom?: 'vue' | '@vue/composition-api' | string;
   /**
