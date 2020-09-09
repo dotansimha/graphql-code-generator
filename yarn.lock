@@ -9701,6 +9701,22 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.npmjs.org/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
+graphql-config@0.0.0-experimental-49a60af.df7:
+  version "0.0.0-experimental-49a60af.df7"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-0.0.0-experimental-49a60af.df7.tgz#95c3740d9f1b33ad8c123ff53214c8397f16e455"
+  integrity sha512-cDDyV8n2yPzHkbi4w8BefHWnsG2uvgRDs1Zv1DN2QdW5yfwbTQvapc4pQf6ZoNpPBBQz7NlyBZlthQo/9DBN9A==
+  dependencies:
+    "@graphql-tools/graphql-file-loader" "^6.0.0"
+    "@graphql-tools/json-file-loader" "^6.0.0"
+    "@graphql-tools/load" "^6.0.0"
+    "@graphql-tools/merge" "^6.0.0"
+    "@graphql-tools/url-loader" "^6.0.0"
+    "@graphql-tools/utils" "^6.0.0"
+    cosmiconfig "6.0.0"
+    minimatch "3.0.4"
+    string-env-interpolation "1.0.1"
+    tslib "^2.0.0"
+
 graphql-config@^3.0.2:
   version "3.0.3"
   resolved "https://registry.npmjs.org/graphql-config/-/graphql-config-3.0.3.tgz#58907c65ed7d6e04132321450b60e57863ea9a5f"

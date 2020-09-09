@@ -15,6 +15,18 @@ import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { join } from 'path';
 
+export const defaultSchemaLoadOptions = {
+  assumeValidSDL: true,
+  sort: true,
+  convertExtensions: true,
+  includeSources: true,
+};
+
+export const defaultDocumentsLoadOptions = {
+  sort: true,
+  skipGraphQLImport: true,
+};
+
 export async function loadSchema(
   schemaPointers: UnnormalizedTypeDefPointer,
   config: Types.Config
@@ -32,11 +44,8 @@ export async function loadSchema(
     ];
 
     const schema = await loadSchemaToolkit(schemaPointers, {
-      assumeValidSDL: true,
+      ...defaultSchemaLoadOptions,
       loaders,
-      sort: true,
-      convertExtensions: true,
-      includeSources: true,
       ...config,
     });
     return schema;
@@ -70,10 +79,9 @@ export async function loadDocuments(
   const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()];
 
   const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
+    ...defaultDocumentsLoadOptions,
     ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
     loaders,
-    sort: true,
-    skipGraphQLImport: true,
     ...config,
   });
 
