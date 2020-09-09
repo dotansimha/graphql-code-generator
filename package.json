@@ -88,7 +88,7 @@
     "graphql": "15.3.0",
     "graphql-config": "^3.0.2",
     "graphql-tag": "2.11.0",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "java-ast": "0.3.0",
     "jest": "26.4.2",
     "jest-docblock": "26.0.0",
