@@ -2272,7 +2272,7 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/merge@6.0.11", "@graphql-tools/merge@^6.0.0":
+"@graphql-tools/merge@6.0.11":
   version "6.0.11"
   resolved "https://registry.npmjs.org/@graphql-tools/merge/-/merge-6.0.11.tgz#0bf50e31f8dc2ec262809503b82ff54c6041dfd3"
   integrity sha512-jNXl5pOdjfTRm+JKMpD47hsafM44Ojt7oi25Cflydw9VaWlQ5twFUSXk2rydP0mx1Twdxozk9ZCj4qiTdzw9ag==
@@ -2281,7 +2281,7 @@
     "@graphql-tools/utils" "6.0.11"
     tslib "~2.0.0"
 
-"@graphql-tools/merge@6.1.0", "@graphql-tools/merge@^6":
+"@graphql-tools/merge@6.1.0":
   version "6.1.0"
   resolved "https://registry.npmjs.org/@graphql-tools/merge/-/merge-6.1.0.tgz#5c9d09b2387514f4b2d679a2e2b15335cee95f15"
   integrity sha512-dD7J/LELhy87+5V8pko5EhSx2leoRIT02V5coa6S19PTiNrVqCJU/fMMKdWC1FmHSWUYOf+wZhItsilUxPr7XQ==
@@ -2290,7 +2290,7 @@
     "@graphql-tools/utils" "6.1.0"
     tslib "~2.0.1"
 
-"@graphql-tools/merge@6.2.1":
+"@graphql-tools/merge@6.2.1", "@graphql-tools/merge@^6", "@graphql-tools/merge@^6.0.0":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.1.tgz#edce28a343776ea580e7feceb3b6557c99ce9cfe"
   integrity sha512-GJyMOYM2JyZhvMlVwpUZUv5ocvWCh+/KdPCCzXqo3Va/kOO1ntm8lKGNf3JZpQDgpC5FvaQfsu/b5pE7TBFxyw==
