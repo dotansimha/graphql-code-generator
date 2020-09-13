@@ -257,6 +257,10 @@ export function buildModule(
       return coreType;
     }
 
+    if (external.scalars.includes(typeName)) {
+      return `${importNamespace}.Scalars['${typeName}']`;
+    }
+
     if (defined.enums.includes(typeName) && picks.enums[typeName]) {
       return `Pick<${coreType}, DefinedEnumValues['${typeName}']>`;
     }
