@@ -29,6 +29,7 @@ export interface JavaResolverParsedConfig extends ParsedConfig {
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
+  classMembersPrefix: string;
 }
 
 export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConfig, JavaResolverParsedConfig> {
@@ -41,6 +42,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'Iterable',
       className: rawConfig.className || 'Types',
+      classMembersPrefix: rawConfig.classMembersPrefix || '',
       package: rawConfig.package || defaultPackageName,
       scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
     });
@@ -191,7 +193,12 @@ public static ${enumName} valueOfLabel(String label) {
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        return indent(`private ${typeToUse.typeName} _${arg.name.value};`);
+        if (arg.name.value === 'interface') {
+          // forcing prefix of _ since interface is a keyword in JAVA
+          return indent(`private ${typeToUse.typeName} _${this.config.classMembersPrefix}${arg.name.value};`);
+        } else {
+          return indent(`private ${typeToUse.typeName} ${this.config.classMembersPrefix}${arg.name.value};`);
+        }
       })
       .join('\n');
     const ctorSet = inputValueArray
@@ -202,36 +209,59 @@ public static ${enumName} valueOfLabel(String label) {
           this._addListImport = true;
           return indentMultiline(
             `if (args.get("${arg.name.value}") != null) {
-  this._${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());
+  this.${this.config.classMembersPrefix}${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());
 }`,
             3
           );
         } else if (typeToUse.isScalar) {
-          return indent(`this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`, 3);
+          return indent(
+            `this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`,
+            3
+          );
         } else if (typeToUse.isEnum) {
           return indentMultiline(
             `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
-  this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
+  this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
 } else {
-  this._${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
+  this.${this.config.classMembersPrefix}${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
 }`,
             3
           );
         } else {
-          return indent(
-            `this._${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-            3
-          );
+          if (arg.name.value === 'interface') {
+            // forcing prefix of _ since interface is a keyword in JAVA
+            return indent(
+              `this._${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+              3
+            );
+          } else {
+            return indent(
+              `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+              3
+            );
+          }
         }
       })
       .join('\n');
+
     const getters = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        return indent(
-          `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${arg.name.value}; }`
-        );
+        if (arg.name.value === 'interface') {
+          // forcing prefix of _ since interface is a keyword in JAVA
+          return indent(
+            `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${
+              this.config.classMembersPrefix
+            }${arg.name.value}; }`
+          );
+        } else {
+          return indent(
+            `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this.${
+              this.config.classMembersPrefix
+            }${arg.name.value}; }`
+          );
+        }
       })
       .join('\n');
 
