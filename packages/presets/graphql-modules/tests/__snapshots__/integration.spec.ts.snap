@@ -2,9 +2,7 @@
 
 exports[`Integration dotanions module should export DefinedFields, Schema Types with Picks and resolvers 1`] = `
 "import * as Types from \\"../global-types\\";
-
 import * as gm from \\"graphql-modules\\";
-
 interface DefinedFields {
   Paypal: 'id' | 'url';
   CreditCard: 'id' | 'cardNumber' | 'cardOwner';

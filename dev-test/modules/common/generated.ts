@@ -1,7 +1,5 @@
 import * as Types from '../types';
-
 import * as gm from 'graphql-modules';
-
 interface DefinedFields {
   Query: 'ping';
   Mutation: 'pong';
