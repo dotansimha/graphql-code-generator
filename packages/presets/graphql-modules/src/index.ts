@@ -45,7 +45,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
 
             return Object.keys(typeMap)
               .map(t => {
-                if (t && typeMap[t] && isScalarType(typeMap[t] && !isGraphQLPrimitive(t))) {
+                if (t && typeMap[t] && isScalarType(typeMap[t]) && !isGraphQLPrimitive(t)) {
                   return `export type ${t} = Scalars["${t}"];`;
                 }
 
