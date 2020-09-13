@@ -1,11 +1,9 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import addPlugin from '@graphql-codegen/add';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { concatAST, isScalarType, parse } from 'graphql';
 import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
-import { schema } from 'packages/plugins/typescript/resolvers/tests/common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
@@ -28,11 +26,6 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
     const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.sources, baseOutputDir);
     const modules = Object.keys(sourcesByModuleMap);
 
-    const pluginMap: { [name: string]: CodegenPlugin } = {
-      ...options.pluginMap,
-      add: addPlugin,
-    };
-
     // One file with an output from all plugins
     const baseOutput: Types.GenerateOptions = {
       filename: resolve(cwd, baseOutputDir, baseTypesPath),
@@ -45,9 +38,9 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
       ],
       pluginMap: {
-        ...pluginMap,
+        ...options.pluginMap,
         'modules-exported-scalars': {
-          plugin: () => {
+          plugin: schema => {
             const typeMap = schema.getTypeMap();
 
             return Object.keys(typeMap)
@@ -91,15 +84,14 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         schema: options.schema,
         documents: [],
         plugins: [
-          ...options.plugins.filter(p => typeof p === 'object' && !!p.add),
           {
             'graphql-modules-plugin': {},
           },
         ],
         pluginMap: {
-          ...pluginMap,
+          ...options.pluginMap,
           'graphql-modules-plugin': {
-            plugin: () =>
+            plugin: schema =>
               buildModule(moduleName, moduleDocument, {
                 importNamespace: importTypesNamespace,
                 importPath,
