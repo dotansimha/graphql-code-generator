@@ -28,7 +28,7 @@ describe('Integration', () => {
   });
 
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
-  // This is very imporant
+  // This is very important
   test('should generate a base output and 4 for modules', async () => {
     try {
       const output = await executeCodegen(options);

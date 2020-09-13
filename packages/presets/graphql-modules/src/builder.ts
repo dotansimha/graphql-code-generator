@@ -433,11 +433,6 @@ export function buildModule(
         pushUnique(extended.unions, name);
         break;
       }
-
-      case Kind.SCALAR_TYPE_EXTENSION: {
-        pushUnique(extended.scalars, name);
-        break;
-      }
     }
   }
 }

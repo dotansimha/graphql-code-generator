@@ -67,7 +67,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         schema: options.schema,
         documents: [],
         plugins: [
-          ...options.plugins.filter(p => !!p[0].add),
+          ...options.plugins.filter(p => typeof p === 'object' && !!p.add),
           {
             add: {
               content: buildModule(moduleName, moduleDocument, {
