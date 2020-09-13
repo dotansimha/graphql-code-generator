@@ -265,6 +265,26 @@ public static ${enumName} valueOfLabel(String label) {
       })
       .join('\n');
 
+    const setters = inputValueArray
+      .map(arg => {
+        const typeToUse = this.resolveInputFieldType(arg.type);
+
+        if (arg.name.value === 'interface') {
+          return indent(
+            `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} _${arg.name.value}) { this._${
+              arg.name.value
+            } = _${arg.name.value}; }`
+          );
+        } else {
+          return indent(
+            `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} ${arg.name.value}) { this.${
+              arg.name.value
+            } = ${arg.name.value}; }`
+          );
+        }
+      })
+      .join('\n');
+
     return `public static class ${name} {
 ${classMembers}
 
@@ -275,6 +295,7 @@ ${ctorSet}
   }
 
 ${getters}
+${setters}
 }`;
   }
 
