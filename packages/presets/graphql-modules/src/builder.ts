@@ -11,6 +11,7 @@ import {
   InputObjectTypeDefinitionNode,
   InputObjectTypeExtensionNode,
 } from 'graphql';
+import { pascalCase } from 'change-case';
 import {
   unique,
   withQuotes,
@@ -20,7 +21,9 @@ import {
   uniqueByKey,
   createObject,
   collectUsedTypes,
+  indent,
 } from './utils';
+import { ModulesConfig } from './config';
 
 // TODO: consider options of other plugins (naming convention etc)
 
@@ -33,13 +36,16 @@ const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>
 const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
 
 export function buildModule(
+  name: string,
   doc: DocumentNode,
   {
     importNamespace,
     importPath,
+    encapsulate,
   }: {
     importNamespace: string;
     importPath: string;
+    encapsulate: ModulesConfig['encapsulateModuleTypes'];
   }
 ) {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
@@ -99,10 +105,10 @@ export function buildModule(
   //
   //
 
-  // An actuall output
-  return [
-    `import * as ${importNamespace} from "${importPath}";`,
-    `import * as gm from "graphql-modules";`,
+  // An actual output
+  const imports = [`import * as ${importNamespace} from "${importPath}";`, `import * as gm from "graphql-modules";`];
+
+  let content = [
     printDefinedFields(),
     printDefinedEnumValues(),
     printDefinedInputFields(),
@@ -115,12 +121,18 @@ export function buildModule(
     .filter(Boolean)
     .join('\n\n');
 
+  if (encapsulate === 'namespace') {
+    content = `export namespace ${pascalCase(name)} {\n` + indent(2)(content) + '\n}';
+  }
+
+  return [...imports, content].filter(Boolean).join('\n');
+
   /**
    * A dictionary of fields to pick from an object
    */
   function printDefinedFields() {
     return buildBlock({
-      name: 'interface DefinedFields',
+      name: `interface DefinedFields`,
       lines: visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`),
     });
   }
@@ -130,9 +142,17 @@ export function buildModule(
    */
   function printDefinedEnumValues() {
     return buildBlock({
-      name: 'interface DefinedEnumValues',
+      name: `interface DefinedEnumValues`,
       lines: visited.enums.map(typeName => `${typeName}: ${printPicks(typeName, picks.enums)};`),
     });
+  }
+
+  function encapsulateTypeName(typeName: string): string {
+    if (encapsulate === 'prefix') {
+      return `${pascalCase(name)}_${typeName}`;
+    }
+
+    return typeName;
   }
 
   /**
@@ -140,7 +160,7 @@ export function buildModule(
    */
   function printDefinedInputFields() {
     return buildBlock({
-      name: 'interface DefinedInputFields',
+      name: `interface DefinedInputFields`,
       lines: visited.inputs.map(typeName => `${typeName}: ${printPicks(typeName, picks.inputs)};`),
     });
   }
@@ -176,9 +196,12 @@ export function buildModule(
     }
 
     return [
-      `export type Scalars = Pick<${importNamespace}.Scalars, ${registry.scalars.map(withQuotes).join(' | ')}>;`,
+      `export type ${encapsulateTypeName('Scalars')} = Pick<${importNamespace}.Scalars, ${registry.scalars
+        .map(withQuotes)
+        .join(' | ')}>;`,
       ...registry.scalars.map(
-        scalar => `export type ${scalar}ScalarConfig = ${importNamespace}.${scalar}ScalarConfig;`
+        scalar =>
+          `export type ${encapsulateTypeName(`${scalar}ScalarConfig`)} = ${importNamespace}.${scalar}ScalarConfig;`
       ),
     ].join('\n');
   }
@@ -196,16 +219,16 @@ export function buildModule(
 
         types.forEach(typeName => {
           if (k === 'scalars') {
-            lines.push(`${typeName}?: ${importNamespace}.Resolvers['${typeName}'];`);
+            lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
-            lines.push(`${typeName}?: ${typeName}Resolvers;`);
+            lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);
           }
         });
       }
     }
 
     return buildBlock({
-      name: 'export interface Resolvers',
+      name: `export interface ${encapsulateTypeName('Resolvers')}`,
       lines,
     });
   }
@@ -233,7 +256,7 @@ export function buildModule(
     }
 
     return buildBlock({
-      name: 'export interface MiddlewareMap',
+      name: `export interface ${encapsulateTypeName('MiddlewareMap')}`,
       lines: blocks,
     });
   }
@@ -243,7 +266,9 @@ export function buildModule(
   }
 
   function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {
-    return `export type ${typeName}Resolvers = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']${extraKeys}>;`;
+    return `export type ${encapsulateTypeName(
+      `${typeName}Resolvers`
+    )} = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']${extraKeys}>;`;
   }
 
   function printPicks(typeName: string, records: Record<string, string[]>): string {
@@ -277,7 +302,7 @@ export function buildModule(
   }
 
   function printExportType(typeName: string): string {
-    return `export type ${typeName} = ${printTypeBody(typeName)};`;
+    return `export type ${encapsulateTypeName(typeName)} = ${printTypeBody(typeName)};`;
   }
 
   //

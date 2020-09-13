@@ -4,89 +4,12 @@ import { concatAST, parse } from 'graphql';
 import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize } from './utils';
 import { buildModule } from './builder';
-
-export type ModulesConfig = {
-  /**
-   * @name baseTypesPath
-   * @type string
-   * @description Required, should point to the base schema types file.
-   * The key of the output is used a the base path for this file.
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *  plugins:
-   *    - typescript-resolvers
-   * ```
-   */
-  baseTypesPath: string;
-  /**
-   * @name cwd
-   * @type string
-   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
-   * @default process.cwd()
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-resolvers
-   * ```
-   */
-  cwd?: string;
-  /**
-   * @name importTypesNamespace
-   * @type string
-   * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
-   * @default Types
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: core
-   *  plugins:
-   *    - typescript-resolvers
-   * ```
-   */
-  importTypesNamespace?: string;
-  /**
-   * @name filename
-   * @type string
-   * @description Required, sets the file name for the generated files.
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    filename: types.ts
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
-   */
-  filename: string;
-};
+import { ModulesConfig } from './config';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
     const { baseOutputDir } = options;
-    const { baseTypesPath } = options.presetConfig;
+    const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -146,9 +69,10 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         plugins: [
           {
             add: {
-              content: buildModule(moduleDocument, {
+              content: buildModule(moduleName, moduleDocument, {
                 importNamespace: importTypesNamespace,
                 importPath,
+                encapsulate: encapsulateModuleTypes || 'none',
               }),
             },
           },

@@ -42,9 +42,10 @@ const testDoc = parse(/* GraphQL */ `
 `);
 
 test('should include import statement', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -52,10 +53,42 @@ test('should include import statement', () => {
   `);
 });
 
-test('should pick fields from defined and extended types', () => {
-  const output = buildModule(testDoc, {
+test('encapsulate: should wrap correctly with namespace', () => {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'namespace',
+  });
+
+  expect(output).toBeSimilarStringTo(`export namespace Test {`);
+  expect(output).toMatchSnapshot();
+});
+
+test('encapsulate: should wrap correctly with prefix', () => {
+  const output = buildModule('test', testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+    encapsulate: 'prefix',
+  });
+
+  expect(output).toMatchSnapshot();
+  expect(output).toContain(`export type Test_Article`);
+  expect(output).toContain(`export type Test_User`);
+  expect(output).toContain(`export type Test_Scalars`);
+  expect(output).toContain(`export type Test_ArticleResolvers`);
+  expect(output).toContain(`export interface Test_Resolvers`);
+  expect(output).toContain(`export interface Test_MiddlewareMap`);
+  expect(output).toContain(`interface DefinedFields {`);
+  expect(output).toContain(`interface DefinedEnumValues {`);
+  expect(output).toContain(`interface DefinedInputFields {`);
+  expect(output).not.toBeSimilarStringTo(`export namespace Test {`);
+});
+
+test('should pick fields from defined and extended types', () => {
+  const output = buildModule('test', testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -80,9 +113,10 @@ test('should pick fields from defined and extended types', () => {
 });
 
 test('should reexport used types but not defined in module', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -94,9 +128,10 @@ test('should reexport used types but not defined in module', () => {
 });
 
 test('should export partial types, only those defined in module or root types', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -120,9 +155,10 @@ test('should export partial types, only those defined in module or root types', 
 });
 
 test('should export partial types of scalars, only those defined in module or root types', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -136,9 +172,10 @@ test('should export partial types of scalars, only those defined in module or ro
 });
 
 test('should use and export resolver signatures of types defined or extended in a module', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -169,18 +206,20 @@ test('should use and export resolver signatures of types defined or extended in 
 });
 
 test('should not generate resolver signatures of types that are not defined or extened by a module', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).not.toContain('CommentResolvers');
 });
 
 test('should generate an aggregation of individual resolver signatures', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -195,9 +234,10 @@ test('should generate an aggregation of individual resolver signatures', () => {
 });
 
 test('should generate a signature for ResolveMiddleware (with widlcards)', () => {
-  const output = buildModule(testDoc, {
+  const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
+    encapsulate: 'none',
   });
 
   expect(output).toContain(`import * as gm from "graphql-modules";`);

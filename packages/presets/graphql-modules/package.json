@@ -19,6 +19,7 @@
     "@graphql-codegen/plugin-helpers": "^1.17.8",
     "@graphql-codegen/visitor-plugin-common": "^1.17.14",
     "parse-filepath": "^1.0.2",
+    "change-case": "^4.1.1",
     "tslib": "~2.0.1"
   },
   "peerDependencies": {
