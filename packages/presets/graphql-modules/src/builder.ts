@@ -32,9 +32,6 @@ type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>> = ['scalars', 'objects', 'enums'];
 
-// TODO: Unfortunately it's static... for now
-const ROOT_TYPES = ['Query', 'Mutation', 'Subscription'];
-
 export function buildModule(
   name: string,
   doc: DocumentNode,
@@ -42,12 +39,14 @@ export function buildModule(
     importNamespace,
     importPath,
     encapsulate,
+    rootTypes,
   }: {
     importNamespace: string;
     importPath: string;
     encapsulate: ModulesConfig['encapsulateModuleTypes'];
+    rootTypes: string[];
   }
-) {
+): string {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
   const defined: Registry = createObject(registryKeys, () => []);
   const extended: Registry = createObject(registryKeys, () => []);
@@ -122,7 +121,7 @@ export function buildModule(
     .join('\n\n');
 
   if (encapsulate === 'namespace') {
-    content = `export namespace ${pascalCase(name)} {\n` + indent(2)(content) + '\n}';
+    content = `export namespace ${pascalCase(name)}Module {\n` + indent(2)(content) + '\n}';
   }
 
   return [...imports, content].filter(Boolean).join('\n');
@@ -182,7 +181,7 @@ export function buildModule(
           printResolverType(
             name,
             'DefinedFields',
-            !ROOT_TYPES.includes(name) && defined.objects.includes(name) ? ` | '__isTypeOf'` : ''
+            !rootTypes.includes(name) && defined.objects.includes(name) ? ` | '__isTypeOf'` : ''
           )
         )
         .join('\n'),
@@ -402,7 +401,7 @@ export function buildModule(
         collectFieldsFromObject(node);
         // Do not include root types as extensions
         // so we can use them in DefinedFields
-        if (ROOT_TYPES.includes(name)) {
+        if (rootTypes.includes(name)) {
           pushUnique(defined.objects, name);
           return;
         }

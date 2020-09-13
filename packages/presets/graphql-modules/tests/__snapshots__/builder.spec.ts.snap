@@ -3,7 +3,7 @@
 exports[`encapsulate: should wrap correctly with namespace 1`] = `
 "import * as core from \\"../types\\";
 import * as gm from \\"graphql-modules\\";
-export namespace Test {
+export namespace TestModule {
   interface DefinedFields {
     Article: 'id' | 'title' | 'text' | 'author' | 'comments';
     Query: 'articles' | 'articleById' | 'articlesByUser';

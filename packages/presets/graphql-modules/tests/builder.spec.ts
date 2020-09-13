@@ -2,6 +2,8 @@ import '@graphql-codegen/testing';
 import { parse } from 'graphql';
 import { buildModule } from '../src/builder';
 
+const ROOT_TYPES = ['Query'];
+
 const testDoc = parse(/* GraphQL */ `
   scalar DateTime
 
@@ -46,6 +48,7 @@ test('should include import statement', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -58,9 +61,10 @@ test('encapsulate: should wrap correctly with namespace', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'namespace',
+    rootTypes: ROOT_TYPES,
   });
 
-  expect(output).toBeSimilarStringTo(`export namespace Test {`);
+  expect(output).toBeSimilarStringTo(`export namespace TestModule {`);
   expect(output).toMatchSnapshot();
 });
 
@@ -69,6 +73,7 @@ test('encapsulate: should wrap correctly with prefix', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'prefix',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toMatchSnapshot();
@@ -89,6 +94,7 @@ test('should pick fields from defined and extended types', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -117,6 +123,7 @@ test('should reexport used types but not defined in module', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -132,6 +139,7 @@ test('should export partial types, only those defined in module or root types', 
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -159,6 +167,7 @@ test('should export partial types of scalars, only those defined in module or ro
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -176,6 +185,7 @@ test('should use and export resolver signatures of types defined or extended in 
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -210,6 +220,7 @@ test('should not generate resolver signatures of types that are not defined or e
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).not.toContain('CommentResolvers');
@@ -220,6 +231,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toBeSimilarStringTo(`
@@ -238,6 +250,7 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
   });
 
   expect(output).toContain(`import * as gm from "graphql-modules";`);

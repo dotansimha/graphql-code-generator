@@ -102,7 +102,7 @@ export function resolveTypeNode(node: TypeNode): NamedTypeNode {
   return node;
 }
 
-function isGraphQLPrimitive(name: string) {
+export function isGraphQLPrimitive(name: string): boolean {
   return ['String', 'Boolean', 'ID', 'Float', 'Int'].includes(name);
 }
 

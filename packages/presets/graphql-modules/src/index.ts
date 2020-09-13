@@ -1,10 +1,11 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import addPlugin from '@graphql-codegen/add';
-import { concatAST, parse } from 'graphql';
+import { concatAST, isScalarType, parse } from 'graphql';
 import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize } from './utils';
+import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
+import { schema } from 'packages/plugins/typescript/resolvers/tests/common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
@@ -37,8 +38,31 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       filename: resolve(cwd, baseOutputDir, baseTypesPath),
       schema: options.schema,
       documents: options.documents,
-      plugins: options.plugins,
-      pluginMap,
+      plugins: [
+        ...options.plugins,
+        {
+          'modules-exported-scalars': {},
+        },
+      ],
+      pluginMap: {
+        ...pluginMap,
+        'modules-exported-scalars': {
+          plugin: () => {
+            const typeMap = schema.getTypeMap();
+
+            return Object.keys(typeMap)
+              .map(t => {
+                if (t && typeMap[t] && isScalarType(typeMap[t] && !isGraphQLPrimitive(t))) {
+                  return `export type ${t} = Scalars["${t}"];`;
+                }
+
+                return null;
+              })
+              .filter(Boolean)
+              .join('\n');
+          },
+        },
+      },
       config: options.config,
       schemaAst: options.schemaAst!,
     };
@@ -69,18 +93,24 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         plugins: [
           ...options.plugins.filter(p => typeof p === 'object' && !!p.add),
           {
-            add: {
-              content: buildModule(moduleName, moduleDocument, {
-                importNamespace: importTypesNamespace,
-                importPath,
-                encapsulate: encapsulateModuleTypes || 'none',
-              }),
-            },
+            'graphql-modules-plugin': {},
           },
         ],
         pluginMap: {
-          ...options.pluginMap,
-          add: addPlugin,
+          ...pluginMap,
+          'graphql-modules-plugin': {
+            plugin: () =>
+              buildModule(moduleName, moduleDocument, {
+                importNamespace: importTypesNamespace,
+                importPath,
+                encapsulate: encapsulateModuleTypes || 'none',
+                rootTypes: [
+                  schema.getQueryType()?.name,
+                  schema.getMutationType()?.name,
+                  schema.getSubscriptionType()?.name,
+                ].filter(Boolean),
+              }),
+          },
         },
         config: options.config,
         schemaAst: options.schemaAst,
