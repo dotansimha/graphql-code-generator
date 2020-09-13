@@ -209,7 +209,7 @@ public static ${enumName} valueOfLabel(String label) {
           this._addListImport = true;
           return indentMultiline(
             `if (args.get("${arg.name.value}") != null) {
-  this.${this.config.classMembersPrefix}${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());
+		this.${arg.name.value} = (${this.config.listType}<${typeToUse.baseType}>) args.get("${arg.name.value}");
 }`,
             3
           );
