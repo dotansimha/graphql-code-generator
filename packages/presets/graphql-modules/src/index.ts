@@ -67,6 +67,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         schema: options.schema,
         documents: [],
         plugins: [
+          ...options.plugins.filter(p => !!p[0].add),
           {
             add: {
               content: buildModule(moduleName, moduleDocument, {
@@ -78,6 +79,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
           },
         ],
         pluginMap: {
+          ...options.pluginMap,
           add: addPlugin,
         },
         config: options.config,
