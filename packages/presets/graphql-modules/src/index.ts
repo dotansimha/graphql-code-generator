@@ -1,7 +1,7 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { concatAST, isScalarType, parse } from 'graphql';
+import { concatAST, parse } from 'graphql';
 import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
+import { groupSourcesByModule, stripFilename, normalize } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
 
@@ -33,28 +33,28 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       documents: options.documents,
       plugins: [
         ...options.plugins,
-        {
-          'modules-exported-scalars': {},
-        },
+        // {
+        //   'modules-exported-scalars': {},
+        // },
       ],
       pluginMap: {
         ...options.pluginMap,
-        'modules-exported-scalars': {
-          plugin: schema => {
-            const typeMap = schema.getTypeMap();
+        // 'modules-exported-scalars': {
+        //   plugin: schema => {
+        //     const typeMap = schema.getTypeMap();
 
-            return Object.keys(typeMap)
-              .map(t => {
-                if (t && typeMap[t] && isScalarType(typeMap[t]) && !isGraphQLPrimitive(t)) {
-                  return `export type ${t} = Scalars["${t}"];`;
-                }
+        //     return Object.keys(typeMap)
+        //       .map(t => {
+        //         if (t && typeMap[t] && isScalarType(typeMap[t]) && !isGraphQLPrimitive(t)) {
+        //           return `export type ${t} = Scalars["${t}"];`;
+        //         }
 
-                return null;
-              })
-              .filter(Boolean)
-              .join('\n');
-          },
-        },
+        //         return null;
+        //       })
+        //       .filter(Boolean)
+        //       .join('\n');
+        //   },
+        // },
       },
       config: options.config,
       schemaAst: options.schemaAst!,
