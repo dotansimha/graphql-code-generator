@@ -88,8 +88,8 @@ export interface DeclarationBlockConfig {
   ignoreExport?: boolean;
 }
 
-export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
-  if (!comment || comment === '') {
+export function transformComment(comment: string | StringValueNode, indentLevel = 0, disabled = false): string {
+  if (!comment || comment === '' || disabled) {
     return '';
   }
 
@@ -147,10 +147,10 @@ export class DeclarationBlock {
     return this;
   }
 
-  withComment(comment: string | StringValueNode | null): DeclarationBlock {
+  withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
     const nonEmptyComment = isStringValueNode(comment) ? !!comment.value : !!comment;
 
-    if (nonEmptyComment) {
+    if (nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
     }
 
@@ -429,4 +429,8 @@ export function wrapTypeWithModifiers(
   }
 
   return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
+}
+
+export function removeDescription<T extends { description?: StringValueNode }>(nodes: readonly T[]) {
+  return nodes.map(node => ({ ...node, description: undefined }));
 }

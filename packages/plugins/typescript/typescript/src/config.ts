@@ -189,4 +189,20 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   noExport?: boolean;
+  /**
+   * @description Set the to `true` in order to disable all comment generation.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Disable field description comment generation
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    disableComments: true
+   * ```
+   */
+  disableComments?: boolean;
 }
