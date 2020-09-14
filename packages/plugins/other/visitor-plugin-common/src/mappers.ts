@@ -167,7 +167,7 @@ function addSuffix(element: string, suffix: string): string {
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#') && !value.includes('"') && !value.includes("'");
+  return value.includes('#');
 }
 
 export function transformMappers(

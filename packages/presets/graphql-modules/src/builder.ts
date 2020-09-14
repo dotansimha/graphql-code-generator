@@ -10,6 +10,8 @@ import {
   EnumTypeExtensionNode,
   InputObjectTypeDefinitionNode,
   InputObjectTypeExtensionNode,
+  GraphQLSchema,
+  isScalarType,
 } from 'graphql';
 import { pascalCase } from 'change-case';
 import {
@@ -40,11 +42,13 @@ export function buildModule(
     importPath,
     encapsulate,
     rootTypes,
+    schema,
   }: {
     importNamespace: string;
     importPath: string;
     encapsulate: ModulesConfig['encapsulateModuleTypes'];
     rootTypes: string[];
+    schema?: GraphQLSchema;
   }
 ): string {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
@@ -278,11 +282,11 @@ export function buildModule(
     const coreType = `${importNamespace}.${typeName}`;
 
     if (external.enums.includes(typeName) || external.objects.includes(typeName)) {
-      return coreType;
-    }
+      if (schema && isScalarType(schema.getType(typeName))) {
+        return `${importNamespace}.Scalars['${typeName}']`;
+      }
 
-    if (external.scalars.includes(typeName)) {
-      return `${importNamespace}.Scalars['${typeName}']`;
+      return coreType;
     }
 
     if (defined.enums.includes(typeName) && picks.enums[typeName]) {

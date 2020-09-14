@@ -97,6 +97,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importNamespace: importTypesNamespace,
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'none',
+                schema,
                 rootTypes: [
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,
