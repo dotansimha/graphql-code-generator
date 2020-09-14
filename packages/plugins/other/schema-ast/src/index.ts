@@ -75,7 +75,7 @@ export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string
   const printedSchema = printSchema(schema);
   const astNode = parseSchema(printedSchema);
 
-  const transformedAST = config.disableComments
+  const transformedAST = config.disableDescriptions
     ? visit(astNode, {
         leave: node => ({
           ...node,
@@ -84,7 +84,7 @@ export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string
       })
     : astNode;
 
-  const transformedSchema = config.disableComments ? buildASTSchema(transformedAST) : schema;
+  const transformedSchema = config.disableDescriptions ? buildASTSchema(transformedAST) : schema;
 
   return {
     schema: transformedSchema,

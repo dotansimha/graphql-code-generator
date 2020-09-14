@@ -261,7 +261,7 @@ describe('TypeScript', () => {
         "My custom scalar"
         scalar A
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
@@ -282,7 +282,7 @@ describe('TypeScript', () => {
           f: String
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput`);
@@ -296,7 +296,7 @@ describe('TypeScript', () => {
           f: String!
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
@@ -314,7 +314,7 @@ describe('TypeScript', () => {
           f: String!
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput`);
@@ -332,7 +332,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type A = `);
@@ -349,7 +349,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
         export type B = `);
@@ -365,7 +365,7 @@ describe('TypeScript', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type B = {
@@ -381,7 +381,7 @@ describe('TypeScript', () => {
           id: ID!
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {
@@ -399,7 +399,7 @@ describe('TypeScript', () => {
           B
         }
       `);
-      const result = await plugin(schema, [], { disableComments: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export enum MyEnum {
@@ -421,7 +421,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { enumsAsTypes: true, disableComments: true },
+        { enumsAsTypes: true, disableDescriptions: true },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
@@ -444,7 +444,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { enumsAsTypes: true, disableComments: false },
+        { enumsAsTypes: true, disableDescriptions: false },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
