@@ -9058,21 +9058,24 @@ graphql-language-service-interface@2.4.0:
     vscode-languageserver-types "^3.15.1"
 
 graphql-language-service-parser@^1.6.0:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.6.2.tgz#e139c37318e358c99786dc84f94bd1745135812a"
-  integrity sha512-7CwFkvuOjyrzwk+Ox4hPH839NOGnFHbzlWD08nsRxRTqth71LkHWS1ADVFxvBv49C1kXFmLSsCMhi4PH1meozQ==
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.6.3.tgz#16c1efdb005c982de0500161d67e96ce749cf1d5"
+  integrity sha512-UjmVXcSN59pCkFDBIZav0rTdz7ISeYAgGshA/0OpFlrJ6ZkS3hlOBbu/QvLyjRvTcjKpx95qT299auL39kE+/g==
+  dependencies:
+    graphql-language-service-types "^1.6.2"
+    typescript "^3.9.5"
 
-graphql-language-service-types@^1.6.0, graphql-language-service-types@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.6.1.tgz#2f3933426e47d1979a977f88738ea2cb1414c765"
-  integrity sha512-ag3m5b7aje7ZBSuLVQE/gt2iDL9WEfzotZfLyskUDOonhHKniQ8BfmSQ/pF9F6zrdVjtZ8VRr5nes1sEYvvwKQ==
+graphql-language-service-types@^1.6.0, graphql-language-service-types@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.6.2.tgz#c42c5d67c05120d422076e0965794ae9c589689e"
+  integrity sha512-5cslPoUd8P7/EjJ5L3/zs0NBeDhvQHhjUMbjKQakwqu4tZXplriZ9KvvA+Q/n4w/Rn79+3cbr7maNtsTk6/TmQ==
 
 graphql-language-service-utils@^2.4.0:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.4.1.tgz#37d3ffdb603fc8b54f11e7d57b4ca04660247c2b"
-  integrity sha512-fqYSrjJ3YXHwY9eYUz5nesLwLfo8csbR/hS4Xz8wDZCeqkD20UzjVfnbF1Q0SjtKFlDtEfnG9hJvHZEJXZCF3A==
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.4.2.tgz#0333377e2aad85b61bc9c0304e61cea13eec90c7"
+  integrity sha512-el9WfW0LyKaxpUzsIOec/qAjSdXIQ6hVRAX2HV8bN0+yPO93m6sMfPDtNrVkj/2FkwtruCrs01TB0dB1Qk9Dew==
   dependencies:
-    graphql-language-service-types "^1.6.1"
+    graphql-language-service-types "^1.6.2"
 
 graphql-request@^3.0.0:
   version "3.0.0"
@@ -12348,10 +12351,10 @@ mock-stdin@0.3.0:
   resolved "https://registry.npmjs.org/mock-stdin/-/mock-stdin-0.3.0.tgz#f40d2a513a114e6d547480625b5ef5190744bd4d"
   integrity sha1-9A0qUToRTm1UdIBiW171GQdEvU0=
 
-moment@~2.27.0:
-  version "2.27.0"
-  resolved "https://registry.npmjs.org/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
-  integrity sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
+moment@~2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.28.0.tgz#cdfe73ce01327cee6537b0fafac2e0f21a237d75"
+  integrity sha512-Z5KOjYmnHyd/ukynmFd/WwyXHd7L4J9vTI/nn5Ap9AVUgaAE15VvQ9MOGmJJygEUklupqIrFnor/tjTwRU+tQw==
 
 monaco-editor-webpack-plugin@1.9.0:
   version "1.9.0"
@@ -17316,6 +17319,11 @@ typescript@4.0.2, typescript@~4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.2.tgz#7ea7c88777c723c681e33bf7988be5d008d05ac2"
   integrity sha512-e4ERvRV2wb+rRZ/IQeb3jm2VxBsirQLpQhdxplZ2MEzGvDkkMmPglecnNDfSUBivMjP93vRbngYYDQqQ/78bcQ==
+
+typescript@^3.9.5:
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
+  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 ua-parser-js@^0.7.18:
   version "0.7.21"
