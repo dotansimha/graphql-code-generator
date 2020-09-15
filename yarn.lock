@@ -2075,22 +2075,14 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/git-loader@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.1.tgz#0dc1843ea1fa249f95f3e87e8a3074fa0c6af9c5"
-  integrity sha512-yPMvnvn5mahfMMFWjfDGiuOYtqhIhchnOE7RaxoI6pbYix2KWbGrBZufUW6lhr+JeuMG3bjz1oiO4XJUEu6oZw==
+"@graphql-tools/git-loader@6.2.2", "@graphql-tools/git-loader@^6":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.2.tgz#6e2fe4e5853b90a3096dc88d9827f3d4b47c16d9"
+  integrity sha512-gfhQX5ZQ7nc4AAW6tT0s2d0o2lkYtMMhaeX4miPMGd+Hgej1phLrIeSSEAfrlSy0JWgARmmsoXGuz76wDZdhjw==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.2.1"
-    "@graphql-tools/utils" "6.2.1"
+    "@graphql-tools/graphql-tag-pluck" "6.2.2"
+    "@graphql-tools/utils" "6.2.2"
     tslib "~2.0.1"
-
-"@graphql-tools/git-loader@^6":
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/@graphql-tools/git-loader/-/git-loader-6.1.0.tgz#dbf6b477954908914d2778538b95a37c5578fca1"
-  integrity sha512-4faA3p2OaMuxvJj6ctHg3e1lkiMFBBs/Bn0oqXkbBAl96YZ9XZhX5o1O5a6qXa+vA0UzjTTtSYl80Il/hG9NSQ==
-  dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.1.0"
-    "@graphql-tools/utils" "6.1.0"
 
 "@graphql-tools/github-loader@6.2.1":
   version "6.2.1"
@@ -2162,6 +2154,19 @@
     "@babel/traverse" "7.11.5"
     "@babel/types" "7.11.5"
     "@graphql-tools/utils" "6.2.1"
+    tslib "~2.0.1"
+  optionalDependencies:
+    vue-template-compiler "^2.6.12"
+
+"@graphql-tools/graphql-tag-pluck@6.2.2":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.2.2.tgz#b6c2ef7fe04c58a3ef242926e0b7b7845e555b68"
+  integrity sha512-KH6QoJYo3WXtc4+3e2oTfm627oszRGsKVpMF7A0IvtiVUU0XxoXLAjmJBlNrGN/PdqpBDPEVSdz2VLX2eDkokw==
+  dependencies:
+    "@babel/parser" "7.11.5"
+    "@babel/traverse" "7.11.5"
+    "@babel/types" "7.11.5"
+    "@graphql-tools/utils" "6.2.2"
     tslib "~2.0.1"
   optionalDependencies:
     vue-template-compiler "^2.6.12"
