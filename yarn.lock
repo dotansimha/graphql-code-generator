@@ -2281,13 +2281,22 @@
     "@graphql-tools/utils" "6.1.0"
     tslib "~2.0.1"
 
-"@graphql-tools/merge@6.2.1", "@graphql-tools/merge@^6", "@graphql-tools/merge@^6.0.0":
+"@graphql-tools/merge@6.2.1":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.1.tgz#edce28a343776ea580e7feceb3b6557c99ce9cfe"
   integrity sha512-GJyMOYM2JyZhvMlVwpUZUv5ocvWCh+/KdPCCzXqo3Va/kOO1ntm8lKGNf3JZpQDgpC5FvaQfsu/b5pE7TBFxyw==
   dependencies:
     "@graphql-tools/schema" "6.2.1"
     "@graphql-tools/utils" "6.2.1"
+    tslib "~2.0.1"
+
+"@graphql-tools/merge@^6", "@graphql-tools/merge@^6.0.0":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.2.tgz#49d8da0e706530ad484dee8ba7b91f8d80126030"
+  integrity sha512-2YyErSvq4hn5mjE6qJ/0Q8r3WU9JB3+obv2xyvb+oW+E/T1iYRJGxSFldi6lqO5IADZz8QASLJeSpRBw40gpBg==
+  dependencies:
+    "@graphql-tools/schema" "6.2.2"
+    "@graphql-tools/utils" "6.2.2"
     tslib "~2.0.1"
 
 "@graphql-tools/prisma-loader@6.2.2", "@graphql-tools/prisma-loader@^6":
