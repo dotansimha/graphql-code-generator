@@ -60,7 +60,7 @@ test('should include import statement', () => {
   `);
 });
 
-test.only('should work with naming conventions', () => {
+test('should work with naming conventions', () => {
   const output = buildModule('test', parse(`type query_root { test: ID! } schema { query: query_root }`), {
     importPath: '../types',
     importNamespace: 'core',
@@ -69,7 +69,8 @@ test.only('should work with naming conventions', () => {
     baseVisitor,
   });
 
-  console.log(output);
+  expect(output).toContain(`Pick<core.Query_RootResolvers, `);
+  expect(output).toContain(`Pick<core.Query_Root,`);
 });
 
 test('encapsulate: should wrap correctly with namespace', () => {
