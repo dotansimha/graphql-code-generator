@@ -60,6 +60,18 @@ test('should include import statement', () => {
   `);
 });
 
+test.only('should work with naming conventions', () => {
+  const output = buildModule('test', parse(`type query_root { test: ID! } schema { query: query_root }`), {
+    importPath: '../types',
+    importNamespace: 'core',
+    encapsulate: 'none',
+    rootTypes: ROOT_TYPES,
+    baseVisitor,
+  });
+
+  console.log(output);
+});
+
 test('encapsulate: should wrap correctly with namespace', () => {
   const output = buildModule('test', testDoc, {
     importPath: '../types',

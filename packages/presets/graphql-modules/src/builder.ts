@@ -279,7 +279,9 @@ export function buildModule(
   function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {
     return `export type ${encapsulateTypeName(
       `${typeName}Resolvers`
-    )} = Pick<${importNamespace}.${typeName}Resolvers, ${picksTypeName}['${typeName}']${extraKeys}>;`;
+    )} = Pick<${importNamespace}.${baseVisitor.convertName(typeName, {
+      suffix: 'Resolvers',
+    })}, ${picksTypeName}['${typeName}']${extraKeys}>;`;
   }
 
   function printPicks(typeName: string, records: Record<string, string[]>): string {
