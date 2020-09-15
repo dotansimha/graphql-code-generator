@@ -26,8 +26,7 @@ import {
   indent,
 } from './utils';
 import { ModulesConfig } from './config';
-
-// TODO: consider options of other plugins (naming convention etc)
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
 type Registry = Record<RegistryKeys, string[]>;
@@ -43,11 +42,13 @@ export function buildModule(
     encapsulate,
     rootTypes,
     schema,
+    baseVisitor,
   }: {
     importNamespace: string;
     importPath: string;
     encapsulate: ModulesConfig['encapsulateModuleTypes'];
     rootTypes: string[];
+    baseVisitor: BaseVisitor;
     schema?: GraphQLSchema;
   }
 ): string {
@@ -125,7 +126,14 @@ export function buildModule(
     .join('\n\n');
 
   if (encapsulate === 'namespace') {
-    content = `export namespace ${pascalCase(name)}Module {\n` + indent(2)(content) + '\n}';
+    content =
+      `export namespace ${baseVisitor.convertName(name, {
+        suffix: 'Module',
+        useTypesPrefix: false,
+        useTypesSuffix: false,
+      })} {\n` +
+      indent(2)(content) +
+      '\n}';
   }
 
   return [...imports, content].filter(Boolean).join('\n');
@@ -279,7 +287,10 @@ export function buildModule(
   }
 
   function printTypeBody(typeName: string): string {
-    const coreType = `${importNamespace}.${typeName}`;
+    const coreType = `${importNamespace}.${baseVisitor.convertName(typeName, {
+      useTypesSuffix: true,
+      useTypesPrefix: true,
+    })}`;
 
     if (external.enums.includes(typeName) || external.objects.includes(typeName)) {
       if (schema && isScalarType(schema.getType(typeName))) {

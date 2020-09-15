@@ -4,6 +4,7 @@ import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
@@ -60,6 +61,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       schemaAst: options.schemaAst!,
     };
 
+    const baseVisitor = new BaseVisitor(options.config, {});
     const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
     const baseTypesDir = stripFilename(baseOutput.filename);
 
@@ -98,6 +100,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'none',
                 schema,
+                baseVisitor,
                 rootTypes: [
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,
