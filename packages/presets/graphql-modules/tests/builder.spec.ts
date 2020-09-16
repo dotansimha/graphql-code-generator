@@ -224,7 +224,6 @@ test('should use and export resolver signatures of types defined or extended in 
   expect(output).toBeSimilarStringTo(`
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
   `);
-  console.log(output);
   // Interfaces should not have resolvers
   // We want Object types to have __isTypeOf
   expect(output).not.toBeSimilarStringTo(`
