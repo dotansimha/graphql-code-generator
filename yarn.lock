@@ -2090,19 +2090,6 @@
     fs-extra "9.0.1"
     tslib "~2.0.0"
 
-"@graphql-tools/graphql-tag-pluck@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.2.1.tgz#95c0e9afd854575cb2169c30f081ab2190011aa8"
-  integrity sha512-rgdoJx8jfHiMFVR6O6Xb0xeoMal+p7c+TXli5YIjUdgY/jJnQi589qOs394YY3JeB0xDPm/s8hU+leXm25Mxcg==
-  dependencies:
-    "@babel/parser" "7.11.5"
-    "@babel/traverse" "7.11.5"
-    "@babel/types" "7.11.5"
-    "@graphql-tools/utils" "6.2.1"
-    tslib "~2.0.1"
-  optionalDependencies:
-    vue-template-compiler "^2.6.12"
-
 "@graphql-tools/graphql-tag-pluck@6.2.2":
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.2.2.tgz#b6c2ef7fe04c58a3ef242926e0b7b7845e555b68"
@@ -3437,10 +3424,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@14.10.1":
-  version "14.10.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.10.1.tgz#cc323bad8e8a533d4822f45ce4e5326f36e42177"
-  integrity sha512-aYNbO+FZ/3KGeQCEkNhHFRIzBOUgc7QvcVNKXbfnhDkSfwUv91JsQQa10rDgKSTSLkXZ1UIyPe4FJJNVgw1xWQ==
+"@types/node@*", "@types/node@14.10.2":
+  version "14.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.10.2.tgz#9b47a2c8e4dabd4db73b57e750b24af689600514"
+  integrity sha512-IzMhbDYCpv26pC2wboJ4MMOa9GKtjplXfcAqrMeNJpUUwpM/2ATt2w1JPUXwS6spu856TvKZL2AOmeU2rAxskw==
 
 "@types/node@^10.1.0":
   version "10.17.26"
