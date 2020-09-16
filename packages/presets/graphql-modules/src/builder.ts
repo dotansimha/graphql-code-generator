@@ -197,7 +197,6 @@ export function buildModule(
           )
         )
         .join('\n'),
-      registry.enums.map(name => printResolverType(name, 'DefinedEnumValues')).join('\n'),
     ].join('\n');
   }
 
@@ -229,6 +228,9 @@ export function buildModule(
         const types = registry[k];
 
         types.forEach(typeName => {
+          if (k === 'enums') {
+            return;
+          }
           if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
@@ -303,7 +305,7 @@ export function buildModule(
     }
 
     if (defined.enums.includes(typeName) && picks.enums[typeName]) {
-      return `Pick<${coreType}, DefinedEnumValues['${typeName}']>`;
+      return `DefinedEnumValues['${typeName}']`;
     }
 
     if (defined.objects.includes(typeName) && picks.objects[typeName]) {

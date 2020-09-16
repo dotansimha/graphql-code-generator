@@ -29,7 +29,6 @@ export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Don
 export type MutationResolvers = Pick<Types.MutationResolvers, DefinedFields['Mutation']>;
 export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
 
-
 export interface Resolvers {
   Paypal?: PaypalResolvers;
   CreditCard?: CreditCardResolvers;

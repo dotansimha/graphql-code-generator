@@ -171,7 +171,7 @@ test('should export partial types, only those defined in module or root types', 
     export type Query = Pick<core.Query, DefinedFields['Query']>;
   `);
   expect(output).toBeSimilarStringTo(`
-    export type UserKind = Pick<core.UserKind, DefinedEnumValues['UserKind']>;
+    export type UserKind = DefinedEnumValues['UserKind'];
   `);
   expect(output).toBeSimilarStringTo(`
     export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
@@ -222,11 +222,9 @@ test('should use and export resolver signatures of types defined or extended in 
     export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
   `);
   expect(output).toBeSimilarStringTo(`
-    export type UserKindResolvers = Pick<core.UserKindResolvers, DefinedEnumValues['UserKind']>;
-  `);
-  expect(output).toBeSimilarStringTo(`
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
   `);
+  console.log(output);
   // Interfaces should not have resolvers
   // We want Object types to have __isTypeOf
   expect(output).not.toBeSimilarStringTo(`
@@ -266,7 +264,6 @@ test('should generate an aggregation of individual resolver signatures', () => {
       Query?: QueryResolvers;
       User?: UserResolvers;
       DateTime?: core.Resolvers['DateTime'];
-      UserKind?: UserKindResolvers;
     };
   `);
 });

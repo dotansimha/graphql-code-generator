@@ -25,7 +25,7 @@ export namespace TestModule {
   export type ArticleOrUser = core.ArticleOrUser;
   export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
   export type Query = Pick<core.Query, DefinedFields['Query']>;
-  export type UserKind = Pick<core.UserKind, DefinedEnumValues['UserKind']>;
+  export type UserKind = DefinedEnumValues['UserKind'];
   
   export type Scalars = Pick<core.Scalars, 'DateTime'>;
   export type DateTimeScalarConfig = core.DateTimeScalarConfig;
@@ -33,14 +33,12 @@ export namespace TestModule {
   export type ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
   export type QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
   export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
-  export type UserKindResolvers = Pick<core.UserKindResolvers, DefinedEnumValues['UserKind']>;
   
   export interface Resolvers {
     Article?: ArticleResolvers;
     Query?: QueryResolvers;
     User?: UserResolvers;
     DateTime?: core.Resolvers['DateTime'];
-    UserKind?: UserKindResolvers;
   };
   
   export interface MiddlewareMap {
@@ -93,7 +91,7 @@ export type Test_Node = core.Node;
 export type Test_ArticleOrUser = core.ArticleOrUser;
 export type Test_NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
 export type Test_Query = Pick<core.Query, DefinedFields['Query']>;
-export type Test_UserKind = Pick<core.UserKind, DefinedEnumValues['UserKind']>;
+export type Test_UserKind = DefinedEnumValues['UserKind'];
 
 export type Test_Scalars = Pick<core.Scalars, 'DateTime'>;
 export type Test_DateTimeScalarConfig = core.DateTimeScalarConfig;
@@ -101,14 +99,12 @@ export type Test_DateTimeScalarConfig = core.DateTimeScalarConfig;
 export type Test_ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
 export type Test_QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
 export type Test_UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
-export type Test_UserKindResolvers = Pick<core.UserKindResolvers, DefinedEnumValues['UserKind']>;
 
 export interface Test_Resolvers {
   Article?: Test_ArticleResolvers;
   Query?: Test_QueryResolvers;
   User?: Test_UserResolvers;
   DateTime?: Test_core.Resolvers['DateTime'];
-  UserKind?: Test_UserKindResolvers;
 };
 
 export interface Test_MiddlewareMap {
