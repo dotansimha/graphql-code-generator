@@ -2017,18 +2017,6 @@
     fs-extra "9.0.1"
     tslib "~2.0.1"
 
-"@graphql-tools/delegate@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-6.2.1.tgz#97847e6d236e55a70de8fb7ece9eb615c57fbc6b"
-  integrity sha512-IsmrZ+aiT00V567PfawxvdjwMf8RrfjSuyOy7LvqJ6ABUlpcjZejYMFIl82ZjHf8m3OU1xF5Wier8G6XFYzPYw==
-  dependencies:
-    "@ardatan/aggregate-error" "0.0.6"
-    "@graphql-tools/schema" "6.2.1"
-    "@graphql-tools/utils" "6.2.1"
-    dataloader "2.0.0"
-    is-promise "4.0.0"
-    tslib "~2.0.1"
-
 "@graphql-tools/delegate@6.2.2":
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-6.2.2.tgz#3c401a06f6f7c3ef068d78217bde5e9b7b3830a0"
@@ -2199,14 +2187,6 @@
     "@graphql-tools/utils" "6.1.0"
     relay-compiler "10.0.1"
 
-"@graphql-tools/schema@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.2.1.tgz#6b584defa37d6649180491ae32e1bb737b1d33e5"
-  integrity sha512-SKoZmxlLwOq08/NZ8Y5aShgEHneTJ8Ksw4gU1WBSWVJGf64ROoxIxN4Uc47F0cZxwOBqVqUy/EdXWZ8Jt97uQQ==
-  dependencies:
-    "@graphql-tools/utils" "6.2.1"
-    tslib "~2.0.1"
-
 "@graphql-tools/schema@6.2.2":
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.2.2.tgz#2dd7c6fbb4b6ccad239d0fefc3eb6d98a1bfcb01"
@@ -2214,21 +2194,6 @@
   dependencies:
     "@graphql-tools/utils" "6.2.2"
     tslib "~2.0.1"
-
-"@graphql-tools/url-loader@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.2.1.tgz#9265dc6578263a79d386ea307bbb733740c9a0d2"
-  integrity sha512-6NTibFENUn02oI53VhW2Dcas0QdHYDyqRD5yxk0D+rQUP558t4eoYLJ8/hhdqbJ5t+2/lBRkzVU/5oJkZQosMQ==
-  dependencies:
-    "@graphql-tools/delegate" "6.2.1"
-    "@graphql-tools/utils" "6.2.1"
-    "@graphql-tools/wrap" "6.2.1"
-    "@types/websocket" "1.0.1"
-    cross-fetch "3.0.5"
-    subscriptions-transport-ws "0.9.18"
-    tslib "~2.0.1"
-    valid-url "1.0.9"
-    websocket "1.0.32"
 
 "@graphql-tools/url-loader@6.2.2", "@graphql-tools/url-loader@^6", "@graphql-tools/url-loader@^6.0.0":
   version "6.2.2"
@@ -2277,17 +2242,6 @@
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.1"
-    tslib "~2.0.1"
-
-"@graphql-tools/wrap@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/wrap/-/wrap-6.2.1.tgz#4df858924a95fa90861a712a7578d94d8dcdd07e"
-  integrity sha512-bjmN2Xh3haRp5tMDNPpUDV/9IlvFfmG9umsAOb3WFRJBoVi/dX0YwWIyucM3WBVix4ory8Op5eT4KkoKeaFSMw==
-  dependencies:
-    "@graphql-tools/delegate" "6.2.1"
-    "@graphql-tools/schema" "6.2.1"
-    "@graphql-tools/utils" "6.2.1"
-    is-promise "4.0.0"
     tslib "~2.0.1"
 
 "@graphql-tools/wrap@6.2.2":
@@ -16515,21 +16469,10 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
-subscriptions-transport-ws@0.9.18:
+subscriptions-transport-ws@0.9.18, subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.16:
   version "0.9.18"
   resolved "https://registry.npmjs.org/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.18.tgz#bcf02320c911fbadb054f7f928e51c6041a37b97"
   integrity sha512-tztzcBTNoEbuErsVQpTN2xUNN/efAZXyCyL5m3x4t6SKrEiTL2N8SaKWBFWM4u56pL79ULif3zjyeq+oV+nOaA==
-  dependencies:
-    backo2 "^1.0.2"
-    eventemitter3 "^3.1.0"
-    iterall "^1.2.1"
-    symbol-observable "^1.0.4"
-    ws "^5.2.0"
-
-subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.16:
-  version "0.9.16"
-  resolved "https://registry.npmjs.org/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.16.tgz#90a422f0771d9c32069294c08608af2d47f596ec"
-  integrity sha512-pQdoU7nC+EpStXnCfh/+ho0zE0Z+ma+i7xvj7bkXKb1dvYHSZxgRPaU6spRP+Bjzow67c/rRDoix5RT0uU9omw==
   dependencies:
     backo2 "^1.0.2"
     eventemitter3 "^3.1.0"
