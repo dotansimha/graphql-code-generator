@@ -1,6 +1,6 @@
 {
-  "name": "@graphql-codegen/typescript-apollo-angular",
-  "version": "2.0.1",
+  "name": "@jbarrus/typescript-apollo-angular",
+  "version": "2.0.1-import-fix",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": {
     "type": "git",
