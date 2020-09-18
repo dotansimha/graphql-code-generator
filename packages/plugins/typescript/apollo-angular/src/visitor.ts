@@ -37,6 +37,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   ApolloAngularRawPluginConfig,
   ApolloAngularPluginConfig
 > {
+  private _externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -76,6 +77,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       },
       documents
     );
+
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
 
     autoBind(this);
   }
@@ -256,6 +259,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       serviceName,
     });
 
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+
     const content = `
   @Injectable({
     providedIn: ${this._providedIn(node)}
@@ -285,6 +291,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
 
     const allPossibleActions = this._operationsToInclude
       .map(o => {
+        const operationResultType = this._externalImportPrefix + o.operationResultType;
+        const operationVariablesTypes = this._externalImportPrefix + o.operationVariablesTypes;
+
         const optionalVariables =
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
@@ -292,13 +301,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
 
         const options =
           o.operationType === 'Mutation'
-            ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>`
-            : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
+            ? `${o.operationType}OptionsAlone<${operationResultType}, ${operationVariablesTypes}>`
+            : `${o.operationType}OptionsAlone<${operationVariablesTypes}>`;
 
         const method = `
-${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
-          o.operationVariablesTypes
-        }, options?: ${options}) {
+${camelCase(o.node.name.value)}(variables${
+          optionalVariables ? '?' : ''
+        }: ${operationVariablesTypes}, options?: ${options}) {
   return this.${camelCase(o.serviceName)}.${actionType(o.operationType)}(variables, options)
 }`;
 
@@ -307,9 +316,9 @@ ${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
         if (o.operationType === 'Query') {
           watchMethod = `
 
-${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${
-            o.operationVariablesTypes
-          }, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
+${camelCase(o.node.name.value)}Watch(variables${
+            optionalVariables ? '?' : ''
+          }: ${operationVariablesTypes}, options?: WatchQueryOptionsAlone<${operationVariablesTypes}>) {
   return this.${camelCase(o.serviceName)}.watch(variables, options)
 }`;
         }
