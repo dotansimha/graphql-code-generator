@@ -5,7 +5,7 @@ export async function getPresetByName(
   name: string,
   loader: Types.PackageLoaderFn<{ preset?: Types.OutputPreset; default?: Types.OutputPreset }>
 ): Promise<Types.OutputPreset> {
-  const possibleNames = [`@graphql-codegen/${name}`, `@graphql-codegen/${name}-preset`, name];
+  const possibleNames = [name, `@graphql-codegen/${name}`, `@graphql-codegen/${name}-preset`];
   const possibleModules = possibleNames.concat(resolve(process.cwd(), name));
 
   for (const moduleName of possibleModules) {

@@ -25,8 +25,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': { plugins: ['typescript'] },
-          'out2.ts': { plugins: ['typescript'] },
+          'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
+          'out2.ts': { plugins: ['@graphql-codegen/typescript'] },
         },
       });
 
@@ -40,7 +40,7 @@ describe('Codegen Executor', () => {
         schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
         require: join(__dirname, './dummy-require.js'),
         generates: {
-          'out1.ts': { plugins: ['typescript'] },
+          'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
         },
         cwd: __dirname,
       });
@@ -55,7 +55,7 @@ describe('Codegen Executor', () => {
           schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
           require: join(__dirname, './missing.js'),
           generates: {
-            'out1.ts': { plugins: ['typescript'] },
+            'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
           },
           cwd: __dirname,
         });
@@ -119,7 +119,7 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -133,7 +133,7 @@ describe('Codegen Executor', () => {
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -150,7 +150,7 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           generates: {
             'out.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -184,7 +184,7 @@ describe('Codegen Executor', () => {
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
           'out.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -204,7 +204,7 @@ describe('Codegen Executor', () => {
             schema: `
               type OtherType { a: String }
             `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -221,7 +221,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -237,7 +237,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -255,7 +255,7 @@ describe('Codegen Executor', () => {
           `,
           documents: [`query q { e }`, `query q { f }`],
           generates: {
-            'out1.ts': { plugins: ['typescript'] },
+            'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
           },
         });
         throw SHOULD_NOT_THROW_STRING;
@@ -271,7 +271,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -285,7 +285,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -300,7 +300,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -315,7 +315,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -331,7 +331,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -345,7 +345,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -360,7 +360,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
         pluckConfig: {
@@ -381,7 +381,7 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': { plugins: ['typescript'] },
+          'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
         },
       });
 
@@ -397,7 +397,7 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': { plugins: ['typescript'] },
+          'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
         },
         pluckConfig: {
           modules: [
@@ -427,7 +427,7 @@ describe('Codegen Executor', () => {
         },
         generates: {
           'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -446,13 +446,13 @@ describe('Codegen Executor', () => {
             config: {
               namingConvention: 'lower-case#lowerCase',
             },
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
           'out2.ts': {
             config: {
               namingConvention: 'upper-case#upperCase',
             },
-            plugins: ['typescript', 'typescript-operations'],
+            plugins: ['@graphql-codegen/typescript', '@graphql-codegen/typescript-operations'],
           },
         },
       });
@@ -687,7 +687,7 @@ describe('Codegen Executor', () => {
         schema: [schemaA, schemaB],
         generates: {
           'out1.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -715,7 +715,7 @@ describe('Codegen Executor', () => {
           },
         ],
         generates: {
-          'out1.ts': { plugins: ['typescript'] },
+          'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
         },
       });
 
@@ -733,7 +733,7 @@ describe('Codegen Executor', () => {
                 },
               },
             ],
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -752,7 +752,7 @@ describe('Codegen Executor', () => {
             },
           ],
           generates: {
-            'out1.ts': { plugins: ['typescript'] },
+            'out1.ts': { plugins: ['@graphql-codegen/typescript'] },
           },
         });
 
@@ -775,7 +775,7 @@ describe('Codegen Executor', () => {
           ],
           generates: {
             'out1.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -799,7 +799,7 @@ describe('Codegen Executor', () => {
           ],
           generates: {
             'out1.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -826,7 +826,7 @@ describe('Codegen Executor', () => {
         ],
         generates: {
           'out1.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -846,7 +846,7 @@ describe('Codegen Executor', () => {
                 },
               },
             ],
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -867,7 +867,7 @@ describe('Codegen Executor', () => {
           ],
           generates: {
             'out1.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -892,7 +892,7 @@ describe('Codegen Executor', () => {
           ],
           generates: {
             'out1.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -917,7 +917,7 @@ describe('Codegen Executor', () => {
           ],
           generates: {
             'out1.ts': {
-              plugins: ['typescript'],
+              plugins: ['@graphql-codegen/typescript'],
             },
           },
         });
@@ -938,7 +938,7 @@ describe('Codegen Executor', () => {
         documents: ['./tests/test-documents/valid.graphql'],
         generates: {
           'out1.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });
@@ -965,7 +965,7 @@ describe('Codegen Executor', () => {
         ],
         generates: {
           'out1.ts': {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       });

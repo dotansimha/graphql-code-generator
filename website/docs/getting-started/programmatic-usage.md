@@ -59,7 +59,7 @@ We are using this API in the live demo in GraphQL Code Generator website. [The c
 :::
 
 :::tip Loading schema and documents
-You can use one of the tools from [`@graphql-toolkit`](https://github.com/ardatan/graphql-toolkit) for file loading, schema merging, transformations and more. 
+You can use one of the tools from [`@graphql-toolkit`](https://github.com/ardatan/graphql-toolkit) for file loading, schema merging, transformations and more.
 :::
 
 ## Using the CLI instead of `core`
@@ -76,7 +76,7 @@ async function doSomething() {
       documents: './src/**/*.graphql',
       generates: {
         [process.cwd() + '/models/types.d.ts']: {
-          plugins: ['typescript'],
+          plugins: ['@graphql-codegen/typescript'],
         },
       },
     },
@@ -89,4 +89,4 @@ The return value should be of type `Promise<FileOutput[]>`.
 
 :::caution
 This usage will not work in a browser environment, because the `cli` package depends on NodeJS internals and the file system.
-::: 
+:::

@@ -33,7 +33,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },
@@ -62,7 +62,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },
@@ -89,7 +89,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },
@@ -117,7 +117,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },
@@ -148,7 +148,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },
@@ -183,7 +183,11 @@ describe('generate-and-save', () => {
           documents: inputFile,
           generates: {
             [outputFile]: {
-              plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+              plugins: [
+                '@graphql-codegen/typescript',
+                '@graphql-codegen/typescript-operations',
+                '@graphql-codegen/typescript-react-apollo',
+              ],
             },
           },
         },
@@ -202,7 +206,7 @@ describe('generate-and-save', () => {
         schema: `./tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts`,
         generates: {
           [filename]: {
-            plugins: ['typescript'],
+            plugins: ['@graphql-codegen/typescript'],
           },
         },
       },

@@ -6,6 +6,7 @@ export async function getPluginByName(
   pluginLoader: Types.PackageLoaderFn<CodegenPlugin>
 ): Promise<CodegenPlugin> {
   const possibleNames = [
+    name,
     `@graphql-codegen/${name}`,
     `@graphql-codegen/${name}-template`,
     `@graphql-codegen/${name}-plugin`,
@@ -14,7 +15,6 @@ export async function getPluginByName(
     `graphql-codegen-${name}-plugin`,
     `codegen-${name}`,
     `codegen-${name}-template`,
-    name,
   ];
   const possibleModules = possibleNames.concat(resolve(process.cwd(), name));
 
