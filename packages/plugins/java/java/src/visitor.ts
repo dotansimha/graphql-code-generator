@@ -93,12 +93,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
-      return indent(
-        `${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(
-          enumName,
-          node.name.value
-        )}")`
-      );
+      return indent(`${this.getEnumValue(enumName, node.name.value)}`);
     };
   }
 
@@ -107,25 +102,9 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     this._addMapImport = true;
     const enumName = this.convertName(node.name);
     const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';';
-    const enumCtor = indentMultiline(`
-public final String label;
- 
-${enumName}(String label) {
-  this.label = label;
-}`);
-    const valueOf = indentMultiline(`
-private static final Map<String, ${enumName}> BY_LABEL = new HashMap<>();
-  
-static {
-    for (${enumName} e : values()) {
-        BY_LABEL.put(e.label, e);
-    }
-}
+    const enumCtor = indentMultiline(``);
 
-public static ${enumName} valueOfLabel(String label) {
-  return BY_LABEL.get(label);
-}`);
-    const enumBlock = [enumValues, enumCtor, valueOf].join('\n');
+    const enumBlock = [enumValues, enumCtor].join('\n');
 
     return new JavaDeclarationBlock()
       .access('public')
@@ -223,7 +202,7 @@ public static ${enumName} valueOfLabel(String label) {
             `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
   this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
 } else {
-  this.${this.config.classMembersPrefix}${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
+  // TODO: Tzach - remove the args from the ctor
 }`,
             3
           );
