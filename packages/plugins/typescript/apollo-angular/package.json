@@ -1,6 +1,6 @@
 {
   "name": "@jbarrus/typescript-apollo-angular",
-  "version": "2.0.1-import-fix",
+  "version": "2.0.1-import-fixes2",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": {
     "type": "git",

@@ -225,7 +225,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
+    return this.config.documentMode === DocumentMode.external
+      ? `Operations.${documentVariableName}`
+      : documentVariableName;
   }
 
   private _operationSuffix(operationType: string): string {
