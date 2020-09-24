@@ -48,7 +48,7 @@ export interface TypeScriptFilesModulesPluginConfig {
 export const plugin: PluginFunction = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  { modulePathPrefix = '', relativeToCwd, prefix = '*/', type }: TypeScriptFilesModulesPluginConfig
+  { modulePathPrefix = '', relativeToCwd, prefix = '*/', type = "DocumentNode" }: TypeScriptFilesModulesPluginConfig
 ): Promise<string> => {
   const useRelative = relativeToCwd === true;
 
