@@ -153,7 +153,8 @@ export class TsVisitor<
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign =
-      !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+      !this.config.avoidOptionals.inputValue &&
+      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE || node.defaultValue !== undefined);
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
     return (

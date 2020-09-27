@@ -2259,6 +2259,24 @@ describe('TypeScript', () => {
       `);
       await validateTs(result);
     });
+
+    it('Should generate correctly types for inputs with default value - #4273', async () => {
+      const schema = buildSchema(
+        `input MyInput { a: String = "default", b: String! = "default", c: String, d: String! }`
+      );
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          a?: Maybe<Scalars['String']>;
+          b?: Scalars['String'];
+          c?: Maybe<Scalars['String']>;
+          d: Scalars['String'];
+        };
+    `);
+
+      validateTs(result);
+    });
   });
 
   describe('Enum', () => {
