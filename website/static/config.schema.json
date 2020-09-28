@@ -1685,6 +1685,10 @@
           "default": "",
           "type": "string"
         },
+        "vueCompositionApiImportFrom": {
+          "default": "",
+          "type": "string"
+        },
         "addDocBlocks": {
           "description": "Allows you to enable/disable the generation of docblocks in generated code.\nSome IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.",
           "default": true,

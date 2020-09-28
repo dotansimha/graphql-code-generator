@@ -85,6 +85,25 @@ describe('Vue Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import VueApollo and VueCompositionApi dependencies from configured packages', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          vueApolloComposableImportFrom: 'custom-apollo-composable-package',
+          vueCompositionApiImportFrom: 'custom-composition-api-package',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as VueApolloComposable from 'custom-apollo-composable-package';`);
+      expect(content.prepend).toContain(`import * as VueCompositionApi from 'custom-composition-api-package';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
