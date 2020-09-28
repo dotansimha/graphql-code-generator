@@ -184,4 +184,19 @@ async function test() {
       expect(output).toMatchSnapshot();
     });
   });
+
+  describe('issues', () => {
+    it('#4748 - integration with importDocumentNodeExternallyFrom', async () => {
+      const config = { importDocumentNodeExternallyFrom: './operations', documentMode: DocumentMode.external };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`import * as Operations from './operations';`);
+      expect(result.content).toContain(`(print(Operations.feed), variables));`);
+      expect(result.content).toContain(`(print(Operations.feed2), variables));`);
+      expect(result.content).toContain(`(print(Operations.feed3), variables));`);
+    });
+  });
 });
