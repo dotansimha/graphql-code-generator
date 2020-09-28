@@ -14,7 +14,7 @@
 
 ### `decoratorName`
 
-type: `Partial`
+type: `Partial_1`
 
 
 
