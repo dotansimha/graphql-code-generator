@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.17.10
+
+### Patch Changes
+
+- d2cde3d5: fixed isTypeOf resolvers signature
+- 89a6aa80: Fixes issues with typesSuffix and arguments type name
+- Updated dependencies [d2cde3d5]
+- Updated dependencies [89a6aa80]
+- Updated dependencies [f603b8f8]
+- Updated dependencies [7ad7a1ae]
+- Updated dependencies [da8bdd17]
+  - @graphql-codegen/visitor-plugin-common@1.17.15
+  - @graphql-codegen/typescript@1.17.10
+  - @graphql-codegen/plugin-helpers@1.17.9
+
 ## 1.17.9
 
 ### Patch Changes

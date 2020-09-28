@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 2.1.0
+
+### Minor Changes
+
+- a20d2f57: make composition api import configurable
+
+### Patch Changes
+
+- Updated dependencies [d2cde3d5]
+- Updated dependencies [89a6aa80]
+- Updated dependencies [f603b8f8]
+- Updated dependencies [da8bdd17]
+  - @graphql-codegen/visitor-plugin-common@1.17.15
+  - @graphql-codegen/plugin-helpers@1.17.9
+
 ## 2.0.0
 
 ### Major Changes

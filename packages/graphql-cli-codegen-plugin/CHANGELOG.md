@@ -1,6 +1,15 @@
 # @graphql-cli/codegen
 
+## 1.17.9
+
+### Patch Changes
+
+- Updated dependencies [e7d56e32]
+- Updated dependencies [398b094b]
+  - @graphql-codegen/cli@1.17.9
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
