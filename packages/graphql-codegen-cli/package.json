@@ -77,7 +77,7 @@
     "pascal-case": "^3.1.1",
     "request": "^2.88.2",
     "string-env-interpolation": "^1.0.1",
-    "ts-log": "^2.1.4",
+    "ts-log": "^2.2.3",
     "tslib": "~2.0.1",
     "upper-case": "^2.0.1",
     "valid-url": "^1.0.9",
