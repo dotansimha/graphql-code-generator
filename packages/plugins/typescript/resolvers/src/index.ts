@@ -176,7 +176,7 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => ${namespacedImportPrefix}Maybe<TTypes> | Promise<${namespacedImportPrefix}Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
