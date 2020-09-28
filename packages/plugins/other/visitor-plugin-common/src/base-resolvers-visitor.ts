@@ -919,23 +919,21 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+
       let argsType = hasArguments
-        ? `${
-            this.convertName(
-              parentName,
-              {
-                useTypesPrefix: true,
-                useTypesSuffix: true,
-              },
-              true
-            ) +
-            (this.config.addUnderscoreToArgsType ? '_' : '') +
-            this.convertName(node.name, {
-              useTypesPrefix: false,
-              useTypesSuffix: false,
-            }) +
-            'Args'
-          }`
+        ? this.convertName(
+            parentName +
+              (this.config.addUnderscoreToArgsType ? '_' : '') +
+              this.convertName(node.name, {
+                useTypesPrefix: false,
+                useTypesSuffix: false,
+              }) +
+              'Args',
+            {
+              useTypesPrefix: true,
+            },
+            true
+          )
         : null;
 
       if (argsType !== null) {
