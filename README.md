@@ -47,8 +47,9 @@ And create a config like below:
 ```yml
 schema: http://localhost:3000/graphql
 generates:
-  src/types.ts:
-    - typescript
+  ./src/types.d.ts:
+    plugins:
+      - typescript
 ```
 
 Then, run the code-generator using `graphql-codegen` command:
