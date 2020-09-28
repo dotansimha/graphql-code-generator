@@ -13,7 +13,8 @@ import { pascalCase } from 'pascal-case';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
   withCompositionFunctions: boolean;
-  vueApolloComposableImportFrom: string;
+  vueApolloComposableImportFrom: 'vue' | '@vue/apollo-composable' | string;
+  vueCompositionApiImportFrom: 'vue' | '@vue/apollo-composable' | string;
   addDocBlocks: boolean;
 }
 
@@ -44,6 +45,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     super(schema, fragments, rawConfig, {
       withCompositionFunctions: getConfigValue(rawConfig.withCompositionFunctions, true),
       vueApolloComposableImportFrom: getConfigValue(rawConfig.vueApolloComposableImportFrom, '@vue/apollo-composable'),
+      vueCompositionApiImportFrom: getConfigValue(rawConfig.vueCompositionApiImportFrom, '@vue/composition-api'),
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
     });
 
@@ -58,7 +60,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   }
 
   private get vueCompositionApiImport(): string {
-    return `import * as VueCompositionApi from '@vue/composition-api';`;
+    return `import * as VueCompositionApi from '${this.config.vueCompositionApiImportFrom}';`;
   }
 
   private get reactiveFunctionType(): string {
