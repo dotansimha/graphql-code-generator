@@ -295,7 +295,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
      */
-    hooks?: LifecycleHooksDefinition;
+    hooks?: Partial<LifecycleHooksDefinition>;
   }
 
   /* Output Builder Preset */
