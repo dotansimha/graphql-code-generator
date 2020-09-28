@@ -87,6 +87,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
+      expect(result.content).toContain(`(print(FeedDocument), variables));`);
       expect(output).toMatchSnapshot();
     });
 
@@ -192,11 +193,12 @@ async function test() {
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
+      const output = await validate(result, config, docs, schema, '');
 
-      expect(result.prepend).toContain(`import * as Operations from './operations';`);
-      expect(result.content).toContain(`(print(Operations.feed), variables));`);
-      expect(result.content).toContain(`(print(Operations.feed2), variables));`);
-      expect(result.content).toContain(`(print(Operations.feed3), variables));`);
+      expect(output).toContain(`import * as Operations from './operations';`);
+      expect(output).toContain(`(print(Operations.FeedDocument), variables));`);
+      expect(output).toContain(`(print(Operations.Feed2Document), variables));`);
+      expect(output).toContain(`(print(Operations.Feed3Document), variables));`);
     });
   });
 });
