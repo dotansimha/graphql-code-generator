@@ -496,10 +496,6 @@ export class ClientSideBaseVisitor<
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
-    if (!node.name || !node.name.value) {
-      return null;
-    }
-
     this._collectedOperations.push(node);
 
     const documentVariableName = this.convertName(node, {
@@ -520,13 +516,16 @@ export class ClientSideBaseVisitor<
 
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
-      documentString = `${
-        this.config.noExport ? '' : 'export'
-      } const ${documentVariableName}${this.getDocumentNodeSignature(
-        operationResultType,
-        operationVariablesTypes,
-        node
-      )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+      // only generate exports for named queries
+      if (documentVariableName !== '') {
+        documentString = `${
+          this.config.noExport ? '' : 'export'
+        } const ${documentVariableName}${this.getDocumentNodeSignature(
+          operationResultType,
+          operationVariablesTypes,
+          node
+        )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+      }
     }
 
     const additional = this.buildOperation(

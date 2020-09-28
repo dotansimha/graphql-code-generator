@@ -222,7 +222,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     operationType: string
   ): string {
     const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as { [key: string]: any };
-    const operationName = typeof node === 'string' ? node : node.name.value;
+    const operationName = typeof node === 'string' ? node : node.name ? node.name.value : '';
     return omitOperationSuffix
       ? ''
       : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase())
