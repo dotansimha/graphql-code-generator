@@ -15,7 +15,7 @@
     "jsonpath": "1.0.2",
     "mkdirp": "1.0.4",
     "ts-node": "9.0.0",
-    "typescript": "4.0.2",
+    "typescript": "4.0.3",
     "typescript-json-schema": "0.43.0"
   }
 }
