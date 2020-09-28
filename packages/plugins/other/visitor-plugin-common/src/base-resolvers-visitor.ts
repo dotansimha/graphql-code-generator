@@ -920,20 +920,22 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
       let argsType = hasArguments
-        ? `${this.convertName(
-            parentName,
-            {
-              useTypesPrefix: true,
-              useTypesSuffix: true,
-            },
-            true
-          ) +
+        ? `${
+            this.convertName(
+              parentName,
+              {
+                useTypesPrefix: true,
+                useTypesSuffix: true,
+              },
+              true
+            ) +
             (this.config.addUnderscoreToArgsType ? '_' : '') +
             this.convertName(node.name, {
               useTypesPrefix: false,
               useTypesSuffix: false,
             }) +
-            'Args'}`
+            'Args'
+          }`
         : null;
 
       if (argsType !== null) {
@@ -1017,7 +1019,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const fieldsContent = node.fields.map((f: any) => f(node.name));
 
     if (!isRootType) {
-      fieldsContent.push(indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType>${this.getPunctuation(declarationKind)}`));
+      fieldsContent.push(
+        indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`)
+      );
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)

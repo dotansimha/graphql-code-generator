@@ -74,7 +74,11 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => ?Types | Promise<?Types>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, Context = {}> = (
+  obj: T,
+  context: Context,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -120,7 +124,7 @@ export type UserResolvers<ContextType = any, ParentType = $ElementType<Resolvers
   id?: Resolver<$ElementType<ResolversTypes, 'Int'>, ParentType, ContextType>,
   name?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>,
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
 };
 
 export type Resolvers<ContextType = any> = {
