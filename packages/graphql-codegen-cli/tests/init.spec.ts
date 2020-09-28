@@ -1,3 +1,8 @@
+/* eslint-disable import/first */
+jest.mock('latest-version', () => {
+  return () => Promise.resolve('1.0.0');
+});
+
 import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
 import { init } from '../src/init';
@@ -294,7 +299,7 @@ describe('init', () => {
     expect(config.schema).toEqual(defaults.schema);
     expect(config.documents).toEqual(defaults.documents);
     expect(config.generates[defaults.output]).toBeDefined();
-    expect(logSpy.mock.calls[1][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
   });
 
   it('should have few default values', async () => {
@@ -334,7 +339,7 @@ describe('init', () => {
     expect(config.schema).toEqual(options.schema);
     expect(config.documents).toEqual(options.documents);
     expect(config.generates[options.output]).toBeDefined();
-    expect(logSpy.mock.calls[1][0]).toContain(`Config file generated at ${bold(options.config)}`);
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(options.config)}`);
   });
 
   it('custom setup', async () => {
@@ -392,7 +397,7 @@ describe('init', () => {
 
     // logs
     const welcomeMsg = logSpy.mock.calls[0][0];
-    const doneMsg = logSpy.mock.calls[1][0];
+    const doneMsg = logSpy.mock.calls[2][0];
 
     expect(welcomeMsg).toContain(`Welcome to ${bold('GraphQL Code Generator')}`);
     expect(doneMsg).toContain(`Config file generated at ${bold('codegen.yml')}`);
