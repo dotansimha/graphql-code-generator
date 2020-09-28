@@ -87,6 +87,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
+      expect(result.content).toContain(`(print(FeedDocument), variables));`);
       expect(output).toMatchSnapshot();
     });
 
@@ -182,6 +183,22 @@ async function test() {
       const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();
+    });
+  });
+
+  describe('issues', () => {
+    it('#4748 - integration with importDocumentNodeExternallyFrom', async () => {
+      const config = { importDocumentNodeExternallyFrom: './operations', documentMode: DocumentMode.external };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+      const output = await validate(result, config, docs, schema, '');
+
+      expect(output).toContain(`import * as Operations from './operations';`);
+      expect(output).toContain(`(print(Operations.FeedDocument), variables));`);
+      expect(output).toContain(`(print(Operations.Feed2Document), variables));`);
+      expect(output).toContain(`(print(Operations.Feed3Document), variables));`);
     });
   });
 });
