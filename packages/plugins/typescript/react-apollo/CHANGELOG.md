@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.0.7
+
+### Patch Changes
+
+- f603b8f8: Support unnamed queries in operation visitors
+- Updated dependencies [d2cde3d5]
+- Updated dependencies [89a6aa80]
+- Updated dependencies [f603b8f8]
+- Updated dependencies [da8bdd17]
+  - @graphql-codegen/visitor-plugin-common@1.17.15
+  - @graphql-codegen/plugin-helpers@1.17.9
+
 ## 2.0.6
 
 ### Patch Changes
