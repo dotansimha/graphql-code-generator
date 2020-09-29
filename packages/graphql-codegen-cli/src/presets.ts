@@ -18,7 +18,7 @@ export async function getPresetByName(
 
       return loaded as Types.OutputPreset;
     } catch (err) {
-      if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
+      if (err.code !== 'MODULE_NOT_FOUND') {
         throw new DetailedError(
           `Unable to load preset matching ${name}`,
           `
