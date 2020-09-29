@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.17.10
+
+### Patch Changes
+
+- 2900ee29: Check the error code instead of the error message to determine if a package wasn't found
+
 ## 1.17.9
 
 ### Patch Changes

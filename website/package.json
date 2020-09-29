@@ -33,7 +33,7 @@
     "@graphql-codegen/add": "2.0.1",
     "@graphql-codegen/c-sharp": "1.17.9",
     "@graphql-codegen/c-sharp-operations": "1.17.9",
-    "@graphql-codegen/cli": "1.17.9",
+    "@graphql-codegen/cli": "1.17.10",
     "@graphql-codegen/flow": "1.18.0",
     "@graphql-codegen/flow-operations": "1.18.0",
     "@graphql-codegen/flow-resolvers": "1.17.10",
