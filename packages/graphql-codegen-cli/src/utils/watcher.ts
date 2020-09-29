@@ -24,7 +24,7 @@ function emitWatching() {
 export const createWatcher = (
   initalContext: CodegenContext,
   onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
-) => {
+): Promise<void> => {
   debugLog(`[Watcher] Starting watcher...`);
   let config: Types.Config & { configFilePath?: string } = initalContext.getConfig();
   const files: string[] = [initalContext.filepath].filter(a => a);
@@ -88,15 +88,19 @@ export const createWatcher = (
         }
       });
 
+    let pollingInterval = 100;
+    if (typeof config.watchPolling === 'object') {
+      pollingInterval = config.watchPolling.interval;
+    }
+
     watcher = chokidar.watch(files, {
       persistent: true,
       ignoreInitial: true,
       followSymlinks: true,
       cwd: process.cwd(),
       disableGlobbing: false,
-      usePolling: true,
-      interval: 100,
-      binaryInterval: 300,
+      usePolling: !!config.watchPolling,
+      interval: pollingInterval,
       depth: 99,
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
@@ -141,7 +145,7 @@ export const createWatcher = (
   };
 
   // the promise never resolves to keep process running
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     executeCodegen(initalContext)
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)

@@ -50,6 +50,16 @@ If you wish, you can specify a custom list of files to watch, by adding a glob e
 Use this when you are loading your schema or documents from a single code file, that depends on other files internally, because codegen can't tell that you using those files automatically.   
 :::
 
+By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead in unusual cases where system support is unavailable.
+
+```yml
+watch: true
+# Supports a boolean toggle, or additional options to configure polling
+watchPolling: 
+  interval: 1000 # polling interval in ms (default: 100 when polling is enabled)
+```
+
+
 ### Monorepo and Yarn Workspaces
 
 If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) or [Lerna](https://github.com/lerna/lerna), we recommend to install the codegen in the root of your monorepo.

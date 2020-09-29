@@ -415,6 +415,18 @@ export namespace Types {
      */
     watch?: boolean | string | string[];
     /**
+     * @description Allows overriding the behavior of watch to use stat polling over native file watching support.
+     *
+     * You can specify a boolean to toggle polling on or off (default: false) or an interval option to configure polling.
+     *
+     * For more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode
+     */
+    watchPolling?:
+      | {
+          interval: number;
+        }
+      | boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
