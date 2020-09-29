@@ -54,9 +54,10 @@ By default, watch mode uses the system's native support to listen for file chang
 
 ```yml
 watch: true
-# Supports a boolean toggle, or additional options to configure polling
-watchPolling: 
-  interval: 1000 # polling interval in ms (default: 100 when polling is enabled)
+# Passed directly through to chokidar's file watch configuration
+watchConfig: 
+  usePolling: true
+  interval: 1000
 ```
 
 

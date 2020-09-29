@@ -88,19 +88,14 @@ export const createWatcher = (
         }
       });
 
-    let pollingInterval = 100;
-    if (typeof config.watchPolling === 'object') {
-      pollingInterval = config.watchPolling.interval;
-    }
-
     watcher = chokidar.watch(files, {
       persistent: true,
       ignoreInitial: true,
       followSymlinks: true,
       cwd: process.cwd(),
       disableGlobbing: false,
-      usePolling: !!config.watchPolling,
-      interval: pollingInterval,
+      usePolling: config.watchConfig?.usePolling,
+      interval: config.watchConfig?.interval,
       depth: 99,
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
