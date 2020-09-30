@@ -54,6 +54,8 @@ interface Type {
   isScalar: boolean;
 }
 
+const FIX_DECORATOR_SIGNATURE = `type FixDecorator<T> = T;`;
+
 export class TypeGraphQLVisitor<
   TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig,
   TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeGraphQLPluginParsedConfig
@@ -102,6 +104,14 @@ export class TypeGraphQLVisitor<
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
     });
+  }
+
+  public getWrapperDefinitions(): string[] {
+    return [...super.getWrapperDefinitions(), this.getFixDecoratorDefinition()];
+  }
+
+  public getFixDecoratorDefinition(): string {
+    return `${this.getExportPrefix()}${FIX_DECORATOR_SIGNATURE}`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
