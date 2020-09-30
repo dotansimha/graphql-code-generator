@@ -415,6 +415,17 @@ export namespace Types {
      */
     watch?: boolean | string | string[];
     /**
+     * @description Allows overriding the behavior of watch to use stat polling over native file watching support.
+     *
+     * Config fields have the same defaults and sematics as the identically named ones for chokidar.
+     *
+     * For more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode
+     */
+    watchConfig?: {
+      usePolling: boolean;
+      interval?: number;
+    };
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
