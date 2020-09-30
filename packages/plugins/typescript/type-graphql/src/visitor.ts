@@ -300,7 +300,7 @@ export class TypeGraphQLVisitor<
     ancestors?: TypeDefinitionNode[]
   ): string {
     const parentName = ancestors?.[ancestors.length - 1].name.value;
-    if (!this.hasTypeDecorators(parentName)) {
+    if (parent && !this.hasTypeDecorators(parentName)) {
       return super.InputValueDefinition(node, key, parent);
     }
 

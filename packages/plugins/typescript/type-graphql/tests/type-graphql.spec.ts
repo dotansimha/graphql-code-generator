@@ -432,6 +432,10 @@ describe('type-graphql', () => {
       input TypeGraphQLInputType {
         id: ID
       }
+
+      type Query {
+        test(mandatoryId: ID!, optionalId: ID): Boolean!
+      }
     `);
 
     const result = await plugin(
