@@ -4,6 +4,22 @@ import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('type-graphql', () => {
+  it('should expose Maybe', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.prepend).toBeSimilarStringTo('export type Maybe<T> =');
+  });
+
+  it('should expose Exact', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.prepend).toBeSimilarStringTo('export type Exact<');
+  });
+
   it('should generate type-graphql imports', async () => {
     const schema = buildSchema(/* GraphQL */ `
       scalar A
