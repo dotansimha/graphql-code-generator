@@ -396,4 +396,103 @@ describe('type-graphql', () => {
   };
   `);
   });
+
+  it('should only generate TypeGraphQL decorators for included types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      enum RegularEnum {
+        A
+        B
+      }
+
+      enum TypeGraphQLEnum {
+        A
+        B
+      }
+
+      interface IRegularInterfaceType {
+        id: ID
+      }
+
+      interface ITypeGraphQLInterfaceType {
+        id: ID
+      }
+
+      type RegularType {
+        id: ID
+      }
+
+      type TypeGraphQLType {
+        id: ID
+      }
+
+      input RegularInputType {
+        id: ID
+      }
+
+      input TypeGraphQLInputType {
+        id: ID
+      }
+    `);
+
+    const result = await plugin(
+      schema,
+      [],
+      { decorateTypes: ['TypeGraphQLEnum', 'ITypeGraphQLInterfaceType', 'TypeGraphQLType', 'TypeGraphQLInputType'] },
+      { outputFile: '' }
+    );
+
+    expect(result.content).not.toBeSimilarStringTo(
+      `TypeGraphQL.registerEnumType(RegularEnum, { name: 'RegularEnum' });`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `TypeGraphQL.registerEnumType(TypeGraphQlEnum, { name: 'TypeGraphQlEnum' });`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `export abstract class IRegularInterfaceType {
+        id?: Maybe<Scalars['ID']>;
+      };`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `
+      @TypeGraphQL.InterfaceType()
+      export abstract class ITypeGraphQlInterfaceType {
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+      }`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `export class RegularType {
+        __typename?: 'RegularType';
+
+        id?: Maybe<Scalars['ID']>;
+      };`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `@TypeGraphQL.ObjectType()
+      export class TypeGraphQlType {
+        __typename?: 'TypeGraphQLType';
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+      }`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `export class RegularInputType {
+        id?: Maybe<Scalars['ID']>;
+      };`
+    );
+
+    expect(result.content).toBeSimilarStringTo(
+      `@TypeGraphQL.InputType()
+      export class TypeGraphQlInputType {
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+      }`
+    );
+  });
 });

@@ -16,6 +16,7 @@ import {
   TypeNode,
   GraphQLEnumType,
   InputObjectTypeDefinitionNode,
+  TypeDefinitionNode,
 } from 'graphql';
 import {
   TypeScriptOperationVariablesToObject,
@@ -38,6 +39,7 @@ export interface TypeGraphQLPluginParsedConfig extends TypeScriptPluginParsedCon
   immutableTypes: boolean;
   maybeValue: string;
   decoratorName: DecoratorConfig;
+  decorateTypes?: string[];
 }
 
 const MAYBE_REGEX = /^Maybe<(.*?)>$/;
@@ -80,6 +82,7 @@ export class TypeGraphQLVisitor<
         input: 'InputType',
         ...(pluginConfig.decoratorName || {}),
       },
+      decorateTypes: pluginConfig.decorateTypes || undefined,
       ...(additionalConfig || {}),
     } as TParsedConfig);
     autoBind(this);
@@ -105,6 +108,10 @@ export class TypeGraphQLVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+      return super.ObjectTypeDefinition(node, key, parent);
+    }
+
     const typeDecorator = this.config.decoratorName.type;
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -125,6 +132,10 @@ export class TypeGraphQLVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+      return super.InputObjectTypeDefinition(node);
+    }
+
     const typeDecorator = this.config.decoratorName.input;
 
     let declarationBlock = this.getInputObjectDeclarationBlock(node);
@@ -164,6 +175,10 @@ export class TypeGraphQLVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+      return super.InterfaceTypeDefinition(node, key, parent);
+    }
+
     const interfaceDecorator = this.config.decoratorName.interface;
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
@@ -240,7 +255,18 @@ export class TypeGraphQLVisitor<
     return type.isArray || type.isNullable || type.isScalar ? typeString : `FixDecorator<${typeString}>`;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
+  FieldDefinition(
+    node: FieldDefinitionNode,
+    key?: number | string,
+    parent?: any,
+    path?: any,
+    ancestors?: TypeDefinitionNode[]
+  ): string {
+    const parentName = ancestors?.[ancestors.length - 1].name.value;
+    if (!this.hasTypeDecorators(parentName)) {
+      return super.FieldDefinition(node, key, parent);
+    }
+
     const fieldDecorator = this.config.decoratorName.field;
     let typeString = (node.type as any) as string;
     const comment = transformComment((node.description as any) as string, 1);
@@ -266,7 +292,18 @@ export class TypeGraphQLVisitor<
     );
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    key?: number | string,
+    parent?: any,
+    path?: any,
+    ancestors?: TypeDefinitionNode[]
+  ): string {
+    const parentName = ancestors?.[ancestors.length - 1].name.value;
+    if (!this.hasTypeDecorators(parentName)) {
+      return super.InputValueDefinition(node, key, parent);
+    }
+
     const fieldDecorator = this.config.decoratorName.field;
     const rawType = node.type as TypeNode | string;
     const comment = transformComment((node.description as any) as string, 1);
@@ -294,6 +331,10 @@ export class TypeGraphQLVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+      return super.EnumTypeDefinition(node);
+    }
+
     return (
       super.EnumTypeDefinition(node) +
       `TypeGraphQL.registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`
@@ -306,5 +347,13 @@ export class TypeGraphQLVisitor<
     }
 
     return str;
+  }
+
+  protected hasTypeDecorators(typeName: string) {
+    if (!this.config.decorateTypes) {
+      return true;
+    }
+
+    return this.config.decorateTypes.some(filter => filter === typeName);
   }
 }
