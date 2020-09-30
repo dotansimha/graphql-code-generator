@@ -51,6 +51,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   public getImports(): string {
     const allImports = [];
 
+    allImports.push(`java.util.List`);
     if (this._addHashMapImport) {
       allImports.push(`java.util.HashMap`);
     }
@@ -122,7 +123,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     const isArray =
       typeNode.kind === Kind.LIST_TYPE ||
       (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } = null;
+    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean };
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
@@ -180,48 +181,6 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
         }
       })
       .join('\n');
-    const ctorSet = inputValueArray
-      .map(arg => {
-        const typeToUse = this.resolveInputFieldType(arg.type);
-
-        if (typeToUse.isArray && !typeToUse.isScalar) {
-          this._addListImport = true;
-          return indentMultiline(
-            `if (args.get("${arg.name.value}") != null) {
-		this.${arg.name.value} = (${this.config.listType}<${typeToUse.baseType}>) args.get("${arg.name.value}");
-}`,
-            3
-          );
-        } else if (typeToUse.isScalar) {
-          return indent(
-            `this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`,
-            3
-          );
-        } else if (typeToUse.isEnum) {
-          return indentMultiline(
-            `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
-  this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
-} else {
-  // TODO: Tzach - remove the args from the ctor
-}`,
-            3
-          );
-        } else {
-          if (arg.name.value === 'interface') {
-            // forcing prefix of _ since interface is a keyword in JAVA
-            return indent(
-              `this._${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-              3
-            );
-          } else {
-            return indent(
-              `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-              3
-            );
-          }
-        }
-      })
-      .join('\n');
 
     const getters = inputValueArray
       .map(arg => {
@@ -267,11 +226,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     return `public static class ${name} {
 ${classMembers}
 
-  public ${name}(Map<String, Object> args) {
-    if (args != null) {
-${ctorSet}
-    }
-  }
+  public ${name}() {}
 
 ${getters}
 ${setters}
