@@ -30,7 +30,7 @@
     "@graphql-codegen/plugin-helpers": "^1.17.9",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
-    "open": "^7.2.1",
+    "open": "^7.3.0",
     "tslib": "~2.0.1"
   },
   "publishConfig": {
