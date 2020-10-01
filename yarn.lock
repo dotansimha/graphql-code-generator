@@ -2082,24 +2082,14 @@
     "@graphql-tools/utils" "6.2.2"
     tslib "~2.0.1"
 
-"@graphql-tools/github-loader@6.2.3":
-  version "6.2.3"
-  resolved "https://registry.npmjs.org/@graphql-tools/github-loader/-/github-loader-6.2.3.tgz#b7d944616278d182d1187bbcace3b6b967a0ca7a"
-  integrity sha512-YDMcT59Jt2PO9Ork397BOjMCMvjNVFm4LVic7Llnl+3t5MnsBHsJ8fWEOx/p10/LXIBW5xjtKonz6QeY9QfB7w==
+"@graphql-tools/github-loader@6.2.4", "@graphql-tools/github-loader@^6":
+  version "6.2.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/github-loader/-/github-loader-6.2.4.tgz#38520b5964594a578dbb4a7693a76938a79877a1"
+  integrity sha512-p4peplm/Ot989bCD4XATK5NEXX7l39BXNw+YKaqgoEoHopyQ142I2Zb0GJiMRjW9yXGqIlDjG4reZazleiprgQ==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.2.3"
-    "@graphql-tools/utils" "6.2.3"
+    "@graphql-tools/graphql-tag-pluck" "^6.2.4"
+    "@graphql-tools/utils" "^6.2.4"
     cross-fetch "3.0.6"
-    tslib "~2.0.1"
-
-"@graphql-tools/github-loader@^6":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/github-loader/-/github-loader-6.2.2.tgz#6d0bf63e5dd0319c47cfb0cd52e2b6632e7bb7da"
-  integrity sha512-tPUWfD8Dwc2YuiO8WtMg9rtsnq1tyfk8NEfjwxqe7cKwyEKRb8ybRURT/acwEroAgENc3Jwa3cgju+OJCbw4pQ==
-  dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.2.2"
-    "@graphql-tools/utils" "6.2.2"
-    cross-fetch "3.0.5"
     tslib "~2.0.1"
 
 "@graphql-tools/graphql-file-loader@6.2.4", "@graphql-tools/graphql-file-loader@^6", "@graphql-tools/graphql-file-loader@^6.0.0":
@@ -2134,6 +2124,19 @@
     "@babel/traverse" "7.11.5"
     "@babel/types" "7.11.5"
     "@graphql-tools/utils" "6.2.3"
+    tslib "~2.0.1"
+  optionalDependencies:
+    vue-template-compiler "^2.6.12"
+
+"@graphql-tools/graphql-tag-pluck@^6.2.4":
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.2.5.tgz#5c0c47362406a55aaf661c4af0209b542b8483dc"
+  integrity sha512-qvdIOTanBuKYLIMSYl9Tk+ej9dq00B4BqUnHqoCvYtSjD1n1UINGrqXgwMT+JXp66gUZWw8BU9Ke92mQ4UwTpg==
+  dependencies:
+    "@babel/parser" "7.11.5"
+    "@babel/traverse" "7.11.5"
+    "@babel/types" "7.11.5"
+    "@graphql-tools/utils" "^6.2.4"
     tslib "~2.0.1"
   optionalDependencies:
     vue-template-compiler "^2.6.12"
