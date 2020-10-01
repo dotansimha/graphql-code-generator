@@ -2026,22 +2026,13 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/git-loader@6.2.3":
-  version "6.2.3"
-  resolved "https://registry.npmjs.org/@graphql-tools/git-loader/-/git-loader-6.2.3.tgz#a2a217064201adf109139e7a0784ac23926894bf"
-  integrity sha512-kWUsQ6rhFTSC6NhfNUxLJsMwtop4Es8e0xLz8IKqboDl+a3gRqv4bdGUVKXndNj98G7bt6DZRqH7LTS0dPmZwQ==
+"@graphql-tools/git-loader@6.2.4", "@graphql-tools/git-loader@^6":
+  version "6.2.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.4.tgz#2502d48cb1253bde7df3f3e1dfd2bdcf7ff72b82"
+  integrity sha512-urMwWhhsZUKnX9MDHXbMUfZd568pWwj1Bx1O2M7N8I25GqZDW54Fzj9DudlVKE5M9twMtoEyBTH7sH4tscliqg==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.2.3"
-    "@graphql-tools/utils" "6.2.3"
-    tslib "~2.0.1"
-
-"@graphql-tools/git-loader@^6":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.2.tgz#6e2fe4e5853b90a3096dc88d9827f3d4b47c16d9"
-  integrity sha512-gfhQX5ZQ7nc4AAW6tT0s2d0o2lkYtMMhaeX4miPMGd+Hgej1phLrIeSSEAfrlSy0JWgARmmsoXGuz76wDZdhjw==
-  dependencies:
-    "@graphql-tools/graphql-tag-pluck" "6.2.2"
-    "@graphql-tools/utils" "6.2.2"
+    "@graphql-tools/graphql-tag-pluck" "^6.2.4"
+    "@graphql-tools/utils" "^6.2.4"
     tslib "~2.0.1"
 
 "@graphql-tools/github-loader@6.2.4", "@graphql-tools/github-loader@^6":
@@ -6379,13 +6370,6 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-cross-fetch@3.0.5:
-  version "3.0.5"
-  resolved "https://registry.npmjs.org/cross-fetch/-/cross-fetch-3.0.5.tgz#2739d2981892e7ab488a7ad03b92df2816e03f4c"
-  integrity sha512-FFLcLtraisj5eteosnX1gf01qYDCOc4fDy0+euOt8Kn9YBY2NtXL/pCoYPavw24NIQkQqm5ZOLsGD5Zzj0gyew==
-  dependencies:
-    node-fetch "2.6.0"
 
 cross-fetch@3.0.6, cross-fetch@^3.0.5:
   version "3.0.6"
@@ -12322,11 +12306,6 @@ node-fetch-npm@^2.0.2:
     json-parse-better-errors "^1.0.0"
     safe-buffer "^5.1.1"
 
-node-fetch@2.6.0, node-fetch@^2.1.2, node-fetch@^2.2.0:
-  version "2.6.0"
-  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
-
 node-fetch@2.6.1, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
@@ -12339,6 +12318,11 @@ node-fetch@^1.0.1:
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
+
+node-fetch@^2.1.2, node-fetch@^2.2.0:
+  version "2.6.0"
+  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
 node-forge@0.9.0:
   version "0.9.0"
