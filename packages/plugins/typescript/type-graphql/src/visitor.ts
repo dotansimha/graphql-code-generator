@@ -380,7 +380,11 @@ export class TypeGraphQLVisitor<
     return str;
   }
 
-  protected hasTypeDecorators(typeName: string) {
+  protected hasTypeDecorators(typeName: string): boolean {
+    if (GRAPHQL_TYPES.includes(typeName)) {
+      return false;
+    }
+
     if (!this.config.decorateTypes) {
       return true;
     }

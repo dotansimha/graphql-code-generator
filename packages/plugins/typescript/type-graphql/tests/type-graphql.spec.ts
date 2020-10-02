@@ -390,8 +390,7 @@ describe('type-graphql', () => {
   
   export type Query = {
     __typename?: 'Query';
-    @TypeGraphQL.Field(type => [Guest], { nullable: true })
-    guests!: Maybe<Array<Maybe<Guest>>>;
+    guests?: Maybe<Array<Maybe<Guest>>>;
   };
   `);
   });
