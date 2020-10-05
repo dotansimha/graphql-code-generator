@@ -50,7 +50,7 @@
     "@graphql-tools/git-loader": "6.2.4",
     "@graphql-tools/github-loader": "6.2.4",
     "@graphql-tools/graphql-file-loader": "6.2.4",
-    "@graphql-tools/json-file-loader": "6.2.3",
+    "@graphql-tools/json-file-loader": "6.2.4",
     "@graphql-tools/load": "6.2.4",
     "@graphql-tools/prisma-loader": "6.2.4",
     "@graphql-tools/url-loader": "6.2.4",
