@@ -15,12 +15,13 @@ import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { CodegenContext, ensureContext } from './config';
+import fs from 'fs';
 import path from 'path';
 // eslint-disable-next-line
 import { createRequire, createRequireFromPath } from 'module';
 
 const makeDefaultLoader = (from: string) => {
-  if (!path.extname(from)) {
+  if (fs.statSync(from).isDirectory()) {
     from = path.join(from, '__fake.js');
   }
 
