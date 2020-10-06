@@ -92,7 +92,7 @@
     "java-ast": "0.3.0",
     "jest": "26.4.2",
     "jest-docblock": "26.0.0",
-    "jest-junit": "11.1.0",
+    "jest-junit": "12.0.0",
     "lint-staged": "10.4.0",
     "lodash": "4.17.20",
     "npm": "6.14.8",
