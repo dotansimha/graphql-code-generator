@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "react-markdown": "4.3.1",
-    "monaco-yaml": "2.4.1",
+    "monaco-yaml": "2.5.1",
     "react-select": "3.1.0",
     "@graphql-codegen/add": "2.0.1",
     "@graphql-codegen/c-sharp": "1.17.9",
