@@ -69,6 +69,8 @@ function formatDecoratorOptions(options: DecoratorOptions, isFirstArgument = tru
   }
 }
 
+const FIX_DECORATOR_SIGNATURE = `type FixDecorator<T> = T;`;
+
 export class TypeGraphQLVisitor<
   TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig,
   TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeGraphQLPluginParsedConfig
@@ -118,7 +120,7 @@ export class TypeGraphQLVisitor<
       enumNameValueSeparator: ' =',
     });
   }
-
+  
   getDecoratorOptions(
     node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode | FieldDefinitionNode | InputObjectTypeDefinitionNode
   ): DecoratorOptions {
@@ -131,6 +133,14 @@ export class TypeGraphQLVisitor<
     }
 
     return decoratorOptions;
+  }
+
+  public getWrapperDefinitions(): string[] {
+    return [...super.getWrapperDefinitions(), this.getFixDecoratorDefinition()];
+  }
+
+  public getFixDecoratorDefinition(): string {
+    return `${this.getExportPrefix()}${FIX_DECORATOR_SIGNATURE}`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {

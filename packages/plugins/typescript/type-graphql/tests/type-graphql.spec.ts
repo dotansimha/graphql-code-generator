@@ -4,13 +4,38 @@ import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('type-graphql', () => {
-  it('should generate type-graphql imports', async () => {
+  it('should expose Maybe', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.prepend).toBeSimilarStringTo('export type Maybe<T> =');
+  });
+
+  it('should expose Exact', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.prepend).toBeSimilarStringTo('export type Exact<');
+  });
+
+  it('should expose FixDecorator', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result.prepend).toBeSimilarStringTo('export type FixDecorator<T> = T;');
+  });
+
+  it('should generate type-graphql import/export', async () => {
     const schema = buildSchema(/* GraphQL */ `
       scalar A
     `);
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
-    expect(result.prepend).toContainEqual(`import * as TypeGraphQL from 'type-graphql';`);
+    expect(result.prepend).toBeSimilarStringTo(`import * as TypeGraphQL from 'type-graphql';
+    export { TypeGraphQL };`);
   });
 
   it('should generate type-graphql enums', async () => {
