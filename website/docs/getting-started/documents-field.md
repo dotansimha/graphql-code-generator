@@ -113,7 +113,7 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig` (see below).
+> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/`query { ... }` ``). This can be configured with `pluckConfig` (see below).
 
 - ### String
 
