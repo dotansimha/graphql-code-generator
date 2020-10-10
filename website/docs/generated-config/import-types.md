@@ -11,7 +11,7 @@ generates:
 path/to/file.ts:
  preset: import-types
  presetConfig:
-   typesPath: types.ts
+   baseTypesPath: types.ts
  plugins:
    - typescript-operations
 ```
