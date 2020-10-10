@@ -421,4 +421,73 @@ describe('type-graphql', () => {
   };
   `);
   });
+
+  it('should put the GraphQL description in the TypeGraphQL options', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      """
+      Test type description
+      """
+      type Test implements ITest {
+        """
+        id field description
+        inside Test class
+        """
+        id: ID
+
+        """
+        mandatoryStr field description
+        """
+        mandatoryStr: String!
+      }
+
+      """
+      ITest interface description
+      """
+      interface ITest {
+        """
+        id field description
+        inside ITest interface
+        """
+        id: ID
+      }
+
+      """
+      TestInput input description
+      """
+      input TestInput {
+        id: ID
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.ObjectType({ description: 'Test type description', implements: ITest })
+      export class Test extends ITest {
+        __typename?: 'Test';
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { description: 'id field description\\ninside Test class', nullable: true })
+        id!: Maybe<Scalars['ID']>;
+        @TypeGraphQL.Field(type => String, { description: 'mandatoryStr field description' })
+        mandatoryStr!: Scalars['String'];
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.InterfaceType({ description: 'ITest interface description' })
+      export abstract class ITest {
+        
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { description: 'id field description\\ninside ITest interface', nullable: true })
+        id!: Maybe<Scalars['ID']>;
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.InputType({ description: 'TestInput input description' })
+      export class TestInput {
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+      }
+    `);
+  });
 });
