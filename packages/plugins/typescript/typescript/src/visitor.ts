@@ -203,7 +203,7 @@ export class TsVisitor<
             node.values
               .map(enumOption => {
                 const name = (enumOption.name as unknown) as string;
-                const enumValue: string | number = getValueFromConfig(name) || name;
+                const enumValue: string | number = getValueFromConfig(name) ?? name;
                 const comment = transformComment((enumOption.description as any) as string, 1);
 
                 return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
@@ -223,7 +223,7 @@ export class TsVisitor<
           node.values
             .map((enumOption, i) => {
               const valueFromConfig = getValueFromConfig((enumOption.name as unknown) as string);
-              const enumValue: string | number = valueFromConfig || i;
+              const enumValue: string | number = valueFromConfig ?? i;
               const comment = transformComment((enumOption.description as any) as string, 1);
 
               return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
@@ -253,7 +253,7 @@ export class TsVisitor<
               const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
               const comment = transformComment((enumOption.description as any) as string, 1);
               const name = (enumOption.name as unknown) as string;
-              const enumValue: string | number = getValueFromConfig(name) || name;
+              const enumValue: string | number = getValueFromConfig(name) ?? name;
 
               return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
             })

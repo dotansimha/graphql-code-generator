@@ -228,6 +228,42 @@ describe('TypeScript', () => {
       export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
 
+    it('Should work with enum as const combined with enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A_B_C
+          X_Y_Z
+          _TEST
+          My_Value
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          enumsAsConst: true,
+          enumValues: {
+            MyEnum: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export const MyEnum = {
+        ABC: 0,
+        XYZ: 'Foo',
+        Test: 'Bar',
+        MyValue: 1
+      } as const;
+      export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
