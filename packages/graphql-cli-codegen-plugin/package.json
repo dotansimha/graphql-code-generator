@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@graphql-codegen/cli": "1.17.10",
-    "@graphql-cli/common": "4.0.0"
+    "@graphql-cli/common": "4.1.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
