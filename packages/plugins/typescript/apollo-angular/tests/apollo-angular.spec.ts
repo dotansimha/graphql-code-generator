@@ -5,6 +5,7 @@ import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } fr
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('Apollo Angular', () => {
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -189,6 +190,27 @@ describe('Apollo Angular', () => {
       `);
       expect(content.content).not.toContain('@namedClient');
       await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('should allow importing operations from another file', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+          importDocumentNodeExternallyFrom: '@myproject/generated',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from '@myproject/generated';`);
+      expect(content.content).toContain('Operations.TestQuery');
+      expect(content.content).toContain('Operations.TestQueryVariables');
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
