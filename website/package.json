@@ -20,7 +20,7 @@
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
     "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react-dom": "16.14.0",
     "remark-code-import": "0.2.0",
     "remark-import-partial": "0.0.2",
     "ts-node": "9.0.0",
