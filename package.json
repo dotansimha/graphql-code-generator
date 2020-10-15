@@ -97,7 +97,7 @@
     "lodash": "4.17.20",
     "npm": "6.14.8",
     "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react-dom": "16.14.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.5",
     "ts-jest": "26.4.1",
