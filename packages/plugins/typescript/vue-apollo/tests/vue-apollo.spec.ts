@@ -424,8 +424,8 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
       expect(content.content).toBeSimilarStringTo(
-        `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-             return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedDocument, undefined, options);
+        `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, null> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, null>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, null>> = {}) {
+             return VueApolloComposable.useQuery<FeedQuery>(FeedDocument, undefined, options);
            }`
       );
 
@@ -471,8 +471,8 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-          return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedQueryDocument, undefined, options);
+        `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, null> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, null>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, null>> = {}) {
+          return VueApolloComposable.useQuery<FeedQuery>(FeedQueryDocument, undefined, options);
         }`
       );
 

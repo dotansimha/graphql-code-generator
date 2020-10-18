@@ -216,9 +216,9 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
                 operationHasNonNullableVariable ? '' : '?'
               }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, `
             : ''
-        }options: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> = {}) {
-            return VueApolloComposable.use${operationType}<${operationResultType}, ${
-          operationHasVariables ? operationVariablesTypes : 'undefined'
+        }options: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationHasVariables ? operationVariablesTypes: null}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationHasVariables ? operationVariablesTypes: null}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationHasVariables ? operationVariablesTypes: null}>> = {}) {
+            return VueApolloComposable.use${operationType}<${operationResultType}${
+          operationHasVariables ? ', ' + operationVariablesTypes : ''
         }>(${documentNodeVariable}, ${operationHasVariables ? 'variables' : 'undefined'}, options);
           }`;
       }
@@ -237,8 +237,8 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
               }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, `
             : ''
         }options: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>> = {}) {
-          return VueApolloComposable.use${operationType}<${operationResultType}, ${
-          operationHasVariables ? operationVariablesTypes : 'undefined'
+          return VueApolloComposable.use${operationType}<${operationResultType}${
+          operationHasVariables ? ', ' + operationVariablesTypes : ''
         }>(${documentNodeVariable}, ${operationHasVariables ? 'variables' : 'undefined'}, options);
         }`;
       }
