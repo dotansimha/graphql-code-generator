@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
 
-import { Renderer } from './utils/listr-renderer';
+import { Renderer, ErrorRenderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
@@ -72,7 +72,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   } else {
     listr = new Listr({
       ...commonListrOptions,
-      renderer: config.silent ? 'silent' : Renderer,
+      renderer: config.silent ? 'silent' : config.errorsOnly ? ErrorRenderer : Renderer,
       nonTTYRenderer: config.silent ? 'silent' : 'default',
       collapse: true,
       clearOutput: false,
