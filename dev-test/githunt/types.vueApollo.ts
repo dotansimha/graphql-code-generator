@@ -464,19 +464,11 @@ export const CurrentUserForProfileDocument = gql`
  */
 export function useCurrentUserForProfileQuery(
   options:
-    | VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
-    | VueCompositionApi.Ref<
-        VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
-      >
-    | ReactiveFunction<
-        VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
-      > = {}
+    | VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, null>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, null>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, null>> = {}
 ) {
-  return VueApolloComposable.useQuery<CurrentUserForProfileQuery, undefined>(
-    CurrentUserForProfileDocument,
-    undefined,
-    options
-  );
+  return VueApolloComposable.useQuery<CurrentUserForProfileQuery>(CurrentUserForProfileDocument, undefined, options);
 }
 export type CurrentUserForProfileQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   CurrentUserForProfileQuery,
