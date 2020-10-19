@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/kotlin",
-  "version": "1.17.8",
+  "version": "1.17.9",
   "description": "GraphQL Code Generator plugin for generating Kotlin code based on a GraphQL schema",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@graphql-codegen/java-common": "^1.17.8",
     "@graphql-codegen/plugin-helpers": "^1.17.8",
-    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.16",
     "tslib": "~2.0.1"
   },
   "peerDependencies": {

@@ -1,5 +1,16 @@
 # @graphql-codegen/import-types-preset
 
+## 1.18.0
+
+### Minor Changes
+
+- b04535c2: Adds support for `useTypeImports` when using the preset `import-types`
+
+### Patch Changes
+
+- Updated dependencies [92d8f876]
+  - @graphql-codegen/visitor-plugin-common@1.17.16
+
 ## 1.17.9
 
 ### Patch Changes

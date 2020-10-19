@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 2.1.1
+
+### Patch Changes
+
+- dc3a510b: Allow the vue-apollo plugin to write code to .tsx files
+- Updated dependencies [92d8f876]
+  - @graphql-codegen/visitor-plugin-common@1.17.16
+
 ## 2.1.0
 
 ### Minor Changes
