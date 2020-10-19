@@ -491,6 +491,24 @@ describe('TypeScript', () => {
       expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
     });
 
+    it('#4834 - enum members should be quoted if numeric', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MediaItemSizeEnum {
+          AXB
+          _1X2
+          _3X4
+        }
+      `);
+
+      const result = (await plugin(testSchema, [], {})) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`export enum MediaItemSizeEnum {
+        Axb = 'AXB',
+        '1X2' = '_1X2',
+        '3X4' = '_3X4'
+      }`);
+    });
+
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum MyEnum {
