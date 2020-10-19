@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.16
+
+### Patch Changes
+
+- 92d8f876: Fixed unquoted numeric enum identifiers
+
 ## 1.17.15
 
 ### Patch Changes

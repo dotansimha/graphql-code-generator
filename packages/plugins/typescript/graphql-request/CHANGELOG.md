@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 2.0.2
+
+### Patch Changes
+
+- 73442b73: fix grapqhl-request import types
+- Updated dependencies [92d8f876]
+  - @graphql-codegen/visitor-plugin-common@1.17.16
+
 ## 2.0.1
 
 ### Patch Changes

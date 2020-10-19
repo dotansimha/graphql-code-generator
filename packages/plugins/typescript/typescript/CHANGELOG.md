@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript
 
+## 1.17.11
+
+### Patch Changes
+
+- 077cf064: Fixed reading of enumValues config values
+- 92d8f876: Fixed unquoted numeric enum identifiers
+- Updated dependencies [92d8f876]
+  - @graphql-codegen/visitor-plugin-common@1.17.16
+
 ## 1.17.10
 
 ### Patch Changes

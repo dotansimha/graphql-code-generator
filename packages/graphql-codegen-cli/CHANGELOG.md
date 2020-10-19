@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 1.18.0
+
+### Minor Changes
+
+- ceb9fe0c: Changes watch mode to not use polling by default and adds configurable override
+
+### Patch Changes
+
+- 186962c9: Use `fs.statSync` when creating custom require instead of `path.extname`
+
 ## 1.17.10
 
 ### Patch Changes
