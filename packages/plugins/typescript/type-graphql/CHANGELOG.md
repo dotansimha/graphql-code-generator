@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-type-graphql
 
+## 1.18.1
+
+### Patch Changes
+
+- 4f89d402: Fixed decorators for nullable type-graphql array types
+
 ## 1.18.0
 
 ### Minor Changes

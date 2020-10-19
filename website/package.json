@@ -59,7 +59,7 @@
     "@graphql-codegen/typescript-react-apollo": "2.0.7",
     "@graphql-codegen/typescript-resolvers": "1.17.10",
     "@graphql-codegen/typescript-stencil-apollo": "1.17.8",
-    "@graphql-codegen/typescript-type-graphql": "1.18.0",
+    "@graphql-codegen/typescript-type-graphql": "1.18.1",
     "@graphql-codegen/typescript-urql": "2.0.2",
     "@graphql-codegen/typescript-vue-apollo": "2.1.1",
     "react-monaco-editor": "0.39.1",
