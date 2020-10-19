@@ -49,6 +49,7 @@ interface Type {
   isNullable: boolean;
   isArray: boolean;
   isScalar: boolean;
+  isItemsNullable: boolean;
 }
 
 function escapeString(str: string) {
@@ -79,6 +80,20 @@ function formatDecoratorOptions(options: DecoratorOptions, isFirstArgument = tru
 }
 
 const FIX_DECORATOR_SIGNATURE = `type FixDecorator<T> = T;`;
+
+function getTypeGraphQLNullableValue(type: Type): string | undefined {
+  if (type.isNullable) {
+    if (type.isItemsNullable) {
+      return "'itemsAndList'";
+    } else {
+      return 'true';
+    }
+  } else if (type.isItemsNullable) {
+    return "'items'";
+  }
+
+  return undefined;
+}
 
 export class TypeGraphQLVisitor<
   TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig,
@@ -136,7 +151,12 @@ export class TypeGraphQLVisitor<
   }
 
   getDecoratorOptions(
-    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode | FieldDefinitionNode | InputObjectTypeDefinitionNode
+    node:
+      | ObjectTypeDefinitionNode
+      | InterfaceTypeDefinitionNode
+      | FieldDefinitionNode
+      | InputObjectTypeDefinitionNode
+      | InputValueDefinitionNode
   ): DecoratorOptions {
     const decoratorOptions: DecoratorOptions = {};
 
@@ -299,6 +319,7 @@ export class TypeGraphQLVisitor<
         type: typeNode.name.value,
         isNullable: true,
         isArray: false,
+        isItemsNullable: false,
         isScalar: SCALARS.includes(typeNode.name.value),
       };
     } else if (typeNode.kind === 'NonNullType') {
@@ -318,8 +339,10 @@ export class TypeGraphQLVisitor<
     const nonNullableType = (rawType as string).replace(MAYBE_REGEX, '$1');
     const isArray = !!nonNullableType.match(ARRAY_REGEX);
     const singularType = nonNullableType.replace(ARRAY_REGEX, '$1');
-    const isScalar = !!singularType.match(SCALAR_REGEX);
-    const type = singularType.replace(SCALAR_REGEX, (match, type) => {
+    const isSingularTypeNullable = !!singularType.match(MAYBE_REGEX);
+    const singularNonNullableType = singularType.replace(MAYBE_REGEX, '$1');
+    const isScalar = !!singularNonNullableType.match(SCALAR_REGEX);
+    const type = singularNonNullableType.replace(SCALAR_REGEX, (match, type) => {
       if (TYPE_GRAPHQL_SCALARS.includes(type)) {
         // This is a TypeGraphQL type
         return `TypeGraphQL.${type}`;
@@ -334,7 +357,7 @@ export class TypeGraphQLVisitor<
       }
     });
 
-    return { type, isNullable, isArray, isScalar };
+    return { type, isNullable, isArray, isScalar, isItemsNullable: isArray && isSingularTypeNullable };
   }
 
   fixDecorator(type: Type, typeString: string) {
@@ -358,19 +381,17 @@ export class TypeGraphQLVisitor<
 
     const type = this.parseType(typeString);
 
-    const maybeType = type.type.match(MAYBE_REGEX);
-    const arrayType = `[${maybeType ? this.clearOptional(type.type) : type.type}]`;
-
     const decoratorOptions = this.getDecoratorOptions(node);
 
-    if (type.isNullable) {
-      decoratorOptions.nullable = 'true';
+    const nullableValue = getTypeGraphQLNullableValue(type);
+    if (nullableValue) {
+      decoratorOptions.nullable = nullableValue;
     }
 
     const decorator =
       '\n' +
       indent(
-        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? arrayType : type.type}${formatDecoratorOptions(
+        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${formatDecoratorOptions(
           decoratorOptions,
           false
         )})`
@@ -400,12 +421,20 @@ export class TypeGraphQLVisitor<
     const type = this.parseType(rawType);
     const typeGraphQLType =
       type.isScalar && TYPE_GRAPHQL_SCALARS.includes(type.type) ? `TypeGraphQL.${type.type}` : type.type;
+
+    const decoratorOptions = this.getDecoratorOptions(node);
+
+    const nullableValue = getTypeGraphQLNullableValue(type);
+    if (nullableValue) {
+      decoratorOptions.nullable = nullableValue;
+    }
+
     const decorator =
       '\n' +
       indent(
-        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType}${
-          type.isNullable ? ', { nullable: true }' : ''
-        })`
+        `@TypeGraphQL.${fieldDecorator}(type => ${
+          type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType
+        }${formatDecoratorOptions(decoratorOptions, false)})`
       ) +
       '\n';
 
