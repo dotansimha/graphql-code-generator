@@ -206,6 +206,7 @@ describe('Apollo Angular', () => {
         }
       );
 
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         'importDocumentNodeExternallyFrom must be provided if documentMode=external'
       );
@@ -225,6 +226,8 @@ describe('Apollo Angular', () => {
           outputFile: 'graphql.ts',
         }
       );
+
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         'importOperationTypesFrom only works correctly when left empty or set to "Operations"'
       );
@@ -243,6 +246,8 @@ describe('Apollo Angular', () => {
           outputFile: 'graphql.ts',
         }
       );
+
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
       );
@@ -262,6 +267,8 @@ describe('Apollo Angular', () => {
           outputFile: 'graphql.ts',
         }
       );
+
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
       );
