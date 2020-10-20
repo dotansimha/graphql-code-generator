@@ -443,6 +443,11 @@ export class ClientSideBaseVisitor<
               `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
             );
           } else {
+            if (!this.config.importDocumentNodeExternallyFrom) {
+              // eslint-disable-next-line no-console
+              console.warn('importDocumentNodeExternallyFrom must be provided if documentMode=external');
+            }
+
             this._imports.add(
               `import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`
             );

@@ -192,7 +192,82 @@ describe('Apollo Angular', () => {
       await validateTypeScript(content, modifiedSchema, docs, {});
     });
 
-    it('should allow importing operations from another file', async () => {
+    it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        'importDocumentNodeExternallyFrom must be provided if documentMode=external'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set to something other than "Operations"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Whatever',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(console.warn).toHaveBeenCalledWith(
+        'importOperationTypesFrom only works correctly when left empty or set to "Operations"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and documentMode is not "external"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and importDocumentNodeExternallyFrom is not', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('should allow importing operations and documents from another file', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
@@ -210,6 +285,7 @@ describe('Apollo Angular', () => {
       expect(content.prepend).toContain(`import * as Operations from '@myproject/generated';`);
       expect(content.content).toContain('Operations.TestQuery');
       expect(content.content).toContain('Operations.TestQueryVariables');
+      expect(content.content).toContain('Operations.TestDocument');
       await validateTypeScript(content, schema, docs, {});
     });
   });

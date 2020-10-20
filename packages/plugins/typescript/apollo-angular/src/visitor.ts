@@ -84,8 +84,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
         // eslint-disable-next-line no-console
         console.warn(
-          'apollo-angular "importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+          '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
         );
+      }
+
+      if (this.config.importOperationTypesFrom !== 'Operations') {
+        // eslint-disable-next-line no-console
+        console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
       }
     }
 
@@ -234,8 +239,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external
-      ? `Operations.${documentVariableName}`
+    return this.config.importOperationTypesFrom
+      ? `${this.config.importOperationTypesFrom}.${documentVariableName}`
       : documentVariableName;
   }
 
