@@ -296,7 +296,7 @@ This config should be used if `documentMode` is `external`. This has 2 usage:
 config:
   documentMode: external
   importOperationTypesFrom: 'Operations',
-  importDocumentNodeExternallyFrom: near-operation-file
+  importDocumentNodeExternallyFrom: '@myproject/generated'
 ```
 
 ```yml
