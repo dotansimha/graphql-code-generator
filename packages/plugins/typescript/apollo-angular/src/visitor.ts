@@ -37,7 +37,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   ApolloAngularRawPluginConfig,
   ApolloAngularPluginConfig
 > {
-  private _externalImportPrefix: string;
+  private _externalImportPrefix = '';
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -78,7 +78,16 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       documents
     );
 
-    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
+    if (this.config.importOperationTypesFrom) {
+      this._externalImportPrefix = `${this.config.importOperationTypesFrom}.`;
+
+      if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'apollo-angular "importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+        );
+      }
+    }
 
     autoBind(this);
   }
