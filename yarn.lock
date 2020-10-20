@@ -106,10 +106,10 @@
     "@algolia/logger-common" "4.3.1"
     "@algolia/requester-common" "4.3.1"
 
-"@apollo/client@3.2.4":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.2.4.tgz#d9a308a900bd9e7053348367f66f3962804ed385"
-  integrity sha512-lfsxKINoc11+g4NQFyKFuxszc/GlecHrxkJYvx/oWkdpscSU5bm/c+BwI/yvk1/E3yfbR7Afi9XIYrt212xrtA==
+"@apollo/client@3.2.5":
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.2.5.tgz#24e0a6faa1d231ab44807af237c6227410c75c4d"
+  integrity sha512-zpruxnFMz6K94gs2pqc3sidzFDbQpKT5D6P/J/I9s8ekHZ5eczgnRp6pqXC86Bh7+44j/btpmOT0kwiboyqTnA==
   dependencies:
     "@graphql-typed-document-node/core" "^3.0.0"
     "@types/zen-observable" "^0.8.0"
@@ -121,7 +121,6 @@
     optimism "^0.13.0"
     prop-types "^15.7.2"
     symbol-observable "^2.0.0"
-    terser "^5.2.0"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
     zen-observable "^0.8.14"
@@ -16657,7 +16656,7 @@ terser@^4.1.2, terser@^4.6.3:
     source-map "~0.6.1"
     source-map-support "~0.5.12"
 
-terser@^5.2.0, terser@^5.3.2:
+terser@^5.3.2:
   version "5.3.2"
   resolved "https://registry.npmjs.org/terser/-/terser-5.3.2.tgz#f4bea90eb92945b2a028ceef79181b9bb586e7af"
   integrity sha512-H67sydwBz5jCUA32ZRL319ULu+Su1cAoZnnc+lXnenGRYWyLE3Scgkt8mNoAsMx0h5kdo758zdoS0LG9rYZXDQ==
