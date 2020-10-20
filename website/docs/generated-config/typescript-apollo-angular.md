@@ -286,18 +286,11 @@ This is useful if you wish to generate base types from `typescript-operations` p
 type: `string`
 default: ``
 
-This config should be used if `documentMode` is `external`. This has 3 usage:
-- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document. You can
-also import operations from a separate file with `importOperationTypesFrom`.
+This config should be used if `documentMode` is `external`. This has 2 usage:
+- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document `importOperationTypesFrom` and `importOperationTypesFrom` must also be set as well.
 - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
 
 #### Usage Examples
-
-```yml
-config:
-  documentMode: external
-  importDocumentNodeExternallyFrom: path/to/document-node-file
-```
 
 ```yml
 config:
