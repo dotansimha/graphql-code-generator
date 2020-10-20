@@ -27,7 +27,7 @@
     "vscode-languageserver-types": "3.15.1"
   },
   "dependencies": {
-    "react-markdown": "4.3.1",
+    "react-markdown": "5.0.0",
     "monaco-yaml": "2.5.1",
     "react-select": "3.1.0",
     "@graphql-codegen/add": "2.0.1",
