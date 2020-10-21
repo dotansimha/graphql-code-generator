@@ -430,6 +430,10 @@ export namespace Types {
      */
     silent?: boolean;
     /**
+     * @description A flag to print only errors.
+     */
+    errorsOnly?: boolean;
+    /**
      * @description If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than require.
      */
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;

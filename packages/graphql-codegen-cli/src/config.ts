@@ -14,6 +14,7 @@ export type YamlCliFlags = {
   overwrite: boolean;
   project: string;
   silent: boolean;
+  errorsOnly: boolean;
 };
 
 function generateSearchPlaces(moduleName: string) {
@@ -151,6 +152,11 @@ export function buildOptions() {
       describe: 'Suppresses printing errors',
       type: 'boolean' as const,
     },
+    e: {
+      alias: 'errors-only',
+      describe: 'Only print errors',
+      type: 'boolean' as const,
+    },
     p: {
       alias: 'project',
       describe: 'Name of a project in GraphQL Config',
@@ -189,6 +195,10 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
 
   if (cliFlags.silent === true) {
     config.silent = cliFlags.silent;
+  }
+
+  if (cliFlags.errorsOnly === true) {
+    config.errorsOnly = cliFlags.errorsOnly;
   }
 
   if (cliFlags.project) {
