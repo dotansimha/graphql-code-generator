@@ -7,8 +7,8 @@ export namespace Types {
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
-    documents: Types.DocumentFile[];
-    config: { [key: string]: any };
+    documents?: Types.DocumentFile[];
+    config?: { [key: string]: any };
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
