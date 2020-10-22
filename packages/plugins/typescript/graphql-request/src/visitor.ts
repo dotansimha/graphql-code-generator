@@ -22,6 +22,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   RawGraphQLRequestPluginConfig,
   GraphQLRequestPluginConfig
 > {
+  private externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -49,6 +50,10 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
       this._additionalImports.push(`${typeImport} { Headers } from 'graphql-request/dist/types.dom';`);
     }
+    
+    this.externalImportPrefix = this.config.importOperationTypesFrom
+      ? `${this.config.importOperationTypesFrom}.`
+      : '';
   }
 
   protected buildOperation(
@@ -58,6 +63,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    operationResultType = this.externalImportPrefix + operationResultType;
+    operationVariablesTypes = this.externalImportPrefix + operationVariablesTypes;
     this._operationsToInclude.push({
       node,
       documentVariableName,
