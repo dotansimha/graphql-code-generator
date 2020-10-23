@@ -280,7 +280,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           .withBlock(
             '\n' +
               node.selectionSet.selections
-                .flatMap(opr => {
+                .map(opr => {
                   if (opr.kind !== Kind.FIELD) {
                     throw new Error(`Unknown kind; ${opr.kind} in OperationDefinitionNode`);
                   }
