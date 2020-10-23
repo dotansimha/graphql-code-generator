@@ -202,6 +202,134 @@ describe('C# Operations', () => {
         public static GraphQLRequest getFindMeGQL() {
       `);
     });
+    it('Should generate scalar response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          [JsonProperty("me")]
+          public int me { get; set; }
+        }
+      `);
+    });
+    it('Should generate nested response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: Person!
+        }
+        type Person {
+          name: String!
+          friendIds: [Int!]!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me {
+            friendIds
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          public class PersonSelection {
+            [JsonProperty("friendIds")]
+            public System.Collections.Generic.List<int> friendIds { get; set; }
+          }
+          [JsonProperty("me")]
+          public PersonSelection me { get; set; }
+        }
+      `);
+    });
+    it('Should generate variable class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMine($id: Int!) {
+          mine(id: $id)
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("id")]
+          public int id { get; set; }
+        }
+      `);
+    });
+    it('Should generate proxy method without input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.Threading.Tasks.Task<GraphQLResponse<Response>> SendQueryAsync(IGraphQLClient client, System.Threading.CancellationToken cancellationToken = default) {
+          return client.SendQueryAsync<Response>(Request(), cancellationToken);
+        }
+      `);
+    });
+    it('Should generate proxy method with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMine($id: Int!) {
+          mine(id: $id)
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.Threading.Tasks.Task<GraphQLResponse<Response>> SendQueryAsync(IGraphQLClient client, Variables variables, System.Threading.CancellationToken cancellationToken = default) {
+          return client.SendQueryAsync<Response>(Request(variables), cancellationToken);
+        }
+      `);
+    });
   });
 
   describe('Mutation', () => {
@@ -336,6 +464,136 @@ describe('C# Operations', () => {
       expect(result.content).toBeSimilarStringTo(`
         /// <remarks>This method is obsolete. Use Request instead.</remarks>
         public static GraphQLRequest getUpdateMeGQL() {
+      `);
+    });
+    it('Should generate scalar response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMe {
+          me
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          [JsonProperty("me")]
+          public int me { get; set; }
+        }
+      `);
+    });
+    it('Should generate nested response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          me: Person!
+        }
+        type Person {
+          name: String!
+          friendIds: [Int!]!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMe {
+          me {
+            friendIds
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          public class PersonSelection {
+            [JsonProperty("friendIds")]
+            public System.Collections.Generic.List<int> friendIds { get; set; }
+          }
+          [JsonProperty("me")]
+          public PersonSelection me { get; set; }
+        }
+      `);
+    });
+    it('Should generate variable class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMine($id: Int) {
+          mine(id: $id)
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("id")]
+          public int? id { get; set; }
+        }
+      `);
+    });
+    it('Should generate proxy method without variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          me: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMe {
+          me
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.Threading.Tasks.Task<GraphQLResponse<Response>> SendMutationAsync(IGraphQLClient client, System.Threading.CancellationToken cancellationToken = default) {
+          return client.SendMutationAsync<Response>(Request(), cancellationToken);
+        }
+      `);
+    });
+    it('Should generate proxy method with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          mine(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateMine($id: Int) {
+          mine(id: $id)
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.Threading.Tasks.Task<GraphQLResponse<Response>> SendMutationAsync(IGraphQLClient client, Variables variables, System.Threading.CancellationToken cancellationToken = default) {
+          return client.SendMutationAsync<Response>(Request(variables), cancellationToken);
+        }
       `);
     });
   });
@@ -474,6 +732,142 @@ describe('C# Operations', () => {
         public static GraphQLRequest getOnNotifyThemGQL() {
       `);
     });
+    it('Should generate scalar response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          you: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyYou {
+          you
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          [JsonProperty("you")]
+          public int you { get; set; }
+        }
+      `);
+    });
+    it('Should generate nested response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          you: Person!
+        }
+        type Person {
+          name: String!
+          friendIds: [Int!]!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyYou {
+          you {
+            friendIds
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          public class PersonSelection {
+            [JsonProperty("friendIds")]
+            public System.Collections.Generic.List<int> friendIds { get; set; }
+          }
+          [JsonProperty("you")]
+          public PersonSelection you { get; set; }
+        }
+      `);
+    });
+    it('Should generate variable class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          those(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyThose($id: Int!) {
+          those(id: $id)
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("id")]
+          public int id { get; set; }
+        }
+      `);
+    });
+    it('Should generate proxy method without variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          you: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyYou {
+          you
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client) {
+          return client.CreateSubscriptionStream<Response>(Request());
+        }
+
+        public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client, System.Action<System.Exception> exceptionHandler) {
+          return client.CreateSubscriptionStream<Response>(Request(), exceptionHandler);
+        }
+      `);
+    });
+    it('Should generate proxy method with input variables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          those(id: Int): Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onNotifyThose($id: Int!) {
+          those(id: $id)
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client, Variables variables) {
+          return client.CreateSubscriptionStream<Response>(Request(variables));
+        }
+
+        public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client, Variables variables, System.Action<System.Exception> exceptionHandler) {
+          return client.CreateSubscriptionStream<Response>(Request(variables), exceptionHandler);
+        }
+      `);
+    });
   });
 
   describe('Fragments', () => {
@@ -527,6 +921,69 @@ describe('C# Operations', () => {
             id
             username
           }"
+      `);
+    });
+
+    it('Should generate response class', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: Person!
+        }
+        type Person {
+          name: String!
+          age: Int!
+          friends: [Friend!]!
+        }
+        type Friend {
+          id: Int!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findMe {
+          me {
+            name
+            ...PersonFragment1
+            ...PersonFragment2
+          }
+        }
+        fragment PersonFragment1 on Person {
+          age
+        }
+        fragment PersonFragment2 on Person {
+          friends {
+            ...FriendFragment
+          }
+        }
+        fragment FriendFragment on Friend {
+          id
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Response {
+          public class PersonSelection {
+            [JsonProperty("name")]
+            public string name { get; set; }
+            [JsonProperty("age")]
+            public int age { get; set; }
+
+            public class FriendSelection {
+              [JsonProperty("id")]
+              public int id { get; set; }
+            }
+
+            [JsonProperty("friends")]
+            public System.Collections.Generic.List<FriendSelection> friends { get; set; }
+          }
+
+          [JsonProperty("me")]
+          public PersonSelection me { get; set; }
+        }
       `);
     });
   });
@@ -645,6 +1102,9 @@ describe('C# Operations', () => {
         }
         type Mutation {
           you: Int!
+          them: Int!
+        }
+        type Subscription {
           them: Int!
         }
       `);

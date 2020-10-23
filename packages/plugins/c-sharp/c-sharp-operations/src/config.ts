@@ -58,4 +58,15 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * ```
    */
   subscriptionSuffix?: string;
+  /**
+   * @description Allows to generate operation methods with class definitions for request/response parameters
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   typesafeOperation: true
+   * ```
+   */
+  typesafeOperation?: boolean;
 }
