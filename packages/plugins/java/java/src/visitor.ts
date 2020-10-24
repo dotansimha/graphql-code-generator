@@ -102,7 +102,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     this._addHashMapImport = true;
     this._addMapImport = true;
     const enumName = this.convertName(node.name);
-    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';';
+    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n');
     const enumCtor = indentMultiline(``);
 
     const enumBlock = [enumValues, enumCtor].join('\n');
