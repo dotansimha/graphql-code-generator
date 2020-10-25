@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 1.19.0
+
+### Minor Changes
+
+- 857c603c: Adds the --errors-only flag to the cli to print errors only.
+
+### Patch Changes
+
+- Updated dependencies [857c603c]
+  - @graphql-codegen/plugin-helpers@1.18.0
+
 ## 1.18.0
 
 ### Minor Changes
