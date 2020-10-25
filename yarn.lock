@@ -1577,85 +1577,6 @@
     "@francoischalifour/autocomplete-preset-algolia" "^1.0.0-alpha.28"
     algoliasearch "^4.0.0"
 
-"@docusaurus/core@2.0.0-alpha.65":
-  version "2.0.0-alpha.65"
-  resolved "https://registry.yarnpkg.com/@docusaurus/core/-/core-2.0.0-alpha.65.tgz#e99f19d602c6505febe3de68029fb7ca1225df4d"
-  integrity sha512-9kfgPugosRq5byuBC/tz3ZShPFT8xh8t08r5tsx8QujfH2ZpDXSQpLF0x/isbCY1O2NQsRZZCKGXQf5dE6NZfQ==
-  dependencies:
-    "@babel/core" "^7.9.0"
-    "@babel/plugin-proposal-nullish-coalescing-operator" "^7.10.1"
-    "@babel/plugin-proposal-optional-chaining" "^7.10.3"
-    "@babel/plugin-syntax-dynamic-import" "^7.8.3"
-    "@babel/plugin-transform-runtime" "^7.9.0"
-    "@babel/preset-env" "^7.9.0"
-    "@babel/preset-react" "^7.9.4"
-    "@babel/preset-typescript" "^7.9.0"
-    "@babel/runtime" "^7.9.2"
-    "@babel/runtime-corejs3" "^7.10.4"
-    "@docusaurus/types" "2.0.0-alpha.65"
-    "@docusaurus/utils" "2.0.0-alpha.65"
-    "@docusaurus/utils-validation" "2.0.0-alpha.65"
-    "@endiliey/static-site-generator-webpack-plugin" "^4.0.0"
-    "@hapi/joi" "^17.1.1"
-    "@svgr/webpack" "^5.4.0"
-    babel-loader "^8.1.0"
-    babel-plugin-dynamic-import-node "^2.3.0"
-    boxen "^4.2.0"
-    cache-loader "^4.1.0"
-    chalk "^3.0.0"
-    chokidar "^3.3.0"
-    commander "^4.0.1"
-    copy-webpack-plugin "^6.0.3"
-    core-js "^2.6.5"
-    css-loader "^3.4.2"
-    del "^5.1.0"
-    detect-port "^1.3.0"
-    eta "^1.1.1"
-    express "^4.17.1"
-    file-loader "^6.0.0"
-    fs-extra "^8.1.0"
-    globby "^10.0.1"
-    html-minifier-terser "^5.0.5"
-    html-tags "^3.1.0"
-    html-webpack-plugin "^4.0.4"
-    import-fresh "^3.2.1"
-    inquirer "^7.2.0"
-    is-root "^2.1.0"
-    leven "^3.1.0"
-    lodash "^4.5.2"
-    lodash.flatmap "^4.5.0"
-    lodash.has "^4.5.2"
-    lodash.isplainobject "^4.0.6"
-    lodash.isstring "^4.0.1"
-    mini-css-extract-plugin "^0.8.0"
-    nprogress "^0.2.0"
-    null-loader "^3.0.0"
-    optimize-css-assets-webpack-plugin "^5.0.3"
-    pnp-webpack-plugin "^1.6.4"
-    postcss-loader "^3.0.0"
-    postcss-preset-env "^6.7.0"
-    react-dev-utils "^10.2.1"
-    react-helmet "^6.0.0-beta"
-    react-loadable "^5.5.0"
-    react-loadable-ssr-addon "^0.3.0"
-    react-router "^5.1.2"
-    react-router-config "^5.1.1"
-    react-router-dom "^5.1.2"
-    resolve-pathname "^3.0.0"
-    semver "^6.3.0"
-    serve-handler "^6.1.3"
-    shelljs "^0.8.4"
-    std-env "^2.2.1"
-    terser-webpack-plugin "^4.1.0"
-    update-notifier "^4.1.0"
-    url-loader "^4.1.0"
-    wait-file "^1.0.5"
-    webpack "^4.44.1"
-    webpack-bundle-analyzer "^3.6.1"
-    webpack-dev-server "^3.11.0"
-    webpack-merge "^4.2.2"
-    webpackbar "^4.0.0"
-
 "@docusaurus/core@2.0.0-alpha.66":
   version "2.0.0-alpha.66"
   resolved "https://registry.yarnpkg.com/@docusaurus/core/-/core-2.0.0-alpha.66.tgz#4e1d4296322df48c331f6051a8c0d39d99bd356b"
@@ -1917,16 +1838,6 @@
     eta "^1.1.1"
     lodash "^4.17.19"
 
-"@docusaurus/types@2.0.0-alpha.65":
-  version "2.0.0-alpha.65"
-  resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.0.0-alpha.65.tgz#e47104e7198ee3708d4f0d82c9fcb1aa2c118ab5"
-  integrity sha512-a4pcWUfS4I4B6O9zi2yJ7JJvjo8lHqwC6+EdwW/XiJ9B40CkD9LGKYGR2EKIUFM2qrRCgSBrDukIK1oAROrkSQ==
-  dependencies:
-    "@types/webpack" "^4.41.0"
-    commander "^4.0.1"
-    querystring "0.2.0"
-    webpack-merge "^4.2.2"
-
 "@docusaurus/types@2.0.0-alpha.66":
   version "2.0.0-alpha.66"
   resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.0.0-alpha.66.tgz#192b166cb62fe85e0218f01e3c8272e2986b5086"
@@ -1937,15 +1848,6 @@
     querystring "0.2.0"
     webpack-merge "^4.2.2"
 
-"@docusaurus/utils-validation@2.0.0-alpha.65":
-  version "2.0.0-alpha.65"
-  resolved "https://registry.yarnpkg.com/@docusaurus/utils-validation/-/utils-validation-2.0.0-alpha.65.tgz#3d2b5b365938cacd35c224f4a661802978b5d6ff"
-  integrity sha512-BcWQx8zb+bbQEDzzUerl31Lehuv4axdoty2vSDqt4rhKiAn1lh/XyWYxxPN98r+roailHsl3WRYK0L+KJjTcKA==
-  dependencies:
-    "@docusaurus/utils" "2.0.0-alpha.65"
-    "@hapi/joi" "17.1.1"
-    chalk "^3.0.0"
-
 "@docusaurus/utils-validation@2.0.0-alpha.66":
   version "2.0.0-alpha.66"
   resolved "https://registry.yarnpkg.com/@docusaurus/utils-validation/-/utils-validation-2.0.0-alpha.66.tgz#e888332ceb3339fc7e06a2d1d0311f4346747598"
@@ -1954,18 +1856,6 @@
     "@docusaurus/utils" "2.0.0-alpha.66"
     "@hapi/joi" "17.1.1"
     chalk "^3.0.0"
-
-"@docusaurus/utils@2.0.0-alpha.65":
-  version "2.0.0-alpha.65"
-  resolved "https://registry.yarnpkg.com/@docusaurus/utils/-/utils-2.0.0-alpha.65.tgz#2dfc82da1be31d9632cca85d3b70628ef17dc149"
-  integrity sha512-Fz0rF/eMuzgMOJITF3R62H7fC2fDfTNtJ9wq5DBR050647OMEJnimKSilS1Rsckd7c72mfBdhg3Hdb9rrSrk8Q==
-  dependencies:
-    escape-string-regexp "^2.0.0"
-    fs-extra "^8.1.0"
-    gray-matter "^4.0.2"
-    lodash.camelcase "^4.3.0"
-    lodash.kebabcase "^4.1.1"
-    resolve-pathname "^3.0.0"
 
 "@docusaurus/utils@2.0.0-alpha.66":
   version "2.0.0-alpha.66"
@@ -10712,7 +10602,7 @@ js-tokens@^3.0.2:
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-yaml@3.14.0, js-yaml@^3.11.0, js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@^3.14.0, js-yaml@^3.6.1:
+js-yaml@3.14.0, js-yaml@^3.11.0, js-yaml@^3.12.0, js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@^3.14.0, js-yaml@^3.6.1:
   version "3.14.0"
   resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
   integrity sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
@@ -10830,11 +10720,6 @@ json5@^1.0.1:
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
-
-jsonc-parser@^2.2.1:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-2.3.0.tgz#7c7fc988ee1486d35734faaaa866fadb00fa91ee"
-  integrity sha512-b0EBt8SWFNnixVdvoR2ZtEGa9ZqLhbJnOjezn+WP+8kspFm+PFYDN8Z4Bc7pRlDjvuVcADSUkroIuTWWn/YiIA==
 
 jsonc-parser@^2.3.1:
   version "2.3.1"
@@ -12209,12 +12094,17 @@ monaco-editor@*:
   resolved "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.20.0.tgz#5d5009343a550124426cb4d965a4d27a348b4dea"
   integrity sha512-hkvf4EtPJRMQlPC3UbMoRs0vTAFAYdzFQ+gpMb8A+9znae1c43q8Mab9iVsgTcg/4PNiLGGn3SlDIa8uvK1FIQ==
 
-monaco-yaml@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/monaco-yaml/-/monaco-yaml-2.5.1.tgz#af9303a4aa6e3b94db62b8a8659362f31944590d"
-  integrity sha512-U+zIAcwnQzlUgy6vdzFdNf5PToFzuz099FxYmUxIeen9GTiq6XYDX9mmXSR31mMrgiSaU5a2bGEyG4p2fbW/7A==
+monaco-yaml@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.npmjs.org/monaco-yaml/-/monaco-yaml-2.4.1.tgz#f0d3384b1f10cc7af2b60e3a30b0adc6683b728a"
+  integrity sha512-Q0Yj6FNok97AslptS1OVfyX07rJ5uhOYsHKaVoU0usiUqeL7gzl6l8TL8W3QGdwCKm4WhfKpJ9bqPDtiQvCirg==
   dependencies:
-    yaml-language-server "^0.11.1"
+    js-yaml "^3.12.0"
+    vscode-json-languageservice "^3.4.11"
+    vscode-languageserver "^5.2.1"
+    vscode-uri "^2.1.1"
+  optionalDependencies:
+    prettier "^1.19.1"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -14187,17 +14077,12 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier@2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
-  integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
-
 prettier@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
   integrity sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
 
-prettier@^1.18.2:
+prettier@^1.18.2, prettier@^1.19.1:
   version "1.19.1"
   resolved "https://registry.npmjs.org/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
@@ -15212,15 +15097,6 @@ replaceall@^0.1.6:
   version "0.1.6"
   resolved "https://registry.npmjs.org/replaceall/-/replaceall-0.1.6.tgz#81d81ac7aeb72d7f5c4942adf2697a3220688d8e"
   integrity sha1-gdgax663LX9cSUKt8ml6MiBojY4=
-
-request-light@^0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/request-light/-/request-light-0.2.5.tgz#38a3da7b2e56f7af8cbba57e8a94930ee2380746"
-  integrity sha512-eBEh+GzJAftUnex6tcL6eV2JCifY0+sZMIUpUPOVXbs2nV5hla4ZMmO3icYKGuGVuQ2zHE9evh4OrRcH4iyYYw==
-  dependencies:
-    http-proxy-agent "^2.1.0"
-    https-proxy-agent "^2.2.3"
-    vscode-nls "^4.1.1"
 
 request-promise-core@1.1.3:
   version "1.1.3"
@@ -17678,10 +17554,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vscode-json-languageservice@^3.6.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/vscode-json-languageservice/-/vscode-json-languageservice-3.9.0.tgz#34b000fac9e04fc625f05abe06a2f977ac889a16"
-  integrity sha512-J+2rbntYRLNL9wk0D2iovWo1df3JwYM+5VvWl1omNUgw+XbgpNBwpFZ/TsC1pTCdmpu5RMatXooplXZ8l/Irsg==
+vscode-json-languageservice@^3.4.11:
+  version "3.9.1"
+  resolved "https://registry.npmjs.org/vscode-json-languageservice/-/vscode-json-languageservice-3.9.1.tgz#f72b581f8cd2bd9b47445ccf8b0ddcde6aba7483"
+  integrity sha512-oJkknkdCVitQ5XPSRa0weHjUxt8eSCptaL+MBQQlRsa6Nb8XnEY0S5wYnLUFHzEvKzwt01/LKk8LdOixWEXkNA==
   dependencies:
     jsonc-parser "^2.3.1"
     vscode-languageserver-textdocument "^1.0.1"
@@ -17729,11 +17605,6 @@ vscode-languageserver@^5.2.1:
   dependencies:
     vscode-languageserver-protocol "3.14.1"
     vscode-uri "^1.0.6"
-
-vscode-nls@^4.1.1, vscode-nls@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/vscode-nls/-/vscode-nls-4.1.2.tgz#ca8bf8bb82a0987b32801f9fddfdd2fb9fd3c167"
-  integrity sha512-7bOHxPsfyuCqmP+hZXscLhiHwe7CSuFE4hyhbs22xPIhQ4jv99FcR4eBzfYYVLP356HNFpdvz63FFb/xw6T4Iw==
 
 vscode-nls@^5.0.0:
   version "5.0.0"
@@ -18351,32 +18222,10 @@ yallist@^4.0.0:
   resolved "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yaml-ast-parser-custom-tags@0.0.43:
-  version "0.0.43"
-  resolved "https://registry.yarnpkg.com/yaml-ast-parser-custom-tags/-/yaml-ast-parser-custom-tags-0.0.43.tgz#46968145ce4e24cb03c3312057f0f141b93a7d02"
-  integrity sha512-R5063FF/JSAN6qXCmylwjt9PcDH6M0ExEme/nJBzLspc6FJDmHHIqM7xh2WfEmsTJqClF79A9VkXjkAqmZw9SQ==
-
 yaml-ast-parser@^0.0.43:
   version "0.0.43"
   resolved "https://registry.npmjs.org/yaml-ast-parser/-/yaml-ast-parser-0.0.43.tgz#e8a23e6fb4c38076ab92995c5dca33f3d3d7c9bb"
   integrity sha512-2PTINUwsRqSd+s8XxKaJWQlUuEMHJQyEuh2edBbW8KNJz0SJPwUSD2zRWqezFEdN7IzAgeuYHFUCF7o8zRdZ0A==
-
-yaml-language-server@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/yaml-language-server/-/yaml-language-server-0.11.1.tgz#4ddc72eb9a6dd7dc41f31af2a8f5c72cce456cc9"
-  integrity sha512-N3Tu3g4O6ZWV7W0LVsNk62DtKJDQkbnPZRDd7ntaAeEl8QkxL1vnMunI26uzDU4PwwG4tPJ8g/VRS6U+fVp/6A==
-  dependencies:
-    js-yaml "^3.13.1"
-    jsonc-parser "^2.2.1"
-    request-light "^0.2.4"
-    vscode-json-languageservice "^3.6.0"
-    vscode-languageserver "^5.2.1"
-    vscode-languageserver-types "^3.15.1"
-    vscode-nls "^4.1.2"
-    vscode-uri "^2.1.1"
-    yaml-ast-parser-custom-tags "0.0.43"
-  optionalDependencies:
-    prettier "2.0.5"
 
 yaml@^1.10.0, yaml@^1.7.2:
   version "1.10.0"

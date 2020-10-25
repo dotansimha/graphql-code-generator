@@ -53,8 +53,24 @@
             }
           ]
         },
+        "watchConfig": {
+          "description": "Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
+          "type": "object",
+          "properties": {
+            "usePolling": {
+              "type": "boolean"
+            },
+            "interval": {
+              "type": "number"
+            }
+          }
+        },
         "silent": {
           "description": "A flag to suppress printing errors when they occur.",
+          "type": "boolean"
+        },
+        "errorsOnly": {
+          "description": "A flag to print only errors.",
           "type": "boolean"
         },
         "pluginLoader": {
@@ -87,6 +103,16 @@
         "hooks": {
           "$ref": "#/definitions/Types.LifecycleHooksDefinition",
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
+        }
+      }
+    },
+    "ApolloClientHelpersConfig": {
+      "type": "object",
+      "properties": {
+        "useTypeImports": {
+          "type": "boolean",
+          "default": false,
+          "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option"
         }
       }
     },
@@ -628,7 +654,14 @@
       "type": "object",
       "properties": {
         "decoratorName": {
-          "$ref": "#/definitions/Partial_1"
+          "$ref": "#/definitions/Partial_1",
+          "description": "allow overriding of TypeGraphQL decorator types",
+          "default": "```json\n{\n  type: 'ObjectType',\n  interface: 'InterfaceType',\n  arguments: 'ArgsType',\n  field: 'Field',\n  input: 'InputType'\n}\n```",
+          "type": "Partial<DecoratorConfig>"
+        },
+        "decorateTypes": {
+          "description": "Speciies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.",
+          "type": "string[]"
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.",
@@ -2931,6 +2964,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "typescript-apollo-client-helpers"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/ApolloClientHelpersConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "add"
                 }
               }
@@ -4406,6 +4458,14 @@
           "type": "object",
           "additionalProperties": true,
           "properties": {
+            "typescript-apollo-client-helpers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ApolloClientHelpersConfig"
+            },
+            "@graphql-codegen/typescript-apollo-client-helpers": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ApolloClientHelpersConfig"
+            },
             "add": {
               "additionalProperties": false,
               "$ref": "#/definitions/AddPluginConfig"
@@ -4643,6 +4703,14 @@
         {
           "type": "string",
           "oneOf": [
+            {
+              "const": "typescript-apollo-client-helpers",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-apollo-client-helpers",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
+            },
             {
               "const": "add",
               "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/add\n\n=> Make sure to include \"@graphql-codegen/add\" in your package.json file and install your dependencies.\n\n"
