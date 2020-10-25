@@ -13,8 +13,8 @@ export const plugin: PluginFunction<ApolloClientHelpersConfig> = (
   results.push(generateTypePoliciesSignature(schema, config));
 
   return {
-    prepend: results.flatMap(r => r.prepend || []),
-    append: results.flatMap(r => r.append || []),
+    prepend: results.reduce((prev, r) => [...prev, ...(r.prepend || [])], []),
+    append: results.reduce((prev, r) => [...prev, ...(r.append || [])], []),
     content: results.map(r => r.content).join('\n'),
   };
 };
