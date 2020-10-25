@@ -2,4 +2,4 @@
 '@graphql-codegen/typescript-apollo-client-helpers': major
 ---
 
-Initial release for new plugin
+🚀🚀 NEW PLUGIN: Helpers for Apollo-Client v3 🚀🚀

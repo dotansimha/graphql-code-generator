@@ -14,7 +14,6 @@ describe('apollo-client-helpers', () => {
       }
     `);
     const result = mergeOutputs([await plugin(schema, [], {})]);
-
-    console.log(result);
+    expect(result).toMatchSnapshot();
   });
 });

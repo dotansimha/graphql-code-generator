@@ -14,7 +14,7 @@
     "file-loader": "6.1.0",
     "style-loader": "2.0.0",
     "monaco-editor-webpack-plugin": "1.9.0",
-    "@docusaurus/core": "2.0.0-alpha.65",
+    "@docusaurus/core": "2.0.0-alpha.66",
     "@docusaurus/preset-classic": "2.0.0-alpha.66",
     "@graphql-codegen/config-schema": "1.17.8",
     "babel-preset-minify": "0.5.1",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "react-markdown": "5.0.1",
-    "monaco-yaml": "2.5.1",
+    "monaco-yaml": "2.4.1",
     "react-select": "3.1.0",
     "@graphql-codegen/add": "2.0.1",
     "@graphql-codegen/c-sharp": "1.17.9",
@@ -62,6 +62,7 @@
     "@graphql-codegen/typescript-type-graphql": "1.18.1",
     "@graphql-codegen/typescript-urql": "2.0.2",
     "@graphql-codegen/typescript-vue-apollo": "2.1.1",
+    "@graphql-codegen/typescript-apollo-client-helpers": "0.0.1",
     "react-monaco-editor": "0.39.1",
     "js-yaml": "3.14.0"
   },

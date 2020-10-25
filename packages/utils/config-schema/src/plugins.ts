@@ -2,6 +2,11 @@ export type PluginConfig = { file: string; identifier: string; pluginName: strin
 
 export const relevantConfigurations: PluginConfig[] = [
   {
+    file: '../../plugins/typescript/apollo-client-helpers/src/config.ts',
+    identifier: 'ApolloClientHelpersConfig',
+    pluginName: 'typescript-apollo-client-helpers',
+  },
+  {
     file: '../../plugins/other/add/src/config.ts',
     identifier: 'AddPluginConfig',
     pluginName: 'add',
