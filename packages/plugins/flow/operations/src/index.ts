@@ -35,7 +35,7 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   });
 
   return {
-    prepend: [''],
+    prepend: ['// @flow\n'],
     content: [prefix, ...visitorResult.definitions].join('\n'),
   };
 };
