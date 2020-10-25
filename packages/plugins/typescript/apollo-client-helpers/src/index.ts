@@ -58,13 +58,15 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
     return prev;
   }, {} as Record<string, string>);
 
-  const rootContent = `export type TypedTypePolicies = {${Object.keys(typedTypePolicies)
+  const rootContent = `export type TypedTypePolicies = TypePolicies & {${Object.keys(typedTypePolicies)
     .map(typeName => `\n\t${typeName}?: ${typedTypePolicies[typeName]}`)
     .join(',')}\n};`;
 
   return {
     prepend: [
-      `import ${config.useTypeImports ? 'type ' : ''}{ FieldPolicy, FieldReadFunction } from '@apollo/client/cache';`,
+      `import ${
+        config.useTypeImports ? 'type ' : ''
+      }{ FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';`,
     ],
     content: [...perTypePolicies, rootContent].join('\n'),
   };
