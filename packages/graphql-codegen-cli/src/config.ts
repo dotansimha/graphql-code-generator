@@ -4,6 +4,7 @@ import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
+// eslint-disable-next-line
 import { createRequire, createRequireFromPath } from 'module';
 import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments } from './load';
