@@ -113,6 +113,16 @@
           "type": "boolean",
           "default": false,
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option"
+        },
+        "requireKeyFields": {
+          "type": "boolean",
+          "default": false,
+          "description": "Remove optional sign from all `keyFields` fields."
+        },
+        "requirePoliciesForAllTypes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Remove optional sign from all generated keys of the root TypePolicy."
         }
       }
     },
@@ -2667,7 +2677,7 @@
         },
         "apolloClientVersion": {
           "description": "Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.",
-          "default": 2,
+          "default": 3,
           "enum": [2, 3],
           "type": "number"
         },

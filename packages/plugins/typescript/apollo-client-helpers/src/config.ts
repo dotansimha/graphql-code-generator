@@ -13,4 +13,20 @@ export type ApolloClientHelpersConfig = {
    * ```
    */
   useTypeImports?: boolean;
+  /**
+   * @name requireKeyFields
+   * @type boolean
+   * @default false
+   * @description Remove optional sign from all `keyFields` fields.
+   *
+   */
+  requireKeyFields?: boolean;
+  /**
+   * @name requirePoliciesForAllTypes
+   * @type boolean
+   * @default false
+   * @description Remove optional sign from all generated keys of the root TypePolicy.
+   *
+   */
+  requirePoliciesForAllTypes?: boolean;
 };
