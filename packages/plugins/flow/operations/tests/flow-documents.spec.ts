@@ -205,7 +205,7 @@ describe('Flow Operations Plugin', () => {
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-        "// @flow 
+        "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
@@ -570,7 +570,7 @@ describe('Flow Operations Plugin', () => {
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-        "// @flow 
+        "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
@@ -620,7 +620,7 @@ describe('Flow Operations Plugin', () => {
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-        "// @flow 
+        "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
@@ -673,7 +673,7 @@ describe('Flow Operations Plugin', () => {
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-        "// @flow 
+        "// @flow
 
 
         export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
