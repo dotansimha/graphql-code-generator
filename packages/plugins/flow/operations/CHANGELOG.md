@@ -1,5 +1,13 @@
 # @graphql-codegen/flow-operations
 
+## 1.18.1
+
+### Patch Changes
+
+- bc5e4c83: Consolidate `// @flow` declarations to avoid duplicates
+- Updated dependencies [bc5e4c83]
+  - @graphql-codegen/flow@1.18.1
+
 ## 1.18.0
 
 ### Minor Changes
