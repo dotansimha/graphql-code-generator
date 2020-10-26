@@ -103,7 +103,9 @@ describe('Fragment Matcher Plugin', () => {
       const content = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.json',
         }
@@ -118,7 +120,9 @@ describe('Fragment Matcher Plugin', () => {
       const jsContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.js',
         }
@@ -126,7 +130,9 @@ describe('Fragment Matcher Plugin', () => {
       const jsxContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.jsx',
         }
@@ -144,6 +150,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           module: 'commonjs',
         },
         {
@@ -154,6 +161,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           module: 'commonjs',
         },
         {
@@ -174,7 +182,9 @@ describe('Fragment Matcher Plugin', () => {
       const tsContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.ts',
         }
@@ -182,7 +192,9 @@ describe('Fragment Matcher Plugin', () => {
       const tsxContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.tsx',
         }
@@ -278,6 +290,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           useExplicitTyping: true,
         },
         {
@@ -288,6 +301,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           useExplicitTyping: true,
         },
         {
@@ -372,6 +386,7 @@ describe('Fragment Matcher Plugin', () => {
       ],
       config: {
         federation: true,
+        apolloClientVersion: 2,
       },
       pluginMap: {
         'fragment-matcher': {
@@ -418,6 +433,7 @@ describe('Fragment Matcher Plugin', () => {
         },
       ],
       config: {
+        apolloClientVersion: 2,
         federation: true,
       },
       pluginMap: {
