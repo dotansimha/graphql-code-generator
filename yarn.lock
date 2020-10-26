@@ -1991,12 +1991,12 @@
     "@graphql-tools/load" "6.2.4"
     tslib "2.0.2"
 
-"@graphql-tools/apollo-engine-loader@6.2.4", "@graphql-tools/apollo-engine-loader@^6":
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.2.4.tgz#bed59ccac654e36a62f736e035697e2e5de152ba"
-  integrity sha512-aYDyEs7Q0J0og7E/B7zj2+62Jf8QerkwV+hQ5wwGLSQlYnLDTB+hMNBG/3ga9qMQ5UVQ+d45ckXKN9nOl6LX7g==
+"@graphql-tools/apollo-engine-loader@6.2.5", "@graphql-tools/apollo-engine-loader@^6":
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-6.2.5.tgz#b9e65744f522bb9f6ca50651e5622820c4f059a8"
+  integrity sha512-CE4uef6PyxtSG+7OnLklIr2BZZDgjO89ZXK47EKdY7jQy/BQD/9o+8SxPsgiBc+2NsDJH2I6P/nqoaJMOEat6g==
   dependencies:
-    "@graphql-tools/utils" "^6.2.4"
+    "@graphql-tools/utils" "^7.0.0"
     cross-fetch "3.0.6"
     tslib "~2.0.1"
 
