@@ -46,7 +46,9 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
       return {
         ...prev,
         [typeName]: `{
-\t\tkeyFields?: false | ${keySpecifierVarName} | (() => undefined | ${keySpecifierVarName}),
+\t\tkeyFields${
+          config.requireKeyFields ? '' : '?'
+        }: false | ${keySpecifierVarName} | (() => undefined | ${keySpecifierVarName}),
 \t\tqueryType?: true,
 \t\tmutationType?: true,
 \t\tsubscriptionType?: true,
@@ -58,8 +60,18 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
     return prev;
   }, {} as Record<string, string>);
 
+  const rootTypes = [
+    schema.getQueryType()?.name,
+    schema.getMutationType()?.name,
+    schema.getSubscriptionType()?.name,
+  ].filter(Boolean);
+
   const rootContent = `export type TypedTypePolicies = TypePolicies & {${Object.keys(typedTypePolicies)
-    .map(typeName => `\n\t${typeName}?: ${typedTypePolicies[typeName]}`)
+    .map(typeName => {
+      const nonOptional = config.requirePoliciesForAllTypes && !rootTypes.includes(typeName);
+
+      return `\n\t${typeName}${nonOptional ? '' : '?'}: ${typedTypePolicies[typeName]}`;
+    })
     .join(',')}\n};`;
 
   return {
@@ -79,6 +91,6 @@ export const validate: PluginValidateFn<ApolloClientHelpersConfig> = async (
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-    throw new Error(`Plugin "typed-document-node" requires extension to be ".ts" or ".tsx"!`);
+    throw new Error(`Plugin "apollo-client-helpers" requires extension to be ".ts" or ".tsx"!`);
   }
 };
