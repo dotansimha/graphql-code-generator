@@ -60,6 +60,10 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   }
 
   private get vueCompositionApiImport(): string {
+    if (this.config.useTypeImports) {
+      return `import type * as VueCompositionApi from '${this.config.vueCompositionApiImportFrom}';`;
+    }
+
     return `import * as VueCompositionApi from '${this.config.vueCompositionApiImportFrom}';`;
   }
 
