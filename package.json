@@ -47,7 +47,7 @@
     "@changesets/cli": "2.11.1",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
     "@graphql-tools/code-file-loader": "6.2.4",
-    "@graphql-tools/git-loader": "6.2.4",
+    "@graphql-tools/git-loader": "6.2.5",
     "@graphql-tools/github-loader": "6.2.5",
     "@graphql-tools/graphql-file-loader": "6.2.5",
     "@graphql-tools/json-file-loader": "6.2.4",

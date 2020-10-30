@@ -2033,13 +2033,13 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/git-loader@6.2.4", "@graphql-tools/git-loader@^6":
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.4.tgz#2502d48cb1253bde7df3f3e1dfd2bdcf7ff72b82"
-  integrity sha512-urMwWhhsZUKnX9MDHXbMUfZd568pWwj1Bx1O2M7N8I25GqZDW54Fzj9DudlVKE5M9twMtoEyBTH7sH4tscliqg==
+"@graphql-tools/git-loader@6.2.5", "@graphql-tools/git-loader@^6":
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-6.2.5.tgz#a4b3e8826964e1752a3d3a5a33a44b70b9694353"
+  integrity sha512-WOQDSzazyPZMZUvymHBv5oZ80/mS7tc8XUNy2GmU5My8YRny5zu4fEgP4vQeFcD1trG3uoHUaJPGF7Mmvp6Yhg==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "^6.2.4"
-    "@graphql-tools/utils" "^6.2.4"
+    "@graphql-tools/graphql-tag-pluck" "^6.2.6"
+    "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
 "@graphql-tools/github-loader@6.2.5", "@graphql-tools/github-loader@^6":
