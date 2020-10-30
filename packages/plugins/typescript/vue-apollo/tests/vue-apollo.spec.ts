@@ -744,14 +744,13 @@ query MyFeed {
  * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFeedQuery(
- *   {
- *      id: // value for 'id'
- *   }
- * );
+ * const { result, loading, error } = useFeedQuery({
+ *   id: // value for 'id'
+ * });
  */`;
 
     const subscriptionDocBlockSnapshot = `/**
@@ -761,14 +760,13 @@ query MyFeed {
  * When your component renders, \`useCommentAddedSubscription\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the subscription
  * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
  *
  * @example
- * const { result, loading, error } = useCommentAddedSubscription(
- *   {
- *      name: // value for 'name'
- *   }
- * );
+ * const { result, loading, error } = useCommentAddedSubscription({
+ *   name: // value for 'name'
+ * });
  */`;
 
     const mutationDocBlockSnapshot = `/**
@@ -784,7 +782,7 @@ query MyFeed {
  * @example
  * const { mutate, loading, error, onDone } = useSubmitRepositoryMutation({
  *   variables: {
- *      name: // value for 'name'
+ *     name: // value for 'name'
  *   },
  * });
  */`;

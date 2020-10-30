@@ -90,11 +90,23 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     operationName: string,
     operationType: string
   ): string {
-    const variableString = node.variableDefinitions?.reduce((accumulator, currentDefinition) => {
+    const operationHasVariables = node.variableDefinitions?.length > 0;
+
+    const exampleVariablesString = node.variableDefinitions?.reduce((accumulator, currentDefinition) => {
       const name = currentDefinition.variable.name.value;
 
-      return `${accumulator}\n *      ${name}: // value for '${name}'`;
+      return `${accumulator}\n *   ${operationType === 'Mutation' ? '  ' : ''}${name}: // value for '${name}'`;
     }, '');
+
+    const exampleArguments = operationHasVariables
+      ? operationType === 'Mutation'
+        ? `{
+ *   variables: {${exampleVariablesString}
+ *   },
+ * }`
+        : `{${exampleVariablesString}
+ * }`
+      : '';
 
     const queryDescription = `
  * To run a query within a Vue component, call \`use${operationName}\` and pass it any options that fit your needs.
@@ -102,10 +114,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  * you can use to render your UI.`;
 
     const queryExample = `
- * const { result, loading, error } = use${operationName}(
- *   {${variableString}
- *   }
- * );`;
+ * const { result, loading, error } = use${operationName}(${exampleArguments});`;
 
     const mutationDescription = `
  * To run a mutation, you first call \`use${operationName}\` within a Vue component and pass it any options that fit your needs.
@@ -114,16 +123,18 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return`;
 
     const mutationExample = `
- * const { mutate, loading, error, onDone } = use${operationName}({
- *   variables: {${variableString}
- *   },
- * });`;
+ * const { mutate, loading, error, onDone } = use${operationName}(${exampleArguments});`;
 
     return `
 /**
  * __use${operationName}__
  *${operationType === 'Mutation' ? mutationDescription : queryDescription}
- *
+ *${
+   operationHasVariables && operationType !== 'Mutation'
+     ? `
+ * @param variables that will be passed into the ${operationType.toLowerCase()}`
+     : ''
+ }
  * @param options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/${
       operationType === 'Mutation' ? 'mutation' : operationType === 'Subscription' ? 'subscription' : 'query'
     }.html#options;
