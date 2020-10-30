@@ -443,7 +443,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-             return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedDocument, undefined, options);
+             return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, {}, options);
            }`
       );
 
@@ -490,7 +490,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-          return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedQueryDocument, undefined, options);
+          return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, {}, options);
         }`
       );
 
