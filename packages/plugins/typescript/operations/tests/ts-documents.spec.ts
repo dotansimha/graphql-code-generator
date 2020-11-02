@@ -4467,8 +4467,6 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      console.log(content);
-
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
         showAddress: Scalars['Boolean'];
