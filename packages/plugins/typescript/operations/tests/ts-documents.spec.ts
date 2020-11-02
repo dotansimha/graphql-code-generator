@@ -4434,6 +4434,49 @@ function test(q: GetEntityBrandDataQuery): void {
         export type UserQuery = { user: Pick<User, 'id' | 'login'> };
       `);
     });
+
+    it('#3836 - @skip, @include should result in optional fields', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          address: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showAddress: Boolean!) {
+          user {
+            name
+            address @include(if: $showAddress)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      console.log(content);
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQueryVariables = Exact<{
+        showAddress: Scalars['Boolean'];
+      }>;
+
+      
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: Maybe<string> } };`);
+    });
   });
 
   it('handles unnamed queries', async () => {
