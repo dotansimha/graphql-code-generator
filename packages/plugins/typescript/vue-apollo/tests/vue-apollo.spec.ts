@@ -437,6 +437,64 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`Should respect omitOperationSuffix and generate type omitted composition functions`, async () => {
+      const documentWithHardcodedQuerySuffix = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const documentNoQuerySuffix = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          {},
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
+    });
+
     it('Should generate deduped composition functions for query and mutation', async () => {
       const documents = parse(/* GraphQL */ `
         query FeedQuery {
@@ -482,6 +540,24 @@ query MyFeed {
         }`
       );
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`Should generate deduped and type omitted compositions functions`, async () => {
+      const documentWithQuerySuffix = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
+          { omitOperationSuffix: true, dedupeOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
     it('Should not generate composition functions for query and mutation', async () => {
