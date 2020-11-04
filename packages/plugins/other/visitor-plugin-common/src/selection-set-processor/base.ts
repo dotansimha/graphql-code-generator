@@ -34,8 +34,8 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   }
 
   transformPrimitiveFields(
-    schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    _schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    _fields: PrimitiveField[]
   ): ProcessResult {
     throw new Error(
       `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
@@ -43,19 +43,19 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   }
 
   transformAliasesPrimitiveFields(
-    schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveAliasedFields[]
+    _schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    _fields: PrimitiveAliasedFields[]
   ): ProcessResult {
     throw new Error(
       `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
     );
   }
 
-  transformLinkFields(fields: LinkField[]): ProcessResult {
+  transformLinkFields(_fields: LinkField[]): ProcessResult {
     throw new Error(`Please override "transformLinkFields" as part of your BaseSelectionSetProcessor implementation!`);
   }
 
-  transformTypenameField(type: string, name: string): ProcessResult {
+  transformTypenameField(_type: string, _name: string): ProcessResult {
     throw new Error(
       `Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`
     );

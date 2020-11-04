@@ -348,7 +348,7 @@ export const OnCommentAddedDocument = gql`
  * });
  */
 export function useOnCommentAddedSubscription(
-  baseOptions?: Apollo.SubscriptionHookOptions<
+  baseOptions: Apollo.SubscriptionHookOptions<
     OnCommentAddedSubscriptionMyOperation,
     OnCommentAddedSubscriptionVariables
   >
@@ -409,7 +409,7 @@ export const CommentDocument = gql`
  *   },
  * });
  */
-export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQueryMyOperation, CommentQueryVariables>) {
+export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQueryMyOperation, CommentQueryVariables>) {
   return Apollo.useQuery<CommentQueryMyOperation, CommentQueryVariables>(CommentDocument, baseOptions);
 }
 export function useCommentLazyQuery(
@@ -496,7 +496,7 @@ export const FeedDocument = gql`
  *   },
  * });
  */
-export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQueryMyOperation, FeedQueryVariables>) {
+export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQueryMyOperation, FeedQueryVariables>) {
   return Apollo.useQuery<FeedQueryMyOperation, FeedQueryVariables>(FeedDocument, baseOptions);
 }
 export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQueryMyOperation, FeedQueryVariables>) {
@@ -535,7 +535,7 @@ export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSubmitRepositoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>
+  baseOptions: Apollo.MutationHookOptions<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>
 ) {
   return Apollo.useMutation<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
@@ -580,7 +580,7 @@ export type SubmitCommentMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSubmitCommentMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>
+  baseOptions: Apollo.MutationHookOptions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>
 ) {
   return Apollo.useMutation<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>(
     SubmitCommentDocument,
@@ -625,7 +625,7 @@ export type VoteMutationFn = Apollo.MutationFunction<VoteMutationMyOperation, Vo
  * });
  */
 export function useVoteMutation(
-  baseOptions?: Apollo.MutationHookOptions<VoteMutationMyOperation, VoteMutationVariables>
+  baseOptions: Apollo.MutationHookOptions<VoteMutationMyOperation, VoteMutationVariables>
 ) {
   return Apollo.useMutation<VoteMutationMyOperation, VoteMutationVariables>(VoteDocument, baseOptions);
 }

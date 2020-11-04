@@ -29,7 +29,7 @@ export function generateDocs(schema: TJS.Definition, types: PluginConfig[]): Rec
   return result;
 }
 
-function generateContentForSchema(schema: TJS.Definition, level = 3): string {
+function generateContentForSchema(schema: TJS.Definition): string {
   return Object.keys(schema.properties || {})
     .map(propName => {
       const prop = schema.properties[propName] as TJS.Definition;

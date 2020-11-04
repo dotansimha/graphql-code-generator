@@ -271,7 +271,7 @@ export class TsVisitor<
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
-  protected getPunctuation(declarationKind: DeclarationKind): string {
+  protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 }

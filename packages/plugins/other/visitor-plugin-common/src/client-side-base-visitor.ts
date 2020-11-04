@@ -443,6 +443,11 @@ export class ClientSideBaseVisitor<
               `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
             );
           } else {
+            if (!this.config.importDocumentNodeExternallyFrom) {
+              // eslint-disable-next-line no-console
+              console.warn('importDocumentNodeExternallyFrom must be provided if documentMode=external');
+            }
+
             this._imports.add(
               `import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`
             );
@@ -471,19 +476,20 @@ export class ClientSideBaseVisitor<
   }
 
   protected buildOperation(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
+    _node: OperationDefinitionNode,
+    _documentVariableName: string,
+    _operationType: string,
+    _operationResultType: string,
+    _operationVariablesTypes: string,
+    _hasRequiredVariables: boolean
   ): string {
     return null;
   }
 
   protected getDocumentNodeSignature(
-    resultType: string,
-    variablesTypes: string,
-    node: FragmentDefinitionNode | OperationDefinitionNode
+    _resultType: string,
+    _variablesTypes: string,
+    _node: FragmentDefinitionNode | OperationDefinitionNode
   ): string {
     if (
       this.config.documentMode === DocumentMode.documentNode ||
@@ -493,6 +499,21 @@ export class ClientSideBaseVisitor<
     }
 
     return '';
+  }
+
+  /**
+   * Checks if the specific operation has variables that are non-null (required), and also doesn't have default.
+   * This is useful for deciding of `variables` should be optional or not.
+   * @param node
+   */
+  protected checkVariablesRequirements(node: OperationDefinitionNode): boolean {
+    const variables = node.variableDefinitions || [];
+
+    if (variables.length === 0) {
+      return false;
+    }
+
+    return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
@@ -528,12 +549,15 @@ export class ClientSideBaseVisitor<
       }
     }
 
+    const hasRequiredVariables = this.checkVariablesRequirements(node);
+
     const additional = this.buildOperation(
       node,
       documentVariableName,
       operationType,
       operationResultType,
-      operationVariablesTypes
+      operationVariablesTypes,
+      hasRequiredVariables
     );
 
     return [documentString, additional].filter(a => a).join('\n');

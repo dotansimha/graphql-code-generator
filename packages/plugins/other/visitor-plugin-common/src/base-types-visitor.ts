@@ -368,7 +368,7 @@ export class BaseTypesVisitor<
     return comment;
   }
 
-  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+  protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
     return allFields.join('\n');
   }
 
@@ -383,7 +383,7 @@ export class BaseTypesVisitor<
 
   getInterfaceTypeDeclarationBlock(
     node: InterfaceTypeDefinitionNode,
-    originalNode: InterfaceTypeDefinitionNode
+    _originalNode: InterfaceTypeDefinitionNode
   ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -403,7 +403,7 @@ export class BaseTypesVisitor<
       .join('\n\n');
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+  ScalarTypeDefinition(_node: ScalarTypeDefinitionNode): string {
     // We empty this because we handle scalars in a different way, see constructor.
     return '';
   }
@@ -519,7 +519,7 @@ export class BaseTypesVisitor<
       .join(',\n');
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
     return '';
   }
 
