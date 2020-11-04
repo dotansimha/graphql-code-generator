@@ -145,7 +145,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
 
   private getCompositionFunctionSuffix(name: string, operationType: string) {
     if (!this.config.dedupeOperationSuffix) {
-      return pascalCase(operationType);
+      return this.config.omitOperationSuffix ? '' : pascalCase(operationType);
     }
     if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
       return '';
