@@ -104,7 +104,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       : [];
   }
 
-  protected getPunctuation(declarationKind: DeclarationKind): string {
+  protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 

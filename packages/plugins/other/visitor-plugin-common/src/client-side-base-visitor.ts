@@ -476,19 +476,19 @@ export class ClientSideBaseVisitor<
   }
 
   protected buildOperation(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
+    _node: OperationDefinitionNode,
+    _documentVariableName: string,
+    _operationType: string,
+    _operationResultType: string,
+    _operationVariablesTypes: string
   ): string {
     return null;
   }
 
   protected getDocumentNodeSignature(
-    resultType: string,
-    variablesTypes: string,
-    node: FragmentDefinitionNode | OperationDefinitionNode
+    _resultType: string,
+    _variablesTypes: string,
+    _node: FragmentDefinitionNode | OperationDefinitionNode
   ): string {
     if (
       this.config.documentMode === DocumentMode.documentNode ||

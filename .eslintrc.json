@@ -1,11 +1,10 @@
 {
+  "root": true,
   "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
-    "standard",
-    "prettier",
-    "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
@@ -13,7 +12,10 @@
     "no-console": "error",
     "no-prototype-builtins": "off",
     "no-useless-constructor": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", {"args":  "none"}],
+    "no-unused-vars": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars-experimental": ["warn", { "ignoreArgsIfArgsAfterAreUsed": true }],
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-empty-interface": "off",
@@ -31,18 +33,15 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/tests/**/*.ts",
-        "**/graphql-codegen-testing/**/*.ts",
-        "*.spec.ts"
-      ],
+      "files": ["**/tests/**/*.ts", "**/graphql-codegen-testing/**/*.ts", "*.spec.ts"],
       "env": {
         "jest": true
       },
       "rules": {
+        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "off"
       }
     }
   ],
-  "ignorePatterns": ["dist", "node_modules", "dev-test", "website"]
+  "ignorePatterns": ["dist", "node_modules", "dev-test", "website", "test-files"]
 }

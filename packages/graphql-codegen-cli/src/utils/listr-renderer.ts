@@ -104,7 +104,7 @@ const render = tasks => {
 export class ErrorRenderer {
   private tasks: any;
 
-  constructor(tasks, options) {
+  constructor(tasks, _options) {
     this.tasks = tasks;
   }
 

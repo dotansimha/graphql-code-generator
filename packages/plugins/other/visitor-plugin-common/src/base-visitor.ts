@@ -265,7 +265,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     });
   }
 
-  protected getPunctuation(declarationKind: DeclarationKind): string {
+  protected getPunctuation(_declarationKind: DeclarationKind): string {
     return '';
   }
 }

@@ -135,7 +135,7 @@ describe('generate-and-save', () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
     const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
-    readSpy.mockImplementation(f => '');
+    readSpy.mockImplementation(_f => '');
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
     fileExistsSpy.mockImplementation(file => file === filename);
