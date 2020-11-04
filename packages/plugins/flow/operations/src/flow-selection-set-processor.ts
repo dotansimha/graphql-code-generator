@@ -5,7 +5,7 @@ import {
   ProcessResult,
   BaseSelectionSetProcessor,
   indent,
-  PrimitiveWithFlagsField,
+  PrimitiveField,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
@@ -73,7 +73,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveWithFlagsField[]
+    fields: PrimitiveField[]
   ): ProcessResult {
     if (fields.length === 0) {
       return [];

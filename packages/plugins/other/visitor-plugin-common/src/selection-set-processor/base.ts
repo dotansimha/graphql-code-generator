@@ -1,8 +1,7 @@
 import { ScalarsMap, ConvertNameFn } from '../types';
 import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, DirectiveNode } from 'graphql';
 
-export type PrimitiveField = string;
-export type PrimitiveWithFlagsField = { makeNullable: boolean; fieldName: string };
+export type PrimitiveField = { isConditional: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
@@ -36,7 +35,7 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveWithFlagsField[]
+    fields: PrimitiveField[]
   ): ProcessResult {
     throw new Error(
       `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`

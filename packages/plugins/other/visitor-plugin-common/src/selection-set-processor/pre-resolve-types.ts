@@ -4,7 +4,7 @@ import {
   LinkField,
   PrimitiveAliasedFields,
   SelectionSetProcessorConfig,
-  PrimitiveWithFlagsField,
+  PrimitiveField,
 } from './base';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
@@ -21,7 +21,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveWithFlagsField[]
+    fields: PrimitiveField[]
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -33,7 +33,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const baseType = getBaseType(fieldObj.type);
       let typeToUse = baseType.name;
 
-      const useInnerType = field.makeNullable && isNonNullType(fieldObj.type);
+      const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
 
       if (isEnumType(baseType)) {
         typeToUse =
