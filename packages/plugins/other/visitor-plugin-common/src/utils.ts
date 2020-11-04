@@ -20,6 +20,7 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
+  DirectiveNode,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
@@ -400,6 +401,10 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   }
 
   return [];
+}
+
+export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
+  return directives.length > 0;
 }
 
 type WrapModifiersOptions = {

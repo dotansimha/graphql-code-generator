@@ -17,7 +17,6 @@ import {
   isNonNullType,
   GraphQLObjectType,
   GraphQLOutputType,
-  DirectiveNode,
 } from 'graphql';
 import {
   getPossibleTypes,
@@ -25,6 +24,7 @@ import {
   getFieldNodeNameValue,
   DeclarationBlock,
   mergeSelectionSets,
+  hasConditionalDirectives,
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -385,7 +385,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
-          isConditional: this.hasConditionalDirectives(field.directives),
+          isConditional: hasConditionalDirectives(field.directives),
           fieldName: field.name.value,
         }))
       ),
@@ -515,9 +515,5 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       useTypesPrefix: true,
       suffix: typeName ? `_${typeName}_${suffix}` : suffix,
     });
-  }
-
-  protected hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
-    return directives.length > 0;
   }
 }
