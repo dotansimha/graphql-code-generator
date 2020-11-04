@@ -117,7 +117,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .withBlock(node.fields.map(f => indent((f as any)(false))).join('\n')).string;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, _parent: any) {
     return (isInterface: boolean) => {
       const baseType = getBaseTypeNode(node.type);
       const typeToUse = this.getTypeToUse(baseType);
