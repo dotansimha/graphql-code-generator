@@ -413,7 +413,7 @@ type WrapModifiersOptions = {
 };
 export function wrapTypeWithModifiers(
   baseType: string,
-  type: GraphQLOutputType,
+  type: GraphQLOutputType | GraphQLNamedType,
   options: WrapModifiersOptions
 ): string {
   let currentType = type;
