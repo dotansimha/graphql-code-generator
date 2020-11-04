@@ -43,11 +43,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      const name = this.config.formatNamedField(field.fieldName, useInnerType ? fieldObj.type.ofType : fieldObj.type);
-      const wrappedType = this.config.wrapTypeWithModifiers(
-        typeToUse,
-        useInnerType ? fieldObj.type.ofType : fieldObj.type
-      );
+      const name = this.config.formatNamedField(field.fieldName, useInnerType ? baseType : fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, useInnerType ? baseType : fieldObj.type);
 
       return {
         name,
