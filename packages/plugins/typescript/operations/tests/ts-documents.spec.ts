@@ -3901,6 +3901,49 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#4389 - validate issues with interfaces', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface A {
+          a: String!
+        }
+
+        interface B implements A {
+          a: String!
+          b: String
+        }
+
+        type C implements B {
+          a: String!
+          b: String
+          c: String!
+        }
+
+        type Query {
+          foo: C
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query {
+          foo {
+            ... on A {
+              a
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: '', document: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toContain(`{ foo?: Maybe<{ __typename?: 'C' }> }`);
+    });
+
     it('#5001 - incorrect output with typeSuffix', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
