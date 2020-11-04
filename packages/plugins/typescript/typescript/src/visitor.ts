@@ -22,6 +22,7 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
+  UnionTypeDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -30,6 +31,8 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   constEnums: boolean;
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
+  futureProofUnions: boolean;
+  nonOptionalTypename: boolean;
   enumsAsConst: boolean;
   numericEnums: boolean;
   onlyOperationTypes: boolean;
@@ -52,6 +55,8 @@ export class TsVisitor<
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
+      futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
+      nonOptionalTypename: getConfigValue(pluginConfig.nonOptionalTypename, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
@@ -121,6 +126,39 @@ export class TsVisitor<
 
   ListType(node: ListTypeNode): string {
     return `Maybe<${super.ListType(node)}>`;
+  }
+
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
+    let withFutureAddedValue: string[] = [];
+    if (this.config.futureProofUnions) {
+      if (this.config.addTypename) {
+        if (this.config.nonOptionalTypename) {
+          withFutureAddedValue = [
+            this.config.immutableTypes ? `{ readonly __typename: "%other" }` : `{ __typename: "%other" }`,
+          ];
+        } else {
+          withFutureAddedValue = [
+            this.config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
+          ];
+        }
+      } else {
+        withFutureAddedValue = ['{}'];
+      }
+    }
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .concat(...withFutureAddedValue)
+      .join(' | ');
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
+      .withContent(possibleTypes).string;
+    // return super.UnionTypeDefinition(node, key, parent).concat(withFutureAddedValue).join("");
   }
 
   protected wrapWithListType(str: string): string {
