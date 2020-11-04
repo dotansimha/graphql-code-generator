@@ -480,7 +480,8 @@ export class ClientSideBaseVisitor<
     _documentVariableName: string,
     _operationType: string,
     _operationResultType: string,
-    _operationVariablesTypes: string
+    _operationVariablesTypes: string,
+    _hasRequiredVariables: boolean
   ): string {
     return null;
   }
@@ -498,6 +499,21 @@ export class ClientSideBaseVisitor<
     }
 
     return '';
+  }
+
+  /**
+   * Checks if the specific operation has variables that are non-null (required), and also doesn't have default.
+   * This is useful for deciding of `variables` should be optional or not.
+   * @param node
+   */
+  protected checkVariablesRequirements(node: OperationDefinitionNode): boolean {
+    const variables = node.variableDefinitions || [];
+
+    if (variables.length === 0) {
+      return false;
+    }
+
+    return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
@@ -533,12 +549,15 @@ export class ClientSideBaseVisitor<
       }
     }
 
+    const hasRequiredVariables = this.checkVariablesRequirements(node);
+
     const additional = this.buildOperation(
       node,
       documentVariableName,
       operationType,
       operationResultType,
-      operationVariablesTypes
+      operationVariablesTypes,
+      hasRequiredVariables
     );
 
     return [documentString, additional].filter(a => a).join('\n');

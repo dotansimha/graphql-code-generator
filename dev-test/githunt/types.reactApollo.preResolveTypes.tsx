@@ -375,7 +375,7 @@ export const OnCommentAddedDocument = gql`
  * });
  */
 export function useOnCommentAddedSubscription(
-  baseOptions?: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
+  baseOptions: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
 ) {
   return Apollo.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
     OnCommentAddedDocument,
@@ -433,7 +433,7 @@ export const CommentDocument = gql`
  *   },
  * });
  */
-export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
   return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
 export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
@@ -518,7 +518,7 @@ export const FeedDocument = gql`
  *   },
  * });
  */
-export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
 export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
@@ -557,7 +557,7 @@ export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSubmitRepositoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  baseOptions: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
 ) {
   return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
@@ -599,7 +599,7 @@ export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutat
  * });
  */
 export function useSubmitCommentMutation(
-  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+  baseOptions: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
 ) {
   return Apollo.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
 }
@@ -640,7 +640,7 @@ export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationV
  *   },
  * });
  */
-export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+export function useVoteMutation(baseOptions: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
   return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
