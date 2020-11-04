@@ -53,6 +53,14 @@ generates:
       commentDescriptions: true
 ```
 
+### `sort`
+
+type: `boolean`
+default: `false`
+
+Set to true in order get the schema lexicographically sorted before printed.
+
+
 ### `federation`
 
 type: `boolean`

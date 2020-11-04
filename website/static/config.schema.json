@@ -655,6 +655,11 @@
           "default": false,
           "type": "boolean"
         },
+        "sort": {
+          "description": "Set to true in order get the schema lexicographically sorted before printed.",
+          "default": false,
+          "type": "boolean"
+        },
         "federation": {
           "type": "boolean"
         }
