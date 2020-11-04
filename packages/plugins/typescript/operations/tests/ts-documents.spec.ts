@@ -3788,6 +3788,43 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#5001 - incorrect output with typeSuffix', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!): User!
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query user {
+          user(id: 1) {
+            id
+            username
+            email
+          }
+        }
+      `);
+
+      const config = {
+        typesSuffix: 'Type',
+      };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).not.toContain('UserTypeQueryVariablesType');
+      expect(content).not.toContain('UserTypeQueryType');
+      expect(content).toContain('UserQueryVariablesType');
+      expect(content).toContain('UserQueryType');
+    });
+
     it('#3064 - fragments over interfaces causes issues with fields', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Venue {

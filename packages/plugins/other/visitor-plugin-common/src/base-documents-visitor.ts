@@ -170,8 +170,9 @@ export class BaseDocumentsVisitor<
     const name = node.name && node.name.value;
 
     if (name) {
-      return this.convertName(node, {
+      return this.convertName(name, {
         useTypesPrefix: false,
+        useTypesSuffix: false,
       });
     }
 
@@ -179,6 +180,7 @@ export class BaseDocumentsVisitor<
       prefix: 'Unnamed_',
       suffix: '_',
       useTypesPrefix: false,
+      useTypesSuffix: false,
     });
   }
 
