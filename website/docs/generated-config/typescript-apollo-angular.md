@@ -287,7 +287,7 @@ type: `string`
 default: ``
 
 This config should be used if `documentMode` is `external`. This has 2 usage:
-- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
+- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document. `importOperationTypesFrom` and `importOperationTypesFrom` must also be set as well.
 - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
 
 #### Usage Examples
@@ -295,7 +295,8 @@ This config should be used if `documentMode` is `external`. This has 2 usage:
 ```yml
 config:
   documentMode: external
-  importDocumentNodeExternallyFrom: path/to/document-node-file
+  importOperationTypesFrom: 'Operations',
+  importDocumentNodeExternallyFrom: '@myproject/generated'
 ```
 
 ```yml
