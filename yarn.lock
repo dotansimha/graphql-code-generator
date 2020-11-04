@@ -8783,7 +8783,7 @@ graphql-extensions@^0.12.6:
     apollo-server-env "^2.4.5"
     apollo-server-types "^0.6.1"
 
-graphql-language-service-interface@2.4.0:
+graphql-language-service-interface@2.4.0, graphql-language-service-interface@^2.4.2:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0.tgz#4e2e63242c76197c4f56c61122db68187ea566b3"
   integrity sha512-r7DQPyhCFY5TlpEukdh9tekJ9hAc7MD9TdOsb5CfAPlsIb1/faVVo2Ty19PxGSYDxygXjwpKLOQD0LqqFuw63A==
@@ -8806,11 +8806,19 @@ graphql-language-service-types@^1.6.0, graphql-language-service-types@^1.6.3:
   resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.6.3.tgz#1a6ba25140ec9ffc6d7f36eca7a4069e91500f3d"
   integrity sha512-VDtBhdan1iSe7ad7+eBbsO5rrzWQpC6aV4SxSHEi8AtEQOFXpnL9Lq5jSaN8O02pGvAUr4wNUPu0oRU5g2XmVA==
 
-graphql-language-service-utils@^2.4.0:
+graphql-language-service-utils@^2.4.0, graphql-language-service-utils@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.4.3.tgz#e4f4d1a7e950dcc5ada2456096c88ad5b2bab9f2"
   integrity sha512-XSCMKsV4GuVSGdW8RJTpO/IJDMXgESDJLu67SAuXFXwfel84j1gWrsmBAUeu6Di6NUEoM9NOCEtJv3LbU+/8qw==
   dependencies:
+    graphql-language-service-types "^1.6.3"
+
+graphql-language-service@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/graphql-language-service/-/graphql-language-service-3.0.2.tgz#8c360e3cd22b57579ba15fb67d15d39d286ca7a9"
+  integrity sha512-o2sYfQhiVwiBcyyp0io3bAVQ/nHk8aExbxCpuBGyzPBtxATiWhstfSsGcDvZHTvTtCiAMQ2XrEwPdvPSNyfCFw==
+  dependencies:
+    graphql-language-service-interface "^2.4.2"
     graphql-language-service-types "^1.6.3"
 
 graphql-request@^3.1.0:
@@ -12152,10 +12160,19 @@ monaco-editor-webpack-plugin@1.9.0:
   dependencies:
     loader-utils "^1.2.3"
 
-monaco-editor@*:
+monaco-editor@*, monaco-editor@^0.20.0:
   version "0.20.0"
   resolved "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.20.0.tgz#5d5009343a550124426cb4d965a4d27a348b4dea"
   integrity sha512-hkvf4EtPJRMQlPC3UbMoRs0vTAFAYdzFQ+gpMb8A+9znae1c43q8Mab9iVsgTcg/4PNiLGGn3SlDIa8uvK1FIQ==
+
+monaco-graphql@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/monaco-graphql/-/monaco-graphql-0.3.1.tgz#b4e8f1e02bf01e818668b299c3cf9cfc790b6a1a"
+  integrity sha512-czKEpUk1OvN53/X6rjVZuwcsEuFqkqE0PAJDjwRtqKoX3GP5KJL0ksp21SK/w3FnKgQy+uep1AGcbuGG0IBebQ==
+  dependencies:
+    graphql-language-service "^3.0.2"
+    graphql-language-service-utils "^2.4.3"
+    monaco-editor "^0.20.0"
 
 monaco-yaml@2.5.1:
   version "2.5.1"

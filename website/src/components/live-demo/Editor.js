@@ -21,10 +21,10 @@ if (ExecutionEnvironment.canUseDOM) {
           fileMatch: ['*'],
           schema: {
             id: 'http://codegen/schema.json',
-            ...CodegenYamlSchema
+            ...CodegenYamlSchema,
           },
-        }
-      ]
+        },
+      ],
     });
   }
 }
@@ -33,7 +33,7 @@ export const Editor = ({ value, lang, readOnly, onEdit }) => {
   if (typeof window === 'undefined') {
     return null;
   }
-  
+
   const { isDarkTheme } = useThemeContext();
   const options = {
     readOnly,

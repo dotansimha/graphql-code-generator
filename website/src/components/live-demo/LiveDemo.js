@@ -9,6 +9,15 @@ import { CodegenOutput } from './CodegenOutput';
 import Select from 'react-select';
 import useThemeContext from '@theme/hooks/useThemeContext';
 import ReactMarkdown from 'react-markdown';
+import { api as GraphQLAPI } from 'monaco-graphql';
+
+GraphQLAPI.setModeConfiguration({
+  documentFormattingEdits: true,
+  completionItems: true,
+  hovers: true,
+  documentSymbols: true,
+  diagnostics: true,
+});
 
 const groupedExamples = Object.keys(EXAMPLES).map(catName => {
   return {
@@ -36,6 +45,21 @@ function useCodegen(config, schema, documents, templateName) {
   React.useEffect(() => {
     run();
   }, [config, schema, documents, templateName]);
+
+  React.useEffect(() => {
+    async function updateApi() {
+      console.log('set schema');
+      await GraphQLAPI.setSchema(schema);
+    }
+    updateApi();
+  }, [schema]);
+
+  React.useEffect(() => {
+    async function updateApi() {
+      await GraphQLAPI.setSchema(schema);
+    }
+    updateApi();
+  }, [schema]);
 
   return {
     error,
@@ -91,7 +115,11 @@ export const LiveDemo = () => {
               menu: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               control: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               container: styles => ({ ...styles, display: 'inline-block', width: '100%', textAlign: 'left' }),
-              option: (styles, { isFocused }) => ({ ...styles, fontSize: 13, ...(isDarkTheme && isFocused ? { backgroundColor: 'gray' } : {}) }),
+              option: (styles, { isFocused }) => ({
+                ...styles,
+                fontSize: 13,
+                ...(isDarkTheme && isFocused ? { backgroundColor: 'gray' } : {}),
+              }),
               singleValue: styles => ({ ...styles, width: '100%', ...(isDarkTheme ? { color: 'white' } : {}) }),
             }}
             isMulti={false}
@@ -121,9 +149,7 @@ export const LiveDemo = () => {
             defaultValue={groupedExamples[0].options[0]}
             options={groupedExamples}
           />
-          <div className={classes.exampleDesc}>
-            {description ? <ReactMarkdown source={description} /> : null}
-          </div>
+          <div className={classes.exampleDesc}>{description ? <ReactMarkdown source={description} /> : null}</div>
         </div>
       </div>
       <div className={classes.container}>
@@ -132,14 +158,18 @@ export const LiveDemo = () => {
             <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
             <span className={classes.iconText}>schema.graphql</span>
           </div>
-          <Editor lang={'graphql'} onEdit={setSchema} value={schema} />
+          <Editor lang={'graphqlDev'} onEdit={setSchema} value={schema} />
         </div>
         <div className={classes.column}>
           <div className={classes.title}>
             <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
             <span className={classes.iconText}>operation.graphql</span>
           </div>
-          <Editor lang={'graphql'} onEdit={setDocuments} value={documents || `# This example isn't\n# using GraphQL operations` } />
+          <Editor
+            lang={'graphqlDev'}
+            onEdit={setDocuments}
+            value={documents || `# This example isn't\n# using GraphQL operations`}
+          />
         </div>
         <div className={classes.column}>
           <div className={classes.title}>

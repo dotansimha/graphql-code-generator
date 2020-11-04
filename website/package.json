@@ -27,6 +27,9 @@
     "vscode-languageserver-types": "3.15.1"
   },
   "dependencies": {
+    "graphql-language-service": "3.0.2",
+    "graphql-language-service-utils": "2.4.3",
+    "monaco-graphql": "0.3.1",
     "react-markdown": "5.0.2",
     "monaco-yaml": "2.5.1",
     "react-select": "3.1.0",
