@@ -383,18 +383,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
-        Array.from(primitiveFields.values())
-          .filter(field => !field.directives || field.directives.length === 0)
-          .map(field => field.name.value)
-      ),
-      ...this._processor.transformPrimitiveFieldsWithDirectives(
-        parentSchemaType,
-        Array.from(primitiveFields.values())
-          .filter(field => !!field.directives && field.directives.length >= 1)
-          .map(field => ({
-            makeNullable: this._processor.resolveDirectives(field.directives),
-            fieldName: field.name.value,
-          }))
+        Array.from(primitiveFields.values()).map(field => ({
+          makeNullable: this.resolveDirectives(field.directives),
+          fieldName: field.name.value,
+        }))
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,
@@ -522,5 +514,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       useTypesPrefix: true,
       suffix: typeName ? `_${typeName}_${suffix}` : suffix,
     });
+  }
+
+  protected resolveDirectives(directives: any): boolean {
+    return directives.length > 0;
   }
 }

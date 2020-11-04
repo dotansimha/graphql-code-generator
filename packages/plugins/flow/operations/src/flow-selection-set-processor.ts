@@ -1,11 +1,11 @@
 import {
   LinkField,
-  PrimitiveField,
   PrimitiveAliasedFields,
   SelectionSetProcessorConfig,
   ProcessResult,
   BaseSelectionSetProcessor,
   indent,
+  PrimitiveWithFlagsField,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
@@ -73,7 +73,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    fields: PrimitiveWithFlagsField[]
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -89,7 +89,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     const fieldObj = schemaType.getFields();
     return [
       `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(fieldName => `${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`)
+        .map(field => `${formatNamedField(field.fieldName, fieldObj[field.fieldName].type)}: *`)
         .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
     ];
   }

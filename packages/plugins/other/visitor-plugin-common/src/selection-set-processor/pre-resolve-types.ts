@@ -3,9 +3,8 @@ import {
   ProcessResult,
   LinkField,
   PrimitiveAliasedFields,
-  PrimitiveField,
   SelectionSetProcessorConfig,
-  PrimitiveWithDirectivesField,
+  PrimitiveWithFlagsField,
 } from './base';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
@@ -22,38 +21,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
-  ): ProcessResult {
-    if (fields.length === 0) {
-      return [];
-    }
-
-    return fields.map(field => {
-      const fieldObj = schemaType.getFields()[field];
-      const baseType = getBaseType(fieldObj.type);
-      let typeToUse = baseType.name;
-
-      if (isEnumType(baseType)) {
-        typeToUse =
-          (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
-          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
-      } else if (this.config.scalars[baseType.name]) {
-        typeToUse = this.config.scalars[baseType.name];
-      }
-
-      const name = this.config.formatNamedField(field, fieldObj.type);
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
-
-      return {
-        name,
-        type: wrappedType,
-      };
-    });
-  }
-
-  transformPrimitiveFieldsWithDirectives(
-    schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveWithDirectivesField[]
+    fields: PrimitiveWithFlagsField[]
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -75,8 +43,6 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      // Do something to make it be wraped
-
       const name = this.config.formatNamedField(field.fieldName, useInnerType ? fieldObj.type.ofType : fieldObj.type);
       const wrappedType = this.config.wrapTypeWithModifiers(
         typeToUse,
@@ -88,10 +54,6 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         type: wrappedType,
       };
     });
-  }
-
-  resolveDirectives(directives: any): boolean {
-    return directives.length > 0;
   }
 
   transformAliasesPrimitiveFields(

@@ -3,15 +3,15 @@ import {
   ProcessResult,
   LinkField,
   PrimitiveAliasedFields,
-  PrimitiveField,
   SelectionSetProcessorConfig,
+  PrimitiveWithFlagsField,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    fields: PrimitiveWithFlagsField[]
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -23,7 +23,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    return [`Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')}>`];
+    return [`Pick<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
