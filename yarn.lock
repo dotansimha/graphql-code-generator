@@ -14587,10 +14587,10 @@ react-loadable@^5.5.0:
   dependencies:
     prop-types "^15.5.0"
 
-react-markdown@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-5.0.1.tgz#ad0bc952f76fa04a08a91a31f66c47311ad78736"
-  integrity sha512-+Fu+UeIfuwhCvaIPNJfG12b9LZlBxwbj3wHt3pE+znmG/lisDIYcTjLvLE5uwkv1RB7na7uaWrGFNmpSSVBwgg==
+react-markdown@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-5.0.2.tgz#d15a8beb37b4ec34fc23dd892e7755eb7040b8db"
+  integrity sha512-kmkB4JbV7LqkDAjvaKRKtodB3n3Id76/DalaDun1U8FuLB0SenPfvH+jAQ5Pcpo54cACRQc1LB1yXmuuuIVecw==
   dependencies:
     "@types/mdast" "^3.0.3"
     "@types/unist" "^2.0.3"
