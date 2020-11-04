@@ -1,5 +1,15 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.17
+
+### Patch Changes
+
+- 612e5e52: remove broken isTypeOf call for expanding fragments with flattenGeneratedTypes = true
+- 9f2a4e2f: Expose `_hasRequiredVariables` to `buildOperation` in order to allow better type-safety for plugins that deals with `variables`
+- 0f35e775: Fix issues with incorrect naming of operation and variables when used with typesSuffix
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.17.16
 
 ### Patch Changes
