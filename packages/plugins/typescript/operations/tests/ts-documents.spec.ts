@@ -3593,6 +3593,119 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
+    it('#4216 - handle fragments against unions and interfaces with flattenGeneratedTypes', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          search: [Searchable!]
+        }
+
+        interface Concept {
+          id: String
+        }
+
+        type Dimension implements Concept {
+          id: String
+        }
+
+        type DimValue {
+          dimension: Dimension
+          value: String!
+        }
+
+        union Searchable = Dimension | DimValue
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SearchPopular {
+          search {
+            ...SearchableFragment
+          }
+        }
+
+        fragment SearchableFragment on Searchable {
+          ...SearchConceptFragment
+          ...SearchDimValueFragment
+        }
+
+        fragment SearchConceptFragment on Concept {
+          id
+        }
+
+        fragment SearchDimValueFragment on DimValue {
+          dimension {
+            ...SearchConceptFragment
+          }
+          value
+        }
+      `);
+
+      const config = {
+        flattenGeneratedTypes: true,
+      };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      const output = await validate(content, config, testSchema);
+      expect(mergeOutputs([output])).toMatchSnapshot();
+
+      expect(output).toBeSimilarStringTo(`
+        export type Maybe<T> = T | null;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          search?: Maybe<Array<Searchable>>;
+        };
+
+        export type Concept = {
+          id?: Maybe<Scalars['String']>;
+        };
+
+        export type Dimension = Concept & {
+          __typename?: 'Dimension';
+          id?: Maybe<Scalars['String']>;
+        };
+
+        export type DimValue = {
+          __typename?: 'DimValue';
+          dimension?: Maybe<Dimension>;
+          value: Scalars['String'];
+        };
+
+        export type Searchable = Dimension | DimValue;
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type SearchPopularQuery = (
+          { __typename?: 'Query' }
+          & { search?: Maybe<Array<(
+            { __typename?: 'Dimension' }
+            & Pick<Dimension, 'id'>
+          ) | (
+            { __typename?: 'DimValue' }
+            & Pick<DimValue, 'value'>
+            & { dimension?: Maybe<(
+              { __typename?: 'Dimension' }
+              & Pick<Dimension, 'id'>
+            )> }
+          )>> }
+        );`);
+    });
+
     it('Should add operation name when addOperationExport is true', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type User {
@@ -3788,6 +3901,49 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#4389 - validate issues with interfaces', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface A {
+          a: String!
+        }
+
+        interface B implements A {
+          a: String!
+          b: String
+        }
+
+        type C implements B {
+          a: String!
+          b: String
+          c: String!
+        }
+
+        type Query {
+          foo: C
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query {
+          foo {
+            ... on A {
+              a
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: '', document: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toContain(`{ foo?: Maybe<{ __typename?: 'C' }> }`);
+    });
+
     it('#5001 - incorrect output with typeSuffix', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {

@@ -102,7 +102,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           this._appendToTypeMap(types, typeOnSchema.name, fields);
           this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
-        } else if (isInterfaceType(typeOnSchema) && parentType.isTypeOf(typeOnSchema, null, null)) {
+        } else if (isInterfaceType(typeOnSchema) && parentType.getInterfaces().includes(typeOnSchema)) {
           this._appendToTypeMap(types, parentType.name, fields);
           this._appendToTypeMap(types, parentType.name, spreadsUsage[parentType.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
