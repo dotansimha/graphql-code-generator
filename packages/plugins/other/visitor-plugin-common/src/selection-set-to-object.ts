@@ -17,6 +17,7 @@ import {
   isNonNullType,
   GraphQLObjectType,
   GraphQLOutputType,
+  DirectiveNode,
 } from 'graphql';
 import {
   getPossibleTypes,
@@ -384,7 +385,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
-          makeNullable: this.resolveDirectives(field.directives),
+          isConditional: this.hasConditionalDirectives(field.directives),
           fieldName: field.name.value,
         }))
       ),
@@ -516,7 +517,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     });
   }
 
-  protected resolveDirectives(directives: any): boolean {
+  protected hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
     return directives.length > 0;
   }
 }
