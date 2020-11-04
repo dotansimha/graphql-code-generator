@@ -1,7 +1,8 @@
 import { ScalarsMap, ConvertNameFn } from '../types';
-import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType } from 'graphql';
+import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, DirectiveNode } from 'graphql';
 
 export type PrimitiveField = string;
+export type PrimitiveWithDirectivesField = { makeNullable: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
@@ -49,6 +50,17 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
     throw new Error(
       `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
     );
+  }
+
+  transformPrimitiveFieldsWithDirectives(
+    parentSchemaType: GraphQLObjectType<any, any>,
+    fields: { makeNullable: boolean; fieldName: string }[]
+  ): ProcessResult {
+    throw new Error('Method not implemented.');
+  }
+
+  resolveDirectives(directives: readonly DirectiveNode[]): boolean {
+    throw new Error('Method not implemented.');
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {

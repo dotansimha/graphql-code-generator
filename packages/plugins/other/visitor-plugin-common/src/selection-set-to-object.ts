@@ -383,7 +383,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
-        Array.from(primitiveFields.values()).map(field => field.name.value)
+        Array.from(primitiveFields.values())
+          .filter(field => !field.directives || field.directives.length === 0)
+          .map(field => field.name.value)
+      ),
+      ...this._processor.transformPrimitiveFieldsWithDirectives(
+        parentSchemaType,
+        Array.from(primitiveFields.values())
+          .filter(field => !!field.directives && field.directives.length >= 1)
+          .map(field => ({
+            makeNullable: this._processor.resolveDirectives(field.directives),
+            fieldName: field.name.value,
+          }))
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,

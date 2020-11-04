@@ -5,8 +5,9 @@ import {
   PrimitiveAliasedFields,
   PrimitiveField,
   SelectionSetProcessorConfig,
+  PrimitiveWithDirectivesField,
 } from './base';
-import { GraphQLObjectType, GraphQLInterfaceType, isEnumType } from 'graphql';
+import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
@@ -48,6 +49,49 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         type: wrappedType,
       };
     });
+  }
+
+  transformPrimitiveFieldsWithDirectives(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveWithDirectivesField[]
+  ): ProcessResult {
+    if (fields.length === 0) {
+      return [];
+    }
+
+    return fields.map(field => {
+      const fieldObj = schemaType.getFields()[field.fieldName];
+
+      const baseType = getBaseType(fieldObj.type);
+      let typeToUse = baseType.name;
+
+      const useInnerType = field.makeNullable && isNonNullType(fieldObj.type);
+
+      if (isEnumType(baseType)) {
+        typeToUse =
+          (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+      } else if (this.config.scalars[baseType.name]) {
+        typeToUse = this.config.scalars[baseType.name];
+      }
+
+      // Do something to make it be wraped
+
+      const name = this.config.formatNamedField(field.fieldName, useInnerType ? fieldObj.type.ofType : fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(
+        typeToUse,
+        useInnerType ? fieldObj.type.ofType : fieldObj.type
+      );
+
+      return {
+        name,
+        type: wrappedType,
+      };
+    });
+  }
+
+  resolveDirectives(directives: any): boolean {
+    return directives.length > 0;
   }
 
   transformAliasesPrimitiveFields(
