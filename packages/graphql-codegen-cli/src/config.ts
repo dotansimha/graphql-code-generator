@@ -4,6 +4,8 @@ import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
+// eslint-disable-next-line
+import { createRequire, createRequireFromPath } from 'module';
 import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments } from './load';
 
@@ -171,7 +173,8 @@ export function parseArgv(argv = process.argv): YamlCliFlags {
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
-    await Promise.all(cliFlags.require.map(mod => import(mod)));
+    const relativeRequire = (createRequire || createRequireFromPath)(process.cwd());
+    await Promise.all(cliFlags.require.map(mod => import(relativeRequire.resolve(mod))));
   }
 
   const customConfigPath = getCustomConfigPath(cliFlags);
