@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.1.1
+
+### Patch Changes
+
+- b31ce77e: prevent baseOptions from being required when Mutation is used
+
 ## 2.1.0
 
 ### Minor Changes
