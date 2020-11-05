@@ -1,5 +1,17 @@
 # @graphql-codegen/typed-document-node
 
+## 1.17.10
+
+### Patch Changes
+
+- 3e3941b9: Avoid printing imports when there are no operations
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.17.9
 
 ### Patch Changes
