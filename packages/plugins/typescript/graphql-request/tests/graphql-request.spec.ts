@@ -87,7 +87,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(result.content).toContain(`(print(FeedDocument), variables));`);
+      expect(result.content).toContain(`(print(FeedDocument), variables, requestHeaders));`);
       expect(output).toMatchSnapshot();
     });
 
