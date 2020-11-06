@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 jest.mock('latest-version', () => {
   return () => Promise.resolve('1.0.0');
 });

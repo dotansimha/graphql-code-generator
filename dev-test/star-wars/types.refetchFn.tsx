@@ -549,7 +549,7 @@ export const HeroNameConditionalInclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalInclusionQuery(
-  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
 ) {
   return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
@@ -604,7 +604,7 @@ export const HeroNameConditionalExclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalExclusionQuery(
-  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
 ) {
   return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,

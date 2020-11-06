@@ -111,9 +111,7 @@ export type EscalateMutation = { __typename?: 'Mutation' } & {
  *   },
  * });
  */
-export function useGetMessagesQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>
-) {
+export function useGetMessagesQuery(baseOptions: Apollo.QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
   return Apollo.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(Operations.GetMessages, baseOptions);
 }
 export function useGetMessagesLazyQuery(

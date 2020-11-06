@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 2.1.0
+
+### Minor Changes
+
+- 7610ce64: add support for importing operations from external file in angular-apollo plugin
+
+### Patch Changes
+
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 2.0.1
 
 ### Patch Changes

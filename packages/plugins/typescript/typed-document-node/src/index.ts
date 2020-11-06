@@ -27,7 +27,7 @@ export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
-    prepend: visitor.getImports(),
+    prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),
     content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
   };
 };

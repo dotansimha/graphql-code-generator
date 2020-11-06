@@ -12,6 +12,7 @@ import {
   SelectionSetToObject,
   getConfigValue,
   DeclarationKind,
+  generateFragmentImportStatement,
 } from '@graphql-codegen/visitor-plugin-common';
 
 import autoBind from 'auto-bind';
@@ -85,5 +86,14 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return declarationKind === 'type' ? ',' : ';';
+  }
+
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports
+          // In flow, all non ` * as x` imports must be type imports
+          .map(fragmentImport => ({ ...fragmentImport, typesImport: true }))
+          .map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
   }
 }

@@ -6,8 +6,7 @@ import { CSharpResolversPluginRawConfig } from './config';
 export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: CSharpResolversPluginRawConfig,
-  { outputFile }
+  config: CSharpResolversPluginRawConfig
 ): Promise<string> => {
   const visitor = new CSharpResolversVisitor(config, schema);
   const printedSchema = printSchema(schema);

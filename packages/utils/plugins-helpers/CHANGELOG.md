@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 1.18.1
+
+### Patch Changes
+
+- eaf45d1f: fix issue with inline fragment without typeCondition
+
 ## 1.18.0
 
 ### Minor Changes

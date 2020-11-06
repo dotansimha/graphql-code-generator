@@ -316,7 +316,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     operationType: string,
     documentVariableName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const nodeName = node.name?.value ?? '';
     const suffix = this._getHookSuffix(nodeName, operationType);
@@ -329,7 +330,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHooksImport(false));
 
     const hookFns = [
-      `export function use${operationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+      `export function use${operationName}(baseOptions${
+        hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
+      }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,
         documentVariableName
@@ -446,7 +449,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     documentVariableName: string,
     operationType: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
@@ -462,7 +466,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       ? this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes)
       : null;
     const hooks = this.config.withHooks
-      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      ? this._buildHooks(
+          node,
+          operationType,
+          documentVariableName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        )
       : null;
     const resultType = this.config.withResultType
       ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes)

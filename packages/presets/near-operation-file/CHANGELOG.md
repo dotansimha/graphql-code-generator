@@ -1,5 +1,17 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 1.17.12
+
+### Patch Changes
+
+- eaf45d1f: fix issue with inline fragment without typeCondition
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.17.11
 
 ### Patch Changes

@@ -166,7 +166,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *  path/to/file.ts:
    *    plugins:
    *      - typescript
-   *      - typescript-resolves
+   *      - typescript-resolvers
    *    config:
    *      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
    * ```

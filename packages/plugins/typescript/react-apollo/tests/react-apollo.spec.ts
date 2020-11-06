@@ -123,6 +123,66 @@ describe('React Apollo', () => {
   });
 
   describe('Issues', () => {
+    it.each([
+      {
+        document: `query Feed { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
+        document: `mutation Feed { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
+        document: `query Feed($something: Boolean) { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
+        document: `query Feed($something: Boolean!) { feed { ...Feed } } `,
+        optionalBaseOptions: false,
+      },
+      {
+        document: `mutation Feed($something: Boolean!) { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
+        document: `query Feed($something: Boolean!, $somethingElse: Boolean!) { feed { ...Feed } } `,
+        optionalBaseOptions: false,
+      },
+      {
+        document: `query Feed($something: Boolean, $somethingElse: Boolean!) { feed { ...Feed } } `,
+        optionalBaseOptions: false,
+      },
+      {
+        document: `query Feed($something: Boolean! = true) { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
+        document: `query Feed($something: Boolean! = true, $somethingElse: Boolean) { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+    ])(
+      'Issue #4887 - baseOptions of generated hooks should not be optional when there are required variables',
+      async ({ document, optionalBaseOptions }) => {
+        const docs = [
+          {
+            location: '',
+            document: parse(document),
+          },
+        ];
+
+        const result = (await plugin(
+          schema,
+          docs,
+          {},
+          {
+            outputFile: 'graphql.tsx',
+          }
+        )) as Types.ComplexPluginOutput;
+
+        expect(result.content).toContain(`(baseOptions${optionalBaseOptions ? '?' : ''}: Apollo.`);
+      }
+    );
+
     it('Issue #3612 - Missing fragments spread when fragment name is same as operation?', async () => {
       const docs = [
         {

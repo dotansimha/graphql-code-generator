@@ -113,7 +113,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     return this.clearOptional(baseValue);
   }
 
-  protected getPunctuation(declarationKind: DeclarationKind): string {
+  protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 

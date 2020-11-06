@@ -85,6 +85,24 @@ describe('Vue Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should support typeImports', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          useTypeImports: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as VueApolloComposable from '@vue/apollo-composable';`);
+      expect(content.prepend).toContain(`import type * as VueCompositionApi from '@vue/composition-api';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import VueApollo and VueCompositionApi dependencies from configured packages', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
@@ -425,7 +443,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-             return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedDocument, undefined, options);
+             return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, {}, options);
            }`
       );
 
@@ -435,6 +453,64 @@ query MyFeed {
          }`
       );
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`Should respect omitOperationSuffix and generate type omitted composition functions`, async () => {
+      const documentWithHardcodedQuerySuffix = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const documentNoQuerySuffix = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          {},
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsCompositionFunctionResult');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
     it('Should generate deduped composition functions for query and mutation', async () => {
@@ -472,7 +548,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
-          return VueApolloComposable.useQuery<FeedQuery, undefined>(FeedQueryDocument, undefined, options);
+          return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, {}, options);
         }`
       );
 
@@ -482,6 +558,24 @@ query MyFeed {
         }`
       );
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`Should generate deduped and type omitted compositions functions`, async () => {
+      const documentWithQuerySuffix = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
+          { omitOperationSuffix: true, dedupeOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
     it('Should not generate composition functions for query and mutation', async () => {
@@ -726,14 +820,13 @@ query MyFeed {
  * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFeedQuery(
- *   {
- *      id: // value for 'id'
- *   }
- * );
+ * const { result, loading, error } = useFeedQuery({
+ *   id: // value for 'id'
+ * });
  */`;
 
     const subscriptionDocBlockSnapshot = `/**
@@ -743,14 +836,13 @@ query MyFeed {
  * When your component renders, \`useCommentAddedSubscription\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the subscription
  * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
  *
  * @example
- * const { result, loading, error } = useCommentAddedSubscription(
- *   {
- *      name: // value for 'name'
- *   }
- * );
+ * const { result, loading, error } = useCommentAddedSubscription({
+ *   name: // value for 'name'
+ * });
  */`;
 
     const mutationDocBlockSnapshot = `/**
@@ -766,7 +858,7 @@ query MyFeed {
  * @example
  * const { mutate, loading, error, onDone } = useSubmitRepositoryMutation({
  *   variables: {
- *      name: // value for 'name'
+ *     name: // value for 'name'
  *   },
  * });
  */`;
