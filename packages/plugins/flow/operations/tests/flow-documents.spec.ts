@@ -1277,4 +1277,54 @@ describe('Flow Operations Plugin', () => {
       validateFlow(result);
     });
   });
+
+  describe('Directives handling', () => {
+    it('@skip, @include should result in optional fields', async () => {
+      const schema1 = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          id: String!
+          name: String
+          address: String!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query user($showAddress: Boolean!) {
+          user {
+            id
+            name
+            address @include(if: $showAddress)
+          }
+        }
+      `);
+      const result = mergeOutputs([
+        await plugin(
+          schema1,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, useFlowExactObjects: false },
+          { outputFile: '' }
+        ),
+      ]);
+
+      expect(result).toBeSimilarStringTo(`
+      export type UserQueryVariables = {
+        showAddress: $ElementType<Scalars, 'Boolean'>,
+      };
+      
+      
+      export type UserQuery = { user: $Pick<User, { id: *, name?: *, address?: * }> };
+      `);
+
+      validateFlow(result);
+    });
+  });
 });

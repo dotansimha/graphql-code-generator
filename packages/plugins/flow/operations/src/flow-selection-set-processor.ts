@@ -1,3 +1,4 @@
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import {
   LinkField,
   PrimitiveAliasedFields,
@@ -89,7 +90,12 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     const fieldObj = schemaType.getFields();
     return [
       `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(field => `${formatNamedField(field.fieldName, fieldObj[field.fieldName].type)}: *`)
+        .map(field => {
+          const type = field.isConditional
+            ? getBaseType(fieldObj[field.fieldName].type)
+            : fieldObj[field.fieldName].type;
+          return `${formatNamedField(field.fieldName, type)}: *`;
+        })
         .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
     ];
   }
