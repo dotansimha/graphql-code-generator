@@ -32,7 +32,6 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
   futureProofUnions: boolean;
-  nonOptionalTypename: boolean;
   enumsAsConst: boolean;
   numericEnums: boolean;
   onlyOperationTypes: boolean;
@@ -56,7 +55,6 @@ export class TsVisitor<
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
-      nonOptionalTypename: getConfigValue(pluginConfig.nonOptionalTypename, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
@@ -132,19 +130,9 @@ export class TsVisitor<
     if (this.config.onlyOperationTypes) return '';
     let withFutureAddedValue: string[] = [];
     if (this.config.futureProofUnions) {
-      if (this.config.addTypename) {
-        if (this.config.nonOptionalTypename) {
-          withFutureAddedValue = [
-            this.config.immutableTypes ? `{ readonly __typename: "%other" }` : `{ __typename: "%other" }`,
-          ];
-        } else {
-          withFutureAddedValue = [
-            this.config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
-          ];
-        }
-      } else {
-        withFutureAddedValue = ['{}'];
-      }
+      withFutureAddedValue = [
+        this.config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
+      ];
     }
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
