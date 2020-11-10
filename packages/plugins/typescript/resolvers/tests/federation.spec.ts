@@ -94,7 +94,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
 
       extend type User @key(fields: "id") {
-        id: ID!
+        id: ID! @external
         name: String
         username: String
       }
