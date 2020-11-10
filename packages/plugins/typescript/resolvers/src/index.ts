@@ -31,7 +31,9 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
       ].join('\n')
     : '';
 
-  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  const transformedSchema = config.federation
+    ? addFederationReferencesToSchema(schema, config.mappers && Object.keys(config.mappers))
+    : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 

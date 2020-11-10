@@ -45,6 +45,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -55,6 +58,32 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // Foo shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
       __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+    `);
+  });
+
+  it('should not add __resolveReference to objects that do not have mapped types in config.mappers', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        allUsers: [User]
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+        username: String
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    // User shouldn't have it because it's not mapped
+    expect(content).not.toBeSimilarStringTo(`
+      __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
     `);
   });
 
@@ -79,6 +108,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -110,6 +142,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -148,6 +183,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          Address: 'Address',
+          User: 'User',
+        },
       },
     });
 
@@ -181,6 +220,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -214,6 +256,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -260,6 +305,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          Admin: 'Admin',
+          Name: 'Name',
+          User: 'User',
+        },
       },
     });
 
@@ -292,6 +342,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -327,6 +380,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -354,6 +410,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -388,6 +447,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -419,6 +481,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       schema: federatedSchema,
       config: {
         federation: true,
+        mappers: {
+          User: 'User',
+        },
       },
     });
 
@@ -504,6 +569,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         schema: federatedSchema,
         config: {
           federation: true,
+          mappers: {
+            User: 'User',
+          },
           wrapFieldDefinitions: true,
         },
       });
@@ -522,6 +590,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         schema: federatedSchema,
         config: {
           federation: true,
+          mappers: {
+            User: 'User',
+          },
           wrapFieldDefinitions: true,
         },
       });

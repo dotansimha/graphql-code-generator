@@ -904,6 +904,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): (parentName: string) => string | null {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
+    const mappersTypeNames = Object.keys(this.config.mappers);
 
     return (parentName: string) => {
       const original: FieldDefinitionNode = parent[key];
@@ -953,14 +954,17 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
       const parentTypeSignature = this._federation.transformParentType({
         fieldNode: original,
+        mappersTypeNames,
         parentType,
         parentTypeSignature: originalParentTypeSignature,
       });
+
       const mappedTypeSignature = isSubscriptionType
         ? `${originalMappedTypeSignature}, "${node.name}"`
         : this._federation.transformMappedType({
             fieldNode: original,
             mappedTypeSignature: originalMappedTypeSignature,
+            mappersTypeNames,
             parentType,
             parentTypeSignature: this._variablesTransfomer.wrapAstTypeWithModifiers(
               originalParentTypeSignature,

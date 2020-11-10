@@ -23,7 +23,9 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
 
   const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
-  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  const transformedSchema = config.federation
+    ? addFederationReferencesToSchema(schema, config.mappers && Object.keys(config.mappers))
+    : schema;
 
   const printedSchema = config.federation
     ? printSchemaWithDirectives(transformedSchema)

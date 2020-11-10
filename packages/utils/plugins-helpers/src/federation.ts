@@ -30,14 +30,17 @@ export const federationSpec = parse(/* GraphQL */ `
 `);
 
 /**
- * Adds `__resolveReference` in each ObjectType involved in Federation.
+ * Adds `__resolveReference` in each ObjectType involved in Federation, only when there's a mapped type in config.mappers.
  * @param schema
  */
-export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
+export function addFederationReferencesToSchema(
+  schema: GraphQLSchema,
+  mappersTypeName: string[] | undefined
+): GraphQLSchema {
   const typeMap = schema.getTypeMap();
   for (const typeName in typeMap) {
     const type = schema.getType(typeName);
-    if (isObjectType(type) && isFederationObjectType(type)) {
+    if (isObjectType(type) && isFederationObjectType(type) && mappersTypeName && mappersTypeName.includes(typeName)) {
       const typeConfig = type.toConfig();
       typeConfig.fields = {
         [resolveReferenceFieldName]: {
@@ -156,10 +159,12 @@ export class ApolloFederation {
    */
   transformParentType({
     fieldNode,
+    mappersTypeNames,
     parentType,
     parentTypeSignature,
   }: {
     fieldNode: FieldDefinitionNode;
+    mappersTypeNames: string[];
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
   }) {
@@ -167,7 +172,9 @@ export class ApolloFederation {
       this.enabled &&
       isObjectType(parentType) &&
       isFederationObjectType(parentType) &&
-      fieldNode.name.value === resolveReferenceFieldName
+      (mappersTypeNames.includes(parentType.name)
+        ? fieldNode.name.value === resolveReferenceFieldName
+        : isTypeExtension(parentType))
     ) {
       const keys = getDirectivesByName('key', parentType);
 
@@ -214,11 +221,13 @@ export class ApolloFederation {
   transformMappedType({
     fieldNode,
     mappedTypeSignature,
+    mappersTypeNames,
     parentType,
     parentTypeSignature,
   }: {
     fieldNode: FieldDefinitionNode;
     mappedTypeSignature: string;
+    mappersTypeNames: string[];
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
   }) {
@@ -226,7 +235,9 @@ export class ApolloFederation {
       this.enabled &&
       isObjectType(parentType) &&
       isFederationObjectType(parentType) &&
-      fieldNode.name.value === resolveReferenceFieldName
+      (mappersTypeNames.includes(parentType.name)
+        ? fieldNode.name.value === resolveReferenceFieldName
+        : isTypeExtension(parentType))
     ) {
       return parentTypeSignature;
     }
