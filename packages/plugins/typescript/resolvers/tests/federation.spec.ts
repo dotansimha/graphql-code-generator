@@ -55,7 +55,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
     `);
-    // Foo shouldn't because it doesn't have @key
+    // Book shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
       __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
     `);
@@ -118,7 +118,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
     `);
-    // Foo shouldn't because it doesn't have @key
+    // Book shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
       __resolveReference?: ReferenceResolver<Maybe<ParentType>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
     `);
