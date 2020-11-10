@@ -151,7 +151,7 @@ export class ApolloFederation {
   }
 
   /**
-   * Transforms ParentType signature in ObjectTypes involved in Federation
+   * Transforms ParentType signature in ObjectTypes' __resolveReference involved in Federation
    * @param data
    */
   transformParentType({
@@ -167,18 +167,16 @@ export class ApolloFederation {
       this.enabled &&
       isObjectType(parentType) &&
       isFederationObjectType(parentType) &&
-      (isTypeExtension(parentType) || fieldNode.name.value === resolveReferenceFieldName)
+      fieldNode.name.value === resolveReferenceFieldName
     ) {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
-        const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
+        const outputs: string[] = [];
 
-        // Look for @requires and see what the service needs and gets
-        const requires = getDirectivesByName('requires', fieldNode).map(this.extractKeyOrRequiresFieldSet);
-        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
+        outputs.push(`{ __typename: '${parentType.name}' }`);
 
-        // @key() @key() - "primary keys" in Federation
+        // Will receive @key() fields - "primary keys" in Federation
         const primaryKeys = keys.map(def => {
           const fields = this.extractKeyOrRequiresFieldSet(def);
           return this.translateFieldSet(fields, parentTypeSignature);
@@ -188,16 +186,52 @@ export class ApolloFederation {
 
         outputs.push([open, primaryKeys.join(' | '), close].join(''));
 
-        // include required fields
-        if (requires.length) {
-          outputs.push(`& ${requiredFields}`);
+        // Will perhaps receive @requires() fields, it depends on the requested fields.
+        const requiresFields = Object.values(parentType.getFields()).reduce((fields, field) => {
+          if (field.astNode) {
+            const requires = getDirectivesByName('requires', field.astNode).map(this.extractKeyOrRequiresFieldSet);
+            fields = merge(fields, ...requires);
+          }
+          return fields;
+        }, {});
+
+        if (Object.keys(requiresFields).length > 0) {
+          const requiredFields = this.translateFieldSet(requiresFields, parentTypeSignature);
+          outputs.push(`DeepPartial<${requiredFields}>`);
         }
 
-        return outputs.join(' ');
+        return outputs.join(' & ');
       }
     }
 
     return parentTypeSignature;
+  }
+
+  /**
+   * Transforms MappedType signature in ObjectTypes' __resolveReference involved in Federation
+   * @param data
+   */
+  transformMappedType({
+    fieldNode,
+    mappedTypeSignature,
+    parentType,
+    parentTypeSignature,
+  }: {
+    fieldNode: FieldDefinitionNode;
+    mappedTypeSignature: string;
+    parentType: GraphQLNamedType;
+    parentTypeSignature: string;
+  }) {
+    if (
+      this.enabled &&
+      isObjectType(parentType) &&
+      isFederationObjectType(parentType) &&
+      fieldNode.name.value === resolveReferenceFieldName
+    ) {
+      return parentTypeSignature;
+    }
+
+    return mappedTypeSignature;
   }
 
   private isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType): boolean {

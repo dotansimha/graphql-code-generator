@@ -958,7 +958,15 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       });
       const mappedTypeSignature = isSubscriptionType
         ? `${originalMappedTypeSignature}, "${node.name}"`
-        : originalMappedTypeSignature;
+        : this._federation.transformMappedType({
+            fieldNode: original,
+            mappedTypeSignature: originalMappedTypeSignature,
+            parentType,
+            parentTypeSignature: this._variablesTransfomer.wrapAstTypeWithModifiers(
+              originalParentTypeSignature,
+              original.type
+            ),
+          });
 
       const signature: {
         name: string;

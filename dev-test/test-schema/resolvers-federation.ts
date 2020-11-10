@@ -54,6 +54,7 @@ type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
 type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
 type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
 export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+export type DeepPartial<T> = { [K in keyof T]?: DeepPartial<T[K]> };
 
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -170,23 +171,16 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
 > = {
   __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & (
-      | GraphQLRecursivePick<ParentType, { id: true }>
-      | GraphQLRecursivePick<ParentType, { name: true }>
-    ),
-    ContextType
-  >;
-
-  email?: Resolver<
-    ResolversTypes['String'],
+    Maybe<ParentType>,
     { __typename: 'User' } & (
       | GraphQLRecursivePick<ParentType, { id: true }>
       | GraphQLRecursivePick<ParentType, { name: true }>
     ) &
-      GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
+      DeepPartial<GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>>,
     ContextType
   >;
+
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
