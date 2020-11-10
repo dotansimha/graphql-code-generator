@@ -915,8 +915,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         return null;
       }
 
+      const originalParentTypeSignature = this.getParentTypeForSignature(node);
+
       const typeToUse = this.getTypeToUse(realType);
-      const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
+      const originalMappedTypeSignature = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
+
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
@@ -951,9 +954,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const parentTypeSignature = this._federation.transformParentType({
         fieldNode: original,
         parentType,
-        parentTypeSignature: this.getParentTypeForSignature(node),
+        parentTypeSignature: originalParentTypeSignature,
       });
-      const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
+      const mappedTypeSignature = isSubscriptionType
+        ? `${originalMappedTypeSignature}, "${node.name}"`
+        : originalMappedTypeSignature;
 
       const signature: {
         name: string;
@@ -965,7 +970,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         modifier: this.config.avoidOptionals ? '' : '?',
         type: isSubscriptionType ? 'SubscriptionResolver' : 'Resolver',
         genericTypes: [
-          mappedTypeKey,
+          mappedTypeSignature,
           parentTypeSignature,
           this._fieldContextTypeMap[`${parentName}.${node.name}`]
             ? this._fieldContextTypeMap[`${parentName}.${node.name}`].type
