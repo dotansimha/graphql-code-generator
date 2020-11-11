@@ -88,16 +88,21 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
         useTypesPrefix: true,
       });
     const fieldObj = schemaType.getFields();
-    return [
-      `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(field => {
-          const type = field.isConditional
-            ? getBaseType(fieldObj[field.fieldName].type)
-            : fieldObj[field.fieldName].type;
-          return `${formatNamedField(field.fieldName, type)}: *`;
-        })
-        .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
-    ];
+    let hasConditionals = false;
+    const conditilnalsList: string[] = [];
+    let resString = `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
+      .map(field => {
+        if (field.isConditional) {
+          hasConditionals = true;
+          conditilnalsList.push(field.fieldName);
+        }
+        return `${formatNamedField(field.fieldName, fieldObj[field.fieldName].type)}: *`;
+      })
+      .join(', ')} ${useFlowExactObject ? '|' : ''}}>`;
+    if (hasConditionals) {
+      resString = `$MakeOptional<${resString}, ${conditilnalsList.map(field => `{ ${field}: * }`).join(' | ')}>`;
+    }
+    return [resString];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
