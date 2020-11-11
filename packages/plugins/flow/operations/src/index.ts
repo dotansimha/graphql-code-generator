@@ -15,7 +15,7 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
 
   const prefix = config.preResolveTypes
     ? ''
-    : `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
+    : `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\ntype $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;\n`;
 
   const allAst = concatAST(documents.map(v => v.document));
   const includedFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION);
