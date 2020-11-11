@@ -2199,18 +2199,23 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   });
 
   it('Should generate resolvers with replaced typeResolverFieldName if specified', async () => {
-    const result = (await plugin(schema, [], { typeResolverFieldName: 'resolveType' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      schema,
+      [],
+      { typeResolverFieldName: 'resolveType' },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
-        resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+        resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
       };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
