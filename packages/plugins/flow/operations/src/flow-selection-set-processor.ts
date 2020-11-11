@@ -1,4 +1,3 @@
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import {
   LinkField,
   PrimitiveAliasedFields,
