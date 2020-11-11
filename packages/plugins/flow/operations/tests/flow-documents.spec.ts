@@ -208,6 +208,7 @@ describe('Flow Operations Plugin', () => {
         "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
 
         export type NotificationsQueryVariables = {};
 
@@ -573,6 +574,7 @@ describe('Flow Operations Plugin', () => {
         "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
 
         export type UserFieldsFragment = ({
             ...$Pick<User, {| id: *, username: *, role?: * |}>,
@@ -623,6 +625,7 @@ describe('Flow Operations Plugin', () => {
         "// @flow
 
         type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
 
         export type UserFieldsFragment = ({
             ...$Pick<User, {| id: *, username: *, role?: * |}>,
@@ -1321,7 +1324,7 @@ describe('Flow Operations Plugin', () => {
       };
       
       
-      export type UserQuery = { user: $Pick<User, { id: *, name?: *, address?: * }> };
+      export type UserQuery = { user: $MakeOptional<$Pick<User, { id: *, name?: *, address: * }>, { address: * }> };
       `);
 
       validateFlow(result);
