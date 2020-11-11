@@ -23,7 +23,22 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    return [`Pick<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
+    let hasConditionals = false;
+    const conditilnalsList: string[] = [];
+    let resString = `Pick<${parentName}, ${fields
+      .map(field => {
+        if (field.isConditional) {
+          hasConditionals = true;
+          conditilnalsList.push(field.fieldName);
+        }
+        return `'${field.fieldName}'`;
+      })
+      .join(' | ')}>`;
+
+    if (hasConditionals) {
+      resString = `MakeOptional<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
+    }
+    return [resString];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
