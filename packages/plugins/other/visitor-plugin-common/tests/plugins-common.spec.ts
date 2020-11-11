@@ -12,6 +12,18 @@ describe('convertFactory', () => {
     expect(factory('MyNAME')).toBe('MyName');
   });
 
+  it('Should allow to override underscore behaviour directly from configuration.', () => {
+    const factory = convertFactory({
+      namingConvention: {
+        transformUnderscore: true,
+      },
+    });
+
+    expect(factory('My_Name')).toBe('MyName');
+    expect(factory('_Myname')).toBe('Myname');
+    expect(factory('My_name')).toBe('MyName');
+  });
+
   it('Should allow to use "keep" as root', () => {
     const factory = convertFactory({
       namingConvention: 'keep',

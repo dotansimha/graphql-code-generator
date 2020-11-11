@@ -2,24 +2,51 @@ import { lifecycleHooks } from './hooks';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import { fileExists, readSync, writeSync } from './utils/file-system';
+import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
 import { sync as mkdirpSync } from 'mkdirp';
-import { dirname } from 'path';
+import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
+import { CodegenContext, ensureContext } from './config';
 import { createHash } from 'crypto';
 
-const hash = (content: string): string =>
-  createHash('sha1')
-    .update(content)
-    .digest('base64');
+const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
-export async function generate(config: Types.Config, saveToFile = true): Promise<Types.FileOutput[] | any> {
+export async function generate(
+  input: CodegenContext | (Types.Config & { cwd?: string }),
+  saveToFile = true
+): Promise<Types.FileOutput[] | any> {
+  const context = ensureContext(input);
+  const config = context.getConfig();
   await lifecycleHooks(config.hooks).afterStart();
-  let recentOutputHash = new Map<string, string>();
 
+  let previouslyGeneratedFilenames: string[] = [];
+  function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
+    const filenames = generationResult.map(o => o.filename);
+    // find stale files from previous build which are not present in current build
+    const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
+    staleFilenames.forEach(filename => {
+      if (shouldOverwrite(config, filename)) {
+        unlinkFile(filename, err => {
+          const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+          if (err) {
+            debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
+          } else {
+            debugLog(`Removed stale file: ${prettyFilename}`);
+          }
+        });
+      }
+    });
+    previouslyGeneratedFilenames = filenames;
+  }
+
+  const recentOutputHash = new Map<string, string>();
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;
+    }
+
+    if (config.watch) {
+      removeStaleFiles(config, generationResult);
     }
 
     await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
@@ -55,7 +82,10 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
         await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
         mkdirpSync(basedir);
-        writeSync(result.filename, result.content);
+        const absolutePath = isAbsolute(result.filename)
+          ? result.filename
+          : join(input.cwd || process.cwd(), result.filename);
+        writeSync(absolutePath, result.content);
         await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
       })
@@ -68,10 +98,10 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
 
   // watch mode
   if (config.watch) {
-    return createWatcher(config, writeOutput);
+    return createWatcher(context, writeOutput);
   }
 
-  const outputFiles = await executeCodegen(config);
+  const outputFiles = await executeCodegen(context);
 
   await writeOutput(outputFiles);
 

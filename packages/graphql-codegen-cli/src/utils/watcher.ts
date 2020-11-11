@@ -1,16 +1,16 @@
 import { executeCodegen } from '../codegen';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
-import * as isValidPath from 'is-valid-path';
-import * as isGlob from 'is-glob';
-import * as debounce from 'debounce';
-import * as logSymbols from 'log-symbols';
+import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
+
+import isGlob from 'is-glob';
+import debounce from 'debounce';
+import logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
-import { loadAndParseConfig } from '../config';
 import { lifecycleHooks } from '../hooks';
+import { loadContext, CodegenContext } from '../config';
+import { isValidPath } from '@graphql-tools/utils';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -21,10 +21,13 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (initialConfig: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
+export const createWatcher = (
+  initalContext: CodegenContext,
+  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
+): Promise<void> => {
   debugLog(`[Watcher] Starting watcher...`);
-  let config: Types.Config = initialConfig;
-  const files: string[] = [initialConfig.configFilePath].filter(a => a);
+  let config: Types.Config & { configFilePath?: string } = initalContext.getConfig();
+  const files: string[] = [initalContext.filepath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -64,7 +67,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
-        executeCodegen(config)
+        executeCodegen(initalContext)
           .then(onNext, () => Promise.resolve())
           .then(() => emitWatching());
       }
@@ -91,9 +94,8 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       followSymlinks: true,
       cwd: process.cwd(),
       disableGlobbing: false,
-      usePolling: true,
-      interval: 100,
-      binaryInterval: 300,
+      usePolling: config.watchConfig?.usePolling,
+      interval: config.watchConfig?.interval,
       depth: 99,
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
@@ -103,7 +105,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
     debugLog(`[Watcher] Started`);
 
-    const shutdown = async () => {
+    const shutdown = () => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
@@ -116,10 +118,13 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
       debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
       const fullPath = join(process.cwd(), path);
+      delete require.cache[fullPath];
 
       if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
         log(`${logSymbols.info} Config file has changed, reloading...`);
-        const newParsedConfig = loadAndParseConfig(config.configFilePath);
+        const context = await loadContext(config.configFilePath);
+
+        const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;
@@ -135,8 +140,8 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
   };
 
   // the promise never resolves to keep process running
-  return new Promise((_, reject) => {
-    executeCodegen(config)
+  return new Promise<void>((resolve, reject) => {
+    executeCodegen(initalContext)
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {

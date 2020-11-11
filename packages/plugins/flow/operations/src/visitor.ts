@@ -1,8 +1,21 @@
-import { GraphQLSchema } from 'graphql';
-import { FlowDocumentsPluginConfig } from './index';
-import { ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { FlowSelectionSetToObject } from './flow-selection-set-to-object';
+import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
+import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
+import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
+import {
+  wrapTypeWithModifiers,
+  PreResolveTypesProcessor,
+  ParsedDocumentsConfig,
+  BaseDocumentsVisitor,
+  LoadedFragment,
+  SelectionSetProcessorConfig,
+  SelectionSetToObject,
+  getConfigValue,
+  DeclarationKind,
+  generateFragmentImportStatement,
+} from '@graphql-codegen/visitor-plugin-common';
+
+import autoBind from 'auto-bind';
 
 export interface FlowDocumentsParsedConfig extends ParsedDocumentsConfig {
   useFlowExactObjects: boolean;
@@ -14,13 +27,73 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     super(
       config,
       {
-        useFlowExactObjects: config.useFlowExactObjects || false,
-        useFlowReadOnlyTypes: config.useFlowReadOnlyTypes || false,
+        useFlowExactObjects: getConfigValue(config.useFlowExactObjects, true),
+        useFlowReadOnlyTypes: getConfigValue(config.useFlowReadOnlyTypes, false),
       } as FlowDocumentsParsedConfig,
       schema
     );
 
-    this.setSelectionSetHandler(new FlowSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.preResolveTypes, this.config.nonOptionalTypename, allFragments, this.config));
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName));
+    autoBind(this);
+
+    const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
+    const wrapOptional = (type: string) => `?${type}`;
+
+    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+      const optional = !!type && !isNonNullType(type);
+      return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
+    };
+
+    const processorConfig: SelectionSetProcessorConfig = {
+      namespacedImportName: this.config.namespacedImportName,
+      convertName: this.convertName.bind(this),
+      enumPrefix: this.config.enumPrefix,
+      scalars: this.scalars,
+      formatNamedField,
+      wrapTypeWithModifiers(baseType, type) {
+        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+      },
+    };
+
+    const processor = config.preResolveTypes
+      ? new PreResolveTypesProcessor(processorConfig)
+      : new FlowWithPickSelectionSetProcessor({
+          ...processorConfig,
+          useFlowExactObjects: this.config.useFlowExactObjects,
+        });
+    const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
+    this.setSelectionSetHandler(
+      new SelectionSetToObject(
+        processor,
+        this.scalars,
+        this.schema,
+        this.convertName.bind(this),
+        this.getFragmentSuffix.bind(this),
+        allFragments,
+        this.config
+      )
+    );
+    this.setVariablesTransformer(
+      new FlowOperationVariablesToObject(
+        this.scalars,
+        this.convertName.bind(this),
+        this.config.namespacedImportName,
+        enumsNames,
+        this.config.enumPrefix
+      )
+    );
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return declarationKind === 'type' ? ',' : ';';
+  }
+
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports
+          // In flow, all non ` * as x` imports must be type imports
+          .map(fragmentImport => ({ ...fragmentImport, typesImport: true }))
+          .map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
   }
 }

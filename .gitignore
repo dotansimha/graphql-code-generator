@@ -1,6 +1,9 @@
 .idea
 .npmrc
 .yarnclean
+.DS_Store
+coverage
+npm-debug.log
 lerna-debug.log
 yarn-error.log
 node_modules
@@ -11,4 +14,10 @@ website/static/live-demo
 temp
 test-results/
 junit.xml
-
+dist
+.bob
+out.txt
+.cache
+tsconfig.tsbuildinfo
+.yarn
+.yarnrc

@@ -1,7 +1,18 @@
-import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
-import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema, isUnionType } from 'graphql';
-import { CompatabilityPluginRawConfig } from './index';
-import { CompatabilityPluginConfig } from './visitor';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import {
+  SelectionSetNode,
+  isObjectType,
+  isInterfaceType,
+  isNonNullType,
+  isListType,
+  Kind,
+  GraphQLSchema,
+  isUnionType,
+  GraphQLOutputType,
+} from 'graphql';
+import { CompatibilityPluginRawConfig } from './config';
+import { CompatibilityPluginConfig } from './visitor';
 
 export type SelectionSetToObjectResult = {
   [typeName: string]: {
@@ -20,9 +31,21 @@ const handleTypeNameDuplicates = (result: SelectionSetToObjectResult, name: stri
   return prefix + typeToUse;
 };
 
+function transformNestedAst(type: GraphQLOutputType, base: string, applyNonNullable: boolean): string {
+  if (isListType(type)) {
+    return applyNonNullable
+      ? `NonNullable<${transformNestedAst(type.ofType, base, applyNonNullable)}[number]>`
+      : `${transformNestedAst(type.ofType, base, applyNonNullable)}[number]`;
+  } else if (isNonNullType(type)) {
+    return transformNestedAst(type.ofType, base, applyNonNullable);
+  } else {
+    return applyNonNullable ? `(NonNullable<${base}>)` : base;
+  }
+}
+
 export function selectionSetToTypes(
   typesPrefix: string,
-  baseVisitor: BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig>,
+  baseVisitor: BaseVisitor<CompatibilityPluginRawConfig, CompatibilityPluginConfig>,
   schema: GraphQLSchema,
   parentTypeName: string,
   stack: string,
@@ -42,28 +65,32 @@ export function selectionSetToTypes(
       switch (selection.kind) {
         case Kind.FIELD: {
           if (isObjectType(parentType) || isInterfaceType(parentType)) {
-            const selectionName = selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
+            const selectionName =
+              selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
 
             if (!selectionName.startsWith('__')) {
               const field = parentType.getFields()[selection.name.value];
               const baseType = getBaseType(field.type);
-              const wrapWithNonNull = (baseVisitor.config.strict || baseVisitor.config.preResolveTypes) && !isNonNullType(field.type);
-              const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
               const typeRef = `${stack}['${selectionName}']`;
-              const nonNullableInnerType = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}`;
-              const arrayInnerType = isArray ? `${nonNullableInnerType}[0]` : nonNullableInnerType;
-              const wrapArrayWithNonNull = baseVisitor.config.strict || baseVisitor.config.preResolveTypes;
-              const newStack = isArray && wrapArrayWithNonNull ? `(NonNullable<${arrayInnerType}>)` : arrayInnerType;
-              selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, preResolveTypes, result);
+              const newStack = transformNestedAst(
+                field.type,
+                typeRef,
+                baseVisitor.config.strict || baseVisitor.config.preResolveTypes
+              );
+
+              selectionSetToTypes(
+                typesPrefix,
+                baseVisitor,
+                schema,
+                baseType.name,
+                newStack,
+                selectionName,
+                selection.selectionSet,
+                preResolveTypes,
+                result
+              );
             }
           }
-
-          break;
-        }
-
-        case Kind.FRAGMENT_SPREAD: {
-          const fragmentName = baseVisitor.convertName(selection.name.value, { suffix: 'Fragment' });
-          result[typeToUse] = { export: 'type', name: fragmentName };
 
           break;
         }
@@ -74,15 +101,45 @@ export function selectionSetToTypes(
           let inlineFragmentValue;
 
           if (isUnionType(parentType) || isInterfaceType(parentType)) {
-            inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
+            inlineFragmentValue = `DiscriminateUnion<${stack}, { __typename${
+              baseVisitor.config.nonOptionalTypename ? '' : '?'
+            }: '${typeCondition}' }>`;
           } else {
-            inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
-              .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
-              .filter(a => a)
-              .join(' | ')}>`;
+            let encounteredNestedInlineFragment = false;
+            const subSelections = selection.selectionSet.selections
+              .map(subSelection => {
+                switch (subSelection.kind) {
+                  case Kind.FIELD:
+                    return `'${subSelection.name.value}'`;
+                  case Kind.FRAGMENT_SPREAD:
+                    return `keyof ${baseVisitor.convertName(subSelection.name.value, { suffix: 'Fragment' })}`;
+                  case Kind.INLINE_FRAGMENT:
+                    encounteredNestedInlineFragment = true;
+                    return null;
+                }
+              })
+              .filter(a => a);
+
+            if (encounteredNestedInlineFragment) {
+              throw new Error('Nested inline fragments are not supported the `typescript-compatibility` plugin');
+            } else if (subSelections.length) {
+              inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${subSelections.join(' | ')}>`;
+            }
           }
 
-          selectionSetToTypes(typesPrefix, baseVisitor, schema, typeCondition, `(${inlineFragmentValue})`, fragmentName, selection.selectionSet, preResolveTypes, result);
+          if (inlineFragmentValue) {
+            selectionSetToTypes(
+              typesPrefix,
+              baseVisitor,
+              schema,
+              typeCondition,
+              `(${inlineFragmentValue})`,
+              fragmentName,
+              selection.selectionSet,
+              preResolveTypes,
+              result
+            );
+          }
 
           break;
         }

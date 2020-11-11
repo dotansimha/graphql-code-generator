@@ -1,13 +1,15 @@
 import { parse } from 'java-ast';
 
 export function validateJava(content: string): void {
-  const originalErr = console['error'];
+  /* eslint-disable no-console */
+  const originalErr = console.error;
   const collectedErrors = [];
-  console['error'] = (errorStr: string) => {
+  console.error = (errorStr: string) => {
     collectedErrors.push(errorStr);
   };
   parse(content);
-  console['error'] = originalErr;
+  console.error = originalErr;
+  /* eslint-enable no-console */
 
   if (collectedErrors.length > 0) {
     const mergedErrors = collectedErrors.join('\n');

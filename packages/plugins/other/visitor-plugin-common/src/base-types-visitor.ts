@@ -16,12 +16,30 @@ import {
   UnionTypeDefinitionNode,
   StringValueNode,
   isEnumType,
+  DirectiveNode,
+  Kind,
+  GraphQLEnumType,
 } from 'graphql';
+import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
-import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
-import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes, getConfigValue } from './utils';
+import {
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  DeclarationKindConfig,
+  DeclarationKind,
+  ParsedEnumValuesMap,
+} from './types';
+import {
+  transformComment,
+  buildScalars,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  indent,
+  wrapWithSingleQuotes,
+  getConfigValue,
+} from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
 
@@ -29,30 +47,30 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyOperationTypes: boolean;
   enumPrefix: boolean;
+  fieldWrapperValue: string;
+  wrapFieldDefinitions: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
   /**
-   * @name addUnderscoreToArgsType
-   * @type boolean
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
-   * @example With Custom Values
+   * @exampleMarkdown
+   * ## With Custom Values
    * ```yml
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
-   *
    */
   addUnderscoreToArgsType?: boolean;
   /**
-   * @name enumValues
-   * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
    *
-   * @example With Custom Values
+   * @exampleMarkdown
+   * ## With Custom Values
    * ```yml
    *   config:
    *     enumValues:
@@ -60,14 +78,14 @@ export interface RawTypesConfig extends RawConfig {
    *         A: 'foo'
    * ```
    *
-   * @example With External Enum
+   * ## With External Enum
    * ```yml
    *   config:
    *     enumValues:
    *       MyEnum: ./my-file#MyCustomEnum
    * ```
    *
-   * @example Import All Enums from a file
+   * ## Import All Enums from a file
    * ```yml
    *   config:
    *     enumValues: ./my-file
@@ -75,17 +93,16 @@ export interface RawTypesConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
-   * @name declarationKind
-   * @type DeclarationKindConfig
    * @description Overrides the default output for various GraphQL elements.
    *
-   * @example Override all declarations
+   * @exampleMarkdown
+   * ## Override all declarations
    * ```yml
    *   config:
    *     declarationKind: 'interface'
    * ```
    *
-   * @example Override only specific declarations
+   * ## Override only specific declarations
    * ```yml
    *   config:
    *     declarationKind:
@@ -95,12 +112,11 @@ export interface RawTypesConfig extends RawConfig {
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
   /**
-   * @name enumPrefix
-   * @type boolean
    * @default true
    * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
-   * @example Disable enum prefixes
+   * @exampleMarkdown
+   * ## Disable enum prefixes
    * ```yml
    *   config:
    *     typesPrefix: I
@@ -108,34 +124,120 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
+   * @default T
+   *
+   * @exampleMarkdown
+   * ## Allow Promise
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   *    fieldWrapperValue: T | Promise<T>
+   * ```
+   */
+  fieldWrapperValue?: string;
+  /**
+   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
+   * This is useful to allow return types such as Promises and functions.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Enable wrapping fields
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapFieldDefinitions: true
+   * ```
+   */
+  wrapFieldDefinitions?: boolean;
+  /**
+   * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    onlyOperationTypes: true
+   * ```
+   */
+  onlyOperationTypes?: boolean;
 }
 
-export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseTypesVisitor<
+  TRawConfig extends RawTypesConfig = RawTypesConfig,
+  TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
+> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
-  constructor(protected _schema: GraphQLSchema, rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
-    super(
-      rawConfig,
-      {
-        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
-        declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
-        ...additionalConfig,
-      },
-      buildScalars(_schema, defaultScalars)
-    );
+  constructor(
+    protected _schema: GraphQLSchema,
+    rawConfig: TRawConfig,
+    additionalConfig: TPluginConfig,
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+  ) {
+    super(rawConfig, {
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
+      addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
+      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
+      wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
+      ...additionalConfig,
+    });
 
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 
+  protected getExportPrefix(): string {
+    return 'export ';
+  }
+
+  public getFieldWrapperValue(): string {
+    if (this.config.fieldWrapperValue) {
+      return `${this.getExportPrefix()}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+    }
+
+    return '';
+  }
+
+  public getScalarsImports(): string[] {
+    return Object.keys(this.config.scalars)
+      .map(enumName => {
+        const mappedValue = this.config.scalars[enumName];
+
+        if (mappedValue.isExternal) {
+          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+        }
+
+        return null;
+      })
+      .filter(a => a);
+  }
+
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
-      const scalarValue = this.config.scalars[scalarName];
+      const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
-      const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const comment =
+        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue},`);
+      return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
     });
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -160,19 +262,24 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return asString;
   }
 
-  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+  getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
-      .withBlock(node.fields.join('\n')).string;
+      .withBlock(node.fields.join('\n'));
+  }
+
+  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    return this.getInputObjectDeclarationBlock(node).string;
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
     const comment = transformComment((node.description as any) as string, 1);
+    const { input } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${node.type},`);
+    return comment + indent(`${node.name}: ${node.type}${this.getPunctuation(input)}`);
   }
 
   Name(node: NameNode): string {
@@ -181,14 +288,18 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
-    const comment = transformComment((node.description as any) as string, 1);
+    const { type } = this._parsedConfig.declarationKind;
+    const comment = this.getFieldComment(node);
 
-    return comment + indent(`${node.name}: ${typeString},`);
+    return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    const originalNode = parent[key!] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
+    if (this.config.onlyOperationTypes) return '';
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -198,46 +309,83 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(possibleTypes).string;
   }
 
-  getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
+  protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
+    return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
+  }
+
+  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+    block.withContent(this.mergeInterfaces(interfaces, fields.length > 0));
+    block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
+  }
+
+  getObjectTypeDeclarationBlock(
+    node: ObjectTypeDefinitionNode,
+    originalNode: ObjectTypeDefinitionNode
+  ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields];
+    const allFields = [
+      ...(this.config.addTypename
+        ? [
+            indent(
+              `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'${this.getPunctuation(
+                type
+              )}`
+            ),
+          ]
+        : []),
+      ...node.fields,
+    ] as string[];
+    const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
-    const buildInterfaces = () => {
-      if (!originalNode.interfaces || !node.interfaces.length) {
-        return '';
-      }
-
-      const interfaces = originalNode.interfaces.map(i => this.convertName(i));
-
-      if (type === 'interface' || type === 'class') {
-        return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
-      }
-
-      return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
-    };
-    const interfaces = buildInterfaces();
-
-    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+    const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(type)
       .withName(this.convertName(node))
-      .withContent(interfaces)
       .withComment((node.description as any) as string);
 
-    return declarationBlock.withBlock(allFields.join('\n'));
+    if (type === 'interface' || type === 'class') {
+      if (interfacesNames.length > 0) {
+        declarationBlock.withContent('extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+      }
+
+      declarationBlock.withBlock(this.mergeAllFields(allFields, false));
+    } else {
+      this.appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
+    }
+
+    return declarationBlock;
+  }
+
+  getFieldComment(node: FieldDefinitionNode): string {
+    let commentText: string = node.description as any;
+    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+    }
+    const comment = transformComment(commentText, 1);
+    return comment;
+  }
+
+  protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
+    return allFields.join('\n');
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as ObjectTypeDefinitionNode;
+    if (this.config.onlyOperationTypes) return '';
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
-    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+      .filter(f => f)
+      .join('\n\n');
   }
 
-  getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
-    const argumentsBlock = this.buildArgumentsBlock(originalNode);
-
-    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+  getInterfaceTypeDeclarationBlock(
+    node: InterfaceTypeDefinitionNode,
+    _originalNode: InterfaceTypeDefinitionNode
+  ): DeclarationBlock {
+    const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
@@ -247,34 +395,64 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as InterfaceTypeDefinitionNode;
+    if (this.config.onlyOperationTypes) return '';
+    const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+      .filter(f => f)
+      .join('\n\n');
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+  ScalarTypeDefinition(_node: ScalarTypeDefinitionNode): string {
     // We empty this because we handle scalars in a different way, see constructor.
     return '';
   }
 
-  protected _buildEnumImport(identifier: string, source: string): string {
-    return `import { ${identifier} } from '${source}';`;
+  protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
+    const { useTypeImports } = this.config;
+    if (asDefault) {
+      if (useTypeImports) {
+        return `import type { default as ${identifier} } from '${source}';`;
+      }
+      return `import ${identifier} from '${source}';`;
+    }
+    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
+  }
+
+  protected handleEnumValueMapper(
+    typeIdentifier: string,
+    importIdentifier: string | null,
+    sourceIdentifier: string | null,
+    sourceFile: string | null
+  ): string[] {
+    const importStatement = this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile);
+
+    if (importIdentifier !== sourceIdentifier || sourceIdentifier !== typeIdentifier) {
+      return [importStatement, `import ${typeIdentifier} = ${sourceIdentifier};`];
+    }
+
+    return [importStatement];
   }
 
   public getEnumsImports(): string[] {
-    return Object.keys(this.config.enumValues)
-      .map(enumName => {
-        const mappedValue = this.config.enumValues[enumName];
+    return flatMap(Object.keys(this.config.enumValues), enumName => {
+      const mappedValue = this.config.enumValues[enumName];
 
-        if (mappedValue.sourceFile) {
-          const identifier = mappedValue.sourceIdentifier !== mappedValue.typeIdentifier ? `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}` : mappedValue.sourceIdentifier;
-
-          return this._buildEnumImport(identifier, mappedValue.sourceFile);
+      if (mappedValue.sourceFile) {
+        if (mappedValue.isDefault) {
+          return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
         }
 
-        return null;
-      })
-      .filter(a => a);
+        return this.handleEnumValueMapper(
+          mappedValue.typeIdentifier,
+          mappedValue.importIdentifier,
+          mappedValue.sourceIdentifier,
+          mappedValue.sourceFile
+        );
+      }
+
+      return [];
+    }).filter(a => a);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -298,24 +476,72 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return node.value;
   }
 
+  protected makeValidEnumIdentifier(identifier: string): string {
+    if (/^[0-9]/.exec(identifier)) {
+      return wrapWithSingleQuotes(identifier, true);
+    }
+    return identifier;
+  }
+
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
+    const schemaEnumType: GraphQLEnumType | undefined = this._schema
+      ? (this._schema.getType(typeName) as GraphQLEnumType)
+      : undefined;
+
     return values
       .map(enumOption => {
-        const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
+        const optionName = this.makeValidEnumIdentifier(
+          this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+        );
         const comment = transformComment((enumOption.description as any) as string, 1);
-        let enumValue: string = (enumOption.name as any) as string;
+        const schemaEnumValue = schemaEnumType ? schemaEnumType.getValue(enumOption.name as any).value : undefined;
+        let enumValue: string | number =
+          typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
 
-        if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+        if (
+          this.config.enumValues[typeName] &&
+          this.config.enumValues[typeName].mappedValues &&
+          typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
+        ) {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
         }
 
-        return comment + indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
+        return (
+          comment +
+          indent(
+            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
+              enumValue,
+              typeof schemaEnumValue !== 'undefined'
+            )}`
+          )
+        );
       })
       .join(',\n');
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
     return '';
+  }
+
+  getArgumentsObjectDeclarationBlock(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.arguments)
+      .withName(this.convertName(name))
+      .withComment(node.description)
+      .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments));
+  }
+
+  getArgumentsObjectTypeDefinition(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): string {
+    return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
@@ -327,15 +553,11 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
           (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
+            useTypesSuffix: false,
           }) +
           'Args';
 
-        return new DeclarationBlock(this._declarationBlockConfig)
-          .export()
-          .asKind(this._parsedConfig.declarationKind.arguments)
-          .withName(this.convertName(name))
-          .withComment(node.description)
-          .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
+        return this.getArgumentsObjectTypeDefinition(node, name, field);
       })
       .join('\n\n');
   }
@@ -362,8 +584,16 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return this.convertName(node);
   }
 
-  NamedType(node: NamedTypeNode): string {
-    return this._getTypeForNode(node);
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const typeToUse = this._getTypeForNode(node);
+
+    if (!isVisitingInputType && this.config.fieldWrapperValue && this.config.wrapFieldDefinitions) {
+      return `FieldWrapper<${typeToUse}>`;
+    }
+
+    return typeToUse;
   }
 
   ListType(node: ListTypeNode): string {
@@ -374,6 +604,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   SchemaDefinition() {
     return null;
+  }
+
+  protected getDeprecationReason(directive: DirectiveNode): string | void {
+    if ((directive.name as any) === 'deprecated') {
+      const hasArguments = directive.arguments.length > 0;
+      let reason = 'Field no longer supported';
+      if (hasArguments) {
+        reason = directive.arguments[0].value as any;
+      }
+      return reason;
+    }
   }
 
   protected wrapWithListType(str: string): string {

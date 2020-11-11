@@ -1,6 +1,6 @@
 ---
-name: New Codegen Template
-about: Suggest a new idea for a template
+name: New Codegen Plugin
+about: Suggest a new idea for a codegen plugin
 ---
 
 <!--

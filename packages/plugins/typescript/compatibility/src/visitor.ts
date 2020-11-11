@@ -1,23 +1,32 @@
-import { CompatabilityPluginRawConfig } from './index';
-import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { CompatibilityPluginRawConfig } from './config';
+import {
+  BaseVisitor,
+  DeclarationBlock,
+  indent,
+  getConfigValue,
+  buildScalars,
+  ParsedConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
-import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
-import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
 
-export interface CompatabilityPluginConfig extends ParsedConfig {
+import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
+import { pascalCase } from 'pascal-case';
+
+export interface CompatibilityPluginConfig extends ParsedConfig {
   reactApollo: any;
   noNamespaces: boolean;
   strict: boolean;
   preResolveTypes: boolean;
 }
 
-export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig> {
-  constructor(rawConfig: CompatabilityPluginRawConfig, private _schema: GraphQLSchema, options: { reactApollo: any }) {
+export class CompatibilityPluginVisitor extends BaseVisitor<CompatibilityPluginRawConfig, CompatibilityPluginConfig> {
+  constructor(rawConfig: CompatibilityPluginRawConfig, private _schema: GraphQLSchema, options: { reactApollo: any }) {
     super(rawConfig, {
       reactApollo: options.reactApollo,
       noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
       preResolveTypes: getConfigValue<boolean>(rawConfig.preResolveTypes, false),
       strict: getConfigValue<boolean>(rawConfig.strict, false),
+      scalars: buildScalars(_schema, rawConfig.scalars),
     } as any);
   }
 
@@ -35,16 +44,26 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
 
   protected buildOperationBlock(node: OperationDefinitionNode): SelectionSetToObjectResult {
     const typeName = this.getRootType(node.operation);
-    const baseName = this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}` });
+    const baseName = this.convertName(node.name.value, { suffix: `${pascalCase(node.operation)}` });
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {
       [typesPrefix + this.convertName('Variables')]: {
         export: 'type',
-        name: this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}Variables` }),
+        name: this.convertName(node.name.value, { suffix: `${pascalCase(node.operation)}Variables` }),
       },
     };
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, node.operation, node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
+    selectionSetToTypes(
+      typesPrefix,
+      this,
+      this._schema,
+      typeName,
+      baseName,
+      node.operation,
+      node.selectionSet,
+      this.config.preResolveTypes,
+      selectionSetTypes
+    );
 
     return selectionSetTypes;
   }
@@ -55,7 +74,17 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {};
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, 'fragment', node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
+    selectionSetToTypes(
+      typesPrefix,
+      this,
+      this._schema,
+      typeName,
+      baseName,
+      'fragment',
+      node.selectionSet,
+      this.config.preResolveTypes,
+      selectionSetTypes
+    );
 
     return selectionSetTypes;
   }
@@ -63,7 +92,9 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
   protected printTypes(selectionSetTypes: SelectionSetToObjectResult): string {
     return Object.keys(selectionSetTypes)
       .filter(typeName => typeName !== selectionSetTypes[typeName].name)
-      .map(typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`)
+      .map(
+        typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`
+      )
       .map(m => (this.config.noNamespaces ? m : indent(m)))
       .join('\n');
   }
@@ -145,7 +176,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
       if (hooks) {
         selectionSetTypes['use' + prefix] = {
           export: 'const',
-          name: 'use' + this.convertName(baseName, { suffix: toPascalCase(node.operation) }),
+          name: 'use' + this.convertName(baseName, { suffix: pascalCase(node.operation) }),
         };
       }
     }

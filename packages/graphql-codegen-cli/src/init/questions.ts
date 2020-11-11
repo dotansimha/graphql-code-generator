@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { grey } from './helpers';
 import { Tags, Answers } from './types';
 import { plugins } from './plugins';
@@ -45,7 +45,7 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       type: 'input',
       name: 'output',
       message: 'Where to write the output:',
-      default: 'src/generated/graphql.ts',
+      default: getOutputDefaultValue,
       validate: (str: string) => str.length > 0,
     },
     {
@@ -116,7 +116,8 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
       name: 'Application built with other framework or vanilla JS',
       key: 'client',
       value: [Tags.browser, Tags.typescript, Tags.flow],
-      checked: possibleTargets.Browser && !possibleTargets.Angular && !possibleTargets.React && !possibleTargets.Stencil,
+      checked:
+        possibleTargets.Browser && !possibleTargets.Angular && !possibleTargets.React && !possibleTargets.Stencil,
     },
   ];
 }
@@ -135,4 +136,14 @@ export function getPluginChoices(answers: Answers) {
 
 function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
   return [].concat(...targets);
+}
+
+export function getOutputDefaultValue(answers: Answers) {
+  if (answers.plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
+    return 'src/generated/graphql.tsx';
+  } else if (answers.plugins.some(plugin => plugin.defaultExtension === '.ts')) {
+    return 'src/generated/graphql.ts';
+  } else {
+    return 'src/generated/graphql.js';
+  }
 }

@@ -1,9 +1,8 @@
-import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { parse } from 'graphql';
 
-import { validateTs } from '@graphql-codegen/testing';
-
 import { plugin } from '../src/index';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('graphql-codegen typescript-graphql-document-nodes', () => {
   it('Should generate simple module with one file', async () => {
@@ -11,8 +10,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -21,18 +20,16 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MyQuery = gql\`
         query MyQuery {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate correctly for mutiple files', async () => {
@@ -40,16 +37,16 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
         {
-          filePath: 'some/file/my-other-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-other-query.graphql',
+          document: parse(/* GraphQL */ `
             query OtherQuery {
               field
             }
@@ -58,11 +55,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    )) as string;
+    )) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MyQuery = gql\`
         query MyQuery {
           field
@@ -75,7 +70,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should ignore unnamed documents', async () => {
@@ -83,8 +78,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query {
               field
             }
@@ -93,10 +88,10 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    )) as string;
+    )) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo('');
-    validateTs(result);
+    expect(result.content).toBeSimilarStringTo('');
+    validateTs(result.content);
   });
 
   it('Should generate simple module with two documents in one file', async () => {
@@ -104,8 +99,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -118,11 +113,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    )) as string;
+    )) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MyQuery = gql\`
         query MyQuery {
           field
@@ -135,7 +128,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with a name as a camel case', async () => {
@@ -143,28 +136,26 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
       ],
-      { namingConvention: 'change-case#camelCase' },
+      { namingConvention: 'camel-case#camelCase' },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const myQuery = gql\`
         query MyQuery {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with a name as a pascal case with underscores', async () => {
@@ -172,28 +163,26 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query My_Query {
               field
             }
           `),
         },
       ],
-      { namingConvention: 'change-case#pascalCase', transformUnderscore: false },
+      { namingConvention: 'pascal-case#pascalCase', transformUnderscore: false } as any,
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const My_Query = gql\`
         query My_Query {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with a name as a pascal case without underscores', async () => {
@@ -201,28 +190,31 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query My_Query {
               field
             }
           `),
         },
       ],
-      { namingConvention: 'change-case#pascalCase', transformUnderscore: true },
+      {
+        namingConvention: {
+          typeNames: 'pascal-case#pascalCase',
+          transformUnderscore: true,
+        },
+      },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MyQuery = gql\`
         query My_Query {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with a name as a contant case', async () => {
@@ -230,28 +222,26 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
       ],
-      { namingConvention: 'change-case#constantCase' },
+      { namingConvention: 'constant-case#constantCase' },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MY_QUERY = gql\`
         query MyQuery {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with prefix for a name', async () => {
@@ -259,8 +249,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -269,18 +259,16 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       { namePrefix: 'Graphql' },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const GraphqlMyQuery = gql\`
         query MyQuery {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate module with suffix for a name', async () => {
@@ -288,8 +276,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -298,18 +286,16 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       { nameSuffix: 'Query' },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-
+    expect(result.content).toBeSimilarStringTo(`
       export const MyQueryQuery = gql\`
         query MyQuery {
           field
         }
       \`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 
   it('Should generate simple module without graphql-tag', async () => {
@@ -317,8 +303,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -327,22 +313,21 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       { noGraphQLTag: true },
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-    import { DocumentNode } from 'graphql';
-
+    expect(result.content).toBeSimilarStringTo(`
     export const MyQuery: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"variableDefinitions":[],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"},"arguments":[],"directives":[]}]}}]};
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
+
   it('should contain fragment definitions', async () => {
     const result = plugin(
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             # Put your operations here
             fragment fragment1 on User {
               id
@@ -366,11 +351,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    ) as string;
+    ) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`
-    import gql from 'graphql-tag';
-    
+    expect(result.content).toBeSimilarStringTo(`
     export const Fragment1 = gql\`
       fragment fragment1 on User {
         id
@@ -395,6 +378,6 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       }
     \${Fragment1}\`;
     `);
-    validateTs(result);
+    validateTs(result.content);
   });
 });

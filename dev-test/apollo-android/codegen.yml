@@ -1,0 +1,15 @@
+schema:
+  - https://jpmbfqfpxvcujfn4d4e3lu2pga.appsync-api.us-east-1.amazonaws.com/graphql:
+      headers:
+        'x-api-key': da2-t2u7vtm33fattisq6vrrde56ui
+documents:
+  - /Users/dotansimha/Dev/test-app/app/src/main/graphql/com/amazonaws/amplify/generated/graphql/*.graphql
+generates:
+  generatedJava/:
+    preset: java-apollo-android
+    config:
+      package: com.app.generated.graphql
+      scalars:
+        AWSDate: Long
+    plugins:
+      - java-apollo-android

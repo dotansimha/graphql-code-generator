@@ -1,6 +1,5 @@
 type Message {
   id: String!
-
 }
 
 type Query {

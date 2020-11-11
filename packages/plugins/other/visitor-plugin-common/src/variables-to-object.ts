@@ -1,8 +1,8 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
-import { ScalarsMap, ConvertNameFn } from './types';
+import { NormalizedScalarsMap, ConvertNameFn, ParsedEnumValuesMap } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 
 export interface InterfaceOrVariable {
   name?: NameNode;
@@ -12,7 +12,14 @@ export interface InterfaceOrVariable {
 }
 
 export class OperationVariablesToObject {
-  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null, protected _enumNames: string[] = [], protected _enumPrefix = true) {
+  constructor(
+    protected _scalars: NormalizedScalarsMap,
+    protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
+    protected _namespacedImportName: string | null = null,
+    protected _enumNames: string[] = [],
+    protected _enumPrefix = true,
+    protected _enumValues: ParsedEnumValuesMap = {}
+  ) {
     autoBind(this);
   }
 
@@ -35,7 +42,10 @@ export class OperationVariablesToObject {
       return null;
     }
 
-    return variablesNode.map(variable => indent(this.transformVariable(variable))).join(',\n');
+    return (
+      variablesNode.map(variable => indent(this.transformVariable(variable))).join(`${this.getPunctuation()}\n`) +
+      this.getPunctuation()
+    );
   }
 
   protected getScalar(name: string): string {
@@ -53,11 +63,16 @@ export class OperationVariablesToObject {
     } else {
       const baseType = getBaseTypeNode(variable.type);
       const typeName = baseType.name.value;
-      typeValue = this._scalars[typeName]
-        ? this.getScalar(typeName)
-        : `${prefix}${this._convertName(baseType, {
-            useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
-          })}`;
+
+      if (this._scalars[typeName]) {
+        typeValue = this.getScalar(typeName);
+      } else if (this._enumValues[typeName] && this._enumValues[typeName].sourceFile) {
+        typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
+      } else {
+        typeValue = `${prefix}${this._convertName(baseType, {
+          useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
+        })}`;
+      }
     }
 
     const fieldName = this.getName(variable);
@@ -72,11 +87,11 @@ export class OperationVariablesToObject {
     return `${formattedFieldString}: ${formattedTypeString}`;
   }
 
-  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  public wrapAstTypeWithModifiers(_baseType: string, _typeNode: TypeNode): string {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
-  protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+  protected formatFieldString(fieldName: string, isNonNullType: boolean, _hasDefaultValue: boolean): string {
     return fieldName;
   }
 
@@ -88,5 +103,9 @@ export class OperationVariablesToObject {
     }
 
     return fieldType;
+  }
+
+  protected getPunctuation(): string {
+    return ',';
   }
 }

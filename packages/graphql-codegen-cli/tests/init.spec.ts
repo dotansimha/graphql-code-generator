@@ -1,13 +1,18 @@
-jest.mock('fs');
-import * as bddStdin from 'bdd-stdin';
+jest.mock('latest-version', () => {
+  return () => Promise.resolve('1.0.0');
+});
+
+import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
 import { init } from '../src/init';
 import { Tags } from '../src/init/types';
 import { guessTargets } from '../src/init/targets';
 import { plugins } from '../src/init/plugins';
 import { bold } from '../src/init/helpers';
-import { parseConfigFile } from '../src/yml';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions';
+import { safeLoad } from 'js-yaml';
+
+jest.mock('fs');
 const { version } = require('../package.json');
 
 const SELECT = ' '; // checkbox
@@ -112,7 +117,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -128,7 +133,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-apollo-angular');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use react related plugins when react is found', async () => {
@@ -155,12 +160,12 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
-    expect(config.generates['src/generated/graphql.ts']).toBeDefined();
+    expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
 
-    const output: any = config.generates['src/generated/graphql.ts'];
+    const output: any = config.generates['src/generated/graphql.tsx'];
     expect(output.plugins).toContainEqual('typescript');
     expect(output.plugins).toContainEqual('typescript-operations');
     expect(output.plugins).toContainEqual('typescript-react-apollo');
@@ -171,7 +176,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-react-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use stencil related plugins when @stencil/core is found', async () => {
@@ -198,12 +203,12 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
-    expect(config.generates['src/generated/graphql.ts']).toBeDefined();
+    expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
 
-    const output: any = config.generates['src/generated/graphql.ts'];
+    const output: any = config.generates['src/generated/graphql.tsx'];
     expect(output.plugins).toContainEqual('typescript');
     expect(output.plugins).toContainEqual('typescript-operations');
     expect(output.plugins).toContainEqual('typescript-stencil-apollo');
@@ -214,7 +219,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-stencil-apollo');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3);
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
   });
 
   it('should use typescript related plugins when typescript is found (node)', async () => {
@@ -240,7 +245,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -254,7 +259,7 @@ describe('init', () => {
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
     expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-resolvers');
     // should not have other plugins
-    expect(Object.keys(pkg.devDependencies)).toHaveLength(3); // 3 - because we have typescript package in devDeps
+    expect(Object.keys(pkg.devDependencies)).toHaveLength(4); // 3 - because we have typescript package in devDeps
   });
 
   it('should have few default values', async () => {
@@ -284,16 +289,16 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
-    expect(pkg.scripts['graphql']).toEqual(`graphql-codegen --config ${defaults.config}`);
+    expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config ${defaults.config}`);
     expect(configFile).toEqual(resolve(process.cwd(), defaults.config));
     expect(config.overwrite).toEqual(true);
     expect(config.schema).toEqual(defaults.schema);
     expect(config.documents).toEqual(defaults.documents);
     expect(config.generates[defaults.output]).toBeDefined();
-    expect(logSpy.mock.calls[1][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
   });
 
   it('should have few default values', async () => {
@@ -324,7 +329,7 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
     expect(pkg.scripts[options.script]).toEqual(`graphql-codegen --config ${options.config}`);
@@ -333,7 +338,7 @@ describe('init', () => {
     expect(config.schema).toEqual(options.schema);
     expect(config.documents).toEqual(options.documents);
     expect(config.generates[options.output]).toBeDefined();
-    expect(logSpy.mock.calls[1][0]).toContain(`Config file generated at ${bold(options.config)}`);
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(options.config)}`);
   });
 
   it('custom setup', async () => {
@@ -361,7 +366,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = parseConfigFile(writeFileSpy.mock.calls[0][1] as string);
+    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // config
     // should overwrite
@@ -391,7 +396,7 @@ describe('init', () => {
 
     // logs
     const welcomeMsg = logSpy.mock.calls[0][0];
-    const doneMsg = logSpy.mock.calls[1][0];
+    const doneMsg = logSpy.mock.calls[2][0];
 
     expect(welcomeMsg).toContain(`Welcome to ${bold('GraphQL Code Generator')}`);
     expect(doneMsg).toContain(`Config file generated at ${bold('codegen.yml')}`);
@@ -423,6 +428,7 @@ describe('init', () => {
         [Tags.node]: targets.includes(Tags.node),
         [Tags.typescript]: targets.includes(Tags.typescript),
         [Tags.flow]: targets.includes(Tags.flow),
+        [Tags.vue]: targets.includes(Tags.vue),
       })
         .filter(c => c.checked)
         .reduce((all, choice) => all.concat(choice.value), []);
@@ -591,6 +597,26 @@ describe('init', () => {
   });
 });
 
-function useInputs(inputs: { onTarget: string[]; onSchema: string[]; onDocuments?: string[]; onPlugins: string[]; onOutput: string[]; onIntrospection: string[]; onConfig: string[]; onScript: string[] }) {
-  bddStdin([].concat(inputs.onTarget, inputs.onSchema, inputs.onDocuments || [], inputs.onPlugins, inputs.onOutput, inputs.onIntrospection, inputs.onConfig, inputs.onScript));
+function useInputs(inputs: {
+  onTarget: string[];
+  onSchema: string[];
+  onDocuments?: string[];
+  onPlugins: string[];
+  onOutput: string[];
+  onIntrospection: string[];
+  onConfig: string[];
+  onScript: string[];
+}) {
+  bddStdin(
+    [].concat(
+      inputs.onTarget,
+      inputs.onSchema,
+      inputs.onDocuments || [],
+      inputs.onPlugins,
+      inputs.onOutput,
+      inputs.onIntrospection,
+      inputs.onConfig,
+      inputs.onScript
+    )
+  );
 }

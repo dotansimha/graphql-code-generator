@@ -1,9 +1,28 @@
 import { FieldsTree } from './fields-tree';
-import { getBaseTypeNode, DeclarationBlock, getConfigValue, ParsedConfig, BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import {
+  getBaseTypeNode,
+  DeclarationBlock,
+  getConfigValue,
+  ParsedConfig,
+  BaseVisitor,
+  buildScalars,
+  DEFAULT_SCALARS,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
-import * as autoBind from 'auto-bind';
-import { Directives, TypeScriptMongoPluginConfig } from './index';
-import { DirectiveNode, GraphQLSchema, ObjectTypeDefinitionNode, NamedTypeNode, FieldDefinitionNode, Kind, ValueNode, isEnumType, InterfaceTypeDefinitionNode, UnionTypeDefinitionNode } from 'graphql';
+import autoBind from 'auto-bind';
+import { Directives, TypeScriptMongoPluginConfig } from './config';
+import {
+  DirectiveNode,
+  GraphQLSchema,
+  ObjectTypeDefinitionNode,
+  NamedTypeNode,
+  FieldDefinitionNode,
+  Kind,
+  ValueNode,
+  isEnumType,
+  InterfaceTypeDefinitionNode,
+  UnionTypeDefinitionNode,
+} from 'graphql';
 
 type AdditionalField = { path: string; type: string };
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
@@ -47,6 +66,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       idFieldName: pluginConfig.idFieldName || '_id',
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false),
+      scalars: buildScalars(_schema, pluginConfig.scalars, DEFAULT_SCALARS),
     } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
     autoBind(this);
     this._variablesTransformer = new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, false, false);
@@ -73,15 +93,12 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.NULL:
         return null;
       case Kind.OBJECT:
-        return valueNode.fields.reduce(
-          (prev, f) => {
-            return {
-              ...prev,
-              [f.name.value]: this._resolveDirectiveValue<T>(f.value),
-            };
-          },
-          {} as T
-        );
+        return valueNode.fields.reduce((prev, f) => {
+          return {
+            ...prev,
+            [f.name.value]: this._resolveDirectiveValue<T>(f.value),
+          };
+        }, {} as T);
       default:
         return undefined;
     }
@@ -106,7 +123,9 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       return null;
     }
 
-    const foundDirective = node.directives.find(d => (d.name as any) === directiveName || (d.name.value && d.name.value === directiveName));
+    const foundDirective = node.directives.find(
+      d => (d.name as any) === directiveName || (d.name.value && d.name.value === directiveName)
+    );
 
     if (!foundDirective) {
       return null;
@@ -131,18 +150,36 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _handleIdField(fieldNode: FieldDefinitionNode, tree: FieldsTree, addOptionalSign: boolean): void {
-    tree.addField(`${this.config.idFieldName}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(this.config.objectIdType, fieldNode.type));
+    tree.addField(
+      `${this.config.idFieldName}${addOptionalSign ? '?' : ''}`,
+      this._variablesTransformer.wrapAstTypeWithModifiers(this.config.objectIdType, fieldNode.type)
+    );
   }
 
-  private _handleLinkField(fieldNode: FieldDefinitionNode, tree: FieldsTree, linkDirective: DirectiveNode, mapPath: string | null, addOptionalSign: boolean): void {
+  private _handleLinkField(
+    fieldNode: FieldDefinitionNode,
+    tree: FieldsTree,
+    linkDirective: DirectiveNode,
+    mapPath: string | null,
+    addOptionalSign: boolean
+  ): void {
     const overrideType = this._getDirectiveArgValue<string>(linkDirective, 'overrideType');
-    const coreType = overrideType ? overrideType : getBaseTypeNode(fieldNode.type);
+    const coreType = overrideType || getBaseTypeNode(fieldNode.type);
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type));
+    tree.addField(
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type)
+    );
   }
 
-  private _handleColumnField(fieldNode: FieldDefinitionNode, tree: FieldsTree, columnDirective: DirectiveNode, mapPath: string | null, addOptionalSign: boolean): void {
+  private _handleColumnField(
+    fieldNode: FieldDefinitionNode,
+    tree: FieldsTree,
+    columnDirective: DirectiveNode,
+    mapPath: string | null,
+    addOptionalSign: boolean
+  ): void {
     const overrideType = this._getDirectiveArgValue<string>(columnDirective, 'overrideType');
     const coreType = getBaseTypeNode(fieldNode.type);
     let type: string = null;
@@ -159,14 +196,25 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       }
     }
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, overrideType ? overrideType : this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
+    tree.addField(
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      overrideType || this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type)
+    );
   }
 
-  private _handleEmbeddedField(fieldNode: FieldDefinitionNode, tree: FieldsTree, mapPath: string | null, addOptionalSign: boolean): void {
+  private _handleEmbeddedField(
+    fieldNode: FieldDefinitionNode,
+    tree: FieldsTree,
+    mapPath: string | null,
+    addOptionalSign: boolean
+  ): void {
     const coreType = getBaseTypeNode(fieldNode.type);
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
+    tree.addField(
+      `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,
+      this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type)
+    );
   }
 
   private _buildFieldsTree(fields: ReadonlyArray<FieldDefinitionNode>): FieldsTree {

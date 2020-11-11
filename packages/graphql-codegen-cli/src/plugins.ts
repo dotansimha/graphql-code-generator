@@ -1,8 +1,10 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { resolve } from 'path';
-import { DetailedError } from '@graphql-codegen/core';
 
-export async function getPluginByName(name: string, pluginLoader: Types.PackageLoaderFn<CodegenPlugin>): Promise<CodegenPlugin> {
+export async function getPluginByName(
+  name: string,
+  pluginLoader: Types.PackageLoaderFn<CodegenPlugin>
+): Promise<CodegenPlugin> {
   const possibleNames = [
     `@graphql-codegen/${name}`,
     `@graphql-codegen/${name}-template`,
@@ -18,9 +20,9 @@ export async function getPluginByName(name: string, pluginLoader: Types.PackageL
 
   for (const moduleName of possibleModules) {
     try {
-      return (await pluginLoader(moduleName)) as CodegenPlugin;
+      return await pluginLoader(moduleName);
     } catch (err) {
-      if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
+      if (err.code !== 'MODULE_NOT_FOUND') {
         throw new DetailedError(
           `Unable to load template plugin matching ${name}`,
           `

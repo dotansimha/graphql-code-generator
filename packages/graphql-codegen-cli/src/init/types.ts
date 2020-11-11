@@ -5,6 +5,7 @@ export interface PluginOption {
   pathInRepo: string;
   available(tags: Tags[]): boolean;
   shouldBeSelected(tags: Tags[]): boolean;
+  defaultExtension: string;
 }
 
 export interface Answers {
@@ -26,4 +27,5 @@ export enum Tags {
   angular = 'Angular',
   stencil = 'Stencil',
   react = 'React',
+  vue = 'Vue',
 }

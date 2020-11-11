@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { getQuestions } from './questions';
 import { guessTargets } from './targets';
@@ -6,7 +6,7 @@ import { Answers, Tags } from './types';
 import { writeConfig, writePackage, bold } from './helpers';
 
 function log(...msgs: string[]) {
-  // tslint:disable-next-line
+  // eslint-disable-next-line no-console
   console.log(...msgs);
 }
 
@@ -38,10 +38,12 @@ export async function init() {
   }
 
   // config file
-  const { relativePath } = writeConfig(answers, config);
+  const { relativePath } = await writeConfig(answers, config);
+
+  log(`Fetching latest versions of selected plugins...`);
 
   // write package.json
-  writePackage(answers, relativePath);
+  await writePackage(answers, relativePath);
 
   // Emit status to the terminal
   log(`

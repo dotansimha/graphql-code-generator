@@ -1,30 +1,39 @@
 {
   "name": "@graphql-codegen/java-common",
-  "version": "1.6.1",
+  "version": "1.17.8",
   "description": "GraphQL Code Generator utils library for developing Java plugins",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/java/common"
+  },
   "license": "MIT",
   "scripts": {
-    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
+    "lint": "eslint **/*.ts",
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.6.1",
-    "@graphql-codegen/visitor-plugin-common": "1.6.1",
-    "tslib": "1.10.0"
+    "@graphql-codegen/plugin-helpers": "^1.17.8",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
+    "auto-bind": "~4.0.0",
+    "strip-indent": "^3.0.0",
+    "tslib": "~2.0.1",
+    "unixify": "^1.0.0"
   },
-  "devDependencies": {
-    "graphql": "14.5.0",
-    "java-ast": "0.1.0",
-    "typescript": "3.5.3"
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "sideEffects": false,
-  "main": "dist/commonjs/index.js",
-  "module": "dist/esnext/index.js",
-  "typings": "dist/esnext/index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
   "typescript": {
-    "definition": "dist/esnext/index.d.ts"
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

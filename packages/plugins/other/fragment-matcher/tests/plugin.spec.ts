@@ -1,6 +1,9 @@
 import '@graphql-codegen/testing';
-import { buildASTSchema } from 'graphql';
+
+import { codegen } from '@graphql-codegen/core';
+import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
+
 import { plugin, validate } from '../src';
 
 const schema = buildASTSchema(gql`
@@ -50,6 +53,16 @@ const introspection = JSON.stringify(
   2
 );
 
+const apolloClient3Result = JSON.stringify(
+  {
+    possibleTypes: {
+      People: ['Character', 'Jedi', 'Droid'],
+    },
+  },
+  null,
+  2
+);
+
 describe('Fragment Matcher Plugin', () => {
   describe('validate', () => {
     it('should not throw on tsx?, jsx?, json files, both in lower and upper case', async () => {
@@ -90,7 +103,9 @@ describe('Fragment Matcher Plugin', () => {
       const content = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.json',
         }
@@ -105,7 +120,9 @@ describe('Fragment Matcher Plugin', () => {
       const jsContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.js',
         }
@@ -113,7 +130,9 @@ describe('Fragment Matcher Plugin', () => {
       const jsxContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.jsx',
         }
@@ -131,6 +150,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           module: 'commonjs',
         },
         {
@@ -141,6 +161,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
+          apolloClientVersion: 2,
           module: 'commonjs',
         },
         {
@@ -161,7 +182,9 @@ describe('Fragment Matcher Plugin', () => {
       const tsContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.ts',
         }
@@ -169,7 +192,9 @@ describe('Fragment Matcher Plugin', () => {
       const tsxContent = await plugin(
         schema,
         [],
-        {},
+        {
+          apolloClientVersion: 2,
+        },
         {
           outputFile: 'foo.tsx',
         }
@@ -186,8 +211,43 @@ describe('Fragment Matcher Plugin', () => {
             }[];
           };
         }
-
         const result: IntrospectionResultData = ${introspection};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should use es2015 module by default - apollo client 3', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
+      }
+
+        const result: PossibleTypesResultData = ${apolloClient3Result};  
 
         export default result;
       `;
@@ -224,5 +284,166 @@ describe('Fragment Matcher Plugin', () => {
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
     });
+
+    it('should support exportAsConst for apolloClientVersion 2', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 2,
+          useExplicitTyping: true,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 2,
+          useExplicitTyping: true,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+        export type IntrospectionResultData = ${introspection};
+        const result: IntrospectionResultData = ${introspection};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should support useExplicitTyping for apolloClientVersion 3', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+          useExplicitTyping: true,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+          useExplicitTyping: true,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+        export type PossibleTypesResultData = ${apolloClient3Result};
+        const result: PossibleTypesResultData = ${apolloClient3Result};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+  });
+
+  it('should support Apollo Federation', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      type Character @key(fields: "id") {
+        id: ID
+        name: String
+      }
+
+      type Jedi @key(fields: "id") {
+        id: ID
+        side: String
+      }
+
+      type Droid @key(fields: "id") {
+        id: ID
+        model: String
+      }
+
+      union People = Character | Jedi | Droid
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+    const content = await codegen({
+      filename: 'foo.json',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'fragment-matcher': {},
+        },
+      ],
+      config: {
+        federation: true,
+        apolloClientVersion: 2,
+      },
+      pluginMap: {
+        'fragment-matcher': {
+          plugin,
+          validate,
+        },
+      },
+    });
+
+    expect(content).toEqual(introspection);
+  });
+  it('should support Apollo Federation with predefined directive definitions', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      directive @key(fields: String!) on FIELD_DEFINITION
+
+      type Character @key(fields: "id") {
+        id: ID
+        name: String
+      }
+
+      type Jedi @key(fields: "id") {
+        id: ID
+        side: String
+      }
+
+      type Droid @key(fields: "id") {
+        id: ID
+        model: String
+      }
+
+      union People = Character | Jedi | Droid
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+    const content = await codegen({
+      filename: 'foo.json',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'fragment-matcher': {},
+        },
+      ],
+      config: {
+        apolloClientVersion: 2,
+        federation: true,
+      },
+      pluginMap: {
+        'fragment-matcher': {
+          plugin,
+          validate,
+        },
+      },
+    });
+
+    expect(content).toEqual(introspection);
   });
 });

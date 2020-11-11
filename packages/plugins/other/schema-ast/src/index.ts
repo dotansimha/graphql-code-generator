@@ -1,25 +1,17 @@
-import { GraphQLSchema, printSchema, print } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, lexicographicSortSchema, printSchema } from 'graphql';
+import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
-// Actually this should go to ardatan/graphql-toolkit
-export function printSchemaWithDirectives(schema: GraphQLSchema): string {
-  const allTypes = schema.getTypeMap();
-  const allTypesAst = Object.keys(allTypes).map(key => allTypes[key].astNode);
-
-  const allDirectivesAst = schema.getDirectives().map(dir => dir.astNode);
-
-  return [...allDirectivesAst, ...allTypesAst].map(ast => print(ast)).join('\n');
-}
-
+/**
+ * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
+ */
 export interface SchemaASTConfig {
   /**
-   * @name includeDirectives
-   * @type boolean
    * @description Include directives to Schema output.
    * @default false
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * schema:
    *   - './src/schema.graphql'
@@ -32,16 +24,52 @@ export interface SchemaASTConfig {
    * ```
    */
   includeDirectives?: boolean;
+  /**
+   * @description Set to true in order to print description as comments (using # instead of """)
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * schema: http://localhost:3000/graphql
+   * generates:
+   *   schema.graphql:
+   *     plugins:
+   *       - schema-ast
+   *     config:
+   *       commentDescriptions: true
+   * ```
+   */
+  commentDescriptions?: boolean;
+  /**
+   * @description Set to true in order get the schema lexicographically sorted before printed.
+   * @default false
+   */
+  sort?: boolean;
+  federation?: boolean;
 }
-export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, { includeDirectives = false }: SchemaASTConfig): Promise<string> => {
+
+export const plugin: PluginFunction<SchemaASTConfig> = async (
+  schema: GraphQLSchema,
+  _documents,
+  { commentDescriptions = false, includeDirectives = false, sort = false, federation }
+): Promise<string> => {
+  let outputSchema = federation ? removeFederation(schema) : schema;
+  outputSchema = sort ? lexicographicSortSchema(outputSchema) : outputSchema;
+
   if (includeDirectives) {
-    return printSchemaWithDirectives(schema);
+    return printSchemaWithDirectives(outputSchema);
   }
 
-  return printSchema(schema, { commentDescriptions: false });
+  return printSchema(outputSchema, { commentDescriptions: commentDescriptions });
 };
 
-export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], _config: SchemaASTConfig, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => {
+export const validate: PluginValidateFn<any> = async (
+  _schema: GraphQLSchema,
+  _documents: Types.DocumentFile[],
+  _config: SchemaASTConfig,
+  outputFile: string,
+  allPlugins: Types.ConfiguredPlugin[]
+) => {
   const singlePlugin = allPlugins.length === 1;
 
   if (singlePlugin && extname(outputFile) !== '.graphql') {

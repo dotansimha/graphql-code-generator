@@ -1,9 +1,8 @@
 {
   "trailingComma": "es5",
-  "tabWidth": 2,
-  "printWidth": 250,
-  "semi": true,
+  "printWidth": 120,
   "singleQuote": true,
+  "arrowParens": "avoid",
   "overrides": [
     {
       "files": "*.flow.js",

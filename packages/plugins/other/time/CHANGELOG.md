@@ -1,0 +1,54 @@
+# @graphql-codegen/time
+
+## 2.0.1
+
+### Patch Changes
+
+- 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
+- 1d7c6432: Bump versions of @graphql-tools/ packages to fix issues with loading schemas and SDL comments
+- Updated dependencies [1d7c6432]
+- Updated dependencies [1d7c6432]
+  - @graphql-codegen/plugin-helpers@1.17.8
+
+## 2.0.0
+
+### Major Changes
+
+- bc6e5c08: Update plugin configuration API to use object only (`string` is no longer supported)
+
+  ## Migration Notes
+
+  This only effects developers who used to override the `format`. You now need to specify it with a key!
+
+  #### Before
+
+  ```yaml
+  plugins:
+    - time: 'DD-MM-YYYY'
+  ```
+
+  #### After
+
+  ```yaml
+  plugins:
+    - time:
+        format: 'DD-MM-YYYY'
+  ```
+
+## 1.17.10
+
+### Patch Changes
+
+- ee2b01a3: Fixes for issues with publish command
+
+## 1.17.9
+
+### Patch Changes
+
+- 6cb9c96d: Fixes issues with previous release
+
+## 1.17.8
+
+### Patch Changes
+
+- bccfd28c: Fix issues with adding time to .graphql files

@@ -1,6 +1,6 @@
 query myQuery {
-    fieldA
-    fieldB @client {
-        fieldC
-    }
+  fieldA
+  fieldB @client {
+    fieldC
+  }
 }

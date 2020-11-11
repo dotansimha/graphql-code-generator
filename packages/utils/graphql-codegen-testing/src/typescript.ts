@@ -1,36 +1,51 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import * as ts from 'typescript';
-import * as path from 'path';
+import {
+  CompilerOptions,
+  ModuleResolutionKind,
+  ScriptTarget,
+  JsxEmit,
+  ModuleKind,
+  createSourceFile,
+  ScriptKind,
+  flattenDiagnosticMessageText,
+  createCompilerHost,
+  createProgram,
+  Diagnostic,
+} from 'typescript';
+import { resolve, join, dirname } from 'path';
+import open from 'open';
+
+const { compressToEncodedURIComponent } = require('lz-string');
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
-  options: ts.CompilerOptions = {
+  options: CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
-    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    moduleResolution: ModuleResolutionKind.NodeJs,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    target: ts.ScriptTarget.ES5,
-    typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
-    jsx: ts.JsxEmit.Preserve,
+    target: ScriptTarget.ES5,
+    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
     ],
-    module: ts.ModuleKind.ESNext,
+    module: ModuleKind.ESNext,
   },
   isTsx = false,
-  isStrict = false
+  isStrict = false,
+  openPlayground = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
   }
-
   if (isStrict) {
     options.strictNullChecks = true;
     options.strict = true;
@@ -40,104 +55,140 @@ export function validateTs(
     options.strictFunctionTypes = true;
   }
 
-  const contents: string = typeof pluginOutput === 'string' ? pluginOutput : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-  const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
+  const contents: string =
+    typeof pluginOutput === 'string'
+      ? pluginOutput
+      : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
 
-  if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
-    const errors: string[] = [];
-    const allDiagnostics: any[] = result['parseDiagnostics'];
+  try {
+    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const result = createSourceFile(
+      testFile,
+      contents,
+      ScriptTarget.ES2016,
+      false,
+      isTsx ? ScriptKind.TSX : undefined
+    ) as { parseDiagnostics?: Diagnostic[] };
 
-    allDiagnostics.forEach(diagnostic => {
-      if (diagnostic.file) {
-        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-        errors.push(`${line + 1},${character + 1}: ${message} ->
+    const allDiagnostics = result.parseDiagnostics;
+
+    if (allDiagnostics && allDiagnostics.length > 0) {
+      const errors: string[] = [];
+
+      allDiagnostics.forEach(diagnostic => {
+        if (diagnostic.file) {
+          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
-      } else {
-        errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
-      }
+        } else {
+          errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        }
 
-      const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
+        const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
 
-      if (relevantErrors && relevantErrors.length > 0) {
-        throw new Error(relevantErrors.join('\n'));
-      }
-    });
+        if (relevantErrors && relevantErrors.length > 0) {
+          throw new Error(relevantErrors.join('\n'));
+        }
+      });
+    }
+  } catch (e) {
+    if (openPlayground && !process.env) {
+      const compressedCode = compressToEncodedURIComponent(contents);
+      open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
+
+    throw e;
   }
 }
 
 export function compileTs(
   contents: string,
-  options: ts.CompilerOptions = {
+  options: CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
-    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    moduleResolution: ModuleResolutionKind.NodeJs,
+    allowSyntheticDefaultImports: true,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    target: ts.ScriptTarget.ES5,
-    typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
-    jsx: ts.JsxEmit.Preserve,
+    target: ScriptTarget.ES5,
+    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
     ],
-    module: ts.ModuleKind.ESNext,
+    module: ModuleKind.ESNext,
   },
-  isTsx = false
+  isTsx = false,
+  openPlayground = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
   }
 
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-  const host = ts.createCompilerHost(options);
-  let program = ts.createProgram([testFile], options, {
-    ...host,
-    getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
-      if (fileName === testFile) {
-        return ts.createSourceFile(fileName, contents, options.target);
-      }
+  try {
+    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const host = createCompilerHost(options);
+    const program = createProgram([testFile], options, {
+      ...host,
+      getSourceFile: (
+        fileName: string,
+        languageVersion: ScriptTarget,
+        onError?: (message: string) => void,
+        shouldCreateNewSourceFile?: boolean
+      ) => {
+        if (fileName === testFile) {
+          return createSourceFile(fileName, contents, options.target);
+        }
 
-      return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
-    },
-    writeFile: function() {},
-    useCaseSensitiveFileNames: function() {
-      return false;
-    },
-    getCanonicalFileName: function(filename) {
-      return filename;
-    },
-    getCurrentDirectory: function() {
-      return '';
-    },
-    getNewLine: function() {
-      return '\n';
-    },
-  });
-  let emitResult = program.emit();
-  let allDiagnostics = emitResult.diagnostics;
-  const errors: string[] = [];
+        return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
+      },
+      writeFile: function () {},
+      useCaseSensitiveFileNames: function () {
+        return false;
+      },
+      getCanonicalFileName: function (filename) {
+        return filename;
+      },
+      getCurrentDirectory: function () {
+        return '';
+      },
+      getNewLine: function () {
+        return '\n';
+      },
+    });
+    const emitResult = program.emit();
+    const allDiagnostics = emitResult.diagnostics;
+    const errors: string[] = [];
 
-  allDiagnostics.forEach(diagnostic => {
-    if (diagnostic.file) {
-      let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-      let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      errors.push(`${line + 1},${character + 1}: ${message} ->
+    allDiagnostics.forEach(diagnostic => {
+      if (diagnostic.file) {
+        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+        const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
-    } else {
-      errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+      } else {
+        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+      }
+    });
+
+    const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
+
+    if (relevantErrors && relevantErrors.length > 0) {
+      throw new Error(relevantErrors.join('\n'));
     }
-  });
+  } catch (e) {
+    if (openPlayground) {
+      const compressedCode = compressToEncodedURIComponent(contents);
+      open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
 
-  const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
-
-  if (relevantErrors && relevantErrors.length > 0) {
-    throw new Error(relevantErrors.join('\n'));
+    throw e;
   }
 }

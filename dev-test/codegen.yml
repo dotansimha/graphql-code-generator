@@ -1,4 +1,3 @@
-overwrite: true
 hooks:
   afterAllFileWrite:
     - prettier --write
@@ -6,7 +5,6 @@ generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-resolvers
   ./dev-test/test-schema/flow-types.flow.js:
@@ -17,7 +15,6 @@ generates:
   ./dev-test/test-schema/resolvers-root.ts:
     schema: ./dev-test/test-schema/schema-with-root.graphql
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-resolvers
   ./dev-test/test-schema/resolvers-federation.ts:
@@ -25,13 +22,11 @@ generates:
     config:
       federation: true
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-resolvers
   ./dev-test/test-schema/typings.avoidOptionals.ts:
@@ -50,18 +45,32 @@ generates:
           content: '}'
       - typescript
       - typescript-operations
+  ./dev-test/test-schema/env.types.ts:
+    schema: ${SCHEMA_PATH}
+    plugins:
+      - typescript
   ./dev-test/test-schema/typings.immutableTypes.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
       imutableTypes: true
     plugins:
       - typescript
+  ./dev-test/test-schema/typings.enum.ts:
+    schema: ./dev-test/test-schema/schema-object.js
+    plugins:
+      - typescript
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - add: // tslint:disable
       - typescript-graphql-files-modules
+  ./dev-test/githunt/typed-document-nodes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
   ./dev-test/githunt/flow.flow.js:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -79,6 +88,24 @@ generates:
     documents: ./dev-test/githunt/**/*.graphql
     config:
       preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/githunt/types.flatten.preResolveTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+      flattenGeneratedTypes: true
     plugins:
       - typescript
       - typescript-operations
@@ -127,7 +154,15 @@ generates:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - add: // tslint:disable
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+  ./dev-test/githunt/types.reactApollo.v2.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      reactApolloVersion: 2
+    plugins:
       - typescript
       - typescript-operations
       - typescript-react-apollo
@@ -137,7 +172,6 @@ generates:
     config:
       operationResultSuffix: MyOperation
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-operations
       - typescript-react-apollo
@@ -147,7 +181,6 @@ generates:
     config:
       preResolveTypes: true
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-operations
       - typescript-react-apollo
@@ -155,17 +188,29 @@ generates:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-operations
       - typescript-react-apollo
+  ./dev-test/githunt/types.apolloAngular.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-apollo-angular
+  ./dev-test/githunt/types.apolloAngular.sdk.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
     config:
-      withHooks: true
+      sdkClass: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-apollo-angular
   ./dev-test/githunt/types.stencilApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-operations
       - typescript-stencil-apollo
@@ -173,7 +218,6 @@ generates:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - add: // tslint:disable
       - typescript
       - typescript-operations
       - typescript-urql
@@ -183,14 +227,21 @@ generates:
     preset: near-operation-file
     presetConfig:
       extension: .stencil-component.tsx
+      folder: __generated__
       baseTypesPath: types.d.ts
     plugins:
-      - add: // tslint:disable
       - typescript-operations
       - typescript-stencil-apollo
-    config: 
+    config:
       componentType: class
       globalNamespace: true
+  ./dev-test/githunt/types.vueApollo.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-apollo
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -205,23 +256,52 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
   ./dev-test/test-schema/types.preResolveTypes.ts:
     schema: ./dev-test/test-schema/schema.graphql
     documents:
-      - "query test { testArr1 testArr2 testArr3 }"
+      - 'query test { testArr1 testArr2 testArr3 }'
     config:
       preResolveTypes: true
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/test-schema/types.preResolveTypes.onlyOperationTypes.ts:
+    schema: ./dev-test/test-schema/schema.graphql
+    documents:
+      - 'query test { testArr1 testArr2 testArr3 }'
+    config:
+      preResolveTypes: true
+      onlyOperationTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
   ./dev-test/star-wars/types.d.ts:
     schema: ./dev-test/star-wars/schema.json
-    documents: ./dev-test/star-wars/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    preset: near-operation-file
+    presetConfig:
+      extension: .tsx
+      folder: __generated__
+      baseTypesPath: types.d.ts
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo
   ./dev-test/star-wars/types.globallyAvailable.d.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -253,3 +333,25 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars/types.refetchFn.tsx:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-react-apollo
+    config:
+      withRefetchFn: true
+  ./dev-test/test-message/types.tsx:
+    schema: ./dev-test/test-message/schema.graphql
+    documents: ./dev-test/test-message/documents.ts
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      documentMode: external
+      importDocumentNodeExternallyFrom: './documents.ts'
+      reactApolloVersion: 3
+      gqlImport: graphql-tag
+      hooksImportFrom: '@apollo/react-hooks'
+      withMutationFn: false

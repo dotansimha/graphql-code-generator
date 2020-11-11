@@ -8,7 +8,9 @@ export const plugins: Array<PluginOption> = [
     value: 'typescript',
     pathInRepo: 'typescript/typescript',
     available: hasTag(Tags.typescript),
-    shouldBeSelected: tags => oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react) || noneOf(tags, Tags.flow),
+    shouldBeSelected: tags =>
+      oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react) || noneOf(tags, Tags.flow),
+    defaultExtension: '.ts',
   },
   {
     name: `TypeScript Operations ${italic('(operations and fragments)')}`,
@@ -17,6 +19,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/operations',
     available: tags => allOf(tags, Tags.browser, Tags.typescript),
     shouldBeSelected: tags => oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react),
+    defaultExtension: '.ts',
   },
   {
     name: `TypeScript Resolvers ${italic('(strongly typed resolve functions)')}`,
@@ -25,6 +28,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/resolvers',
     available: tags => allOf(tags, Tags.node, Tags.typescript),
     shouldBeSelected: tags => noneOf(tags, Tags.flow),
+    defaultExtension: '.ts',
   },
   {
     name: `Flow ${italic('(required by other flow plugins)')}`,
@@ -33,6 +37,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'flow/flow',
     available: hasTag(Tags.flow),
     shouldBeSelected: tags => noneOf(tags, Tags.typescript),
+    defaultExtension: '.js',
   },
   {
     name: `Flow Operations ${italic('(operations and fragments)')}`,
@@ -41,6 +46,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'flow/operations',
     available: tags => allOf(tags, Tags.browser, Tags.flow),
     shouldBeSelected: tags => noneOf(tags, Tags.typescript),
+    defaultExtension: '.js',
   },
   {
     name: `Flow Resolvers ${italic('(strongly typed resolve functions)')}`,
@@ -49,6 +55,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'flow/resolvers',
     available: tags => allOf(tags, Tags.node, Tags.flow),
     shouldBeSelected: tags => noneOf(tags, Tags.typescript),
+    defaultExtension: '.js',
   },
   {
     name: `TypeScript Apollo Angular ${italic('(typed GQL services)')}`,
@@ -57,6 +64,16 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/apollo-angular',
     available: hasTag(Tags.angular),
     shouldBeSelected: () => true,
+    defaultExtension: '.js',
+  },
+  {
+    name: `TypeScript Vue Apollo ${italic('(typed composition functions)')}`,
+    package: '@graphql-codegen/typescript-vue-apollo',
+    value: 'typescript-vue-apollo',
+    pathInRepo: 'typescript/vue-apollo',
+    available: tags => allOf(tags, Tags.vue, Tags.typescript),
+    shouldBeSelected: () => true,
+    defaultExtension: '.ts',
   },
   {
     name: `TypeScript React Apollo ${italic('(typed components and HOCs)')}`,
@@ -65,6 +82,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/react-apollo',
     available: tags => allOf(tags, Tags.react, Tags.typescript),
     shouldBeSelected: () => true,
+    defaultExtension: '.tsx',
   },
   {
     name: `TypeScript Stencil Apollo ${italic('(typed components)')}`,
@@ -73,6 +91,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/stencil-apollo',
     available: hasTag(Tags.stencil),
     shouldBeSelected: () => true,
+    defaultExtension: '.tsx',
   },
   {
     name: `TypeScript MongoDB ${italic('(typed MongoDB objects)')}`,
@@ -81,6 +100,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/mongodb',
     available: tags => allOf(tags, Tags.node, Tags.typescript),
     shouldBeSelected: () => false,
+    defaultExtension: '.ts',
   },
   {
     name: `TypeScript GraphQL files modules ${italic('(declarations for .graphql files)')}`,
@@ -89,6 +109,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/graphql-files-modules',
     available: tags => allOf(tags, Tags.browser, Tags.typescript),
     shouldBeSelected: () => false,
+    defaultExtension: '.ts',
   },
   {
     name: `TypeScript GraphQL document nodes ${italic('(embedded GraphQL document)')}`,
@@ -97,6 +118,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/document-nodes',
     available: tags => allOf(tags, Tags.typescript),
     shouldBeSelected: () => false,
+    defaultExtension: '.ts',
   },
   {
     name: `Introspection Fragment Matcher ${italic('(for Apollo Client)')}`,
@@ -105,6 +127,7 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'other/fragment-matcher',
     available: hasTag(Tags.browser),
     shouldBeSelected: () => false,
+    defaultExtension: '.ts',
   },
 ];
 

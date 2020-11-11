@@ -1,22 +1,21 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "1.6.1",
+  "version": "1.19.1",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/commonjs/cli.js",
-    "graphql-codegen": "dist/commonjs/cli.js",
-    "graphql-code-generator": "dist/commonjs/cli.js"
+    "gql-gen": "dist/bin.js",
+    "graphql-codegen": "dist/bin.js",
+    "graphql-code-generator": "dist/bin.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/graphql-codegen-cli"
   },
   "scripts": {
-    "clean": "rimraf ./dist",
-    "lint": "tslint src/**/*.ts",
-    "prebuild": "yarn clean",
-    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --config ../../jest.config.js"
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman",
+    "prepack": "bob prepack"
   },
   "keywords": [
     "gql",
@@ -39,70 +38,90 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@babel/parser": "7.5.5",
-    "@graphql-codegen/core": "1.6.1",
-    "@graphql-codegen/plugin-helpers": "1.6.1",
-    "@types/debounce": "1.2.0",
-    "@types/is-glob": "4.0.1",
-    "@types/mkdirp": "0.5.2",
-    "@types/valid-url": "1.0.2",
-    "babel-types": "7.0.0-beta.3",
-    "chalk": "2.4.2",
-    "change-case": "3.1.0",
-    "chokidar": "3.0.2",
-    "commander": "3.0.0",
-    "common-tags": "1.8.0",
-    "debounce": "1.2.0",
-    "detect-indent": "6.0.0",
-    "glob": "7.1.4",
-    "graphql-config": "2.2.1",
-    "graphql-import": "0.7.1",
-    "graphql-tag-pluck": "0.8.4",
-    "graphql-toolkit": "0.5.10",
-    "graphql-tools": "4.0.5",
-    "indent-string": "4.0.0",
-    "inquirer": "6.5.1",
-    "is-glob": "4.0.1",
-    "is-valid-path": "0.1.1",
-    "js-yaml": "3.13.1",
-    "json-to-pretty-yaml": "1.2.2",
-    "listr": "0.14.3",
-    "listr-update-renderer": "0.5.0",
-    "log-symbols": "3.0.0",
-    "log-update": "3.2.0",
-    "mkdirp": "0.5.1",
-    "prettier": "1.18.2",
-    "request": "2.88.0",
-    "ts-log": "2.1.4",
-    "tslib": "1.10.0",
-    "valid-url": "1.0.9"
+    "latest-version": "5.1.0",
+    "@graphql-codegen/core": "1.17.8",
+    "@graphql-codegen/plugin-helpers": "^1.18.1",
+    "@graphql-tools/apollo-engine-loader": "^6",
+    "@graphql-tools/code-file-loader": "^6",
+    "@graphql-tools/git-loader": "^6",
+    "@graphql-tools/github-loader": "^6",
+    "@graphql-tools/graphql-file-loader": "^6",
+    "@graphql-tools/json-file-loader": "^6",
+    "@graphql-tools/load": "^6",
+    "@graphql-tools/prisma-loader": "^6",
+    "@graphql-tools/url-loader": "^6",
+    "@graphql-tools/utils": "^6",
+    "ansi-escapes": "^4.3.1",
+    "camel-case": "^4.1.1",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.4.3",
+    "common-tags": "^1.8.0",
+    "constant-case": "^3.0.3",
+    "cosmiconfig": "^7.0.0",
+    "debounce": "^1.2.0",
+    "dependency-graph": "^0.9.0",
+    "detect-indent": "^6.0.0",
+    "glob": "^7.1.6",
+    "graphql-config": "^3.0.2",
+    "indent-string": "^4.0.0",
+    "inquirer": "^7.3.3",
+    "is-glob": "^4.0.1",
+    "json-to-pretty-yaml": "^1.2.2",
+    "listr": "^0.14.3",
+    "listr-update-renderer": "^0.5.0",
+    "log-symbols": "^4.0.0",
+    "lower-case": "^2.0.1",
+    "minimatch": "^3.0.4",
+    "mkdirp": "^1.0.4",
+    "pascal-case": "^3.1.1",
+    "request": "^2.88.2",
+    "string-env-interpolation": "^1.0.1",
+    "ts-log": "^2.2.3",
+    "tslib": "~2.0.1",
+    "upper-case": "^2.0.1",
+    "valid-url": "^1.0.9",
+    "wrap-ansi": "^7.0.0",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
-    "@types/chokidar": "1.7.5",
-    "@types/detect-indent": "5.0.0",
-    "@types/inquirer": "6.5.0",
-    "@types/js-yaml": "3.12.1",
+    "@types/chokidar": "2.1.3",
+    "@types/debounce": "1.2.0",
+    "@types/detect-indent": "6.0.0",
+    "@types/glob": "7.1.3",
+    "@types/inquirer": "7.3.1",
+    "@types/is-glob": "4.0.1",
+    "@types/js-yaml": "3.12.5",
     "@types/listr": "0.14.2",
-    "@types/log-symbols": "2.0.0",
+    "@types/log-symbols": "3.0.0",
+    "@types/minimatch": "3.0.3",
+    "@types/mkdirp": "1.0.1",
+    "@types/valid-url": "1.0.3",
     "bdd-stdin": "0.2.0",
-    "graphql": "14.5.0",
-    "ts-jest": "24.0.2"
+    "dotenv": "8.2.0",
+    "js-yaml": "3.14.0",
+    "make-dir": "3.1.0",
+    "prettier": "2.1.2"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "main": "dist/commonjs/index.js",
-  "module": "dist/esnext/index.js",
-  "typings": "dist/esnext/index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
   "typescript": {
-    "definition": "dist/esnext/index.d.ts"
+    "definition": "dist/index.d.ts"
   },
-  "jest-junit": {
-    "outputDirectory": "../../test-results/cli"
+  "buildOptions": {
+    "bin": {
+      "graphql-codegen": {
+        "input": "src/bin.ts"
+      }
+    }
   },
   "publishConfig": {
+    "directory": "dist",
     "access": "public"
   }
 }

@@ -3,6 +3,3 @@ query HeroName($episode: Episode) {
     name
   }
 }
-
-
-

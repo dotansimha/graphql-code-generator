@@ -1,93 +1,127 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './index';
-import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode } from 'graphql';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
+import autoBind from 'auto-bind';
+import {
+  FragmentDefinitionNode,
+  print,
+  OperationDefinitionNode,
+  visit,
+  FragmentSpreadNode,
+  GraphQLSchema,
+  Kind,
+} from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue } from './utils';
-import { LoadedFragment } from './types';
-import { basename } from 'path';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import { getConfigValue, buildScalars } from './utils';
+import { LoadedFragment, ParsedImport } from './types';
+import { basename, extname } from 'path';
+import { DEFAULT_SCALARS } from './scalars';
+import { pascalCase } from 'pascal-case';
+import { generateFragmentImportStatement } from './imports';
 
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
   documentNode = 'documentNode',
+  documentNodeImportFragments = 'documentNodeImportFragments',
   external = 'external',
+  string = 'string',
 }
+
+const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
-  noGraphQLTag?: boolean;
-  gqlImport?: string;
-  noExport?: boolean;
-  dedupeOperationSuffix?: boolean;
-  operationResultSuffix?: string;
-  documentVariablePrefix?: string;
-  documentVariableSuffix?: string;
-  transformUnderscore?: boolean;
-  documentMode?: DocumentMode;
-  importDocumentNodeExternallyFrom?: string;
-}
-
-export interface ClientSideBasePluginConfig extends ParsedConfig {
   /**
-   * @name gqlImport
-   * @type string
-   * @default gql#graphql-tag
+   * @description Deprecated. Changes the documentMode to `documentNode`.
+   * @default false
+   */
+  noGraphQLTag?: boolean;
+  /**
+   * @default graphql-tag#gql
    * @description Customize from which module will `gql` be imported from.
    * This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
    *
-   * @example graphql.macro
+   * @exampleMarkdown
+   * ## graphql.macro
    * ```yml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
-   * @example Gatsby
+   *
+   * ## Gatsby
    * ```yml
    * config:
    *   gqlImport: gatsby#graphql
    * ```
    */
-  gqlImport: string;
+  gqlImport?: string;
   /**
-   * @name operationResultSuffix
-   * @type string
-   * @default ""
-   * @description Adds a suffix to generated operation result type names
+   * @default graphql#DocumentNode
+   * @description Customize from which module will `DocumentNode` be imported from.
+   * This is useful if you want to use modules other than `graphql`, e.g. `@graphql-typed-document-node`.
    */
-  operationResultSuffix: string;
+  documentNodeImport?: string;
   /**
-   * @name dedupeOperationSuffix
-   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.
+   */
+  noExport?: boolean;
+  /**
    * @default false
    * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
    */
-  dedupeOperationSuffix: boolean;
-  noExport: boolean;
-  documentVariablePrefix: string;
-  documentVariableSuffix: string;
-  transformUnderscore: boolean;
-  fragmentVariablePrefix: string;
-  fragmentVariableSuffix: string;
-
+  dedupeOperationSuffix?: boolean;
   /**
-   * @name documentMode
-   * @type 'graphQLTag' | 'documentNode' | 'external'
-   * @default 'graphQLTag'
+   * @default false
+   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+   */
+  omitOperationSuffix?: boolean;
+  /**
+   * @default ""
+   * @description Adds a suffix to generated operation result type names
+   */
+  operationResultSuffix?: string;
+  /**
+   * @default ""
+   * @description Changes the GraphQL operations variables prefix.
+   */
+  documentVariablePrefix?: string;
+  /**
+   * @default Document
+   * @description Changes the GraphQL operations variables suffix.
+   */
+  documentVariableSuffix?: string;
+  /**
+   * @default ""
+   * @description Changes the GraphQL fragments variables prefix.
+   */
+  fragmentVariablePrefix?: string;
+  /**
+   * @default FragmentDoc
+   * @description Changes the GraphQL fragments variables suffix.
+   */
+  fragmentVariableSuffix?: string;
+  /**
+   * @default graphQLTag
    * @description Declares how DocumentNode are created:
    * - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
+   * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
    * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
    */
   documentMode?: DocumentMode;
-
   /**
-   * @name importDocumentNodeExternallyFrom
-   * @type string | 'near-operation-file'
-   * @default ''
+   * @default ""
+   * @description This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
+   * This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
+   */
+  importOperationTypesFrom?: string;
+  /**
+   * @default ""
    * @description This config should be used if `documentMode` is `external`. This has 2 usage:
    * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * config:
    *   documentMode: external
@@ -102,23 +136,60 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    *
    */
   importDocumentNodeExternallyFrom?: string;
+  /**
+   * @default false
+   * @description This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
+   */
+  pureMagicComment?: boolean;
 }
 
-export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export interface ClientSideBasePluginConfig extends ParsedConfig {
+  gqlImport: string;
+  documentNodeImport: string;
+  operationResultSuffix: string;
+  dedupeOperationSuffix: boolean;
+  omitOperationSuffix: boolean;
+  noExport: boolean;
+  documentVariablePrefix: string;
+  documentVariableSuffix: string;
+  fragmentVariablePrefix: string;
+  fragmentVariableSuffix: string;
+  documentMode?: DocumentMode;
+  importDocumentNodeExternallyFrom?: 'near-operation-file' | string;
+  importOperationTypesFrom?: string;
+  globalNamespace?: boolean;
+  pureMagicComment?: boolean;
+}
+
+export class ClientSideBaseVisitor<
+  TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
+  TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig
+> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _collectedOperations: OperationDefinitionNode[] = [];
   protected _documents: Types.DocumentFile[] = [];
+  protected _additionalImports: string[] = [];
+  protected _imports = new Set<string>();
 
-  constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
+  constructor(
+    protected _schema: GraphQLSchema,
+    protected _fragments: LoadedFragment[],
+    rawConfig: TRawConfig,
+    additionalConfig: Partial<TPluginConfig>,
+    documents?: Types.DocumentFile[]
+  ) {
     super(rawConfig, {
+      scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
+      documentNodeImport: rawConfig.documentNodeImport || null,
       noExport: !!rawConfig.noExport,
+      importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
       documentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'Document'),
-      fragmentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
-      fragmentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'FragmentDoc'),
-      transformUnderscore: getConfigValue(rawConfig.transformUnderscore, false),
+      fragmentVariablePrefix: getConfigValue(rawConfig.fragmentVariablePrefix, ''),
+      fragmentVariableSuffix: getConfigValue(rawConfig.fragmentVariableSuffix, 'FragmentDoc'),
       documentMode: ((rawConfig: RawClientSideBasePluginConfig) => {
         if (typeof rawConfig.noGraphQLTag === 'boolean') {
           return rawConfig.noGraphQLTag ? DocumentMode.documentNode : DocumentMode.graphQLTag;
@@ -126,6 +197,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         return getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag);
       })(rawConfig),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
+      pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
       ...additionalConfig,
     } as any);
 
@@ -134,58 +206,60 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     autoBind(this);
   }
 
-  protected _getFragmentName(fragment: FragmentDefinitionNode | string): string {
-    return this.convertName(fragment, {
-      suffix: this.config.fragmentVariableSuffix,
-      prefix: this.config.fragmentVariablePrefix,
-      transformUnderscore: this.config.transformUnderscore,
-      useTypesPrefix: false,
-    });
-  }
-
-  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
+  protected _extractFragments(
+    document: FragmentDefinitionNode | OperationDefinitionNode,
+    withNested = false
+  ): string[] {
     if (!document) {
       return [];
     }
 
-    const names = [];
+    const names: Set<string> = new Set();
 
     visit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
-          names.push(node.name.value);
+          names.add(node.name.value);
+
+          if (withNested) {
+            const foundFragment = this._fragments.find(f => f.name === node.name.value);
+
+            if (foundFragment) {
+              const childItems = this._extractFragments(foundFragment.node, true);
+
+              if (childItems && childItems.length > 0) {
+                for (const item of childItems) {
+                  names.add(item);
+                }
+              }
+            }
+          }
         },
       },
     });
 
-    return names;
+    return Array.from(names);
   }
 
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
-    return this._extractFragments(document).map(document => this._getFragmentName(document));
+    const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
+
+    return this._extractFragments(document, includeNestedFragments).map(document =>
+      this.getFragmentVariableName(document)
+    );
   }
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
-        return `${fragments
-          .filter((name, i, all) => all.indexOf(name) === i)
-          .map(name => {
-            const found = this._fragments.find(f => `${f.name}FragmentDoc` === name);
-
-            if (found) {
-              return print(found.node);
-            }
-
-            return null;
-          })
-          .filter(a => a)
-          .join('\n')}`;
+        return this._fragments
+          .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
+          .map(fragment => print(fragment.node))
+          .join('\n');
+      } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+        return '';
       } else {
-        return `${fragments
-          .filter((name, i, all) => all.indexOf(name) === i)
-          .map(name => '${' + name + '}')
-          .join('\n')}`;
+        return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
     }
 
@@ -197,27 +271,49 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
+    const fragments = this._transformFragments(node);
+
     const doc = this._prepareDocument(`
-    ${print(node)}
-    ${this._includeFragments(this._transformFragments(node))}`);
+    ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
+    ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag(doc);
-
-      if (gqlObj && gqlObj['loc']) {
-        delete gqlObj.loc;
+      const gqlObj = gqlTag([doc]);
+      if (gqlObj && gqlObj.loc) {
+        delete (gqlObj as any).loc;
       }
-
       return JSON.stringify(gqlObj);
+    } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+      const gqlObj = gqlTag([doc]);
+      if (gqlObj && gqlObj.loc) {
+        delete (gqlObj as any).loc;
+      }
+      if (fragments.length > 0) {
+        const definitions = [
+          ...gqlObj.definitions.map(t => JSON.stringify(t)),
+          ...fragments.map(name => `...${name}.definitions`),
+        ].join();
+        return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
+      }
+      return JSON.stringify(gqlObj);
+    } else if (this.config.documentMode === DocumentMode.string) {
+      return '`' + doc + '`';
     }
 
-    return 'gql`' + doc + '`';
+    const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
+
+    return (gqlImport.propName || 'gql') + '`' + doc + '`';
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
-    const name = this._getFragmentName(fragmentDocument);
-
-    return `export const ${name}${this.config.documentMode === DocumentMode.documentNode ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
+    const name = this.getFragmentVariableName(fragmentDocument);
+    const fragmentResultType = this.convertName(fragmentDocument.name.value, {
+      useTypesPrefix: true,
+      suffix: this.getFragmentSuffix(fragmentDocument),
+    });
+    return `export const ${name}${this.getDocumentNodeSignature(fragmentResultType, 'unknown', fragmentDocument)} =${
+      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+    } ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -256,12 +352,32 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     const graph = this.fragmentsGraph;
     const orderedDeps = graph.overallOrder();
-    const localFragments = orderedDeps.filter(name => !graph.getNodeData(name).isExternal).map(name => this._generateFragment(graph.getNodeData(name).node));
+    const localFragments = orderedDeps
+      .filter(name => !graph.getNodeData(name).isExternal)
+      .map(name => this._generateFragment(graph.getNodeData(name).node));
 
     return localFragments.join('\n');
   }
 
-  protected _parseImport(importStr: string) {
+  protected _parseImport(importStr: string): ParsedImport {
+    // This is a special case when we want to ignore importing, and just use `gql` provided from somewhere else
+    // Plugins that uses that will need to ensure to add import/declaration for the gql identifier
+    if (importStr === 'gql') {
+      return {
+        moduleName: null,
+        propName: 'gql',
+      };
+    }
+
+    // This is a special use case, when we don't want this plugin to manage the import statement
+    // of the gql tag. In this case, we provide something like `Namespace.gql` and it will be used instead.
+    if (importStr.includes('.gql')) {
+      return {
+        moduleName: null,
+        propName: importStr,
+      };
+    }
+
     const [moduleName, propName] = importStr.split('#');
 
     return {
@@ -270,77 +386,179 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     };
   }
 
-  public getImports(): string[] {
-    let imports = [];
+  protected _generateImport(
+    { moduleName, propName }: ParsedImport,
+    varName: string,
+    isTypeImport: boolean
+  ): string | null {
+    const typeImport = isTypeImport && this.config.useTypeImports ? 'import type' : 'import';
+    const propAlias = propName === varName ? '' : ` as ${varName}`;
+
+    if (moduleName) {
+      return `${typeImport} ${propName ? `{ ${propName}${propAlias} }` : varName} from '${moduleName}';`;
+    }
+
+    return null;
+  }
+
+  private clearExtension(path: string): string {
+    const extension = extname(path);
+
+    if (EXTENSIONS_TO_REMOVE.includes(extension)) {
+      return path.replace(/\.[^/.]+$/, '');
+    }
+
+    return path;
+  }
+
+  public getImports(options: { excludeFragments?: boolean } = {}): string[] {
+    (this._additionalImports || []).forEach(i => this._imports.add(i));
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
-        imports.push(`import { DocumentNode } from 'graphql';`);
+      case DocumentMode.documentNodeImportFragments: {
+        const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
+        const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
+
+        if (tagImport) {
+          this._imports.add(tagImport);
+        }
+
         break;
-      case DocumentMode.graphQLTag:
+      }
+      case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-        imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
+        const tagImport = this._generateImport(gqlImport, 'gql', false);
+
+        if (tagImport) {
+          this._imports.add(tagImport);
+        }
+
         break;
-      case DocumentMode.external:
-        if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-          imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
-        } else {
-          imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
+      }
+      case DocumentMode.external: {
+        if (this._collectedOperations.length > 0) {
+          if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
+            this._imports.add(
+              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
+            );
+          } else {
+            if (!this.config.importDocumentNodeExternallyFrom) {
+              // eslint-disable-next-line no-console
+              console.warn('importDocumentNodeExternallyFrom must be provided if documentMode=external');
+            }
+
+            this._imports.add(
+              `import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`
+            );
+          }
         }
         break;
+      }
       default:
         break;
     }
 
-    if (this.config.documentMode === DocumentMode.graphQLTag) {
-      (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
-        .forEach(externalFragment => {
-          const identifierName = this._getFragmentName(externalFragment.name);
-
-          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+    if (!options.excludeFragments && !this.config.globalNamespace) {
+      const { documentMode, fragmentImports } = this.config;
+      if (
+        documentMode === DocumentMode.graphQLTag ||
+        documentMode === DocumentMode.string ||
+        documentMode === DocumentMode.documentNodeImportFragments
+      ) {
+        fragmentImports.forEach(fragmentImport => {
+          this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
         });
+      }
     }
 
-    return imports;
+    return Array.from(this._imports);
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    _node: OperationDefinitionNode,
+    _documentVariableName: string,
+    _operationType: string,
+    _operationResultType: string,
+    _operationVariablesTypes: string,
+    _hasRequiredVariables: boolean
+  ): string {
     return null;
   }
 
-  public OperationDefinition(node: OperationDefinitionNode): string {
-    if (!node.name || !node.name.value) {
-      return null;
+  protected getDocumentNodeSignature(
+    _resultType: string,
+    _variablesTypes: string,
+    _node: FragmentDefinitionNode | OperationDefinitionNode
+  ): string {
+    if (
+      this.config.documentMode === DocumentMode.documentNode ||
+      this.config.documentMode === DocumentMode.documentNodeImportFragments
+    ) {
+      return `: DocumentNode`;
     }
 
+    return '';
+  }
+
+  /**
+   * Checks if the specific operation has variables that are non-null (required), and also doesn't have default.
+   * This is useful for deciding of `variables` should be optional or not.
+   * @param node
+   */
+  protected checkVariablesRequirements(node: OperationDefinitionNode): boolean {
+    const variables = node.variableDefinitions || [];
+
+    if (variables.length === 0) {
+      return false;
+    }
+
+    return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
+  }
+
+  public OperationDefinition(node: OperationDefinitionNode): string {
     this._collectedOperations.push(node);
 
     const documentVariableName = this.convertName(node, {
       suffix: this.config.documentVariableSuffix,
       prefix: this.config.documentVariablePrefix,
-      transformUnderscore: this.config.transformUnderscore,
       useTypesPrefix: false,
+    });
+
+    const operationType: string = pascalCase(node.operation);
+    const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
+
+    const operationResultType: string = this.convertName(node, {
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
+    });
+    const operationVariablesTypes: string = this.convertName(node, {
+      suffix: operationTypeSuffix + 'Variables',
     });
 
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.documentMode === DocumentMode.documentNode ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+      // only generate exports for named queries
+      if (documentVariableName !== '') {
+        documentString = `${
+          this.config.noExport ? '' : 'export'
+        } const ${documentVariableName}${this.getDocumentNodeSignature(
+          operationResultType,
+          operationVariablesTypes,
+          node
+        )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+      }
     }
 
-    const operationType: string = toPascalCase(node.operation);
-    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
+    const hasRequiredVariables = this.checkVariablesRequirements(node);
 
-    const operationResultType: string = this.convertName(node, {
-      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
-      transformUnderscore: this.config.transformUnderscore,
-    });
-    const operationVariablesTypes: string = this.convertName(node, {
-      suffix: operationTypeSuffix + 'Variables',
-      transformUnderscore: this.config.transformUnderscore,
-    });
-
-    const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
+    const additional = this.buildOperation(
+      node,
+      documentVariableName,
+      operationType,
+      operationResultType,
+      operationVariablesTypes,
+      hasRequiredVariables
+    );
 
     return [documentString, additional].filter(a => a).join('\n');
   }

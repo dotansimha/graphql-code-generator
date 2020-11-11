@@ -1,12 +1,20 @@
-import { ScalarsMap, ConvertOptions } from './types';
-import * as autoBind from 'auto-bind';
+import { NormalizedScalarsMap } from './types';
+import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
-import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
+import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
+import {
+  GraphQLSchema,
+  FragmentDefinitionNode,
+  GraphQLObjectType,
+  OperationDefinitionNode,
+  VariableDefinitionNode,
+  OperationTypeNode,
+} from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
-import { BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { BaseVisitor } from './base-visitor';
 import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
+import { pascalCase } from 'pascal-case';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
@@ -25,16 +33,18 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
+  omitOperationSuffix: boolean;
+  namespacedImportName: string | null;
+  exportFragmentSpreadSubTypes: boolean;
+  skipTypeNameForRoot: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
   /**
-   * @name preResolveTypes
-   * @type boolean
    * @default false
    * @description Avoid using `Pick` and resolve the actual primitive type of all selection set.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * plugins
    *   config:
@@ -43,12 +53,22 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    */
   preResolveTypes?: boolean;
   /**
-   * @name globalNamespace
-   * @type boolean
+   * @default false
+   * @description Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * plugins
+   *   config:
+   *     skipTypeNameForRoot: true
+   * ```
+   */
+  skipTypeNameForRoot?: boolean;
+  /**
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
    *
-   * @example
+   * @exampleMarkdown
    * ```yml
    * plugins
    *   config:
@@ -57,46 +77,76 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    */
   globalNamespace?: boolean;
   /**
-   * @name operationResultSuffix
-   * @type string
    * @default ""
    * @description Adds a suffix to generated operation result type names
    */
   operationResultSuffix?: string;
   /**
-   * @name dedupeOperationSuffix
-   * @type boolean
    * @default false
    * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
    */
   dedupeOperationSuffix?: boolean;
+  /**
+   * @default false
+   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+   */
+  omitOperationSuffix?: boolean;
+  /**
+   * @default false
+   * @description If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
+   */
+  exportFragmentSpreadSubTypes?: boolean;
+
+  // The following are internal, and used by presets
+  /**
+   * @ignore
+   */
+  namespacedImportName?: string;
 }
 
-export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseDocumentsVisitor<
+  TRawConfig extends RawDocumentsConfig = RawDocumentsConfig,
+  TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig
+> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
+  protected _globalDeclarations: Set<string> = new Set<string>();
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, scalars: ScalarsMap = DEFAULT_SCALARS) {
-    super(
-      rawConfig,
-      {
-        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-        preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
-        dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
-        addTypename: !rawConfig.skipTypename,
-        globalNamespace: !!rawConfig.globalNamespace,
-        operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
-        ...((additionalConfig || {}) as any),
-      },
-      buildScalars(_schema, scalars)
-    );
+  constructor(
+    rawConfig: TRawConfig,
+    additionalConfig: TPluginConfig,
+    protected _schema: GraphQLSchema,
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+  ) {
+    super(rawConfig, {
+      exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
+      dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
+      skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
+      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
+      addTypename: !rawConfig.skipTypename,
+      globalNamespace: !!rawConfig.globalNamespace,
+      operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
+      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      ...((additionalConfig || {}) as any),
+    });
 
     autoBind(this);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);
+    this._variablesTransfomer = new OperationVariablesToObject(
+      this.scalars,
+      this.convertName,
+      this.config.namespacedImportName
+    );
   }
 
-  setSelectionSetHandler(handler: SelectionSetToObject) {
+  public getGlobalDeclarations(noExport = false): string[] {
+    return Array.from(this._globalDeclarations).map(t => (noExport ? t : `export ${t}`));
+  }
+
+  setSelectionSetHandler(handler: SelectionSetToObject): void {
     this._selectionSetToObject = handler;
   }
 
@@ -108,12 +158,6 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     this._variablesTransfomer = variablesTransfomer;
   }
 
-  public convertName(node: ASTNode | string, options?: ConvertOptions & BaseVisitorConvertOptions): string {
-    const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
-
-    return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
-  }
-
   public get schema(): GraphQLSchema {
     return this._schema;
   }
@@ -122,12 +166,13 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     return this._parsedConfig.addTypename;
   }
 
-  private handleAnonymouseOperation(node: OperationDefinitionNode): string {
+  private handleAnonymousOperation(node: OperationDefinitionNode): string {
     const name = node.name && node.name.value;
 
     if (name) {
-      return this.convertName(node, {
+      return this.convertName(name, {
         useTypesPrefix: false,
+        useTypesSuffix: false,
       });
     }
 
@@ -135,28 +180,28 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       prefix: 'Unnamed_',
       suffix: '_',
       useTypesPrefix: false,
+      useTypesSuffix: false,
     });
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
-    const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+    const fragmentSuffix = this.getFragmentSuffix(node);
 
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(
-        this.convertName(node, {
-          useTypesPrefix: true,
-          suffix: fragmentSuffix,
-        })
-      )
-      .withContent(selectionSet.string).string;
+    return selectionSet.transformFragmentSelectionSetToTypes(
+      node.name.value,
+      fragmentSuffix,
+      this._declarationBlockConfig
+    );
+  }
+
+  protected applyVariablesWrapper(variablesBlock: string): string {
+    return variablesBlock;
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
-    const name = this.handleAnonymouseOperation(node);
+    const name = this.handleAnonymousOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
 
     if (!operationRootType) {
@@ -164,8 +209,11 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     }
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
-    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
-    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : toPascalCase(node.operation);
+    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
+      node.variableDefinitions
+    );
+    const operationType: string = pascalCase(node.operation);
+    const operationTypeSuffix = this.getOperationSuffix(name, operationType);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -175,9 +223,12 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.string).string;
+      .withContent(selectionSet.transformSelectionSet()).string;
 
-    const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
+    const operationVariables = new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer: t => this.applyVariablesWrapper(t),
+    })
       .export()
       .asKind('type')
       .withName(

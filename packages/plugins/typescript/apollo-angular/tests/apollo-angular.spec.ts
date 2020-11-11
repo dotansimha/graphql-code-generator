@@ -5,10 +5,10 @@ import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } fr
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
-import { readFileSync } from 'fs';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('Apollo Angular', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -25,7 +25,12 @@ describe('Apollo Angular', () => {
     }
   `);
 
-  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (
+    output: Types.PluginOutput,
+    testSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    config: any
+  ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
@@ -34,7 +39,7 @@ describe('Apollo Angular', () => {
 
   describe('Imports', () => {
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -52,7 +57,7 @@ describe('Apollo Angular', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -67,7 +72,7 @@ describe('Apollo Angular', () => {
     });
 
     it(`should add the correct angular imports`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -78,6 +83,44 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Apollo from 'apollo-angular';`);
+      expect(content.prepend).toContain(`import { Injectable } from '@angular/core';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should add a constructor and super call (Issue #4366)`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+          constructor(apollo: Apollo.Apollo) {
+            super(apollo);
+          }
+        }
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should add the correct angular imports with override`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          apolloAngularPackage: 'my-custom-apollo-angular',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Apollo from 'my-custom-apollo-angular';`);
       expect(content.prepend).toContain(`import { Injectable } from '@angular/core';`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -95,7 +138,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -115,7 +158,7 @@ describe('Apollo Angular', () => {
       expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
       expect(content.content).not.toContain('@NgModule');
       expect(content.content).toContain('@client');
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
     });
 
     it('Should import namedClient and remove namedClient directive', async () => {
@@ -130,7 +173,7 @@ describe('Apollo Angular', () => {
         }
       `);
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -146,7 +189,111 @@ describe('Apollo Angular', () => {
         client = 'custom';
       `);
       expect(content.content).not.toContain('@namedClient');
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importDocumentNodeExternallyFrom must be provided if documentMode=external'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set to something other than "Operations"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Whatever',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importOperationTypesFrom only works correctly when left empty or set to "Operations"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and documentMode is not "external"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and importDocumentNodeExternallyFrom is not', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('should allow importing operations and documents from another file', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+          importDocumentNodeExternallyFrom: '@myproject/generated',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from '@myproject/generated';`);
+      expect(content.content).toContain('Operations.TestQuery');
+      expect(content.content).toContain('Operations.TestQueryVariables');
+      expect(content.content).toContain('Operations.TestDocument');
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -161,7 +308,7 @@ describe('Apollo Angular', () => {
           f
         }
       `;
-      const docs = [{ filePath: '', content: query }];
+      const docs = [{ location: '', document: query }];
       const content = (await plugin(
         rootSchema,
         docs,
@@ -177,7 +324,7 @@ describe('Apollo Angular', () => {
         })
         export class TestGQL extends Apollo.Query
       `);
-      validateTypeScript(content, rootSchema, docs, {});
+      await validateTypeScript(content, rootSchema, docs, {});
     });
 
     it('Should handle @client', async () => {
@@ -189,7 +336,7 @@ describe('Apollo Angular', () => {
         }
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         schema,
         docs,
@@ -201,7 +348,7 @@ describe('Apollo Angular', () => {
 
       expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
 
-      validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -222,7 +369,10 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }, { filePath: 'a.ts', content: myExtraFeed }];
+      const docs = [
+        { location: '', document: myFeed },
+        { location: 'a.ts', document: myExtraFeed },
+      ];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -258,7 +408,205 @@ describe('Apollo Angular', () => {
       expect(content.content).toBeSimilarStringTo(`client = 'extra';`);
       expect(content.content).not.toContain('@namedClient');
 
-      validateTypeScript(content, modifiedSchema, docs, {});
+      await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+    it('should be allowed to define custom operation suffixes in config', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const vote = gql(`
+      mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
+      `);
+      const commentAdded = gql(`
+        subscription onCommentAdded($repoFullName: String!) {
+        commentAdded(repoFullName: $repoFullName) {
+          id
+          postedBy {
+            login
+            html_url
+          }
+          createdAt
+          content
+        }
+      }
+      `);
+      const docs = [
+        { location: '', document: myFeed },
+        { location: '', document: commentAdded },
+        { location: '', document: vote },
+      ];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          querySuffix: 'QueryService',
+          mutationSuffix: 'MutationService',
+          subscriptionSuffix: 'SubscriptionService',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export class MyFeedQueryService`);
+      expect(content.content).toContain(`export class OnCommentAddedSubscriptionService`);
+      expect(content.content).toContain(`export class VoteMutationService`);
+      await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+  });
+
+  describe('SDK Service', () => {
+    it('should generate a SDK service', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        { sdkClass: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule
+      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable({ providedIn: 'root' })
+        export class ApolloAngularSDK {
+        constructor(
+          private myFeedGql: MyFeedGQL
+        ) {}
+        
+        myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.fetch(variables, options)
+        }
+
+        myFeedWatch(variables?: MyFeedQueryVariables, options?: WatchQueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.watch(variables, options)
+        }
+        }
+      `);
+      await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+    it('should generate a SDK service with custom settings', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          serviceName: 'MySDK',
+          serviceProvidedInRoot: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule
+      expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
+      // console.log('content.content', content.content);
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable()
+        export class MySDK {
+        constructor(
+          private myFeedGql: MyFeedGQL
+        ) {}
+        
+        myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.fetch(variables, options)
+        }
+
+        myFeedWatch(variables?: MyFeedQueryVariables, options?: WatchQueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.watch(variables, options)
+        }
+        }
+      `);
+      await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('should generate a SDK service for Apollo Angular 1.0 on demand', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          apolloAngularVersion: 1,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
+    });
+
+    it('should generate a SDK service with a requested providedIn value', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          serviceProvidedIn: '../app.module#AppModule',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule import
+      expect(content.prepend).toContain(`import { AppModule } from '../app.module';`);
+      // NgModule in `providedIn`
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable({ providedIn: AppModule })
+        export class ApolloAngularSDK {
+      `);
     });
   });
 
@@ -277,7 +625,7 @@ describe('Apollo Angular', () => {
         }
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         schema,
         docs,
@@ -287,7 +635,7 @@ describe('Apollo Angular', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 });

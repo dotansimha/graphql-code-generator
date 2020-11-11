@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+      "./website/static/config.schema.json": "*codegen.*"
+    }
+  }

@@ -1,21 +1,10 @@
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  rootDir: process.cwd(),
-  globals: {
-    'ts-jest': {
-      diagnostics: false,
-    },
-  },
-  reporters: [
-    'default',
-    [
-      'jest-junit',
-      {
-        classNameTemplate: '{classname}',
-        titleTemplate: '{title}',
-        addFileAttribute: 'true',
-      },
-    ],
-  ],
-};
+const PROJECTS = false;
+const CI = !!process.env.CI;
+
+module.exports =
+  !PROJECTS || CI
+    ? require('./jest.project')({ dirname: __dirname, projectMode: PROJECTS })
+    : {
+        rootDir: __dirname,
+        projects: ['<rootDir>/packages/**/*/jest.config.js'],
+      };

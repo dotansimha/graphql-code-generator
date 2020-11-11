@@ -1,17 +1,36 @@
-import { FlowResolversPluginConfig } from './index';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
-import * as autoBind from 'auto-bind';
-import { indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  GraphQLSchema,
+  ScalarTypeDefinitionNode,
+  InputValueDefinitionNode,
+  EnumTypeDefinitionNode,
+} from 'graphql';
+import autoBind from 'auto-bind';
+import {
+  RawResolversConfig,
+  indent,
+  ParsedResolversConfig,
+  BaseResolversVisitor,
+  DeclarationBlock,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
+export const ENUM_RESOLVERS_SIGNATURE =
+  'export type EnumResolverSignature<T, AllowedValues = any> = $ObjMap<T, () => AllowedValues>;';
+
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
-export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPluginConfig, ParsedFlorResolversConfig> {
-  constructor(pluginConfig: FlowResolversPluginConfig, schema: GraphQLSchema) {
+export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfig, ParsedFlorResolversConfig> {
+  constructor(pluginConfig: RawResolversConfig, schema: GraphQLSchema) {
     super(pluginConfig, null, schema);
     autoBind(this);
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
+    this.setVariablesTransformer(
+      new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName)
+    );
   }
 
   protected _getScalar(name: string): string {
@@ -23,6 +42,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `$RequireFields<${argsType}, { ${fields.map(f => `${f.name.value}: *`).join(', ')} }>`;
   }
 
+  protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
+    return argsType;
+  }
+
   protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
     if (types[0] && types[0].asDefault) {
       return `import type ${types[0].identifier} from '${source}';`;
@@ -31,8 +54,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `import { ${types.map(t => `type ${t.identifier}`).join(', ')} } from '${source}';`;
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
+    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'}${this.getPunctuation(
+      declarationKind
+    )}`;
   }
 
   protected transformParentGenericType(parentType: string): string {
@@ -50,7 +75,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
   NonNullType(node: NonNullTypeNode): string {
     const baseValue = super.NonNullType(node);
 
-    if (baseValue.charAt(0) === '?') {
+    if (baseValue.startsWith('?')) {
       return baseValue.substr(1);
     }
 
@@ -81,8 +106,13 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `$ElementType<${resolversType}, '${name}'>`;
   }
 
-  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
-    return `$Diff<${typeName}, { ${relevantFields.map(f => `${f.fieldName}: * `).join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  protected replaceFieldsInType(
+    typeName: string,
+    relevantFields: { fieldName: string; replaceWithType: string }[]
+  ): string {
+    return `$Diff<${typeName}, { ${relevantFields
+      .map(f => `${f.fieldName}: * `)
+      .join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -103,6 +133,35 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
           suffix: 'ScalarConfig',
         })
       )
-      .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n')).string;
+      .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n'))
+      .string;
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return declarationKind === 'type' ? ',' : ';';
+  }
+
+  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+    const valuesMap = `{| ${(node.values || [])
+      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: *`)
+      .join(', ')} |}`;
+
+    this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
+
+    return `EnumResolverSignature<${valuesMap}, ${mappedEnumType}>`;
+  }
+
+  protected buildEnumResolversExplicitMappedValues(
+    node: EnumTypeDefinitionNode,
+    valuesMapping: { [valueName: string]: string | number }
+  ): string {
+    return `{| ${(node.values || [])
+      .map(v => {
+        const valueName = (v.name as any) as string;
+        const mappedValue = valuesMapping[valueName];
+
+        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+      })
+      .join(', ')} |}`;
   }
 }

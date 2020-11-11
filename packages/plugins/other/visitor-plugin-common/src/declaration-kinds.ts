@@ -8,7 +8,9 @@ export const DEFAULT_DECLARATION_KINDS: DeclarationKindConfig = {
   arguments: 'type',
 };
 
-export function normalizeDeclarationKind(declarationKind?: DeclarationKind | DeclarationKindConfig): DeclarationKindConfig {
+export function normalizeDeclarationKind(
+  declarationKind?: DeclarationKind | DeclarationKindConfig
+): DeclarationKindConfig {
   if (typeof declarationKind === 'string') {
     return {
       scalar: declarationKind,
