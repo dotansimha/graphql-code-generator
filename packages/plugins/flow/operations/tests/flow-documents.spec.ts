@@ -1321,7 +1321,7 @@ describe('Flow Operations Plugin', () => {
       };
       
       
-      export type UserQuery = { user: $Pick<User, { id: *, name?: *, address?: * }> };
+      export type UserQuery = { user: $MakeOptional<$Pick<User, { id: *, name?: *, address: * }>, { address: * }> };
       `);
 
       validateFlow(result);
