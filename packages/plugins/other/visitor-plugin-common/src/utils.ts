@@ -404,7 +404,14 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
 }
 
 export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
-  return directives.length > 0;
+  if (directives.length === 0) return false;
+
+  for (const directive of directives) {
+    if (['skip', 'include'].includes(directive.name.value)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 type WrapModifiersOptions = {
