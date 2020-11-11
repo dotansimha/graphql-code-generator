@@ -125,4 +125,20 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    */
   optionalInfoArgument?: boolean;
+  /**
+   * @description Changes the field name of field resolvers for abstract type
+   * @default '__resolveType'
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    typeResolverFieldName: resolveType
+   * ```
+   */
+  typeResolverFieldName?: string;
 }
