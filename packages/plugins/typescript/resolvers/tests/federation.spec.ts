@@ -46,7 +46,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -109,7 +109,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -143,7 +143,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -184,8 +184,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          Address: 'Address',
-          User: 'User',
+          Address: './my-models#AddressModel',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -221,7 +221,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -257,7 +257,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -306,9 +306,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          Admin: 'Admin',
-          Name: 'Name',
-          User: 'User',
+          Admin: './my-models#Admin',
+          Name: './my-models#Name',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -343,7 +343,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -381,7 +381,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -411,7 +411,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -448,7 +448,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -482,7 +482,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       config: {
         federation: true,
         mappers: {
-          User: 'User',
+          User: './my-models#UserModel',
         },
       },
     });
@@ -570,7 +570,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         config: {
           federation: true,
           mappers: {
-            User: 'User',
+            User: './my-models#UserModel',
           },
           wrapFieldDefinitions: true,
         },
@@ -591,7 +591,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         config: {
           federation: true,
           mappers: {
-            User: 'User',
+            User: './my-models#UserModel',
           },
           wrapFieldDefinitions: true,
         },

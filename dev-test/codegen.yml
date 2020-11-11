@@ -21,6 +21,8 @@ generates:
     schema: ./dev-test/test-schema/schema-federation.graphql
     config:
       federation: true
+      mappers:
+        User: ./my-models#UserModel
     plugins:
       - typescript
       - typescript-resolvers

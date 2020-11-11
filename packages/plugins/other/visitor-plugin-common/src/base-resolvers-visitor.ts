@@ -916,10 +916,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         return null;
       }
 
-      const originalParentTypeSignature = this.getParentTypeForSignature(node);
+      let parentTypeSignature = this.getParentTypeForSignature(node);
 
       const typeToUse = this.getTypeToUse(realType);
-      const originalMappedTypeSignature = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
+      let mappedTypeSignature = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
 
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
@@ -952,25 +952,38 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      const parentTypeSignature = this._federation.transformParentType({
-        fieldNode: original,
-        mappersTypeNames,
-        parentType,
-        parentTypeSignature: originalParentTypeSignature,
-      });
+      if (this._federation.isTypeFederated(parentType)) {
+        this._hasFederation = true;
 
-      const mappedTypeSignature = isSubscriptionType
-        ? `${originalMappedTypeSignature}, "${node.name}"`
-        : this._federation.transformMappedType({
+        if (
+          this._federation.isResolveReferenceToBeTransformed({
             fieldNode: original,
-            mappedTypeSignature: originalMappedTypeSignature,
             mappersTypeNames,
             parentType,
-            parentTypeSignature: this._variablesTransfomer.wrapAstTypeWithModifiers(
-              originalParentTypeSignature,
-              original.type
-            ),
+          })
+        ) {
+          mappedTypeSignature = this._variablesTransfomer.wrapAstTypeWithModifiers(parentTypeSignature, original.type);
+
+          parentTypeSignature = this._federation.transformParentTypeSignature({
+            parentType,
+            parentTypeSignature,
           });
+        } else if (
+          this._federation.isTypeExtensionToBeTransformed({
+            mappersTypeNames,
+            parentType,
+          })
+        ) {
+          parentTypeSignature = this._federation.transformParentTypeSignature({
+            parentType,
+            parentTypeSignature,
+          });
+        }
+      }
+
+      if (isSubscriptionType) {
+        mappedTypeSignature = `${mappedTypeSignature}, "${node.name}"`;
+      }
 
       const signature: {
         name: string;
@@ -992,7 +1005,6 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       };
 
       if (this._federation.isResolveReferenceField(node)) {
-        this._hasFederation = true;
         signature.type = 'ReferenceResolver';
 
         if (signature.genericTypes.length >= 3) {
