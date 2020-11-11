@@ -299,7 +299,7 @@ export interface RawResolversConfig extends RawConfig {
    * @name typeResolverFieldName
    * @type string
    * @default '__resolveType'
-   * @description Changes the field name of field resolvers for abstract type
+   * @description Changes the field name of the abstract typename resolver
    */
   typeResolverFieldName?: string;
 }
