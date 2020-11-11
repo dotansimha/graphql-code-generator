@@ -40,6 +40,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
   federation: boolean;
+  typeResolverFieldName: string;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -210,6 +211,13 @@ export interface RawResolversConfig extends RawConfig {
    *
    */
   federation?: boolean;
+  /**
+   * @name typeResolverFieldName
+   * @type string
+   * @default '__resolveType'
+   * @description Changes the field name of field resolvers for abstract type
+   */
+  typeResolverFieldName?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -241,6 +249,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
         defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
         mappers: transformMappers(rawConfig.mappers || {}),
+        typeResolverFieldName: rawConfig.typeResolverFieldName || '__resolveType',
         ...(additionalConfig || {}),
       } as TPluginConfig,
       buildScalars(_schema, defaultScalars)
@@ -750,7 +759,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .export()
       .asKind('type')
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
+      .withBlock(indent(`${this.config.typeResolverFieldName}: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -831,7 +840,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .export()
       .asKind('type')
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
+      .withBlock([indent(`${this.config.typeResolverFieldName}: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {

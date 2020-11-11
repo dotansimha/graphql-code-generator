@@ -60,6 +60,24 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   noSchemaStitching?: boolean;
+  /**
+   * @name typeResolverFieldName
+   * @type string
+   * @description Changes the field name of field resolvers for abstract type
+   * @default '__resolveType'
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    typeResolverFieldName: resolveType
+   * ```
+   */
+  typeResolverFieldName?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
