@@ -57,7 +57,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
   federation: boolean;
-  typeResolverFieldName: string;
   enumPrefix: boolean;
   optionalResolveType: boolean;
   immutableTypes: boolean;
