@@ -2149,13 +2149,13 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/prisma-loader@6.2.4", "@graphql-tools/prisma-loader@^6":
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-6.2.4.tgz#3f902b9f1d36ae0c4731e1fe963178bea300af49"
-  integrity sha512-4S6j+7kNHKLDnK6mgVj+daW/7SkbdaZ7S8kkyKQzsY8hCh0B7RUkUBqkPCZ5+rbTyKCtFOyKyMYw+ebfLQ5QXg==
+"@graphql-tools/prisma-loader@6.2.5", "@graphql-tools/prisma-loader@^6":
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-6.2.5.tgz#1de03e548ef2c0c301b2386e0e8f4a715036adde"
+  integrity sha512-Xm/cQMV0oKm9tlmz3kMS0G+IRVsC8fJuOmYWvTxc4GorJpMnKCnYu0L7JDSMRBp0Q9yLEbh1ticGEMvjozD4OA==
   dependencies:
-    "@graphql-tools/url-loader" "^6.2.4"
-    "@graphql-tools/utils" "^6.2.4"
+    "@graphql-tools/url-loader" "^6.3.1"
+    "@graphql-tools/utils" "^7.0.0"
     "@types/http-proxy-agent" "^2.0.2"
     "@types/js-yaml" "^3.12.5"
     "@types/json-stable-stringify" "^1.0.32"
@@ -2166,7 +2166,7 @@
     debug "^4.2.0"
     dotenv "^8.2.0"
     fs-extra "9.0.1"
-    graphql-request "^3.1.0"
+    graphql-request "^3.2.0"
     http-proxy-agent "^4.0.1"
     https-proxy-agent "^5.0.0"
     isomorphic-fetch "^3.0.0"
@@ -2196,7 +2196,7 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/url-loader@6.4.0", "@graphql-tools/url-loader@^6", "@graphql-tools/url-loader@^6.0.0", "@graphql-tools/url-loader@^6.2.4":
+"@graphql-tools/url-loader@6.4.0", "@graphql-tools/url-loader@^6", "@graphql-tools/url-loader@^6.0.0", "@graphql-tools/url-loader@^6.3.1":
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.4.0.tgz#e13aa701f334aaaa73975ccf25336f1bd5fae35e"
   integrity sha512-M3mS/VH6vpnai3b3Fa33kYcdCgZvhFh7RqFE1R3NMfhYjphQ10EWwgf31P+VQcBNB2zz+ubxttI6UcJLiGqwuQ==
@@ -6364,7 +6364,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@3.0.6, cross-fetch@^3.0.5:
+cross-fetch@3.0.6, cross-fetch@^3.0.6:
   version "3.0.6"
   resolved "https://registry.npmjs.org/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
   integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
@@ -8855,12 +8855,12 @@ graphql-language-service-utils@^2.4.0:
   dependencies:
     graphql-language-service-types "^1.6.3"
 
-graphql-request@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.1.0.tgz#c487488a1aa7b9a0f02335026b4ec897d645f9d4"
-  integrity sha512-Flg2Bd4Ek9BDJ5qacZC/iYuiS3LroHxQTmlUnfqjo/6jKwowY25FVtoLTnssMCBrYspRYEYEIfF1GN8J3/o5JQ==
+graphql-request@^3.2.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.3.0.tgz#1b9003f34b73cd40d691803d2d422fde5c713af3"
+  integrity sha512-NHj65WSIUh8j7TBYgzWU0fqvLfxrqFDrLG8nZUh+IREZw50ljR6JXlXRkr52/fL/46wpItiQNLDrG+UZI+KmzA==
   dependencies:
-    cross-fetch "^3.0.5"
+    cross-fetch "^3.0.6"
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
