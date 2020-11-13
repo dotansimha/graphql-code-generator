@@ -1,0 +1,198 @@
+{
+  "packages/plugins/java/apollo-android/tests/input.spec.ts": {
+    "timestamp": "2020-10-28T17:35:34",
+    "time": 5.178
+  },
+  "packages/plugins/flow/flow/tests/flow.spec.ts": {
+    "timestamp": "2020-10-28T17:35:27",
+    "time": 4.328
+  },
+  "packages/plugins/java/java/tests/java.spec.ts": {
+    "timestamp": "2020-10-28T17:35:32",
+    "time": 4.651
+  },
+  "packages/plugins/typescript/react-apollo/tests/react-apollo.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 21.976
+  },
+  "packages/plugins/flow/resolvers/tests/mapping.spec.ts": {
+    "timestamp": "2020-10-28T17:35:27",
+    "time": 5.15
+  },
+  "packages/plugins/flow/operations/tests/flow-documents.spec.ts": {
+    "timestamp": "2020-10-28T17:35:26",
+    "time": 4.416
+  },
+  "packages/graphql-codegen-cli/tests/generate-and-save.spec.ts": {
+    "timestamp": "2020-10-28T17:35:35",
+    "time": 7.481
+  },
+  "packages/plugins/typescript/typescript/tests/typescript.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 20.562
+  },
+  "packages/plugins/typescript/operations/tests/ts-documents.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 21.132
+  },
+  "packages/plugins/typescript/resolvers/tests/ts-resolvers.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 20.641
+  },
+  "packages/graphql-codegen-cli/tests/cli-flags.spec.ts": {
+    "timestamp": "2020-10-28T17:35:37",
+    "time": 6.093
+  },
+  "packages/graphql-codegen-cli/tests/codegen.spec.ts": {
+    "timestamp": "2020-10-28T17:35:27",
+    "time": 9.919
+  },
+  "packages/plugins/typescript/compatibility/tests/compatibility.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 20.801
+  },
+  "packages/plugins/typescript/vue-apollo/tests/vue-apollo.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 20.538
+  },
+  "packages/plugins/typescript/mongodb/tests/typescript-mongo.spec.ts": {
+    "timestamp": "2020-10-28T17:35:31",
+    "time": 2.825
+  },
+  "packages/plugins/typescript/resolvers/tests/mapping.spec.ts": {
+    "timestamp": "2020-10-28T17:35:06",
+    "time": 19.484
+  },
+  "packages/plugins/java/resolvers/tests/java-resolvers.spec.ts": {
+    "timestamp": "2020-10-28T17:35:39",
+    "time": 3.094
+  },
+  "packages/plugins/typescript/stencil-apollo/tests/stencil-apollo.spec.ts": {
+    "timestamp": "2020-10-28T17:35:38",
+    "time": 2.195
+  },
+  "packages/plugins/other/jsdoc/tests/jsdoc-document-types.spec.ts": {
+    "timestamp": "2020-10-28T17:35:41",
+    "time": 1.549
+  },
+  "packages/plugins/typescript/urql/tests/urql.spec.ts": {
+    "timestamp": "2020-10-28T17:35:30",
+    "time": 2.738
+  },
+  "packages/plugins/typescript/type-graphql/tests/type-graphql.spec.ts": {
+    "timestamp": "2020-10-28T17:35:28",
+    "time": 2.264
+  },
+  "packages/plugins/c-sharp/c-sharp-operations/test/c-sharp-operations.spec.ts": {
+    "timestamp": "2020-10-28T17:35:29",
+    "time": 1.901
+  },
+  "packages/plugins/typescript/apollo-angular/tests/apollo-angular.spec.ts": {
+    "timestamp": "2020-10-28T17:35:31",
+    "time": 2.478
+  },
+  "packages/graphql-codegen-cli/tests/init.spec.ts": {
+    "timestamp": "2020-10-28T17:35:27",
+    "time": 3.404
+  },
+  "packages/plugins/other/schema-ast/tests/schema-ast.spec.ts": {
+    "timestamp": "2020-10-28T17:35:37",
+    "time": 1.707
+  },
+  "packages/plugins/typescript/graphql-files-modules/tests/graphql-files-modules.spec.ts": {
+    "timestamp": "2020-10-28T17:35:37",
+    "time": 1.949
+  },
+  "packages/plugins/other/fragment-matcher/tests/plugin.spec.ts": {
+    "timestamp": "2020-10-28T17:35:32",
+    "time": 1.929
+  },
+  "packages/plugins/c-sharp/c-sharp/test/c-sharp.spec.ts": {
+    "timestamp": "2020-10-28T17:35:30",
+    "time": 1.975
+  },
+  "packages/presets/near-operation-file/tests/near-operation-file.spec.ts": {
+    "timestamp": "2020-10-28T17:35:27",
+    "time": 2.186
+  },
+  "packages/plugins/typescript/oclif/tests/oclif.spec.ts": {
+    "timestamp": "2020-10-28T17:35:40",
+    "time": 1.285
+  },
+  "packages/plugins/typescript/document-nodes/tests/graphql-document-nodes.spec.ts": {
+    "timestamp": "2020-10-28T17:35:33",
+    "time": 1.563
+  },
+  "packages/utils/plugins-helpers/tests/is-using-types.spec.ts": {
+    "timestamp": "2020-10-28T17:35:34",
+    "time": 1.172
+  },
+  "packages/plugins/typescript/resolvers/tests/federation.spec.ts": {
+    "timestamp": "2020-10-28T17:35:31",
+    "time": 2.466
+  },
+  "packages/plugins/other/visitor-plugin-common/tests/plugins-common.spec.ts": {
+    "timestamp": "2020-10-28T17:35:40",
+    "time": 1.398
+  },
+  "packages/plugins/java/kotlin/tests/kotlin.spec.ts": {
+    "timestamp": "2020-10-28T17:35:34",
+    "time": 1.9
+  },
+  "packages/plugins/typescript/generic-sdk/tests/generic-sdk.spec.ts": {
+    "timestamp": "2020-10-28T17:35:39",
+    "time": 2.016
+  },
+  "packages/plugins/other/jsdoc/tests/jsdoc-schema-types.spec.ts": {
+    "timestamp": "2020-10-28T17:35:35",
+    "time": 1.541
+  },
+  "packages/presets/import-types/tests/types-import.spec.ts": {
+    "timestamp": "2020-10-28T17:35:37",
+    "time": 1.285
+  },
+  "packages/plugins/flow/resolvers/tests/flow-resolvers.spec.ts": {
+    "timestamp": "2020-10-28T17:35:33",
+    "time": 1.892
+  },
+  "packages/plugins/typescript/graphql-request/tests/graphql-request.spec.ts": {
+    "timestamp": "2020-10-28T17:35:36",
+    "time": 2.388
+  },
+  "packages/plugins/typescript/named-operations-object/tests/plugin.spec.ts": {
+    "timestamp": "2020-10-28T17:35:38",
+    "time": 2.212
+  },
+  "packages/plugins/other/visitor-plugin-common/tests/enum-values.spec.ts": {
+    "timestamp": "2020-10-28T17:35:42",
+    "time": 1.086
+  },
+  "packages/graphql-codegen-cli/tests/cli-error.spec.ts": {
+    "timestamp": "2020-10-28T17:35:42",
+    "time": 0.826
+  },
+  "packages/plugins/other/visitor-plugin-common/tests/parse-mapper.spec.ts": {
+    "timestamp": "2020-10-28T17:35:38",
+    "time": 1.423
+  },
+  "packages/graphql-codegen-core/tests/prepend.spec.ts": {
+    "timestamp": "2020-10-28T17:35:42",
+    "time": 0.683
+  },
+  "packages/plugins/other/introspection/tests/introspection.spec.ts": {
+    "timestamp": "2020-10-28T17:35:41",
+    "time": 1.392
+  },
+  "packages/plugins/java/apollo-android/tests/operations.spec.ts": {
+    "timestamp": "2020-10-28T17:35:34",
+    "time": 2.568
+  },
+  "packages/plugins/typescript/apollo-client-helpers/tests/apollo-client-helpers.spec.ts": {
+    "timestamp": "2020-10-28T17:35:41",
+    "time": 1.126
+  },
+  "packages/plugins/other/time/tests/time.spec.ts": {
+    "timestamp": "2020-10-28T17:35:42",
+    "time": 0.776
+  }
+}

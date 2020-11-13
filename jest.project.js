@@ -17,11 +17,12 @@ module.exports = ({ dirname, projectMode = true }) => {
     globals: {
       'ts-jest': {
         diagnostics: false,
-        tsConfig: 'tsconfig.json',
+        tsconfig: 'tsconfig.json',
       },
     },
     restoreMocks: true,
-    reporters: ['default'],
+    reporters: ['default', '<rootDir>/jest-time-reporter.js'],
+    runner: '<rootDir>/jest-job-runner.js',
     modulePathIgnorePatterns: ['dist'],
     moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: `${ROOT_DIR}/` }),
     cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
