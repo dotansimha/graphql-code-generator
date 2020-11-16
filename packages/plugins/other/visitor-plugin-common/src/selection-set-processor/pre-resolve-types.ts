@@ -3,10 +3,10 @@ import {
   ProcessResult,
   LinkField,
   PrimitiveAliasedFields,
-  PrimitiveField,
   SelectionSetProcessorConfig,
+  PrimitiveField,
 } from './base';
-import { GraphQLObjectType, GraphQLInterfaceType, isEnumType } from 'graphql';
+import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
@@ -28,9 +28,12 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     }
 
     return fields.map(field => {
-      const fieldObj = schemaType.getFields()[field];
+      const fieldObj = schemaType.getFields()[field.fieldName];
+
       const baseType = getBaseType(fieldObj.type);
       let typeToUse = baseType.name;
+
+      const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
 
       if (isEnumType(baseType)) {
         typeToUse =
@@ -40,8 +43,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      const name = this.config.formatNamedField(field, fieldObj.type);
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
+      const name = this.config.formatNamedField(field.fieldName, useInnerType ? baseType : fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, useInnerType ? baseType : fieldObj.type);
 
       return {
         name,

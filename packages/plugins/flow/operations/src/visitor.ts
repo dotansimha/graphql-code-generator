@@ -1,5 +1,5 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
+import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
@@ -39,7 +39,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapOptional = (type: string) => `?${type}`;
 
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+    const formatNamedField = (name: string, type: GraphQLOutputType | GraphQLNamedType | null): string => {
       const optional = !!type && !isNonNullType(type);
       return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };

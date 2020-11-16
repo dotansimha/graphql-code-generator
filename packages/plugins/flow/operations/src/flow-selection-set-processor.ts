@@ -1,11 +1,11 @@
 import {
   LinkField,
-  PrimitiveField,
   PrimitiveAliasedFields,
   SelectionSetProcessorConfig,
   ProcessResult,
   BaseSelectionSetProcessor,
   indent,
+  PrimitiveField,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
@@ -87,11 +87,21 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
         useTypesPrefix: true,
       });
     const fieldObj = schemaType.getFields();
-    return [
-      `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
-        .map(fieldName => `${formatNamedField(fieldName, fieldObj[fieldName].type)}: *`)
-        .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
-    ];
+    let hasConditionals = false;
+    const conditilnalsList: string[] = [];
+    let resString = `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
+      .map(field => {
+        if (field.isConditional) {
+          hasConditionals = true;
+          conditilnalsList.push(field.fieldName);
+        }
+        return `${formatNamedField(field.fieldName, fieldObj[field.fieldName].type)}: *`;
+      })
+      .join(', ')} ${useFlowExactObject ? '|' : ''}}>`;
+    if (hasConditionals) {
+      resString = `$MakeOptional<${resString}, ${conditilnalsList.map(field => `{ ${field}: * }`).join(' | ')}>`;
+    }
+    return [resString];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {

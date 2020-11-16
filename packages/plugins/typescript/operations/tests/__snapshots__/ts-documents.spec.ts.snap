@@ -162,6 +162,7 @@ export type QQuery = (
 exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 2`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in keyof Pick<T, K>]?: Maybe<Pick<T, K>[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -446,6 +447,7 @@ export type UserQueryQuery = (
 exports[`TypeScript Operations Plugin Union & Interfaces #4216 - handle fragments against unions and interfaces with flattenGeneratedTypes 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in keyof Pick<T, K>]?: Maybe<Pick<T, K>[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -564,6 +566,7 @@ export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fr
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in keyof Pick<T, K>]?: Maybe<Pick<T, K>[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -654,6 +657,7 @@ export type UserQueryQuery = (
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in keyof Pick<T, K>]?: Maybe<Pick<T, K>[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
