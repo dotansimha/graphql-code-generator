@@ -1,6 +1,18 @@
 # @graphql-codegen/schema-ast
 
+## 1.18.0
+
+### Minor Changes
+
+- 2e6f20a6: added support for sorting schemas before printing
+
+### Patch Changes
+
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues

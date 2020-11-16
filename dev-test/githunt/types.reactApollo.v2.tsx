@@ -535,7 +535,7 @@ export type SubmitRepositoryMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSubmitRepositoryMutation(
-  baseOptions: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
 ) {
   return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
@@ -580,7 +580,7 @@ export type SubmitCommentMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSubmitCommentMutation(
-  baseOptions: ApolloReactHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
 ) {
   return ApolloReactHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(
     SubmitCommentDocument,
@@ -625,7 +625,7 @@ export type VoteMutationFn = ApolloReactCommon.MutationFunction<VoteMutation, Vo
  * });
  */
 export function useVoteMutation(
-  baseOptions: ApolloReactHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>
+  baseOptions?: ApolloReactHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>
 ) {
   return ApolloReactHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 }

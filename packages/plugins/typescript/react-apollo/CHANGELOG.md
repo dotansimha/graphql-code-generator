@@ -1,5 +1,26 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.1.1
+
+### Patch Changes
+
+- b31ce77e: prevent baseOptions from being required when Mutation is used
+
+## 2.1.0
+
+### Minor Changes
+
+- 9f2a4e2f: Improved type-safety: in generated React Hooks, `baseOptions` will be non-optional in case there when there is a required variables with no default value
+
+### Patch Changes
+
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 2.0.7
 
 ### Patch Changes

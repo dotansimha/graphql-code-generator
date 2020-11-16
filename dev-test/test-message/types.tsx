@@ -143,7 +143,7 @@ export type GetMessagesQueryResult = Apollo.QueryResult<GetMessagesQuery, GetMes
  * });
  */
 export function useCreateMessageMutation(
-  baseOptions: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>
 ) {
   return Apollo.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(
     Operations.CreateMessage,
@@ -175,7 +175,9 @@ export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<
  *   },
  * });
  */
-export function useDeclineMutation(baseOptions: Apollo.MutationHookOptions<DeclineMutation, DeclineMutationVariables>) {
+export function useDeclineMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeclineMutation, DeclineMutationVariables>
+) {
   return Apollo.useMutation<DeclineMutation, DeclineMutationVariables>(Operations.Decline, baseOptions);
 }
 export type DeclineMutationHookResult = ReturnType<typeof useDeclineMutation>;
@@ -199,7 +201,9 @@ export type DeclineMutationOptions = Apollo.BaseMutationOptions<DeclineMutation,
  *   },
  * });
  */
-export function useApproveMutation(baseOptions: Apollo.MutationHookOptions<ApproveMutation, ApproveMutationVariables>) {
+export function useApproveMutation(
+  baseOptions?: Apollo.MutationHookOptions<ApproveMutation, ApproveMutationVariables>
+) {
   return Apollo.useMutation<ApproveMutation, ApproveMutationVariables>(Operations.Approve, baseOptions);
 }
 export type ApproveMutationHookResult = ReturnType<typeof useApproveMutation>;
@@ -224,7 +228,7 @@ export type ApproveMutationOptions = Apollo.BaseMutationOptions<ApproveMutation,
  * });
  */
 export function useEscalateMutation(
-  baseOptions: Apollo.MutationHookOptions<EscalateMutation, EscalateMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<EscalateMutation, EscalateMutationVariables>
 ) {
   return Apollo.useMutation<EscalateMutation, EscalateMutationVariables>(Operations.Escalate, baseOptions);
 }

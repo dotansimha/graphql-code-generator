@@ -1,5 +1,23 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 2.2.0
+
+### Minor Changes
+
+- 36294d92: \* Support the `useTypeImports` options
+  - Fix typing errors for operations without variables
+  - Improve jsdoc
+
+### Patch Changes
+
+- b83668d2: Fix regression so omitOperationSuffix is respected again
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 2.1.1
 
 ### Patch Changes

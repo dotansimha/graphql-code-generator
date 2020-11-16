@@ -1,5 +1,14 @@
 # @graphql-codegen/cli
 
+## 1.19.1
+
+### Patch Changes
+
+- 4ad0319a: Resolve modules passed through the -r flag relative to the cwd
+- 93e49f89: Correctly resolve relative to the cwd
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.19.0
 
 ### Minor Changes

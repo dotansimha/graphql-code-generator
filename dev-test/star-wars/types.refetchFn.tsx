@@ -288,7 +288,7 @@ export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useCreateReviewForEpisodeMutation(
-  baseOptions: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
 ) {
   return Apollo.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
     CreateReviewForEpisodeDocument,
