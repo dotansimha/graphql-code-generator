@@ -36,7 +36,9 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       .join(' | ')}>`;
 
     if (hasConditionals) {
-      resString = `MakeOptional<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
+      resString = `${
+        this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
+      }MakeOptional<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
     }
     return [resString];
   }

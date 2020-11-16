@@ -204,31 +204,7 @@ describe('Flow Operations Plugin', () => {
         await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' }),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
-
-        export type NotificationsQueryVariables = {};
-
-
-        export type NotificationsQuery = ({
-            ...{ __typename?: 'Query' },
-          ...{| notifications: Array<({
-              ...{ __typename?: 'TextNotification' },
-            ...$Pick<Types.TextNotification, {| text: *, id: * |}>
-          }) | ({
-              ...{ __typename?: 'ImageNotification' },
-            ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
-            ...{| metadata: ({
-                ...{ __typename?: 'ImageMetadata' },
-              ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
-            }) |}
-          })> |}
-        });
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
   });
@@ -570,23 +546,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
-
-        export type UserFieldsFragment = ({
-            ...$Pick<User, {| id: *, username: *, role?: * |}>,
-          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-        });
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = {| me?: ?UserFieldsFragment |};
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
@@ -621,26 +581,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-        type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
-
-        export type UserFieldsFragment = ({
-            ...$Pick<User, {| id: *, username: *, role?: * |}>,
-          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-        });
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = {| me?: ?({
-              ...$Pick<User, {| id: *, username: *, role?: * |}>,
-            ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-          }) |};
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
@@ -675,18 +616,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-
-        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
