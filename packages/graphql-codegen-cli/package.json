@@ -83,7 +83,7 @@
     "upper-case": "^2.0.1",
     "valid-url": "^1.0.9",
     "wrap-ansi": "^7.0.0",
-    "yargs": "^16.1.0"
+    "yargs": "^16.1.1"
   },
   "devDependencies": {
     "@types/chokidar": "2.1.3",
