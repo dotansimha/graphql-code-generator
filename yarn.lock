@@ -16262,10 +16262,10 @@ stealthy-require@^1.1.1:
   resolved "https://registry.npmjs.org/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-stencil-apollo@0.1.5:
-  version "0.1.5"
-  resolved "https://registry.npmjs.org/stencil-apollo/-/stencil-apollo-0.1.5.tgz#8e0585ce3c227bb34b9f2cb9f29927a9fb23aea4"
-  integrity sha512-spLBBSV5DaoOsQq5/a+eWMzE+yE4BDB0k0MqFW6Quf0ydix6obUFhlVwRaNHiy9I2FLKre8dLvYcSsxL0cPCWg==
+stencil-apollo@0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/stencil-apollo/-/stencil-apollo-0.1.6.tgz#74b40ee2f37293461bc774f14be7f46049e32e4c"
+  integrity sha512-jgTyBngLdKF/MrHC/mZOelAmWAhF7FIVQIb3PDEzw2mfiTvuUkVm99ogy633uWoKu4XRVvG56qWvxbX5dqEFLg==
   dependencies:
     "@stencil/state-tunnel" "1.0.1"
 
