@@ -1,5 +1,13 @@
 # @graphql-cli/codegen
 
+## 1.17.14
+
+### Patch Changes
+
+- Updated dependencies [faa13973]
+- Updated dependencies [faa13973]
+  - @graphql-codegen/cli@1.19.2
+
 ## 1.17.13
 
 ### Patch Changes

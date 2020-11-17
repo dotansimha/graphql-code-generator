@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-operations
 
+## 1.17.10
+
+### Patch Changes
+
+- 475aa9b8: @skip, @include directives resolve to optional fields
+- Updated dependencies [faa13973]
+  - @graphql-codegen/visitor-plugin-common@1.17.18
+
 ## 1.17.9
 
 ### Patch Changes

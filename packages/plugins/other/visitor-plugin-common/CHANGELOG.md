@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.18
+
+### Patch Changes
+
+- faa13973: Fixed a bug in `parseMapper` that were preventing to use mappers with complex type usages
+
 ## 1.17.17
 
 ### Patch Changes
