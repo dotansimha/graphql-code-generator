@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.17.11
+
+### Patch Changes
+
+- faa13973: Fixed issues with mappers setup
+- Updated dependencies [faa13973]
+  - @graphql-codegen/visitor-plugin-common@1.17.18
+
 ## 1.17.10
 
 ### Patch Changes

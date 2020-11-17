@@ -1,5 +1,12 @@
 # @graphql-codegen/cli
 
+## 1.19.2
+
+### Patch Changes
+
+- faa13973: Fix issues with missing sources in loadSchema
+- faa13973: fix(cli): use default options of codegen for graphql-config's load methods
+
 ## 1.19.1
 
 ### Patch Changes
