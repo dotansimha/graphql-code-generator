@@ -124,8 +124,12 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               } else if (parent.operation === 'subscription') {
                 return schema.getSubscriptionType().name;
               }
-            } else if (parent.kind === Kind.INLINE_FRAGMENT && parent.typeCondition) {
-              return parent.typeCondition.name.value;
+            } else if (parent.kind === Kind.INLINE_FRAGMENT) {
+              if (parent.typeCondition) {
+                return parent.typeCondition.name.value;
+              } else {
+                return typesStack[typesStack.length - 1].name;
+              }
             }
 
             return null;

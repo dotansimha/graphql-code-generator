@@ -24,6 +24,7 @@ import {
   getFieldNodeNameValue,
   DeclarationBlock,
   mergeSelectionSets,
+  hasConditionalDirectives,
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -102,7 +103,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           this._appendToTypeMap(types, typeOnSchema.name, fields);
           this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
-        } else if (isInterfaceType(typeOnSchema) && parentType.isTypeOf(typeOnSchema, null, null)) {
+        } else if (isInterfaceType(typeOnSchema) && parentType.getInterfaces().includes(typeOnSchema)) {
           this._appendToTypeMap(types, parentType.name, fields);
           this._appendToTypeMap(types, parentType.name, spreadsUsage[parentType.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
@@ -383,7 +384,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
-        Array.from(primitiveFields.values()).map(field => field.name.value)
+        Array.from(primitiveFields.values()).map(field => ({
+          isConditional: hasConditionalDirectives(field.directives),
+          fieldName: field.name.value,
+        }))
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,

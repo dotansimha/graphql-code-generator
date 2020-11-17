@@ -3,6 +3,7 @@
 
 Required, should point to the base schema types file. The key of the output is used a the base path for this file.
 
+> If the specified path starts with `~` it will be used as is.
 
 #### Usage Example
 

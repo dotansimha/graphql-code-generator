@@ -32,6 +32,38 @@ introspection.json:
     minify: true
 ```
 
+### `descriptions`
+
+type: `boolean`
+default: `true`
+
+Whether to include descriptions in the introspection result.
+
+
+### `specifiedByUrl`
+
+type: `boolean`
+default: `false`
+
+Whether to include `specifiedByUrl` in the introspection result.
+
+
+### `directiveIsRepeatable`
+
+type: `boolean`
+default: `true`
+
+Whether to include `isRepeatable` flag on directives.
+
+
+### `schemaDescription`
+
+type: `boolean`
+default: `false`
+
+Whether to include `description` field on schema.
+
+
 ### `federation`
 
 type: `boolean`

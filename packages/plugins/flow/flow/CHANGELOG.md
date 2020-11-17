@@ -1,6 +1,13 @@
 # @graphql-codegen/flow
 
+## 1.18.1
+
+### Patch Changes
+
+- bc5e4c83: Consolidate `// @flow` declarations to avoid duplicates
+
 ## 1.18.0
+
 ### Minor Changes
 
 - e0d04cb6: added typeSuffix option

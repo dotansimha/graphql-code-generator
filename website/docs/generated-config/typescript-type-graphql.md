@@ -14,8 +14,25 @@
 
 ### `decoratorName`
 
-type: `Partial`
+type: `Partial<DecoratorConfig>`
+default: ````json
+{
+  type: 'ObjectType',
+  interface: 'InterfaceType',
+  arguments: 'ArgsType',
+  field: 'Field',
+  input: 'InputType'
+}
+````
 
+allow overriding of TypeGraphQL decorator types
+
+
+### `decorateTypes`
+
+type: `string[]`
+
+Speciies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.
 
 
 ### `avoidOptionals`
@@ -207,7 +224,7 @@ generates:
  path/to/file.ts:
    plugins:
      - typescript
-     - typescript-resolves
+     - typescript-resolvers
    config:
      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
 ```

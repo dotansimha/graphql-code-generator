@@ -1,5 +1,26 @@
 # @graphql-codegen/flow-operations
 
+## 1.18.2
+
+### Patch Changes
+
+- 0a519e29: Fixes generation of type imports for fragments
+- 612e5e52: Remove broken isTypeOf call (always undefined in graphql-tools v6)
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
+## 1.18.1
+
+### Patch Changes
+
+- bc5e4c83: Consolidate `// @flow` declarations to avoid duplicates
+- Updated dependencies [bc5e4c83]
+  - @graphql-codegen/flow@1.18.1
+
 ## 1.18.0
 
 ### Minor Changes

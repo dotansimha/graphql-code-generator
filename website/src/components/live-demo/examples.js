@@ -13,9 +13,11 @@ export const EXAMPLES_ICONS = {
   angular: k => <img alt={'Angular'} className={classes.exampleIcon} key={k} src={'/img/icons/angular.svg'} />,
   urql: k => <img alt={'urql'} className={classes.exampleIcon} key={k} src={'/img/icons/urql.svg'} />,
   nodejs: k => <img alt={'NodeJS'} className={classes.exampleIcon} key={k} src={'/img/icons/nodejs.svg'} />,
-  'type-graphql': k => <img alt={'type-graphql'} className={classes.exampleIcon} key={k} src={'/img/icons/type-graphql.png'} />,
-  'mongodb': k => <img alt={'MongoDB'} className={classes.exampleIcon} key={k} src={'/img/icons/mongodb.png'} />,
-}
+  'type-graphql': k => (
+    <img alt={'type-graphql'} className={classes.exampleIcon} key={k} src={'/img/icons/type-graphql.png'} />
+  ),
+  mongodb: k => <img alt={'MongoDB'} className={classes.exampleIcon} key={k} src={'/img/icons/mongodb.png'} />,
+};
 
 const TS_SCHEMA = `scalar Date
 
@@ -146,6 +148,16 @@ export const EXAMPLES = {
       - typed-document-node`,
       schema: TS_SCHEMA,
       documents: TS_QUERY,
+    },
+    {
+      name: 'Apollo-Client v3 TypePolicies',
+      description: 'This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Client v3.',
+      tags: ['typescript', 'apollo'],
+      config: `generates:
+      type-policies.ts:
+        plugins:
+          - typescript-apollo-client-helpers`,
+      schema: TS_SCHEMA,
     },
     {
       name: 'React-Apollo Hooks',

@@ -47,6 +47,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     if (this.config.rawRequest) {
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
+      this._additionalImports.push(`${typeImport} { Headers } from 'graphql-request/dist/types.dom';`);
     }
   }
 
@@ -68,6 +69,12 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     return null;
   }
 
+  private getDocumentNodeVariable(documentVariableName: string): string {
+    return this.config.documentMode === DocumentMode.external
+      ? `Operations.${documentVariableName}`
+      : documentVariableName;
+  }
+
   public get sdkContent(): string {
     const allPossibleActions = this._operationsToInclude
       .map(o => {
@@ -75,10 +82,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        const doc =
-          this.config.documentMode === DocumentMode.string
-            ? o.documentVariableName
-            : `print(${o.documentVariableName})`;
+        const docVarName = this.getDocumentNodeVariable(o.documentVariableName);
+        const doc = this.config.documentMode === DocumentMode.string ? docVarName : `print(${docVarName})`;
         if (this.config.rawRequest) {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes

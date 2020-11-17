@@ -228,6 +228,42 @@ describe('TypeScript', () => {
       export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
 
+    it('Should work with enum as const combined with enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A_B_C
+          X_Y_Z
+          _TEST
+          My_Value
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          enumsAsConst: true,
+          enumValues: {
+            MyEnum: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export const MyEnum = {
+        ABC: 0,
+        XYZ: 'Foo',
+        Test: 'Bar',
+        MyValue: 1
+      } as const;
+      export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
@@ -453,6 +489,24 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
+    });
+
+    it('#4834 - enum members should be quoted if numeric', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MediaItemSizeEnum {
+          AXB
+          _1X2
+          _3X4
+        }
+      `);
+
+      const result = (await plugin(testSchema, [], {})) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`export enum MediaItemSizeEnum {
+        Axb = 'AXB',
+        '1X2' = '_1X2',
+        '3X4' = '_3X4'
+      }`);
     });
 
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
@@ -2258,6 +2312,24 @@ describe('TypeScript', () => {
         };
       `);
       await validateTs(result);
+    });
+
+    it('Should generate correctly types for inputs with default value - #4273', async () => {
+      const schema = buildSchema(
+        `input MyInput { a: String = "default", b: String! = "default", c: String, d: String! }`
+      );
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          a?: Maybe<Scalars['String']>;
+          b?: Scalars['String'];
+          c?: Maybe<Scalars['String']>;
+          d: Scalars['String'];
+        };
+    `);
+
+      validateTs(result);
     });
   });
 

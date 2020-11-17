@@ -1,5 +1,5 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
+import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
@@ -12,6 +12,7 @@ import {
   SelectionSetToObject,
   getConfigValue,
   DeclarationKind,
+  generateFragmentImportStatement,
 } from '@graphql-codegen/visitor-plugin-common';
 
 import autoBind from 'auto-bind';
@@ -38,7 +39,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapOptional = (type: string) => `?${type}`;
 
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+    const formatNamedField = (name: string, type: GraphQLOutputType | GraphQLNamedType | null): string => {
       const optional = !!type && !isNonNullType(type);
       return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };
@@ -85,5 +86,14 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return declarationKind === 'type' ? ',' : ';';
+  }
+
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports
+          // In flow, all non ` * as x` imports must be type imports
+          .map(fragmentImport => ({ ...fragmentImport, typesImport: true }))
+          .map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
   }
 }

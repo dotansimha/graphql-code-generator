@@ -67,6 +67,8 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`silent`** - A flag to suppress printing errors when they occur.
 
+- **`errorsOnly`** - A flag to suppress printing anything except errors.
+
 - **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. You can read more about lifecycle hooks [here](lifecycle-hooks.md). You can specify this on your root configuration or on each output.
 
 - **`pluginLoader`** - If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than `require`.
@@ -110,6 +112,8 @@ The Codegen also supports several CLI flags that allow you to override the defau
 - **`--watch` (`-w`)** - Overrides the `watch` config to true. You can also specify a glob expression to create a custom watch list.
 
 - **`--silent` (`-s`)** - Overrides the `silent` config to true.
+
+- **`--errors-only` (`-e`)** - Overrides the `errorsOnly` config to true.
 
 - **`--require` (`-r`)** - Specifies `require.extensions` before loading the `.yml` file.
 

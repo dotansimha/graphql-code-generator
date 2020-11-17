@@ -893,7 +893,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `${resolversType}['${name}']`;
   }
 
-  protected getParentTypeForSignature(node: FieldDefinitionNode): string {
+  protected getParentTypeForSignature(_node: FieldDefinitionNode): string {
     return 'ParentType';
   }
 
@@ -919,21 +919,21 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+
       let argsType = hasArguments
-        ? `${this.convertName(
-            parentName,
+        ? this.convertName(
+            parentName +
+              (this.config.addUnderscoreToArgsType ? '_' : '') +
+              this.convertName(node.name, {
+                useTypesPrefix: false,
+                useTypesSuffix: false,
+              }) +
+              'Args',
             {
               useTypesPrefix: true,
-              useTypesSuffix: true,
             },
             true
-          ) +
-            (this.config.addUnderscoreToArgsType ? '_' : '') +
-            this.convertName(node.name, {
-              useTypesPrefix: false,
-              useTypesSuffix: false,
-            }) +
-            'Args'}`
+          )
         : null;
 
       if (argsType !== null) {
@@ -996,7 +996,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
   }
 
-  protected applyOptionalFields(argsType: string, fields: readonly InputValueDefinitionNode[]): string {
+  protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
     return `RequireFields<${argsType}, never>`;
   }
@@ -1017,7 +1017,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const fieldsContent = node.fields.map((f: any) => f(node.name));
 
     if (!isRootType) {
-      fieldsContent.push(indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType>${this.getPunctuation(declarationKind)}`));
+      fieldsContent.push(
+        indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`)
+      );
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
@@ -1134,13 +1136,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     ].join('\n');
   }
 
-  protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
+  protected buildEnumResolverContentBlock(_node: EnumTypeDefinitionNode, _mappedEnumType: string): string {
     throw new Error(`buildEnumResolverContentBlock is not implemented!`);
   }
 
   protected buildEnumResolversExplicitMappedValues(
-    node: EnumTypeDefinitionNode,
-    valuesMapping: { [valueName: string]: string | number }
+    _node: EnumTypeDefinitionNode,
+    _valuesMapping: { [valueName: string]: string | number }
   ): string {
     throw new Error(`buildEnumResolversExplicitMappedValues is not implemented!`);
   }

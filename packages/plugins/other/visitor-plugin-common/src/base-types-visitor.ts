@@ -368,7 +368,7 @@ export class BaseTypesVisitor<
     return comment;
   }
 
-  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+  protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
     return allFields.join('\n');
   }
 
@@ -383,7 +383,7 @@ export class BaseTypesVisitor<
 
   getInterfaceTypeDeclarationBlock(
     node: InterfaceTypeDefinitionNode,
-    originalNode: InterfaceTypeDefinitionNode
+    _originalNode: InterfaceTypeDefinitionNode
   ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -403,7 +403,7 @@ export class BaseTypesVisitor<
       .join('\n\n');
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+  ScalarTypeDefinition(_node: ScalarTypeDefinitionNode): string {
     // We empty this because we handle scalars in a different way, see constructor.
     return '';
   }
@@ -476,6 +476,13 @@ export class BaseTypesVisitor<
     return node.value;
   }
 
+  protected makeValidEnumIdentifier(identifier: string): string {
+    if (/^[0-9]/.exec(identifier)) {
+      return wrapWithSingleQuotes(identifier, true);
+    }
+    return identifier;
+  }
+
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
     const schemaEnumType: GraphQLEnumType | undefined = this._schema
       ? (this._schema.getType(typeName) as GraphQLEnumType)
@@ -483,7 +490,9 @@ export class BaseTypesVisitor<
 
     return values
       .map(enumOption => {
-        const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
+        const optionName = this.makeValidEnumIdentifier(
+          this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+        );
         const comment = transformComment((enumOption.description as any) as string, 1);
         const schemaEnumValue = schemaEnumType ? schemaEnumType.getValue(enumOption.name as any).value : undefined;
         let enumValue: string | number =
@@ -510,7 +519,7 @@ export class BaseTypesVisitor<
       .join(',\n');
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
     return '';
   }
 

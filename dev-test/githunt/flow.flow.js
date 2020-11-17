@@ -1,7 +1,5 @@
 // @flow
 
-// @flow
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {|
   ID: string,
@@ -170,7 +168,8 @@ export type SubscriptionCommentAddedArgs = {|
 |};
 
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-
+type $MakeOptional<T, K: Object> = $Diff<T, K> &
+  $ObjMapi<$Rest<T, K>, <SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: $ElementType<Scalars, 'String'>,
 };

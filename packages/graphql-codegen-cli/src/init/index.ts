@@ -40,6 +40,8 @@ export async function init() {
   // config file
   const { relativePath } = await writeConfig(answers, config);
 
+  log(`Fetching latest versions of selected plugins...`);
+
   // write package.json
   await writePackage(answers, relativePath);
 
