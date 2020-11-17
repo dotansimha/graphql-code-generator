@@ -53,14 +53,7 @@ interface Type {
 }
 
 function escapeString(str: string) {
-  return (
-    "'" +
-    str
-      .replace(/\\/g, '\\\\')
-      .replace(/\n/g, '\\n')
-      .replace(/'/g, "\\'") +
-    "'"
-  );
+  return "'" + str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'") + "'";
 }
 
 type DecoratorOptions = { [key: string]: string };

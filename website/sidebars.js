@@ -80,7 +80,12 @@ module.exports = {
         ],
       },
     ],
-    Presets: ['presets/presets-index', 'presets/near-operation-file', 'presets/import-types'],
+    Presets: [
+      'presets/presets-index',
+      'presets/near-operation-file',
+      'presets/import-types',
+      'presets/graphql-modules',
+    ],
     Integrations: [
       'integrations/apollo-local-state',
       'integrations/create-react-app',

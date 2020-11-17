@@ -39,7 +39,7 @@ const config = {
 };
 ```
 
-> The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from a external source (file, url), you can use `loadSchema` from `graphql-toolkit`.
+> The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from a external source (file, url), you can use `loadSchema` from `@graphql-tools/load`.
 
 Notice that a plugin name key in `pluginMap` and `plugins` must match to identify a plugin and its configuration.
 
@@ -59,7 +59,7 @@ We are using this API in the live demo in GraphQL Code Generator website. [The c
 :::
 
 :::tip Loading schema and documents
-You can use one of the tools from [`@graphql-toolkit`](https://github.com/ardatan/graphql-toolkit) for file loading, schema merging, transformations and more. 
+You can use one of the tools from [`@graphql-tools`](https://github.com/ardatan/graphql-tools) for file loading, schema merging, transformations and more. 
 :::
 
 ## Using the CLI instead of `core`
