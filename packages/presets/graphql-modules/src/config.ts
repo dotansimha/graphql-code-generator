@@ -77,10 +77,11 @@ export type ModulesConfig = {
   /**
    * @name encapsulateModuleTypes
    * @type string
+   * @default namespace
    * @description Configure how to encapsulate the module types, to avoid confusion.
    *
-   * `prefix` (default): will prefix all types from a specific module with the module name.
-   * `namespace`: will wrap all types in a TypeScript namespace, using the module name.
+   * `namespace` (default): will wrap all types in a TypeScript namespace, using the module name.
+   * `prefix`: will prefix all types from a specific module with the module name.
    * `none`: will skip encapsulation, and generate type as-is.
    *
    * @example

@@ -101,7 +101,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
               buildModule(moduleName, moduleDocument, {
                 importNamespace: importTypesNamespace,
                 importPath,
-                encapsulate: encapsulateModuleTypes || 'none',
+                encapsulate: encapsulateModuleTypes || 'namespace',
                 schema,
                 baseVisitor,
                 rootTypes: [

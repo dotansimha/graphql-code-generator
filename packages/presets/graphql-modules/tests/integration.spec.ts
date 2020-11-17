@@ -15,6 +15,7 @@ const options = {
       presetConfig: {
         baseTypesPath: 'global-types.ts',
         filename: 'module-types.ts',
+        encapsulateModuleTypes: 'none',
       },
     },
   },

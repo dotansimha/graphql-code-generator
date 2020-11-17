@@ -180,6 +180,7 @@ test('should pick fields from defined and extended types', () => {
       Article: 'id' | 'title' | 'text' | 'author' | 'comments';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
+      Node: 'id';
     };
   `);
 
@@ -235,7 +236,7 @@ test('should export partial types, only those defined in module or root types', 
     export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
   `);
   expect(output).toBeSimilarStringTo(`
-    export type Node = core.Node;
+    export type Node = Pick<core.Node, DefinedFields['Node']>;
   `);
   expect(output).toBeSimilarStringTo(`
     export type ArticleOrUser = core.ArticleOrUser;
@@ -284,7 +285,7 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
   // Interfaces should not have resolvers
   // We want Object types to have __isTypeOf
-  expect(output).not.toBeSimilarStringTo(`
+  expect(output).toBeSimilarStringTo(`
     export type NodeResolvers
   `);
   // Unions should not have resolvers
