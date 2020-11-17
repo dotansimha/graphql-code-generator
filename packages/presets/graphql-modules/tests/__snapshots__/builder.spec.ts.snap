@@ -8,6 +8,7 @@ export namespace TestModule {
     Article: 'id' | 'title' | 'text' | 'author' | 'comments';
     Query: 'articles' | 'articleById' | 'articlesByUser';
     User: 'articles';
+    Node: 'id';
   };
   
   interface DefinedEnumValues {
@@ -21,7 +22,7 @@ export namespace TestModule {
   export type Article = Pick<core.Article, DefinedFields['Article']>;
   export type User = core.User;
   export type Comment = core.Comment;
-  export type Node = core.Node;
+  export type Node = Pick<core.Node, DefinedFields['Node']>;
   export type ArticleOrUser = core.ArticleOrUser;
   export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
   export type Query = Pick<core.Query, DefinedFields['Query']>;
@@ -33,6 +34,7 @@ export namespace TestModule {
   export type ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
   export type QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
   export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+  export type NodeResolvers = Pick<core.NodeResolvers, DefinedFields['Node']>;
   
   export interface Resolvers {
     Article?: ArticleResolvers;
@@ -74,6 +76,7 @@ interface DefinedFields {
   Article: 'id' | 'title' | 'text' | 'author' | 'comments';
   Query: 'articles' | 'articleById' | 'articlesByUser';
   User: 'articles';
+  Node: 'id';
 };
 
 interface DefinedEnumValues {
@@ -87,7 +90,7 @@ interface DefinedInputFields {
 export type Test_Article = Pick<core.Article, DefinedFields['Article']>;
 export type Test_User = core.User;
 export type Test_Comment = core.Comment;
-export type Test_Node = core.Node;
+export type Test_Node = Pick<core.Node, DefinedFields['Node']>;
 export type Test_ArticleOrUser = core.ArticleOrUser;
 export type Test_NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
 export type Test_Query = Pick<core.Query, DefinedFields['Query']>;
@@ -99,6 +102,7 @@ export type Test_DateTimeScalarConfig = core.DateTimeScalarConfig;
 export type Test_ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
 export type Test_QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
 export type Test_UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+export type Test_NodeResolvers = Pick<core.NodeResolvers, DefinedFields['Node']>;
 
 export interface Test_Resolvers {
   Article?: Test_ArticleResolvers;

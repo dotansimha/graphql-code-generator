@@ -12,6 +12,8 @@ import {
   InputObjectTypeExtensionNode,
   GraphQLSchema,
   isScalarType,
+  InterfaceTypeDefinitionNode,
+  InterfaceTypeExtensionNode,
 } from 'graphql';
 import { pascalCase } from 'change-case';
 import {
@@ -144,7 +146,13 @@ export function buildModule(
   function printDefinedFields() {
     return buildBlock({
       name: `interface DefinedFields`,
-      lines: visited.objects.map(typeName => `${typeName}: ${printPicks(typeName, picks.objects)};`),
+      lines: [...visited.objects, ...visited.interfaces].map(
+        typeName =>
+          `${typeName}: ${printPicks(typeName, {
+            ...picks.objects,
+            ...picks.interfaces,
+          })};`
+      ),
     });
   }
 
@@ -188,7 +196,7 @@ export function buildModule(
 
   function printResolveSignaturesPerType(registry: Registry) {
     return [
-      registry.objects
+      [...registry.objects, ...registry.interfaces]
         .map(name =>
           printResolverType(
             name,
@@ -230,8 +238,7 @@ export function buildModule(
         types.forEach(typeName => {
           if (k === 'enums') {
             return;
-          }
-          if (k === 'scalars') {
+          } else if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);
@@ -312,6 +319,10 @@ export function buildModule(
       return `Pick<${coreType}, DefinedFields['${typeName}']>`;
     }
 
+    if (defined.interfaces.includes(typeName) && picks.interfaces[typeName]) {
+      return `Pick<${coreType}, DefinedFields['${typeName}']>`;
+    }
+
     if (defined.inputs.includes(typeName) && picks.inputs[typeName]) {
       return `Pick<${coreType}, DefinedInputFields['${typeName}']>`;
     }
@@ -331,30 +342,25 @@ export function buildModule(
   //
   //
 
-  function collectFieldsFromObject(node: ObjectTypeDefinitionNode | ObjectTypeExtensionNode) {
+  function collectFields(
+    node:
+      | ObjectTypeDefinitionNode
+      | ObjectTypeExtensionNode
+      | InterfaceTypeDefinitionNode
+      | InterfaceTypeExtensionNode
+      | InputObjectTypeDefinitionNode
+      | InputObjectTypeExtensionNode,
+    picksObj: Record<string, string[]>
+  ) {
     const name = node.name.value;
 
     if (node.fields) {
-      if (!picks.objects[name]) {
-        picks.objects[name] = [];
+      if (!picksObj[name]) {
+        picksObj[name] = [];
       }
 
       node.fields.forEach(field => {
-        picks.objects[name].push(field.name.value);
-      });
-    }
-  }
-
-  function collectFieldsFromInput(node: InputObjectTypeDefinitionNode | InputObjectTypeExtensionNode) {
-    const name = node.name.value;
-
-    if (node.fields) {
-      if (!picks.inputs[name]) {
-        picks.inputs[name] = [];
-      }
-
-      node.fields.forEach(field => {
-        picks.inputs[name].push(field.name.value);
+        picksObj[name].push(field.name.value);
       });
     }
   }
@@ -379,7 +385,7 @@ export function buildModule(
     switch (node.kind) {
       case Kind.OBJECT_TYPE_DEFINITION: {
         defined.objects.push(name);
-        collectFieldsFromObject(node);
+        collectFields(node, picks.objects);
         break;
       }
 
@@ -391,7 +397,7 @@ export function buildModule(
 
       case Kind.INPUT_OBJECT_TYPE_DEFINITION: {
         defined.inputs.push(name);
-        collectFieldsFromInput(node);
+        collectFields(node, picks.inputs);
         break;
       }
 
@@ -402,6 +408,7 @@ export function buildModule(
 
       case Kind.INTERFACE_TYPE_DEFINITION: {
         defined.interfaces.push(name);
+        collectFields(node, picks.interfaces);
         break;
       }
 
@@ -417,7 +424,7 @@ export function buildModule(
 
     switch (node.kind) {
       case Kind.OBJECT_TYPE_EXTENSION: {
-        collectFieldsFromObject(node);
+        collectFields(node, picks.objects);
         // Do not include root types as extensions
         // so we can use them in DefinedFields
         if (rootTypes.includes(name)) {
@@ -437,12 +444,13 @@ export function buildModule(
       }
 
       case Kind.INPUT_OBJECT_TYPE_EXTENSION: {
-        collectFieldsFromInput(node);
+        collectFields(node, picks.inputs);
         pushUnique(extended.inputs, name);
         break;
       }
 
       case Kind.INTERFACE_TYPE_EXTENSION: {
+        collectFields(node, picks.interfaces);
         pushUnique(extended.interfaces, name);
         break;
       }

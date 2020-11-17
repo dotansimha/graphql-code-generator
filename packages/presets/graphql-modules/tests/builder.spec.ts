@@ -46,6 +46,64 @@ const testDoc = parse(/* GraphQL */ `
 
 const baseVisitor = new BaseVisitor({}, {});
 
+test('should generate interface field resolvers', () => {
+  const output = buildModule(
+    'test',
+    parse(/* GraphQL */ `
+      interface BaseUser {
+        id: ID!
+        email: String!
+      }
+
+      type User implements BaseUser {
+        id: ID!
+        email: String!
+      }
+
+      type Query {
+        me: BaseUser!
+      }
+    `),
+    {
+      importPath: '../types',
+      importNamespace: 'core',
+      encapsulate: 'none',
+      rootTypes: ROOT_TYPES,
+      baseVisitor,
+    }
+  );
+
+  expect(output).toContain(`BaseUser: 'id' | 'email';`);
+  expect(output).toContain(`export type BaseUser = Pick<core.BaseUser, DefinedFields['BaseUser']>;`);
+  expect(output).toContain(`export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`);
+});
+
+test('should generate interface extensions field resolvers ', () => {
+  const output = buildModule(
+    'test',
+    parse(/* GraphQL */ `
+      extend interface BaseUser {
+        newField: String!
+      }
+
+      type Query {
+        me: BaseUser!
+      }
+    `),
+    {
+      importPath: '../types',
+      importNamespace: 'core',
+      encapsulate: 'none',
+      rootTypes: ROOT_TYPES,
+      baseVisitor,
+    }
+  );
+
+  expect(output).toContain(`BaseUser: 'newField';`);
+  expect(output).toContain(`export type BaseUser = core.BaseUser`);
+  expect(output).toContain(`export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`);
+});
+
 test('should include import statement', () => {
   const output = buildModule('test', testDoc, {
     importPath: '../types',
