@@ -65,6 +65,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
+      avoidOptionals: this.config.avoidOptionals,
     };
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
