@@ -1,4 +1,4 @@
-import { ScalarsMap, ConvertNameFn } from '../types';
+import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types';
 import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
@@ -14,6 +14,7 @@ export type SelectionSetProcessorConfig = {
   scalars: ScalarsMap;
   formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
+  avoidOptionals?: AvoidOptionalsConfig;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
