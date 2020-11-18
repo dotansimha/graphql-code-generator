@@ -1259,5 +1259,50 @@ describe('Flow Operations Plugin', () => {
 
       validateFlow(result);
     });
+
+    it('On avoidOptionals:true, fileds with @skip, @include should make container resolve into MakeMaybe type', async () => {
+      const schema1 = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!): User!
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query user {
+          user(id: 1) {
+            id
+            username
+            email @skip(if: true)
+          }
+        }
+      `);
+      const result = mergeOutputs([
+        await plugin(
+          schema1,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, useFlowExactObjects: false },
+          { outputFile: '' }
+        ),
+      ]);
+
+      expect(result).toBeSimilarStringTo(`
+      export type UserQueryVariables = {};      
+      
+      export type UserQuery = { user: $MakeMaybe<$Pick<User, { id: *, name?: *, address: * }>, { address: * }> };
+      `);
+
+      validateFlow(result);
+    });
   });
 });
