@@ -106,6 +106,87 @@
         }
       }
     },
+    "ReactQueryRawPluginConfig": {
+      "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "type": "object",
+      "properties": {
+        "fetcher": {
+          "description": "Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetcing layer, so you should provide it, or use a custom one.\n\nThe following options are available to use:\n- 'fetch' - requires you to specify endpoint and headers on each call, and uses `fetch` to do the actual http call.\n- `{ endpoint: string, fetchParams: RequestInit }`: hardcode your endpoint and fetch options into the generated output, using the environment `fetch` method. You can also use `process.env.MY_VAR` as endpoint or header value.\n- `file#identifier` - You can use custom fetcher method that should implement the exported `ReactQueryFetcher` interface. Example: `./my-fetcher#myCustomFetcher`.\n- `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "endpoint": {
+                  "type": "string"
+                },
+                "fetchParams": {
+                  "$ref": "#/definitions/Record"
+                }
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dedupeOperationSuffix": {
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "description": "Adds a suffix to generated operation result type names\nDefault value: \"\"",
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "description": "Changes the GraphQL operations variables prefix.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "description": "Changes the GraphQL operations variables suffix.\nDefault value: \"Document\"",
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "description": "Changes the GraphQL fragments variables prefix.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "description": "Changes the GraphQL fragments variables suffix.\nDefault value: \"FragmentDoc\"",
+          "type": "string"
+        },
+        "pureMagicComment": {
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+        },
+        "typesPrefix": {
+          "description": "Prefixes all the generated types.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "description": "Suffixes all the generated types.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "skipTypename": {
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
+          "type": "boolean"
+        }
+      }
+    },
     "ApolloClientHelpersConfig": {
       "type": "object",
       "properties": {
@@ -2632,6 +2713,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "typescript-react-query"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/ReactQueryRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "typescript-apollo-client-helpers"
                 }
               }
@@ -3313,77 +3413,11 @@
     "Types.LifecycleHooksDefinition": {
       "$ref": "#/definitions/__type_3"
     },
-    "AvoidOptionalsConfig": {
-      "type": "object",
-      "properties": {
-        "field": {
-          "type": "boolean"
-        },
-        "object": {
-          "type": "boolean"
-        },
-        "inputValue": {
-          "type": "boolean"
-        }
-      }
-    },
-    "EnumValuesMap": {
-      "description": "A raw configuration for enumValues map - can be represented with a single string value for a file path,\na map between enum name and a file path, or a map between enum name and an object with explicit enum values.",
-      "anyOf": [
-        {
-          "type": "object",
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "additionalProperties": {
-                      "type": ["string", "number"]
-                    }
-                  },
-                  {
-                    "$ref": "#/definitions/AdditionalProps"
-                  }
-                ]
-              },
-              {
-                "type": "string"
-              }
-            ]
-          }
-        },
-        {
-          "type": "string"
-        }
-      ]
-    },
-    "AdditionalProps": {
+    "__type_4": {
       "type": "object"
     },
-    "DeclarationKindConfig": {
-      "type": "object",
-      "properties": {
-        "scalar": {
-          "$ref": "#/definitions/DeclarationKind"
-        },
-        "input": {
-          "$ref": "#/definitions/DeclarationKind"
-        },
-        "type": {
-          "$ref": "#/definitions/DeclarationKind"
-        },
-        "interface": {
-          "$ref": "#/definitions/DeclarationKind"
-        },
-        "arguments": {
-          "$ref": "#/definitions/DeclarationKind"
-        }
-      }
-    },
-    "DeclarationKind": {
-      "enum": ["abstract class", "class", "interface", "type"],
-      "type": "string"
+    "Record": {
+      "$ref": "#/definitions/__type_4"
     },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
@@ -4047,7 +4081,7 @@
         }
       }
     },
-    "__type_4": {
+    "__type_5": {
       "type": "object",
       "properties": {
         "path": {
@@ -4077,13 +4111,85 @@
       }
     },
     "ImportSource": {
-      "$ref": "#/definitions/__type_4"
+      "$ref": "#/definitions/__type_5"
+    },
+    "AvoidOptionalsConfig": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "boolean"
+        },
+        "object": {
+          "type": "boolean"
+        },
+        "inputValue": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EnumValuesMap": {
+      "description": "A raw configuration for enumValues map - can be represented with a single string value for a file path,\na map between enum name and a file path, or a map between enum name and an object with explicit enum values.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": ["string", "number"]
+                    }
+                  },
+                  {
+                    "$ref": "#/definitions/AdditionalProps"
+                  }
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "AdditionalProps": {
+      "type": "object"
+    },
+    "DeclarationKindConfig": {
+      "type": "object",
+      "properties": {
+        "scalar": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "input": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "type": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "interface": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
+        "arguments": {
+          "$ref": "#/definitions/DeclarationKind"
+        }
+      }
+    },
+    "DeclarationKind": {
+      "enum": ["abstract class", "class", "interface", "type"],
+      "type": "string"
     },
     "DocumentMode": {
       "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
     },
-    "__type_5": {
+    "__type_6": {
       "type": "object",
       "properties": {
         "type": {
@@ -4104,7 +4210,7 @@
       }
     },
     "Partial_1": {
-      "$ref": "#/definitions/__type_5"
+      "$ref": "#/definitions/__type_6"
     },
     "Array_1": {
       "type": "array",
@@ -4126,6 +4232,14 @@
           "type": "object",
           "additionalProperties": true,
           "properties": {
+            "typescript-react-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ReactQueryRawPluginConfig"
+            },
+            "@graphql-codegen/typescript-react-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/ReactQueryRawPluginConfig"
+            },
             "typescript-apollo-client-helpers": {
               "additionalProperties": false,
               "$ref": "#/definitions/ApolloClientHelpersConfig"
@@ -4371,6 +4485,14 @@
         {
           "type": "string",
           "oneOf": [
+            {
+              "const": "typescript-react-query",
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-react-query",
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+            },
             {
               "const": "typescript-apollo-client-helpers",
               "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"

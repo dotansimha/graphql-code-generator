@@ -188,7 +188,7 @@ export function transformMappers(
 export function buildMapperImport(
   source: string,
   types: { identifier: string; asDefault?: boolean }[],
-  useTypeImports = false
+  useTypeImports: boolean
 ): string | null {
   if (!types || types.length === 0) {
     return null;

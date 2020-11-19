@@ -1,6 +1,6 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
-export type HardcodedFetch = { endpoint: string; fetchParams?: RequestInit };
+export type HardcodedFetch = { endpoint: string; fetchParams?: Record<string, any> };
 
 /**
  * @description This plugin generates `React-Query` Hooks with TypeScript typings.
@@ -8,7 +8,17 @@ export type HardcodedFetch = { endpoint: string; fetchParams?: RequestInit };
  * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
  */
 export interface ReactQueryRawPluginConfig
-  extends Omit<RawClientSideBasePluginConfig, 'documentMode' | 'noGraphQLTag'> {
+  extends Omit<
+    RawClientSideBasePluginConfig,
+    | 'documentMode'
+    | 'noGraphQLTag'
+    | 'gqlImport'
+    | 'documentNodeImport'
+    | 'noExport'
+    | 'importOperationTypesFrom'
+    | 'importDocumentNodeExternallyFrom'
+    | 'useTypeImports'
+  > {
   /**
    * @description Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetcing layer, so you should provide it, or use a custom one.
    *
