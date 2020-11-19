@@ -4767,7 +4767,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );`);
     });
 
-    it('On avoidOptionals:true, fileds with @skip, @include should make container resolve into MakeMaybe type', async () => {
+    it('On avoidOptionals:true, fields with @skip, @include should make container resolve into MakeMaybe type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user(id: ID!): User!
