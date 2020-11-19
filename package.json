@@ -42,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "react-query": "2.26.2",
     "@apollo/client": "3.2.6",
     "@babel/preset-typescript": "7.12.1",
     "@changesets/cli": "2.11.2",

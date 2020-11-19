@@ -1,0 +1,297 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`React-Query fetcher: custom-mapper Should generate query correctly with external mapper 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    myCustomFetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+    useMutation<TestMutation, unknown, TestMutationVariables>(
+    myCustomFetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+  );"
+`;
+
+exports[`React-Query fetcher: custom-mapper Should generate query correctly with internal mapper 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    myCustomFetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+    useMutation<TestMutation, unknown, TestMutationVariables>(
+    myCustomFetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+  );"
+`;
+
+exports[`React-Query fetcher: fetch Should generate query and mutation correctly 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+    options
+  );"
+`;
+
+exports[`React-Query fetcher: graphql-request Should generate query correctly with client 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (client: GraphQLClient, variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(client, TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (client: GraphQLClient, variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(client, TestDocument, variables),
+    options
+  );"
+`;
+
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with fetch config 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+);"
+`;
+
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+);"
+`;
+
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint from env var 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+);"
+`;
+
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint from just identifier 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = (variables?: TestQueryVariables, options?: QueryConfig<TestQuery>) => 
+  useQuery<TestQuery>(
+    ['test', variables],
+    fetcher<TestQuery, TestQueryVariables>(TestDocument, variables),
+    options
+  );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = (variables?: TestMutationVariables, options?: MutationConfig<TestMutation, unknown, TestMutationVariables>) => 
+  useMutation<TestMutation, unknown, TestMutationVariables>(
+    fetcher<TestMutation, TestMutationVariables>(TestDocument, variables),
+    options
+);"
+`;
