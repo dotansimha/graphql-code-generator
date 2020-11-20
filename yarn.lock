@@ -18535,10 +18535,10 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.11.2:
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.11.2.tgz#dfc63734b26262cf4f143768f345b104094b32c0"
-  integrity sha512-1MIjOjZO5xgdqtcj9QdD2/JXpEVAl03vylaiSVm6QGqEbkBP9Zvb405QUJzCbVKH8bFoPxfcjvNAWwM8lekEMg==
+urql@1.11.3:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.11.3.tgz#39c44f5753062b04553125070aae4d078d273c6d"
+  integrity sha512-LEzNd35RcjFfi6U5xl/9s+WRC325I0uGFJgW82JxwwTTT81OZNldeYQ621yejWH3AG0fEU/cWEXvh2cjqL3gGA==
   dependencies:
     "@urql/core" "^1.15.1"
     wonka "^4.0.14"
