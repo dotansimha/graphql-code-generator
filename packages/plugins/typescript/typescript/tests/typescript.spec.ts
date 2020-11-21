@@ -2323,7 +2323,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
           a?: Maybe<Scalars['String']>;
-          b?: Scalars['String'];
+          b: Scalars['String'];
           c?: Maybe<Scalars['String']>;
           d: Scalars['String'];
         };
