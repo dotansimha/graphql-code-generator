@@ -67,7 +67,7 @@ export class TsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName,
-        this.config.avoidOptionals.object,
+        this.config.avoidOptionals,
         this.config.immutableTypes,
         null,
         enumNames,

@@ -13,6 +13,7 @@ export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptional
       object: avoidOptionals,
       inputValue: avoidOptionals,
       field: avoidOptionals,
+      defaultValue: avoidOptionals,
     };
   }
 

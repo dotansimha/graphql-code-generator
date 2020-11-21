@@ -53,14 +53,7 @@ interface Type {
 }
 
 function escapeString(str: string) {
-  return (
-    "'" +
-    str
-      .replace(/\\/g, '\\\\')
-      .replace(/\n/g, '\\n')
-      .replace(/'/g, "\\'") +
-    "'"
-  );
+  return "'" + str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'") + "'";
 }
 
 type DecoratorOptions = { [key: string]: string };
@@ -137,7 +130,7 @@ export class TypeGraphQLVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName,
-        this.config.avoidOptionals.object,
+        this.config.avoidOptionals,
         this.config.immutableTypes,
         null,
         enumNames,
