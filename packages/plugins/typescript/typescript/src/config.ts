@@ -34,6 +34,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *      field: true
    *      inputValue: true
    *      object: true
+   *      defaultValue: true
    * ```
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;
@@ -173,7 +174,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   maybeValue?: string;
   /**
-   * @description Set the to `true` in order to generate output without `export` modifier.
+   * @description Set to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false
    *
