@@ -2435,9 +2435,9 @@ describe('TypeScript Operations Plugin', () => {
           password: Scalars['String'];
           input?: Maybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
-          requireString: Array<Maybe<Scalars['String']>>;
-          innerRequired: Array<Scalars['String']>;
+          testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+          requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+          innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
       await validate(content, config);
