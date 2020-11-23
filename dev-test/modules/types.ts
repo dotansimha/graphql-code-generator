@@ -230,16 +230,16 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryArticleByIdArgs, 'id'>
   >;
-  articles?: Resolver<Maybe<Array<ResolversTypes['Article']>>, ParentType, ContextType>;
+  articles?: Resolver<Maybe<Array<ResolversTypes['Article']> | ResolversTypes['Article']>, ParentType, ContextType>;
   articlesByUser?: Resolver<
-    Maybe<Array<ResolversTypes['Article']>>,
+    Maybe<Array<ResolversTypes['Article']> | ResolversTypes['Article']>,
     ParentType,
     ContextType,
     RequireFields<QueryArticlesByUserArgs, 'userId'>
   >;
   ping?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
-  users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<ResolversTypes['User']> | ResolversTypes['User']>, ParentType, ContextType>;
 };
 
 export type MutationResolvers<
@@ -288,7 +288,11 @@ export type UserResolvers<
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  paymentOptions?: Resolver<Maybe<Array<ResolversTypes['PaymentOption']>>, ParentType, ContextType>;
+  paymentOptions?: Resolver<
+    Maybe<Array<ResolversTypes['PaymentOption']> | ResolversTypes['PaymentOption']>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

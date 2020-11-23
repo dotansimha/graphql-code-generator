@@ -150,14 +150,14 @@ export type QueryRootResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['QueryRoot'] = ResolversParentTypes['QueryRoot']
 > = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
+  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>> | Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   userById?: Resolver<
     Maybe<ResolversTypes['User']>,
     ParentType,
     ContextType,
     RequireFields<QueryRootUserByIdArgs, 'id'>
   >;
-  answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  answer?: Resolver<Array<ResolversTypes['Int']> | ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type SubscriptionRootResolvers<

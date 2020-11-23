@@ -150,12 +150,20 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
+  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>> | Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
-  answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
-  testArr1?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  testArr2?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
-  testArr3?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  answer?: Resolver<Array<ResolversTypes['Int']> | ResolversTypes['Int'], ParentType, ContextType>;
+  testArr1?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['String']>> | Maybe<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  testArr2?: Resolver<
+    Array<Maybe<ResolversTypes['String']>> | Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  testArr3?: Resolver<Array<ResolversTypes['String']> | ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
