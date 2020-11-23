@@ -3657,7 +3657,8 @@ describe('TypeScript Operations Plugin', () => {
       expect(output).toBeSimilarStringTo(`
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in keyof Pick<T, K>]?: Maybe<Pick<T, K>[SubKey]> };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -4764,6 +4765,53 @@ function test(q: GetEntityBrandDataQuery): void {
           & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
         ) }
       );`);
+    });
+
+    it('On avoidOptionals:true, fields with @skip, @include should make container resolve into MakeMaybe type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!): User!
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user {
+          user(id: 1) {
+            id
+            username
+            email @skip(if: true)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        
+        export type UserQuery = (
+          { __typename?: 'Query' }
+          & { user: (
+            { __typename?: 'User' }
+            & MakeMaybe<Pick<User, 'id' | 'username' | 'email'>, 'email'>
+          ) }
+        );
+      `);
     });
   });
 
