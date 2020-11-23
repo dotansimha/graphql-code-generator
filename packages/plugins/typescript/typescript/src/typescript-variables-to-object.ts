@@ -24,7 +24,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
     const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'i');
 
-    if (str.startsWith(`${this._namespacedImportName ? `${this._namespacedImportName}.` : ''}Maybe`)) {
+    if (str.startsWith(`${prefix}Maybe`)) {
       return str.replace(rgx, '$1');
     }
 
@@ -41,7 +41,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}> | ${innerType}>`;
     } else {
       return `${prefix}Maybe<${baseType}>`;
     }
