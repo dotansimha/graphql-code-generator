@@ -4655,7 +4655,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: Maybe<Array<Maybe<Scalars['String']>>> | Maybe<Scalars['String']>;
+        testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
         requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
         innerRequired: Array<Scalars['String']> | Scalars['String'];
       }>;`);
