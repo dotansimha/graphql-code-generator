@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "react-query": "2.26.2",
-    "@apollo/client": "3.2.6",
+    "@apollo/client": "3.2.7",
     "@babel/preset-typescript": "7.12.1",
     "@changesets/cli": "2.11.2",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
@@ -104,7 +104,7 @@
     "ts-jest": "26.4.4",
     "tslib": "2.0.1",
     "typescript": "4.0.5",
-    "urql": "1.11.2",
+    "urql": "1.11.3",
     "vue": "2.6.12"
   },
   "lint-staged": {
