@@ -203,7 +203,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type MyCustomOtherType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
@@ -282,7 +282,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type MyCustomOtherType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
     arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
@@ -510,7 +510,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type MyBaseType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyBaseType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
@@ -673,7 +673,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type CustomPartial } from './my-wrapper';`);
+    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<MyType>>,

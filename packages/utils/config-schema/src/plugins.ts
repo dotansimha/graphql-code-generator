@@ -21,6 +21,11 @@ export const presetsConfigurations: PresetConfig[] = [
 
 export const pluginsConfigurations: PluginConfig[] = [
   {
+    file: '../../plugins/typescript/react-query/src/config.ts',
+    identifier: 'ReactQueryRawPluginConfig',
+    name: 'typescript-react-query',
+  },
+  {
     file: '../../plugins/typescript/apollo-client-helpers/src/config.ts',
     identifier: 'ApolloClientHelpersConfig',
     name: 'typescript-apollo-client-helpers',
