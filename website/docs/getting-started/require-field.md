@@ -37,3 +37,29 @@ Specifying `-r` using a CLI flag will load your `require.extension` _before_ loa
 If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm and then to use the `require` cli flag to preload the `dotenv` require extensions: `-r dotenv/config`.
 
 It will make sure to load your `.env` file before executing the codegen and loading your `.yml` file.
+
+#### For example:
+
+local.env file:
+```ENV
+    SCHEME_PATH=http:localhost:8080/graphql
+```
+    
+  codegen.yml file:
+```yml
+    schema: ${SCHEMA_PATH}
+    documents: ./src/**/*.graphql
+    generates:
+      ./src/types.ts:
+        plugins:
+          - typescript
+          - typescript-operations
+```
+   package.json file:
+   ```json
+   {
+    "scripts": {
+      "generate": "graphql-codegen --require dotenv/config --config codegen.yml DOTENV_CONFIG_PATH=local.env"
+    }
+   }
+   ```
