@@ -610,8 +610,9 @@ export class BaseTypesVisitor<
           }
         }
       }
-
-      return implementingTypes.join('|');
+      if (implementingTypes.length > 0) {
+        return implementingTypes.join('|');
+      }
     }
 
     if (schemaType && isEnumType(schemaType)) {

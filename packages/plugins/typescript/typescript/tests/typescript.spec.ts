@@ -2749,6 +2749,10 @@ describe('TypeScript', () => {
       type Hello {
         foo: Foo!
       }
+
+      type NoInterface {
+        hello: Hello!
+      }
     `);
 
     const output = (await plugin(
@@ -2772,6 +2776,13 @@ describe('TypeScript', () => {
       export type Hello = {
         __typename?: 'Hello';
         foo: Bar;
+      };
+    `);
+    // Type should be Hello
+    expect(output.content).toBeSimilarStringTo(`
+      export type NoInterface = {
+        __typename?: 'NoInterface';
+        hello: Hello;
       };
     `);
   });
