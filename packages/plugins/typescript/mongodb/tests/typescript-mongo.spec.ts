@@ -191,7 +191,7 @@ describe('TypeScript Mongo', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain('name?: Maybe<string>'); // optional scalar
       expect(result).toContain('gender?: Maybe<string>'); // enum as string by default
-      expect(result).toContain(`arrayColumn?: Maybe<Array<Maybe<number>> | Maybe<number>>`); // simple @column with array
+      expect(result).toContain(`arrayColumn?: Maybe<Array<Maybe<number>>>`); // simple @column with array
       expect(result).toContain(`columnWithOverride?: number`); // override type
       await validate(result, schema, {});
     });
@@ -199,9 +199,7 @@ describe('TypeScript Mongo', () => {
     it('Should output the correct values for @link directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`someLink?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
-      expect(result).toContain(
-        `multipleLinks?: Maybe<Array<Maybe<LinkTypeDbObject['_id']>> | Maybe<LinkTypeDbObject['_id']>>`
-      ); // links array
+      expect(result).toContain(`multipleLinks?: Maybe<Array<Maybe<LinkTypeDbObject['_id']>>>`); // links array
       await validate(result, schema, {});
     });
 
@@ -219,7 +217,7 @@ describe('TypeScript Mongo', () => {
         _id: ObjectID,
         foo: string,
       };
-      
+
       export type Test2DbObject = {
         testfield: TestDbObject['_id'],
       };`);
@@ -229,15 +227,13 @@ describe('TypeScript Mongo', () => {
     it('Should output the correct values for @link directive and overrideType and array type', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
-      expect(result).toContain(
-        `documents?: Maybe<Array<Maybe<MachineDocumentDbObject['_id']>> | Maybe<MachineDocumentDbObject['_id']>>`
-      ); // link to another entity with overwrite type and array
+      expect(result).toContain(`documents?: Maybe<Array<Maybe<MachineDocumentDbObject['_id']>>>`); // link to another entity with overwrite type and array
       await validate(result, schema, {});
     });
 
     it('Should output the correct values for @map directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toContain(`myInnerArray?: Maybe<Array<Maybe<number>> | Maybe<number>>`); // simple @column with array and @map
+      expect(result).toContain(`myInnerArray?: Maybe<Array<Maybe<number>>>`); // simple @column with array and @map
       expect(result).toContain(`other_name?: Maybe<string>`); // simple @map scalar
       expect(result).toBeSimilarStringTo(`
       profile: {
