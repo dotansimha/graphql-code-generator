@@ -40,10 +40,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       return this.clearOptional(type);
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
-      const listInputCoercionExtension = isField ? '>' : ` | ${innerType}>`;
-      return (
-        `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>` + listInputCoercionExtension
-      );
+      const listInputCoercionExtension = isField ? '' : ` | ${innerType}`;
+      return `${prefix}Maybe<${
+        this._immutableTypes ? 'ReadonlyArray' : 'Array'
+      }<${innerType}>${listInputCoercionExtension}>`;
     } else {
       return `${prefix}Maybe<${baseType}>`;
     }
