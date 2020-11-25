@@ -1,5 +1,17 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.0
+
+### Minor Changes
+
+- bd3bd296: Improve DocumentNode optimizations, to reduce bundle size when consumed as pre-compiled
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
 ## 1.17.10
 
 ### Patch Changes
