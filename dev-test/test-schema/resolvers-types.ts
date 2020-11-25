@@ -153,11 +153,7 @@ export type QueryResolvers<
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>> | Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
   answer?: Resolver<Array<ResolversTypes['Int']> | ResolversTypes['Int'], ParentType, ContextType>;
-  testArr1?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['String']>> | Maybe<ResolversTypes['String']>>,
-    ParentType,
-    ContextType
-  >;
+  testArr1?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   testArr2?: Resolver<
     Array<Maybe<ResolversTypes['String']>> | Maybe<ResolversTypes['String']>,
     ParentType,

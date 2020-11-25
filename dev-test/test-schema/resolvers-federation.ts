@@ -164,11 +164,7 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  users?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['User']>> | Maybe<ResolversTypes['User']>>,
-    ParentType,
-    ContextType
-  >;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 };
 
 export type UserResolvers<
