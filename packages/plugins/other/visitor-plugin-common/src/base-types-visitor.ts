@@ -43,7 +43,6 @@ import {
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
-import { schema } from 'packages/plugins/typescript/resolvers/tests/common';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;

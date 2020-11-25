@@ -2778,7 +2778,7 @@ describe('TypeScript', () => {
         foo: Bar;
       };
     `);
-    // Type should be Hello
+    // Type should be Hello and not empty
     expect(output.content).toBeSimilarStringTo(`
       export type NoInterface = {
         __typename?: 'NoInterface';
