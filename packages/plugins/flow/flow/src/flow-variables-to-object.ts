@@ -24,7 +24,7 @@ export class FlowOperationVariablesToObject extends OperationVariablesToObject {
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `?Array<${innerType}>`;
+      return `?Array<${innerType}> | ${innerType}`;
     } else {
       return `?${baseType}`;
     }
