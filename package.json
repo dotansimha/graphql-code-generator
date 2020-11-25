@@ -37,6 +37,7 @@
       "website/live-demo"
     ],
     "nohoist": [
+      "@graphql-codegen/website/**",
       "**/@babel-*",
       "**/@babel-*/**"
     ]

@@ -157,6 +157,10 @@
           "description": "Changes the GraphQL fragments variables suffix.\nDefault value: \"FragmentDoc\"",
           "type": "string"
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
           "type": "boolean"
@@ -600,6 +604,10 @@
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
           "type": "string"
@@ -871,6 +879,10 @@
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+        },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
         },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
@@ -1250,6 +1262,10 @@
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
           "type": "string"
@@ -1355,6 +1371,10 @@
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+        },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
         },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
@@ -1507,6 +1527,10 @@
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
           "type": "string"
@@ -1617,6 +1641,10 @@
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
           "type": "string"
@@ -1714,6 +1742,10 @@
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+        },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
         },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
@@ -1828,6 +1860,10 @@
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+        },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "type": "boolean"
         },
         "importOperationTypesFrom": {
           "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
