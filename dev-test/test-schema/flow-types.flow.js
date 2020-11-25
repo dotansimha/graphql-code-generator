@@ -111,7 +111,11 @@ export type ResolversParentTypes = {
 };
 
 export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
-  allUsers?: Resolver<Array<?$ElementType<ResolversTypes, 'User'>>, ParentType, ContextType>,
+  allUsers?: Resolver<
+    Array<?$ElementType<ResolversTypes, 'User'>> | ?$ElementType<ResolversTypes, 'User'>,
+    ParentType,
+    ContextType
+  >,
   userById?: Resolver<
     ?$ElementType<ResolversTypes, 'User'>,
     ParentType,
