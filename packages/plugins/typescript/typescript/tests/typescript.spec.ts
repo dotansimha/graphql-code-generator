@@ -2719,4 +2719,60 @@ describe('TypeScript', () => {
       }
     `);
   });
+
+  it('should use implementing types as node type - issue #5126', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Matrix {
+        pills: [Pill!]!
+      }
+
+      interface Pill {
+        id: ID!
+      }
+
+      type RedPill implements Pill {
+        red: String!
+      }
+
+      type GreenPill implements Pill {
+        green: String!
+      }
+
+      interface Foo {
+        id: ID!
+      }
+
+      type Bar implements Foo {
+        lol: String!
+      }
+
+      type Hello {
+        foo: Foo!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        useImplementingInterfaces: true,
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    // Type should be Array<RedPill|GreenPill> and not Pill
+    expect(output.content).toBeSimilarStringTo(`
+      export type Matrix = {
+        __typename?: 'Matrix';
+        pills: Array<RedPill|GreenPill>;
+      };
+    `);
+    // Type should be Bar and not Foo
+    expect(output.content).toBeSimilarStringTo(`
+      export type Hello = {
+        __typename?: 'Hello';
+        foo: Bar;
+      };
+    `);
+  });
 });
