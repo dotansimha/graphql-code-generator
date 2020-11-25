@@ -158,7 +158,7 @@
           "type": "string"
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "pureMagicComment": {
@@ -605,7 +605,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -881,7 +881,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1263,7 +1263,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1373,7 +1373,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1528,7 +1528,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1642,7 +1642,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1744,7 +1744,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -1862,7 +1862,7 @@
           "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefiniions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
