@@ -14,7 +14,7 @@
     "file-loader": "6.2.0",
     "style-loader": "2.0.0",
     "monaco-editor-webpack-plugin": "1.9.0",
-    "@docusaurus/core": "2.0.0-alpha.66",
+    "@docusaurus/core": "2.0.0-alpha.69",
     "@docusaurus/preset-classic": "2.0.0-alpha.66",
     "@graphql-codegen/config-schema": "1.17.8",
     "babel-preset-minify": "0.5.1",
