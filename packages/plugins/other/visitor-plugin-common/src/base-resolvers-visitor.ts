@@ -887,7 +887,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       }
 
       const typeToUse = this.getTypeToUse(realType);
-      const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
+      const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type, true);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 

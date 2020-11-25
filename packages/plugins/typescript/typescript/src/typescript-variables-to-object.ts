@@ -31,7 +31,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     return str;
   }
 
-  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, isField = false): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
@@ -40,8 +40,26 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       return this.clearOptional(type);
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
+      const listInputCoercionExtension = isField ? '>' : ` | ${innerType}>`;
+      return (
+        `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>` + listInputCoercionExtension
+      );
+    } else {
+      return `${prefix}Maybe<${baseType}>`;
+    }
+  }
 
-      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}> | ${innerType}>`;
+  public wrapTypeNodeWithModifiers(baseType: string, typeNode: TypeNode): string {
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
+    if (typeNode.kind === Kind.NON_NULL_TYPE) {
+      const type = this.wrapTypeNodeWithModifiers(baseType, typeNode.type);
+
+      return this.clearOptional(type);
+    } else if (typeNode.kind === Kind.LIST_TYPE) {
+      const innerType = this.wrapTypeNodeWithModifiers(baseType, typeNode.type);
+
+      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
       return `${prefix}Maybe<${baseType}>`;
     }
