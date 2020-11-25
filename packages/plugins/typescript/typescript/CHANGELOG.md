@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript
 
+## 1.18.0
+
+### Minor Changes
+
+- 49242c20: Added a "defaultValue" option in the "avoidOptionals" config
+  See https://github.com/dotansimha/graphql-code-generator/issues/5112
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
 ## 1.17.11
 
 ### Patch Changes

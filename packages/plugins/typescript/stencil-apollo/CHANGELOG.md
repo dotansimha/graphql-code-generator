@@ -1,6 +1,19 @@
 # @graphql-codegen/typescript-stencil-apollo
 
+## 1.18.0
+
+### Minor Changes
+
+- bd3bd296: Improve DocumentNode optimizations, to reduce bundle size when consumed as pre-compiled
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues

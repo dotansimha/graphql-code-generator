@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-operations
 
+## 1.17.11
+
+### Patch Changes
+
+- 7587fda4: When using avoidOptionals config, @skip, @include resolve into MakeMaybe type
+- Updated dependencies [99819bf1]
+- Updated dependencies [49242c20]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+  - @graphql-codegen/typescript@1.18.0
+
 ## 1.17.10
 
 ### Patch Changes
