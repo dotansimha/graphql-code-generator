@@ -49,22 +49,6 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     }
   }
 
-  public wrapTypeNodeWithModifiers(baseType: string, typeNode: TypeNode): string {
-    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
-
-    if (typeNode.kind === Kind.NON_NULL_TYPE) {
-      const type = this.wrapTypeNodeWithModifiers(baseType, typeNode.type);
-
-      return this.clearOptional(type);
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
-      const innerType = this.wrapTypeNodeWithModifiers(baseType, typeNode.type);
-
-      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
-    } else {
-      return `${prefix}Maybe<${baseType}>`;
-    }
-  }
-
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
     if (!hasDefaultValue && (this._avoidOptionals || isNonNullType)) {
       return fieldName;
