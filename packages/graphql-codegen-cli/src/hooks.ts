@@ -70,7 +70,7 @@ async function executeHooks(
   for (const script of scripts) {
     if (typeof script === 'string') {
       debugLog(`Running lifecycle hook "${hookName}" script: ${script} with args: ${args.join(' ')}...`);
-      await execShellCommand(`${script} ${args.join(' ')}`);
+      await execShellCommand(`${script} "${args.join(' ')}"`);
     } else {
       debugLog(`Running lifecycle hook "${hookName}" script: ${script.name} with args: ${args.join(' ')}...`);
       await script(...args);
