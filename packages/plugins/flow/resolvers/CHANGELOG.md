@@ -1,5 +1,15 @@
 # @graphql-codegen/flow-resolvers
 
+## 1.17.12
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/flow@1.18.2
+  - @graphql-codegen/plugin-helpers@1.18.2
+
 ## 1.17.11
 
 ### Patch Changes
