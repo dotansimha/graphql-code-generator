@@ -52,7 +52,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumPrefix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
-  useImplementingInterfaces: boolean;
+  useImplementingTypes: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -177,7 +177,7 @@ export interface RawTypesConfig extends RawConfig {
    */
   onlyOperationTypes?: boolean;
   /**
-   * @description This will cause the generator to use the implementing types of an interface as the type for a field.
+   * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
    * @default false
    *
    * @exampleMarkdown
@@ -188,10 +188,10 @@ export interface RawTypesConfig extends RawConfig {
    *  plugins:
    *    - typescript
    *  config:
-   *    useImplementingInterfaces: true
+   *    useImplementingTypes: true
    * ```
    */
-  useImplementingInterfaces?: boolean;
+  useImplementingTypes?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -208,7 +208,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      useImplementingInterfaces: getConfigValue(rawConfig.useImplementingInterfaces, false),
+      useImplementingTypes: getConfigValue(rawConfig.useImplementingTypes, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
@@ -596,7 +596,8 @@ export class BaseTypesVisitor<
 
     const schemaType = this._schema.getType(node.name as any);
 
-    if (this.config.useImplementingInterfaces) {
+    // TODO: Move this to a better place, since we are using this logic in some other places as well.
+    if (this.config.useImplementingTypes) {
       const allTypesMap = this._schema.getTypeMap();
       const implementingTypes: string[] = [];
 

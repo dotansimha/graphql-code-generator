@@ -2753,17 +2753,34 @@ describe('TypeScript', () => {
       type NoInterface {
         hello: Hello!
       }
+
+      interface NestedInterface implements Foo {
+        field: String!
+      }
+
+      type NestedType1 implements NestedInterface {
+        hi: String!
+      }
+
+      type NestedType2 implements NestedInterface {
+        ho: String!
+      }
+
+      type NestedField {
+        nested: NestedInterface!
+      }
     `);
 
     const output = (await plugin(
       testSchema,
       [],
       {
-        useImplementingInterfaces: true,
+        useImplementingTypes: true,
       } as any,
       { outputFile: 'graphql.ts' }
     )) as Types.ComplexPluginOutput;
 
+    expect(output.content).toMatchSnapshot();
     // Type should be Array<RedPill|GreenPill> and not Pill
     expect(output.content).toBeSimilarStringTo(`
       export type Matrix = {
@@ -2783,6 +2800,13 @@ describe('TypeScript', () => {
       export type NoInterface = {
         __typename?: 'NoInterface';
         hello: Hello;
+      };
+    `);
+    // Type should be NestedType1|NestedType2
+    expect(output.content).toBeSimilarStringTo(`
+      export type NestedField = {
+        __typename?: 'NestedField';
+        nested: NestedType1|NestedType2;
       };
     `);
   });
