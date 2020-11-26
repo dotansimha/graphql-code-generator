@@ -2781,6 +2781,7 @@ describe('TypeScript', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(output.content).toMatchSnapshot();
+
     // Type should be Array<RedPill|GreenPill> and not Pill
     expect(output.content).toBeSimilarStringTo(`
       export type Matrix = {
