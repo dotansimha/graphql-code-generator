@@ -2573,10 +2573,10 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/optimize@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@graphql-tools/optimize/-/optimize-1.0.0.tgz#975d22cd59749366baf5404923ca578d7ab2341c"
-  integrity sha512-Mi/opv6q0CmB+W/c2wKpI25jRY1w1e0GoSxg9JMm9ko9hrSW5JZANljs8Acq96L7CxFzAj0mkt9OQO1Rmt38cg==
+"@graphql-tools/optimize@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@graphql-tools/optimize/-/optimize-1.0.1.tgz#9933fffc5a3c63f95102b1cb6076fb16ac7bb22d"
+  integrity sha512-cRlUNsbErYoBtzzS6zXahXeTBZGPVlPHXCpnEZ0XiK/KY/sQL96cyzak0fM/Gk6qEI9/l32MYEICjasiBQrl5w==
   dependencies:
     tslib "~2.0.1"
 
@@ -13398,7 +13398,6 @@ npm@6.14.9:
     cmd-shim "^3.0.3"
     columnify "~1.5.4"
     config-chain "^1.1.12"
-    debuglog "*"
     detect-indent "~5.0.0"
     detect-newline "^2.1.0"
     dezalgo "~1.0.3"
@@ -13413,7 +13412,6 @@ npm@6.14.9:
     has-unicode "~2.0.1"
     hosted-git-info "^2.8.8"
     iferr "^1.0.2"
-    imurmurhash "*"
     infer-owner "^1.0.4"
     inflight "~1.0.6"
     inherits "^2.0.4"
@@ -13432,14 +13430,8 @@ npm@6.14.9:
     libnpx "^10.2.4"
     lock-verify "^2.1.0"
     lockfile "^1.0.4"
-    lodash._baseindexof "*"
     lodash._baseuniq "~4.6.0"
-    lodash._bindcallback "*"
-    lodash._cacheindexof "*"
-    lodash._createcache "*"
-    lodash._getnative "*"
     lodash.clonedeep "~4.5.0"
-    lodash.restparam "*"
     lodash.union "~4.6.0"
     lodash.uniq "~4.5.0"
     lodash.without "~4.4.0"
