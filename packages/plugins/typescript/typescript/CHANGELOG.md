@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript
 
+## 1.19.0
+
+### Minor Changes
+
+- 1d6a593f: Added `useImplementingTypes` flag for generating code that uses implementing types instead of interfaces
+
+### Patch Changes
+
+- Updated dependencies [8356f8a2]
+  - @graphql-codegen/visitor-plugin-common@1.17.21
+
 ## 1.18.1
 
 ### Patch Changes

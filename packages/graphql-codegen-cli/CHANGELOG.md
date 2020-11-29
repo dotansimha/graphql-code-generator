@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.19.4
+
+### Patch Changes
+
+- 920d8e95: Allow loading configuration from package.json file
+
 ## 1.19.3
 
 ### Patch Changes
