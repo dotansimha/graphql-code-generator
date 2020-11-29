@@ -1143,6 +1143,10 @@
           "description": "The type name to use when exporting all resolvers signature as unified type.\nDefault value: \"Resolvers\"",
           "type": "string"
         },
+        "internalResolversPrefix": {
+          "type": "string",
+          "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2220,6 +2224,10 @@
         "allResolversTypeName": {
           "description": "The type name to use when exporting all resolvers signature as unified type.\nDefault value: \"Resolvers\"",
           "type": "string"
+        },
+        "internalResolversPrefix": {
+          "type": "string",
+          "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
