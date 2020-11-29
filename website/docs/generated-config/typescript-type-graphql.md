@@ -14,16 +14,8 @@
 
 ### `decoratorName`
 
-type: `Partial<DecoratorConfig>`
-default: ````json
-{
-  type: 'ObjectType',
-  interface: 'InterfaceType',
-  arguments: 'ArgsType',
-  field: 'Field',
-  input: 'InputType'
-}
-````
+type: `Partial_1`
+default: ``{ type: 'ObjectType', interface: 'InterfaceType', arguments: 'ArgsType', field: 'Field', input: 'InputType' }``
 
 allow overriding of TypeGraphQL decorator types
 
@@ -67,6 +59,7 @@ path/to/file.ts:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `constEnums`
@@ -234,7 +227,7 @@ generates:
 type: `boolean`
 default: `false`
 
-Set the to `true` in order to generate output without `export` modifier.
+Set to `true` in order to generate output without `export` modifier.
 This is useful if you are generating `.d.ts` file and want it to be globally available.
 
 #### Usage Examples

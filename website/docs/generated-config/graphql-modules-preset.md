@@ -20,6 +20,14 @@ Required, should point to the base schema types file.
 The key of the output is used a the base path for this file.
 
 
+### `importBaseTypesFrom`
+
+type: `string`
+
+Overrides the package import for the base types. Use this if you are within a monorepo and you wish
+to import the base types directly from a different package, and not from a relative path.
+
+
 ### `cwd`
 
 type: `string`

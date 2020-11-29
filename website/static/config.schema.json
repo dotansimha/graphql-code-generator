@@ -293,7 +293,7 @@
           "type": "string"
         },
         "noExport": {
-          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "addUnderscoreToArgsType": {
@@ -676,8 +676,7 @@
       "properties": {
         "decoratorName": {
           "$ref": "#/definitions/Partial_1",
-          "description": "allow overriding of TypeGraphQL decorator types\nDefault value: \"```json\n{\n  type: 'ObjectType',\n  interface: 'InterfaceType',\n  arguments: 'ArgsType',\n  field: 'Field',\n  input: 'InputType'\n}\n```\"",
-          "type": "Partial<DecoratorConfig>"
+          "description": "allow overriding of TypeGraphQL decorator types\nDefault value: \"`{ type: 'ObjectType', interface: 'InterfaceType', arguments: 'ArgsType', field: 'Field', input: 'InputType' }`\""
         },
         "decorateTypes": {
           "description": "Speciies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.",
@@ -727,7 +726,7 @@
           "type": "string"
         },
         "noExport": {
-          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "addUnderscoreToArgsType": {
@@ -2412,6 +2411,10 @@
         "baseTypesPath": {
           "type": "string",
           "description": "Required, should point to the base schema types file.\nThe key of the output is used a the base path for this file."
+        },
+        "importBaseTypesFrom": {
+          "type": "string",
+          "description": "Overrides the package import for the base types. Use this if you are within a monorepo and you wish\nto import the base types directly from a different package, and not from a relative path."
         },
         "cwd": {
           "type": "string",
@@ -4159,6 +4162,9 @@
           "type": "boolean"
         },
         "inputValue": {
+          "type": "boolean"
+        },
+        "defaultValue": {
           "type": "boolean"
         }
       }

@@ -49,7 +49,10 @@ src/:
  preset: near-operation-file
  presetConfig:
    baseTypesPath: types.ts
-   importAllFragmentsFrom: '
+   importAllFragmentsFrom: '~types'
+ plugins:
+   - typescript-operations
+```
 
 ### `extension`
 

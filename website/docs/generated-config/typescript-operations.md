@@ -50,6 +50,7 @@ path/to/file.ts:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `immutableTypes`

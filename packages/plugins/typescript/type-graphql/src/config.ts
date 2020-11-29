@@ -5,17 +5,7 @@ export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
   /**
    * @name decoratorName
    * @description allow overriding of TypeGraphQL decorator types
-   * @default
-   * ```json
-   * {
-   *   type: 'ObjectType',
-   *   interface: 'InterfaceType',
-   *   arguments: 'ArgsType',
-   *   field: 'Field',
-   *   input: 'InputType'
-   * }
-   * ```
-   * @type Partial<DecoratorConfig>
+   * @default `{ type: 'ObjectType', interface: 'InterfaceType', arguments: 'ArgsType', field: 'Field', input: 'InputType' }`
    */
   decoratorName?: Partial<DecoratorConfig>;
 
