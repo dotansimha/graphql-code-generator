@@ -296,6 +296,10 @@
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "useImplementingTypes": {
+          "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -727,6 +731,10 @@
         },
         "noExport": {
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "useImplementingTypes": {
+          "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "addUnderscoreToArgsType": {

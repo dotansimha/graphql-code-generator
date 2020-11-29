@@ -2719,4 +2719,96 @@ describe('TypeScript', () => {
       }
     `);
   });
+
+  it('should use implementing types as node type - issue #5126', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Matrix {
+        pills: [Pill!]!
+      }
+
+      interface Pill {
+        id: ID!
+      }
+
+      type RedPill implements Pill {
+        red: String!
+      }
+
+      type GreenPill implements Pill {
+        green: String!
+      }
+
+      interface Foo {
+        id: ID!
+      }
+
+      type Bar implements Foo {
+        lol: String!
+      }
+
+      type Hello {
+        foo: Foo!
+      }
+
+      type NoInterface {
+        hello: Hello!
+      }
+
+      interface NestedInterface implements Foo {
+        field: String!
+      }
+
+      type NestedType1 implements NestedInterface {
+        hi: String!
+      }
+
+      type NestedType2 implements NestedInterface {
+        ho: String!
+      }
+
+      type NestedField {
+        nested: NestedInterface!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        useImplementingTypes: true,
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(output.content).toMatchSnapshot();
+
+    // Type should be Array<RedPill|GreenPill> and not Pill
+    expect(output.content).toBeSimilarStringTo(`
+      export type Matrix = {
+        __typename?: 'Matrix';
+        pills: Array<RedPill | GreenPill>;
+      };
+    `);
+    // Type should be Bar and not Foo
+    expect(output.content).toBeSimilarStringTo(`
+      export type Hello = {
+        __typename?: 'Hello';
+        foo: Bar;
+      };
+    `);
+    // Type should be Hello and not empty
+    expect(output.content).toBeSimilarStringTo(`
+      export type NoInterface = {
+        __typename?: 'NoInterface';
+        hello: Hello;
+      };
+    `);
+    // Type should be NestedType1|NestedType2
+    expect(output.content).toBeSimilarStringTo(`
+      export type NestedField = {
+        __typename?: 'NestedField';
+        nested: NestedType1 | NestedType2;
+      };
+    `);
+  });
 });

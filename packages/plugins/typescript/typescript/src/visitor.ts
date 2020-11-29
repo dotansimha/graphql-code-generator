@@ -22,6 +22,7 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
+  GraphQLObjectType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -36,6 +37,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   immutableTypes: boolean;
   maybeValue: string;
   noExport: boolean;
+  useImplementingTypes: boolean;
 }
 
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
@@ -58,6 +60,7 @@ export class TsVisitor<
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
+      useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -81,6 +84,32 @@ export class TsVisitor<
       enumNameValueSeparator: ' =',
       ignoreExport: this.config.noExport,
     });
+  }
+
+  protected _getTypeForNode(node: NamedTypeNode): string {
+    const typeAsString = (node.name as any) as string;
+
+    if (this.config.useImplementingTypes) {
+      const allTypesMap = this._schema.getTypeMap();
+      const implementingTypes: string[] = [];
+
+      // TODO: Move this to a better place, since we are using this logic in some other places as well.
+      for (const graphqlType of Object.values(allTypesMap)) {
+        if (graphqlType instanceof GraphQLObjectType) {
+          const allInterfaces = graphqlType.getInterfaces();
+
+          if (allInterfaces.some(int => typeAsString === int.name)) {
+            implementingTypes.push(this.convertName(graphqlType.name));
+          }
+        }
+      }
+
+      if (implementingTypes.length > 0) {
+        return implementingTypes.join(' | ');
+      }
+    }
+
+    return super._getTypeForNode(node);
   }
 
   public getWrapperDefinitions(): string[] {

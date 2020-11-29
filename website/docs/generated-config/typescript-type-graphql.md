@@ -242,6 +242,25 @@ path/to/file.ts:
    noExport: true
 ```
 
+### `useImplementingTypes`
+
+type: `boolean`
+default: `false`
+
+When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
+
+#### Usage Examples
+
+##### Override all definition types
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   useImplementingTypes: true
+```
+
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
