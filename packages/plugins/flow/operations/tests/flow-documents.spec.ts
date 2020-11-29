@@ -204,30 +204,7 @@ describe('Flow Operations Plugin', () => {
         await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' }),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-
-        export type NotificationsQueryVariables = {};
-
-
-        export type NotificationsQuery = ({
-            ...{ __typename?: 'Query' },
-          ...{| notifications: Array<({
-              ...{ __typename?: 'TextNotification' },
-            ...$Pick<Types.TextNotification, {| text: *, id: * |}>
-          }) | ({
-              ...{ __typename?: 'ImageNotification' },
-            ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
-            ...{| metadata: ({
-                ...{ __typename?: 'ImageMetadata' },
-              ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
-            }) |}
-          })> |}
-        });
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
   });
@@ -569,22 +546,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-
-        export type UserFieldsFragment = ({
-            ...$Pick<User, {| id: *, username: *, role?: * |}>,
-          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-        });
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = {| me?: ?UserFieldsFragment |};
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
@@ -619,25 +581,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-        type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-
-        export type UserFieldsFragment = ({
-            ...$Pick<User, {| id: *, username: *, role?: * |}>,
-          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-        });
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = {| me?: ?({
-              ...$Pick<User, {| id: *, username: *, role?: * |}>,
-            ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-          }) |};
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
@@ -672,18 +616,7 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "// @flow
-
-
-        export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
-
-        export type MeQueryVariables = {};
-
-
-        export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
-        "
-      `);
+      expect(result).toMatchSnapshot();
       validateFlow(result);
     });
 
@@ -1272,6 +1205,56 @@ describe('Flow Operations Plugin', () => {
         ...{| +adminRole?: $ElementType<User, 'role'> |},
         ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
     }) |};
+      `);
+
+      validateFlow(result);
+    });
+  });
+
+  describe('Directives handling', () => {
+    it('@skip, @include should result in optional fields', async () => {
+      const schema1 = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          id: String!
+          name: String
+          address: String!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query user($showAddress: Boolean!) {
+          user {
+            id
+            name
+            address @include(if: $showAddress)
+          }
+        }
+      `);
+      const result = mergeOutputs([
+        await plugin(
+          schema1,
+          [
+            {
+              location: '',
+              document: ast,
+            },
+          ],
+          { skipTypename: true, useFlowExactObjects: false },
+          { outputFile: '' }
+        ),
+      ]);
+
+      expect(result).toBeSimilarStringTo(`
+      export type UserQueryVariables = {
+        showAddress: $ElementType<Scalars, 'Boolean'>,
+      };
+      
+      
+      export type UserQuery = { user: $MakeOptional<$Pick<User, { id: *, name?: *, address: * }>, { address: * }> };
       `);
 
       validateFlow(result);

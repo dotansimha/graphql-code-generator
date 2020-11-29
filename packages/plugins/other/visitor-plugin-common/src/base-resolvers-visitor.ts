@@ -40,7 +40,7 @@ import {
 } from 'graphql';
 
 import { OperationVariablesToObject } from './variables-to-object';
-import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
+import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers';
 import { parseEnumValues } from './enum-values';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 
@@ -729,37 +729,8 @@ export class BaseResolversVisitor<
     });
 
     return Object.keys(groupedMappers)
-      .map(source => this.buildMapperImport(source, groupedMappers[source]))
+      .map(source => buildMapperImport(source, groupedMappers[source], this.config.useTypeImports))
       .filter(Boolean);
-  }
-
-  protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string | null {
-    if (!types || types.length === 0) {
-      return null;
-    }
-
-    const defaultType = types.find(t => t.asDefault === true);
-    let namedTypes = types.filter(t => !t.asDefault);
-
-    if (this.config.useTypeImports) {
-      if (defaultType) {
-        // default as Baz
-        namedTypes = [{ identifier: `default as ${defaultType.identifier}` }, ...namedTypes];
-      }
-      // { Foo, Bar as BarModel }
-      const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
-
-      // { default as Baz, Foo, Bar as BarModel }
-      return `import type ${[namedImports].filter(Boolean).join(', ')} from '${source}';`;
-    }
-
-    // { Foo, Bar as BarModel }
-    const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
-    // Baz
-    const defaultImport = defaultType ? defaultType.identifier : '';
-
-    // Baz, { Foo, Bar as BarModel }
-    return `import ${[defaultImport, namedImports].filter(Boolean).join(', ')} from '${source}';`;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {

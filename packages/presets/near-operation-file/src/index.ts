@@ -44,7 +44,7 @@ export type NearOperationFileConfig = {
    *  preset: near-operation-file
    *  presetConfig:
    *    baseTypesPath: types.ts
-   *    importAllFragmentsFrom: '@fragments'
+   *    importAllFragmentsFrom: '~types'
    *  plugins:
    *    - typescript-operations
    * ```

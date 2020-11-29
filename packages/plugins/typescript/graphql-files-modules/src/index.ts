@@ -42,13 +42,13 @@ export interface TypeScriptFilesModulesPluginConfig {
    * @default "DocumentNode"
    * @description By default, the named exports will have a type `DocumentNode`. Change this to "string" if you only use raw strings.
    */
-  type?: "string" | "DocumentNode"
+  type?: 'string' | 'DocumentNode';
 }
 
 export const plugin: PluginFunction = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  { modulePathPrefix = '', relativeToCwd, prefix = '*/', type = "DocumentNode" }: TypeScriptFilesModulesPluginConfig
+  { modulePathPrefix = '', relativeToCwd, prefix = '*/', type = 'DocumentNode' }: TypeScriptFilesModulesPluginConfig
 ): Promise<string> => {
   const useRelative = relativeToCwd === true;
 
@@ -80,7 +80,7 @@ export const plugin: PluginFunction = async (
 
       return `
 declare module '${prefix}${modulePathPrefix}${fileName}' {
-  ${type === "DocumentNode" ? `import { DocumentNode } from 'graphql';` : ""}
+  ${type === 'DocumentNode' ? `import { DocumentNode } from 'graphql';` : ''}
   const defaultDocument: ${type};
   ${operations
     .filter(d => d.name && d.name.value)

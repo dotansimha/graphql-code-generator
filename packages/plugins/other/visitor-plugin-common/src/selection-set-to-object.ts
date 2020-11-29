@@ -24,6 +24,7 @@ import {
   getFieldNodeNameValue,
   DeclarationBlock,
   mergeSelectionSets,
+  hasConditionalDirectives,
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -383,7 +384,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
-        Array.from(primitiveFields.values()).map(field => field.name.value)
+        Array.from(primitiveFields.values()).map(field => ({
+          isConditional: hasConditionalDirectives(field.directives),
+          fieldName: field.name.value,
+        }))
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,

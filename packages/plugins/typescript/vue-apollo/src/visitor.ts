@@ -224,9 +224,9 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     documentNodeVariable,
   }: BuildCompositionFunctions): string {
     const variables = operationHasVariables
-      ? `variables${
-          operationHasNonNullableVariable ? '' : '?'
-        }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>, `
+      ? `variables: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ReactiveFunction<${operationVariablesTypes}>${
+          operationHasNonNullableVariable ? '' : ' = {}'
+        }, `
       : '';
 
     switch (operationType) {

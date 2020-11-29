@@ -13,7 +13,7 @@ import {
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
+import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
@@ -51,7 +51,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return `${listModifier}<${type}>`;
     };
 
-    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
+    const formatNamedField = (name: string, type: GraphQLOutputType | GraphQLNamedType | null): string => {
       const optional = !this.config.avoidOptionals.field && !!type && !isNonNullType(type);
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
@@ -65,6 +65,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
+      avoidOptionals: this.config.avoidOptionals,
     };
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig

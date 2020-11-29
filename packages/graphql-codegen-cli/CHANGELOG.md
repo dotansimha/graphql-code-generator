@@ -1,5 +1,21 @@
 # @graphql-codegen/cli
 
+## 1.19.3
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/core@1.17.9
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.19.2
+
+### Patch Changes
+
+- faa13973: Fix issues with missing sources in loadSchema
+- faa13973: fix(cli): use default options of codegen for graphql-config's load methods
+
 ## 1.19.1
 
 ### Patch Changes

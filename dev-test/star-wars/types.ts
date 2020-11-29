@@ -1,5 +1,7 @@
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -317,7 +319,10 @@ export type HeroNameConditionalInclusionQueryVariables = Exact<{
 }>;
 
 export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
-  hero?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+  hero?: Maybe<
+    | ({ __typename?: 'Human' } & MakeOptional<Pick<Human, 'name'>, 'name'>)
+    | ({ __typename?: 'Droid' } & MakeOptional<Pick<Droid, 'name'>, 'name'>)
+  >;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
@@ -326,7 +331,10 @@ export type HeroNameConditionalExclusionQueryVariables = Exact<{
 }>;
 
 export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
-  hero?: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+  hero?: Maybe<
+    | ({ __typename?: 'Human' } & MakeOptional<Pick<Human, 'name'>, 'name'>)
+    | ({ __typename?: 'Droid' } & MakeOptional<Pick<Droid, 'name'>, 'name'>)
+  >;
 };
 
 export type HeroParentTypeDependentFieldQueryVariables = Exact<{
