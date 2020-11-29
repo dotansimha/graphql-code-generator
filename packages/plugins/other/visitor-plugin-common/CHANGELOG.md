@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.21
+
+### Patch Changes
+
+- 8356f8a2: Extended behaviour to allow support in `internalResolversPrefix` flag for resolvers plugin
+
 ## 1.17.20
 
 ### Patch Changes
