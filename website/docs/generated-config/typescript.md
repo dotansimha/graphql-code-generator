@@ -48,6 +48,7 @@ path/to/file.ts:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `constEnums`
@@ -215,7 +216,7 @@ generates:
 type: `boolean`
 default: `false`
 
-Set the to `true` in order to generate output without `export` modifier.
+Set to `true` in order to generate output without `export` modifier.
 This is useful if you are generating `.d.ts` file and want it to be globally available.
 
 #### Usage Examples

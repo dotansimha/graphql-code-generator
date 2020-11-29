@@ -37,14 +37,15 @@
       "website/live-demo"
     ],
     "nohoist": [
+      "@graphql-codegen/website/@docusaurus/*",
       "**/@babel-*",
       "**/@babel-*/**"
     ]
   },
   "devDependencies": {
-    "react-query": "2.26.2",
+    "react-query": "2.26.3",
     "@apollo/client": "3.2.7",
-    "@babel/preset-typescript": "7.12.1",
+    "@babel/preset-typescript": "7.12.7",
     "@changesets/cli": "2.11.2",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
     "@graphql-tools/code-file-loader": "6.2.5",
@@ -77,7 +78,7 @@
     "bob-the-bundler": "1.1.0",
     "eslint": "7.13.0",
     "eslint-config-prettier": "6.15.0",
-    "eslint-config-standard": "16.0.1",
+    "eslint-config-standard": "16.0.2",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
@@ -96,7 +97,7 @@
     "jest-junit": "12.0.0",
     "lint-staged": "10.5.1",
     "lodash": "4.17.20",
-    "npm": "6.14.8",
+    "npm": "6.14.9",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "rimraf": "3.0.2",

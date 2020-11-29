@@ -18,6 +18,14 @@ export type ModulesConfig = {
    */
   baseTypesPath: string;
   /**
+   * @name importBaseTypesFrom
+   * @type string
+   * @description Overrides the package import for the base types. Use this if you are within a monorepo and you wish
+   * to import the base types directly from a different package, and not from a relative path.
+   *
+   */
+  importBaseTypesFrom?: string;
+  /**
    * @name cwd
    * @type string
    * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.

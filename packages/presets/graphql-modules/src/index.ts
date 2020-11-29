@@ -73,7 +73,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       const filename = resolve(cwd, baseOutputDir, moduleName, options.presetConfig.filename);
       const dirpath = stripFilename(filename);
       const relativePath = relative(dirpath, baseTypesDir);
-      const importPath = normalize(join(relativePath, baseTypesFilename)); // ../../types
+      const importPath = options.presetConfig.importBaseTypesFrom || normalize(join(relativePath, baseTypesFilename));
       const sources = sourcesByModuleMap[moduleName];
 
       const moduleDocument = concatAST(

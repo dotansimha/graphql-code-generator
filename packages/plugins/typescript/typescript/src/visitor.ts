@@ -69,7 +69,7 @@ export class TsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName,
-        this.config.avoidOptionals.object,
+        this.config.avoidOptionals,
         this.config.immutableTypes,
         null,
         enumNames,
@@ -169,7 +169,8 @@ export class TsVisitor<
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&
-      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE || node.defaultValue !== undefined);
+      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
+        (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
     return (
