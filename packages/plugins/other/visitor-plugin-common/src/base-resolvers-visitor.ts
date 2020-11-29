@@ -63,7 +63,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   namespacedImportName: string;
   resolverTypeSuffix: string;
   allResolversTypeName: string;
-  typeResolverFieldName: string;
+  internalResolversPrefix: string;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -295,12 +295,12 @@ export interface RawResolversConfig extends RawConfig {
    */
   allResolversTypeName?: string;
   /**
-   * @name typeResolverFieldName
    * @type string
-   * @default '__resolveType'
-   * @description Changes the field name of the abstract typename resolver
+   * @default '__'
+   * @description Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.
+   * If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
    */
-  typeResolverFieldName?: string;
+  internalResolversPrefix?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -353,7 +353,7 @@ export class BaseResolversVisitor<
         : null,
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
-      typeResolverFieldName: rawConfig.typeResolverFieldName || '__resolveType',
+      internalResolversPrefix: rawConfig.internalResolversPrefix || '__',
       ...(additionalConfig || {}),
     } as TPluginConfig);
 
@@ -1027,7 +1027,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
     if (!isRootType) {
       fieldsContent.push(
-        indent(`__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`)
+        indent(
+          `${
+            this.config.internalResolversPrefix
+          }isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`
+        )
       );
     }
 
@@ -1062,7 +1066,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(
         indent(
-          `${this.config.typeResolverFieldName}${
+          `${this.config.internalResolversPrefix}resolveType${
             this.config.optionalResolveType ? '?' : ''
           }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
@@ -1211,7 +1215,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .withBlock(
         [
           indent(
-            `${this.config.typeResolverFieldName}${
+            `${this.config.internalResolversPrefix}resolveType${
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
