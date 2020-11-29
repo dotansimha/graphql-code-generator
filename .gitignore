@@ -21,3 +21,4 @@ out.txt
 tsconfig.tsbuildinfo
 .yarn
 .yarnrc
+recompile.sh

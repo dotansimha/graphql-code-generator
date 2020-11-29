@@ -114,27 +114,10 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`    public enum UserRole {
-        Admin("ADMIN"),
-        User("USER"),
-        Editor("EDITOR");
-        
-        public final String label;
-         
-        UserRole(String label) {
-          this.label = label;
-        }
-        
-        private static final Map<String, UserRole> BY_LABEL = new HashMap<>();
-          
-        static {
-            for (UserRole e : values()) {
-                BY_LABEL.put(e.label, e);
-            }
-        }
-        
-        public static UserRole valueOfLabel(String label) {
-          return BY_LABEL.get(label);
-        }
+        ADMIN,
+        USER,
+        EDITOR      
+                
       }`);
     });
 
@@ -152,8 +135,8 @@ describe('Java', () => {
         { outputFile: OUTPUT_FILE }
       );
 
-      expect(result).toContain(`Admin("AdminRoleValue"),`);
-      expect(result).toContain(`User("USER"),`);
+      expect(result).toContain(`AdminRoleValue,`);
+      expect(result).toContain(`USER,`);
     });
   });
 
@@ -162,20 +145,15 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class InputWithArrayInput {
-        private Iterable<String> _f;
-        private Iterable<SearchUserInput> _g;
+        private Iterable<String> f;
+        private Iterable<SearchUserInput> g;
       
-        public InputWithArrayInput(Map<String, Object> args) {
-          if (args != null) {
-            this._f = (Iterable<String>) args.get("f");
-            if (args.get("g") != null) {
-              this._g = ((List<Map<String, Object>>) args.get("g")).stream().map(SearchUserInput::new).collect(Collectors.toList());
-            }
-          }
-        }
+        public InputWithArrayInput() {}          
       
-        public Iterable<String> getF() { return this._f; }
-        public Iterable<SearchUserInput> getG() { return this._g; }
+        public Iterable<String> getF() { return this.f; }
+        public Iterable<SearchUserInput> getG() { return this.g; }
+        public void setF(Iterable<String> f) { this.f = f; }
+        public void setG(Iterable<SearchUserInput> g) { this.g = g; }
       }`);
     });
 
@@ -183,18 +161,15 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class UserFriendsArgs {
-        private Integer _skip;
-        private Integer _limit;
+        private Integer skip;
+        private Integer limit;
       
-        public UserFriendsArgs(Map<String, Object> args) {
-          if (args != null) {
-            this._skip = (Integer) args.get("skip");
-            this._limit = (Integer) args.get("limit");
-          }
-        }
+        public UserFriendsArgs() {}         
       
-        public Integer getSkip() { return this._skip; }
-        public Integer getLimit() { return this._limit; }
+        public Integer getSkip() { return this.skip; }
+        public Integer getLimit() { return this.limit; }
+        public void setSkip(Integer skip) { this.skip = skip; }
+        public void setLimit(Integer limit) { this.limit = limit; }
       }`);
     });
 
@@ -202,15 +177,12 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class CustomInput {
-        private Object _id;
+        private Object id;
       
-        public CustomInput(Map<String, Object> args) {
-          if (args != null) {
-            this._id = (Object) args.get("id");
-          }
-        }
+        public CustomInput() {}          
       
-        public Object getId() { return this._id; }
+        public Object getId() { return this.id; }
+        public void setId(Object id) { this.id = id; }
       }`);
     });
 
@@ -218,83 +190,68 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class QueryUserArgs {
-        private Object _id;
+        private Object id;
       
-        public QueryUserArgs(Map<String, Object> args) {
-          if (args != null) {
-            this._id = (Object) args.get("id");
-          }
-        }
-      
-        public Object getId() { return this._id; }
+        public QueryUserArgs() {}
+              
+        public Object getId() { return this.id; }
+        public void setId(Object id) { this.id = id; }
       }`);
 
       expect(result).toBeSimilarStringTo(`public static class QuerySearchUserArgs {
-        private SearchUserInput _searchFields;
+        private SearchUserInput searchFields;
       
-        public QuerySearchUserArgs(Map<String, Object> args) {
-          if (args != null) {
-            this._searchFields = new SearchUserInput((Map<String, Object>) args.get("searchFields"));
-          }
-        }
+        public QuerySearchUserArgs() {}
       
-        public SearchUserInput getSearchFields() { return this._searchFields; }
+        public SearchUserInput getSearchFields() { return this.searchFields; }
+        public void setSearchFields(SearchUserInput searchFields) { this.searchFields = searchFields; }
       }`);
     });
 
-    it('Should generate check type for enum', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
-      expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
-        this._sort = (ResultSort) args.get("sort");
-      } else {
-        this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
-      }`);
-    });
+    // it('Should generate check type for enum', async () => {
+    //   const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+    //   expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
+    //     this._sort = (ResultSort) args.get("sort");
+    //   } else {
+    //     this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
+    //   }`);
+    // });
 
     it('Should generate input class per each input, also with nested input types', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class MetadataSearchInput {
-        private Integer _something;
+        private Integer something;
       
-        public MetadataSearchInput(Map<String, Object> args) {
-          if (args != null) {
-            this._something = (Integer) args.get("something");
-          }
-        }
+        public MetadataSearchInput() {}
       
-        public Integer getSomething() { return this._something; }
+        public Integer getSomething() { return this.something; }
+        public void setSomething(Integer something) { this.something = something; }
       }`);
 
       expect(result).toBeSimilarStringTo(`public static class SearchUserInput {
-        private String _username;
-        private String _email;
-        private String _name;
-        private Object _dateOfBirth;
-        private ResultSort _sort;
-        private MetadataSearchInput _metadata;
+        private String username;
+        private String email;
+        private String name;
+        private Object dateOfBirth;
+        private ResultSort sort;
+        private MetadataSearchInput metadata;
       
-        public SearchUserInput(Map<String, Object> args) {
-          if (args != null) {
-            this._username = (String) args.get("username");
-            this._email = (String) args.get("email");
-            this._name = (String) args.get("name");
-            this._dateOfBirth = (Object) args.get("dateOfBirth");
-            if (args.get("sort") instanceof ResultSort) {
-              this._sort = (ResultSort) args.get("sort");
-            } else {
-              this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
-            }
-            this._metadata = new MetadataSearchInput((Map<String, Object>) args.get("metadata"));
-          }
-        }
+        public SearchUserInput() {}
       
-        public String getUsername() { return this._username; }
-        public String getEmail() { return this._email; }
-        public String getName() { return this._name; }
-        public Object getDateOfBirth() { return this._dateOfBirth; }
-        public ResultSort getSort() { return this._sort; }
-        public MetadataSearchInput getMetadata() { return this._metadata; }
+        public String getUsername() { return this.username; }
+        public String getEmail() { return this.email; }
+        public String getName() { return this.name; }
+        public Object getDateOfBirth() { return this.dateOfBirth; }
+        public ResultSort getSort() { return this.sort; }
+        public MetadataSearchInput getMetadata() { return this.metadata; }
+        public void setUsername(String username) { this.username = username; }
+        public void setEmail(String email) { this.email = email; }
+        public void setName(String name) { this.name = name; }
+        public void setDateOfBirth(Object dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+        public void setSort(ResultSort sort) { this.sort = sort; }
+        public void setMetadata(MetadataSearchInput metadata) { this.metadata = metadata; }
+        
       }`);
     });
 
@@ -302,33 +259,27 @@ describe('Java', () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class UpdateUserMetadataInput {
-        private Integer _something;
+        private Integer something;
       
-        public UpdateUserMetadataInput(Map<String, Object> args) {
-          if (args != null) {
-            this._something = (Integer) args.get("something");
-          }
-        }
+        public UpdateUserMetadataInput() {}
       
-        public Integer getSomething() { return this._something; }
+        public Integer getSomething() { return this.something; }
+        public void setSomething(Integer something) { this.something = something; }
       }`);
 
       expect(result).toBeSimilarStringTo(`public static class UpdateUserInput {
-        private Object _id;
-        private String _username;
-        private UpdateUserMetadataInput _metadata;
+        private Object id;
+        private String username;
+        private UpdateUserMetadataInput metadata;
       
-        public UpdateUserInput(Map<String, Object> args) {
-          if (args != null) {
-            this._id = (Object) args.get("id");
-            this._username = (String) args.get("username");
-            this._metadata = new UpdateUserMetadataInput((Map<String, Object>) args.get("metadata"));
-          }
-        }
-      
-        public Object getId() { return this._id; }
-        public String getUsername() { return this._username; }
-        public UpdateUserMetadataInput getMetadata() { return this._metadata; }
+        public UpdateUserInput() {}
+          
+        public Object getId() { return this.id; }
+        public String getUsername() { return this.username; }
+        public UpdateUserMetadataInput getMetadata() { return this.metadata; }
+        public void setId(Object id) { this.id = id; }
+        public void setUsername(String username) { this.username = username; }
+        public void setMetadata(UpdateUserMetadataInput metadata) { this.metadata = metadata; }
       }`);
     });
   });
