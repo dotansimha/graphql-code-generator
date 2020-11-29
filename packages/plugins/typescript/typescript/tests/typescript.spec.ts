@@ -2786,7 +2786,7 @@ describe('TypeScript', () => {
     expect(output.content).toBeSimilarStringTo(`
       export type Matrix = {
         __typename?: 'Matrix';
-        pills: Array<RedPill|GreenPill>;
+        pills: Array<RedPill | GreenPill>;
       };
     `);
     // Type should be Bar and not Foo
@@ -2807,7 +2807,7 @@ describe('TypeScript', () => {
     expect(output.content).toBeSimilarStringTo(`
       export type NestedField = {
         __typename?: 'NestedField';
-        nested: NestedType1|NestedType2;
+        nested: NestedType1 | NestedType2;
       };
     `);
   });

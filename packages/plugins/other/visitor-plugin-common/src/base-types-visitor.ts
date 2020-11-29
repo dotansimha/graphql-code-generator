@@ -19,7 +19,6 @@ import {
   DirectiveNode,
   Kind,
   GraphQLEnumType,
-  GraphQLObjectType,
 } from 'graphql';
 import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
@@ -52,7 +51,6 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumPrefix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
-  useImplementingTypes: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -176,22 +174,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   onlyOperationTypes?: boolean;
-  /**
-   * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
-   * @default false
-   *
-   * @exampleMarkdown
-   * ## Override all definition types
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    useImplementingTypes: true
-   * ```
-   */
-  useImplementingTypes?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -208,7 +190,6 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      useImplementingTypes: getConfigValue(rawConfig.useImplementingTypes, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
@@ -595,25 +576,6 @@ export class BaseTypesVisitor<
     }
 
     const schemaType = this._schema.getType(node.name as any);
-
-    // TODO: Move this to a better place, since we are using this logic in some other places as well.
-    if (this.config.useImplementingTypes) {
-      const allTypesMap = this._schema.getTypeMap();
-      const implementingTypes: string[] = [];
-
-      for (const graphqlType of Object.values(allTypesMap)) {
-        if (graphqlType instanceof GraphQLObjectType) {
-          const allInterfaces = graphqlType.getInterfaces();
-
-          if (allInterfaces.some(int => typeAsString === int.name)) {
-            implementingTypes.push(this.convertName(graphqlType.name));
-          }
-        }
-      }
-      if (implementingTypes.length > 0) {
-        return implementingTypes.join('|');
-      }
-    }
 
     if (schemaType && isEnumType(schemaType)) {
       return this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
