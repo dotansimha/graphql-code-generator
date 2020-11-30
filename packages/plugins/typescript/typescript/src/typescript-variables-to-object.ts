@@ -17,9 +17,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _namespacedImportName: string | null = null,
     _enumNames: string[] = [],
     _enumPrefix = true,
-    _enumValues: ParsedEnumValuesMap = {}
+    _enumValues: ParsedEnumValuesMap = {},
+    _applyCoercion: Boolean = false
   ) {
-    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues);
+    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues, _applyCoercion);
   }
 
   private clearOptional(str: string): string {
@@ -40,7 +41,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       return this.clearOptional(type);
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
-      const listInputCoercionExtension = applyCoercion ? '' : ` | ${innerType}`;
+      const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return this.wrapMaybe(
         `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`

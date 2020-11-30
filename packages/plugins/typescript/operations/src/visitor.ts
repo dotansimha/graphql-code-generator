@@ -91,7 +91,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.namespacedImportName,
         enumsNames,
         this.config.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        true
       )
     );
     this._declarationBlockConfig = {
