@@ -73,8 +73,8 @@ export type MyType = {|
 export type MyTypeFooArgs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
-  c?: ?Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
-  d: Array<$ElementType<Scalars, 'Int'>> | $ElementType<Scalars, 'Int'>,
+  c?: ?Array<?$ElementType<Scalars, 'String'>>,
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -126,9 +126,9 @@ export type MyType = {|
 export type MyTypeFooArgs = {|
   a?: ?MyInput,
   b: MyInput,
-  c?: ?Array<?MyInput> | ?MyInput,
-  d: Array<?MyInput> | ?MyInput,
-  e: Array<MyInput> | MyInput,
+  c?: ?Array<?MyInput>,
+  d: Array<?MyInput>,
+  e: Array<MyInput>,
 |};
 "
 `;
@@ -466,8 +466,8 @@ export type Imytype = {|
 export type Imytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
-  c?: ?Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
-  d: Array<$ElementType<Scalars, 'Int'>> | $ElementType<Scalars, 'Int'>,
+  c?: ?Array<?$ElementType<Scalars, 'String'>>,
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -491,8 +491,8 @@ export type mytype = {|
 export type mytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
-  c?: ?Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
-  d: Array<$ElementType<Scalars, 'Int'>> | $ElementType<Scalars, 'Int'>,
+  c?: ?Array<?$ElementType<Scalars, 'String'>>,
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;

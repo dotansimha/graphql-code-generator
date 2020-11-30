@@ -927,8 +927,8 @@ describe('TypeScript', () => {
         export type mytypefooargs = {
           a: Scalars['String'];
           b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          d: Array<Scalars['Int']> | Scalars['Int'];
+          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          d: Array<Scalars['Int']>;
         };
     `);
       expect(result.content).toBeSimilarStringTo(`
@@ -1002,8 +1002,8 @@ describe('TypeScript', () => {
         export type MyTypefooArgs = {
           a: Scalars['String'];
           b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          d: Array<Scalars['Int']> | Scalars['Int'];
+          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          d: Array<Scalars['Int']>;
         };
       `);
 
@@ -1887,8 +1887,8 @@ describe('TypeScript', () => {
         export type mytypefooargs = {
           a: Scalars['String'];
           b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          d: Array<Scalars['Int']> | Scalars['Int'];
+          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          d: Array<Scalars['Int']>;
         };
     `);
       expect(result.content).toBeSimilarStringTo(`
@@ -1914,8 +1914,8 @@ describe('TypeScript', () => {
         export type Imytypefooargs = {
           a: Scalars['String'];
           b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          d: Array<Scalars['Int']> | Scalars['Int'];
+          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          d: Array<Scalars['Int']>;
         };
       `);
 
@@ -2195,8 +2195,8 @@ describe('TypeScript', () => {
         export type MyTypeFooArgs = {
           a: Scalars['String'];
           b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          d: Array<Scalars['Int']> | Scalars['Int'];
+          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          d: Array<Scalars['Int']>;
         };
     `);
 
@@ -2254,9 +2254,9 @@ describe('TypeScript', () => {
         export type MyTypeFooArgs = {
           a?: Maybe<MyInput>;
           b: MyInput;
-          c?: Maybe<Array<Maybe<MyInput>> | Maybe<MyInput>>;
-          d: Array<Maybe<MyInput>> | Maybe<MyInput>;
-          e: Array<MyInput> | MyInput;
+          c?: Maybe<Array<Maybe<MyInput>>>;
+          d: Array<Maybe<MyInput>>;
+          e: Array<MyInput>;
         };
     `);
 
