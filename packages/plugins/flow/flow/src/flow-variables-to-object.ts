@@ -16,14 +16,14 @@ export class FlowOperationVariablesToObject extends OperationVariablesToObject {
     return `$ElementType<${prefix}Scalars, '${name}'>`;
   }
 
-  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, isField = false): string {
+  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, applyCoercion = false): string {
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
-      const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, isField);
+      const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
 
       return this.clearOptional(type);
     } else if (typeNode.kind === Kind.LIST_TYPE) {
-      const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, isField);
-      const listInputCoercionExtension = isField ? '' : ` | ${innerType}`;
+      const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
+      const listInputCoercionExtension = applyCoercion ? '' : ` | ${innerType}`;
 
       return `?Array<${innerType}>${listInputCoercionExtension}`;
     } else {
