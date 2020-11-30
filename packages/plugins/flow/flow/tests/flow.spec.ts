@@ -411,8 +411,8 @@ describe('Flow Plugin', () => {
         export type Imytypefooargs = {|
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'String'>,
-          c?: ?Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
-          d: Array<$ElementType<Scalars, 'Int'>> | $ElementType<Scalars, 'Int'>,
+          c?: ?Array<?$ElementType<Scalars, 'String'>>,
+          d: Array<$ElementType<Scalars, 'Int'>>,
         |};
       `);
 
