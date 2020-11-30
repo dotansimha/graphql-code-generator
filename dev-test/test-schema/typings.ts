@@ -132,7 +132,7 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>> | Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
 };
 
