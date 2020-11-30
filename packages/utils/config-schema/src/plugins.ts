@@ -1,154 +1,178 @@
-export type PluginConfig = { file: string; identifier: string; pluginName: string; link?: string };
+export type PluginConfig = { file: string; identifier: string; name: string };
+export type PresetConfig = { file: string; identifier: string; name: string };
 
-export const relevantConfigurations: PluginConfig[] = [
+export const presetsConfigurations: PresetConfig[] = [
+  {
+    file: '../../presets/graphql-modules/src/config.ts',
+    identifier: 'ModulesConfig',
+    name: 'graphql-modules-preset',
+  },
+  {
+    file: '../../presets/near-operation-file/src/index.ts',
+    identifier: 'NearOperationFileConfig',
+    name: 'near-operation-file-preset',
+  },
+  {
+    file: '../../presets/import-types/src/index.ts',
+    identifier: 'ImportTypesConfig',
+    name: 'import-types-preset',
+  },
+];
+
+export const pluginsConfigurations: PluginConfig[] = [
+  {
+    file: '../../plugins/typescript/react-query/src/config.ts',
+    identifier: 'ReactQueryRawPluginConfig',
+    name: 'typescript-react-query',
+  },
   {
     file: '../../plugins/typescript/apollo-client-helpers/src/config.ts',
     identifier: 'ApolloClientHelpersConfig',
-    pluginName: 'typescript-apollo-client-helpers',
+    name: 'typescript-apollo-client-helpers',
   },
   {
     file: '../../plugins/other/add/src/config.ts',
     identifier: 'AddPluginConfig',
-    pluginName: 'add',
+    name: 'add',
   },
   {
     file: '../../plugins/other/time/src/config.ts',
     identifier: 'TimePluginConfig',
-    pluginName: 'time',
+    name: 'time',
   },
   {
     file: '../../plugins/typescript/typescript/src/config.ts',
     identifier: 'TypeScriptPluginConfig',
-    pluginName: 'typescript',
+    name: 'typescript',
   },
   {
     file: '../../plugins/typescript/operations/src/config.ts',
     identifier: 'TypeScriptDocumentsPluginConfig',
-    pluginName: 'typescript-operations',
+    name: 'typescript-operations',
   },
   {
     file: '../../plugins/c-sharp/c-sharp/src/config.ts',
     identifier: 'CSharpResolversPluginRawConfig',
-    pluginName: 'c-sharp',
+    name: 'c-sharp',
   },
   {
     file: '../../plugins/c-sharp/c-sharp-operations/src/config.ts',
     identifier: 'CSharpOperationsRawPluginConfig',
-    pluginName: 'c-sharp-operations',
+    name: 'c-sharp-operations',
   },
   {
     file: '../../plugins/other/schema-ast/src/index.ts',
     identifier: 'SchemaASTConfig',
-    pluginName: 'schema-ast',
+    name: 'schema-ast',
   },
   {
     file: '../..//plugins/typescript/type-graphql/src/config.ts',
     identifier: 'TypeGraphQLPluginConfig',
-    pluginName: 'typescript-type-graphql',
+    name: 'typescript-type-graphql',
   },
   {
     file: '../../plugins/typescript/graphql-files-modules/src/index.ts',
     identifier: 'TypeScriptFilesModulesPluginConfig',
-    pluginName: 'typescript-graphql-files-modules',
+    name: 'typescript-graphql-files-modules',
   },
   {
     file: '../../plugins/typescript/named-operations-object/src/index.ts',
     identifier: 'NamedOperationsObjectPluginConfig',
-    pluginName: 'named-operations-object',
+    name: 'named-operations-object',
   },
   {
     file: '../../plugins/typescript/graphql-request/src/config.ts',
     identifier: 'RawGraphQLRequestPluginConfig',
-    pluginName: 'typescript-graphql-request',
+    name: 'typescript-graphql-request',
   },
   {
     file: '../../plugins/typescript/compatibility/src/config.ts',
     identifier: 'CompatibilityPluginRawConfig',
-    pluginName: 'typescript-compatibility',
+    name: 'typescript-compatibility',
   },
   {
     file: '../../plugins/typescript/mongodb/src/config.ts',
     identifier: 'TypeScriptMongoPluginConfig',
-    pluginName: 'typescript-mongodb',
+    name: 'typescript-mongodb',
   },
   {
     file: '../../plugins/typescript/resolvers/src/config.ts',
     identifier: 'TypeScriptResolversPluginConfig',
-    pluginName: 'typescript-resolvers',
+    name: 'typescript-resolvers',
   },
   {
     file: '../../plugins/typescript/apollo-angular/src/config.ts',
     identifier: 'ApolloAngularRawPluginConfig',
-    pluginName: 'typescript-apollo-angular',
+    name: 'typescript-apollo-angular',
   },
   {
     file: '../../plugins/typescript/urql/src/config.ts',
     identifier: 'UrqlRawPluginConfig',
-    pluginName: 'typescript-urql',
+    name: 'typescript-urql',
   },
   {
     file: '../../plugins/typescript/react-apollo/src/config.ts',
     identifier: 'ReactApolloRawPluginConfig',
-    pluginName: 'typescript-react-apollo',
+    name: 'typescript-react-apollo',
   },
   {
     file: '../../plugins/typescript/vue-apollo/src/config.ts',
     identifier: 'VueApolloRawPluginConfig',
-    pluginName: 'typescript-vue-apollo',
+    name: 'typescript-vue-apollo',
   },
   {
     file: '../../plugins/typescript/stencil-apollo/src/config.ts',
     identifier: 'StencilApolloRawPluginConfig',
-    pluginName: 'typescript-stencil-apollo',
+    name: 'typescript-stencil-apollo',
   },
   {
     file: '../../plugins/typescript/document-nodes/src/index.ts',
     identifier: 'TypeScriptDocumentNodesRawPluginConfig',
-    pluginName: 'typescript-document-nodes',
+    name: 'typescript-document-nodes',
   },
   {
     file: '../../plugins/java/apollo-android/src/plugin.ts',
     identifier: 'JavaApolloAndroidPluginConfig',
-    pluginName: 'java-apollo-android',
+    name: 'java-apollo-android',
   },
   {
     file: '../../plugins/java/resolvers/src/config.ts',
     identifier: 'JavaResolversPluginRawConfig',
-    pluginName: 'java-resolvers',
+    name: 'java-resolvers',
   },
   {
     file: '../../plugins/java/java/src/config.ts',
     identifier: 'JavaResolversPluginRawConfig',
-    pluginName: 'java',
+    name: 'java',
   },
   {
     file: '../../plugins/java/kotlin/src/config.ts',
     identifier: 'KotlinResolversPluginRawConfig',
-    pluginName: 'kotlin',
+    name: 'kotlin',
   },
   {
     file: '../../plugins/flow/flow/src/config.ts',
     identifier: 'FlowPluginConfig',
-    pluginName: 'flow',
+    name: 'flow',
   },
   {
     file: '../../plugins/flow/resolvers/src/index.ts',
     identifier: 'RawFlowResolversConfig',
-    pluginName: 'flow-resolvers',
+    name: 'flow-resolvers',
   },
   {
     file: '../../plugins/flow/operations/src/config.ts',
     identifier: 'FlowDocumentsPluginConfig',
-    pluginName: 'flow-operations',
+    name: 'flow-operations',
   },
   {
     file: '../../plugins/other/introspection/src/index.ts',
     identifier: 'IntrospectionPluginConfig',
-    pluginName: 'introspection',
+    name: 'introspection',
   },
   {
     file: '../../plugins/other/fragment-matcher/src/index.ts',
     identifier: 'FragmentMatcherConfig',
-    pluginName: 'fragment-matcher',
+    name: 'fragment-matcher',
   },
 ];

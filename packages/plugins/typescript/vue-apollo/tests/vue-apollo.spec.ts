@@ -815,20 +815,20 @@ query MyFeed {
 
     it('Should generate optional variables if all optional in graphql document', async () => {
       const documents = parse(/* GraphQL */ `
-      query feed($id: ID) {
-        feed(id: $id) {
-          id
+        query feed($id: ID) {
+          feed(id: $id) {
+            id
+          }
         }
-      }
 
-      subscription test($name: String) {
-        commentAdded(repoFullName: $name) {
-          id
+        subscription test($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
         }
-      }
-    `);
+      `);
 
-    const docs = [{ location: '', document: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,

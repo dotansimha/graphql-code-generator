@@ -1,5 +1,23 @@
 # @graphql-codegen/flow-operations
 
+## 1.18.4
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/flow@1.18.2
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.18.3
+
+### Patch Changes
+
+- 475aa9b8: @skip, @include directives resolve to optional fields
+- Updated dependencies [faa13973]
+  - @graphql-codegen/visitor-plugin-common@1.17.18
+
 ## 1.18.2
 
 ### Patch Changes

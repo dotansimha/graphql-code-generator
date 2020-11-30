@@ -18,6 +18,7 @@ import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
 import { pascalCase } from 'pascal-case';
 import { generateFragmentImportStatement } from './imports';
+import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
@@ -110,6 +111,12 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    */
   documentMode?: DocumentMode;
   /**
+   * @default true
+   * @description If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.
+   * This will remove all "loc" and "description" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).
+   */
+  optimizeDocumentNode?: boolean;
+  /**
    * @default ""
    * @description This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
    * This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
@@ -159,6 +166,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   importOperationTypesFrom?: string;
   globalNamespace?: boolean;
   pureMagicComment?: boolean;
+  optimizeDocumentNode: boolean;
 }
 
 export class ClientSideBaseVisitor<
@@ -180,6 +188,7 @@ export class ClientSideBaseVisitor<
     super(rawConfig, {
       scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      optimizeDocumentNode: getConfigValue(rawConfig.optimizeDocumentNode, true),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       documentNodeImport: rawConfig.documentNodeImport || null,
@@ -278,23 +287,29 @@ export class ClientSideBaseVisitor<
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag([doc]);
-      if (gqlObj && gqlObj.loc) {
-        delete (gqlObj as any).loc;
+      let gqlObj = gqlTag([doc]);
+
+      if (this.config.optimizeDocumentNode) {
+        gqlObj = optimizeDocumentNode(gqlObj);
       }
+
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-      const gqlObj = gqlTag([doc]);
-      if (gqlObj && gqlObj.loc) {
-        delete (gqlObj as any).loc;
+      let gqlObj = gqlTag([doc]);
+
+      if (this.config.optimizeDocumentNode) {
+        gqlObj = optimizeDocumentNode(gqlObj);
       }
+
       if (fragments.length > 0) {
         const definitions = [
           ...gqlObj.definitions.map(t => JSON.stringify(t)),
           ...fragments.map(name => `...${name}.definitions`),
         ].join();
+
         return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
       }
+
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';

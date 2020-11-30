@@ -10,11 +10,11 @@ To pass configuration to GraphQL Codegen, you need to simply create a `codegen.y
 The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
 
 :::shell With `yarn`
-    yarn graphql-codegen --config ./path/to/config.yml
+yarn graphql-codegen --config ./path/to/config.yml
 :::
 
 :::shell With `npm`
-    npx graphql-codegen --config ./path/to/config.yml
+npx graphql-codegen --config ./path/to/config.yml
 :::
 
 Here's an example for a possible config file:
@@ -33,7 +33,7 @@ An example for a very large config file can be seen [here](https://github.com/do
 
 :::tip YAML Config Validation & auto-complete
 
-If you are using VSCode as your IDE, make sure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml), this will add validation and auto-complete for available plugins, plugins config and general structure of the `codegen.yml` file! 
+If you are using VSCode as your IDE, make sure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml), this will add validation and auto-complete for available plugins, plugins config and general structure of the `codegen.yml` file!
 
 :::
 
@@ -124,3 +124,11 @@ The Codegen also supports several CLI flags that allow you to override the defau
 You can set the `DEBUG` environment variable to `1` in order to tell the codegen to print debug information.
 
 You can set the `VERBOSE` environment variable to `1` in order to tell the codegen to print more information regarding the CLI output (`listr`).
+
+## Other ways to provide configuration
+
+GraphQL-Codegen is using [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig) library to manage configuration loading.
+
+That means, you can use `codegen.yml`, but also `codegen.json` or `codegen.js` will work. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
+
+For more information, [please refer to `cosmiconfig` documentation](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).

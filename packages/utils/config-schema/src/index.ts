@@ -3,7 +3,7 @@ import * as TJS from 'typescript-json-schema';
 import { writeFile } from 'fs-extra';
 import { generateDocs } from './docs';
 import { sync as mkdirp } from 'mkdirp';
-import { relevantConfigurations } from './plugins';
+import { pluginsConfigurations, presetsConfigurations } from './plugins';
 import { join } from 'path';
 import { apply } from 'jsonpath';
 
@@ -15,22 +15,26 @@ const baseDir = process.argv[2] || process.cwd();
 const docsOutDir = process.argv[3] ? join(baseDir, process.argv[3]) : './docs/generated-config/';
 const schemaOutDir = process.argv[4] ? join(baseDir, process.argv[4]) : baseDir;
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
+const DEFAULT_JSDOC_KEY = 'default';
 
 async function generate() {
-  const program = TJS.getProgramFromFiles([ROOT_FILE, ...relevantConfigurations.map(f => f.file)], {
-    esModuleInterop: true,
-    baseUrl: '../../../',
-    paths: tsConfig.compilerOptions.paths,
-    module: 'esnext',
-    target: 'es2018',
-    skipLibCheck: true,
-    allowSyntheticDefaultImports: true,
-    importHelpers: true,
-    resolveJsonModule: true,
-    moduleResolution: 'node',
-    experimentalDecorators: true,
-    lib: ['es6', 'esnext', 'es2015', 'dom'],
-  });
+  const program = TJS.getProgramFromFiles(
+    [ROOT_FILE, ...[...pluginsConfigurations, ...presetsConfigurations].map(f => f.file)],
+    {
+      esModuleInterop: true,
+      baseUrl: '../../../',
+      paths: tsConfig.compilerOptions.paths,
+      module: 'esnext',
+      target: 'es2018',
+      skipLibCheck: true,
+      allowSyntheticDefaultImports: true,
+      importHelpers: true,
+      resolveJsonModule: true,
+      moduleResolution: 'node',
+      experimentalDecorators: true,
+      lib: ['es6', 'esnext', 'es2015', 'dom'],
+    }
+  );
 
   const generator = TJS.buildGenerator(program, {
     topRef: true,
@@ -39,7 +43,7 @@ async function generate() {
   });
 
   const schema = generator.getSchemaForSymbols(
-    [ROOT_IDENTIFIER, ...relevantConfigurations.map(f => f.identifier)],
+    [ROOT_IDENTIFIER, ...pluginsConfigurations.map(f => f.identifier), ...presetsConfigurations.map(f => f.identifier)],
     true
   );
 
@@ -49,7 +53,7 @@ async function generate() {
       {
         type: 'object',
         additionalProperties: true,
-        properties: relevantConfigurations.reduce((prev, plugin) => {
+        properties: pluginsConfigurations.reduce((prev, plugin) => {
           const refObj = {
             additionalProperties: false,
             $ref: `#/definitions/${plugin.identifier}`,
@@ -57,30 +61,30 @@ async function generate() {
 
           return {
             ...prev,
-            [plugin.pluginName]: refObj,
-            [`@graphql-codegen/${plugin.pluginName}`]: refObj,
+            [plugin.name]: refObj,
+            [`@graphql-codegen/${plugin.name}`]: refObj,
           };
         }, {}),
       },
       {
         type: 'string',
-        oneOf: relevantConfigurations.reduce((prev, p) => {
+        oneOf: pluginsConfigurations.reduce((prev, p) => {
           const description = `${
             (schema.definitions[p.identifier] as TJS.Definition).description || ''
           }\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/${
-            p.pluginName
+            p.name
           }\n\n=> Make sure to include "@graphql-codegen/${
-            p.pluginName
+            p.name
           }" in your package.json file and install your dependencies.\n\n`;
 
           return [
             ...prev,
             {
-              const: p.pluginName,
+              const: p.name,
               description,
             },
             {
-              const: `@graphql-codegen/${p.pluginName}`,
+              const: `@graphql-codegen/${p.name}`,
               description,
             },
           ];
@@ -104,14 +108,14 @@ async function generate() {
     additionalProperties: true,
   };
 
-  outputRecord.allOf = relevantConfigurations.map(p => {
+  outputRecord.allOf = pluginsConfigurations.map(p => {
     return {
       if: {
         properties: {
           plugins: {
             contains: {
               type: 'string',
-              const: p.pluginName,
+              const: p.name,
             },
           },
         },
@@ -127,7 +131,7 @@ async function generate() {
   // Point the root schema to the config root
   schema.$ref = `#/definitions/${ROOT_IDENTIFIER}`;
 
-  const docsMarkdown = generateDocs(schema, relevantConfigurations);
+  const docsMarkdown = generateDocs(schema, [...pluginsConfigurations, ...presetsConfigurations]);
 
   mkdirp(docsOutDir);
   await Promise.all(
@@ -139,6 +143,19 @@ async function generate() {
   // Remove non-standard keys
   apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
 
+  // Remvoe default to avoid annoying auto-complete
+  apply(schema, `$..*`, v => {
+    if (v && typeof v === 'object' && typeof v[DEFAULT_JSDOC_KEY] !== 'undefined') {
+      if (!v.description) {
+        v.description = '';
+      }
+
+      v.description += `\nDefault value: "${String(v.default)}"`;
+      delete v.default;
+    }
+
+    return v;
+  });
   mkdirp(schemaOutDir);
   await writeFile(join(schemaOutDir, './config.schema.json'), JSON.stringify(schema, null, 2));
 }

@@ -1,5 +1,34 @@
 # @graphql-codegen/typescript-operations
 
+## 1.17.12
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/typescript@1.18.1
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.17.11
+
+### Patch Changes
+
+- 7587fda4: When using avoidOptionals config, @skip, @include resolve into MakeMaybe type
+- Updated dependencies [99819bf1]
+- Updated dependencies [49242c20]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+  - @graphql-codegen/typescript@1.18.0
+
+## 1.17.10
+
+### Patch Changes
+
+- 475aa9b8: @skip, @include directives resolve to optional fields
+- Updated dependencies [faa13973]
+  - @graphql-codegen/visitor-plugin-common@1.17.18
+
 ## 1.17.9
 
 ### Patch Changes

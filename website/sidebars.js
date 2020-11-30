@@ -31,6 +31,7 @@ module.exports = {
           'plugins/typed-document-node',
           'plugins/typescript-apollo-client-helpers',
           'plugins/typescript-graphql-request',
+          'plugins/typescript-react-query',
           'plugins/typescript-react-apollo',
           'plugins/typescript-vue-apollo',
           'plugins/typescript-apollo-angular',
@@ -80,7 +81,12 @@ module.exports = {
         ],
       },
     ],
-    Presets: ['presets/presets-index', 'presets/near-operation-file', 'presets/import-types'],
+    Presets: [
+      'presets/presets-index',
+      'presets/near-operation-file',
+      'presets/import-types',
+      'presets/graphql-modules',
+    ],
     Integrations: [
       'integrations/apollo-local-state',
       'integrations/create-react-app',

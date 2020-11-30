@@ -1,5 +1,32 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.21
+
+### Patch Changes
+
+- 8356f8a2: Extended behaviour to allow support in `internalResolversPrefix` flag for resolvers plugin
+
+## 1.17.20
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.17.19
+
+### Patch Changes
+
+- 99819bf1: Improve DocumentNode optimization for plugins that generate it
+- c3b59e81: Extract buildMapperImport to external function
+
+## 1.17.18
+
+### Patch Changes
+
+- faa13973: Fixed a bug in `parseMapper` that were preventing to use mappers with complex type usages
+
 ## 1.17.17
 
 ### Patch Changes
