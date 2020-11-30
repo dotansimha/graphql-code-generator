@@ -1,5 +1,19 @@
 # @graphql-codegen/java
 
+## 1.18.0
+
+### Minor Changes
+
+- cc3864b3: Added new configuration for `classMembersPrefix`
+
+### Patch Changes
+
+- cc3864b3: Fix issues with compilation errors
+- cc3864b3: Fix issues with missing imports and incorrect naming.
+- 6634ee10: Fixed error compiliation, changed to empty constructor and using setters
+- Updated dependencies [8356f8a2]
+  - @graphql-codegen/visitor-plugin-common@1.17.21
+
 ## 1.17.9
 
 ### Patch Changes

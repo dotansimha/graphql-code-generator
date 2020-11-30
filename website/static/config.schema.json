@@ -296,6 +296,10 @@
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "useImplementingTypes": {
+          "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -729,6 +733,10 @@
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "useImplementingTypes": {
+          "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -1134,6 +1142,10 @@
         "allResolversTypeName": {
           "description": "The type name to use when exporting all resolvers signature as unified type.\nDefault value: \"Resolvers\"",
           "type": "string"
+        },
+        "internalResolversPrefix": {
+          "type": "string",
+          "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2212,6 +2224,10 @@
         "allResolversTypeName": {
           "description": "The type name to use when exporting all resolvers signature as unified type.\nDefault value: \"Resolvers\"",
           "type": "string"
+        },
+        "internalResolversPrefix": {
+          "type": "string",
+          "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",

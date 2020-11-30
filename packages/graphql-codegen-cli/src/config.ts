@@ -25,7 +25,7 @@ function generateSearchPlaces(moduleName: string) {
   // gives .codegenrc.json... but no .codegenrc.config.js
   const dot = extensions.filter(ext => ext !== 'config.js').map(ext => `.${moduleName}rc.${ext}`);
 
-  return regular.concat(dot);
+  return [...regular.concat(dot), 'package.json'];
 }
 
 function customLoader(ext: 'json' | 'yaml' | 'js') {
@@ -54,6 +54,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   const moduleName = 'codegen';
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName),
+    packageProp: moduleName,
     loaders: {
       '.json': customLoader('json'),
       '.yaml': customLoader('yaml'),

@@ -2197,4 +2197,33 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       );
     });
   });
+
+  it('Should generate resolvers with replaced internalResolversPrefix if specified', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      { internalResolversPrefix: '' },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).not.toContain('__resolveType');
+    expect(result.content).toContain('resolveType');
+    expect(result.content).not.toContain('__isTypeOf');
+    expect(result.content).toContain('isTypeOf');
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
+        resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
+        resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
+
+    await validate(result);
+  });
 });

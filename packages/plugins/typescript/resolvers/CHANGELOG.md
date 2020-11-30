@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.18.0
+
+### Minor Changes
+
+- 8356f8a2: Added a new config flag for customizing `isTypeOf` and `resolveType` prefix (`internalResolversPrefix`)
+
+### Patch Changes
+
+- Updated dependencies [8356f8a2]
+- Updated dependencies [1d6a593f]
+  - @graphql-codegen/visitor-plugin-common@1.17.21
+  - @graphql-codegen/typescript@1.19.0
+
 ## 1.17.12
 
 ### Patch Changes

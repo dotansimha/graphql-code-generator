@@ -190,4 +190,20 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   noExport?: boolean;
+  /**
+   * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    useImplementingTypes: true
+   * ```
+   */
+  useImplementingTypes?: boolean;
 }
