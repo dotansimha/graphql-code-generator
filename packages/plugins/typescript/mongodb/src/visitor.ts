@@ -22,7 +22,7 @@ import {
   InterfaceTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { wrapTypeNodeWithModifiers } from '../../../other/visitor-plugin-common/src/utils';
+import { wrapTypeNodeWithModifiers } from '@graphql-codegen/visitor-plugin-common';
 
 type AdditionalField = { path: string; type: string };
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
