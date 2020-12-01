@@ -442,3 +442,29 @@ export function wrapTypeWithModifiers(
 
   return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
 }
+
+export function wrapTypeNodeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  switch (typeNode.kind) {
+    case Kind.NAMED_TYPE: {
+      return `Maybe<${baseType}>`;
+    }
+    case Kind.NON_NULL_TYPE: {
+      const innerType = wrapTypeNodeWithModifiers(baseType, typeNode.type);
+      return clearOptional(innerType);
+    }
+    case Kind.LIST_TYPE: {
+      const innerType = wrapTypeNodeWithModifiers(baseType, typeNode.type);
+      return `Maybe<Array<${innerType}>>`;
+    }
+  }
+}
+
+function clearOptional(str: string): string {
+  const rgx = new RegExp(`^Maybe<(.*?)>$`, 'i');
+
+  if (str.startsWith(`Maybe`)) {
+    return str.replace(rgx, '$1');
+  }
+
+  return str;
+}

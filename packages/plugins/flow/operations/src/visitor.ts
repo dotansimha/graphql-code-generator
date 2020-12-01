@@ -79,7 +79,9 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
         this.convertName.bind(this),
         this.config.namespacedImportName,
         enumsNames,
-        this.config.enumPrefix
+        this.config.enumPrefix,
+        {},
+        true
       )
     );
   }

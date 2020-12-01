@@ -217,7 +217,7 @@ describe('TypeScript Mongo', () => {
         _id: ObjectID,
         foo: string,
       };
-      
+
       export type Test2DbObject = {
         testfield: TestDbObject['_id'],
       };`);

@@ -2435,9 +2435,9 @@ describe('TypeScript Operations Plugin', () => {
           password: Scalars['String'];
           input?: Maybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
-          requireString: Array<Maybe<Scalars['String']>>;
-          innerRequired: Array<Scalars['String']>;
+          testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+          requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+          innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
       await validate(content, config);
@@ -4628,6 +4628,38 @@ function test(q: GetEntityBrandDataQuery): void {
       expect(content).toBeSimilarStringTo(`
         export type UserQuery = { user: Pick<User, 'id' | 'login'> };
       `);
+    });
+
+    it('#4888 - Types for input Lists do not support coercion', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+        }
+
+        type Query {
+          search(testArray: [String], requireString: [String]!, innerRequired: [String!]!): [User!]
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query user($testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
+          search(testArray: $testArray, requireString: $requireString, innerRequired: $innerRequired) {
+            id
+          }
+        }
+      `);
+      const config = { preResolveTypes: true };
+      const { content } = await plugin(schema, [{ location: '', document: ast }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQueryVariables = Exact<{
+        testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+        requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+        innerRequired: Array<Scalars['String']> | Scalars['String'];
+      }>;`);
+      await validate(content, config);
     });
   });
 
