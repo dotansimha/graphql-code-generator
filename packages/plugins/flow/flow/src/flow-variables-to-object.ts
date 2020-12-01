@@ -1,24 +1,7 @@
-import {
-  ParsedEnumValuesMap,
-  OperationVariablesToObject,
-  NormalizedScalarsMap,
-  ConvertNameFn,
-} from '@graphql-codegen/visitor-plugin-common';
+import { OperationVariablesToObject } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class FlowOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(
-    _scalars: NormalizedScalarsMap,
-    _convertName: ConvertNameFn,
-    _namespacedImportName = null,
-    _enumNames: string[] = [],
-    _enumPrefix = true,
-    _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false
-  ) {
-    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues, _applyCoercion);
-  }
-
   private clearOptional(str: string): string {
     if (str.startsWith('?')) {
       return str.replace(/^\?(.*?)$/i, '$1');
