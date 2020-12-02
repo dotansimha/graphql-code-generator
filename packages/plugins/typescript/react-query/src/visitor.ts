@@ -92,8 +92,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         node,
         documentVariableName,
         operationResultType,
-        operationVariablesTypes,
-        hasRequiredVariables
+        operationVariablesTypes
       );
     } else if (operationType === 'Subscription') {
       // eslint-disable-next-line no-console
