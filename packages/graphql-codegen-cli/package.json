@@ -54,7 +54,7 @@
     "@graphql-tools/url-loader": "^6",
     "@graphql-tools/utils": "^6",
     "ansi-escapes": "^4.3.1",
-    "camel-case": "^4.1.1",
+    "camel-case": "^4.1.2",
     "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
     "common-tags": "^1.8.0",
