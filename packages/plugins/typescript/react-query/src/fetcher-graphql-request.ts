@@ -36,10 +36,9 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     node: OperationDefinitionNode,
     documentVariableName: string,
     operationResultType: string,
-    operationVariablesTypes: string,
-    hasRequiredVariables: boolean
+    operationVariablesTypes: string
   ): string {
-    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const variables = `variables?: ${operationVariablesTypes}`;
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
     this.visitor.reactQueryIdentifiersInUse.add('useMutation');
     this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');

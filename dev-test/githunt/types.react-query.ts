@@ -446,7 +446,7 @@ export const SubmitRepositoryDocument = `
     `;
 export const useSubmitRepositoryMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables: SubmitRepositoryMutationVariables,
+  variables?: SubmitRepositoryMutationVariables,
   options?: MutationConfig<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>
 ) =>
   useMutation<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>(
@@ -467,7 +467,7 @@ export const SubmitCommentDocument = `
     ${CommentsPageCommentFragmentDoc}`;
 export const useSubmitCommentMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables: SubmitCommentMutationVariables,
+  variables?: SubmitCommentMutationVariables,
   options?: MutationConfig<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>
 ) =>
   useMutation<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>(
@@ -492,7 +492,7 @@ export const VoteDocument = `
     `;
 export const useVoteMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables: VoteMutationVariables,
+  variables?: VoteMutationVariables,
   options?: MutationConfig<VoteMutation, unknown, VoteMutationVariables>
 ) =>
   useMutation<VoteMutation, unknown, VoteMutationVariables>(
