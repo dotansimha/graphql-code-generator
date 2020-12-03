@@ -9438,29 +9438,29 @@ graphql-extensions@^0.12.6:
     apollo-server-env "^2.4.5"
     apollo-server-types "^0.6.1"
 
-graphql-language-service-interface@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0.tgz#4e2e63242c76197c4f56c61122db68187ea566b3"
-  integrity sha512-r7DQPyhCFY5TlpEukdh9tekJ9hAc7MD9TdOsb5CfAPlsIb1/faVVo2Ty19PxGSYDxygXjwpKLOQD0LqqFuw63A==
+graphql-language-service-interface@2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.3.tgz#bba756d9282b7a2ee818a3cba5702ec9e5da1f7e"
+  integrity sha512-WVWdviRYzb+/z+GS/6ds87OW5qqP0J6l6pGGOE0694x4It57x97//mkRHY5vfNa3knHw5OYwkUYymVzqYu4xTw==
   dependencies:
-    graphql-language-service-parser "^1.6.0"
-    graphql-language-service-types "^1.6.0"
-    graphql-language-service-utils "^2.4.0"
+    graphql-language-service-parser "^1.6.5"
+    graphql-language-service-types "^1.6.3"
+    graphql-language-service-utils "^2.4.3"
     vscode-languageserver-types "^3.15.1"
 
-graphql-language-service-parser@^1.6.0:
+graphql-language-service-parser@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.6.5.tgz#5c9d4c48cbf4b66171f9ec5f182041627669e4f4"
   integrity sha512-Xti3aQfnp7rTYg5dzhUnt3eqs9zbdr0tIC7S02RRcO1J5tWAwqXzv3PpYpWXGar11kD7VzP8amkh81CD4Q/m0Q==
   dependencies:
     graphql-language-service-types "^1.6.3"
 
-graphql-language-service-types@^1.6.0, graphql-language-service-types@^1.6.3:
+graphql-language-service-types@^1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.6.3.tgz#1a6ba25140ec9ffc6d7f36eca7a4069e91500f3d"
   integrity sha512-VDtBhdan1iSe7ad7+eBbsO5rrzWQpC6aV4SxSHEi8AtEQOFXpnL9Lq5jSaN8O02pGvAUr4wNUPu0oRU5g2XmVA==
 
-graphql-language-service-utils@^2.4.0:
+graphql-language-service-utils@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.4.3.tgz#e4f4d1a7e950dcc5ada2456096c88ad5b2bab9f2"
   integrity sha512-XSCMKsV4GuVSGdW8RJTpO/IJDMXgESDJLu67SAuXFXwfel84j1gWrsmBAUeu6Di6NUEoM9NOCEtJv3LbU+/8qw==
