@@ -1800,10 +1800,10 @@
     "@manypkg/get-packages" "^1.0.1"
     semver "^5.4.1"
 
-"@changesets/cli@2.11.2":
-  version "2.11.2"
-  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.11.2.tgz#6c2d9470a9c89e7389db5ac80069a77072079413"
-  integrity sha512-Lfw4MWj46H7dgPzgYmRJ8QbpDxi02dK+21zuWzBjVtsf3AqJgy7oVdXl4Yga/JhBq8eeoxBS9NoCVw8/JOZBcg==
+"@changesets/cli@2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.12.0.tgz#26124b051e6ce6dcc5aa4595588c8cb2ce3e4363"
+  integrity sha512-dGdFkg75zsaEObsG8gwMLglS6sJVjXWwgVTAzEIjqIoWVnKwqZqccTb4gn0noq47uCwy7SqxiAJqGibIy9UOKw==
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@changesets/apply-release-plan" "^4.0.0"
