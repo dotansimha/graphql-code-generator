@@ -48,7 +48,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test --logHeapUsage
+        run: yarn affected:test --logHeapUsage
         env:
           CI: true
       - name: Test dev-tests
