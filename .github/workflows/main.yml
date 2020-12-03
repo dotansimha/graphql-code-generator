@@ -24,6 +24,9 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
+      - name: Bob, check the repo
+        id: bob
+        uses: 'kamilkisiela/bob@master'
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -46,12 +49,15 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Build
+        if: steps.bob.outputs.dirty == 'true'
         run: yarn build
       - name: Test
+        if: steps.bob.outputs.dirty == 'true'
         run: yarn affected:test --logHeapUsage
         env:
           CI: true
       - name: Test dev-tests
+        if: steps.bob.outputs.dirty == 'true'
         run: |
           yarn run generate:examples
           git diff --exit-code -- dev-test/
