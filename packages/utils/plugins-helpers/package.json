@@ -25,7 +25,7 @@
     "lodash": "~4.17.20",
     "lower-case": "2.0.1",
     "param-case": "3.0.3",
-    "pascal-case": "3.1.1",
+    "pascal-case": "3.1.2",
     "tslib": "~2.0.1",
     "upper-case": "2.0.2"
   },
