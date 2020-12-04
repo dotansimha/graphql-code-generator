@@ -24,7 +24,7 @@
     "import-from": "3.0.0",
     "lodash": "~4.17.20",
     "lower-case": "2.0.2",
-    "param-case": "3.0.3",
+    "param-case": "3.0.4",
     "pascal-case": "3.1.2",
     "tslib": "~2.0.1",
     "upper-case": "2.0.2"
