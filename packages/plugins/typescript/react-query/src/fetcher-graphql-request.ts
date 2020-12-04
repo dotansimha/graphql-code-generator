@@ -15,6 +15,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
@@ -24,7 +25,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     this.visitor.reactQueryIdentifiersInUse.add('useQuery');
     this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
 
-    return `export const use${operationResultType} = (client: GraphQLClient, ${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: QueryConfig<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
@@ -35,6 +36,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   generateMutationHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
@@ -43,7 +45,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     this.visitor.reactQueryIdentifiersInUse.add('useMutation');
     this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
 
-    return `export const use${operationResultType} = (client: GraphQLClient, ${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
     options

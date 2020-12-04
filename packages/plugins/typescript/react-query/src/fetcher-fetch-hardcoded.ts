@@ -55,6 +55,7 @@ ${this.getFetchParams()}
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
@@ -63,7 +64,7 @@ ${this.getFetchParams()}
     this.visitor.reactQueryIdentifiersInUse.add('useQuery');
     this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
 
-    return `export const use${operationResultType} = (${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (${variables}, options?: QueryConfig<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
@@ -74,6 +75,7 @@ ${this.getFetchParams()}
   generateMutationHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
@@ -81,7 +83,7 @@ ${this.getFetchParams()}
     this.visitor.reactQueryIdentifiersInUse.add('useMutation');
     this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
 
-    return `export const use${operationResultType} = (${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
     options
