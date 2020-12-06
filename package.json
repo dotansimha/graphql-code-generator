@@ -63,7 +63,7 @@
     "@types/jest": "26.0.16",
     "@types/mkdirp": "1.0.1",
     "@types/node": "14.14.10",
-    "@types/react": "16.14.2",
+    "@types/react": "17.0.0",
     "@types/request": "2.48.5",
     "@typescript-eslint/eslint-plugin": "4.9.0",
     "@typescript-eslint/parser": "3.10.1",
