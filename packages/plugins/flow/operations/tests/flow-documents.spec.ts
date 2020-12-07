@@ -1103,9 +1103,9 @@ describe('Flow Operations Plugin', () => {
           password: $ElementType<Scalars, 'String'>,
           input?: ?InputType,
           mandatoryInput: InputType,
-          testArray?: ?Array<?$ElementType<Scalars, 'String'>>,
-          requireString: Array<?$ElementType<Scalars, 'String'>>,
-          innerRequired: Array<$ElementType<Scalars, 'String'>>,
+          testArray?: ?Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
+          requireString: Array<?$ElementType<Scalars, 'String'>> | ?$ElementType<Scalars, 'String'>,
+          innerRequired: Array<$ElementType<Scalars, 'String'>> | $ElementType<Scalars, 'String'>,
         };`
       );
       validateFlow(result);
@@ -1252,8 +1252,7 @@ describe('Flow Operations Plugin', () => {
       export type UserQueryVariables = {
         showAddress: $ElementType<Scalars, 'Boolean'>,
       };
-      
-      
+
       export type UserQuery = { user: $MakeOptional<$Pick<User, { id: *, name?: *, address: * }>, { address: * }> };
       `);
 

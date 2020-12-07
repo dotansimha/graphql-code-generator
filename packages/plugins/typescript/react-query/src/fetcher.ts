@@ -13,7 +13,6 @@ export interface FetcherRenderer {
     node: OperationDefinitionNode,
     documentVariableName: string,
     operationResultType: string,
-    operationVariablesTypes: string,
-    hasRequiredVariables: boolean
+    operationVariablesTypes: string
   ) => string;
 }
