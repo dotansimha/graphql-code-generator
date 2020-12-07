@@ -132,3 +132,5 @@ GraphQL-Codegen is using [`cosmiconfig`](https://github.com/davidtheclark/cosmic
 That means, you can use `codegen.yml`, but also `codegen.json` or `codegen.js` will work. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
 
 For more information, [please refer to `cosmiconfig` documentation](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).
+
+GraphQL-Codgen is also integratable with [`GraphQL-Config](https://graphql-config.com/), so you can specify `.graphqlrc` as your configuration file.
