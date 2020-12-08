@@ -130,6 +130,7 @@ export const createWatcher = (
         newParsedConfig.overwrite = config.overwrite;
         newParsedConfig.configFilePath = config.configFilePath;
         config = newParsedConfig;
+        initalContext.updateConfig(config);
       }
 
       debouncedExec();
