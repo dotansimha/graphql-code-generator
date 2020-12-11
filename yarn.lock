@@ -2668,10 +2668,10 @@
     "@graphql-tools/utils" "^7.1.2"
     tslib "~2.0.1"
 
-"@graphql-tools/url-loader@6.6.0":
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.6.0.tgz#e825f156f0a7ca644d9140ce664f0883e4c25da3"
-  integrity sha512-iZp6bCKU0AmGKRrsDOYqehg5mVImQS1/JMBvh73VPRp9ry2I1oxsE124Q54t3lHhD2b1wrQ9AJlXxgNsuxmJtQ==
+"@graphql-tools/url-loader@6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.7.0.tgz#f89e0db048fa083a19034d54febaf9d29f6d8b64"
+  integrity sha512-2ZU4kVxfbodDJjOmoDdwN9Wbo41T8NeI6+cIoD53hbNP+JjHf+E29t/LQ+GoXv/zyUsHWIiQbv9sSO+v1XKyNw==
   dependencies:
     "@graphql-tools/delegate" "^7.0.1"
     "@graphql-tools/utils" "^7.1.4"
@@ -2681,7 +2681,7 @@
     eventsource "1.0.7"
     extract-files "9.0.0"
     graphql-upload "^11.0.0"
-    graphql-ws "2.0.1"
+    graphql-ws "3.0.2"
     is-promise "4.0.0"
     isomorphic-form-data "2.0.0"
     isomorphic-ws "4.0.1"
@@ -9615,10 +9615,10 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.3"
     object-path "^0.11.4"
 
-graphql-ws@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-2.0.1.tgz#36971e5453dbf0a59c5674460f7067011e7d6cd7"
-  integrity sha512-K8eaR00TZHFMVw2viZfjDxLWdF1hUIR8xY9Zow6tLI2CLT3E4homJ4XZNRrxEoQjAXEQoUHPcmGkDDynWivNrQ==
+graphql-ws@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-3.0.2.tgz#46fcd1bfa60e432e669b69ef9e91730f0cdbff33"
+  integrity sha512-+5z7ztNSn0P7W8LJTTG2RnN4RFFuwRcLOhZslas69Ko8KTk9UH7wLP9w9jnYB/p+rzMILT7KYFwb2OIWIJRq2A==
 
 graphql@15.4.0, graphql@^14.5.3, graphql@^15.0.0:
   version "15.4.0"
