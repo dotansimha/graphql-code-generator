@@ -3,6 +3,7 @@ import { parse } from 'graphql';
 
 import { plugin } from '../src/index';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('graphql-codegen typescript-graphql-document-nodes', () => {
   it('Should generate simple module with one file', async () => {
@@ -379,5 +380,33 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     \${Fragment1}\`;
     `);
     validateTs(result.content);
+  });
+
+  it('Should replace kinds on demand', async () => {
+    const result = plugin(
+      null,
+      [
+        {
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
+            query MyQuery {
+              field
+            }
+          `),
+        },
+      ],
+      {
+        documentMode: DocumentMode.documentNode,
+        replaceKinds: true,
+      },
+      { outputFile: '' }
+    ) as Types.ComplexPluginOutput;
+
+    const content = result.content;
+
+    expect(content).toMatch(`"kind": Kind.DOCUMENT`);
+    expect(content).not.toMatch(`"kind": "`);
+    expect(result.prepend).toContainEqual(`import { Kind } from 'graphql/language/kinds';`);
+    validateTs(content);
   });
 });

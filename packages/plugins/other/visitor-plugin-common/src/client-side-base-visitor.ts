@@ -117,6 +117,12 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    */
   optimizeDocumentNode?: boolean;
   /**
+   * @default false
+   * @description If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.
+   * This will replace all "kind" strings with a reference to Kind object of GraphQL-JS.
+   */
+  replaceKinds?: boolean;
+  /**
    * @default ""
    * @description This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
    * This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
@@ -166,6 +172,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   importOperationTypesFrom?: string;
   globalNamespace?: boolean;
   pureMagicComment?: boolean;
+  replaceKinds?: boolean;
   optimizeDocumentNode: boolean;
 }
 
@@ -189,6 +196,7 @@ export class ClientSideBaseVisitor<
       scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       optimizeDocumentNode: getConfigValue(rawConfig.optimizeDocumentNode, true),
+      replaceKinds: getConfigValue(rawConfig.replaceKinds, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       documentNodeImport: rawConfig.documentNodeImport || null,
@@ -279,6 +287,22 @@ export class ClientSideBaseVisitor<
     return documentStr;
   }
 
+  private _stringifyNode(doc: object): string {
+    if (this.config.replaceKinds) {
+      let stringifiedDoc = JSON.stringify(doc);
+
+      Object.keys(Kind).forEach((identifier: keyof typeof Kind) => {
+        const value = Kind[identifier];
+
+        stringifiedDoc = stringifiedDoc.replace(new RegExp(`"kind":"${value}"`, 'g'), `"kind": Kind.${identifier}`);
+      });
+
+      return stringifiedDoc;
+    }
+
+    return JSON.stringify(doc);
+  }
+
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const fragments = this._transformFragments(node);
 
@@ -293,7 +317,7 @@ export class ClientSideBaseVisitor<
         gqlObj = optimizeDocumentNode(gqlObj);
       }
 
-      return JSON.stringify(gqlObj);
+      return this._stringifyNode(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       let gqlObj = gqlTag([doc]);
 
@@ -303,14 +327,16 @@ export class ClientSideBaseVisitor<
 
       if (fragments.length > 0) {
         const definitions = [
-          ...gqlObj.definitions.map(t => JSON.stringify(t)),
+          ...gqlObj.definitions.map(t => this._stringifyNode(t)),
           ...fragments.map(name => `...${name}.definitions`),
         ].join();
 
-        return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
+        const documentKind = this.config.replaceKinds ? `Kind.DOCUMENT` : `"${Kind.DOCUMENT}"`;
+
+        return `{"kind":${documentKind},"definitions":[${definitions}]}`;
       }
 
-      return JSON.stringify(gqlObj);
+      return this._stringifyNode(gqlObj);
     } else if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';
     }
@@ -434,6 +460,11 @@ export class ClientSideBaseVisitor<
       case DocumentMode.documentNodeImportFragments: {
         const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
         const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
+
+        if (this.config.replaceKinds) {
+          const kindImport = this._parseImport('graphql/language/kinds#Kind');
+          this._imports.add(this._generateImport(kindImport, 'Kind', false));
+        }
 
         if (tagImport) {
           this._imports.add(tagImport);
