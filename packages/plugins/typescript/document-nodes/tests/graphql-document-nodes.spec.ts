@@ -406,7 +406,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
     expect(content).toMatch(`"kind": Kind.DOCUMENT`);
     expect(content).not.toMatch(`"kind": "`);
-    expect(result.prepend).toContainEqual(`import { Kind } from 'graphql/language/kinds';`);
+    expect(result.prepend).toContainEqual(`import { Kind } from 'graphql';`);
     validateTs(content);
   });
 });
