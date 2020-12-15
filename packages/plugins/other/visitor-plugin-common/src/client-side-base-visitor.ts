@@ -462,7 +462,7 @@ export class ClientSideBaseVisitor<
         const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
 
         if (this.config.replaceKinds) {
-          const kindImport = this._parseImport('graphql/language/kinds#Kind');
+          const kindImport = this._parseImport('graphql#Kind');
           this._imports.add(this._generateImport(kindImport, 'Kind', false));
         }
 
