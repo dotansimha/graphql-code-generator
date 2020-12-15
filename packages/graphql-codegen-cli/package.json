@@ -52,7 +52,7 @@
     "@graphql-tools/load": "^6",
     "@graphql-tools/prisma-loader": "^6",
     "@graphql-tools/url-loader": "^6",
-    "@graphql-tools/utils": "^6",
+    "@graphql-tools/utils": "^7.0.0",
     "ansi-escapes": "^4.3.1",
     "camel-case": "^4.1.2",
     "chalk": "^4.1.0",
@@ -100,7 +100,7 @@
     "@types/valid-url": "1.0.3",
     "bdd-stdin": "0.2.0",
     "dotenv": "8.2.0",
-    "js-yaml": "3.14.0",
+    "js-yaml": "3.14.1",
     "make-dir": "3.1.0",
     "prettier": "2.2.1"
   },
