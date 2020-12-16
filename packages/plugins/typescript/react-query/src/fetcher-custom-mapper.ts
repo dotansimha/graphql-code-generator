@@ -38,6 +38,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
@@ -46,7 +47,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     this.visitor.reactQueryIdentifiersInUse.add('useQuery');
     this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
 
-    return `export const use${operationResultType} = (${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (${variables}, options?: QueryConfig<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
@@ -57,6 +58,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
   generateMutationHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
@@ -64,7 +66,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     this.visitor.reactQueryIdentifiersInUse.add('useMutation');
     this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
 
-    return `export const use${operationResultType} = (${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
     useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
     options

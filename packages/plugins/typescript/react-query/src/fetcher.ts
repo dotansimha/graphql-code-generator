@@ -5,6 +5,7 @@ export interface FetcherRenderer {
   generateQueryHook: (
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
@@ -12,6 +13,7 @@ export interface FetcherRenderer {
   generateMutationHook: (
     node: OperationDefinitionNode,
     documentVariableName: string,
+    operationName: string,
     operationResultType: string,
     operationVariablesTypes: string
   ) => string;
