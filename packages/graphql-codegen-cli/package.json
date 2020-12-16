@@ -83,6 +83,7 @@
     "upper-case": "^2.0.2",
     "valid-url": "^1.0.9",
     "wrap-ansi": "^7.0.0",
+    "yaml": "^1.10.0",
     "yargs": "^16.1.1"
   },
   "devDependencies": {

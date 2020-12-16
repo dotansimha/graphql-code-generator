@@ -7,6 +7,7 @@ import { GraphQLConfig } from 'graphql-config';
 import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
 import { GraphQLSchema } from 'graphql';
+import yaml from 'yaml';
 
 export type YamlCliFlags = {
   config: string;
@@ -39,7 +40,13 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
     }
 
     if (ext === 'yaml') {
-      return defaultLoaders['.yaml'](filepath, content);
+      try {
+        const result = yaml.parse(content, { prettyErrors: true, merge: true });
+        return result;
+      } catch (error) {
+        error.message = `YAML Error in ${filepath}:\n${error.message}`;
+        throw error;
+      }
     }
 
     if (ext === 'js') {
