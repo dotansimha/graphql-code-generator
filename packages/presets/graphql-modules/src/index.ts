@@ -84,6 +84,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         )
       );
 
+      const shouldDeclare = filename.endsWith('.d.ts');
+
       return {
         filename,
         schema: options.schema,
@@ -102,6 +104,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importNamespace: importTypesNamespace,
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'namespace',
+                shouldDeclare,
                 schema,
                 baseVisitor,
                 rootTypes: [
