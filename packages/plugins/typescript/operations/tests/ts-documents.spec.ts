@@ -4661,6 +4661,66 @@ function test(q: GetEntityBrandDataQuery): void {
       }>;`);
       await validate(content, config);
     });
+
+    it('#5263 - Interface that implements interface results in incorrect types', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Entity {
+          id: ID!
+        }
+
+        interface NamedEntity implements Entity {
+          id: ID!
+          name: String!
+        }
+
+        type Session implements Entity {
+          id: ID!
+          data: String!
+        }
+
+        type User implements NamedEntity & Entity {
+          id: ID!
+          name: String!
+        }
+
+        type Query {
+          entity(id: ID!): Entity!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        query entity {
+          entity(id: 1) {
+            id
+            ... on NamedEntity {
+              name
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type EntityQuery = (
+        { __typename?: 'Query' }
+        & { entity: (
+          { __typename?: 'Session' }
+          & Pick<Session, 'id'>
+        ) | (
+          { __typename?: 'User' }
+          & Pick<User, 'name' | 'id'>
+        ) }
+      );
+      `);
+    });
   });
 
   describe('conditional directives handling', () => {
