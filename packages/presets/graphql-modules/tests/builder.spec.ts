@@ -160,7 +160,6 @@ test('encapsulate: should wrap correctly with a declared namespace', () => {
   });
 
   expect(output).toBeSimilarStringTo(`declare namespace TestModule {`);
-  expect(output).toMatchSnapshot();
 });
 
 test('encapsulate: should wrap correctly with prefix', () => {
