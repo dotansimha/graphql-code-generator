@@ -22,10 +22,11 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
-    this.visitor.reactQueryIdentifiersInUse.add('useQuery');
-    this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
 
-    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: ${hookConfig.query.options}<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
@@ -42,10 +43,12 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
-    this.visitor.reactQueryIdentifiersInUse.add('useMutation');
-    this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
 
-    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
+
+    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
     options

@@ -44,10 +44,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
-    this.visitor.reactQueryIdentifiersInUse.add('useQuery');
-    this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
 
-    return `export const use${operationName} = (${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (${variables}, options?: ${
+      hookConfig.query.options
+    }<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
@@ -63,10 +66,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
-    this.visitor.reactQueryIdentifiersInUse.add('useMutation');
-    this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (${variables}, options?: ${
+      hookConfig.mutation.options
+    }<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
     useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
     options

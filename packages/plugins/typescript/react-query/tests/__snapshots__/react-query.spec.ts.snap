@@ -17,7 +17,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -30,7 +30,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
     myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options
@@ -54,7 +54,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -67,7 +67,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
     myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options
@@ -91,7 +91,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
@@ -104,7 +104,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
     options
@@ -128,7 +128,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (client: GraphQLClient, variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (client: GraphQLClient, variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
@@ -141,7 +141,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (client: GraphQLClient, variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (client: GraphQLClient, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables),
     options
@@ -165,7 +165,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -178,7 +178,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options
@@ -202,7 +202,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -215,7 +215,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options
@@ -239,7 +239,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -252,7 +252,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options
@@ -276,7 +276,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: QueryConfig<TTestQuery>) => 
+export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
   useQuery<TTestQuery>(
     ['test', variables],
     fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
@@ -289,7 +289,7 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: MutationConfig<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
     fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
     options

@@ -37,10 +37,11 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
-    this.visitor.reactQueryIdentifiersInUse.add('useQuery');
-    this.visitor.reactQueryIdentifiersInUse.add('QueryConfig');
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
 
-    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}, options?: QueryConfig<${operationResultType}>) => 
+    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}, options?: ${hookConfig.query.options}<${operationResultType}>) => 
   useQuery<${operationResultType}>(
     ['${node.name.value}', variables],
     fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
@@ -56,10 +57,11 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     operationVariablesTypes: string
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
-    this.visitor.reactQueryIdentifiersInUse.add('useMutation');
-    this.visitor.reactQueryIdentifiersInUse.add('MutationConfig');
+    const hookConfig = this.visitor.getReactQueryHooksMap();
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}, options?: MutationConfig<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
     fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
     options
