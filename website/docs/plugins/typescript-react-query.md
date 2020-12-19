@@ -176,7 +176,7 @@ type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables):
 ```tsx
 export const fetchData = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
   return async () => {
-    const res = await fetch('https://graphql.organiced.app/v1/graphql', {
+    const res = await fetch('https://api.url', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
