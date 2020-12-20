@@ -379,12 +379,12 @@ export const CommentDocument = `
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export const useCommentQuery = (
+export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: CommentQueryVariables,
-  options?: UseQueryOptions<CommentQuery>
+  options?: UseQueryOptions<CommentQuery, TError, TData>
 ) =>
-  useQuery<CommentQuery>(
+  useQuery<CommentQuery, TError, TData>(
     ['Comment', variables],
     fetcher<CommentQuery, CommentQueryVariables>(
       dataSource.endpoint,
@@ -402,12 +402,12 @@ export const CurrentUserForProfileDocument = `
   }
 }
     `;
-export const useCurrentUserForProfileQuery = (
+export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables?: CurrentUserForProfileQueryVariables,
-  options?: UseQueryOptions<CurrentUserForProfileQuery>
+  options?: UseQueryOptions<CurrentUserForProfileQuery, TError, TData>
 ) =>
-  useQuery<CurrentUserForProfileQuery>(
+  useQuery<CurrentUserForProfileQuery, TError, TData>(
     ['CurrentUserForProfile', variables],
     fetcher<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
       dataSource.endpoint,
@@ -427,12 +427,12 @@ export const FeedDocument = `
   }
 }
     ${FeedEntryFragmentDoc}`;
-export const useFeedQuery = (
+export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: FeedQueryVariables,
-  options?: UseQueryOptions<FeedQuery>
+  options?: UseQueryOptions<FeedQuery, TError, TData>
 ) =>
-  useQuery<FeedQuery>(
+  useQuery<FeedQuery, TError, TData>(
     ['Feed', variables],
     fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, variables),
     options
