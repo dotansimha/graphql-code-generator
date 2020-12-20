@@ -37,7 +37,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       ${variables}, 
       ${options}
     ) => 
-    useQuery<${operationResultType}, TError, TData>(
+    ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ['${node.name.value}', variables],
       fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
       options
@@ -67,7 +67,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       client: GraphQLClient, 
       ${options}
     ) => 
-    useMutation<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+    ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables)(),
       options
     );`;

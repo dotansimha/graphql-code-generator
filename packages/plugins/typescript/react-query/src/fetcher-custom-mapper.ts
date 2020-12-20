@@ -82,7 +82,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
       TError = unknown,
       TContext = unknown
     >(${options}) => 
-    useMutation<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+    ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       (${variables}) => ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
       options
     );`;

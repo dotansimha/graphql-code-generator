@@ -51,7 +51,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       ${variables}, 
       ${options}
     ) => 
-    useQuery<${operationResultType}, TError, TData>(
+    ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ['${node.name.value}', variables],
       fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
       options
@@ -79,7 +79,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       dataSource: { endpoint: string, fetchParams?: RequestInit }, 
       ${options}
     ) => 
-    useMutation<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+    ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
       options
     );`;
