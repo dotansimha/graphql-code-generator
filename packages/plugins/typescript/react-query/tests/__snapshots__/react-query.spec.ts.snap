@@ -36,11 +36,14 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-    useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-  );"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: custom-mapper Should generate query correctly with internal mapper 1`] = `
@@ -79,11 +82,14 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-    useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-  );"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: fetch Should generate query and mutation correctly 1`] = `
@@ -123,11 +129,17 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
-    options
-  );"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
+    ) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: graphql-request Should generate query correctly with client 1`] = `
@@ -167,11 +179,17 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (client: GraphQLClient, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
-    options
-  );"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient, 
+      options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
+    ) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with fetch config 1`] = `
@@ -210,11 +228,14 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-);"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint 1`] = `
@@ -253,11 +274,14 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-);"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint from env var 1`] = `
@@ -296,11 +320,14 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-);"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;
 
 exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint from just identifier 1`] = `
@@ -339,9 +366,12 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
-  useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
-    options
-);"
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
 `;

@@ -444,11 +444,11 @@ export const SubmitRepositoryDocument = `
   }
 }
     `;
-export const useSubmitRepositoryMutation = (
+export const useSubmitRepositoryMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>
+  options?: UseMutationOptions<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>
 ) =>
-  useMutation<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>(
+  useMutation<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>(
     (variables?: SubmitRepositoryMutationVariables) =>
       fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
         dataSource.endpoint,
@@ -465,11 +465,11 @@ export const SubmitCommentDocument = `
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export const useSubmitCommentMutation = (
+export const useSubmitCommentMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>
+  options?: UseMutationOptions<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>
 ) =>
-  useMutation<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>(
+  useMutation<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>(
     (variables?: SubmitCommentMutationVariables) =>
       fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
         dataSource.endpoint,
@@ -490,11 +490,11 @@ export const VoteDocument = `
   }
 }
     `;
-export const useVoteMutation = (
+export const useVoteMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<VoteMutation, unknown, VoteMutationVariables>
+  options?: UseMutationOptions<VoteMutation, TError, VoteMutationVariables, TContext>
 ) =>
-  useMutation<VoteMutation, unknown, VoteMutationVariables>(
+  useMutation<VoteMutation, TError, VoteMutationVariables, TContext>(
     (variables?: VoteMutationVariables) =>
       fetcher<VoteMutation, VoteMutationVariables>(
         dataSource.endpoint,

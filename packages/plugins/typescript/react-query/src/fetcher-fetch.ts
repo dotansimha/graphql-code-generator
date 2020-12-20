@@ -70,10 +70,18 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
-  useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
-    (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
-    options
-  );`;
+    const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
+
+    return `export const use${operationName} = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      ${options}
+    ) => 
+    useMutation<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
+      options
+    );`;
   }
 }

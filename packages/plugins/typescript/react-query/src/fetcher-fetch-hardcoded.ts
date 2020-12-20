@@ -93,10 +93,15 @@ ${this.getFetchParams()}
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
-  useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
-    (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
-    options
-);`;
+    const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
+
+    return `export const use${operationName} = <
+      TError = unknown,
+      TContext = unknown
+    >(${options}) => 
+    useMutation<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
+      options
+    );`;
   }
 }
