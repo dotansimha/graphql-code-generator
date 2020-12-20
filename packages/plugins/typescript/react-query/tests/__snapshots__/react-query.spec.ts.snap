@@ -17,12 +17,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -54,12 +60,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -91,12 +103,19 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -128,12 +147,19 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (client: GraphQLClient, variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient, 
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -165,12 +191,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -202,12 +234,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -239,12 +277,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -276,12 +320,18 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestQuery = (variables?: TTestQueryVariables, options?: UseQueryOptions<TTestQuery>) => 
-  useQuery<TTestQuery>(
-    ['test', variables],
-    fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-    options
-  );
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {

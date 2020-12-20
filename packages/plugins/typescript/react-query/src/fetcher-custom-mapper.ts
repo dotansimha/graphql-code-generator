@@ -44,18 +44,24 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
-    const hookConfig = this.visitor.getReactQueryHooksMap();
+    const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
 
-    return `export const use${operationName} = (${variables}, options?: ${
-      hookConfig.query.options
-    }<${operationResultType}>) => 
-  useQuery<${operationResultType}>(
-    ['${node.name.value}', variables],
-    ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
-    options
-  );`;
+    const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
+
+    return `export const use${operationName} = <
+      TData = ${operationResultType},
+      TError = unknown
+    >(
+      ${variables}, 
+      ${options}
+    ) => 
+    ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
+      ['${node.name.value}', variables],
+      ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
+      options
+    );`;
   }
 
   generateMutationHook(
@@ -66,7 +72,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
-    const hookConfig = this.visitor.getReactQueryHooksMap();
+    const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 

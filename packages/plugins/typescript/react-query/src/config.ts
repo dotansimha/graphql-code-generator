@@ -29,10 +29,4 @@ export interface ReactQueryRawPluginConfig
    * - `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).
    */
   fetcher: 'fetch' | HardcodedFetch | 'graphql-request' | string;
-
-  /**
-   * @description Specify the react-query version
-   * @default 3
-   */
-  reactQueryMajorVersion?: number;
 }

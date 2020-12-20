@@ -17,7 +17,7 @@ import { pascalCase } from 'pascal-case';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {}
 
-export interface ReactQueryVersionMap {
+export interface ReactQueryMethodMap {
   query: {
     hook: string;
     options: string;
@@ -32,28 +32,15 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   private _externalImportPrefix: string;
   public fetcher: FetcherRenderer;
   public reactQueryIdentifiersInUse = new Set<string>();
-  public reactQueryMajorVersion = 3;
 
-  public queryVersionMap: { [version: number]: ReactQueryVersionMap } = {
-    2: {
-      query: {
-        hook: 'useQuery',
-        options: 'QueryConfig',
-      },
-      mutation: {
-        hook: 'useMutation',
-        options: 'MutationConfig',
-      },
+  public queryMethodMap: ReactQueryMethodMap = {
+    query: {
+      hook: 'useQuery',
+      options: 'UseQueryOptions',
     },
-    3: {
-      query: {
-        hook: 'useQuery',
-        options: 'UseQueryOptions',
-      },
-      mutation: {
-        hook: 'useMutation',
-        options: 'UseMutationOptions',
-      },
+    mutation: {
+      hook: 'useMutation',
+      options: 'UseMutationOptions',
     },
   };
 
@@ -69,9 +56,6 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
     this.fetcher = this.createFetcher(rawConfig.fetcher || 'fetch');
-
-    const version = rawConfig['reactQueryMajorVersion'];
-    this.reactQueryMajorVersion = version ?? 3;
 
     autoBind(this);
   }
@@ -90,10 +74,6 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     }
 
     return new CustomMapperFetcher(this, raw as string);
-  }
-
-  public getReactQueryHooksMap() {
-    return this.queryVersionMap[this.reactQueryMajorVersion];
   }
 
   public getImports(): string[] {

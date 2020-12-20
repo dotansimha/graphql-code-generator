@@ -22,16 +22,26 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
-    const hookConfig = this.visitor.getReactQueryHooksMap();
+
+    const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
 
-    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: ${hookConfig.query.options}<${operationResultType}>) => 
-  useQuery<${operationResultType}>(
-    ['${node.name.value}', variables],
-    fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
-    options
-  );`;
+    const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
+
+    return `export const use${operationName} = <
+      TData = ${operationResultType},
+      TError = unknown
+    >(
+      client: GraphQLClient, 
+      ${variables}, 
+      ${options}
+    ) => 
+    useQuery<${operationResultType}, TError, TData>(
+      ['${node.name.value}', variables],
+      fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
+      options
+    );`;
   }
 
   generateMutationHook(
@@ -44,7 +54,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     const variables = `variables?: ${operationVariablesTypes}`;
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
 
-    const hookConfig = this.visitor.getReactQueryHooksMap();
+    const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
