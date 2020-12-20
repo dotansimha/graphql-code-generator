@@ -1,4 +1,4 @@
-import { useQuery, QueryConfig, useMutation, MutationConfig } from 'react-query';
+import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -382,7 +382,7 @@ export const CommentDocument = `
 export const useCommentQuery = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: CommentQueryVariables,
-  options?: QueryConfig<CommentQuery>
+  options?: UseQueryOptions<CommentQuery>
 ) =>
   useQuery<CommentQuery>(
     ['Comment', variables],
@@ -405,7 +405,7 @@ export const CurrentUserForProfileDocument = `
 export const useCurrentUserForProfileQuery = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables?: CurrentUserForProfileQueryVariables,
-  options?: QueryConfig<CurrentUserForProfileQuery>
+  options?: UseQueryOptions<CurrentUserForProfileQuery>
 ) =>
   useQuery<CurrentUserForProfileQuery>(
     ['CurrentUserForProfile', variables],
@@ -430,7 +430,7 @@ export const FeedDocument = `
 export const useFeedQuery = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: FeedQueryVariables,
-  options?: QueryConfig<FeedQuery>
+  options?: UseQueryOptions<FeedQuery>
 ) =>
   useQuery<FeedQuery>(
     ['Feed', variables],
@@ -446,16 +446,16 @@ export const SubmitRepositoryDocument = `
     `;
 export const useSubmitRepositoryMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: SubmitRepositoryMutationVariables,
-  options?: MutationConfig<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>
+  options?: UseMutationOptions<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>
 ) =>
   useMutation<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>(
-    fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      SubmitRepositoryDocument,
-      variables
-    ),
+    (variables?: SubmitRepositoryMutationVariables) =>
+      fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        SubmitRepositoryDocument,
+        variables
+      )(),
     options
   );
 export const SubmitCommentDocument = `
@@ -467,16 +467,16 @@ export const SubmitCommentDocument = `
     ${CommentsPageCommentFragmentDoc}`;
 export const useSubmitCommentMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: SubmitCommentMutationVariables,
-  options?: MutationConfig<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>
+  options?: UseMutationOptions<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>
 ) =>
   useMutation<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>(
-    fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      SubmitCommentDocument,
-      variables
-    ),
+    (variables?: SubmitCommentMutationVariables) =>
+      fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        SubmitCommentDocument,
+        variables
+      )(),
     options
   );
 export const VoteDocument = `
@@ -492,15 +492,15 @@ export const VoteDocument = `
     `;
 export const useVoteMutation = (
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: VoteMutationVariables,
-  options?: MutationConfig<VoteMutation, unknown, VoteMutationVariables>
+  options?: UseMutationOptions<VoteMutation, unknown, VoteMutationVariables>
 ) =>
   useMutation<VoteMutation, unknown, VoteMutationVariables>(
-    fetcher<VoteMutation, VoteMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      VoteDocument,
-      variables
-    ),
+    (variables?: VoteMutationVariables) =>
+      fetcher<VoteMutation, VoteMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        VoteDocument,
+        variables
+      )(),
     options
   );
