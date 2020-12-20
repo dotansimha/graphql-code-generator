@@ -30,9 +30,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
   );"
 `;
@@ -67,9 +67,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
   );"
 `;
@@ -104,9 +104,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
     options
   );"
 `;
@@ -141,9 +141,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (client: GraphQLClient, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (client: GraphQLClient, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
     options
   );"
 `;
@@ -178,9 +178,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
 );"
 `;
@@ -215,9 +215,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
 );"
 `;
@@ -252,9 +252,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
 );"
 `;
@@ -289,9 +289,9 @@ export const TestDocument = \`
   }
 }
     \`;
-export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
   useMutation<TTestMutation, unknown, TTestMutationVariables>(
-    fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+    (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
     options
 );"
 `;

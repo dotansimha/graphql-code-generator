@@ -61,9 +61,9 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (dataSource: { endpoint: string, fetchParams?: RequestInit }, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
-    fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
+    (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
     options
   );`;
   }

@@ -48,9 +48,9 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (client: GraphQLClient, ${variables}, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
+    return `export const use${operationName} = (client: GraphQLClient, options?: ${hookConfig.mutation.options}<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
   useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
-    fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
+    (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables)(),
     options
   );`;
   }

@@ -70,11 +70,11 @@ export class CustomMapperFetcher implements FetcherRenderer {
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
-    return `export const use${operationName} = (${variables}, options?: ${
+    return `export const use${operationName} = (options?: ${
       hookConfig.mutation.options
     }<${operationResultType}, unknown, ${operationVariablesTypes}>) => 
     useMutation<${operationResultType}, unknown, ${operationVariablesTypes}>(
-    ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
+    (${variables}) => ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
     options
   );`;
   }

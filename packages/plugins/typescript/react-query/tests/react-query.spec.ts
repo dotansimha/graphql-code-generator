@@ -75,9 +75,9 @@ describe('React-Query', () => {
         options
       );`);
       expect(out.content)
-        .toBeSimilarStringTo(`export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+        .toBeSimilarStringTo(`export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-      myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );`);
 
@@ -105,9 +105,9 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content)
-        .toBeSimilarStringTo(`export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+        .toBeSimilarStringTo(`export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-      myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );`);
 
@@ -141,9 +141,9 @@ describe('React-Query', () => {
         options
       );`);
       expect(out.content)
-        .toBeSimilarStringTo(`    export const useTestMutation = (client: GraphQLClient, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+        .toBeSimilarStringTo(`    export const useTestMutation = (client: GraphQLClient, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-      fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables),
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
       options
     );`);
 
@@ -194,9 +194,9 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content)
-        .toBeSimilarStringTo(`    export const useTestMutation = (variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+        .toBeSimilarStringTo(`    export const useTestMutation = (options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
     useMutation<TTestMutation, unknown, TTestMutationVariables>(
-      fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables),
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );`);
 
@@ -335,9 +335,9 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content)
-        .toBeSimilarStringTo(`    export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TTestMutationVariables, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
+        .toBeSimilarStringTo(`    export const useTestMutation = (dataSource: { endpoint: string, fetchParams?: RequestInit }, options?: UseMutationOptions<TTestMutation, unknown, TTestMutationVariables>) => 
       useMutation<TTestMutation, unknown, TTestMutationVariables>(
-        fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+        (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
         options
       );`);
 
