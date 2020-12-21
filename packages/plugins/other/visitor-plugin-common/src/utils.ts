@@ -104,7 +104,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
     return indent(`/** ${lines[0]} */\n`, indentLevel);
   }
   lines = ['/**', ...lines.map(line => ` * ${line}`), ' */\n'];
-  return lines.map(line => indent(line, indentLevel)).join('\n');
+  return stripTrailingSpaces(lines.map(line => indent(line, indentLevel)).join('\n'));
 }
 
 export class DeclarationBlock {
@@ -231,13 +231,13 @@ export class DeclarationBlock {
       result += this._config.blockTransformer('{}');
     }
 
-    return (
+    return stripTrailingSpaces(
       (this._comment ? this._comment : '') +
-      result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
-        ? ''
-        : ';') +
-      '\n'
+        result +
+        (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+          ? ''
+          : ';') +
+        '\n'
     );
   }
 }
@@ -467,4 +467,8 @@ function clearOptional(str: string): string {
   }
 
   return str;
+}
+
+function stripTrailingSpaces(str: string): string {
+  return str.replace(/ +\n/g, '\n');
 }
