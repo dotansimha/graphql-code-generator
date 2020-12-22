@@ -2707,10 +2707,10 @@
     valid-url "1.0.9"
     websocket "1.0.32"
 
-"@graphql-tools/utils@7.1.6":
-  version "7.1.6"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.1.6.tgz#307e99f9a1a39ee3202ccdf8ce7528d4fe1a6103"
-  integrity sha512-vupjLA3lobKaqFsQJoPqaUhZ525F+SbqhAtZl/mug96EAjjGMi1KpZMqIMP+eyYlVQFgyV1Mej9LALrGU1c9SQ==
+"@graphql-tools/utils@7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.2.0.tgz#e1d57c0b17231356c9df44c0a4e66a03814775b4"
+  integrity sha512-dVQHhuh/W6KlmSOQZliHH7ba41dsCOhqPwkeW6dwOjy0FqSx/hGihKZyABDmjNkDbowr2141aAIJYfj2XdoX8Q==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.2"
@@ -15644,10 +15644,10 @@ react-markdown@5.0.3:
     unist-util-visit "^2.0.0"
     xtend "^4.0.1"
 
-react-monaco-editor@0.41.1:
-  version "0.41.1"
-  resolved "https://registry.yarnpkg.com/react-monaco-editor/-/react-monaco-editor-0.41.1.tgz#64baf18b294822b5607ba5352cdd9bb902ac63e5"
-  integrity sha512-axXoPL1F5AL6mSB43fQCbkxYZ+XKSA860JsRA24G4KW/2EkIMwMZ2tutgVwuQk0+rigKAw3tLU9l3DvORPgZfA==
+react-monaco-editor@0.41.2:
+  version "0.41.2"
+  resolved "https://registry.yarnpkg.com/react-monaco-editor/-/react-monaco-editor-0.41.2.tgz#7ec9cadc101d73003a908fca61c50011f237d2b5"
+  integrity sha512-0nNqkkSLtUQDHtcCASv3ccYukD+P2uvFzcFZGh6iWg9RZF3Rj9/+jqsTNo2cl4avkX8JVGC/qnZr/g7hxXTBTQ==
   dependencies:
     monaco-editor "*"
     prop-types "^15.7.2"
