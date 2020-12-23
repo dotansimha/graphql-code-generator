@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout Master
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Configure Git Credentials
         run: |
           git config --global user.email "theguild-bot@users.noreply.github.com"
