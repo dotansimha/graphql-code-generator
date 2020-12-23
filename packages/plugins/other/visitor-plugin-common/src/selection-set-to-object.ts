@@ -17,6 +17,7 @@ import {
   isNonNullType,
   GraphQLObjectType,
   GraphQLOutputType,
+  isTypeSubTypeOf,
 } from 'graphql';
 import {
   getPossibleTypes,
@@ -128,9 +129,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             this._collectInlineFragments(schemaType, inlines, types);
           }
         } else {
+          // it must be an interface type that is spread on an interface field
+
           for (const possibleType of possibleTypes) {
-            this._appendToTypeMap(types, possibleType.name, fields);
-            this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
+            if (!node.typeCondition) {
+              throw new Error('Invalid state. Expected type condition for interface spread on a interface field.');
+            }
+            const fragmentSpreadType = this._schema.getType(node.typeCondition.name.value);
+            // the field should only be added to the valid selections
+            // in case the possible type actually implements the given interface
+            if (isTypeSubTypeOf(this._schema, possibleType, fragmentSpreadType)) {
+              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
+            }
           }
         }
       }
