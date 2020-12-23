@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`apollo-client-helpers Should output typePolicies object correctly 1`] = `
-"import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
+"import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
 export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	user?: FieldPolicy<any> | FieldReadFunction<any>
@@ -12,25 +12,19 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type TypedTypePolicies = TypePolicies & {
-	Query?: {
+	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: QueryFieldPolicy,
 	},
-	User?: {
+	User?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: UserFieldPolicy,
 	}
 };"
 `;
 
 exports[`apollo-client-helpers Should output typePolicies object with requireKeyFields: true 1`] = `
-"import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
+"import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
 export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	user?: FieldPolicy<any> | FieldReadFunction<any>
@@ -41,25 +35,19 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type TypedTypePolicies = TypePolicies & {
-	Query?: {
+	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: QueryFieldPolicy,
 	},
-	User?: {
+	User?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: UserFieldPolicy,
 	}
 };"
 `;
 
 exports[`apollo-client-helpers Should output typePolicies object with requirePoliciesForAllTypes: true 1`] = `
-"import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
+"import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
 export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	user?: FieldPolicy<any> | FieldReadFunction<any>
@@ -70,18 +58,12 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type TypedTypePolicies = TypePolicies & {
-	Query?: {
+	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: QueryFieldPolicy,
 	},
-	User: {
+	User: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
 		fields?: UserFieldPolicy,
 	}
 };"

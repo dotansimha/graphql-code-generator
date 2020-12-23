@@ -45,13 +45,10 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
 
       return {
         ...prev,
-        [typeName]: `{
+        [typeName]: `Omit<TypePolicy, "fields" | "keyFields"> & {
 \t\tkeyFields${
           config.requireKeyFields ? '' : '?'
         }: false | ${keySpecifierVarName} | (() => undefined | ${keySpecifierVarName}),
-\t\tqueryType?: true,
-\t\tmutationType?: true,
-\t\tsubscriptionType?: true,
 \t\tfields?: ${fieldPolicyVarName},
 \t}`,
       };
@@ -78,7 +75,7 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
     prepend: [
       `import ${
         config.useTypeImports ? 'type ' : ''
-      }{ FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';`,
+      }{ FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';`,
     ],
     content: [...perTypePolicies, rootContent].join('\n'),
   };
