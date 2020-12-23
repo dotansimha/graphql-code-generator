@@ -11,6 +11,7 @@
 
 .admonition-shell {
   --ra-admonition-background-color: rgb(41, 45, 62) !important;
+  --ra-admonition-color: #ffffff;
 }
 
 .admonition a {
