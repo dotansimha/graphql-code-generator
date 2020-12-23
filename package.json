@@ -43,7 +43,6 @@
     ]
   },
   "devDependencies": {
-    "react-query": "2.26.4",
     "@apollo/client": "3.3.6",
     "@babel/preset-typescript": "7.12.7",
     "@changesets/cli": "2.12.0",
@@ -100,6 +99,7 @@
     "npm": "6.14.10",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-query": "3.4.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
     "ts-jest": "26.4.4",

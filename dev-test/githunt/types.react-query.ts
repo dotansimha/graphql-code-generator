@@ -1,4 +1,4 @@
-import { useQuery, QueryConfig, useMutation, MutationConfig } from 'react-query';
+import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -379,12 +379,12 @@ export const CommentDocument = `
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export const useCommentQuery = (
+export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: CommentQueryVariables,
-  options?: QueryConfig<CommentQuery>
+  options?: UseQueryOptions<CommentQuery, TError, TData>
 ) =>
-  useQuery<CommentQuery>(
+  useQuery<CommentQuery, TError, TData>(
     ['Comment', variables],
     fetcher<CommentQuery, CommentQueryVariables>(
       dataSource.endpoint,
@@ -402,12 +402,12 @@ export const CurrentUserForProfileDocument = `
   }
 }
     `;
-export const useCurrentUserForProfileQuery = (
+export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables?: CurrentUserForProfileQueryVariables,
-  options?: QueryConfig<CurrentUserForProfileQuery>
+  options?: UseQueryOptions<CurrentUserForProfileQuery, TError, TData>
 ) =>
-  useQuery<CurrentUserForProfileQuery>(
+  useQuery<CurrentUserForProfileQuery, TError, TData>(
     ['CurrentUserForProfile', variables],
     fetcher<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
       dataSource.endpoint,
@@ -427,12 +427,12 @@ export const FeedDocument = `
   }
 }
     ${FeedEntryFragmentDoc}`;
-export const useFeedQuery = (
+export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: FeedQueryVariables,
-  options?: QueryConfig<FeedQuery>
+  options?: UseQueryOptions<FeedQuery, TError, TData>
 ) =>
-  useQuery<FeedQuery>(
+  useQuery<FeedQuery, TError, TData>(
     ['Feed', variables],
     fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, variables),
     options
@@ -444,18 +444,18 @@ export const SubmitRepositoryDocument = `
   }
 }
     `;
-export const useSubmitRepositoryMutation = (
+export const useSubmitRepositoryMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: SubmitRepositoryMutationVariables,
-  options?: MutationConfig<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>
+  options?: UseMutationOptions<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>
 ) =>
-  useMutation<SubmitRepositoryMutation, unknown, SubmitRepositoryMutationVariables>(
-    fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      SubmitRepositoryDocument,
-      variables
-    ),
+  useMutation<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>(
+    (variables?: SubmitRepositoryMutationVariables) =>
+      fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        SubmitRepositoryDocument,
+        variables
+      )(),
     options
   );
 export const SubmitCommentDocument = `
@@ -465,18 +465,18 @@ export const SubmitCommentDocument = `
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export const useSubmitCommentMutation = (
+export const useSubmitCommentMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: SubmitCommentMutationVariables,
-  options?: MutationConfig<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>
+  options?: UseMutationOptions<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>
 ) =>
-  useMutation<SubmitCommentMutation, unknown, SubmitCommentMutationVariables>(
-    fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      SubmitCommentDocument,
-      variables
-    ),
+  useMutation<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>(
+    (variables?: SubmitCommentMutationVariables) =>
+      fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        SubmitCommentDocument,
+        variables
+      )(),
     options
   );
 export const VoteDocument = `
@@ -490,17 +490,17 @@ export const VoteDocument = `
   }
 }
     `;
-export const useVoteMutation = (
+export const useVoteMutation = <TError = unknown, TContext = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: VoteMutationVariables,
-  options?: MutationConfig<VoteMutation, unknown, VoteMutationVariables>
+  options?: UseMutationOptions<VoteMutation, TError, VoteMutationVariables, TContext>
 ) =>
-  useMutation<VoteMutation, unknown, VoteMutationVariables>(
-    fetcher<VoteMutation, VoteMutationVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      VoteDocument,
-      variables
-    ),
+  useMutation<VoteMutation, TError, VoteMutationVariables, TContext>(
+    (variables?: VoteMutationVariables) =>
+      fetcher<VoteMutation, VoteMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        VoteDocument,
+        variables
+      )(),
     options
   );

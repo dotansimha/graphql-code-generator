@@ -17,10 +17,32 @@ import { pascalCase } from 'pascal-case';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {}
 
+export interface ReactQueryMethodMap {
+  query: {
+    hook: string;
+    options: string;
+  };
+  mutation: {
+    hook: string;
+    options: string;
+  };
+}
+
 export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPluginConfig, ReactQueryPluginConfig> {
   private _externalImportPrefix: string;
   public fetcher: FetcherRenderer;
   public reactQueryIdentifiersInUse = new Set<string>();
+
+  public queryMethodMap: ReactQueryMethodMap = {
+    query: {
+      hook: 'useQuery',
+      options: 'UseQueryOptions',
+    },
+    mutation: {
+      hook: 'useMutation',
+      options: 'UseMutationOptions',
+    },
+  };
 
   constructor(
     schema: GraphQLSchema,
