@@ -68,6 +68,7 @@ test('should generate interface field resolvers', () => {
       importPath: '../types',
       importNamespace: 'core',
       encapsulate: 'none',
+      shouldDeclare: false,
       rootTypes: ROOT_TYPES,
       baseVisitor,
     }
@@ -94,6 +95,7 @@ test('should generate interface extensions field resolvers ', () => {
       importPath: '../types',
       importNamespace: 'core',
       encapsulate: 'none',
+      shouldDeclare: false,
       rootTypes: ROOT_TYPES,
       baseVisitor,
     }
@@ -109,6 +111,7 @@ test('should include import statement', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -123,6 +126,7 @@ test('should work with naming conventions', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -136,6 +140,7 @@ test('encapsulate: should wrap correctly with namespace', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'namespace',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -144,11 +149,25 @@ test('encapsulate: should wrap correctly with namespace', () => {
   expect(output).toMatchSnapshot();
 });
 
+test('encapsulate: should wrap correctly with a declared namespace', () => {
+  const output = buildModule('test', testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+    encapsulate: 'namespace',
+    shouldDeclare: true,
+    rootTypes: ROOT_TYPES,
+    baseVisitor,
+  });
+
+  expect(output).toBeSimilarStringTo(`declare namespace TestModule {`);
+});
+
 test('encapsulate: should wrap correctly with prefix', () => {
   const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'prefix',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -171,6 +190,7 @@ test('should pick fields from defined and extended types', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -202,6 +222,7 @@ test('should reexport used types but not defined in module', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -219,6 +240,7 @@ test('should export partial types, only those defined in module or root types', 
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -248,6 +270,7 @@ test('should export partial types of scalars, only those defined in module or ro
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -267,6 +290,7 @@ test('should use and export resolver signatures of types defined or extended in 
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -300,6 +324,7 @@ test('should not generate resolver signatures of types that are not defined or e
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -312,6 +337,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });
@@ -331,6 +357,7 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
     importPath: '../types',
     importNamespace: 'core',
     encapsulate: 'none',
+    shouldDeclare: false,
     rootTypes: ROOT_TYPES,
     baseVisitor,
   });

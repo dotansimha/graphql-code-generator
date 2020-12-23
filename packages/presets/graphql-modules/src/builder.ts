@@ -42,6 +42,7 @@ export function buildModule(
     importNamespace,
     importPath,
     encapsulate,
+    shouldDeclare,
     rootTypes,
     schema,
     baseVisitor,
@@ -49,6 +50,7 @@ export function buildModule(
     importNamespace: string;
     importPath: string;
     encapsulate: ModulesConfig['encapsulateModuleTypes'];
+    shouldDeclare: boolean;
     rootTypes: string[];
     baseVisitor: BaseVisitor;
     schema?: GraphQLSchema;
@@ -129,16 +131,20 @@ export function buildModule(
 
   if (encapsulate === 'namespace') {
     content =
-      `export namespace ${baseVisitor.convertName(name, {
+      `${shouldDeclare ? 'declare' : 'export'} namespace ${baseVisitor.convertName(name, {
         suffix: 'Module',
         useTypesPrefix: false,
         useTypesSuffix: false,
       })} {\n` +
+      (shouldDeclare ? `${indent(2)(imports.join('\n'))}\n` : '') +
       indent(2)(content) +
       '\n}';
   }
 
-  return [...imports, content].filter(Boolean).join('\n');
+  return [
+    ...(!shouldDeclare ? imports : []),
+    content
+  ].filter(Boolean).join('\n');
 
   /**
    * A dictionary of fields to pick from an object
