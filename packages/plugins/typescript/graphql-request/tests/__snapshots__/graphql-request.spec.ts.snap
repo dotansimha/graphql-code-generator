@@ -273,17 +273,17 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables));
+    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+      return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables));
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+      return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables));
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+      return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables));
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+      return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables, requestHeaders));
     }
   };
 }
@@ -588,17 +588,17 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables));
+    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+      return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables));
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+      return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables));
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+      return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables));
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+      return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables, requestHeaders));
     }
   };
 }
@@ -894,17 +894,17 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables));
+    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+      return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables));
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+      return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables));
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+      return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables));
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+      return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables, requestHeaders));
     }
   };
 }
@@ -1202,17 +1202,17 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables));
+    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+      return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables));
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+      return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables));
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+      return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables));
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+      return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables, requestHeaders));
     }
   };
 }

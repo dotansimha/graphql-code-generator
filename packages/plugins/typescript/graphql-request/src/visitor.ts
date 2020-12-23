@@ -87,16 +87,16 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         if (this.config.rawRequest) {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }): Promise<{ data?: ${
+          }, requestHeaders?: Headers): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables));
+    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         } else {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }): Promise<${o.operationResultType}> {
-  return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables));
+          }, requestHeaders?: Headers): Promise<${o.operationResultType}> {
+  return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         }
       })
