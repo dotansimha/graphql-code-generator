@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-apollo-client-helpers
 
+## 1.1.2
+
+### Patch Changes
+
+- 29304511: Extend TypePolicy for types in TypedTypePolicies
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
 ## 1.1.1
 
 ### Patch Changes

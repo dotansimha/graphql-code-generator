@@ -1,5 +1,18 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 1.2.0
+
+### Minor Changes
+
+- f1b99b90: Added support for generating module types as `d.ts`
+
+### Patch Changes
+
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
 ## 1.1.0
 
 ### Minor Changes

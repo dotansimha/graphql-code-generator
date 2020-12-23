@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.0.0
+
+### Major Changes
+
+- d41904e8: Support passing custom headers per each request method.
+
+  NOTE: This version of this plugin requires you to update to graphql-request > 3.4.0
+
+### Patch Changes
+
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
 ## 2.0.3
 
 ### Patch Changes
