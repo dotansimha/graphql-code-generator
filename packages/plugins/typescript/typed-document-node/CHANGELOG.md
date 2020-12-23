@@ -1,5 +1,15 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.2
+
+### Patch Changes
+
+- 99533389: Enable flattening typed document nodes
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
 ## 1.18.1
 
 ### Patch Changes

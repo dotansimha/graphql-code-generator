@@ -1,5 +1,13 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.17.22
+
+### Patch Changes
+
+- 64293437: Support for input lists coercion
+- fd5843a7: Fixed a bug where some import namespacing is missed when generating resolver types.
+- d75051f5: generate correct types for fragments with an interface type condition that are spread on an interface field.
+
 ## 1.17.21
 
 ### Patch Changes
