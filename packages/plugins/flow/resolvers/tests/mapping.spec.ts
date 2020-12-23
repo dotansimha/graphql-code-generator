@@ -11,9 +11,11 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<MyType>,
+      MyType: ResolverTypeWrapper<$Diff<MyType, { unionChild: *  }> & { unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>,
       String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+      Child: ResolverTypeWrapper<Child>,
       MyOtherType: ResolverTypeWrapper<MyOtherType>,
+      ChildUnion: $ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -43,7 +45,9 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeDb>,
       String: ResolverTypeWrapper<number>,
-      MyOtherType: ResolverTypeWrapper<$Diff<MyOtherType, { bar: * }> & { bar: $ElementType<ResolversTypes, 'String'> }>,
+      Child: ResolverTypeWrapper<$Diff<Child, { bar: * , parent: *  }> & { bar: $ElementType<ResolversTypes, 'String'>, parent: ?$ElementType<ResolversTypes, 'MyType'> }>,
+      MyOtherType: ResolverTypeWrapper<$Diff<MyOtherType, { bar: *  }> & { bar: $ElementType<ResolversTypes, 'String'> }>,
+      ChildUnion: $ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -74,7 +78,9 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeDb>,
       String: ResolverTypeWrapper<string>,
+      Child: ResolverTypeWrapper<any>,
       MyOtherType: ResolverTypeWrapper<any>,
+      ChildUnion: ResolverTypeWrapper<any>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -103,7 +109,9 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeDb>,
       String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+      Child: ResolverTypeWrapper<$Diff<Child, { parent: *  }> & { parent: ?$ElementType<ResolversTypes, 'MyType'> }>,
       MyOtherType: ResolverTypeWrapper<MyOtherType>,
+      ChildUnion: $ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -222,7 +230,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyScalarScalarConfig = {
-        ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+        ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
         name: 'MyScalar'
       };`);
 
@@ -231,6 +239,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        unionChild?: Resolver<?$ElementType<ResolversTypes, 'ChildUnion'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
       };
     `);
@@ -300,7 +309,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyScalarScalarConfig = {
-        ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+        ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
         name: 'MyScalar'
       };`);
 
@@ -309,6 +318,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        unionChild?: Resolver<?$ElementType<ResolversTypes, 'ChildUnion'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
       };
     `);
@@ -377,7 +387,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyScalarScalarConfig = {
-      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
       name: 'MyScalar'
     };`);
 
@@ -386,6 +396,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        unionChild?: Resolver<?$ElementType<ResolversTypes, 'ChildUnion'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
       };
     `);
@@ -453,7 +464,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyScalarScalarConfig = {
-      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
       name: 'MyScalar'
     };`);
 
@@ -462,6 +473,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        unionChild?: Resolver<?$ElementType<ResolversTypes, 'ChildUnion'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
       };
     `);
@@ -529,7 +541,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyScalarScalarConfig = {
-      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+      ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
       name: 'MyScalar'
     };`);
 
@@ -538,6 +550,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        unionChild?: Resolver<?$ElementType<ResolversTypes, 'ChildUnion'>, ParentType, ContextType>,
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
       };
     `);
@@ -590,9 +603,11 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<$Diff<MyType, { otherType: * }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'> }>,
+      MyType: ResolverTypeWrapper<$Diff<MyType, { otherType: * , unionChild: *  }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'>, unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>,
       String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+      Child: ResolverTypeWrapper<$Diff<Child, { parent: *  }> & { parent: ?$ElementType<ResolversTypes, 'MyType'> }>,
       MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>,
+      ChildUnion: $ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -620,9 +635,11 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<$Diff<MyType, { otherType: *  }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'> }>,
+      MyType: ResolverTypeWrapper<$Diff<MyType, { otherType: * , unionChild: *  }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'>, unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>,
       String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+      Child: ResolverTypeWrapper<$Diff<Child, { parent: *  }> & { parent: ?$ElementType<ResolversTypes, 'MyType'> }>,
       MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>,
+      ChildUnion: $ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -648,9 +665,11 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<$Shape<MyType>>,
+      MyType: ResolverTypeWrapper<$Shape<$Diff<MyType, { unionChild: *  }> & { unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>>,
       String: ResolverTypeWrapper<$Shape<$ElementType<Scalars, 'String'>>>,
+      Child: ResolverTypeWrapper<$Shape<Child>>,
       MyOtherType: ResolverTypeWrapper<$Shape<MyOtherType>>,
+      ChildUnion: $Shape<$ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,
@@ -676,9 +695,11 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<CustomPartial<MyType>>,
+      MyType: ResolverTypeWrapper<CustomPartial<$Diff<MyType, { unionChild: *  }> & { unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>>,
       String: ResolverTypeWrapper<CustomPartial<$ElementType<Scalars, 'String'>>>,
+      Child: ResolverTypeWrapper<CustomPartial<Child>>,
       MyOtherType: ResolverTypeWrapper<CustomPartial<MyOtherType>>,
+      ChildUnion: CustomPartial<$ElementType<ResolversTypes, 'Child'> | $ElementType<ResolversTypes, 'MyOtherType'>>,
       Query: ResolverTypeWrapper<{}>,
       Subscription: ResolverTypeWrapper<{}>,
       Node: $ElementType<ResolversTypes, 'SomeNode'>,

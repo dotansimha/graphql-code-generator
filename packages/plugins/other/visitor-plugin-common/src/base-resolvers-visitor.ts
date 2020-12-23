@@ -587,7 +587,8 @@ export class BaseResolversVisitor<
   }
 
   protected applyMaybe(str: string): string {
-    return `Maybe<${str}>`;
+    const namespacedImportPrefix = this.config.namespacedImportName ? this.config.namespacedImportName + '.' : '';
+    return `${namespacedImportPrefix}Maybe<${str}>`;
   }
 
   protected applyResolverTypeWrapper(str: string): string {
@@ -595,8 +596,10 @@ export class BaseResolversVisitor<
   }
 
   protected clearMaybe(str: string): string {
-    if (str.startsWith('Maybe<')) {
-      return str.replace(/Maybe<(.*?)>$/, '$1');
+    const namespacedImportPrefix = this.config.namespacedImportName ? this.config.namespacedImportName + '.' : '';
+    if (str.startsWith(`${namespacedImportPrefix}Maybe<`)) {
+      const maybeRe = new RegExp(`${namespacedImportPrefix.replace('.', '\\.')}Maybe<(.*?)>$`);
+      return str.replace(maybeRe, '$1');
     }
 
     return str;

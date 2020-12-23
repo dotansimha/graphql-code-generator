@@ -170,7 +170,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
             return a.toString();
           }
-        }; 
+        };
       `
       );
 
@@ -217,7 +217,7 @@ describe('TypeScript Resolvers Plugin', () => {
           Query: {
             v: () => 'A',
           }
-        }; 
+        };
       `
       );
 
@@ -263,7 +263,7 @@ describe('TypeScript Resolvers Plugin', () => {
           Query: {
             v: () => 'val_1',
           }
-        }; 
+        };
       `
       );
 
@@ -312,7 +312,7 @@ describe('TypeScript Resolvers Plugin', () => {
           Query: {
             v: () => MyCustomEnum.CUSTOM_A,
           }
-        }; 
+        };
       `
       );
 
@@ -363,7 +363,7 @@ describe('TypeScript Resolvers Plugin', () => {
           Query: {
             v: () => MyCustomEnum.CUSTOM_A,
           }
-        }; 
+        };
       `
       );
 
@@ -412,7 +412,7 @@ describe('TypeScript Resolvers Plugin', () => {
           Query: {
             v: () => MyCustomEnum.CUSTOM_A,
           }
-        }; 
+        };
       `
       );
 
@@ -633,6 +633,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -705,6 +706,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -775,6 +777,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -863,6 +866,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -935,6 +939,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -1007,6 +1012,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -1067,6 +1073,7 @@ describe('TypeScript Resolvers Plugin', () => {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextTypeOne>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, SpecialContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
