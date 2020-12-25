@@ -2707,10 +2707,10 @@
     valid-url "1.0.9"
     websocket "1.0.32"
 
-"@graphql-tools/utils@7.2.2":
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.2.2.tgz#b8d8712e1b54e93c10f35fa0e3c5e6462911f2b5"
-  integrity sha512-mf/eC64puBJFBec4/3aCGAKKhJxBDwVMqlRDlJw/+hbNXqM5ptrIiplNTV45xyiIbdW8ls4sbW4SUFVvYEiM1g==
+"@graphql-tools/utils@7.2.3":
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.2.3.tgz#4bb2ae0bef62df1f342f2a769434fbb105dd0d84"
+  integrity sha512-9MvSKeo+8DM72706FvrUP8figQjRzSwBswWrXviyWyt3wSkk6MU2cURQKfMpc0I6nswZvkDSqYoQQ/6mazoXxA==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.2"
