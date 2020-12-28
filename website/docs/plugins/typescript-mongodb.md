@@ -13,7 +13,7 @@ Given the following GraphQL declaration:
 type User @entity {
     id: String @id
     username: String! @column
-    email: @column
+    email: String @column
 }
 ```
 
