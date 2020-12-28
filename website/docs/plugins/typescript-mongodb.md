@@ -82,7 +82,7 @@ type User @entity(additionalFields: [
  { path: "services.login.token", type: "string" }
 ]) {
  id: String @id
- email: @column
+ email: String @column
 }
 ```
 
