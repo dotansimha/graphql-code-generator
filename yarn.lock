@@ -9546,20 +9546,20 @@ graphql-extensions@^0.12.7:
     apollo-server-env "^2.4.5"
     apollo-server-types "^0.6.2"
 
-graphql-language-service-interface@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.5.0.tgz#5af71b24e85dbb950e837910d5b218995a2327d3"
-  integrity sha512-JOT5X+BqsREMofnnacmyu3oy0CI+15JXp5NQWG+KDp4bQATjTDpiCOFeBNtw6t9z2ozaY8m7PTaknp0YjgDkvA==
+graphql-language-service-interface@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.6.0.tgz#6149255ad81e884d675c934ed404cf6d16af30d7"
+  integrity sha512-tATUud6B9L6JyqxtA/Gs8E0el0UWNb6hczMnnO1OxuzK92gxl+O/rn++GAegYJzAZH+uO7UaGURyAGaZd5+TtA==
   dependencies:
-    graphql-language-service-parser "^1.6.5"
+    graphql-language-service-parser "^1.7.0"
     graphql-language-service-types "^1.6.3"
     graphql-language-service-utils "^2.4.3"
     vscode-languageserver-types "^3.15.1"
 
-graphql-language-service-parser@^1.6.5:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.6.5.tgz#5c9d4c48cbf4b66171f9ec5f182041627669e4f4"
-  integrity sha512-Xti3aQfnp7rTYg5dzhUnt3eqs9zbdr0tIC7S02RRcO1J5tWAwqXzv3PpYpWXGar11kD7VzP8amkh81CD4Q/m0Q==
+graphql-language-service-parser@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.7.0.tgz#695ee6b91791e1b2c92804ef281c290f85f39ed0"
+  integrity sha512-m2tV5qBCBBnJNVWPcGX7+XO2dQ1sE8jg9N9vABabNHIW02TMgPlEjWIa98h5QpXp0txcPgobHB1iTIQRE0qBbQ==
   dependencies:
     graphql-language-service-types "^1.6.3"
 
