@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.1.0
+
+### Minor Changes
+
+- b6746105: feat(visitor-plugin-common): add ignoreEnumValuesFromSchema to ignore enum values from GraphQLSchema
+
+### Patch Changes
+
+- Updated dependencies [b6746105]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+
 ## 3.0.0
 
 ### Major Changes
