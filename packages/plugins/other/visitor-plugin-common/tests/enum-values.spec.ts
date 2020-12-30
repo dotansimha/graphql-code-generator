@@ -15,8 +15,11 @@ describe('enumValues', () => {
   `);
 
   it('should work with namespaces', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#SomeNamespace.ETest`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#SomeNamespace.ETest`,
+      },
     });
 
     expect(result).toEqual({
@@ -32,8 +35,11 @@ describe('enumValues', () => {
   });
 
   it('should work with regular type', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#ETest`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#ETest`,
+      },
     });
 
     expect(result).toEqual({
@@ -49,8 +55,11 @@ describe('enumValues', () => {
   });
 
   it('should work with aliased type', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#ETest as Something`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#ETest as Something`,
+      },
     });
 
     expect(result).toEqual({

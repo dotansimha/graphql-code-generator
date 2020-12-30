@@ -174,6 +174,22 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   onlyOperationTypes?: boolean;
+  /**
+   * @description This will cause the generator to respect enum values defined in GraphQLSchema
+   * @default true
+   *
+   * @exampleMarkdown
+   * ## Obtain enum values from schema
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    respectEnumValuesFromSchema: true
+   * ```
+   */
+  respectEnumValuesFromSchema?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -192,7 +208,11 @@ export class BaseTypesVisitor<
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      enumValues: parseEnumValues({
+        schema: _schema,
+        mapOrStr: rawConfig.enumValues,
+        respectEnumValuesFromSchema: getConfigValue(rawConfig.respectEnumValuesFromSchema, true),
+      }),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
