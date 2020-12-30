@@ -2,4 +2,4 @@
 '@graphql-codegen/visitor-plugin-common': minor
 ---
 
-feat(visitor-plugin-common): add respectEnumValuesFromSchema to disable this functionality
+feat(visitor-plugin-common): add ignoreEnumValuesFromSchema to ignore enum values from GraphQLSchema
