@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.18.0
+
+### Minor Changes
+
+- bd4bf7cf: feat(visitor-plugin-common): add ignoreEnumValuesFromSchema to ignore enum values from GraphQLSchema
+
 ## 1.17.22
 
 ### Patch Changes
