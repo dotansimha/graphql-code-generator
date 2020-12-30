@@ -339,7 +339,10 @@ export class BaseResolversVisitor<
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
-      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      enumValues: parseEnumValues({
+        schema: _schema,
+        mapOrStr: rawConfig.enumValues,
+      }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
