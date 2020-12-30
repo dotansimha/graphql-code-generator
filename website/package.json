@@ -47,7 +47,7 @@
     "@graphql-codegen/near-operation-file-preset": "1.17.13",
     "@graphql-codegen/schema-ast": "1.18.1",
     "@graphql-codegen/time": "2.0.2",
-    "@graphql-codegen/typescript": "1.19.0",
+    "@graphql-codegen/typescript": "1.20.0",
     "@graphql-codegen/typed-document-node": "1.18.2",
     "@graphql-codegen/typescript-apollo-angular": "2.2.1",
     "@graphql-codegen/typescript-compatibility": "2.0.1",

@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript
 
+## 1.20.0
+
+### Minor Changes
+
+- d95db95b: feat(typescript): bump visitor-plugin-common
+
 ## 1.19.0
 
 ### Minor Changes
