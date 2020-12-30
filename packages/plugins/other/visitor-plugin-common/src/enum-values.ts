@@ -16,7 +16,7 @@ export function parseEnumValues({
   const allEnums = Object.keys(allTypes).filter(t => isEnumType(allTypes[t]));
 
   if (typeof mapOrStr === 'object') {
-    if (ignoreEnumValuesFromSchema) {
+    if (!ignoreEnumValuesFromSchema) {
       for (const enumTypeName of allEnums) {
         const enumType = schema.getType(enumTypeName) as GraphQLEnumType;
         for (const { name, value } of enumType.getValues()) {

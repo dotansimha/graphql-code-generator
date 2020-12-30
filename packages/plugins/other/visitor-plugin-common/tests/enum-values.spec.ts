@@ -100,7 +100,7 @@ describe('enumValues', () => {
     const result = parseEnumValues({
       schema: schemaWithEnumValues,
       mapOrStr: {},
-      respectEnumValuesFromSchema: true,
+      ignoreEnumValuesFromSchema: false,
     });
 
     expect(result).toEqual({
@@ -123,7 +123,7 @@ describe('enumValues', () => {
     const result = parseEnumValues({
       schema: schemaWithEnumValues,
       mapOrStr: {},
-      respectEnumValuesFromSchema: false,
+      ignoreEnumValuesFromSchema: true,
     });
 
     expect(result).not.toEqual({
