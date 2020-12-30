@@ -1,4 +1,4 @@
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { parseEnumValues } from '../src/enum-values';
 
 describe('enumValues', () => {
@@ -70,6 +70,74 @@ describe('enumValues', () => {
         sourceIdentifier: 'Something',
         importIdentifier: 'ETest as Something',
         mappedValues: null,
+      },
+    });
+  });
+  const schemaWithEnumValues = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: {
+        test: {
+          type: new GraphQLEnumType({
+            name: 'Test',
+            values: {
+              A: {
+                value: 'a',
+              },
+              B: {
+                value: 'b',
+              },
+              C: {
+                value: 'c',
+              },
+            },
+          }),
+        },
+      },
+    }),
+  });
+  it('should respect enum values from schema', () => {
+    const result = parseEnumValues({
+      schema: schemaWithEnumValues,
+      mapOrStr: {},
+      respectEnumValuesFromSchema: true,
+    });
+
+    expect(result).toEqual({
+      Test: {
+        isDefault: false,
+        typeIdentifier: 'Test',
+        sourceFile: null,
+        importIdentifier: null,
+        sourceIdentifier: null,
+        mappedValues: {
+          A: 'a',
+          B: 'b',
+          C: 'c',
+        },
+      },
+    });
+  });
+
+  it('should ignore enum values from schema', () => {
+    const result = parseEnumValues({
+      schema: schemaWithEnumValues,
+      mapOrStr: {},
+      respectEnumValuesFromSchema: false,
+    });
+
+    expect(result).not.toEqual({
+      Test: {
+        isDefault: false,
+        typeIdentifier: 'Test',
+        sourceFile: null,
+        importIdentifier: null,
+        sourceIdentifier: null,
+        mappedValues: {
+          A: 'a',
+          B: 'b',
+          C: 'c',
+        },
       },
     });
   });
