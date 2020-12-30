@@ -6,17 +6,17 @@ import { parseMapper } from './mappers';
 export function parseEnumValues({
   schema,
   mapOrStr = {},
-  respectEnumValuesFromSchema = true,
+  ignoreEnumValuesFromSchema,
 }: {
   schema: GraphQLSchema;
   mapOrStr: EnumValuesMap;
-  respectEnumValuesFromSchema?: boolean;
+  ignoreEnumValuesFromSchema?: boolean;
 }): ParsedEnumValuesMap {
   const allTypes = schema.getTypeMap();
   const allEnums = Object.keys(allTypes).filter(t => isEnumType(allTypes[t]));
 
   if (typeof mapOrStr === 'object') {
-    if (respectEnumValuesFromSchema) {
+    if (ignoreEnumValuesFromSchema) {
       for (const enumTypeName of allEnums) {
         const enumType = schema.getType(enumTypeName) as GraphQLEnumType;
         for (const { name, value } of enumType.getValues()) {
