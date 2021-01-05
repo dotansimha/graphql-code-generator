@@ -13,7 +13,7 @@
     "worker-loader": "3.0.7",
     "file-loader": "6.2.0",
     "style-loader": "2.0.0",
-    "monaco-editor-webpack-plugin": "1.9.1",
+    "monaco-editor-webpack-plugin": "2.1.0",
     "@docusaurus/core": "2.0.0-alpha.f48d435ce",
     "@docusaurus/preset-classic": "2.0.0-alpha.f48d435ce",
     "@graphql-codegen/config-schema": "1.17.9",
