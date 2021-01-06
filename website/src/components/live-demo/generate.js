@@ -5,14 +5,14 @@ import { pluginLoaderMap, presetLoaderMap } from './plugins';
 export async function generate(config, schema, documents) {
   try {
     const outputs = [];
-    const [{ safeLoad }, { codegen }, { parse }] = await Promise.all([
+    const [{ load }, { codegen }, { parse }] = await Promise.all([
       import('js-yaml').then(m => ('default' in m ? m.default : m)),
       import('@graphql-codegen/core').then(m => ('default' in m ? m.default : m)),
       import('graphql').then(m => ('default' in m ? m.default : m)),
     ]);
 
     const cleanTabs = config.replace(/\t/g, '  ');
-    const { generates, ...otherFields } = safeLoad(cleanTabs);
+    const { generates, ...otherFields } = load(cleanTabs);
     const rootConfig = otherFields.config || {};
     const runConfigurations = [];
 
