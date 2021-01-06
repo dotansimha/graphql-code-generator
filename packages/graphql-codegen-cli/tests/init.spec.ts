@@ -10,7 +10,7 @@ import { guessTargets } from '../src/init/targets';
 import { plugins } from '../src/init/plugins';
 import { bold } from '../src/init/helpers';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions';
-import { safeLoad } from 'js-yaml';
+import { load } from 'js-yaml';
 
 jest.mock('fs');
 const { version } = require('../package.json');
@@ -117,7 +117,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -160,7 +160,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
@@ -203,7 +203,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
@@ -245,7 +245,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // should use default output path
     expect(config.generates['src/generated/graphql.ts']).toBeDefined();
@@ -289,7 +289,7 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
     expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config ${defaults.config}`);
@@ -329,7 +329,7 @@ describe('init', () => {
     await init();
 
     const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
     expect(pkg.scripts[options.script]).toEqual(`graphql-codegen --config ${options.config}`);
@@ -366,7 +366,7 @@ describe('init', () => {
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-    const config = safeLoad(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+    const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
     // config
     // should overwrite
