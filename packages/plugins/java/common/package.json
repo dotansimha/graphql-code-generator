@@ -17,7 +17,7 @@
     "@graphql-codegen/visitor-plugin-common": "^1.17.20",
     "auto-bind": "~4.0.0",
     "strip-indent": "^3.0.0",
-    "tslib": "~2.0.1",
+    "tslib": "~2.1.0",
     "unixify": "^1.0.0"
   },
   "peerDependencies": {
