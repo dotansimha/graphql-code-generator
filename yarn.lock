@@ -9556,14 +9556,14 @@ graphql-extensions@^0.12.7:
     apollo-server-env "^2.4.5"
     apollo-server-types "^0.6.2"
 
-graphql-language-service-interface@2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.0.tgz#6d633e5d4da82efa6ebb8953998ea87dc544914e"
-  integrity sha512-Gsoj55E0y0yIo/F5pTFCyTBo1+ZtOjvGh3H4VE57sKYDV04JSoRQuw6vaffhN0ZDSeUsu0MA/17fAm5hrqohFg==
+graphql-language-service-interface@2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.2.tgz#b3bb2aef7eaf0dff0b4ea419fa412c5f66fa268b"
+  integrity sha512-otbOQmhgkAJU1QJgQkMztNku6SbJLu/uodoFOYOOtJsizTjrMs93vkYaHCcYnLA3oi1Goj27XcHjMnRCYQOZXQ==
   dependencies:
     graphql-language-service-parser "^1.9.0"
     graphql-language-service-types "^1.8.0"
-    graphql-language-service-utils "^2.5.0"
+    graphql-language-service-utils "^2.5.1"
     vscode-languageserver-types "^3.15.1"
 
 graphql-language-service-parser@^1.9.0:
@@ -9578,12 +9578,13 @@ graphql-language-service-types@^1.8.0:
   resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.8.0.tgz#b90fd1bc5ec7f394ae45d749305acdc9d9096704"
   integrity sha512-dEn3vZoQmEIB5jgiIPcKN2a9QYvmOp0kxNirEI0pSVugNvGEgZzgiUQQLyJ4wDoUfp6M1xQDLVaFf8zbATxYzg==
 
-graphql-language-service-utils@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.5.0.tgz#3b16f42814aaa64aaebe67da0b146c3ec8f92dd1"
-  integrity sha512-pjq/GKNfu5P7/LHGwnYZ8OklCe7BF0IQsG3pGc/Cryf6g8ovX0fs+WSupa/EDgNjYDi8GtLg//bunB53DO83xQ==
+graphql-language-service-utils@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.5.1.tgz#832ad4b0a9da03fdded756932c27e057ccf71302"
+  integrity sha512-Lzz723cYrYlVN4WVzIyFGg3ogoe+QYAIBfdtDboiIILoy0FTmqbyC2TOErqbmWKqO4NK9xDA95cSRFbWiHYj0g==
   dependencies:
     graphql-language-service-types "^1.8.0"
+    nullthrows "^1.0.0"
 
 graphql-request@^3.3.0:
   version "3.3.0"
@@ -13625,7 +13626,7 @@ null-loader@^3.0.0:
     loader-utils "^1.2.3"
     schema-utils "^1.0.0"
 
-nullthrows@^1.1.1:
+nullthrows@^1.0.0, nullthrows@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nullthrows/-/nullthrows-1.1.1.tgz#7818258843856ae971eae4208ad7d7eb19a431b1"
   integrity sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==
