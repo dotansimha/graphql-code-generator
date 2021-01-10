@@ -7558,10 +7558,10 @@ depd@~1.1.2:
   resolved "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
-dependency-graph@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.npmjs.org/dependency-graph/-/dependency-graph-0.9.0.tgz#11aed7e203bc8b00f48356d92db27b265c445318"
-  integrity sha512-9YLIBURXj4DJMFALxXw9K3Y3rwb5Fk0X5/8ipCzaN84+gKxoHK43tVKRNakCQbiEx07E8Uwhuq21BpUagFhZ8w==
+dependency-graph@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.10.0.tgz#dfebe384f1f36faf7782be203a7a71102a6335a6"
+  integrity sha512-c9amUgpgxSi1bE5/sbLwcs5diLD0ygCQYmhfM5H1s5VH1mCsYkcmAL3CcNdv4kdSw6JuMoHeDGzLgj/gAXdWVg==
 
 deprecated-decorator@^0.1.6:
   version "0.1.6"
