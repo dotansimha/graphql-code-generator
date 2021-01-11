@@ -288,9 +288,9 @@ If your schema has a different or complicated way of loading, you can point to a
 ```yml
 schema:
   - http://localhost:3000/graphql:
-      loader: my-url-loader.js
+      loader: ./my-url-loader.js
   - schema.graphql:
-      loader: my-file-loader.js
+      loader: ./my-file-loader.js
 ```
 
 Your custom loader should export a default function that returns `GraphQLSchema` object, or an identifier called `schema`. For example:
