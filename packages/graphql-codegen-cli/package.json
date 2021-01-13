@@ -40,7 +40,6 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "latest-version": "5.1.0",
     "@graphql-codegen/core": "1.17.9",
     "@graphql-codegen/plugin-helpers": "^1.18.2",
     "@graphql-tools/apollo-engine-loader": "^6",
@@ -69,6 +68,7 @@
     "inquirer": "^7.3.3",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
+    "latest-version": "5.1.0",
     "listr": "^0.14.3",
     "listr-update-renderer": "^0.5.0",
     "log-symbols": "^4.0.0",
@@ -76,7 +76,6 @@
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.4",
     "pascal-case": "^3.1.1",
-    "request": "^2.88.2",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
     "tslib": "~2.1.0",
