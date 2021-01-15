@@ -1,9 +1,9 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
- * @description This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
+ * @description This plugin generates `urql` (https://github.com/FormidableLabs/urql) Svelte stores and HOSs (higher order stores) with TypeScript typings.
  */
-export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
+export interface UrqlSvelteRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Component.
    * @default false
@@ -19,7 +19,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
    * This is useful for further abstraction of some common tasks (eg. error handling).
    * Filepath relative to generated file can be also specified.
-   * @default urql
+   * @default @urql/svelte
    */
-  urqlImportFrom?: string;
+  urqlSvelteImportFrom?: string;
 }
