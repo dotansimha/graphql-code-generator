@@ -10,18 +10,18 @@ import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'pascal-case';
 
-export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
+export interface UrqlSveltePluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
   withHooks: boolean;
-  urqlImportFrom: string;
+  urqlSvelteImportFrom: string;
 }
 
-export class UrqlVisitor extends ClientSideBaseVisitor<UrqlSvelteRawPluginConfig, UrqlPluginConfig> {
+export class UrqlVisitor extends ClientSideBaseVisitor<UrqlSvelteRawPluginConfig, UrqlSveltePluginConfig> {
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlSvelteRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, false),
       withHooks: getConfigValue(rawConfig.withHooks, true),
-      urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
+      urqlSvelteImportFrom: getConfigValue(rawConfig.urqlSvelteImportFrom, null),
     });
 
     autoBind(this);
@@ -91,56 +91,54 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
       useTypesPrefix: false,
     });
 
-//     if (operationType === 'Mutation') {
-//       return `
-// export function ${operationName}() {
-//   return UrqlSvelte.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName});
-// };`;
-//     }
+    //     if (operationType === 'Mutation') {
+    //       return `
+    // export function ${operationName}() {
+    //   return UrqlSvelte.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName});
+    // };`;
+    //     }
 
-//     if (operationType === 'Subscription') {
-//       return `
-// export function ${operationName}<TData = ${operationResultType}>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
-//   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
-// };`;
-//     }
+    //     if (operationType === 'Subscription') {
+    //       return `
+    // export function ${operationName}<TData = ${operationResultType}>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
+    //   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
+    // };`;
+    //     }
 
     return `
 export function ${operationName}(variables: Omit<${operationVariablesTypes}> = {}, context: Omit<any>) {
   return UrqlSvelte.query(UrqlSvelte.operationStore(${documentVariableName}, variables, context });
 };`;
   }
- 
- 
- // query(operationStore(`
- //    query {
- //      listPdfs {
- //        rowid
- //        name
- //      }
- //    }
- //  `));
- 
-//      if (operationType === 'Mutation') {
-//       return `
-// export function use${operationName}() {
-//   return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName});
-// };`;
-//     }
 
-//     if (operationType === 'Subscription') {
-//       return `
-// export function use${operationName}<TData = ${operationResultType}>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
-//   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
-// };`;
-//     }
+  // query(operationStore(`
+  //    query {
+  //      listPdfs {
+  //        rowid
+  //        name
+  //      }
+  //    }
+  //  `));
 
-//     return `
-// export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
-//   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
-// };`;
-//   }
+  //      if (operationType === 'Mutation') {
+  //       return `
+  // export function use${operationName}() {
+  //   return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName});
+  // };`;
+  //     }
 
+  //     if (operationType === 'Subscription') {
+  //       return `
+  // export function use${operationName}<TData = ${operationResultType}>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationResultType}, TData>) {
+  //   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
+  // };`;
+  //     }
+
+  //     return `
+  // export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
+  //   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
+  // };`;
+  //   }
 
   protected buildOperation(
     node: OperationDefinitionNode,

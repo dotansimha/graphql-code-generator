@@ -2,7 +2,7 @@ import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlVisitor } from './visitor';
-import { extname } from 'path';
+// import { extname } from 'path';
 import { UrqlSvelteRawPluginConfig } from './config';
 
 export const plugin: PluginFunction<UrqlSvelteRawPluginConfig, Types.ComplexPluginOutput> = (

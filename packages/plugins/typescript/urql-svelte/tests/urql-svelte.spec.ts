@@ -6,7 +6,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
 
-describe('urql', () => {
+describe('urql-svelte', () => {
   let spyConsoleError: jest.SpyInstance;
   beforeEach(() => {
     spyConsoleError = jest.spyOn(console, 'warn');
@@ -60,8 +60,8 @@ describe('urql', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Urql from 'urql';`);
-      expect(content.prepend).toContain(`import * as React from 'react';`);
+      expect(content.prepend).toContain(`import * as UrqlSvelte from '@urql/svelte';`);
+      // expect(content.prepend).toContain(`import * as React from 'react';`);
       expect(content.prepend).toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -104,13 +104,13 @@ describe('urql', () => {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, urqlImportFrom: 'custom-urql' },
+        { withHooks: true, urqlSvelteImportFrom: 'custom-urql' },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Urql from 'custom-urql';`);
+      expect(content.prepend).toContain(`import * as UrqlSvelte from 'custom-urql';`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
