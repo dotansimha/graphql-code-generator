@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/typescript-urql-svelte",
   "version": "0.0.0",
-  "description": "GraphQL Code Generator plugin for generating a ready-to-use Svelte stores based on GraphQL operations with urql",
+  "description": "GraphQL Code Generator plugin for generating ready-to-use Svelte stores based on GraphQL operations with urql",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
