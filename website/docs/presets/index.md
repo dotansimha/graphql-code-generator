@@ -3,7 +3,7 @@ id: presets-index
 title: All Presets
 ---
 
-GraphQL Code Generator also support presets - which is a way to manipulate and effect the execution of plugins.
+GraphQL Code Generator also support presets - which is a way to manipulate and affect the execution of plugins.
 
 Presets are CLI extensions, that allow manipulation of a `generates` section of codegen, based on custom logic.
 
