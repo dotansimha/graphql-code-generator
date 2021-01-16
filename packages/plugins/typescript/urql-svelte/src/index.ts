@@ -1,8 +1,8 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlVisitor } from './visitor';
-// import { extname } from 'path';
+import { UrqlSvelteVisitor } from './visitor';
+import { extname } from 'path';
 import { UrqlSvelteRawPluginConfig } from './config';
 
 export const plugin: PluginFunction<UrqlSvelteRawPluginConfig, Types.ComplexPluginOutput> = (
@@ -22,12 +22,14 @@ export const plugin: PluginFunction<UrqlSvelteRawPluginConfig, Types.ComplexPlug
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new UrqlVisitor(schema, allFragments, config) as any;
+  const visitor = new UrqlSvelteVisitor(schema, allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), `</script>`].join(
+      '\n'
+    ),
   };
 };
 
@@ -37,15 +39,9 @@ export const validate: PluginValidateFn<any> = async (
   config: UrqlSvelteRawPluginConfig,
   outputFile: string
 ) => {
-  // if (config.withComponent === true) {
-  //   if (extname(outputFile) !== '.tsx') {
-  //     throw new Error(`Plugin "typescript-urql" requires extension to be ".tsx" when withComponent: true is set!`);
-  //   }
-  // } else {
-  //   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-  //     throw new Error(`Plugin "typescript-urql" requires extension to be ".ts" or ".tsx"!`);
-  //   }
-  // }
+  if (extname(outputFile) !== '.svelte') {
+    throw new Error(`Plugin "typescript-urql-svelte" requires extension to be ".svelte"!`);
+  }
 };
 
-export { UrqlVisitor };
+export { UrqlSvelteVisitor };

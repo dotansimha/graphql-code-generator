@@ -7,20 +7,16 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlSvelteRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { pascalCase } from 'pascal-case';
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql'; // Kind
+// import { pascalCase } from 'pascal-case';
 
 export interface UrqlSveltePluginConfig extends ClientSideBasePluginConfig {
-  withComponent: boolean;
-  withHooks: boolean;
   urqlSvelteImportFrom: string;
 }
 
-export class UrqlVisitor extends ClientSideBaseVisitor<UrqlSvelteRawPluginConfig, UrqlSveltePluginConfig> {
+export class UrqlSvelteVisitor extends ClientSideBaseVisitor<UrqlSvelteRawPluginConfig, UrqlSveltePluginConfig> {
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlSvelteRawPluginConfig) {
     super(schema, fragments, rawConfig, {
-      withComponent: getConfigValue(rawConfig.withComponent, false),
-      withHooks: getConfigValue(rawConfig.withHooks, true),
       urqlSvelteImportFrom: getConfigValue(rawConfig.urqlSvelteImportFrom, null),
     });
 
@@ -33,51 +29,50 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlSvelteRawPluginConfig
     const hasOperations = this._collectedOperations.length > 0;
 
     if (!hasOperations) {
-      return baseImports;
+      return [`<script context="module" lang="ts">`, ...baseImports];
     }
 
-    // if (this.config.withComponent) {
-    //   imports.push(`import * as React from 'react';`);
-    // }
-
-    if (this.config.withComponent || this.config.withHooks) {
-      imports.push(`import * as UrqlSvelte from '${this.config.urqlSvelteImportFrom || '@urql/svelte'}';`);
-    }
+    imports.push(`import * as UrqlSvelte from '${this.config.urqlSvelteImportFrom || '@urql/svelte'}';`);
 
     imports.push(OMIT_TYPE);
 
-    return [...baseImports, ...imports];
+    return [`import <script context="module" lang="ts">`, ...baseImports, ...imports];
   }
 
-  private _buildComponent(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
-    const componentName: string = this.convertName(node.name?.value ?? '', {
-      suffix: 'Component',
-      useTypesPrefix: false,
-    });
+  //   private _buildComponent(
+  //     node: OperationDefinitionNode,
+  //     documentVariableName: string,
+  //     operationType: string,
+  //     operationResultType: string,
+  //     operationVariablesTypes: string
+  //   ): string {
+  //     const componentNameConverted: string = this.convertName(node.name?.value ?? '', {
+  //       suffix: 'Component',
+  //       useTypesPrefix: false,
+  //     });
 
-    const isVariablesRequired =
-      operationType === 'Query' &&
-      node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
+  //        const componentName: string = this.convertName(node.name?.value ?? '', {
+  //       suffix: 'Component',
+  //       useTypesPrefix: false,
+  //     });
 
-    const generics = [operationResultType, operationVariablesTypes];
+  //     const isVariablesRequired =
+  //       operationType === 'Query' &&
+  //       node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
-    if (operationType === 'Subscription') {
-      generics.unshift(operationResultType);
-    }
-    return `
-export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(
-      ', '
-    )}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
-  <Urql.${operationType} {...props} query={${documentVariableName}} />
-);
-`;
-  }
+  //     const generics = [operationResultType, operationVariablesTypes];
+
+  //     if (operationType === 'Subscription') {
+  //       generics.unshift(operationResultType);
+  //     }
+  //     return `
+  // export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(
+  //       ', '
+  //     )}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
+  //   <Urql.${operationType} {...props} query={${documentVariableName}} />
+  // );
+  // `;
+  //   }
 
   private _buildHooks(
     node: OperationDefinitionNode,
@@ -86,10 +81,12 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const operationName: string = this.convertName(node.name?.value ?? '', {
-      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+    const operationNameConverted: string = this.convertName(node.name?.value ?? '', {
+      suffix: this.config.omitOperationSuffix ? '' : operationType,
       useTypesPrefix: false,
     });
+
+    const operationName: string = operationNameConverted.slice(0, 1).toLowerCase() + operationNameConverted.slice(1);
 
     //     if (operationType === 'Mutation') {
     //       return `
@@ -104,11 +101,22 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     //   return Urql.use${operationType}<${operationResultType}, TData, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options }, handler);
     // };`;
     //     }
-
-    return `
-export function ${operationName}(variables: Omit<${operationVariablesTypes}> = {}, context: Omit<any>) {
-  return UrqlSvelte.query(UrqlSvelte.operationStore(${documentVariableName}, variables, context });
+    if (operationType === 'Subscription') {
+      return `
+export function ${operationName}(handler) {
+  return UrqlSvelte.subscription(UrqlSvelte.operationStore(${documentVariableName}), handler);
 };`;
+    } else if (operationType === 'Mutation') {
+      return `
+export function ${operationName}() {
+  return UrqlSvelte.mutation(UrqlSvelte.operationStore(${documentVariableName}));
+};`;
+    } else {
+      return `
+export function ${operationName}() {
+  return UrqlSvelte.query(UrqlSvelte.operationStore(${documentVariableName}));
+};`;
+    }
   }
 
   // query(operationStore(`
@@ -147,13 +155,8 @@ export function ${operationName}(variables: Omit<${operationVariablesTypes}> = {
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const component = this.config.withComponent
-      ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
-      : null;
-    const hooks = this.config.withHooks
-      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
-      : null;
+    return this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes);
 
-    return [component, hooks].filter(a => a).join('\n');
+    // return [component, hooks].filter(a => a).join('\n');
   }
 }

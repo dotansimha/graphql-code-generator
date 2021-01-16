@@ -52,9 +52,7 @@ describe('urql-svelte', () => {
       const content = (await plugin(
         schema,
         docs,
-        {
-          withComponent: true,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -104,7 +102,7 @@ describe('urql-svelte', () => {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, urqlSvelteImportFrom: 'custom-urql' },
+        { urqlSvelteImportFrom: 'custom-urql' },
         {
           outputFile: 'graphql.tsx',
         }
@@ -380,7 +378,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { withComponent: false },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -409,9 +407,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {
-          withComponent: true,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -443,9 +439,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {
-          withComponent: true,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -500,9 +494,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {
-          withComponent: true,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -544,7 +536,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, withComponent: false },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -567,7 +559,7 @@ export function useSubmitRepositoryMutation() {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: false },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -591,10 +583,7 @@ export function useSubmitRepositoryMutation() {
       const content = (await plugin(
         schema,
         docs,
-        {
-          withHooks: true,
-          withComponent: false,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -613,7 +602,7 @@ export function useSubmitRepositoryMutation() {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, typesPrefix: 'I' },
+        { typesPrefix: 'I' },
         {
           outputFile: 'graphql.tsx',
         }
@@ -627,7 +616,7 @@ export function useSubmitRepositoryMutation() {
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, omitOperationSuffix: true },
+        { omitOperationSuffix: true },
         {
           outputFile: 'graphql.tsx',
         }
