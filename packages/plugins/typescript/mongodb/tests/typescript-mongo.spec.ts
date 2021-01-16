@@ -276,7 +276,7 @@ describe('TypeScript Mongo', () => {
 
     it('Should output the correct values with nonOptionalField', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toContain(`nonOptionalField?: string`); // additional field non optional
+      expect(result).toContain(`nonOptionalField?: string`); // non optional additional field
       await validate(result, schema, {});
     });
   });
