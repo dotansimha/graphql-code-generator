@@ -14,7 +14,10 @@ describe('TypeScript Mongo', () => {
   const schema = buildSchema(/* GraphQL */ `
     ${print(addToSchema)}
 
-    type User @entity(additionalFields: [{ path: "nonSchemaField", type: "string" }]) {
+    type User
+      @entity(
+        additionalFields: [{ path: "nonSchemaField", type: "string" }, { path: "nonOptionalField?", type: "string" }]
+      ) {
       id: ID @id
       name: String @column
       gender: Gender @column
@@ -268,6 +271,12 @@ describe('TypeScript Mongo', () => {
     it('Should output the correct values with additionalFields', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`nonSchemaField: string`); // additional field
+      await validate(result, schema, {});
+    });
+
+    it('Should output the correct values with nonOptionalField', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`nonOptionalField?: string`); // additional field non optional
       await validate(result, schema, {});
     });
   });
