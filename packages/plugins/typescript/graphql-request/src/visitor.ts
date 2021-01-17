@@ -47,7 +47,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     if (this.config.rawRequest) {
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
-      this._additionalImports.push(`${typeImport} { Headers } from 'graphql-request/dist/types.dom';`);
+      this._additionalImports.push(`${typeImport} { Headers, HeadersInit } from 'graphql-request/dist/types.dom';`);
     }
   }
 
@@ -87,7 +87,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         if (this.config.rawRequest) {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Headers): Promise<{ data?: ${
+          }, requestHeaders?: HeadersInit): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
     return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables, requestHeaders));
@@ -95,7 +95,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         } else {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Headers): Promise<${o.operationResultType}> {
+          }, requestHeaders?: HeadersInit): Promise<${o.operationResultType}> {
   return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         }
