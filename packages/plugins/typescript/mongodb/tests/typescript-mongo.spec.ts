@@ -16,7 +16,10 @@ describe('TypeScript Mongo', () => {
 
     type User
       @entity(
-        additionalFields: [{ path: "nonSchemaField", type: "string" }, { path: "nonOptionalField?", type: "string" }]
+        additionalFields: [
+          { path: "nonSchemaField", type: "string" }
+          { path: "nonSchemaOptionalField?", type: "string" }
+        ]
       ) {
       id: ID @id
       name: String @column
@@ -274,9 +277,9 @@ describe('TypeScript Mongo', () => {
       await validate(result, schema, {});
     });
 
-    it('Should output the correct values with nonOptionalField', async () => {
+    it('Should output the correct values with nonSchemaOptionalField', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toContain(`nonOptionalField?: string`); // non optional additional field
+      expect(result).toContain(`nonSchemaOptionalField?: string`); // non schema optional additional field
       await validate(result, schema, {});
     });
   });
