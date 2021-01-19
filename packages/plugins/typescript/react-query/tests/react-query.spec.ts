@@ -387,4 +387,17 @@ describe('React-Query', () => {
       await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
     });
   });
+
+  describe('exposeQueryKeys: true', () => {
+    it('Should generate getKey for each query', async () => {
+      const config = {
+        fetcher: 'fetch',
+        exposeQueryKeys: true,
+      };
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.getKey = (variables?: TestQueryVariables) => ['test', variables];`
+      );
+    });
+  });
 });

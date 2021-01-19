@@ -29,4 +29,13 @@ export interface ReactQueryRawPluginConfig
    * - `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).
    */
   fetcher: 'fetch' | HardcodedFetch | 'graphql-request' | string;
+
+  /**
+   * @default false
+   * @description For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. Example:
+   * const query = useUserDetailsQuery(...);
+   * const key = useUserDetailsQuery.getKey({id: theUsersId});
+   * // use key in a cache update after a mutation
+   */
+  exposeQueryKeys?: boolean;
 }

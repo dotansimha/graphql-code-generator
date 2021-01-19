@@ -3,6 +3,7 @@ import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
 import { HardcodedFetch } from './config';
 import { URL } from 'url';
+import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor, private config: HardcodedFetch) {}
@@ -60,7 +61,7 @@ ${this.getFetchParams()}
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
@@ -75,7 +76,7 @@ ${this.getFetchParams()}
       ${options}
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ['${node.name.value}', variables],
+      ${generateQueryKey(node)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
       options
     );`;

@@ -1,6 +1,7 @@
 import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
+import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
 
 export class GraphQLRequestClientFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}
@@ -20,7 +21,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
 
     const hookConfig = this.visitor.queryMethodMap;
@@ -38,7 +39,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       ${options}
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ['${node.name.value}', variables],
+      ${generateQueryKey(node)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
       options
     );`;
