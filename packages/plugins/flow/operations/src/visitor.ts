@@ -66,8 +66,12 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapOptional = (type: string) => `?${type}`;
 
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const formatNamedField = (name: string, type: GraphQLOutputType | GraphQLNamedType | null): string => {
-      const optional = !!type && !isNonNullType(type);
+    const formatNamedField = (
+      name: string,
+      type: GraphQLOutputType | GraphQLNamedType | null,
+      isConditional = false
+    ): string => {
+      const optional = (!!type && !isNonNullType(type)) || isConditional;
       return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };
 
