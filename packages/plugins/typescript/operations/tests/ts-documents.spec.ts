@@ -3903,6 +3903,37 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#5422 - Error when interface doesnt have implemeting types', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface A {
+          a: String!
+        }
+
+        type Query {
+          test: A
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query test {
+          test {
+            a
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: '', document: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      console.log(content);
+    });
+
     it('#4389 - validate issues with interfaces', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface A {

@@ -456,8 +456,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return null;
   }
 
+  protected getUnknownType(): string {
+    return 'never';
+  }
+
   public transformSelectionSet(): string {
     const grouped = this._buildGroupedSelections();
+
+    // This might happen in case we have an interface, that is being queries, without any GraphQL
+    // "type" that implements it. It will lead to a runtime error, but we aim to try to reflect that in
+    // build time as well.
+    if (Object.keys(grouped).length === 0) {
+      return this.getUnknownType();
+    }
 
     return Object.keys(grouped)
       .map(typeName => {
