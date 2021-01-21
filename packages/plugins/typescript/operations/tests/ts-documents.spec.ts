@@ -3931,7 +3931,8 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      console.log(content);
+      expect(content).not.toContain(`Maybe<>`);
+      expect(content).toContain(`Maybe<never>`);
     });
 
     it('#4389 - validate issues with interfaces', async () => {
