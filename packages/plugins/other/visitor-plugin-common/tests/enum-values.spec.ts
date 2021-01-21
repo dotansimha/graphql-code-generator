@@ -73,6 +73,7 @@ describe('enumValues', () => {
       },
     });
   });
+
   const schemaWithEnumValues = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
@@ -90,13 +91,17 @@ describe('enumValues', () => {
               C: {
                 value: 'c',
               },
+              D: {
+                value: `escape me '`,
+              },
             },
           }),
         },
       },
     }),
   });
-  it('should respect enum values from schema', () => {
+
+  it('should respect enum values from schema and escape it if needed', () => {
     const result = parseEnumValues({
       schema: schemaWithEnumValues,
       mapOrStr: {},
@@ -114,6 +119,7 @@ describe('enumValues', () => {
           A: 'a',
           B: 'b',
           C: 'c',
+          D: `escape me \\'`,
         },
       },
     });
