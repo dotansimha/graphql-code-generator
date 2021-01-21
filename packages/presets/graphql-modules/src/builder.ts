@@ -141,10 +141,7 @@ export function buildModule(
       '\n}';
   }
 
-  return [
-    ...(!shouldDeclare ? imports : []),
-    content
-  ].filter(Boolean).join('\n');
+  return [...(!shouldDeclare ? imports : []), content].filter(Boolean).join('\n');
 
   /**
    * A dictionary of fields to pick from an object
@@ -223,10 +220,12 @@ export function buildModule(
       `export type ${encapsulateTypeName('Scalars')} = Pick<${importNamespace}.Scalars, ${registry.scalars
         .map(withQuotes)
         .join(' | ')}>;`,
-      ...registry.scalars.map(
-        scalar =>
-          `export type ${encapsulateTypeName(`${scalar}ScalarConfig`)} = ${importNamespace}.${scalar}ScalarConfig;`
-      ),
+      ...registry.scalars.map(scalar => {
+        const convertedName = baseVisitor.convertName(scalar, {
+          suffix: 'ScalarConfig',
+        });
+        return `export type ${encapsulateTypeName(convertedName)} = ${importNamespace}.${convertedName};`;
+      }),
     ].join('\n');
   }
 
