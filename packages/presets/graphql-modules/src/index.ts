@@ -27,6 +27,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
     const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.sources, baseOutputDir);
     const modules = Object.keys(sourcesByModuleMap);
 
+    const baseVisitor = new BaseVisitor(options.config, {});
+
     // One file with an output from all plugins
     const baseOutput: Types.GenerateOptions = {
       filename: resolve(cwd, baseOutputDir, baseTypesPath),
@@ -47,7 +49,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
             return Object.keys(typeMap)
               .map(t => {
                 if (t && typeMap[t] && isScalarType(typeMap[t]) && !isGraphQLPrimitive(t)) {
-                  return `export type ${t} = Scalars["${t}"];`;
+                  const convertedName = baseVisitor.convertName(t);
+                  return `export type ${convertedName} = Scalars["${t}"];`;
                 }
 
                 return null;
@@ -64,7 +67,6 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       schemaAst: options.schemaAst!,
     };
 
-    const baseVisitor = new BaseVisitor(options.config, {});
     const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
     const baseTypesDir = stripFilename(baseOutput.filename);
 
