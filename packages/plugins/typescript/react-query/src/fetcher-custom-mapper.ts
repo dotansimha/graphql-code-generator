@@ -2,20 +2,22 @@ import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
 import { parseMapper, ParsedMapper, buildMapperImport } from '@graphql-codegen/visitor-plugin-common';
+import { CustomFetch } from './config';
 
 export class CustomMapperFetcher implements FetcherRenderer {
   private _mapper: ParsedMapper;
+  private _lazyVariables: boolean;
 
-  constructor(private visitor: ReactQueryVisitor, fetcherStr: string) {
-    this._mapper = parseMapper(fetcherStr);
+  constructor(private visitor: ReactQueryVisitor, customFetcher: CustomFetch) {
+    if (typeof customFetcher === 'string') {
+      customFetcher = { func: customFetcher };
+    }
+    this._mapper = parseMapper(customFetcher.func);
+    this._lazyVariables = customFetcher.lazyVariables;
   }
 
-  getFetcherFnName(): string {
-    if (this._mapper.isExternal) {
-      return this._mapper.type;
-    }
-
-    return this._mapper.type;
+  private getFetcherFnName(operationResultType: string, operationVariablesTypes: string): string {
+    return `${this._mapper.type}<${operationResultType}, ${operationVariablesTypes}>`;
   }
 
   generateFetcherImplementaion(): string {
@@ -50,6 +52,11 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
+    const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const impl = this._lazyVariables
+      ? `${typedFetcher}(${documentVariableName}).bind(null, variables)`
+      : `${typedFetcher}(${documentVariableName}, variables)`;
+
     return `export const use${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
@@ -59,7 +66,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ['${node.name.value}', variables],
-      ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
+      ${impl},
       options
     );`;
   }
@@ -77,13 +84,17 @@ export class CustomMapperFetcher implements FetcherRenderer {
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
+    const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const impl = this._lazyVariables
+      ? `${typedFetcher}(${documentVariableName})`
+      : `(${variables}) => ${typedFetcher}(${documentVariableName}, variables)()`;
 
     return `export const use${operationName} = <
       TError = ${this.visitor.config.errorType},
       TContext = unknown
     >(${options}) => 
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
-      (${variables}) => ${this.getFetcherFnName()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
+      ${impl},
       options
     );`;
   }

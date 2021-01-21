@@ -1,5 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React-Query fetcher: custom-mapper Should generate mutation correctly with lazy variables 1`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      ['test', variables],
+      useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
+      options
+    );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
+      options
+    );"
+`;
+
 exports[`React-Query fetcher: custom-mapper Should generate query correctly with external mapper 1`] = `
 "
 export const TestDocument = \`
