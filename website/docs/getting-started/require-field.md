@@ -57,3 +57,18 @@ You can either set an environment variable called `DOTENV_CONFIG_PATH` with the 
 Or, you can specify it using codegen cli, like that:
 
     graphql-codegen --require dotenv/config --config codegen.yml dotenv_config_path=my.env
+    
+#### `dotenv` Example
+.env:
+
+    SCHEMAURL=https://example.com/graphql
+    APIKEY=ABC123
+
+codegen.yml:
+
+    schema: 
+      - ${SCHEMAURL}:
+        headers:
+          apikey: ${APIKEY}
+      
+  > Note: The env values will be saved in the generated code output.  Be careful not to commit code with sensitive keys.
