@@ -260,6 +260,22 @@ describe('TypeScript Operations Plugin', () => {
       `);
       await validate(content, config);
     });
+
+    it('should include fragment variable definitions when experimentalFragmentVariables is set', async () => {
+      const ast = parse(
+        /* GraphQL */ `
+          fragment TextNotificationFragment($skip: Boolean!) on TextNotification {
+            text @skip(if: $skip)
+          }
+        `,
+        { experimentalFragmentVariables: true }
+      );
+      const config = { experimentalFragmentVariables: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+      expect(content).toMatchSnapshot();
+    });
   });
 
   describe('Scalars', () => {

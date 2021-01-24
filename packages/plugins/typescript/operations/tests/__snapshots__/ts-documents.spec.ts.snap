@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`TypeScript Operations Plugin Config should include fragment variable definitions when experimentalFragmentVariables is set 1`] = `
+"export type TextNotificationFragmentFragment = (
+  { __typename?: 'TextNotification' }
+  & MakeOptional<Pick<TextNotification, 'text'>, 'text'>
+);
+
+
+export type TextNotificationFragmentFragmentVariables = Exact<{
+  skip: Scalars['Boolean'];
+}>;
+"
+`;
+
 exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = Exact<{
   gid: Scalars['ID'];
