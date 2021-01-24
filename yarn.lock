@@ -18102,7 +18102,7 @@ ts-log@^2.2.3:
   resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.2.3.tgz#4da5640fe25a9fb52642cd32391c886721318efb"
   integrity sha512-XvB+OdKSJ708Dmf9ore4Uf/q62AYDTzFcAdxc8KNML1mmAWywRFVt/dn1KYJH8Agt5UJNujfM3znU5PxgAzA2w==
 
-ts-node@9.1.1:
+ts-node@9.1.1, ts-node@^9.1.1:
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.1.1.tgz#51a9a450a3e959401bda5f004a72d54b936d376d"
   integrity sha512-hPlt7ZACERQGf03M253ytLY3dHbGNGrAq9qIHWUY9XHYl1z7wYngSr3OQ5xmui8o2AaxsONxIzjafLUiWBo1Fg==
@@ -18280,14 +18280,15 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript-json-schema@0.47.0:
-  version "0.47.0"
-  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.47.0.tgz#84dde5460b127c6774da81bf70b23c7e04857b13"
-  integrity sha512-A6NVwSOTSsNDHfaqDcDeKwwyXEeKqBHoAr20jcetnYj4e8C6zVFofAVhAuwsBXCRYiWEE/lyHrcxpsSpbIk0Mg==
+typescript-json-schema@0.48.0:
+  version "0.48.0"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.48.0.tgz#d30e287319a09617e87d10c17f484077412a55e7"
+  integrity sha512-RDs66ANmjiqcSQ7dAeFIarF0ON6b+dxb5Fl1x53PK0p/QcqEoSN3kHsJTB0lgw+zWz6wdObCzk3jIwik3maK1Q==
   dependencies:
     "@types/json-schema" "^7.0.6"
     glob "^7.1.6"
     json-stable-stringify "^1.0.1"
+    ts-node "^9.1.1"
     typescript "^4.1.3"
     yargs "^16.2.0"
 
