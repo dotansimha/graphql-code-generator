@@ -4813,56 +4813,7 @@ function test(q: GetEntityBrandDataQuery): void {
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: Maybe<string> } };`);
     });
 
-    // it('objects with @skip, @include should pre resolve into optional', async () => {
-    //   const schema = buildSchema(/* GraphQL */ `
-    //     type Query {
-    //       user: User!
-    //     }
-
-    //     type User {
-    //       id: String!
-    //       name: String!
-    //       address: Address!
-    //     }
-
-    //     type Address {
-    //       city: String!
-    //     }
-    //   `);
-
-    //   const fragment = parse(/* GraphQL */ `
-    //     query user($showAddress: Boolean!, $showName: Boolean!) {
-    //       user {
-    //         id
-    //         name @include(if: $showName)
-    //         address @include(if: $showAddress) {
-    //           city
-    //         }
-    //       }
-    //     }
-    //   `);
-
-    //   const { content } = await plugin(
-    //     schema,
-    //     [{ location: '', document: fragment }],
-    //     {
-    //       preResolveTypes: true,
-    //     },
-    //     {
-    //       outputFile: 'graphql.ts',
-    //     }
-    //   );
-
-    //   expect(content).toBeSimilarStringTo(`
-    //   export type UserQueryVariables = Exact<{
-    //     showAddress: Scalars['Boolean'];
-    //     showName: Scalars['Boolean'];
-    //   }>;
-
-    //   export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: Maybe<string>, address?: Maybe<{ __typename?: 'Address', city: string}> } };`);
-    // });
-
-    it('fileds with @skip, @include should make container resolve into MakeOptional type', async () => {
+    it('objects with @skip, @include should pre resolve into optional', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user: User!
@@ -4871,14 +4822,68 @@ function test(q: GetEntityBrandDataQuery): void {
         type User {
           id: String!
           name: String!
+          address: Address!
+        }
+
+        type Address {
+          city: String!
         }
       `);
 
       const fragment = parse(/* GraphQL */ `
-        query user($showName: Boolean!) {
+        query user($showAddress: Boolean!, $showName: Boolean!) {
           user {
             id
             name @include(if: $showName)
+            address @include(if: $showAddress) {
+              city
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQueryVariables = Exact<{
+        showAddress: Scalars['Boolean'];
+        showName: Scalars['Boolean'];
+      }>;
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: Maybe<string>, address?: Maybe<{ __typename?: 'Address', city: string }> } };`);
+    });
+
+    it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+        type User {
+          id: String!
+          name: String!
+          address: Address!
+        }
+        type Address {
+          city: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showAddress: Boolean!, $showName: Boolean!) {
+          user {
+            id
+            name @include(if: $showName)
+            address @include(if: $showAddress) {
+              city
+            }
           }
         }
       `);
@@ -4894,6 +4899,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
+        showAddress: Scalars['Boolean'];
         showName: Scalars['Boolean'];
       }>;
   
@@ -4902,7 +4908,11 @@ function test(q: GetEntityBrandDataQuery): void {
         { __typename?: 'Query' }
         & { user: (
           { __typename?: 'User' }
-          & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
+          & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>      
+          & { address?: Maybe<(
+            { __typename?: 'Address' }
+            & Pick<Address, 'city'>
+          )> }
         ) }
       );`);
     });
