@@ -168,8 +168,7 @@ export type SubscriptionCommentAddedArgs = {|
 |};
 
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-type $MakeOptional<T, K: Object> = $Diff<T, K> &
-  $ObjMapi<$Rest<T, K>, <SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
+
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: $ElementType<Scalars, 'String'>,
 };
