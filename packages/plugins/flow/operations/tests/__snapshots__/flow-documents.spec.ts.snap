@@ -4,7 +4,7 @@ exports[`Flow Operations Plugin Import namespace Should handle "namespacedImport
 "// @flow
 
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
+
 export type NotificationsQueryVariables = {};
 
 
@@ -27,7 +27,7 @@ export type NotificationsQuery = ({
 
 exports[`Flow Operations Plugin Output options Should respect flow option useFlowReadOnlyTypes 1`] = `
 "type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
+
 export type CurrentUserQueryVariables = {};
 
 
@@ -43,7 +43,7 @@ exports[`Flow Operations Plugin Selection Set Should support fragment spread cor
 "// @flow
 
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
+
 export type UserFieldsFragment = ({
     ...$Pick<User, {| id: *, username: *, role?: * |}>,
   ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
@@ -60,7 +60,7 @@ exports[`Flow Operations Plugin Selection Set Should support fragment spread wit
 "// @flow
 
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-type $MakeOptional<T, K: Object> = $Diff<T, K> & $ObjMapi<$Rest<T, K>,<SubKey>(k: SubKey) => Maybe<$ElementType<T, SubKey>>>;
+
 export type UserFieldsFragment = ({
     ...$Pick<User, {| id: *, username: *, role?: * |}>,
   ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
@@ -78,6 +78,7 @@ export type MeQuery = {| me?: ?({
 
 exports[`Flow Operations Plugin Selection Set Should support fragment spread with flattenGeneratedTypes and preResolveTypes 1`] = `
 "// @flow
+
 
 export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
 
