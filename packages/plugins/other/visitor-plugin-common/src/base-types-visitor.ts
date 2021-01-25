@@ -394,7 +394,7 @@ export class BaseTypesVisitor<
     return allFields.join('\n');
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -416,7 +416,7 @@ export class BaseTypesVisitor<
     return declarationBlock.withBlock(node.fields.join('\n'));
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
     if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
