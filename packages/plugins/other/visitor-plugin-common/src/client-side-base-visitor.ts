@@ -20,6 +20,8 @@ import { pascalCase } from 'pascal-case';
 import { generateFragmentImportStatement } from './imports';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
+gqlTag.enableExperimentalFragmentVariables();
+
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
   documentNode = 'documentNode',
@@ -148,6 +150,11 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @description This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
    */
   pureMagicComment?: boolean;
+  /**
+   * @default false
+   * @description If set to true, it will enable support for parsing variables on fragments.
+   */
+  experimentalFragmentVariables?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -167,6 +174,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   globalNamespace?: boolean;
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
+  experimentalFragmentVariables?: boolean;
 }
 
 export class ClientSideBaseVisitor<
@@ -207,6 +215,7 @@ export class ClientSideBaseVisitor<
       })(rawConfig),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
       pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
+      experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       ...additionalConfig,
     } as any);
 
@@ -322,13 +331,19 @@ export class ClientSideBaseVisitor<
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this.getFragmentVariableName(fragmentDocument);
-    const fragmentResultType = this.convertName(fragmentDocument.name.value, {
-      useTypesPrefix: true,
-      suffix: this.getFragmentSuffix(fragmentDocument),
-    });
-    return `export const ${name}${this.getDocumentNodeSignature(fragmentResultType, 'unknown', fragmentDocument)} =${
-      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-    } ${this._gql(fragmentDocument)};`;
+    const fragmentTypeSuffix = this.getFragmentSuffix(fragmentDocument);
+    return `export const ${name}${this.getDocumentNodeSignature(
+      this.convertName(fragmentDocument.name.value, {
+        useTypesPrefix: true,
+        suffix: fragmentTypeSuffix,
+      }),
+      this.config.experimentalFragmentVariables
+        ? this.convertName(fragmentDocument.name.value, {
+            suffix: fragmentTypeSuffix + 'Variables',
+          })
+        : 'unknown',
+      fragmentDocument
+    )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {

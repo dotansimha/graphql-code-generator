@@ -3,6 +3,10 @@ import { GraphQLSchema, isEnumType, GraphQLEnumType } from 'graphql';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 import { parseMapper } from './mappers';
 
+function escapeString(str: string) {
+  return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'");
+}
+
 export function parseEnumValues({
   schema,
   mapOrStr = {},
@@ -23,7 +27,7 @@ export function parseEnumValues({
           if (value && value !== name) {
             mapOrStr[enumTypeName] = mapOrStr[enumTypeName] || {};
             if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
-              mapOrStr[enumTypeName][name] = value;
+              mapOrStr[enumTypeName][name] = escapeString(value);
             }
           }
         }

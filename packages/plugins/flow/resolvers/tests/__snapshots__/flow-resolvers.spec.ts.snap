@@ -149,7 +149,7 @@ export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<Resolv
 };
 
 export type MyScalarScalarConfig = {
-  ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>, 
+  ...GraphQLScalarTypeConfig<$ElementType<ResolversTypes, 'MyScalar'>, any>,
   name: 'MyScalar'
 };
 

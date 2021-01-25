@@ -372,14 +372,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
+      const isConditional = hasConditionalDirectives(field.directives);
 
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType),
+        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          selectedFieldType
+          isConditional ? realSelectedFieldType : selectedFieldType
         ),
       });
     }
@@ -456,8 +457,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return null;
   }
 
+  protected getUnknownType(): string {
+    return 'never';
+  }
+
   public transformSelectionSet(): string {
     const grouped = this._buildGroupedSelections();
+
+    // This might happen in case we have an interface, that is being queries, without any GraphQL
+    // "type" that implements it. It will lead to a runtime error, but we aim to try to reflect that in
+    // build time as well.
+    if (Object.keys(grouped).length === 0) {
+      return this.getUnknownType();
+    }
 
     return Object.keys(grouped)
       .map(typeName => {

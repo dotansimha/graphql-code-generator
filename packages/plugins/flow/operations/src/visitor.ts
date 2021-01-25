@@ -1,5 +1,12 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
+import {
+  GraphQLSchema,
+  isEnumType,
+  isNonNullType,
+  GraphQLOutputType,
+  GraphQLNamedType,
+  SelectionSetNode,
+} from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
@@ -14,6 +21,26 @@ import {
   DeclarationKind,
   generateFragmentImportStatement,
 } from '@graphql-codegen/visitor-plugin-common';
+
+class FlowSelectionSetToObject extends SelectionSetToObject {
+  getUnknownType() {
+    return 'any';
+  }
+
+  public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
+    return new FlowSelectionSetToObject(
+      this._processor,
+      this._scalars,
+      this._schema,
+      this._convertName.bind(this),
+      this._getFragmentSuffix.bind(this),
+      this._loadedFragments,
+      this._config,
+      parentSchemaType,
+      selectionSet
+    );
+  }
+}
 
 import autoBind from 'auto-bind';
 
@@ -39,8 +66,12 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapOptional = (type: string) => `?${type}`;
 
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const formatNamedField = (name: string, type: GraphQLOutputType | GraphQLNamedType | null): string => {
-      const optional = !!type && !isNonNullType(type);
+    const formatNamedField = (
+      name: string,
+      type: GraphQLOutputType | GraphQLNamedType | null,
+      isConditional = false
+    ): string => {
+      const optional = (!!type && !isNonNullType(type)) || isConditional;
       return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };
 
@@ -63,7 +94,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
         });
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(
-      new SelectionSetToObject(
+      new FlowSelectionSetToObject(
         processor,
         this.scalars,
         this.schema,

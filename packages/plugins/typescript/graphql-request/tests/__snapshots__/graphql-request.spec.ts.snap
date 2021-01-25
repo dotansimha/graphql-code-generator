@@ -6,6 +6,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLClient } from 'graphql-request';
+import { HeadersInit } from 'graphql-request/dist/types.dom';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -273,16 +274,16 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: HeadersInit): Promise<FeedQuery> {
       return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: HeadersInit): Promise<Feed2Query> {
       return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: HeadersInit): Promise<Feed3Query> {
       return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: HeadersInit): Promise<Feed4Query> {
       return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables, requestHeaders));
     }
   };
@@ -320,6 +321,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLClient } from 'graphql-request';
 import { print } from 'graphql';
+import { HeadersInit } from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -588,16 +590,16 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: HeadersInit): Promise<FeedQuery> {
       return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: HeadersInit): Promise<Feed2Query> {
       return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: HeadersInit): Promise<Feed3Query> {
       return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: HeadersInit): Promise<Feed4Query> {
       return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables, requestHeaders));
     }
   };
@@ -627,6 +629,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLClient } from 'graphql-request';
+import { HeadersInit } from 'graphql-request/dist/types.dom';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -894,16 +897,16 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: HeadersInit): Promise<FeedQuery> {
       return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: HeadersInit): Promise<Feed2Query> {
       return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: HeadersInit): Promise<Feed3Query> {
       return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: HeadersInit): Promise<Feed4Query> {
       return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables, requestHeaders));
     }
   };
@@ -934,6 +937,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import type { GraphQLClient } from 'graphql-request';
 import { print } from 'graphql';
+import type { HeadersInit } from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -1202,16 +1206,16 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Headers): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: HeadersInit): Promise<FeedQuery> {
       return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables, requestHeaders));
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Headers): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: HeadersInit): Promise<Feed2Query> {
       return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables, requestHeaders));
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Headers): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: HeadersInit): Promise<Feed3Query> {
       return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables, requestHeaders));
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Headers): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: HeadersInit): Promise<Feed4Query> {
       return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables, requestHeaders));
     }
   };

@@ -7,6 +7,7 @@ const ROOT_TYPES = ['Query'];
 
 const testDoc = parse(/* GraphQL */ `
   scalar DateTime
+  scalar URL
 
   type Article {
     id: ID!
@@ -14,6 +15,7 @@ const testDoc = parse(/* GraphQL */ `
     text: String!
     author: User!
     comments: [Comment!]
+    url: URL!
   }
 
   interface Node {
@@ -197,7 +199,7 @@ test('should pick fields from defined and extended types', () => {
 
   expect(output).toBeSimilarStringTo(`
     interface DefinedFields {
-      Article: 'id' | 'title' | 'text' | 'author' | 'comments';
+      Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'url';
       Query: 'articles' | 'articleById' | 'articlesByUser';
       User: 'articles';
       Node: 'id';
@@ -276,7 +278,7 @@ test('should export partial types of scalars, only those defined in module or ro
   });
 
   expect(output).toBeSimilarStringTo(`
-    export type Scalars = Pick<core.Scalars, 'DateTime'>;
+    export type Scalars = Pick<core.Scalars, 'DateTime' | 'URL'>;
   `);
 
   // DateTime type should not be generated
@@ -306,6 +308,9 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
   expect(output).toBeSimilarStringTo(`
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
+  `);
+  expect(output).toBeSimilarStringTo(`
+    export type UrlScalarConfig = core.UrlScalarConfig;
   `);
   // Interfaces should not have resolvers
   // We want Object types to have __isTypeOf
@@ -348,6 +353,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
       Query?: QueryResolvers;
       User?: UserResolvers;
       DateTime?: core.Resolvers['DateTime'];
+      URL?: core.Resolvers['URL'];
     };
   `);
 });
@@ -376,6 +382,7 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
         text?: gm.Middleware[];
         author?: gm.Middleware[];
         comments?: gm.Middleware[];
+        url?: gm.Middleware[];
       };
       User?: {
         '*'?: gm.Middleware[];

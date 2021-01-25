@@ -228,8 +228,8 @@ export type Scalars = {|
 |};
 
 export const myenumvalues = Object.freeze({
-  a: 'A', 
-  b: 'B', 
+  a: 'A',
+  b: 'B',
   c: 'C'
 });
 
@@ -298,8 +298,8 @@ export type Scalars = {|
 |};
 
 export const MyEnumValues = Object.freeze({
-  A: 'A', 
-  B: 'B', 
+  A: 'A',
+  B: 'B',
   C: 'C'
 });
 
@@ -368,8 +368,8 @@ export type Scalars = {|
 |};
 
 export const IMyEnumValues = Object.freeze({
-  A: 'A', 
-  B: 'B', 
+  A: 'A',
+  B: 'B',
   C: 'C'
 });
 
@@ -438,7 +438,7 @@ export type Scalars = {|
 |};
 
 export const MyEnumValues = Object.freeze({
-  MyValue: 'My_Value', 
+  MyValue: 'My_Value',
   MyOtherValue: '_MyOtherValue'
 });
 
@@ -607,8 +607,8 @@ export type MyInterface = {|
 |};
 
 export const MyEnumValues = Object.freeze({
-  A: 'A', 
-  B: 'B', 
+  A: 'A',
+  B: 'B',
   C: 'C'
 });
 
