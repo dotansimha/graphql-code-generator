@@ -71,4 +71,4 @@ codegen.yml:
         headers:
           apikey: ${APIKEY}
       
-  > Note: The env values will be saved in the generated code output.  Be careful not to commit code with sensitive keys.
+  > Note: The env values might be saved in the generated code output.  Be careful not to commit code with sensitive keys.
