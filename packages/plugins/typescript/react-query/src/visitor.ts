@@ -14,6 +14,7 @@ import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
 import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { pascalCase } from 'pascal-case';
+import { generateQueryKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {}
 
@@ -108,7 +109,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
 
     if (operationType === 'Query') {
-      return this.fetcher.generateQueryHook(
+      let query = this.fetcher.generateQueryHook(
         node,
         documentVariableName,
         operationName,
@@ -116,6 +117,10 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         operationVariablesTypes,
         hasRequiredVariables
       );
+      if (this.rawConfig.exposeQueryKeys) {
+        query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+      }
+      return query;
     } else if (operationType === 'Mutation') {
       return this.fetcher.generateMutationHook(
         node,
