@@ -53,6 +53,16 @@ describe('React-Query', () => {
     },
   ];
 
+  it('should allow to override TError type', async () => {
+    const config = {
+      errorType: 'any',
+    };
+
+    const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+    expect(out.content).not.toContain(`TError = unknown`);
+    expect(out.content).toContain(`TError = any`);
+  });
+
   describe('fetcher: custom-mapper', () => {
     it('Should generate query correctly with external mapper', async () => {
       const config = {

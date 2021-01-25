@@ -3,6 +3,7 @@ import {
   ClientSideBasePluginConfig,
   LoadedFragment,
   DocumentMode,
+  getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import { ReactQueryRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
@@ -16,7 +17,10 @@ import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { pascalCase } from 'pascal-case';
 import { generateQueryKeyMaker } from './variables-generator';
 
-export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {}
+export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
+  errorType: string;
+  exposeQueryKeys: boolean;
+}
 
 export interface ReactQueryMethodMap {
   query: {
@@ -53,6 +57,8 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   ) {
     super(schema, fragments, rawConfig, {
       documentMode: DocumentMode.string,
+      errorType: getConfigValue(rawConfig.errorType, 'unknown'),
+      exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -117,7 +123,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         operationVariablesTypes,
         hasRequiredVariables
       );
-      if (this.rawConfig.exposeQueryKeys) {
+      if (this.config.exposeQueryKeys) {
         query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
       }
       return query;

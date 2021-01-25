@@ -52,7 +52,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
-      TError = unknown
+      TError = ${this.visitor.config.errorType}
     >(
       ${variables}, 
       ${options}
@@ -79,7 +79,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 
     return `export const use${operationName} = <
-      TError = unknown,
+      TError = ${this.visitor.config.errorType},
       TContext = unknown
     >(${options}) => 
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
