@@ -241,12 +241,14 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _addAdditionalFields(tree: FieldsTree, additioalFields: AdditionalField[] | null): void {
+    const avoidOptionals = this.config.avoidOptionals;
     if (!additioalFields || additioalFields.length === 0) {
       return;
     }
 
     for (const field of additioalFields) {
-      tree.addField(field.path, field.type);
+      const isOptional = field.path.includes('?');
+      tree.addField(`${isOptional && avoidOptionals ? field.path.replace(/\?/g, '') : field.path}`, field.type);
     }
   }
 
