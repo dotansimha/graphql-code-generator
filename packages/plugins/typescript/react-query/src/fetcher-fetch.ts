@@ -46,7 +46,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
-      TError = unknown
+      TError = ${this.visitor.config.errorType}
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit }, 
       ${variables}, 
@@ -74,7 +74,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 
     return `export const use${operationName} = <
-      TError = unknown,
+      TError = ${this.visitor.config.errorType},
       TContext = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit }, 

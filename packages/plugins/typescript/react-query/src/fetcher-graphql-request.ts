@@ -32,7 +32,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
-      TError = unknown
+      TError = ${this.visitor.config.errorType}
     >(
       client: GraphQLClient, 
       ${variables}, 
@@ -62,7 +62,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 
     return `export const use${operationName} = <
-      TError = unknown,
+      TError = ${this.visitor.config.errorType},
       TContext = unknown
     >(
       client: GraphQLClient, 
