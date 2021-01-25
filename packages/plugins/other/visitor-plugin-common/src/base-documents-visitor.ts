@@ -5,7 +5,6 @@ import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue 
 import {
   GraphQLSchema,
   FragmentDefinitionNode,
-  GraphQLObjectType,
   OperationDefinitionNode,
   VariableDefinitionNode,
   OperationTypeNode,
@@ -37,6 +36,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
   skipTypeNameForRoot: boolean;
+  experimentalFragmentVariables: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -96,6 +96,11 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @description If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
    */
   exportFragmentSpreadSubTypes?: boolean;
+  /**
+   * @default false
+   * @description If set to true, it will enable support for parsing variables on fragments.
+   */
+  experimentalFragmentVariables?: boolean;
 
   // The following are internal, and used by presets
   /**
@@ -127,6 +132,7 @@ export class BaseDocumentsVisitor<
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
+      experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
@@ -185,15 +191,28 @@ export class BaseDocumentsVisitor<
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
-    const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
+    const fragmentRootType = this._schema.getType(node.typeCondition.name.value);
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
-
-    return selectionSet.transformFragmentSelectionSetToTypes(
-      node.name.value,
-      fragmentSuffix,
-      this._declarationBlockConfig
-    );
+    return [
+      selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig),
+      this.config.experimentalFragmentVariables
+        ? new DeclarationBlock({
+            ...this._declarationBlockConfig,
+            blockTransformer: t => this.applyVariablesWrapper(t),
+          })
+            .export()
+            .asKind('type')
+            .withName(
+              this.convertName(node.name.value, {
+                suffix: fragmentSuffix + 'Variables',
+              })
+            )
+            .withBlock(this._variablesTransfomer.transform(node.variableDefinitions)).string
+        : undefined,
+    ]
+      .filter(r => r)
+      .join('\n\n');
   }
 
   protected applyVariablesWrapper(variablesBlock: string): string {
