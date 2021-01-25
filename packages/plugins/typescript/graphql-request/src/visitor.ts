@@ -7,7 +7,7 @@ import {
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
 import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
@@ -53,6 +53,22 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     }
   }
 
+  public OperationDefinition(node: OperationDefinitionNode) {
+    const operationName = node.name?.value;
+
+    if (!operationName) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Anonymous GraphQL operation was ignored in "typescript-graphql-request", please make sure to name your operation: `,
+        print(node)
+      );
+
+      return null;
+    }
+
+    return super.OperationDefinition(node);
+  }
+
   protected buildOperation(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -80,14 +96,16 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   public get sdkContent(): string {
     const allPossibleActions = this._operationsToInclude
       .map(o => {
+        const operationName = o.node.name.value;
         const optionalVariables =
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
         const docVarName = this.getDocumentNodeVariable(o.documentVariableName);
         const doc = this.config.documentMode === DocumentMode.string ? docVarName : `print(${docVarName})`;
+
         if (this.config.rawRequest) {
-          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
+          return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
           }, requestHeaders?: HeadersInit): Promise<{ data?: ${
             o.operationResultType
@@ -95,13 +113,14 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         } else {
-          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
+          return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
           }, requestHeaders?: HeadersInit): Promise<${o.operationResultType}> {
   return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         }
       })
+      .filter(Boolean)
       .map(s => indentMultiline(s, 2));
 
     return `${additionalExportedTypes}
