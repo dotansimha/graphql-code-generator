@@ -29,7 +29,7 @@
   "dependencies": {
     "react-markdown": "5.0.3",
     "monaco-yaml": "2.5.1",
-    "react-select": "3.2.0",
+    "react-select": "4.0.2",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/c-sharp": "1.17.10",
     "@graphql-codegen/c-sharp-operations": "1.17.10",
