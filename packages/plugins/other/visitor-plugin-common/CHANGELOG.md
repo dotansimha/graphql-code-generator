@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.18.2
+
+### Patch Changes
+
+- ca66569f: Fix issues with undefined calls for str.replace
+
 ## 1.18.1
 
 ### Patch Changes

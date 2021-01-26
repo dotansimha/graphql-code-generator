@@ -1,5 +1,13 @@
 # @graphql-codegen/flow
 
+## 1.18.4
+
+### Patch Changes
+
+- ca66569f: Fix issues with undefined calls for str.replace
+- Updated dependencies [ca66569f]
+  - @graphql-codegen/visitor-plugin-common@1.18.2
+
 ## 1.18.3
 
 ### Patch Changes
