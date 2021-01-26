@@ -6,14 +6,14 @@ import { CustomFetch } from './config';
 
 export class CustomMapperFetcher implements FetcherRenderer {
   private _mapper: ParsedMapper;
-  private _lazyVariables: boolean;
+  private _isReactHook: boolean;
 
   constructor(private visitor: ReactQueryVisitor, customFetcher: CustomFetch) {
     if (typeof customFetcher === 'string') {
       customFetcher = { func: customFetcher };
     }
     this._mapper = parseMapper(customFetcher.func);
-    this._lazyVariables = customFetcher.lazyVariables;
+    this._isReactHook = customFetcher.isReactHook;
   }
 
   private getFetcherFnName(operationResultType: string, operationVariablesTypes: string): string {
@@ -53,7 +53,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
-    const impl = this._lazyVariables
+    const impl = this._isReactHook
       ? `${typedFetcher}(${documentVariableName}).bind(null, variables)`
       : `${typedFetcher}(${documentVariableName}, variables)`;
 
@@ -85,7 +85,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
-    const impl = this._lazyVariables
+    const impl = this._isReactHook
       ? `${typedFetcher}(${documentVariableName})`
       : `(${variables}) => ${typedFetcher}(${documentVariableName}, variables)()`;
 

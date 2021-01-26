@@ -155,14 +155,14 @@ generates:
     config:
       fetcher:
         func: './my-file#myFetcher'
-        lazyVariables: false # optional, defaults to false, controls the function's signature. Read below
+        isReactHook: false # optional, defaults to false, controls the function's signature. Read below
 ```
 
 As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
 ```yml
     #...
     config:
-      fetcher: './my-file#myFetcher' # lazyVariables is false here (the default version)
+      fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
 ```
 
 Codegen will use `myFetcher`, and you can just use the hook directly:
@@ -175,17 +175,17 @@ export const MyComponent = () => {
 };
 ```
 
-Depending on the `lazyVariables` property, your `myFetcher` should be in the following signature:
-* `lazyVariables: false`
+Depending on the `isReactHook` property, your `myFetcher` should be in the following signature:
+* `isReactHook: false`
   ```ts
   type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables): (() => Promise<TData>)
   ```
-* `lazyVariables: true`
+* `isReactHook: true`
   ```ts
   type MyFetcher<TData, TVariables> = (operation: string): ((variables?: TVariables) => Promise<TData>)
   ```
 
-#### Usage example (`lazyVariables: false`)
+#### Usage example (`isReactHook: false`)
 ```tsx
 export const fetchData = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
   return async () => {
@@ -212,9 +212,9 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
 };
 ```
 
-#### Usage example (`lazyVariables: true`)
+#### Usage example (`isReactHook: true`)
 ```tsx
-export const fetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
+export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
   // it is safe to call React Hooks here.
   const {url, headers} = React.useContext(FetchParamsContext);
   return async (variables?: TVariables) => {

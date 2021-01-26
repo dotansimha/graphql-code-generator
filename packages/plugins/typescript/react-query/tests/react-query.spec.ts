@@ -142,7 +142,7 @@ describe('React-Query', () => {
       const config = {
         fetcher: {
           func: './my-file#useCustomFetcher',
-          lazyVariables: true,
+          isReactHook: true,
         },
         typesPrefix: 'T',
       };
