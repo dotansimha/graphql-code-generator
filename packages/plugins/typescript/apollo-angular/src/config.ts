@@ -114,4 +114,17 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default 'apollo-angular'
    */
   apolloAngularPackage?: 'apollo-angular' | string;
+  /**
+   * @description Add additional dependency injections for generated services
+   * @default []
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   additionalDI
+   *      - 'testService: TestService'
+   *      - 'testService1': TestService1'
+   * ```
+   */
+  additionalDI?: string[];
 }
