@@ -1,5 +1,17 @@
 # @graphql-codegen/flow
 
+## 1.18.3
+
+### Patch Changes
+
+- 4444348d: Correctly escape enum values defined in the GraphQLSchema object
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
 ## 1.18.2
 
 ### Patch Changes

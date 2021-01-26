@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.20.1
+
+### Patch Changes
+
+- f86365c2: Dependencies cleanup
+
 ## 1.20.0
 
 ### Minor Changes

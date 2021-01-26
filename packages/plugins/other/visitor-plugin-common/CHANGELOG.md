@@ -1,5 +1,15 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.18.1
+
+### Patch Changes
+
+- 63be0f40: Fix issues with empty interfaces causing syntax issues
+- 190482a1: add support for fragment variables
+- 4444348d: Correctly escape enum values defined in the GraphQLSchema object
+- 142b32b3: Better support for @skip/@include directives with complex selection sets
+- 42213fa0: Strip trailing whitespace from some output
+
 ## 1.18.0
 
 ### Minor Changes

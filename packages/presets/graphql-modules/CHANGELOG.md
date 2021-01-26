@@ -1,5 +1,17 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 1.2.1
+
+### Patch Changes
+
+- c7cb4195: fix(graphql-modules-preset): apply naming convention to scalar config references in module typings
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
 ## 1.2.0
 
 ### Minor Changes
