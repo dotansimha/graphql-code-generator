@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript
 
+## 1.20.2
+
+### Patch Changes
+
+- ca66569f: Fix issues with undefined calls for str.replace
+- Updated dependencies [ca66569f]
+  - @graphql-codegen/visitor-plugin-common@1.18.2
+
 ## 1.20.1
 
 ### Patch Changes
