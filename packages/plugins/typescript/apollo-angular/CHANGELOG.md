@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 2.3.0
+
+### Minor Changes
+
+- b0292408: Add additionalDI config for add custom dependency injections
+
+### Patch Changes
+
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
 ## 2.2.1
 
 ### Patch Changes

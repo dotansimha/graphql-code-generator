@@ -1,5 +1,21 @@
 # @graphql-codegen/typescript-react-query
 
+## 1.1.0
+
+### Minor Changes
+
+- e6efeadc: Allow to override TError type at the level of the config
+- 3c30fbd4: Exposed query keys for each generated qurey hook
+
+### Patch Changes
+
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
 ## 1.0.0
 
 ### Major Changes

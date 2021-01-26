@@ -1,5 +1,21 @@
 # @graphql-codegen/typescript-operations
 
+## 1.17.14
+
+### Patch Changes
+
+- 63be0f40: Fix issues with empty interfaces causing syntax issues
+- 190482a1: add support for fragment variables
+- 142b32b3: @skip, @include directives resolve to optional fields
+- 142b32b3: Better support for @skip/@include directives with complex selection sets
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+  - @graphql-codegen/typescript@1.20.1
+
 ## 1.17.13
 
 ### Patch Changes
