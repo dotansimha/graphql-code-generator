@@ -159,10 +159,7 @@ describe('Urql Introspection Plugin', () => {
         }
       );
       const output = `
-        import { IntrospectionQuery } from 'graphql';
-
-        const result: IntrospectionQuery = ${introspection};  
-        export default result;
+        export default ${introspection};
       `;
 
       expect(tsContent).toBeSimilarStringTo(output);
@@ -191,7 +188,7 @@ describe('Urql Introspection Plugin', () => {
         }
       );
       const output = `
-        export default result;
+        export default ${introspection};
       `;
 
       expect(tsContent).toBeSimilarStringTo(output);

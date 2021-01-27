@@ -72,10 +72,7 @@ export const plugin: PluginFunction = async (
 
   if (extensions.ts.includes(ext)) {
     return `
-      import { IntrospectionQuery } from 'graphql';
-
-      const result: IntrospectionQuery = ${content};
-      export default result;
+      export default ${content};
     `;
   }
 
