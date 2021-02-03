@@ -40,7 +40,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     const typeImport = this.config.useTypeImports ? 'import type' : 'import';
 
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
-    this._additionalImports.push(`${typeImport} { HeadersInit } from 'graphql-request/dist/types.dom';`);
+    this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
     if (this.config.documentMode !== DocumentMode.string) {
       this._additionalImports.push(`import { print } from 'graphql';`);
@@ -105,15 +105,15 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         if (this.config.rawRequest) {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: HeadersInit): Promise<{ data?: ${
+          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
             o.operationResultType
-          } | undefined; extensions?: any; headers: HeadersInit; status: number; errors?: GraphQLError[] | undefined; }> {
+          } | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
     return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: HeadersInit): Promise<${o.operationResultType}> {
+          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
   return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables, requestHeaders));
 }`;
         }
