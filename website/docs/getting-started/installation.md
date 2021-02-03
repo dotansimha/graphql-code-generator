@@ -39,7 +39,7 @@ If you are having issues with loading GraphQL-Codegen plugins, make sure it's in
 
 ## Initialization Wizard
 
-GraphQL Code Generator lets you set up everything by simply running the following command:
+After installing those dependencies, GraphQL Code Generator lets you set up everything by simply running the following command:
 
 :::shell With `yarn`
 yarn graphql-codegen init
