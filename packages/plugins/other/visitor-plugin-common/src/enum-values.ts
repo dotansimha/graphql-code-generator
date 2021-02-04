@@ -3,18 +3,32 @@ import { GraphQLSchema, isEnumType, GraphQLEnumType } from 'graphql';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 import { parseMapper } from './mappers';
 
-export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap = {}): ParsedEnumValuesMap {
+function escapeString(str: string) {
+  return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'");
+}
+
+export function parseEnumValues({
+  schema,
+  mapOrStr = {},
+  ignoreEnumValuesFromSchema,
+}: {
+  schema: GraphQLSchema;
+  mapOrStr: EnumValuesMap;
+  ignoreEnumValuesFromSchema?: boolean;
+}): ParsedEnumValuesMap {
   const allTypes = schema.getTypeMap();
   const allEnums = Object.keys(allTypes).filter(t => isEnumType(allTypes[t]));
 
   if (typeof mapOrStr === 'object') {
-    for (const enumTypeName of allEnums) {
-      const enumType = schema.getType(enumTypeName) as GraphQLEnumType;
-      for (const { name, value } of enumType.getValues()) {
-        if (value && value !== name) {
-          mapOrStr[enumTypeName] = mapOrStr[enumTypeName] || {};
-          if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
-            mapOrStr[enumTypeName][name] = value;
+    if (!ignoreEnumValuesFromSchema) {
+      for (const enumTypeName of allEnums) {
+        const enumType = schema.getType(enumTypeName) as GraphQLEnumType;
+        for (const { name, value } of enumType.getValues()) {
+          if (value && value !== name) {
+            mapOrStr[enumTypeName] = mapOrStr[enumTypeName] || {};
+            if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
+              mapOrStr[enumTypeName][name] = value ? escapeString(value) : value;
+            }
           }
         }
       }

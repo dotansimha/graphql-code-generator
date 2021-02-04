@@ -95,7 +95,7 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
 
     return `${comment}enum class ${enumName}(val label: String) {
 ${enumValues}
-
+        
   companion object {
     @JvmStatic
     fun valueOfLabel(label: String): ${enumName}? {
@@ -167,11 +167,47 @@ ${enumValues}
         return indent(`val ${arg.name.value}: ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}${initial}`, 2);
       })
       .join(',\n');
+    let suppress = '';
+    const ctorSet = inputValueArray
+      .map(arg => {
+        const typeToUse = this.resolveInputFieldType(arg.type);
+        const initialValue = this.initialValue(typeToUse.typeName, arg.defaultValue);
+        const fallback = initialValue ? ` ?: ${initialValue}` : '';
+
+        if (typeToUse.isArray && !typeToUse.isScalar) {
+          suppress = '@Suppress("UNCHECKED_CAST")\n  ';
+          return indent(
+            `args["${arg.name.value}"]${typeToUse.nullable || fallback ? '?' : '!!'}.let { ${arg.name.value} -> (${
+              arg.name.value
+            } as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }${fallback}`,
+            3
+          );
+        } else if (typeToUse.isScalar) {
+          return indent(
+            `args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable || fallback ? '?' : ''}${fallback}`,
+            3
+          );
+        } else if (typeToUse.nullable || fallback) {
+          suppress = '@Suppress("UNCHECKED_CAST")\n  ';
+          return indent(
+            `args["${arg.name.value}"]?.let { ${typeToUse.typeName}(it as Map<String, Any>) }${fallback}`,
+            3
+          );
+        } else {
+          suppress = '@Suppress("UNCHECKED_CAST")\n  ';
+          return indent(`${typeToUse.typeName}(args["${arg.name.value}"] as Map<String, Any>)`, 3);
+        }
+      })
+      .join(',\n');
 
     // language=kotlin
     return `data class ${name}(
 ${classMembers}
-)`;
+) {
+  ${suppress}constructor(args: Map<String, Any>) : this(
+${ctorSet}
+  )
+}`;
   }
 
   protected buildTypeTransfomer(name: string, typeValueArray: ReadonlyArray<FieldDefinitionNode>): string {

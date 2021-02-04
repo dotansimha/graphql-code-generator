@@ -111,6 +111,32 @@ describe('import-types preset', () => {
     );
   });
 
+  it('Should prepend the "add" plugin with the correct import type', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/operation.ts',
+      config: {
+        useTypeImports: true,
+      },
+      presetConfig: {
+        typesPath: './types',
+      },
+      schema: schemaDocumentNode,
+      documents: testDocuments.slice(0, 2),
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: {
+            content: `import type * as Types from './types';\n`,
+          },
+        },
+      ])
+    );
+  });
+
   it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/operation.ts',

@@ -160,9 +160,11 @@ describe('Flow Resolvers Plugin', () => {
     expect(result.content).toBeSimilarStringTo(`
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
-        MyType: MyType,
+        MyType: $Diff<MyType, { unionChild: *  }> & { unionChild: ?$ElementType<ResolversParentTypes, 'ChildUnion'> },
         String: $ElementType<Scalars, 'String'>,
+        Child: Child,
         MyOtherType: MyOtherType,
+        ChildUnion: $ElementType<ResolversParentTypes, 'Child'> | $ElementType<ResolversParentTypes, 'MyOtherType'>,
         Query: {},
         Subscription: {},
         Node: $ElementType<ResolversParentTypes, 'SomeNode'>,

@@ -1,4 +1,4 @@
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { parseEnumValues } from '../src/enum-values';
 
 describe('enumValues', () => {
@@ -15,8 +15,11 @@ describe('enumValues', () => {
   `);
 
   it('should work with namespaces', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#SomeNamespace.ETest`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#SomeNamespace.ETest`,
+      },
     });
 
     expect(result).toEqual({
@@ -32,8 +35,11 @@ describe('enumValues', () => {
   });
 
   it('should work with regular type', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#ETest`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#ETest`,
+      },
     });
 
     expect(result).toEqual({
@@ -49,8 +55,11 @@ describe('enumValues', () => {
   });
 
   it('should work with aliased type', () => {
-    const result = parseEnumValues(schema, {
-      Test: `my-file#ETest as Something`,
+    const result = parseEnumValues({
+      schema,
+      mapOrStr: {
+        Test: `my-file#ETest as Something`,
+      },
     });
 
     expect(result).toEqual({
@@ -61,6 +70,80 @@ describe('enumValues', () => {
         sourceIdentifier: 'Something',
         importIdentifier: 'ETest as Something',
         mappedValues: null,
+      },
+    });
+  });
+
+  const schemaWithEnumValues = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: {
+        test: {
+          type: new GraphQLEnumType({
+            name: 'Test',
+            values: {
+              A: {
+                value: 'a',
+              },
+              B: {
+                value: 'b',
+              },
+              C: {
+                value: 'c',
+              },
+              D: {
+                value: `escape me '`,
+              },
+            },
+          }),
+        },
+      },
+    }),
+  });
+
+  it('should respect enum values from schema and escape it if needed', () => {
+    const result = parseEnumValues({
+      schema: schemaWithEnumValues,
+      mapOrStr: {},
+      ignoreEnumValuesFromSchema: false,
+    });
+
+    expect(result).toEqual({
+      Test: {
+        isDefault: false,
+        typeIdentifier: 'Test',
+        sourceFile: null,
+        importIdentifier: null,
+        sourceIdentifier: null,
+        mappedValues: {
+          A: 'a',
+          B: 'b',
+          C: 'c',
+          D: `escape me \\'`,
+        },
+      },
+    });
+  });
+
+  it('should ignore enum values from schema', () => {
+    const result = parseEnumValues({
+      schema: schemaWithEnumValues,
+      mapOrStr: {},
+      ignoreEnumValuesFromSchema: true,
+    });
+
+    expect(result).not.toEqual({
+      Test: {
+        isDefault: false,
+        typeIdentifier: 'Test',
+        sourceFile: null,
+        importIdentifier: null,
+        sourceIdentifier: null,
+        mappedValues: {
+          A: 'a',
+          B: 'b',
+          C: 'c',
+        },
       },
     });
   });

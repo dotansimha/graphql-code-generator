@@ -1,0 +1,33 @@
+type Paypal {
+  id: ID!
+  url: String!
+}
+
+type CreditCard {
+  id: ID!
+  cardNumber: Int!
+  cardOwner: String!
+}
+
+union PaymentOption = Paypal | CreditCard
+
+extend type User {
+  paymentOptions: [PaymentOption!]
+}
+
+type Donation {
+  id: ID!
+  sender: User!
+  recipient: User!
+  amount: Float!
+}
+
+input DonationInput {
+  user: ID!
+  amount: Float!
+  paymentOption: ID!
+}
+
+extend type Mutation {
+  donate(donation: DonationInput): Donation
+}

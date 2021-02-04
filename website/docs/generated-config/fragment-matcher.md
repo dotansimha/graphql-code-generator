@@ -45,7 +45,7 @@ path/to/file.json:
 ### `apolloClientVersion`
 
 type: `number (values: 2, 3)`
-default: `2`
+default: `3`
 
 Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
 

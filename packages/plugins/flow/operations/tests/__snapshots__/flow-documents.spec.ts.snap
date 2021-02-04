@@ -1,5 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Flow Operations Plugin Import namespace Should handle "namespacedImportName" and add it when specified 1`] = `
+"// @flow
+
+type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+export type NotificationsQueryVariables = {};
+
+
+export type NotificationsQuery = ({
+    ...{ __typename?: 'Query' },
+  ...{| notifications: Array<({
+      ...{ __typename?: 'TextNotification' },
+    ...$Pick<Types.TextNotification, {| text: *, id: * |}>
+  }) | ({
+      ...{ __typename?: 'ImageNotification' },
+    ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
+    ...{| metadata: ({
+        ...{ __typename?: 'ImageMetadata' },
+      ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
+    }) |}
+  })> |}
+});
+"
+`;
+
 exports[`Flow Operations Plugin Output options Should respect flow option useFlowReadOnlyTypes 1`] = `
 "type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
@@ -11,5 +36,55 @@ export type CurrentUserQuery = {| +me?: ?({
     ...{| +adminRole?: $ElementType<User, 'role'> |},
     ...{| +profile?: ?$Pick<Profile, {| +age?: * |}> |}
   }) |};
+"
+`;
+
+exports[`Flow Operations Plugin Selection Set Should support fragment spread correctly with simple type with no other fields 1`] = `
+"// @flow
+
+type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+export type UserFieldsFragment = ({
+    ...$Pick<User, {| id: *, username: *, role?: * |}>,
+  ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+});
+
+export type MeQueryVariables = {};
+
+
+export type MeQuery = {| me?: ?UserFieldsFragment |};
+"
+`;
+
+exports[`Flow Operations Plugin Selection Set Should support fragment spread with flattenGeneratedTypes 1`] = `
+"// @flow
+
+type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+export type UserFieldsFragment = ({
+    ...$Pick<User, {| id: *, username: *, role?: * |}>,
+  ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+});
+
+export type MeQueryVariables = {};
+
+
+export type MeQuery = {| me?: ?({
+      ...$Pick<User, {| id: *, username: *, role?: * |}>,
+    ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+  }) |};
+"
+`;
+
+exports[`Flow Operations Plugin Selection Set Should support fragment spread with flattenGeneratedTypes and preResolveTypes 1`] = `
+"// @flow
+
+
+export type UserFieldsFragment = { id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } };
+
+export type MeQueryVariables = {};
+
+
+export type MeQuery = { me?: ?{ id: string, username: string, role?: ?Role, profile?: ?{ age?: ?number } } };
 "
 `;

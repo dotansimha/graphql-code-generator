@@ -1,6 +1,8 @@
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -116,7 +118,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -184,7 +190,7 @@ export type UserResolvers<
     ContextType
   >;
 
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AddressResolvers<
@@ -194,7 +200,7 @@ export type AddressResolvers<
   lines?: Resolver<ResolversTypes['Lines'], ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type LinesResolvers<
@@ -203,7 +209,7 @@ export type LinesResolvers<
 > = {
   line1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   line2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type BookResolvers<
@@ -211,7 +217,7 @@ export type BookResolvers<
   ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {

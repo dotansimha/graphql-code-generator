@@ -297,6 +297,15 @@ default: `Resolvers`
 The type name to use when exporting all resolvers signature as unified type.
 
 
+### `internalResolversPrefix`
+
+type: `string`
+default: `'__'`
+
+Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.
+If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
+
+
 ### `scalars`
 
 type: `ScalarsMap`

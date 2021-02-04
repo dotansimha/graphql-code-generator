@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`encapsulate: should wrap correctly with namespace 1`] = `
+"import * as core from \\"../types\\";
+import * as gm from \\"graphql-modules\\";
+export namespace TestModule {
+  interface DefinedFields {
+    Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'url';
+    Query: 'articles' | 'articleById' | 'articlesByUser';
+    User: 'articles';
+    Node: 'id';
+  };
+  
+  interface DefinedEnumValues {
+    UserKind: 'ADMIN' | 'WRITER' | 'REGULAR';
+  };
+  
+  interface DefinedInputFields {
+    NewArticle: 'title' | 'text';
+  };
+  
+  export type Article = Pick<core.Article, DefinedFields['Article']>;
+  export type User = core.User;
+  export type Comment = core.Comment;
+  export type Node = Pick<core.Node, DefinedFields['Node']>;
+  export type ArticleOrUser = core.ArticleOrUser;
+  export type NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
+  export type Query = Pick<core.Query, DefinedFields['Query']>;
+  export type UserKind = DefinedEnumValues['UserKind'];
+  
+  export type Scalars = Pick<core.Scalars, 'DateTime' | 'URL'>;
+  export type DateTimeScalarConfig = core.DateTimeScalarConfig;
+  export type UrlScalarConfig = core.UrlScalarConfig;
+  
+  export type ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
+  export type QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
+  export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+  export type NodeResolvers = Pick<core.NodeResolvers, DefinedFields['Node']>;
+  
+  export interface Resolvers {
+    Article?: ArticleResolvers;
+    Query?: QueryResolvers;
+    User?: UserResolvers;
+    DateTime?: core.Resolvers['DateTime'];
+    URL?: core.Resolvers['URL'];
+  };
+  
+  export interface MiddlewareMap {
+    '*'?: {
+      '*'?: gm.Middleware[];
+    };
+    Article?: {
+      '*'?: gm.Middleware[];
+      id?: gm.Middleware[];
+      title?: gm.Middleware[];
+      text?: gm.Middleware[];
+      author?: gm.Middleware[];
+      comments?: gm.Middleware[];
+      url?: gm.Middleware[];
+    };
+    User?: {
+      '*'?: gm.Middleware[];
+      articles?: gm.Middleware[];
+    };
+    Query?: {
+      '*'?: gm.Middleware[];
+      articles?: gm.Middleware[];
+      articleById?: gm.Middleware[];
+      articlesByUser?: gm.Middleware[];
+    };
+  };
+}"
+`;
+
+exports[`encapsulate: should wrap correctly with prefix 1`] = `
+"import * as core from \\"../types\\";
+import * as gm from \\"graphql-modules\\";
+interface DefinedFields {
+  Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'url';
+  Query: 'articles' | 'articleById' | 'articlesByUser';
+  User: 'articles';
+  Node: 'id';
+};
+
+interface DefinedEnumValues {
+  UserKind: 'ADMIN' | 'WRITER' | 'REGULAR';
+};
+
+interface DefinedInputFields {
+  NewArticle: 'title' | 'text';
+};
+
+export type Test_Article = Pick<core.Article, DefinedFields['Article']>;
+export type Test_User = core.User;
+export type Test_Comment = core.Comment;
+export type Test_Node = Pick<core.Node, DefinedFields['Node']>;
+export type Test_ArticleOrUser = core.ArticleOrUser;
+export type Test_NewArticle = Pick<core.NewArticle, DefinedInputFields['NewArticle']>;
+export type Test_Query = Pick<core.Query, DefinedFields['Query']>;
+export type Test_UserKind = DefinedEnumValues['UserKind'];
+
+export type Test_Scalars = Pick<core.Scalars, 'DateTime' | 'URL'>;
+export type Test_DateTimeScalarConfig = core.DateTimeScalarConfig;
+export type Test_UrlScalarConfig = core.UrlScalarConfig;
+
+export type Test_ArticleResolvers = Pick<core.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
+export type Test_QueryResolvers = Pick<core.QueryResolvers, DefinedFields['Query']>;
+export type Test_UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+export type Test_NodeResolvers = Pick<core.NodeResolvers, DefinedFields['Node']>;
+
+export interface Test_Resolvers {
+  Article?: Test_ArticleResolvers;
+  Query?: Test_QueryResolvers;
+  User?: Test_UserResolvers;
+  DateTime?: Test_core.Resolvers['DateTime'];
+  URL?: Test_core.Resolvers['URL'];
+};
+
+export interface Test_MiddlewareMap {
+  '*'?: {
+    '*'?: gm.Middleware[];
+  };
+  Article?: {
+    '*'?: gm.Middleware[];
+    id?: gm.Middleware[];
+    title?: gm.Middleware[];
+    text?: gm.Middleware[];
+    author?: gm.Middleware[];
+    comments?: gm.Middleware[];
+    url?: gm.Middleware[];
+  };
+  User?: {
+    '*'?: gm.Middleware[];
+    articles?: gm.Middleware[];
+  };
+  Query?: {
+    '*'?: gm.Middleware[];
+    articles?: gm.Middleware[];
+    articleById?: gm.Middleware[];
+    articlesByUser?: gm.Middleware[];
+  };
+};"
+`;

@@ -26,7 +26,7 @@ generates:
 path/to/file.ts:
  plugins:
    - typescript
-   - typescript-named-operations-object
+   - named-operations-object
  config:
    identifierName: ListAllOperations
 ```

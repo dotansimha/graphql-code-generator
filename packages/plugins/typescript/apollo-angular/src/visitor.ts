@@ -31,12 +31,14 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   mutationSuffix?: string;
   subscriptionSuffix?: string;
   apolloAngularPackage: string;
+  additionalDI?: string[];
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   ApolloAngularRawPluginConfig,
   ApolloAngularPluginConfig
 > {
+  private _externalImportPrefix = '';
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -45,6 +47,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     operationVariablesTypes: string;
     serviceName: string;
   }[] = [];
+  private dependencyInjections = '';
+  private dependencyInjectionArgs = '';
 
   constructor(
     schema: GraphQLSchema,
@@ -67,6 +71,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
+        additionalDI: getConfigValue(rawConfig.additionalDI, []),
         apolloAngularPackage: getConfigValue(rawConfig.apolloAngularPackage, 'apollo-angular'),
         apolloAngularVersion: getConfigValue(rawConfig.apolloAngularVersion, 2),
         gqlImport: getConfigValue(
@@ -76,6 +81,30 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       },
       documents
     );
+
+    if (this.config.importOperationTypesFrom) {
+      this._externalImportPrefix = `${this.config.importOperationTypesFrom}.`;
+
+      if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+        );
+      }
+
+      if (this.config.importOperationTypesFrom !== 'Operations') {
+        // eslint-disable-next-line no-console
+        console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
+      }
+    }
+
+    const dependencyInjections = ['apollo: Apollo.Apollo'].concat(this.config.additionalDI);
+    const dependencyInjectionArgs = dependencyInjections.map(content => {
+      return content.split(':')[0];
+    });
+
+    this.dependencyInjections = dependencyInjections.join(', ');
+    this.dependencyInjectionArgs = dependencyInjectionArgs.join(', ');
 
     autoBind(this);
   }
@@ -222,7 +251,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
+    return this.config.importOperationTypesFrom
+      ? `${this.config.importOperationTypesFrom}.${documentVariableName}`
+      : documentVariableName;
   }
 
   private _operationSuffix(operationType: string): string {
@@ -256,6 +287,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       serviceName,
     });
 
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+
     const content = `
   @Injectable({
     providedIn: ${this._providedIn(node)}
@@ -263,8 +297,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
+    constructor(${this.dependencyInjections}) {
+      super(${this.dependencyInjectionArgs});
     }
   }`;
 
@@ -285,6 +319,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
 
     const allPossibleActions = this._operationsToInclude
       .map(o => {
+        const operationResultType = this._externalImportPrefix + o.operationResultType;
+        const operationVariablesTypes = this._externalImportPrefix + o.operationVariablesTypes;
+
         const optionalVariables =
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
@@ -292,13 +329,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
 
         const options =
           o.operationType === 'Mutation'
-            ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>`
-            : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
+            ? `${o.operationType}OptionsAlone<${operationResultType}, ${operationVariablesTypes}>`
+            : `${o.operationType}OptionsAlone<${operationVariablesTypes}>`;
 
         const method = `
-${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
-          o.operationVariablesTypes
-        }, options?: ${options}) {
+${camelCase(o.node.name.value)}(variables${
+          optionalVariables ? '?' : ''
+        }: ${operationVariablesTypes}, options?: ${options}) {
   return this.${camelCase(o.serviceName)}.${actionType(o.operationType)}(variables, options)
 }`;
 
@@ -307,9 +344,9 @@ ${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
         if (o.operationType === 'Query') {
           watchMethod = `
 
-${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${
-            o.operationVariablesTypes
-          }, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
+${camelCase(o.node.name.value)}Watch(variables${
+            optionalVariables ? '?' : ''
+          }: ${operationVariablesTypes}, options?: WatchQueryOptionsAlone<${operationVariablesTypes}>) {
   return this.${camelCase(o.serviceName)}.watch(variables, options)
 }`;
         }

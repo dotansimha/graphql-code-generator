@@ -1,4 +1,4 @@
-import { GraphQLSchema, printSchema } from 'graphql';
+import { GraphQLSchema, lexicographicSortSchema, printSchema } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
@@ -40,15 +40,21 @@ export interface SchemaASTConfig {
    * ```
    */
   commentDescriptions?: boolean;
+  /**
+   * @description Set to true in order get the schema lexicographically sorted before printed.
+   * @default false
+   */
+  sort?: boolean;
   federation?: boolean;
 }
 
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  { commentDescriptions = false, includeDirectives = false, federation }
+  { commentDescriptions = false, includeDirectives = false, sort = false, federation }
 ): Promise<string> => {
-  const outputSchema = federation ? removeFederation(schema) : schema;
+  let outputSchema = federation ? removeFederation(schema) : schema;
+  outputSchema = sort ? lexicographicSortSchema(outputSchema) : outputSchema;
 
   if (includeDirectives) {
     return printSchemaWithDirectives(outputSchema);

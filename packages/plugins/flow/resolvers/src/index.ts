@@ -91,7 +91,7 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => ?Types | Promise<?Types>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, Context = {}> = (obj: T, context: Context, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 

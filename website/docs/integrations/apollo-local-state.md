@@ -3,7 +3,7 @@ id: apollo-local-state
 title: Apollo Local State
 ---
 
-If you are using [apollo-client](https://www.apollographql.com/docs/react/essentials/local-state) >2.5 (or older, with [apollo-link-state](https://www.apollographql.com/docs/link/links/state.html)) to manage your app state with GraphQL, you're probably using a client-side only GraphQL schema and client-side directives such as `@client`.
+If you are using [apollo-client](https://www.apollographql.com/docs/react/v2/data/local-state/) >2.5 (or older, with [apollo-link-state](https://www.apollographql.com/docs/link/links/state.html)) to manage your app state with GraphQL, you're probably using a client-side only GraphQL schema and client-side directives such as `@client`.
 
 These types and directives are not part of your remote GraphQL schema.
 

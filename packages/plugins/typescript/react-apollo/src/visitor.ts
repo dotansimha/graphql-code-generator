@@ -139,7 +139,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
+    return this.config.documentMode === DocumentMode.external
+      ? `Operations.${node.name?.value ?? ''}`
+      : documentVariableName;
   }
 
   public getImports(): string[] {
@@ -180,7 +182,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     if (node.operation === 'mutation') {
       this.imports.add(this.getApolloReactCommonImport(true));
       return `export type ${this.convertName(
-        node.name.value + 'MutationFn'
+        (node.name?.value ?? '') + 'MutationFn'
       )} = ${this.getApolloReactCommonIdentifier()}.MutationFunction<${operationResultType}, ${operationVariablesTypes}>;`;
     }
     return null;
@@ -194,12 +196,13 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ): string {
     this.imports.add(this.getApolloReactCommonImport(false));
     this.imports.add(this.getApolloReactHocImport(false));
-    const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
-    const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
+    const nodeName = node.name?.value ?? '';
+    const operationName: string = this.convertName(nodeName, { useTypesPrefix: false });
+    const propsTypeName: string = this.convertName(nodeName, { suffix: 'Props' });
 
     const defaultDataName = node.operation === 'mutation' ? 'mutate' : 'data';
     const propsVar = `export type ${propsTypeName}<TChildProps = {}, TDataName extends string = '${defaultDataName}'> = {
-      [key in TDataName]: ${this._buildHocProps(node.name.value, node.operation)}
+      [key in TDataName]: ${this._buildHocProps(nodeName, node.operation)}
     } & TChildProps;`;
 
     const hocString = `export function with${operationName}<TProps, TChildProps = {}, TDataName extends string = '${defaultDataName}'>(operationOptions?: ApolloReactHoc.OperationOption<
@@ -228,11 +231,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const componentPropsName: string = this.convertName(node.name.value, {
+    const nodeName = node.name?.value ?? '';
+    const componentPropsName: string = this.convertName(nodeName, {
       suffix: this.config.componentSuffix + 'Props',
       useTypesPrefix: false,
     });
-    const componentName: string = this.convertName(node.name.value, {
+    const componentName: string = this.convertName(nodeName, {
       suffix: this.config.componentSuffix,
       useTypesPrefix: false,
     });
@@ -312,10 +316,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     operationType: string,
     documentVariableName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
-    const suffix = this._getHookSuffix(node.name.value, operationType);
-    const operationName: string = this.convertName(node.name.value, {
+    const nodeName = node.name?.value ?? '';
+    const suffix = this._getHookSuffix(nodeName, operationType);
+    const operationName: string = this.convertName(nodeName, {
       suffix,
       useTypesPrefix: false,
     });
@@ -324,7 +330,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHooksImport(false));
 
     const hookFns = [
-      `export function use${operationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+      `export function use${operationName}(baseOptions${
+        hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
+      }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,
         documentVariableName
@@ -339,7 +347,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
 
     if (operationType === 'Query') {
-      const lazyOperationName: string = this.convertName(node.name.value, {
+      const lazyOperationName: string = this.convertName(nodeName, {
         suffix: pascalCase('LazyQuery'),
         useTypesPrefix: false,
       });
@@ -376,7 +384,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const componentResultType = this.convertName(node.name.value, {
+    const componentResultType = this.convertName(node.name?.value ?? '', {
       suffix: `${operationType}Result`,
       useTypesPrefix: false,
     });
@@ -407,7 +415,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     this.imports.add(this.getApolloReactCommonImport(true));
 
-    const mutationOptionsType = this.convertName(node.name.value, { suffix: 'MutationOptions', useTypesPrefix: false });
+    const mutationOptionsType = this.convertName(node.name?.value ?? '', {
+      suffix: 'MutationOptions',
+      useTypesPrefix: false,
+    });
 
     return `export type ${mutationOptionsType} = ${this.getApolloReactCommonIdentifier()}.BaseMutationOptions<${operationResultType}, ${operationVariablesTypes}>;`;
   }
@@ -422,8 +433,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       return '';
     }
 
-    const operationName: string = this.convertName(node.name.value, {
-      suffix: this._getHookSuffix(node.name.value, operationType),
+    const nodeName = node.name?.value ?? '';
+    const operationName: string = this.convertName(nodeName, {
+      suffix: this._getHookSuffix(nodeName, operationType),
       useTypesPrefix: false,
     });
 
@@ -437,7 +449,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     documentVariableName: string,
     operationType: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
@@ -453,7 +466,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       ? this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes)
       : null;
     const hooks = this.config.withHooks
-      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      ? this._buildHooks(
+          node,
+          operationType,
+          documentVariableName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        )
       : null;
     const resultType = this.config.withResultType
       ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes)

@@ -4,7 +4,7 @@ It will generate a strongly typed Angular service for every defined query, mutat
 
 It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
 
-To shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
+To shed some more light regards this template, it's recommended to go through the this article: https://apollo-angular.com/docs/1.0/basics/services , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
 
 ## Installation
 
@@ -270,6 +270,15 @@ Declares how DocumentNode are created:
 - `documentNode`: document nodes will be generated as objects when we generate the templates.
 - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
 - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+
+
+### `optimizeDocumentNode`
+
+type: `boolean`
+default: `true`
+
+If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.
+This will remove all "loc" and "description" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).
 
 
 ### `importOperationTypesFrom`

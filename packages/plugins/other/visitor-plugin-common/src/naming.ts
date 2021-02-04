@@ -17,6 +17,10 @@ function getKind(node: ASTNode | string): keyof NamingConventionMap {
 }
 
 function getName(node: ASTNode | string): string | undefined {
+  if (node == null) {
+    return undefined;
+  }
+
   if (typeof node === 'string') {
     return node;
   }

@@ -1,7 +1,7 @@
-import { ScalarsMap, ConvertNameFn } from '../types';
-import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType } from 'graphql';
+import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types';
+import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
 
-export type PrimitiveField = string;
+export type PrimitiveField = { isConditional: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
@@ -12,8 +12,9 @@ export type SelectionSetProcessorConfig = {
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
-  formatNamedField(name: string, type?: GraphQLOutputType | null): string;
-  wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string;
+  formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null): string;
+  wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
+  avoidOptionals?: AvoidOptionalsConfig;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
@@ -34,8 +35,8 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   }
 
   transformPrimitiveFields(
-    schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    _schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    _fields: PrimitiveField[]
   ): ProcessResult {
     throw new Error(
       `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
@@ -43,19 +44,19 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   }
 
   transformAliasesPrimitiveFields(
-    schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveAliasedFields[]
+    _schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    _fields: PrimitiveAliasedFields[]
   ): ProcessResult {
     throw new Error(
       `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
     );
   }
 
-  transformLinkFields(fields: LinkField[]): ProcessResult {
+  transformLinkFields(_fields: LinkField[]): ProcessResult {
     throw new Error(`Please override "transformLinkFields" as part of your BaseSelectionSetProcessor implementation!`);
   }
 
-  transformTypenameField(type: string, name: string): ProcessResult {
+  transformTypenameField(_type: string, _name: string): ProcessResult {
     throw new Error(
       `Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`
     );

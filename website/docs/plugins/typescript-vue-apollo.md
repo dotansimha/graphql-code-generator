@@ -11,14 +11,18 @@ title: TypeScript Vue Apollo
 ## Installation
 
 ```bash
-  yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable@4.0.0-alpha.8 @vue/composition-api
+  yarn add @graphql-codegen/typescript-vue-apollo @vue/apollo-composable @vue/composition-api
 ```
 
-## Usage examples
+## Examples
 
 The examples below use Vue 2 with the ([composition api plugin](https://github.com/vuejs/composition-api)).
 
-### Example: Using the generated query code
+### Queries
+
+Using the generated query code.
+
+#### Basic query
 
 For the given input:
 
@@ -53,7 +57,7 @@ export default defineComponent({
 </script>
 ```
 
-### Example: Select a single property with useResult and add an error message
+#### Select a single property with useResult and add an error message
 
 For the given input:
 
@@ -90,10 +94,53 @@ import { useAllAccountsQuery } from "../generated/graphqlOperations"
 export default defineComponent({
   setup() {
     const { result, loading, error } = useAllAccountsQuery()
-    // Only select the peroperty 'accounts' for use in the template
+    // Only select the property 'accounts' for use in the template
     const allAccounts = useResult(result, null, (data) => data.accounts)
     return { allAccounts, loading, error }
   }
+})
+</script>
+```
+
+#### Use an options object
+
+Every `useXxxxQuery` can receive an [options object](https://v4.apollo.vuejs.org/guide-composable/query.html#options) to define query specific settings. To demonstrate the use of an options object we will try to only execute a query once a condition is met.
+
+The ref `isAuthenticated` represents a boolean value that is set to `true` once the user successfully logged in to the app. To retrieve the user's application settings we can only execute the graqhl query once the user is logged on (and the ref `isAuthenticated` is set to `true`). Setting this ref is done in another part of the app and is used as a simple example. 
+
+For the given input:
+
+```graphql
+query {
+  viewer {
+    preference {
+      language
+      darkMode
+    }
+  }
+}
+```
+Within the options object is a property `enabled` that defines if a query is enabled or disabled. To only execute the query when `isAuthenticated` is `true` we set the property `enabled` equal to the ref `isAuthenticated`:
+
+```vue
+import { defineComponent, watchEffect } from '@vue/composition-api'
+import { useViewerQuery } from '../generated/graphqlOperations'
+import { isAuthenticated } from 'src/store/authentication'
+
+export default defineComponent({
+  setup(_, { root }) {
+    // our imported ref:
+    // const isAuthenticated = ref(false)
+    const { result, loading, error } = useViewerQuery(() => ({
+      enabled: isAuthenticated.value,
+    }))
+
+    return {
+      loading,
+      error,
+      result,
+    }
+  },
 })
 </script>
 ```

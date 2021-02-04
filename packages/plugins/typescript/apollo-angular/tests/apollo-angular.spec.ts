@@ -5,6 +5,7 @@ import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } fr
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('Apollo Angular', () => {
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -106,6 +107,28 @@ describe('Apollo Angular', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`should add additional DI for constructor & super call`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          additionalDI: ['testService: TestService', 'testService1: TestService1'],
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+          constructor(apollo: Apollo.Apollo, testService: TestService, testService1: TestService1) {
+            super(apollo, testService, testService1);
+          }
+        }
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it(`should add the correct angular imports with override`, async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
@@ -189,6 +212,110 @@ describe('Apollo Angular', () => {
       `);
       expect(content.content).not.toContain('@namedClient');
       await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importDocumentNodeExternallyFrom must be provided if documentMode=external'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set to something other than "Operations"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Whatever',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importOperationTypesFrom only works correctly when left empty or set to "Operations"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and documentMode is not "external"', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and importDocumentNodeExternallyFrom is not', async () => {
+      spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('should allow importing operations and documents from another file', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+          importDocumentNodeExternallyFrom: '@myproject/generated',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from '@myproject/generated';`);
+      expect(content.content).toContain('Operations.TestQuery');
+      expect(content.content).toContain('Operations.TestQueryVariables');
+      expect(content.content).toContain('Operations.TestDocument');
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 

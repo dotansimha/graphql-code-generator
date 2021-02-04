@@ -17,7 +17,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     globals: {
       'ts-jest': {
         diagnostics: false,
-        tsConfig: 'tsconfig.json',
+        tsconfig: 'tsconfig.json',
       },
     },
     restoreMocks: true,

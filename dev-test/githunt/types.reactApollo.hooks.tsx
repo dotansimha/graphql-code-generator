@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -348,7 +350,7 @@ export const OnCommentAddedDocument = gql`
  * });
  */
 export function useOnCommentAddedSubscription(
-  baseOptions?: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
+  baseOptions: Apollo.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>
 ) {
   return Apollo.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(
     OnCommentAddedDocument,
@@ -406,7 +408,7 @@ export const CommentDocument = gql`
  *   },
  * });
  */
-export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
   return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
 export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
@@ -491,7 +493,7 @@ export const FeedDocument = gql`
  *   },
  * });
  */
-export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
 export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {

@@ -3,8 +3,8 @@ import {
   ProcessResult,
   LinkField,
   PrimitiveAliasedFields,
-  PrimitiveField,
   SelectionSetProcessorConfig,
+  PrimitiveField,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
@@ -23,7 +23,31 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    return [`Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')}>`];
+    let hasConditionals = false;
+    const conditilnalsList: string[] = [];
+    let resString = `Pick<${parentName}, ${fields
+      .map(field => {
+        if (field.isConditional) {
+          hasConditionals = true;
+          conditilnalsList.push(field.fieldName);
+        }
+        return `'${field.fieldName}'`;
+      })
+      .join(' | ')}>`;
+
+    if (hasConditionals) {
+      const avoidOptional =
+        // TODO: check type and exec only if relevant
+        this.config.avoidOptionals === true ||
+        this.config.avoidOptionals.field ||
+        this.config.avoidOptionals.inputValue ||
+        this.config.avoidOptionals.object;
+      const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
+      resString = `${
+        this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
+      }${transform}<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
+    }
+    return [resString];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {

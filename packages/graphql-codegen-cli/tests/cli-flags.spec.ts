@@ -192,7 +192,7 @@ describe('CLI Flags', () => {
       await createContext(parseArgv(args));
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e.message).toContain(`Cannot find module 'my-extension'`);
+      expect(e.code).toEqual('MODULE_NOT_FOUND');
     }
   });
 });

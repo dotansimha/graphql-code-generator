@@ -56,7 +56,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    const operationName: string = this.convertName(node.name.value, {
+    const operationName: string = this.convertName(node.name?.value ?? '', {
       useTypesPrefix: false,
     });
 

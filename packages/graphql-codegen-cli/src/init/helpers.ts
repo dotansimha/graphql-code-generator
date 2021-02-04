@@ -4,6 +4,7 @@ import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import detectIndent from 'detect-indent';
 import { Answers } from './types';
+import getLatestVersion from 'latest-version';
 
 // Parses config and writes it to a file
 export async function writeConfig(answers: Answers, config: Types.Config) {
@@ -44,30 +45,17 @@ export async function writePackage(answers: Answers, configLocation: string) {
     pkg.devDependencies = {};
   }
 
-  // read codegen's version
-  let version: string;
-
-  const dynamicImport = (m: string) => import(m).then(m => ('default' in m ? m.default : m));
-  try {
-    // Works in tests
-    const packageJson = await dynamicImport('../../package.json');
-    version = packageJson.version;
-  } catch (e) {
-    // Works in production (package dist is flat, everything is in the same folder)
-    const packageJson = await dynamicImport('./package.json');
-    version = packageJson.version;
-  }
-
-  answers.plugins.forEach(plugin => {
-    pkg.devDependencies[plugin.package] = version;
-  });
+  await Promise.all(
+    answers.plugins.map(async plugin => {
+      pkg.devDependencies[plugin.package] = await getLatestVersion(plugin.package);
+    })
+  );
 
   if (answers.introspection) {
-    pkg.devDependencies['@graphql-codegen/introspection'] = version;
+    pkg.devDependencies['@graphql-codegen/introspection'] = await getLatestVersion('@graphql-codegen/introspection');
   }
 
-  // If cli haven't installed yet
-  pkg.devDependencies['@graphql-codegen/cli'] = version;
+  pkg.devDependencies['@graphql-codegen/cli'] = await getLatestVersion('@graphql-codegen/cli');
 
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }

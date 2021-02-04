@@ -48,6 +48,7 @@ path/to/file.ts:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `constEnums`
@@ -205,7 +206,7 @@ generates:
  path/to/file.ts:
    plugins:
      - typescript
-     - typescript-resolves
+     - typescript-resolvers
    config:
      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
 ```
@@ -215,7 +216,7 @@ generates:
 type: `boolean`
 default: `false`
 
-Set the to `true` in order to generate output without `export` modifier.
+Set to `true` in order to generate output without `export` modifier.
 This is useful if you are generating `.d.ts` file and want it to be globally available.
 
 #### Usage Examples
@@ -228,6 +229,25 @@ path/to/file.ts:
    - typescript
  config:
    noExport: true
+```
+
+### `useImplementingTypes`
+
+type: `boolean`
+default: `false`
+
+When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
+
+#### Usage Examples
+
+##### Override all definition types
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   useImplementingTypes: true
 ```
 
 ### `addUnderscoreToArgsType`

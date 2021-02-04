@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -549,7 +551,7 @@ export const HeroNameConditionalInclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalInclusionQuery(
-  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
 ) {
   return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
@@ -604,7 +606,7 @@ export const HeroNameConditionalExclusionDocument = gql`
  * });
  */
 export function useHeroNameConditionalExclusionQuery(
-  baseOptions?: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
 ) {
   return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,

@@ -1,5 +1,48 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.2
+
+### Patch Changes
+
+- 99533389: Enable flattening typed document nodes
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
+## 1.18.1
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.18.0
+
+### Minor Changes
+
+- bd3bd296: Improve DocumentNode optimizations, to reduce bundle size when consumed as pre-compiled
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
+## 1.17.10
+
+### Patch Changes
+
+- 3e3941b9: Avoid printing imports when there are no operations
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 1.17.9
 
 ### Patch Changes

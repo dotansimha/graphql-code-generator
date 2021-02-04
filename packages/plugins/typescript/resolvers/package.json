@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-resolvers",
-  "version": "1.17.9",
+  "version": "1.18.1",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for resolvers signature",
   "repository": {
     "type": "git",
@@ -14,12 +14,12 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.17.8",
-    "@graphql-codegen/typescript": "^1.17.8",
-    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
-    "@graphql-tools/utils": "^6",
+    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/typescript": "^1.19.0",
+    "@graphql-codegen/visitor-plugin-common": "^1.17.22",
+    "@graphql-tools/utils": "^7.0.0",
     "auto-bind": "~4.0.0",
-    "tslib": "~2.0.1"
+    "tslib": "~2.1.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"

@@ -113,7 +113,7 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig` (see below).
+> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/`query { ... }` ``). This can be configured with `pluckConfig` (see below).
 
 - ### String
 
@@ -157,7 +157,7 @@ const MY_QUERY = /* GraphQL */`
 // ... some components code ...
 ```
 
-By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-toolkit/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L13)
+By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-tools/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L12)
 
 You can add custom tags if you need, by using `pluckConfig` on the root level on your config file:
 
@@ -202,7 +202,7 @@ const { parse } = require('graphql');
 const { readFileSync } = require('fs');
 
 module.exports = function(docString, config) {
-  return parse(readFileSync(docString, { encoding: 'utf-8' }));;
+  return parse(readFileSync(docString, { encoding: 'utf-8' }));
 };
 ```
 

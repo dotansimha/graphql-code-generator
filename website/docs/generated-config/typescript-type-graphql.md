@@ -14,8 +14,17 @@
 
 ### `decoratorName`
 
-type: `Partial`
+type: `Partial_1`
+default: ``{ type: 'ObjectType', interface: 'InterfaceType', arguments: 'ArgsType', field: 'Field', input: 'InputType' }``
 
+allow overriding of TypeGraphQL decorator types
+
+
+### `decorateTypes`
+
+type: `string[]`
+
+Speciies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.
 
 
 ### `avoidOptionals`
@@ -34,7 +43,7 @@ instead of `myField?: Maybe<string>`.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    avoidOptionals: true
 ```
@@ -44,12 +53,13 @@ path/to/file.ts:
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    avoidOptionals:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `constEnums`
@@ -65,7 +75,7 @@ Will prefix every generated `enum` with `const`, you can read more about const e
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    constEnums: true
 ```
@@ -83,7 +93,7 @@ Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to gen
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    enumsAsTypes: true
 ```
@@ -101,7 +111,7 @@ Controls whether to preserve typescript enum values as numbers
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    numericEnums: true
 ```
@@ -120,7 +130,7 @@ This is useful if you are using `relay`.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    enumsAsTypes: true
    futureProofEnums: true
@@ -139,7 +149,7 @@ Generates enum as TypeScript `const assertions` instead of `enum`. This can even
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    enumsAsConst: true
 ```
@@ -158,10 +168,10 @@ Override all definition types
 ```yml
 generates:
 path/to/file.ts:
-plugins:
-- typescript
-config:
-onlyOperationTypes: true
+  plugins:
+    - typescript-type-graphql
+  config:
+    onlyOperationTypes: true
 ```
 
 ### `immutableTypes`
@@ -177,7 +187,7 @@ Generates immutable types by adding `readonly` to properties and uses `ReadonlyA
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    immutableTypes: true
 ```
@@ -196,7 +206,7 @@ Allow to override the type value of `Maybe`.
 generates:
  path/to/file.ts:
    plugins:
-     - typescript
+     - typescript-type-graphql
    config:
      maybeValue: T | null | undefined
 ```
@@ -206,8 +216,8 @@ generates:
 generates:
  path/to/file.ts:
    plugins:
-     - typescript
-     - typescript-resolves
+     - typescript-type-graphql
+     - typescript-resolvers
    config:
      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
 ```
@@ -217,7 +227,7 @@ generates:
 type: `boolean`
 default: `false`
 
-Set the to `true` in order to generate output without `export` modifier.
+Set to `true` in order to generate output without `export` modifier.
 This is useful if you are generating `.d.ts` file and want it to be globally available.
 
 #### Usage Examples
@@ -227,9 +237,28 @@ This is useful if you are generating `.d.ts` file and want it to be globally ava
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    noExport: true
+```
+
+### `useImplementingTypes`
+
+type: `boolean`
+default: `false`
+
+When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
+
+#### Usage Examples
+
+##### Override all definition types
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript-type-graphql
+ config:
+   useImplementingTypes: true
 ```
 
 ### `addUnderscoreToArgsType`
@@ -328,7 +357,7 @@ Allow you to add wrapper for field type, use T as the generic value. Make sure t
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    wrapFieldDefinitions: true
    fieldWrapperValue: T | Promise<T>
@@ -349,7 +378,7 @@ This is useful to allow return types such as Promises and functions.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript
+   - typescript-type-graphql
  config:
    wrapFieldDefinitions: true
 ```
