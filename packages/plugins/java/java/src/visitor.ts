@@ -102,7 +102,16 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     this._addHashMapImport = true;
     this._addMapImport = true;
     const enumName = this.convertName(node.name);
-    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n');
+    const enumValues = node.values
+      .map(enumValue => {
+        const a = (enumValue as any)(node.name.value);
+        // replace reserved word new
+        if (a.trim() === 'new') {
+          return '_new';
+        }
+        return a;
+      })
+      .join(',\n');
     const enumCtor = indentMultiline(``);
 
     const enumBlock = [enumValues, enumCtor].join('\n');
@@ -173,7 +182,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        if (arg.name.value === 'interface') {
+        if (arg.name.value === 'interface' || arg.name.value === 'new') {
           // forcing prefix of _ since interface is a keyword in JAVA
           return indent(`private ${typeToUse.typeName} _${this.config.classMembersPrefix}${arg.name.value};`);
         } else {
@@ -186,7 +195,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        if (arg.name.value === 'interface') {
+        if (arg.name.value === 'interface' || arg.name.value === 'new') {
           // forcing prefix of _ since interface is a keyword in JAVA
           return indent(
             `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${
@@ -207,7 +216,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        if (arg.name.value === 'interface') {
+        if (arg.name.value === 'interface' || arg.name.value === 'new') {
           return indent(
             `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} _${arg.name.value}) { this._${
               arg.name.value
