@@ -1,0 +1,44 @@
+diff --git a/node_modules/@docsearch/react/dist/esm/DocSearchModal.js b/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
+index 12c8367..41e9bec 100644
+--- a/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
++++ b/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
+@@ -230,7 +230,7 @@ export function DocSearchModal(_ref) {
+               getItems: function getItems() {
+                 return Object.values(groupBy(items, function (item) {
+                   return item.hierarchy.lvl1;
+-                })).map(transformItems).map(function (hits) {
++                })).map(function (hits) {
+                   return hits.map(function (item) {
+                     return _objectSpread(_objectSpread({}, item), {}, {
+                       // eslint-disable-next-line @typescript-eslint/camelcase
+diff --git a/node_modules/@docsearch/react/dist/esm/Results.js b/node_modules/@docsearch/react/dist/esm/Results.js
+index 2b3096c..ca6da66 100644
+--- a/node_modules/@docsearch/react/dist/esm/Results.js
++++ b/node_modules/@docsearch/react/dist/esm/Results.js
+@@ -91,7 +91,7 @@ function Result(_ref) {
+     className: "DocSearch-Hit-title",
+     hit: item,
+     attribute: "hierarchy.lvl1"
+-  }), item.content && /*#__PURE__*/React.createElement(Snippet, {
++  }),/*#__PURE__*/React.createElement('div', {style: {fontSize: "10px"}}, `${item.url}`), item.content && /*#__PURE__*/React.createElement(Snippet, {
+     className: "DocSearch-Hit-path",
+     hit: item,
+     attribute: "content"
+@@ -101,7 +101,7 @@ function Result(_ref) {
+     className: "DocSearch-Hit-title",
+     hit: item,
+     attribute: "hierarchy.".concat(item.type)
+-  }), /*#__PURE__*/React.createElement(Snippet, {
++  }),/*#__PURE__*/React.createElement('div', {style: {fontSize: "10px"}}, `${item.url}`), /*#__PURE__*/React.createElement(Snippet, {
+     className: "DocSearch-Hit-path",
+     hit: item,
+     attribute: "hierarchy.lvl1"
+@@ -111,7 +111,7 @@ function Result(_ref) {
+     className: "DocSearch-Hit-title",
+     hit: item,
+     attribute: "content"
+-  }), /*#__PURE__*/React.createElement(Snippet, {
++  }),/*#__PURE__*/React.createElement('div', {style: {fontSize: "10px"}}, `${item.url}`), /*#__PURE__*/React.createElement(Snippet, {
+     className: "DocSearch-Hit-path",
+     hit: item,
+     attribute: "hierarchy.lvl1"
