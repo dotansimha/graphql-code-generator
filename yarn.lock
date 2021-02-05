@@ -9541,10 +9541,10 @@ flow-bin@0.144.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.144.0.tgz#32fbeb94ef39cb8b9fa03d67b6f085042ce3a1bd"
   integrity sha512-+TeTukkfRjimaNhOHt8iQ/M33Fg8Afrm+iBHS19XzAz2fH4GwgroKCrAxDHnZoAUnmRv6jm/XngFxADlcqwYkw==
 
-flow-parser@0.143.1:
-  version "0.143.1"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.143.1.tgz#c18e1745df97d1132e60036e88cbf1925b5094e4"
-  integrity sha512-DWmnt0P1tieuQErYeWmxCNIkzm5Fqd5sMH685v/jCtu8CAvdLEwKi45jqYhij178k+NAy+FNe2jDvQNs7WLBIA==
+flow-parser@0.144.0:
+  version "0.144.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.144.0.tgz#c9e9da22acc065102788112870f099845d0dfcdc"
+  integrity sha512-si2lCamPs0N1QcTiQY8p9RxvVsVGbx4rpkX6dcfUQ2OOvEg6Cya7LItlPqcx54Gtakdx1St6TseQlV8nafYW5g==
 
 flush-write-stream@^1.0.0:
   version "1.1.1"
