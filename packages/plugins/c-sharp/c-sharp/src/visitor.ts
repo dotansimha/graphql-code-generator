@@ -368,6 +368,9 @@ ${classMembers}
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+    if (this.config.emitRecords) {
+      return this.buildRecord(node.name.value, node.description, node.fields, node.interfaces);
+    }
     return this.buildClass(node.name.value, node.description, node.fields, node.interfaces);
   }
 
