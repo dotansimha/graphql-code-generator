@@ -292,7 +292,7 @@ ${recordMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const fieldName = this.convertSafeName(arg.name);
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
@@ -386,6 +386,7 @@ ${classMembers}
     if (this.config.emitRecords) {
       return this.buildRecord(node.name.value, node.description, node.fields, node.interfaces);
     }
+
     return this.buildClass(node.name.value, node.description, node.fields, node.interfaces);
   }
 
