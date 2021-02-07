@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/c-sharp': patch
+'@graphql-codegen/c-sharp': minor
 ---
 
 This release adds support to optionally emit c# 9 records instead of classes.
