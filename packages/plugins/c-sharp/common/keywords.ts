@@ -54,6 +54,7 @@ export const csharpKeywords = [
   'protected',
   'public',
   'readonly',
+  'record',
   'ref',
   'return',
   'sbyte',

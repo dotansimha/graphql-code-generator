@@ -47,7 +47,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    */
   className?: string;
   /**
-   * @default IEnumberable
+   * @default IEnumerable
    * @description Allow you to customize the list type
    *
    * @exampleMarkdown
@@ -61,4 +61,20 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * ```
    */
   listType?: string;
+
+  /**
+   * @default false
+   * @description Emit C# 9.0+ records instead of classes
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/c-sharp/my-org/my-app/Types.cs:
+   *     plugins:
+   *       - c-sharp
+   *     config:
+   *       emitRecords: true
+   * ```
+   */
+  emitRecords?: boolean;
 }

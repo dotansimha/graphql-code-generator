@@ -44,6 +44,7 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
+  emitRecords: boolean;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
@@ -55,6 +56,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       listType: rawConfig.listType || 'List',
       namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
+      emitRecords: rawConfig.emitRecords || false,
       scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
     });
   }
@@ -238,6 +240,28 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     }
 
     return result;
+  }
+
+  protected buildRecord(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<FieldDefinitionNode>,
+    interfaces?: ReadonlyArray<NamedTypeNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
+    const interfaceImpl =
+      interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
+    const recordMembers = inputValueArray
+      .map(arg => {
+        const fieldType = this.resolveInputFieldType(arg.type);
+        //const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(arg.name);
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return `${csharpFieldType} ${fieldName}`;
+      })
+      .join(', ');
+
+    return `${classSummary}public record ${this.convertSafeName(name)}(${recordMembers})${interfaceImpl};`;
   }
 
   protected buildClass(

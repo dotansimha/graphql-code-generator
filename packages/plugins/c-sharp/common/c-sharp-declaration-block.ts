@@ -3,7 +3,7 @@ import { StringValueNode, NameNode } from 'graphql';
 import { transformComment } from './utils';
 
 export type Access = 'private' | 'public' | 'protected';
-export type Kind = 'namespace' | 'class' | 'interface' | 'enum';
+export type Kind = 'namespace' | 'class' | 'record' | 'interface' | 'enum';
 
 export class CSharpDeclarationBlock {
   _name: string = null;
