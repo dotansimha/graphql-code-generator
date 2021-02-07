@@ -38,6 +38,7 @@ import {
   wrapFieldType,
   getListTypeField,
 } from '../../common/common';
+import { pascalCase } from 'change-case';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -254,8 +255,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const recordMembers = inputValueArray
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
-        //const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = pascalCase(this.convertSafeName(arg.name));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return `${csharpFieldType} ${fieldName}`;
       })
@@ -277,7 +277,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = pascalCase(this.convertSafeName(arg.name));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
