@@ -255,13 +255,28 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const recordMembers = inputValueArray
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; init; } = ${fieldName};`);
+      })
+      .join('\n\n');
+    const recordInitializer = inputValueArray
+      .map(arg => {
+        const fieldType = this.resolveInputFieldType(arg.type);
         const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return `${csharpFieldType} ${fieldName}`;
       })
       .join(', ');
-
-    return `${classSummary}public record ${this.convertSafeName(name)}(${recordMembers})${interfaceImpl};`;
+    return `
+#region ${name}
+${classSummary}public record ${this.convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
+  #region members
+${recordMembers}
+  #endregion
+}
+#endregion`;
   }
 
   protected buildClass(
