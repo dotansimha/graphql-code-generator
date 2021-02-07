@@ -255,7 +255,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const recordMembers = inputValueArray
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
-        const fieldName = pascalCase(this.convertSafeName(arg.name));
+        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return `${csharpFieldType} ${fieldName}`;
       })
@@ -277,7 +277,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = pascalCase(this.convertSafeName(arg.name));
+        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
