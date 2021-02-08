@@ -199,7 +199,7 @@ export function buildModule(
 
   function printResolveSignaturesPerType(registry: Registry) {
     return [
-      [...registry.objects, ...registry.interfaces, ...registry.enums]
+      [...registry.objects, ...registry.interfaces]
         .map(name =>
           printResolverType(
             name,
@@ -241,7 +241,7 @@ export function buildModule(
         const types = registry[k];
 
         types.forEach(typeName => {
-          if (k === 'scalars') {
+          if (k === 'scalars' || k === 'enums') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);
