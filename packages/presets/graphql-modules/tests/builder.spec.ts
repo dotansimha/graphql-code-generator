@@ -307,6 +307,9 @@ test('should use and export resolver signatures of types defined or extended in 
     export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
   `);
   expect(output).toBeSimilarStringTo(`
+    export type UserKindResolvers = Pick<core.UserKindResolvers, DefinedFields['UserKind']>;
+  `);
+  expect(output).toBeSimilarStringTo(`
     export type DateTimeScalarConfig = core.DateTimeScalarConfig;
   `);
   expect(output).toBeSimilarStringTo(`
@@ -354,6 +357,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
       User?: UserResolvers;
       DateTime?: core.Resolvers['DateTime'];
       URL?: core.Resolvers['URL'];
+      UserKind?: UserKindResolvers;
     };
   `);
 });
