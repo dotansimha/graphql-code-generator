@@ -191,6 +191,22 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   noExport?: boolean;
   /**
+   * @description Set the value to `true` in order to disable all description generation.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Disable description generation
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    disableDescriptions: true
+   * ```
+   */
+  disableDescriptions?: boolean;
+  /**
    * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
    * @default false
    *

@@ -291,6 +291,209 @@ describe('TypeScript', () => {
     });
   });
 
+  describe('disable comment generation', () => {
+    it('Should not include a description for Scalars type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "My custom scalar"
+        scalar A
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+          A: any;
+        };
+      `);
+    });
+
+    it('Should not add description for input types', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "MyInput"
+        input MyInput {
+          f: String
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput`);
+    });
+
+    it('Should not add description for input fields', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "MyInput"
+        input MyInput {
+          "f is something"
+          f: String!
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          f: Scalars['String'];
+        }`);
+    });
+
+    it('Should remove multiline comment', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        """
+        MyInput
+        multiline
+        """
+        input MyInput {
+          f: String!
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput`);
+    });
+
+    it('Should work with unions', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "my union"
+        union A = B | C
+
+        type B {
+          id: ID
+        }
+        type C {
+          id: ID
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type A = `);
+    });
+
+    it('Should work with types', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "this is b"
+        type B {
+          id: ID
+        }
+        "this is c"
+        type C {
+          id: ID
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type B = `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type C = `);
+    });
+
+    it('Should work with type fields', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type B {
+          "the id"
+          id: ID
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type B = {
+        __typename?: 'B';
+        id?: Maybe<Scalars['ID']>;
+      };`);
+    });
+
+    it('Should work with inteface and inteface fields', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Node {
+          "the id"
+          id: ID!
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Node = {
+        id: Scalars['ID'];
+      };`);
+    });
+
+    it('Should work with enum and enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "custom enum"
+        enum MyEnum {
+          "this is a"
+          A
+          "this is b"
+          B
+        }
+      `);
+      const result = await plugin(schema, [], { disableDescriptions: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        B = 'B'
+      }`);
+    });
+
+    it('Should work with enum and enum values (enumsAsTypes)', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "custom enum"
+        enum MyEnum {
+          "this is a"
+          A
+          "this is b"
+          B
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true, disableDescriptions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyEnum =
+        | 'A' 
+        | 'B';`);
+    });
+
+    it('Should not work when config is false', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "custom enum"
+        enum MyEnum {
+          "this is a"
+          A
+          "this is b"
+          B
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true, disableDescriptions: false },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      /** custom enum */
+      export type MyEnum =
+        /** this is a */
+        | 'A' 
+        /** this is b */
+        | 'B';`);
+    });
+  });
+
   describe('Issues', () => {
     it('#4564 - numeric enum values set on schema level', async () => {
       const testSchema = new GraphQLSchema({
