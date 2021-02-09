@@ -318,9 +318,23 @@ ${classMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+
+        let fieldName: string;
+        let getterSetter: string;
+
+        if (this.config.emitRecords) {
+          // record
+          fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+          getterSetter = '{ get; }';
+        } else {
+          // class
+          fieldName = this.convertSafeName(arg.name);
+          getterSetter = '{ get; set; }';
+        }
+
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
-        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
+
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} ${getterSetter}`);
       })
       .join('\n\n');
 
