@@ -11,7 +11,7 @@ export const plugin: PluginFunction<FlowPluginConfig, Types.ComplexPluginOutput>
   documents: Types.DocumentFile[],
   config: FlowPluginConfig
 ) => {
-  const header = `// @flow \n\n`;
+  const header = `// @flow\n`;
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitor = new FlowVisitor(schema, config);

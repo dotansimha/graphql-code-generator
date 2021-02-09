@@ -120,7 +120,7 @@ It will generates for you types that are pointing to the new form of types. It s
 
 To use it, start by installing from NPM:
 
-\$ yarn add -D @graphql-codegen/typescript-compatibility
+    yarn add -D @graphql-codegen/typescript-compatibility
 
 Then, add it to your codegen configuration:
 

@@ -18,7 +18,8 @@ export class OperationVariablesToObject {
     protected _namespacedImportName: string | null = null,
     protected _enumNames: string[] = [],
     protected _enumPrefix = true,
-    protected _enumValues: ParsedEnumValuesMap = {}
+    protected _enumValues: ParsedEnumValuesMap = {},
+    protected _applyCoercion: Boolean = false
   ) {
     autoBind(this);
   }
@@ -76,7 +77,7 @@ export class OperationVariablesToObject {
     }
 
     const fieldName = this.getName(variable);
-    const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type);
+    const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type, this._applyCoercion);
 
     const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
     const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
@@ -87,11 +88,11 @@ export class OperationVariablesToObject {
     return `${formattedFieldString}: ${formattedTypeString}`;
   }
 
-  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  public wrapAstTypeWithModifiers(_baseType: string, _typeNode: TypeNode, _applyCoercion?: Boolean): string {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
-  protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+  protected formatFieldString(fieldName: string, isNonNullType: boolean, _hasDefaultValue: boolean): string {
     return fieldName;
   }
 

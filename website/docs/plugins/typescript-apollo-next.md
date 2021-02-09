@@ -25,7 +25,7 @@ By declaring a top level query we can save rendering time and provide a simpler 
 
 :::shell Using `yarn`
 
-    $ yarn add -D graphql-codegen-apollo-next-ssr
+    yarn add -D graphql-codegen-apollo-next-ssr
 
 :::
 

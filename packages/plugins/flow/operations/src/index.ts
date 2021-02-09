@@ -30,12 +30,14 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
     ...(config.externalFragments || []),
   ];
 
+  const visitor = new FlowDocumentsVisitor(schema, config, allFragments);
+
   const visitorResult = visit(allAst, {
-    leave: new FlowDocumentsVisitor(schema, config, allFragments),
+    leave: visitor,
   });
 
   return {
-    prepend: ['// @flow \n'],
+    prepend: ['// @flow\n', ...visitor.getImports()],
     content: [prefix, ...visitorResult.definitions].join('\n'),
   };
 };

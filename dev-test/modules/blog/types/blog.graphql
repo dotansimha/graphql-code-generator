@@ -1,0 +1,12 @@
+type Article {
+  id: ID!
+  title: String!
+  text: String!
+  author: User!
+}
+
+extend type Query {
+  articles: [Article!]
+  articleById(id: ID!): Article
+  articlesByUser(userId: ID!): [Article!]
+}

@@ -1,4 +1,4 @@
-This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
+This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
 
 This plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.
 
@@ -13,7 +13,7 @@ This plugin also handles `.graphql` files containing multiple GraphQL documents,
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-graphql-files-modules
+    yarn add -D @graphql-codegen/typescript-graphql-files-modules
 :::
 
 ## API Reference
@@ -52,3 +52,11 @@ type: `string`
 default: `*\/`
 
 By default, a wildcard is being added as prefix, you can change that to a custom prefix
+
+
+### `type`
+
+type: `string (values: DocumentNode, string)`
+default: `DocumentNode`
+
+By default, the named exports will have a type `DocumentNode`. Change this to "string" if you only use raw strings.

@@ -5,9 +5,7 @@ title: near-operation-file
 
 This preset generates a file per each operation file.
 
-## Installation
-
-    $ yarn add @graphql-codegen/near-operation-file-preset
+{@import ../generated-config/near-operation-file-preset.md}
 
 ## Example
 
@@ -43,8 +41,3 @@ The second output refers to the base directory of the project (`./src/`) and it 
 The `presetConfig` section contains a key for setting the output files extension (in our case, `.generated.tsx` because of `react-apollo`), and the location of the base schema types file we created in the first section of this file (it will look for it in the base directory).
 
 > Note: If you're loading your `documents` from files with the same extension as the generated files, make sure the glob you use excludes the generated files. For example, if your original glob was `src/**/*.{ts,tsx}`, use `src/**/!(*.generated).{ts,tsx}` instead.
-
-## Configuration
-
-
-{@import ../generated-config/near-operation-file.md}

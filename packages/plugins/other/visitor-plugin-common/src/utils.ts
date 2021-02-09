@@ -20,6 +20,7 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
+  DirectiveNode,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
@@ -103,7 +104,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
     return indent(`/** ${lines[0]} */\n`, indentLevel);
   }
   lines = ['/**', ...lines.map(line => ` * ${line}`), ' */\n'];
-  return lines.map(line => indent(line, indentLevel)).join('\n');
+  return stripTrailingSpaces(lines.map(line => indent(line, indentLevel)).join('\n'));
 }
 
 export class DeclarationBlock {
@@ -230,13 +231,13 @@ export class DeclarationBlock {
       result += this._config.blockTransformer('{}');
     }
 
-    return (
+    return stripTrailingSpaces(
       (this._comment ? this._comment : '') +
-      result +
-      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
-        ? ''
-        : ';') +
-      '\n'
+        result +
+        (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+          ? ''
+          : ';') +
+        '\n'
     );
   }
 }
@@ -402,13 +403,24 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
+export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
+  if (directives.length === 0) return false;
+
+  for (const directive of directives) {
+    if (['skip', 'include'].includes(directive.name.value)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 type WrapModifiersOptions = {
   wrapOptional(type: string): string;
   wrapArray(type: string): string;
 };
 export function wrapTypeWithModifiers(
   baseType: string,
-  type: GraphQLOutputType,
+  type: GraphQLOutputType | GraphQLNamedType,
   options: WrapModifiersOptions
 ): string {
   let currentType = type;
@@ -433,4 +445,34 @@ export function wrapTypeWithModifiers(
 
 export function removeDescription<T extends { description?: StringValueNode }>(nodes: readonly T[]) {
   return nodes.map(node => ({ ...node, description: undefined }));
+}
+
+export function wrapTypeNodeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  switch (typeNode.kind) {
+    case Kind.NAMED_TYPE: {
+      return `Maybe<${baseType}>`;
+    }
+    case Kind.NON_NULL_TYPE: {
+      const innerType = wrapTypeNodeWithModifiers(baseType, typeNode.type);
+      return clearOptional(innerType);
+    }
+    case Kind.LIST_TYPE: {
+      const innerType = wrapTypeNodeWithModifiers(baseType, typeNode.type);
+      return `Maybe<Array<${innerType}>>`;
+    }
+  }
+}
+
+function clearOptional(str: string): string {
+  const rgx = new RegExp(`^Maybe<(.*?)>$`, 'i');
+
+  if (str.startsWith(`Maybe`)) {
+    return str.replace(rgx, '$1');
+  }
+
+  return str;
+}
+
+function stripTrailingSpaces(str: string): string {
+  return str.replace(/ +\n/g, '\n');
 }

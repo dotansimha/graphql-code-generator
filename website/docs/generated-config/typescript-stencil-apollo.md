@@ -11,7 +11,7 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
+    yarn add -D @graphql-codegen/typescript-stencil-apollo
 :::
 
 ## API Reference
@@ -47,7 +47,7 @@ Deprecated. Changes the documentMode to `documentNode`.
 ### `gqlImport`
 
 type: `string`
-default: `gql#graphql-tag`
+default: `graphql-tag#gql`
 
 Customize from which module will `gql` be imported from.
 This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
@@ -149,6 +149,15 @@ Declares how DocumentNode are created:
 - `documentNode`: document nodes will be generated as objects when we generate the templates.
 - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
 - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+
+
+### `optimizeDocumentNode`
+
+type: `boolean`
+default: `true`
+
+If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.
+This will remove all "loc" and "description" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).
 
 
 ### `importOperationTypesFrom`

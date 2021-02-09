@@ -5,7 +5,7 @@ export const presetLoaderMap = {
 };
 
 export const pluginLoaderMap = {
-  'jsdoc': () => import('@graphql-codegen/jsdoc'),
+  jsdoc: () => import('@graphql-codegen/jsdoc'),
   java: () => import('@graphql-codegen/java'),
   'java-resolvers': () => import('@graphql-codegen/java-resolvers'),
   'fragment-matcher': () => import('@graphql-codegen/fragment-matcher'),
@@ -24,6 +24,7 @@ export const pluginLoaderMap = {
   'typescript-graphql-request': () => import('@graphql-codegen/typescript-graphql-request'),
   'typescript-generic-sdk': () => import('@graphql-codegen/typescript-generic-sdk'),
   'typescript-type-graphql': () => import('@graphql-codegen/typescript-type-graphql'),
+  'typescript-react-query': () => import('@graphql-codegen/typescript-react-query'),
   'typescript-mongodb': () => import('@graphql-codegen/typescript-mongodb'),
   'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
   'c-sharp-operations': () => import('@graphql-codegen/c-sharp-operations'),
@@ -34,4 +35,5 @@ export const pluginLoaderMap = {
   time: () => import('@graphql-codegen/time'),
   introspection: () => import('@graphql-codegen/introspection'),
   'schema-ast': () => import('@graphql-codegen/schema-ast'),
+  'typescript-apollo-client-helpers': () => import('@graphql-codegen/typescript-apollo-client-helpers'),
 };

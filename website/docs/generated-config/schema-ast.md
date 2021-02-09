@@ -9,7 +9,7 @@ This plugin prints the merged schema as string. If multiple schemas are provided
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/schema-ast
+    yarn add -D @graphql-codegen/schema-ast
 :::
 
 ## API Reference
@@ -52,6 +52,14 @@ generates:
     config:
       commentDescriptions: true
 ```
+
+### `sort`
+
+type: `boolean`
+default: `false`
+
+Set to true in order get the schema lexicographically sorted before printed.
+
 
 ### `federation`
 

@@ -5,6 +5,19 @@ import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common
  */
 export interface JavaResolversPluginRawConfig extends RawConfig {
   /**
+   * @description Customize the class members prefix. The default is empty (this might be a breaking change from the default that was _)
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   src/main/java/my-org/my-app/Resolvers.java:
+   *     plugins:
+   *       - java
+   *     config:
+   *       classMembersPrefix: '_'
+   * ```
+   */
+  classMembersPrefix?: string;
+  /**
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown

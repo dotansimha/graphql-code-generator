@@ -1,6 +1,25 @@
 # @graphql-codegen/c-sharp-operations
 
+## 1.17.10
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.17.9
+
+### Patch Changes
+
+- f92c5245: Fix c-sharp-operations package description
+- Updated dependencies [07f9b1b2]
+- Updated dependencies [35f67120]
+  - @graphql-codegen/visitor-plugin-common@1.17.14
+
 ## 1.17.8
+
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues

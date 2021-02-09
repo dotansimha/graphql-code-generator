@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-mongodb",
-  "version": "1.17.8",
+  "version": "1.18.0",
   "description": "GraphQL Code Generator plugin for generting a ready-to-use ORM types for MongoDB",
   "repository": {
     "type": "git",
@@ -14,20 +14,20 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.17.8",
-    "@graphql-codegen/typescript": "^1.17.8",
-    "@graphql-codegen/visitor-plugin-common": "^1.17.13",
-    "@graphql-tools/utils": "^6.0.18",
+    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/typescript": "^1.20.1",
+    "@graphql-codegen/visitor-plugin-common": "^1.18.1",
+    "@graphql-tools/utils": "^7.0.0",
     "auto-bind": "~4.0.0",
     "lodash": "~4.17.20",
-    "tslib": "~2.0.0"
+    "tslib": "~2.1.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.159"
+    "@types/lodash": "4.14.168"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

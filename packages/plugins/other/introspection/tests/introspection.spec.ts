@@ -15,9 +15,12 @@ describe('Introspection template', () => {
     `);
 
     const content = await plugin(schema, [], {}, { outputFile: '' });
-    const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }), null, 2);
+    const introspection = JSON.stringify(
+      introspectionFromSchema(schema, { descriptions: true, schemaDescription: false, specifiedByUrl: false }),
+      null,
+      2
+    );
     expect(introspection).toEqual(content);
-    expect(introspection).toMatchSnapshot();
   });
 
   it('should output a JSON file minified', async () => {
@@ -32,9 +35,10 @@ describe('Introspection template', () => {
     `);
 
     const content = await plugin(schema, [], { minify: true }, { outputFile: '' });
-    const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }));
+    const introspection = JSON.stringify(
+      introspectionFromSchema(schema, { descriptions: true, schemaDescription: false, specifiedByUrl: false })
+    );
     expect(introspection).toEqual(content);
-    expect(introspection).toMatchSnapshot();
   });
 
   it('should support Apollo Federation', async () => {

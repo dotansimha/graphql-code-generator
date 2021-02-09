@@ -54,7 +54,7 @@ export interface FragmentMatcherConfig {
   module?: 'commonjs' | 'es2015';
   /**
    * @description Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
-   * @default 2
+   * @default 3
    *
    * @exampleMarkdown
    * ```yml
@@ -100,7 +100,7 @@ export const plugin: PluginFunction = async (
   const config: Required<FragmentMatcherConfig> = {
     module: 'es2015',
     federation: false,
-    apolloClientVersion: 2,
+    apolloClientVersion: 3,
     useExplicitTyping: false,
     ...pluginConfig,
   };

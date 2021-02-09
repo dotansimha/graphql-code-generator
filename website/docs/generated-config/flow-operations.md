@@ -13,7 +13,7 @@ This plugin requires you to use `@graphql-codegen/flow` as well, because it depe
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/flow-operations
+    yarn add -D @graphql-codegen/flow-operations
 :::
 
 ## API Reference

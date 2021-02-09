@@ -7,7 +7,7 @@
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/named-operations-object
+    yarn add -D @graphql-codegen/named-operations-object
 :::
 
 ## API Reference
@@ -26,7 +26,7 @@ generates:
 path/to/file.ts:
  plugins:
    - typescript
-   - typescript-named-operations-object
+   - named-operations-object
  config:
    identifierName: ListAllOperations
 ```

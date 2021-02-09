@@ -1,14 +1,16 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
+import { TypeScriptTypedDocumentNodesConfig } from 'packages/plugins/typescript/typed-document-node/src/config';
 import { extname } from 'path';
-import { LoadedFragment, RawClientSideBasePluginConfig, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import { LoadedFragment, RawClientSideBasePluginConfig, DocumentMode, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentNodesVisitor } from './visitor';
 
-export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
+export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: RawClientSideBasePluginConfig
+  rawDocuments: Types.DocumentFile[],
+  config: TypeScriptTypedDocumentNodesConfig
 ) => {
+  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
@@ -27,7 +29,7 @@ export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
-    prepend: visitor.getImports(),
+    prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),
     content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
   };
 };

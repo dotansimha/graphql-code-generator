@@ -1,5 +1,56 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 2.3.0
+
+### Minor Changes
+
+- b0292408: Add additionalDI config for add custom dependency injections
+
+### Patch Changes
+
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
+## 2.2.1
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 2.2.0
+
+### Minor Changes
+
+- bd3bd296: Improve DocumentNode optimizations, to reduce bundle size when consumed as pre-compiled
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
+## 2.1.0
+
+### Minor Changes
+
+- 7610ce64: add support for importing operations from external file in angular-apollo plugin
+
+### Patch Changes
+
+- Updated dependencies [612e5e52]
+- Updated dependencies [9f2a4e2f]
+- Updated dependencies [0f35e775]
+- Updated dependencies [eaf45d1f]
+  - @graphql-codegen/visitor-plugin-common@1.17.17
+  - @graphql-codegen/plugin-helpers@1.18.1
+
 ## 2.0.1
 
 ### Patch Changes

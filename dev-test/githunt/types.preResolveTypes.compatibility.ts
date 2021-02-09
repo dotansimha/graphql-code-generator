@@ -1,5 +1,7 @@
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -296,7 +298,7 @@ export namespace OnCommentAdded {
   export type Variables = OnCommentAddedSubscriptionVariables;
   export type Subscription = OnCommentAddedSubscription;
   export type CommentAdded = NonNullable<OnCommentAddedSubscription['commentAdded']>;
-  export type PostedBy = NonNullable<OnCommentAddedSubscription['commentAdded']>['postedBy'];
+  export type PostedBy = NonNullable<NonNullable<OnCommentAddedSubscription['commentAdded']>['postedBy']>;
 }
 
 export namespace Comment {
@@ -304,18 +306,18 @@ export namespace Comment {
   export type Query = CommentQuery;
   export type CurrentUser = NonNullable<CommentQuery['currentUser']>;
   export type Entry = NonNullable<CommentQuery['entry']>;
-  export type PostedBy = NonNullable<CommentQuery['entry']>['postedBy'];
-  export type Comments = NonNullable<NonNullable<CommentQuery['entry']>['comments'][0]>;
-  export type Repository = NonNullable<CommentQuery['entry']>['repository'];
+  export type PostedBy = NonNullable<NonNullable<CommentQuery['entry']>['postedBy']>;
+  export type Comments = NonNullable<NonNullable<NonNullable<CommentQuery['entry']>['comments']>[number]>;
+  export type Repository = NonNullable<NonNullable<CommentQuery['entry']>['repository']>;
   export type RepositoryInlineFragment = { __typename: 'Repository' } & Pick<
-    NonNullable<CommentQuery['entry']>['repository'],
+    NonNullable<NonNullable<CommentQuery['entry']>['repository']>,
     'description' | 'open_issues_count' | 'stargazers_count'
   >;
 }
 
 export namespace CommentsPageComment {
   export type Fragment = CommentsPageCommentFragment;
-  export type PostedBy = CommentsPageCommentFragment['postedBy'];
+  export type PostedBy = NonNullable<CommentsPageCommentFragment['postedBy']>;
 }
 
 export namespace CurrentUserForProfile {
@@ -326,15 +328,15 @@ export namespace CurrentUserForProfile {
 
 export namespace FeedEntry {
   export type Fragment = FeedEntryFragment;
-  export type Repository = FeedEntryFragment['repository'];
-  export type Owner = NonNullable<FeedEntryFragment['repository']['owner']>;
+  export type Repository = NonNullable<FeedEntryFragment['repository']>;
+  export type Owner = NonNullable<NonNullable<FeedEntryFragment['repository']>['owner']>;
 }
 
 export namespace Feed {
   export type Variables = FeedQueryVariables;
   export type Query = FeedQuery;
   export type CurrentUser = NonNullable<FeedQuery['currentUser']>;
-  export type Feed = NonNullable<NonNullable<FeedQuery['feed']>[0]>;
+  export type Feed = NonNullable<NonNullable<FeedQuery['feed']>[number]>;
 }
 
 export namespace SubmitRepository {
@@ -345,8 +347,8 @@ export namespace SubmitRepository {
 
 export namespace RepoInfo {
   export type Fragment = RepoInfoFragment;
-  export type Repository = RepoInfoFragment['repository'];
-  export type PostedBy = RepoInfoFragment['postedBy'];
+  export type Repository = NonNullable<RepoInfoFragment['repository']>;
+  export type PostedBy = NonNullable<RepoInfoFragment['postedBy']>;
 }
 
 export namespace SubmitComment {
@@ -357,12 +359,12 @@ export namespace SubmitComment {
 
 export namespace VoteButtons {
   export type Fragment = VoteButtonsFragment;
-  export type Vote = VoteButtonsFragment['vote'];
+  export type Vote = NonNullable<VoteButtonsFragment['vote']>;
 }
 
 export namespace Vote {
   export type Variables = VoteMutationVariables;
   export type Mutation = VoteMutation;
   export type Vote = NonNullable<VoteMutation['vote']>;
-  export type _Vote = NonNullable<VoteMutation['vote']>['vote'];
+  export type _Vote = NonNullable<NonNullable<VoteMutation['vote']>['vote']>;
 }

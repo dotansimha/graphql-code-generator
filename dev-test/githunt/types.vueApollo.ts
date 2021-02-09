@@ -3,6 +3,8 @@ import * as VueApolloComposable from '@vue/apollo-composable';
 import * as VueCompositionApi from '@vue/composition-api';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type ReactiveFunction<TParam> = () => TParam;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -340,14 +342,13 @@ export const OnCommentAddedDocument = gql`
  * When your component renders, `useOnCommentAddedSubscription` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the subscription
  * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
  *
  * @example
- * const { result, loading, error } = useOnCommentAddedSubscription(
- *   {
- *      repoFullName: // value for 'repoFullName'
- *   }
- * );
+ * const { result, loading, error } = useOnCommentAddedSubscription({
+ *   repoFullName: // value for 'repoFullName'
+ * });
  */
 export function useOnCommentAddedSubscription(
   variables:
@@ -411,16 +412,15 @@ export const CommentDocument = gql`
  * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useCommentQuery(
- *   {
- *      repoFullName: // value for 'repoFullName'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *   }
- * );
+ * const { result, loading, error } = useCommentQuery({
+ *   repoFullName: // value for 'repoFullName'
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
+ * });
  */
 export function useCommentQuery(
   variables:
@@ -457,10 +457,7 @@ export const CurrentUserForProfileDocument = gql`
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useCurrentUserForProfileQuery(
- *   {
- *   }
- * );
+ * const { result, loading, error } = useCurrentUserForProfileQuery();
  */
 export function useCurrentUserForProfileQuery(
   options:
@@ -472,9 +469,9 @@ export function useCurrentUserForProfileQuery(
         VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
       > = {}
 ) {
-  return VueApolloComposable.useQuery<CurrentUserForProfileQuery, undefined>(
+  return VueApolloComposable.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
-    undefined,
+    {},
     options
   );
 }
@@ -501,16 +498,15 @@ export const FeedDocument = gql`
  * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFeedQuery(
- *   {
- *      type: // value for 'type'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *   }
- * );
+ * const { result, loading, error } = useFeedQuery({
+ *   type: // value for 'type'
+ *   offset: // value for 'offset'
+ *   limit: // value for 'limit'
+ * });
  */
 export function useFeedQuery(
   variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables>,
@@ -543,7 +539,7 @@ export const SubmitRepositoryDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useSubmitRepositoryMutation({
  *   variables: {
- *      repoFullName: // value for 'repoFullName'
+ *     repoFullName: // value for 'repoFullName'
  *   },
  * });
  */
@@ -585,8 +581,8 @@ export const SubmitCommentDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useSubmitCommentMutation({
  *   variables: {
- *      repoFullName: // value for 'repoFullName'
- *      commentContent: // value for 'commentContent'
+ *     repoFullName: // value for 'repoFullName'
+ *     commentContent: // value for 'commentContent'
  *   },
  * });
  */
@@ -629,8 +625,8 @@ export const VoteDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useVoteMutation({
  *   variables: {
- *      repoFullName: // value for 'repoFullName'
- *      type: // value for 'type'
+ *     repoFullName: // value for 'repoFullName'
+ *     type: // value for 'type'
  *   },
  * });
  */

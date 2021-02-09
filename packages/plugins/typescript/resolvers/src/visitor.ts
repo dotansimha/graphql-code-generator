@@ -20,7 +20,6 @@ export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
-  avoidOptionals: boolean;
   useIndexSignature: boolean;
   wrapFieldDefinitions: boolean;
   allowParentTypeOverride: boolean;
@@ -113,7 +112,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     return this.clearOptional(baseValue);
   }
 
-  protected getPunctuation(declarationKind: DeclarationKind): string {
+  protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 

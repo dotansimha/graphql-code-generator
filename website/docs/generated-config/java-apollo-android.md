@@ -9,7 +9,7 @@ This plugin and presets creates generated mappers and parsers for a complete typ
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/java-apollo-android
+    yarn add -D @graphql-codegen/java-apollo-android
 :::
 
 ## API Reference

@@ -11,9 +11,9 @@ Given the following GraphQL declaration:
 
 ```graphql
 type User @entity {
-    id: String @id
-    username: String! @column
-    email: @column
+  id: String @id
+  username: String! @column
+  email: String @column
 }
 ```
 
@@ -34,7 +34,6 @@ This interface can be used for db read/write purposes, thus making communication
 > Don't install this plugin as devDependency, because you need to import the directives from it.
 
 {@import ../generated-config/typescript-mongodb.md}
-
 
 ## Usage Example
 
@@ -78,11 +77,15 @@ Use this directive to specify which GraphQL type should have generated MongoDB m
 - `additionalFields: [AdditionalEntityFields]` - specify any additional fields that you would like to add to your MongoDB object, and are not a part of your public GraphQL schema.
 
 ```graphql
-type User @entity(additionalFields: [
- { path: "services.login.token", type: "string" }
-]) {
- id: String @id
- email: @column
+type User
+  @entity(
+    additionalFields: [
+      { path: "services.login.token", type: "string" }
+      { path: "services.login.refreshToken?", type: "string" }
+    ]
+  ) {
+  id: String @id
+  email: String @column
 }
 ```
 

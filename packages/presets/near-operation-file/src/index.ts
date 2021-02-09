@@ -8,7 +8,10 @@ import { FragmentImport, ImportDeclaration, ImportSource } from '@graphql-codege
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
-export type FragmentImportFromFn = (source: ImportSource<FragmentImport>) => ImportSource<FragmentImport>;
+export type FragmentImportFromFn = (
+  source: ImportSource<FragmentImport>,
+  sourceFilePath: string
+) => ImportSource<FragmentImport>;
 
 export type NearOperationFileConfig = {
   /**
@@ -41,7 +44,7 @@ export type NearOperationFileConfig = {
    *  preset: near-operation-file
    *  presetConfig:
    *    baseTypesPath: types.ts
-   *    importAllFragmentsFrom: '@fragments'
+   *    importAllFragmentsFrom: '~types'
    *  plugins:
    *    - typescript-operations
    * ```
@@ -49,7 +52,7 @@ export type NearOperationFileConfig = {
   importAllFragmentsFrom?: string | FragmentImportFromFn;
   /**
    * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
-   * @default .generates.ts
+   * @default .generated.ts
    *
    * @exampleMarkdown
    * ```yml
@@ -171,7 +174,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const newImportSource: ImportSource<FragmentImport> =
             typeof importAllFragmentsFrom === 'string'
               ? { ...t.importSource, path: importAllFragmentsFrom }
-              : importAllFragmentsFrom(t.importSource);
+              : importAllFragmentsFrom(t.importSource, source.filename);
 
           return {
             ...t,

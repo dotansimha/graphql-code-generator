@@ -1,6 +1,6 @@
 import React from 'react';
 import { Editor } from './Editor';
-import { safeLoad } from 'js-yaml';
+import { load } from 'js-yaml';
 import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
@@ -67,7 +67,7 @@ export const LiveDemo = () => {
   let mode = null;
 
   try {
-    const parsedConfig = safeLoad(config || '');
+    const parsedConfig = load(config || '');
     mode = getMode(parsedConfig) || 'typescript';
     mode = mode === 'typescript' ? 'text/typescript' : mode;
   } catch (e) {}

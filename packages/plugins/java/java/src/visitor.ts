@@ -29,6 +29,7 @@ export interface JavaResolverParsedConfig extends ParsedConfig {
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
+  classMembersPrefix: string;
 }
 
 export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConfig, JavaResolverParsedConfig> {
@@ -41,6 +42,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'Iterable',
       className: rawConfig.className || 'Types',
+      classMembersPrefix: rawConfig.classMembersPrefix || '',
       package: rawConfig.package || defaultPackageName,
       scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
     });
@@ -49,6 +51,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   public getImports(): string {
     const allImports = [];
 
+    allImports.push(`java.util.List`);
     if (this._addHashMapImport) {
       allImports.push(`java.util.HashMap`);
     }
@@ -91,12 +94,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
-      return indent(
-        `${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(
-          enumName,
-          node.name.value
-        )}")`
-      );
+      return indent(`${this.getEnumValue(enumName, node.name.value)}`);
     };
   }
 
@@ -104,26 +102,10 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     this._addHashMapImport = true;
     this._addMapImport = true;
     const enumName = this.convertName(node.name);
-    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';';
-    const enumCtor = indentMultiline(`
-public final String label;
- 
-${enumName}(String label) {
-  this.label = label;
-}`);
-    const valueOf = indentMultiline(`
-private static final Map<String, ${enumName}> BY_LABEL = new HashMap<>();
-  
-static {
-    for (${enumName} e : values()) {
-        BY_LABEL.put(e.label, e);
-    }
-}
+    const enumValues = node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n');
+    const enumCtor = indentMultiline(``);
 
-public static ${enumName} valueOfLabel(String label) {
-  return BY_LABEL.get(label);
-}`);
-    const enumBlock = [enumValues, enumCtor, valueOf].join('\n');
+    const enumBlock = [enumValues, enumCtor].join('\n');
 
     return new JavaDeclarationBlock()
       .access('public')
@@ -141,7 +123,7 @@ public static ${enumName} valueOfLabel(String label) {
     const isArray =
       typeNode.kind === Kind.LIST_TYPE ||
       (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } = null;
+    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean };
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
@@ -191,60 +173,63 @@ public static ${enumName} valueOfLabel(String label) {
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        return indent(`private ${typeToUse.typeName} _${arg.name.value};`);
-      })
-      .join('\n');
-    const ctorSet = inputValueArray
-      .map(arg => {
-        const typeToUse = this.resolveInputFieldType(arg.type);
-
-        if (typeToUse.isArray && !typeToUse.isScalar) {
-          this._addListImport = true;
-          return indentMultiline(
-            `if (args.get("${arg.name.value}") != null) {
-  this._${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());
-}`,
-            3
-          );
-        } else if (typeToUse.isScalar) {
-          return indent(`this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`, 3);
-        } else if (typeToUse.isEnum) {
-          return indentMultiline(
-            `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
-  this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
-} else {
-  this._${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
-}`,
-            3
-          );
+        if (arg.name.value === 'interface') {
+          // forcing prefix of _ since interface is a keyword in JAVA
+          return indent(`private ${typeToUse.typeName} _${this.config.classMembersPrefix}${arg.name.value};`);
         } else {
-          return indent(
-            `this._${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-            3
-          );
+          return indent(`private ${typeToUse.typeName} ${this.config.classMembersPrefix}${arg.name.value};`);
         }
       })
       .join('\n');
+
     const getters = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        return indent(
-          `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${arg.name.value}; }`
-        );
+        if (arg.name.value === 'interface') {
+          // forcing prefix of _ since interface is a keyword in JAVA
+          return indent(
+            `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${
+              this.config.classMembersPrefix
+            }${arg.name.value}; }`
+          );
+        } else {
+          return indent(
+            `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this.${
+              this.config.classMembersPrefix
+            }${arg.name.value}; }`
+          );
+        }
+      })
+      .join('\n');
+
+    const setters = inputValueArray
+      .map(arg => {
+        const typeToUse = this.resolveInputFieldType(arg.type);
+
+        if (arg.name.value === 'interface') {
+          return indent(
+            `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} _${arg.name.value}) { this._${
+              arg.name.value
+            } = _${arg.name.value}; }`
+          );
+        } else {
+          return indent(
+            `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} ${arg.name.value}) { this.${
+              arg.name.value
+            } = ${arg.name.value}; }`
+          );
+        }
       })
       .join('\n');
 
     return `public static class ${name} {
 ${classMembers}
 
-  public ${name}(Map<String, Object> args) {
-    if (args != null) {
-${ctorSet}
-    }
-  }
+  public ${name}() {}
 
 ${getters}
+${setters}
 }`;
   }
 

@@ -1,7 +1,7 @@
 This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.
 It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
 
-Note: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.
+Note: In most configurations, this plugin requires you to use typescript as well, because it depends on its base types.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Note: In most configurations, this plugin requires you to use `typescript as wel
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-operations
+    yarn add -D @graphql-codegen/typescript-operations
 :::
 
 ## API Reference
@@ -50,6 +50,7 @@ path/to/file.ts:
      field: true
      inputValue: true
      object: true
+     defaultValue: true
 ```
 
 ### `immutableTypes`

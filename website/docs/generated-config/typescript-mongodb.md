@@ -7,7 +7,7 @@
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/typescript-mongodb
+    yarn add -D @graphql-codegen/typescript-mongodb
 :::
 
 ## API Reference

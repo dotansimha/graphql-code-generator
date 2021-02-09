@@ -36,6 +36,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *      field: true
    *      inputValue: true
    *      object: true
+   *      defaultValue: true
    * ```
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;

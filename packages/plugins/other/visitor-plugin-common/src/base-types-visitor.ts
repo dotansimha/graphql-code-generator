@@ -51,6 +51,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumPrefix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
+  ignoreEnumValuesFromSchema: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -174,6 +175,22 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   onlyOperationTypes?: boolean;
+  /**
+   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Ignore enum values from schema
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    ignoreEnumValuesFromSchema: true
+   * ```
+   */
+  ignoreEnumValuesFromSchema?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -192,11 +209,16 @@ export class BaseTypesVisitor<
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      enumValues: parseEnumValues({
+        schema: _schema,
+        mapOrStr: rawConfig.enumValues,
+        ignoreEnumValuesFromSchema: rawConfig.ignoreEnumValuesFromSchema,
+      }),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
       wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
+      ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       ...additionalConfig,
     });
 
@@ -368,11 +390,11 @@ export class BaseTypesVisitor<
     return comment;
   }
 
-  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+  protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
     return allFields.join('\n');
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -383,7 +405,7 @@ export class BaseTypesVisitor<
 
   getInterfaceTypeDeclarationBlock(
     node: InterfaceTypeDefinitionNode,
-    originalNode: InterfaceTypeDefinitionNode
+    _originalNode: InterfaceTypeDefinitionNode
   ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -394,7 +416,7 @@ export class BaseTypesVisitor<
     return declarationBlock.withBlock(node.fields.join('\n'));
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
     if (this.config.onlyOperationTypes) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
@@ -403,7 +425,7 @@ export class BaseTypesVisitor<
       .join('\n\n');
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+  ScalarTypeDefinition(_node: ScalarTypeDefinitionNode): string {
     // We empty this because we handle scalars in a different way, see constructor.
     return '';
   }
@@ -476,6 +498,13 @@ export class BaseTypesVisitor<
     return node.value;
   }
 
+  protected makeValidEnumIdentifier(identifier: string): string {
+    if (/^[0-9]/.exec(identifier)) {
+      return wrapWithSingleQuotes(identifier, true);
+    }
+    return identifier;
+  }
+
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
     const schemaEnumType: GraphQLEnumType | undefined = this._schema
       ? (this._schema.getType(typeName) as GraphQLEnumType)
@@ -483,9 +512,14 @@ export class BaseTypesVisitor<
 
     return values
       .map(enumOption => {
-        const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
+        const optionName = this.makeValidEnumIdentifier(
+          this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+        );
         const comment = transformComment((enumOption.description as any) as string, 1);
-        const schemaEnumValue = schemaEnumType ? schemaEnumType.getValue(enumOption.name as any).value : undefined;
+        const schemaEnumValue =
+          schemaEnumType && !this.config.ignoreEnumValuesFromSchema
+            ? schemaEnumType.getValue(enumOption.name as any).value
+            : undefined;
         let enumValue: string | number =
           typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
 
@@ -510,7 +544,7 @@ export class BaseTypesVisitor<
       .join(',\n');
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
     return '';
   }
 

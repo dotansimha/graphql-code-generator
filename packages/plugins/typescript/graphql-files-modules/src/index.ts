@@ -3,7 +3,7 @@ import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
 /**
- * @description This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
+ * @description This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
  *
  * This plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.
  *
@@ -38,12 +38,17 @@ export interface TypeScriptFilesModulesPluginConfig {
    * @description By default, a wildcard is being added as prefix, you can change that to a custom prefix
    */
   prefix?: string;
+  /**
+   * @default "DocumentNode"
+   * @description By default, the named exports will have a type `DocumentNode`. Change this to "string" if you only use raw strings.
+   */
+  type?: 'string' | 'DocumentNode';
 }
 
 export const plugin: PluginFunction = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  { modulePathPrefix = '', relativeToCwd, prefix = '*/' }: TypeScriptFilesModulesPluginConfig
+  { modulePathPrefix = '', relativeToCwd, prefix = '*/', type = 'DocumentNode' }: TypeScriptFilesModulesPluginConfig
 ): Promise<string> => {
   const useRelative = relativeToCwd === true;
 
@@ -75,11 +80,11 @@ export const plugin: PluginFunction = async (
 
       return `
 declare module '${prefix}${modulePathPrefix}${fileName}' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
+  ${type === 'DocumentNode' ? `import { DocumentNode } from 'graphql';` : ''}
+  const defaultDocument: ${type};
   ${operations
     .filter(d => d.name && d.name.value)
-    .map(d => `export const ${d.name.value}: DocumentNode;`)
+    .map(d => `export const ${d.name.value}: ${type};`)
     .join('\n')}
 
   export default defaultDocument;

@@ -79,6 +79,46 @@ export class Renderer {
   }
 }
 
+const render = tasks => {
+  for (const task of tasks) {
+    task.subscribe(
+      event => {
+        if (event.type === 'SUBTASKS') {
+          render(task.subtasks);
+          return;
+        }
+
+        if (event.type === 'DATA') {
+          logUpdate.emit(chalk.dim(`${event.data}`));
+        }
+        logUpdate.done();
+      },
+      err => {
+        logUpdate.emit(err);
+        logUpdate.done();
+      }
+    );
+  }
+};
+
+export class ErrorRenderer {
+  private tasks: any;
+
+  constructor(tasks, _options) {
+    this.tasks = tasks;
+  }
+
+  render() {
+    render(this.tasks);
+  }
+
+  static get nonTTY() {
+    return true;
+  }
+
+  end() {}
+}
+
 class LogUpdate {
   private stream = process.stdout;
   // state

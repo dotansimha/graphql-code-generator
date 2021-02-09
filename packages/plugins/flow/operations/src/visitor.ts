@@ -1,5 +1,12 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isEnumType, isNonNullType, GraphQLOutputType } from 'graphql';
+import {
+  GraphQLSchema,
+  isEnumType,
+  isNonNullType,
+  GraphQLOutputType,
+  GraphQLNamedType,
+  SelectionSetNode,
+} from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
@@ -12,7 +19,28 @@ import {
   SelectionSetToObject,
   getConfigValue,
   DeclarationKind,
+  generateFragmentImportStatement,
 } from '@graphql-codegen/visitor-plugin-common';
+
+class FlowSelectionSetToObject extends SelectionSetToObject {
+  getUnknownType() {
+    return 'any';
+  }
+
+  public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
+    return new FlowSelectionSetToObject(
+      this._processor,
+      this._scalars,
+      this._schema,
+      this._convertName.bind(this),
+      this._getFragmentSuffix.bind(this),
+      this._loadedFragments,
+      this._config,
+      parentSchemaType,
+      selectionSet
+    );
+  }
+}
 
 import autoBind from 'auto-bind';
 
@@ -34,12 +62,17 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
 
     autoBind(this);
 
-    const wrapArray = (type: string) => `Array<${type}>`;
+    const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
     const wrapOptional = (type: string) => `?${type}`;
 
-    const formatNamedField = (name: string, type: GraphQLOutputType | null): string => {
-      const optional = !!type && !isNonNullType(type);
-      return `${name}${optional ? '?' : ''}`;
+    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const formatNamedField = (
+      name: string,
+      type: GraphQLOutputType | GraphQLNamedType | null,
+      isConditional = false
+    ): string => {
+      const optional = (!!type && !isNonNullType(type)) || isConditional;
+      return `${useFlowReadOnlyTypes ? '+' : ''}${name}${optional ? '?' : ''}`;
     };
 
     const processorConfig: SelectionSetProcessorConfig = {
@@ -52,16 +85,16 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
     };
+
     const processor = config.preResolveTypes
       ? new PreResolveTypesProcessor(processorConfig)
       : new FlowWithPickSelectionSetProcessor({
           ...processorConfig,
           useFlowExactObjects: this.config.useFlowExactObjects,
-          useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(
-      new SelectionSetToObject(
+      new FlowSelectionSetToObject(
         processor,
         this.scalars,
         this.schema,
@@ -77,12 +110,23 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
         this.convertName.bind(this),
         this.config.namespacedImportName,
         enumsNames,
-        this.config.enumPrefix
+        this.config.enumPrefix,
+        {},
+        true
       )
     );
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
     return declarationKind === 'type' ? ',' : ';';
+  }
+
+  public getImports(): Array<string> {
+    return !this.config.globalNamespace
+      ? this.config.fragmentImports
+          // In flow, all non ` * as x` imports must be type imports
+          .map(fragmentImport => ({ ...fragmentImport, typesImport: true }))
+          .map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      : [];
   }
 }

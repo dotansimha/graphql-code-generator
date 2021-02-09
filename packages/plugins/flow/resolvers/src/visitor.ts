@@ -42,7 +42,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `$RequireFields<${argsType}, { ${fields.map(f => `${f.name.value}: *`).join(', ')} }>`;
   }
 
-  protected applyOptionalFields(argsType: string, fields: readonly InputValueDefinitionNode[]): string {
+  protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
     return argsType;
   }
 

@@ -228,6 +228,42 @@ describe('TypeScript', () => {
       export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
 
+    it('Should work with enum as const combined with enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A_B_C
+          X_Y_Z
+          _TEST
+          My_Value
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          enumsAsConst: true,
+          enumValues: {
+            MyEnum: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export const MyEnum = {
+        ABC: 0,
+        XYZ: 'Foo',
+        Test: 'Bar',
+        MyValue: 1
+      } as const;
+      export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
@@ -656,6 +692,24 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
+    });
+
+    it('#4834 - enum members should be quoted if numeric', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MediaItemSizeEnum {
+          AXB
+          _1X2
+          _3X4
+        }
+      `);
+
+      const result = (await plugin(testSchema, [], {})) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`export enum MediaItemSizeEnum {
+        Axb = 'AXB',
+        '1X2' = '_1X2',
+        '3X4' = '_3X4'
+      }`);
     });
 
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
@@ -2462,6 +2516,65 @@ describe('TypeScript', () => {
       `);
       await validateTs(result);
     });
+
+    it('Should generate correctly types for inputs with default value - #4273', async () => {
+      const schema = buildSchema(
+        `input MyInput { a: String = "default", b: String! = "default", c: String, d: String! }`
+      );
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          a?: Maybe<Scalars['String']>;
+          b?: Scalars['String'];
+          c?: Maybe<Scalars['String']>;
+          d: Scalars['String'];
+        };
+    `);
+
+      validateTs(result);
+    });
+
+    it('Should generate correctly types for inputs with default value and avoidOptionals.defaultValue set to true - #5112', async () => {
+      const schema = buildSchema(
+        `input MyInput { a: String = "default", b: String! = "default", c: String, d: String! }`
+      );
+      const result = await plugin(schema, [], { avoidOptionals: { defaultValue: true } }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          a?: Maybe<Scalars['String']>;
+          b: Scalars['String'];
+          c?: Maybe<Scalars['String']>;
+          d: Scalars['String'];
+        };
+    `);
+
+      validateTs(result);
+    });
+
+    it('Should generate correctly types for field arguments with default value and avoidOptionals.defaultValue option set to true - #5112', async () => {
+      const schema = buildSchema(
+        `type MyType { foo(a: String = "default", b: String! = "default", c: String, d: String!): String }`
+      );
+      const result = (await plugin(
+        schema,
+        [],
+        { avoidOptionals: { defaultValue: true } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyTypeFooArgs = {
+          a?: Maybe<Scalars['String']>;
+          b: Scalars['String'];
+          c?: Maybe<Scalars['String']>;
+          d: Scalars['String'];
+        };
+    `);
+
+      validateTs(result);
+    });
   });
 
   describe('Enum', () => {
@@ -2807,6 +2920,98 @@ describe('TypeScript', () => {
       export enum Foo {
         Bar = 'Qux'
       }
+    `);
+  });
+
+  it('should use implementing types as node type - issue #5126', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Matrix {
+        pills: [Pill!]!
+      }
+
+      interface Pill {
+        id: ID!
+      }
+
+      type RedPill implements Pill {
+        red: String!
+      }
+
+      type GreenPill implements Pill {
+        green: String!
+      }
+
+      interface Foo {
+        id: ID!
+      }
+
+      type Bar implements Foo {
+        lol: String!
+      }
+
+      type Hello {
+        foo: Foo!
+      }
+
+      type NoInterface {
+        hello: Hello!
+      }
+
+      interface NestedInterface implements Foo {
+        field: String!
+      }
+
+      type NestedType1 implements NestedInterface {
+        hi: String!
+      }
+
+      type NestedType2 implements NestedInterface {
+        ho: String!
+      }
+
+      type NestedField {
+        nested: NestedInterface!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        useImplementingTypes: true,
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(output.content).toMatchSnapshot();
+
+    // Type should be Array<RedPill|GreenPill> and not Pill
+    expect(output.content).toBeSimilarStringTo(`
+      export type Matrix = {
+        __typename?: 'Matrix';
+        pills: Array<RedPill | GreenPill>;
+      };
+    `);
+    // Type should be Bar and not Foo
+    expect(output.content).toBeSimilarStringTo(`
+      export type Hello = {
+        __typename?: 'Hello';
+        foo: Bar;
+      };
+    `);
+    // Type should be Hello and not empty
+    expect(output.content).toBeSimilarStringTo(`
+      export type NoInterface = {
+        __typename?: 'NoInterface';
+        hello: Hello;
+      };
+    `);
+    // Type should be NestedType1|NestedType2
+    expect(output.content).toBeSimilarStringTo(`
+      export type NestedField = {
+        __typename?: 'NestedField';
+        nested: NestedType1 | NestedType2;
+      };
     `);
   });
 });

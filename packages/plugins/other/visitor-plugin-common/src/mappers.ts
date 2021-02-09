@@ -167,7 +167,7 @@ function addSuffix(element: string, suffix: string): string {
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#') && !value.includes('"') && !value.includes("'");
+  return value.includes('#');
 }
 
 export function transformMappers(
@@ -183,4 +183,37 @@ export function transformMappers(
   });
 
   return result;
+}
+
+export function buildMapperImport(
+  source: string,
+  types: { identifier: string; asDefault?: boolean }[],
+  useTypeImports: boolean
+): string | null {
+  if (!types || types.length === 0) {
+    return null;
+  }
+
+  const defaultType = types.find(t => t.asDefault === true);
+  let namedTypes = types.filter(t => !t.asDefault);
+
+  if (useTypeImports) {
+    if (defaultType) {
+      // default as Baz
+      namedTypes = [{ identifier: `default as ${defaultType.identifier}` }, ...namedTypes];
+    }
+    // { Foo, Bar as BarModel }
+    const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
+
+    // { default as Baz, Foo, Bar as BarModel }
+    return `import type ${[namedImports].filter(Boolean).join(', ')} from '${source}';`;
+  }
+
+  // { Foo, Bar as BarModel }
+  const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
+  // Baz
+  const defaultImport = defaultType ? defaultType.identifier : '';
+
+  // Baz, { Foo, Bar as BarModel }
+  return `import ${[defaultImport, namedImports].filter(Boolean).join(', ')} from '${source}';`;
 }

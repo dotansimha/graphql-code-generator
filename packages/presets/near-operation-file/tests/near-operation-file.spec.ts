@@ -75,6 +75,94 @@ describe('near-operation-file preset', () => {
   ];
 
   describe('Issues', () => {
+    it('#5002 - error when inline fragment does not specify the name of the type', async () => {
+      const testSchema = parse(/* GraphQL */ `
+        scalar Date
+
+        schema {
+          query: Query
+        }
+
+        type Query {
+          me: User!
+          user(id: ID!): User
+          allUsers: [User]
+          search(term: String!): [SearchResult!]!
+          myChats: [Chat!]!
+        }
+
+        enum Role {
+          USER
+          ADMIN
+        }
+
+        interface Node {
+          id: ID!
+        }
+
+        union SearchResult = User | Chat | ChatMessage
+
+        type User implements Node {
+          id: ID!
+          username: String!
+          email: String!
+          role: Role!
+        }
+
+        type Chat implements Node {
+          id: ID!
+          users: [User!]!
+          messages: [ChatMessage!]!
+        }
+
+        type ChatMessage implements Node {
+          id: ID!
+          content: String!
+          time: Date!
+          user: User!
+        }
+      `);
+
+      const operations = [
+        {
+          location: 'test.graphql',
+          document: parse(/* GraphQL */ `
+            query chats {
+              myChats {
+                ...ChatFields
+              }
+            }
+
+            fragment ChatFields on Chat {
+              id
+              ... @include(if: true) {
+                id
+                messages {
+                  id
+                }
+              }
+            }
+          `),
+        },
+      ];
+
+      expect(async () => {
+        await preset.buildGeneratesSection({
+          baseOutputDir: './src/',
+          config: {},
+          presetConfig: {
+            folder: '__generated__',
+            baseTypesPath: 'types.ts',
+          },
+          schema: testSchema,
+          schemaAst: buildASTSchema(testSchema),
+          documents: operations,
+          plugins: [],
+          pluginMap: {},
+        });
+      }).not.toThrow();
+    });
+
     it('#3066 - should respect higher level of fragments usage, and ignore fragments per input', async () => {
       const doTest = async (operationsStr: string, expected: string) => {
         const testSchema = buildSchema(/* GraphQL */ `
@@ -736,6 +824,28 @@ describe('near-operation-file preset', () => {
     expect(getFragmentImportsFromResult(result)).toContain(
       `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`
     );
+  });
+
+  it('Should allow external fragments to be imported from packages with function', async () => {
+    const spy = jest.fn();
+    await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: '~@types',
+        importAllFragmentsFrom: spy.mockReturnValue(false),
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: testDocuments.slice(0, 2),
+      plugins: [{ 'typescript-react-apollo': {} }],
+      pluginMap: { 'typescript-react-apollo': {} as any },
+    });
+
+    expect(spy.mock.calls.length).toBe(1);
+    expect(spy.mock.calls[0][1]).toBe('/some/deep/path/src/graphql/me-query.generated.ts');
+    expect(spy.mock.calls[0][0].path).toBe('/some/deep/path/src/graphql/user-fragment.generated.ts');
   });
 
   it('Should allow external fragments to be imported from packages', async () => {

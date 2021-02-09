@@ -7,7 +7,7 @@
 
     
 :::shell Using `yarn`
-    $ yarn add -D @graphql-codegen/add
+    yarn add -D @graphql-codegen/add
 :::
 
 ## API Reference
