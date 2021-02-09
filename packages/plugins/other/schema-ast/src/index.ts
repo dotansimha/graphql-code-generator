@@ -1,4 +1,11 @@
-import { GraphQLSchema, lexicographicSortSchema, printSchema, visit, buildASTSchema, parse as parseSchema } from 'graphql';
+import {
+  GraphQLSchema,
+  lexicographicSortSchema,
+  printSchema,
+  visit,
+  buildASTSchema,
+  parse as parseSchema,
+} from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';

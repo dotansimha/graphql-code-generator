@@ -2030,9 +2030,44 @@ describe('TypeScript', () => {
       union MyUnion = MyType | MyOtherType
       `);
       const result = await plugin(schema, [], {}, { outputFile: '' });
-
       expect(result.content).toBeSimilarStringTo(`
       export type MyUnion = MyType | MyOtherType;
+    `);
+      validateTs(result);
+    });
+    it('Should add `%other` object typename to union when futureProofUnions is set', async () => {
+      const schema = buildSchema(`
+      type MyType {
+        foo: String!
+      }
+
+      type MyOtherType {
+        bar: String!
+      }
+
+      union MyUnion = MyType | MyOtherType
+      `);
+      const result = await plugin(schema, [], { futureProofUnions: true }, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyUnion = MyType | MyOtherType | { __typename?: "%other" };
+    `);
+      validateTs(result);
+    });
+    it('Should add `%other` object typename to union when futureProofUnions and immutableTypes is set', async () => {
+      const schema = buildSchema(`
+      type MyType {
+        foo: String!
+      }
+
+      type MyOtherType {
+        bar: String!
+      }
+
+      union MyUnion = MyType | MyOtherType
+      `);
+      const result = await plugin(schema, [], { futureProofUnions: true, immutableTypes: true }, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyUnion = MyType | MyOtherType | { readonly __typename?: "%other" };
     `);
       validateTs(result);
     });
