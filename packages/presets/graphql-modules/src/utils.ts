@@ -139,16 +139,14 @@ export function groupSourcesByModule(sources: Source[], basePath: string): Recor
   const grouped: Record<string, Source[]> = {};
 
   sources.forEach(source => {
-    if (source.name.indexOf(basePath) !== -1) {
-      // PERF: we could guess the module by matching source.location with a list of already resolved paths
-      const mod = extractModuleDirectory(source.name, basePath);
+    // PERF: we could guess the module by matching source.location with a list of already resolved paths
+    const mod = extractModuleDirectory(source.name, basePath);
 
-      if (!grouped[mod]) {
-        grouped[mod] = [];
-      }
-
-      grouped[mod].push(source);
+    if (!grouped[mod]) {
+      grouped[mod] = [];
     }
+
+    grouped[mod].push(source);
   });
 
   return grouped;
