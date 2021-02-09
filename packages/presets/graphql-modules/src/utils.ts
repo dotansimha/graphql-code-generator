@@ -1,12 +1,12 @@
 import {
-  DocumentNode,
-  Kind,
   DefinitionNode,
+  DocumentNode,
   FieldDefinitionNode,
   InputValueDefinitionNode,
+  Kind,
   NamedTypeNode,
-  TypeNode,
   Source,
+  TypeNode,
 } from 'graphql';
 import parse from 'parse-filepath';
 
