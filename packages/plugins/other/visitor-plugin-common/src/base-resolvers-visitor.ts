@@ -1,7 +1,14 @@
 import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap, DeclarationKind, ConvertOptions } from './types';
+import {
+  NormalizedScalarsMap,
+  EnumValuesMap,
+  ParsedEnumValuesMap,
+  DeclarationKind,
+  ConvertOptions,
+  AvoidOptionalsConfig,
+} from './types';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
@@ -52,7 +59,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
     [typeName: string]: ParsedMapper;
   };
   defaultMapper: ParsedMapper | null;
-  avoidOptionals: boolean;
+  avoidOptionals: AvoidOptionalsConfig;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
@@ -212,6 +219,7 @@ export interface RawResolversConfig extends RawConfig {
    * @default false
    *
    * @exampleMarkdown
+   * ## Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -221,8 +229,22 @@ export interface RawResolversConfig extends RawConfig {
    *  config:
    *    avoidOptionals: true
    * ```
+   *
+   * ## Override only specific definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidOptionals:
+   *      field: true
+   *      inputValue: true
+   *      object: true
+   *      defaultValue: true
+   * ```
    */
-  avoidOptionals?: boolean;
+  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @description Warns about unused mappers.
    * @default true
