@@ -5,9 +5,7 @@ import { GraphQLSchema } from 'graphql';
 import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspection';
 
 /**
- * @description This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.
- *
- * If you are using `urql` and your schema contains `interface` or `union` declaration, it's recommended to use provide an introspection to enable Schema Awareness.
+ * @description This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange
  *
  * You can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.
  *
