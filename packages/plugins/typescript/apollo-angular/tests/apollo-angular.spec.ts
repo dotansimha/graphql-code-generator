@@ -107,6 +107,28 @@ describe('Apollo Angular', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`should add additional DI for constructor & super call`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          additionalDI: ['testService: TestService', 'testService1: TestService1'],
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+          constructor(apollo: Apollo.Apollo, testService: TestService, testService1: TestService1) {
+            super(apollo, testService, testService1);
+          }
+        }
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it(`should add the correct angular imports with override`, async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(

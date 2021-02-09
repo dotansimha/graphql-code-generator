@@ -31,6 +31,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   mutationSuffix?: string;
   subscriptionSuffix?: string;
   apolloAngularPackage: string;
+  additionalDI?: string[];
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
@@ -46,6 +47,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     operationVariablesTypes: string;
     serviceName: string;
   }[] = [];
+  private dependencyInjections = '';
+  private dependencyInjectionArgs = '';
 
   constructor(
     schema: GraphQLSchema,
@@ -68,6 +71,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix,
         mutationSuffix: rawConfig.mutationSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix,
+        additionalDI: getConfigValue(rawConfig.additionalDI, []),
         apolloAngularPackage: getConfigValue(rawConfig.apolloAngularPackage, 'apollo-angular'),
         apolloAngularVersion: getConfigValue(rawConfig.apolloAngularVersion, 2),
         gqlImport: getConfigValue(
@@ -93,6 +97,14 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
       }
     }
+
+    const dependencyInjections = ['apollo: Apollo.Apollo'].concat(this.config.additionalDI);
+    const dependencyInjectionArgs = dependencyInjections.map(content => {
+      return content.split(':')[0];
+    });
+
+    this.dependencyInjections = dependencyInjections.join(', ');
+    this.dependencyInjectionArgs = dependencyInjectionArgs.join(', ');
 
     autoBind(this);
   }
@@ -285,8 +297,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
+    constructor(${this.dependencyInjections}) {
+      super(${this.dependencyInjectionArgs});
     }
   }`;
 

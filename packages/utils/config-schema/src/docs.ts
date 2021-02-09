@@ -1,7 +1,7 @@
 import * as TJS from 'typescript-json-schema';
-import { PluginConfig } from './plugins';
+import { PluginConfig, PresetConfig } from './plugins';
 
-export function generateDocs(schema: TJS.Definition, types: PluginConfig[]): Record<string, string> {
+export function generateDocs(schema: TJS.Definition, types: (PluginConfig | PresetConfig)[]): Record<string, string> {
   const result = {};
 
   for (const p of types) {
@@ -16,14 +16,14 @@ export function generateDocs(schema: TJS.Definition, types: PluginConfig[]): Rec
     content += ``;
     content += `## Installation\n\n
 
-<img alt="${p.pluginName} plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/${p.pluginName}?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>\n\n
+<img alt="${p.name} plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/${p.name}?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>\n\n
     
 :::shell Using \`yarn\`
-    yarn add -D @graphql-codegen/${p.pluginName}
+    yarn add -D @graphql-codegen/${p.name}
 :::\n\n`;
     content += `## API Reference\n\n${apiDocs}`;
 
-    result[p.pluginName] = content;
+    result[p.name] = content;
   }
 
   return result;

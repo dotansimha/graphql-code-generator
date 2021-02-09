@@ -3,6 +3,8 @@
 exports[`generic-sdk sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
@@ -304,6 +306,8 @@ async function test() {
 exports[`generic-sdk sdk Should generate a correct wrap method when usingObservableFrom is set 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import Observable from 'zen-observable';
 import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
@@ -529,6 +533,8 @@ export type Sdk = ReturnType<typeof getSdk>;"
 exports[`generic-sdk sdk Should generate a correct wrap method with documentMode=string 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;

@@ -129,12 +129,20 @@ describe('React Apollo', () => {
         optionalBaseOptions: true,
       },
       {
+        document: `mutation Feed { feed { ...Feed } } `,
+        optionalBaseOptions: true,
+      },
+      {
         document: `query Feed($something: Boolean) { feed { ...Feed } } `,
         optionalBaseOptions: true,
       },
       {
         document: `query Feed($something: Boolean!) { feed { ...Feed } } `,
         optionalBaseOptions: false,
+      },
+      {
+        document: `mutation Feed($something: Boolean!) { feed { ...Feed } } `,
+        optionalBaseOptions: true,
       },
       {
         document: `query Feed($something: Boolean!, $somethingElse: Boolean!) { feed { ...Feed } } `,
@@ -171,7 +179,7 @@ describe('React Apollo', () => {
           }
         )) as Types.ComplexPluginOutput;
 
-        expect(result.content).toContain(`Query(baseOptions${optionalBaseOptions ? '?' : ''}: Apollo.`);
+        expect(result.content).toContain(`(baseOptions${optionalBaseOptions ? '?' : ''}: Apollo.`);
       }
     );
 

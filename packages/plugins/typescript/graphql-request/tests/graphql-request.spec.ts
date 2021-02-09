@@ -87,7 +87,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(result.content).toContain(`(print(FeedDocument), variables));`);
+      expect(result.content).toContain(`(print(FeedDocument), variables, requestHeaders));`);
       expect(output).toMatchSnapshot();
     });
 
@@ -187,6 +187,25 @@ async function test() {
   });
 
   describe('issues', () => {
+    it('#5386 - should provide a nice error when dealing with anonymous operations', async () => {
+      const doc = parse(/* GraphQL */ `
+        query {
+          feed {
+            id
+          }
+        }
+      `);
+
+      const warnSpy = jest.spyOn(console, 'warn');
+      const docs = [{ location: 'file.graphlq', document: doc }];
+      const result = (await plugin(schema, docs, {}, {})) as Types.ComplexPluginOutput;
+      expect(result.content).not.toContain('feed');
+      expect(warnSpy.mock.calls.length).toBe(1);
+      expect(warnSpy.mock.calls[0][0]).toContain('Anonymous GraphQL operation was ignored');
+      expect(warnSpy.mock.calls[0][1]).toContain('feed');
+      warnSpy.mockRestore();
+    });
+
     it('#4748 - integration with importDocumentNodeExternallyFrom', async () => {
       const config = { importDocumentNodeExternallyFrom: './operations', documentMode: DocumentMode.external };
       const docs = [{ location: '', document: basicDoc }];
@@ -196,9 +215,9 @@ async function test() {
       const output = await validate(result, config, docs, schema, '');
 
       expect(output).toContain(`import * as Operations from './operations';`);
-      expect(output).toContain(`(print(Operations.FeedDocument), variables));`);
-      expect(output).toContain(`(print(Operations.Feed2Document), variables));`);
-      expect(output).toContain(`(print(Operations.Feed3Document), variables));`);
+      expect(output).toContain(`(print(Operations.FeedDocument), variables, requestHeaders));`);
+      expect(output).toContain(`(print(Operations.Feed2Document), variables, requestHeaders));`);
+      expect(output).toContain(`(print(Operations.Feed3Document), variables, requestHeaders));`);
     });
   });
 });

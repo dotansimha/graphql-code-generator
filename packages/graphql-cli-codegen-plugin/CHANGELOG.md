@@ -1,5 +1,53 @@
 # @graphql-cli/codegen
 
+## 1.17.18
+
+### Patch Changes
+
+- Updated dependencies [f86365c2]
+  - @graphql-codegen/cli@1.20.1
+
+## 1.17.17
+
+### Patch Changes
+
+- Updated dependencies [bff3fa88]
+- Updated dependencies [0e9ddb5a]
+- Updated dependencies [9ebf1877]
+- Updated dependencies [aa955f15]
+  - @graphql-codegen/cli@1.20.0
+
+## 1.17.16
+
+### Patch Changes
+
+- Updated dependencies [920d8e95]
+  - @graphql-codegen/cli@1.19.4
+
+## 1.17.15
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/cli@1.19.3
+
+## 1.17.14
+
+### Patch Changes
+
+- Updated dependencies [faa13973]
+- Updated dependencies [faa13973]
+  - @graphql-codegen/cli@1.19.2
+
+## 1.17.13
+
+### Patch Changes
+
+- Updated dependencies [4ad0319a]
+- Updated dependencies [93e49f89]
+  - @graphql-codegen/cli@1.19.1
+
 ## 1.17.12
 
 ### Patch Changes

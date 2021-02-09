@@ -5,7 +5,9 @@ import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
 import { findAndLoadGraphQLConfig } from './graphql-config';
-import { loadSchema, loadDocuments } from './load';
+import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
+import { GraphQLSchema } from 'graphql';
+import yaml from 'yaml';
 
 export type YamlCliFlags = {
   config: string;
@@ -24,7 +26,7 @@ function generateSearchPlaces(moduleName: string) {
   // gives .codegenrc.json... but no .codegenrc.config.js
   const dot = extensions.filter(ext => ext !== 'config.js').map(ext => `.${moduleName}rc.${ext}`);
 
-  return regular.concat(dot);
+  return [...regular.concat(dot), 'package.json'];
 }
 
 function customLoader(ext: 'json' | 'yaml' | 'js') {
@@ -38,7 +40,13 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
     }
 
     if (ext === 'yaml') {
-      return defaultLoaders['.yaml'](filepath, content);
+      try {
+        const result = yaml.parse(content, { prettyErrors: true, merge: true });
+        return result;
+      } catch (error) {
+        error.message = `YAML Error in ${filepath}:\n${error.message}`;
+        throw error;
+      }
     }
 
     if (ext === 'js') {
@@ -53,6 +61,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   const moduleName = 'codegen';
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName),
+    packageProp: moduleName,
     loaders: {
       '.json': customLoader('json'),
       '.yaml': customLoader('yaml'),
@@ -236,7 +245,7 @@ export class CodegenContext {
     this._project = name;
   }
 
-  getConfig(): Types.Config {
+  getConfig<T>(extraConfig?: T): T & Types.Config {
     if (!this.config) {
       if (this._graphqlConfig) {
         const project = this._graphqlConfig.getProject(this._project);
@@ -252,7 +261,10 @@ export class CodegenContext {
       }
     }
 
-    return this.config;
+    return {
+      ...extraConfig,
+      ...this.config,
+    };
   }
 
   updateConfig(config: Partial<Types.Config>): void {
@@ -266,23 +278,25 @@ export class CodegenContext {
     return this._pluginContext;
   }
 
-  async loadSchema(pointer: Types.Schema) {
+  async loadSchema(pointer: Types.Schema): Promise<GraphQLSchema> {
+    const config = this.getConfig(defaultSchemaLoadOptions);
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
-      return this._graphqlConfig.getProject(this._project).loadSchema(pointer);
+      return this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config);
     }
-    return loadSchema(pointer, this.getConfig());
+    return loadSchema(pointer, config);
   }
 
   async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+    const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer);
+      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config);
 
       return documents;
     }
 
-    return loadDocuments(pointer, this.getConfig());
+    return loadDocuments(pointer, config);
   }
 }
 

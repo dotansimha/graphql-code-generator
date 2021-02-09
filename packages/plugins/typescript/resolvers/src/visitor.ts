@@ -20,7 +20,6 @@ export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
-  avoidOptionals: boolean;
   useIndexSignature: boolean;
   wrapFieldDefinitions: boolean;
   allowParentTypeOverride: boolean;

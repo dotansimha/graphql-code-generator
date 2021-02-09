@@ -1,5 +1,43 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.0.1
+
+### Patch Changes
+
+- 85ba9f49: Fix for error thrown on anonymous operations
+- 4b1ca624: fix(plugin: graphql-requests): Fix argument types in auto-generated methods
+- f2e3548a: Added missing import for HeadersInit
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
+## 3.0.0
+
+### Major Changes
+
+- d41904e8: Support passing custom headers per each request method.
+
+  NOTE: This version of this plugin requires you to update to graphql-request > 3.4.0
+
+### Patch Changes
+
+- Updated dependencies [64293437]
+- Updated dependencies [fd5843a7]
+- Updated dependencies [d75051f5]
+  - @graphql-codegen/visitor-plugin-common@1.17.22
+
+## 2.0.3
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
 ## 2.0.2
 
 ### Patch Changes

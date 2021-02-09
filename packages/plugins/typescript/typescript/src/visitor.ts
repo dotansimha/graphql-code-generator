@@ -23,6 +23,7 @@ import {
   GraphQLSchema,
   isEnumType,
   UnionTypeDefinitionNode,
+  GraphQLObjectType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -38,9 +39,12 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   immutableTypes: boolean;
   maybeValue: string;
   noExport: boolean;
+  useImplementingTypes: boolean;
 }
 
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
+export const MAKE_OPTIONAL_SIGNATURE = `type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };`;
+export const MAKE_MAYBE_SIGNATURE = `type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
@@ -59,6 +63,7 @@ export class TsVisitor<
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
+      useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -70,7 +75,7 @@ export class TsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName,
-        this.config.avoidOptionals.object,
+        this.config.avoidOptionals,
         this.config.immutableTypes,
         null,
         enumNames,
@@ -84,8 +89,39 @@ export class TsVisitor<
     });
   }
 
+  protected _getTypeForNode(node: NamedTypeNode): string {
+    const typeAsString = (node.name as any) as string;
+
+    if (this.config.useImplementingTypes) {
+      const allTypesMap = this._schema.getTypeMap();
+      const implementingTypes: string[] = [];
+
+      // TODO: Move this to a better place, since we are using this logic in some other places as well.
+      for (const graphqlType of Object.values(allTypesMap)) {
+        if (graphqlType instanceof GraphQLObjectType) {
+          const allInterfaces = graphqlType.getInterfaces();
+
+          if (allInterfaces.some(int => typeAsString === int.name)) {
+            implementingTypes.push(this.convertName(graphqlType.name));
+          }
+        }
+      }
+
+      if (implementingTypes.length > 0) {
+        return implementingTypes.join(' | ');
+      }
+    }
+
+    return super._getTypeForNode(node);
+  }
+
   public getWrapperDefinitions(): string[] {
-    const definitions: string[] = [this.getMaybeValue(), this.getExactDefinition()];
+    const definitions: string[] = [
+      this.getMaybeValue(),
+      this.getExactDefinition(),
+      this.getMakeOptionalDefinition(),
+      this.getMakeMaybeDefinition(),
+    ];
 
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
@@ -96,6 +132,14 @@ export class TsVisitor<
 
   public getExactDefinition(): string {
     return `${this.getExportPrefix()}${EXACT_SIGNATURE}`;
+  }
+
+  public getMakeOptionalDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_OPTIONAL_SIGNATURE}`;
+  }
+
+  public getMakeMaybeDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_MAYBE_SIGNATURE}`;
   }
 
   public getMaybeValue(): string {
@@ -180,7 +224,8 @@ export class TsVisitor<
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&
-      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE || node.defaultValue !== undefined);
+      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
+        (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
     return (

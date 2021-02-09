@@ -68,6 +68,7 @@
       "@graphql-codegen/typescript-apollo-client-helpers": [
         "packages/plugins/typescript/apollo-client-helpers/src/index.ts"
       ],
+      "@graphql-codegen/typescript-react-query": ["packages/plugins/typescript/react-query/src/index.ts"],
       "@graphql-cli/codegen": ["packages/graphql-cli-codegen-plugin/src/index.ts"]
     }
   },

@@ -81,6 +81,18 @@ describe('parseMapper', () => {
     });
   });
 
+  it('should support generic with complex setup', () => {
+    const result = parseMapper(`@common-types#Edge<ResolversParentTypes['User']>`, 'SomeType');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Edge',
+      type: `Edge<ResolversParentTypes['User']>`,
+      source: '@common-types',
+    });
+  });
+
   it('Should support generics', () => {
     const result = parseMapper('file#Type<Generic>', 'SomeType');
 

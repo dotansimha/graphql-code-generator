@@ -331,7 +331,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const hookFns = [
       `export function use${operationName}(baseOptions${
-        hasRequiredVariables ? '' : '?'
+        hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
       }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,

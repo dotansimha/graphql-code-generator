@@ -22,7 +22,7 @@ export async function getPluginByName(
     try {
       return await pluginLoader(moduleName);
     } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
+      if (err.code !== 'MODULE_NOT_FOUND' || !err.message.includes(moduleName)) {
         throw new DetailedError(
           `Unable to load template plugin matching ${name}`,
           `

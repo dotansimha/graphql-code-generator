@@ -1,5 +1,34 @@
 # @graphql-codegen/flow
 
+## 1.18.4
+
+### Patch Changes
+
+- ca66569f: Fix issues with undefined calls for str.replace
+- Updated dependencies [ca66569f]
+  - @graphql-codegen/visitor-plugin-common@1.18.2
+
+## 1.18.3
+
+### Patch Changes
+
+- 4444348d: Correctly escape enum values defined in the GraphQLSchema object
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
+## 1.18.2
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
 ## 1.18.1
 
 ### Patch Changes

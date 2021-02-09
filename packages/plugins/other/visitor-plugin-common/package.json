@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.17.16",
+  "version": "1.18.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,15 +13,16 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.17.9",
+    "@graphql-tools/optimize": "^1.0.1",
+    "@graphql-codegen/plugin-helpers": "^1.18.2",
     "@graphql-tools/relay-operation-optimizer": "^6",
-    "array.prototype.flatmap": "^1.2.3",
+    "array.prototype.flatmap": "^1.2.4",
     "auto-bind": "~4.0.0",
-    "dependency-graph": "^0.9.0",
+    "dependency-graph": "^0.10.0",
     "graphql-tag": "^2.11.0",
     "parse-filepath": "^1.0.2",
     "pascal-case": "^3.1.1",
-    "tslib": "~2.0.1"
+    "tslib": "~2.1.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"

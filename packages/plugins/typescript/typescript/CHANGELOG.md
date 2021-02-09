@@ -1,5 +1,64 @@
 # @graphql-codegen/typescript
 
+## 1.20.2
+
+### Patch Changes
+
+- ca66569f: Fix issues with undefined calls for str.replace
+- Updated dependencies [ca66569f]
+  - @graphql-codegen/visitor-plugin-common@1.18.2
+
+## 1.20.1
+
+### Patch Changes
+
+- 4444348d: Correctly escape enum values defined in the GraphQLSchema object
+- Updated dependencies [63be0f40]
+- Updated dependencies [190482a1]
+- Updated dependencies [4444348d]
+- Updated dependencies [142b32b3]
+- Updated dependencies [42213fa0]
+  - @graphql-codegen/visitor-plugin-common@1.18.1
+
+## 1.20.0
+
+### Minor Changes
+
+- d95db95b: feat(typescript): bump visitor-plugin-common
+
+## 1.19.0
+
+### Minor Changes
+
+- 1d6a593f: Added `useImplementingTypes` flag for generating code that uses implementing types instead of interfaces
+
+### Patch Changes
+
+- Updated dependencies [8356f8a2]
+  - @graphql-codegen/visitor-plugin-common@1.17.21
+
+## 1.18.1
+
+### Patch Changes
+
+- 1183d173: Bump all packages to resolve issues with shared dependencies
+- Updated dependencies [1183d173]
+  - @graphql-codegen/visitor-plugin-common@1.17.20
+  - @graphql-codegen/plugin-helpers@1.18.2
+
+## 1.18.0
+
+### Minor Changes
+
+- 49242c20: Added a "defaultValue" option in the "avoidOptionals" config
+  See https://github.com/dotansimha/graphql-code-generator/issues/5112
+
+### Patch Changes
+
+- Updated dependencies [99819bf1]
+- Updated dependencies [c3b59e81]
+  - @graphql-codegen/visitor-plugin-common@1.17.19
+
 ## 1.17.11
 
 ### Patch Changes

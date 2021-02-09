@@ -614,7 +614,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export function useListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables | VueCompositionApi.Ref<ListenToCommentsSubscriptionVariables> | ReactiveFunction<ListenToCommentsSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>> = {}) {
+        `export function useListenToCommentsSubscription(variables: ListenToCommentsSubscriptionVariables | VueCompositionApi.Ref<ListenToCommentsSubscriptionVariables> | ReactiveFunction<ListenToCommentsSubscriptionVariables> = {}, options: VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>> = {}) {
           return VueApolloComposable.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, variables, options);
         }`
       );
@@ -806,6 +806,49 @@ query MyFeed {
       // subscription with required variables
       expect(content.content).toBeSimilarStringTo(
         `export function useTestSubscription(variables: TestSubscriptionVariables | VueCompositionApi.Ref<TestSubscriptionVariables> | ReactiveFunction<TestSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> = {}) {
+           return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(TestDocument, variables, options);
+        }`
+      );
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate optional variables if all optional in graphql document', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed($id: ID) {
+          feed(id: $id) {
+            id
+          }
+        }
+
+        subscription test($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // query with optional variables
+      expect(content.content).toBeSimilarStringTo(
+        `export function useFeedQuery(variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
+           return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+        }`
+      );
+
+      // subscription with optional variables
+      expect(content.content).toBeSimilarStringTo(
+        `export function useTestSubscription(variables: TestSubscriptionVariables | VueCompositionApi.Ref<TestSubscriptionVariables> | ReactiveFunction<TestSubscriptionVariables> = {}, options: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> = {}) {
            return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(TestDocument, variables, options);
         }`
       );

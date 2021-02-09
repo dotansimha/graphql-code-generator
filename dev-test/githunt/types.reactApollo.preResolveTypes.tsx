@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -557,7 +559,7 @@ export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSubmitRepositoryMutation(
-  baseOptions: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
 ) {
   return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
@@ -599,7 +601,7 @@ export type SubmitCommentMutationFn = Apollo.MutationFunction<SubmitCommentMutat
  * });
  */
 export function useSubmitCommentMutation(
-  baseOptions: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>
 ) {
   return Apollo.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
 }
@@ -640,7 +642,7 @@ export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationV
  *   },
  * });
  */
-export function useVoteMutation(baseOptions: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
   return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;

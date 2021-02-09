@@ -82,6 +82,7 @@ export interface AvoidOptionalsConfig {
   field?: boolean;
   object?: boolean;
   inputValue?: boolean;
+  defaultValue?: boolean;
 }
 
 export interface ParsedImport {

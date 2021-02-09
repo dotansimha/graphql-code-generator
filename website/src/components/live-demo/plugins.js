@@ -24,6 +24,7 @@ export const pluginLoaderMap = {
   'typescript-graphql-request': () => import('@graphql-codegen/typescript-graphql-request'),
   'typescript-generic-sdk': () => import('@graphql-codegen/typescript-generic-sdk'),
   'typescript-type-graphql': () => import('@graphql-codegen/typescript-type-graphql'),
+  'typescript-react-query': () => import('@graphql-codegen/typescript-react-query'),
   'typescript-mongodb': () => import('@graphql-codegen/typescript-mongodb'),
   'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
   'c-sharp-operations': () => import('@graphql-codegen/c-sharp-operations'),
