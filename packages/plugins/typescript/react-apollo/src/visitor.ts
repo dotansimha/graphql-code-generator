@@ -31,6 +31,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withResultType: boolean;
   withMutationOptionsType: boolean;
   addDocBlocks: boolean;
+  defaultBaseOptions: any;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -72,6 +73,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
+      defaultBaseOptions: getConfigValue(rawConfig.defaultBaseOptions, {}),
       gqlImport: getConfigValue(
         rawConfig.gqlImport,
         rawConfig.reactApolloVersion === 2 ? null : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}#gql`
@@ -329,14 +331,19 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactCommonImport(true));
     this.imports.add(this.getApolloReactHooksImport(false));
 
+    const options = this.rawConfig.defaultBaseOptions
+      ? JSON.stringify(this.rawConfig.defaultBaseOptions)
+      : 'baseOptions';
     const hookFns = [
       `export function use${operationName}(baseOptions${
         hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
       }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+        const defaultBaseOptions = ${JSON.stringify(this.rawConfig.defaultBaseOptions)}
+        const options = ${options};
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,
         documentVariableName
-      )}, baseOptions);
+      )}, options);
       }`,
     ];
 
