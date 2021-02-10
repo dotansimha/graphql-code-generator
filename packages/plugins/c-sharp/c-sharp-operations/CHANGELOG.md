@@ -1,5 +1,17 @@
 # @graphql-codegen/c-sharp-operations
 
+## 1.18.0
+
+### Minor Changes
+
+- b742b44e: typesafe c-sharp operations
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.17.10
 
 ### Patch Changes

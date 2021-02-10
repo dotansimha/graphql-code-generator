@@ -1,5 +1,12 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.18.3
+
+### Patch Changes
+
+- 5749cb8a: chore: fix type-level incompatibilities of the `avoidOptionals`
+- 5a12fe58: fix type error on parsing enums
+
 ## 1.18.2
 
 ### Patch Changes
