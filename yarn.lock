@@ -4399,10 +4399,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.7.tgz#8ea1e8f8eae2430cf440564b98c6dfce1ec5945d"
   integrity sha512-Zw1vhUSQZYw+7u5dAwNbIA9TuTotpzY/OF7sJM9FqPOF3SPjKnxrjoTktXDZgUjybf4cWVBP7O8wvKdSaGHweg==
 
-"@types/node@14.14.25":
-  version "14.14.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.25.tgz#15967a7b577ff81383f9b888aa6705d43fbbae93"
-  integrity sha512-EPpXLOVqDvisVxtlbvzfyqSsFeQxltFbluZNRndIb8tr9KiBnYNLzrc1N3pyKUCww2RNrfHDViqDWWE1LCJQtQ==
+"@types/node@14.14.26":
+  version "14.14.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.26.tgz#e40df24c957568f350cca04e63bfb1e1556d1cbf"
+  integrity sha512-skWxepWOs+VArEBWd2S/VR3wUavioIIx9/HzW+UJiIjtwa6+kNXdsOeq7FfxDXf56hIcL0ieo2brwMgBJ1+lhw==
 
 "@types/node@^10.1.0":
   version "10.17.18"
@@ -19549,10 +19549,10 @@ worker-farm@^1.7.0:
   dependencies:
     errno "~0.1.7"
 
-worker-loader@3.0.7:
-  version "3.0.7"
-  resolved "https://registry.npmjs.org/worker-loader/-/worker-loader-3.0.7.tgz#9cf2122a9a781d6742cb873c58c3769591b31988"
-  integrity sha512-LjYLuYJw6kqQKDoygpoD5vWeR1CbZjuVSW3/8pFsptMlUl8gatNM/pszhasSDAWt+dYxMipWB6695k+1zId+iQ==
+worker-loader@3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/worker-loader/-/worker-loader-3.0.8.tgz#5fc5cda4a3d3163d9c274a4e3a811ce8b60dbb37"
+  integrity sha512-XQyQkIFeRVC7f7uRhFdNMe/iJOdO6zxAaR3EWbDp45v3mDhrTi+++oswKNxShUNjPC/1xUp5DB29YKLhFo129g==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
