@@ -29,6 +29,7 @@ jobs:
         run: |
           git remote rm origin
           git remote add origin "https://github.com/${{github.repository}}"
+          git fetch
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
