@@ -4149,10 +4149,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/fs-extra@9.0.6":
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.6.tgz#488e56b77299899a608b8269719c1d133027a6ab"
-  integrity sha512-ecNRHw4clCkowNOBJH1e77nvbPxHYnWIXMv1IAoG/9+MYGkgoyr3Ppxr7XYFNL41V422EDhyV4/4SSK8L2mlig==
+"@types/fs-extra@9.0.7":
+  version "9.0.7"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.7.tgz#a9ef2ffdab043def080c5bec94c03402f793577f"
+  integrity sha512-YGq2A6Yc3bldrLUlm17VNWOnUbnEzJ9CMgOeLFtQF3HOCN5lQBO8VyjG00a5acA5NNSM30kHVGp1trZgnVgi1Q==
   dependencies:
     "@types/node" "*"
 
@@ -19549,10 +19549,10 @@ worker-farm@^1.7.0:
   dependencies:
     errno "~0.1.7"
 
-worker-loader@3.0.7:
-  version "3.0.7"
-  resolved "https://registry.npmjs.org/worker-loader/-/worker-loader-3.0.7.tgz#9cf2122a9a781d6742cb873c58c3769591b31988"
-  integrity sha512-LjYLuYJw6kqQKDoygpoD5vWeR1CbZjuVSW3/8pFsptMlUl8gatNM/pszhasSDAWt+dYxMipWB6695k+1zId+iQ==
+worker-loader@3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/worker-loader/-/worker-loader-3.0.8.tgz#5fc5cda4a3d3163d9c274a4e3a811ce8b60dbb37"
+  integrity sha512-XQyQkIFeRVC7f7uRhFdNMe/iJOdO6zxAaR3EWbDp45v3mDhrTi+++oswKNxShUNjPC/1xUp5DB29YKLhFo129g==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
