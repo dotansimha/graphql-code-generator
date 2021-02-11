@@ -10,7 +10,7 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
-    "worker-loader": "3.0.7",
+    "worker-loader": "3.0.8",
     "file-loader": "6.2.0",
     "style-loader": "2.0.0",
     "monaco-editor-webpack-plugin": "1.9.1",
