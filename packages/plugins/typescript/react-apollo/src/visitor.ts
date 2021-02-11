@@ -31,7 +31,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withResultType: boolean;
   withMutationOptionsType: boolean;
   addDocBlocks: boolean;
-  defaultBaseOptions: any;
+  defaultBaseOptions: { [key: string]: string };
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -331,15 +331,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactCommonImport(true));
     this.imports.add(this.getApolloReactHooksImport(false));
 
-    const options = this.rawConfig.defaultBaseOptions
-      ? JSON.stringify(this.rawConfig.defaultBaseOptions)
-      : 'baseOptions';
     const hookFns = [
       `export function use${operationName}(baseOptions${
         hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
       }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-        const defaultBaseOptions = ${JSON.stringify(this.rawConfig.defaultBaseOptions)}
-        const options = ${options};
+        const defaultOptions =  ${JSON.stringify(this.config.defaultBaseOptions)}
+        const options = {...defaultOptions, ...baseOptions}
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,
         documentVariableName
@@ -360,10 +357,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       });
       hookFns.push(
         `export function use${lazyOperationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+          const defaultOptions =  ${JSON.stringify(this.config.defaultBaseOptions)}
+          const options = {...defaultOptions, ...baseOptions}
           return ${this.getApolloReactHooksIdentifier()}.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
           node,
           documentVariableName
-        )}, baseOptions);
+        )}, options);
         }`
       );
       hookResults.push(`export type ${lazyOperationName}HookResult = ReturnType<typeof use${lazyOperationName}>;`);
