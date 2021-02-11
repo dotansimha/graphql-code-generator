@@ -20,6 +20,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure Git Credientials
+        run: |
+          git config --global user.email "theguild-bot@users.noreply.github.com"
+          git config --global user.name "theguild-bot"
+          echo "machine github.com login theguild-bot password ${{secrets.GITHUB_TOKEN}}" > ~/.netrc
+      - name: Add origin remote
+        run: |
+          git remote rm origin
+          git remote add origin "https://github.com/${{github.repository}}"
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
