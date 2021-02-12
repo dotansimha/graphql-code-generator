@@ -31,3 +31,9 @@ jobs:
           FOLDER: website/build
           CLEAN: true
           SINGLE_COMMIT: true
+      - name: Index Docs
+        uses: darrenjennings/algolia-docsearch-action@master
+        with:
+          algolia_api_key: ${{ secrets.ALGOLIA_API_KEY }}
+          algolia_application_id: ${{ secrets.ALGOLIA_APPLICATION_ID }}
+          file: algolia/config.json

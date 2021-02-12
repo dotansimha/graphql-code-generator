@@ -16,9 +16,10 @@ module.exports = {
       trackingID: 'UA-128969121-3',
     },
     algolia: {
-      apiKey: 'dc81d9e0ead1aecb5e776d262181ceeb',
-      indexName: 'graphql-code-generator',
-      searchParameters: {},
+      appId: 'ANRJKXZTRW',
+      apiKey: '811d453fc7f80306044dd5cc4b87e064',
+      indexName: 'theguild',
+      algoliaOptions: {},
     },
     navbar: {
       title: 'GraphQL Code Generator',
