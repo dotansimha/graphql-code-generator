@@ -134,9 +134,16 @@ Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/
 
 ### Contributing
 
+If this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
+
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-For a contribution guide, please refer to: http://graphql-code-generator.com/docs/custom-codegen/contributing
+For a contribution guide specific to this project, please refer to: http://graphql-code-generator.com/docs/custom-codegen/contributing
+
+### Code of Conduct
+
+Help us keep GraphQL Codegenerator open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
+
 
 ### License
 
