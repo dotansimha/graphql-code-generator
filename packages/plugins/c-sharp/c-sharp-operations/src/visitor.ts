@@ -6,6 +6,7 @@ import {
   indentMultiline,
   getBaseTypeNode,
   buildScalars,
+  indent,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import {
@@ -16,10 +17,30 @@ import {
   Kind,
   VariableDefinitionNode,
   isScalarType,
+  FieldNode,
+  printSchema,
+  parse,
+  DocumentNode,
+  isEnumType,
+  isInputObjectType,
+  TypeNode,
+  ObjectTypeDefinitionNode,
+  InputObjectTypeDefinitionNode,
+  EnumTypeDefinitionNode,
+  FragmentSpreadNode,
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { getListInnerTypeNode, C_SHARP_SCALARS, getListTypeField, getListTypeDepth } from '../../common/common';
+import {
+  getListInnerTypeNode,
+  C_SHARP_SCALARS,
+  getListTypeField,
+  getListTypeDepth,
+  CSharpFieldType,
+  isValueType,
+  wrapFieldType,
+  CSharpDeclarationBlock,
+} from '../../common/common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;
@@ -34,6 +55,7 @@ export interface CSharpOperationsPluginConfig extends ClientSideBasePluginConfig
   querySuffix: string;
   mutationSuffix: string;
   subscriptionSuffix: string;
+  typesafeOperation: boolean;
 }
 
 export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
@@ -47,6 +69,8 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     operationResultType: string;
     operationVariablesTypes: string;
   }[] = [];
+
+  private _schemaAST: DocumentNode;
 
   constructor(
     schema: GraphQLSchema,
@@ -65,12 +89,15 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         mutationSuffix: rawConfig.mutationSuffix || defaultSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix || defaultSuffix,
         scalars: buildScalars(schema, rawConfig.scalars, C_SHARP_SCALARS),
+        typesafeOperation: rawConfig.typesafeOperation || false,
       },
       documents
     );
 
     this.overruleConfigSettings();
     autoBind(this);
+
+    this._schemaAST = parse(printSchema(schema));
   }
 
   // Some settings aren't supported with C#, overruled here
@@ -157,6 +184,10 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     };
   }
 
+  public getCSharpImports(): string {
+    return ['Newtonsoft.Json', 'GraphQL', 'GraphQL.Client.Abstractions'].map(i => `using ${i};`).join('\n') + '\n';
+  }
+
   private _operationSuffix(operationType: string): string {
     switch (operationType) {
       case 'query':
@@ -167,6 +198,244 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         return this.config.subscriptionSuffix;
       default:
         return defaultSuffix;
+    }
+  }
+
+  protected resolveFieldType(typeNode: TypeNode, hasDefaultValue: Boolean = false): CSharpFieldType {
+    const innerType = getBaseTypeNode(typeNode);
+    const schemaType = this._schema.getType(innerType.name.value);
+    const listType = getListTypeField(typeNode);
+    const required = getListInnerTypeNode(typeNode).kind === Kind.NON_NULL_TYPE;
+
+    let result: CSharpFieldType = null;
+
+    if (isScalarType(schemaType)) {
+      if (this.scalars[schemaType.name]) {
+        const baseType = this.scalars[schemaType.name];
+        result = new CSharpFieldType({
+          baseType: {
+            type: baseType,
+            required,
+            valueType: isValueType(baseType),
+          },
+          listType,
+        });
+      } else {
+        result = new CSharpFieldType({
+          baseType: {
+            type: 'object',
+            required,
+            valueType: false,
+          },
+          listType,
+        });
+      }
+    } else if (isInputObjectType(schemaType)) {
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${this.convertName(schemaType.name)}`,
+          required,
+          valueType: false,
+        },
+        listType,
+      });
+    } else if (isEnumType(schemaType)) {
+      result = new CSharpFieldType({
+        baseType: {
+          type: this.convertName(schemaType.name),
+          required,
+          valueType: true,
+        },
+        listType,
+      });
+    } else {
+      result = new CSharpFieldType({
+        baseType: {
+          type: `${schemaType.name}`,
+          required,
+          valueType: false,
+        },
+        listType,
+      });
+    }
+
+    if (hasDefaultValue) {
+      // Required field is optional when default value specified, see #4273
+      (result.listType || result.baseType).required = false;
+    }
+
+    return result;
+  }
+
+  private _getResponseFieldRecursive(
+    node: OperationDefinitionNode | FieldNode | FragmentSpreadNode,
+    parentSchema: ObjectTypeDefinitionNode
+  ): string {
+    switch (node.kind) {
+      case Kind.OPERATION_DEFINITION: {
+        return new CSharpDeclarationBlock()
+          .access('public')
+          .asKind('class')
+          .withName('Response')
+          .withBlock(
+            '\n' +
+              node.selectionSet.selections
+                .map(opr => {
+                  if (opr.kind !== Kind.FIELD) {
+                    throw new Error(`Unknown kind; ${opr.kind} in OperationDefinitionNode`);
+                  }
+                  return this._getResponseFieldRecursive(opr, parentSchema);
+                })
+                .join('\n')
+          ).string;
+      }
+      case Kind.FIELD: {
+        const fieldSchema = parentSchema.fields.find(f => f.name.value === node.name.value);
+        if (!fieldSchema) {
+          throw new Error(`Field schema not found; ${node.name.value}`);
+        }
+        const responseType = this.resolveFieldType(fieldSchema.type);
+
+        if (!node.selectionSet) {
+          const responseTypeName = wrapFieldType(
+            responseType,
+            responseType.listType,
+            'System.Collections.Generic.List'
+          );
+          return indentMultiline(
+            [
+              `[JsonProperty("${node.name.value}")]`,
+              `public ${responseTypeName} ${node.name.value} { get; set; }`,
+            ].join('\n') + '\n'
+          );
+        } else {
+          const selectionBaseTypeName = `${responseType.baseType.type}Selection`;
+          const selectionType = Object.assign(new CSharpFieldType(responseType), {
+            baseType: { type: selectionBaseTypeName },
+          });
+          const selectionTypeName = wrapFieldType(
+            selectionType,
+            selectionType.listType,
+            'System.Collections.Generic.List'
+          );
+          const innerClassSchema = this._schemaAST.definitions.find(
+            d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === responseType.baseType.type
+          ) as ObjectTypeDefinitionNode;
+
+          const innerClassDefinition = new CSharpDeclarationBlock()
+            .access('public')
+            .asKind('class')
+            .withName(selectionBaseTypeName)
+            .withBlock(
+              '\n' +
+                node.selectionSet.selections
+                  .map(s => {
+                    if (s.kind === Kind.INLINE_FRAGMENT) {
+                      throw new Error(`Unsupported kind; ${node.name} ${s.kind}`);
+                    }
+                    return this._getResponseFieldRecursive(s, innerClassSchema);
+                  })
+                  .join('\n')
+            ).string;
+          return indentMultiline(
+            [
+              innerClassDefinition,
+              `[JsonProperty("${node.name.value}")]`,
+              `public ${selectionTypeName} ${node.name.value} { get; set; }`,
+            ].join('\n') + '\n'
+          );
+        }
+      }
+      case Kind.FRAGMENT_SPREAD: {
+        const fragmentSchema = this._fragments.find(f => f.name === node.name.value);
+        if (!fragmentSchema) {
+          throw new Error(`Fragment schema not found; ${node.name.value}`);
+        }
+        return fragmentSchema.node.selectionSet.selections
+          .map(s => {
+            if (s.kind === Kind.INLINE_FRAGMENT) {
+              throw new Error(`Unsupported kind; ${node.name} ${s.kind}`);
+            }
+            return this._getResponseFieldRecursive(s, parentSchema);
+          })
+          .join('\n');
+      }
+    }
+  }
+
+  private _getResponseClass(node: OperationDefinitionNode): string {
+    const operationSchema = this._schemaAST.definitions.find(
+      s => s.kind === Kind.OBJECT_TYPE_DEFINITION && s.name.value.toLowerCase() === node.operation
+    );
+    return this._getResponseFieldRecursive(node, operationSchema as ObjectTypeDefinitionNode);
+  }
+
+  private _getVariablesClass(node: OperationDefinitionNode): string {
+    if (!node.variableDefinitions?.length) {
+      return '';
+    }
+    return new CSharpDeclarationBlock()
+      .access('public')
+      .asKind('class')
+      .withName('Variables')
+      .withBlock(
+        '\n' +
+          node.variableDefinitions
+            ?.map(v => {
+              const inputType = this.resolveFieldType(v.type);
+              const inputTypeName = wrapFieldType(inputType, inputType.listType, 'System.Collections.Generic.List');
+              return indentMultiline(
+                [
+                  `[JsonProperty("${v.variable.name.value}")]`,
+                  `public ${inputTypeName} ${v.variable.name.value} { get; set; }`,
+                ].join('\n') + '\n'
+              );
+            })
+            .join('\n')
+      ).string;
+  }
+
+  private _getOperationMethod(node: OperationDefinitionNode): string {
+    const operationSchema = this._schemaAST.definitions.find(
+      s => s.kind === Kind.OBJECT_TYPE_DEFINITION && s.name.value.toLowerCase() === node.operation
+    ) as ObjectTypeDefinitionNode;
+    if (!operationSchema) {
+      throw new Error(`Operation schema not found; ${node.operation}`);
+    }
+
+    const variablesArgument = node.variableDefinitions?.length ? ', Variables variables' : '';
+
+    switch (node.operation) {
+      case 'query':
+      case 'mutation':
+        return [
+          `public static System.Threading.Tasks.Task<GraphQLResponse<Response>> Send${operationSchema.name.value}Async(IGraphQLClient client${variablesArgument}, System.Threading.CancellationToken cancellationToken = default) {`,
+          indent(
+            `return client.Send${operationSchema.name.value}Async<Response>(Request(${
+              node.variableDefinitions?.length ? 'variables' : ''
+            }), cancellationToken);`
+          ),
+          `}`,
+        ].join('\n');
+      case 'subscription': {
+        return [
+          `public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client${variablesArgument}) {`,
+          indent(
+            `return client.CreateSubscriptionStream<Response>(Request(${
+              node.variableDefinitions?.length ? 'variables' : ''
+            }));`
+          ),
+          `}`,
+          '',
+          `public static System.IObservable<GraphQLResponse<Response>> CreateSubscriptionStream(IGraphQLClient client${variablesArgument}, System.Action<System.Exception> exceptionHandler) {`,
+          indent(
+            `return client.CreateSubscriptionStream<Response>(Request(${
+              node.variableDefinitions?.length ? 'variables' : ''
+            }), exceptionHandler);`
+          ),
+          `}`,
+        ].join('\n');
+      }
     }
   }
 
@@ -232,6 +501,16 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     // Should use ObsoleteAttribute but VS treats warnings as errors which would be super annoying so use remarks comment instead
     const obsoleteMessage = '/// <remarks>This method is obsolete. Use Request instead.</remarks>';
 
+    let typesafeOperations = '';
+    if (this.config.typesafeOperation) {
+      typesafeOperations = `
+${this._getVariablesClass(node)}
+${this._getResponseClass(node)}
+${this._getOperationMethod(node)}
+`;
+      typesafeOperations = indentMultiline(typesafeOperations, 3);
+    }
+
     const content = `
     public class ${serviceName} {
       /// <summary>
@@ -255,8 +534,54 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
       }
       ${this._namedClient(node)}
       ${documentString}
+      ${typesafeOperations}
     }
     `;
     return [content].filter(a => a).join('\n');
+  }
+
+  public InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (!this.config.typesafeOperation) {
+      return '';
+    }
+
+    const inputClass = new CSharpDeclarationBlock()
+      .access('public')
+      .asKind('class')
+      .withName(this.convertName(node))
+      .withBlock(
+        '\n' +
+          node.fields
+            ?.map(f => {
+              if (f.kind !== Kind.INPUT_VALUE_DEFINITION) {
+                return null;
+              }
+              const inputType = this.resolveFieldType(f.type);
+              const inputTypeName = wrapFieldType(inputType, inputType.listType, 'System.Collections.Generic.List');
+              return indentMultiline(
+                [`[JsonProperty("${f.name.value}")]`, `public ${inputTypeName} ${f.name.value} { get; set; }`].join(
+                  '\n'
+                ) + '\n'
+              );
+            })
+            .filter(f => !!f)
+            .join('\n')
+      ).string;
+
+    return indentMultiline(inputClass, 2);
+  }
+
+  public EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    if (!this.config.typesafeOperation) {
+      return '';
+    }
+
+    const enumDefinition = new CSharpDeclarationBlock()
+      .access('public')
+      .asKind('enum')
+      .withName(this.convertName(node.name))
+      .withBlock(indentMultiline(node.values?.map(v => v.name.value).join(',\n'))).string;
+
+    return indentMultiline(enumDefinition, 2);
   }
 }

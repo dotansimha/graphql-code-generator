@@ -72,6 +72,7 @@ module.exports = {
         label: 'Utilities',
         items: [
           'plugins/fragment-matcher',
+          'plugins/urql-introspection',
           'plugins/introspection',
           'plugins/schema-ast',
           'plugins/jsdoc',

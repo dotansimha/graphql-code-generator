@@ -27,7 +27,7 @@ export function parseEnumValues({
           if (value && value !== name) {
             mapOrStr[enumTypeName] = mapOrStr[enumTypeName] || {};
             if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
-              mapOrStr[enumTypeName][name] = value ? escapeString(value) : value;
+              mapOrStr[enumTypeName][name] = typeof value === 'string' ? escapeString(value) : value;
             }
           }
         }

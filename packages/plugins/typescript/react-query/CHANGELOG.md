@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-react-query
 
+## 1.2.0
+
+### Minor Changes
+
+- ed0ae4c7: Allow fetcher to receive variables lazily so it can use react hooks
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.1.0
 
 ### Minor Changes

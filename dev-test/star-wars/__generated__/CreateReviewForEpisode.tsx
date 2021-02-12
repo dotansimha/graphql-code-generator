@@ -2,6 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
   review: Types.ReviewInput;
@@ -45,9 +46,10 @@ export type CreateReviewForEpisodeMutationFn = Apollo.MutationFunction<
 export function useCreateReviewForEpisodeMutation(
   baseOptions?: Apollo.MutationHookOptions<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<CreateReviewForEpisodeMutation, CreateReviewForEpisodeMutationVariables>(
     CreateReviewForEpisodeDocument,
-    baseOptions
+    options
   );
 }
 export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;

@@ -137,6 +137,46 @@ describe('React-Query', () => {
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
     });
+
+    it('Should generate mutation correctly with lazy variables', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#useCustomFetcher',
+          isReactHook: true,
+        },
+        typesPrefix: 'T',
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(
+        `import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';`
+      );
+      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
+      expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
+          TData = TTestQuery,
+          TError = unknown
+        >(
+          variables?: TTestQueryVariables, 
+          options?: UseQueryOptions<TTestQuery, TError, TData>
+        ) => 
+        useQuery<TTestQuery, TError, TData>(
+          ['test', variables],
+          useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
+          options
+        );`);
+      expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
+        TError = unknown,
+        TContext = unknown
+      >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+      useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
+        options
+      );`);
+
+      expect(out.content).toMatchSnapshot();
+      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+    });
   });
 
   describe('fetcher: graphql-request', () => {

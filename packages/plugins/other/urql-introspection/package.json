@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/typescript",
-  "version": "1.21.0",
-  "description": "GraphQL Code Generator plugin for generating TypeScript types",
+  "name": "@graphql-codegen/urql-introspection",
+  "version": "0.0.0",
+  "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/typescript/typescript"
+    "directory": "packages/plugins/other/fragment-matcher"
   },
   "license": "MIT",
   "scripts": {
@@ -15,12 +15,11 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^1.18.2",
-    "@graphql-codegen/visitor-plugin-common": "^1.18.3",
-    "auto-bind": "~4.0.0",
+    "@urql/introspection": "0.1.2",
     "tslib": "~2.1.0"
   },
   "peerDependencies": {
-    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

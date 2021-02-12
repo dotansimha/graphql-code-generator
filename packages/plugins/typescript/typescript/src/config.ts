@@ -101,6 +101,22 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   futureProofEnums?: boolean;
   /**
+   * @description This option controls whether or not a catch-all entry is added to union type definitions for values that may be added in the future.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    futureProofUnions: true
+   * ```
+   */
+  futureProofUnions?: boolean;
+  /**
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
    * @default false
    *
@@ -190,6 +206,22 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   noExport?: boolean;
+  /**
+   * @description Set the value to `true` in order to disable all description generation.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Disable description generation
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    disableDescriptions: true
+   * ```
+   */
+  disableDescriptions?: boolean;
   /**
    * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
    * @default false

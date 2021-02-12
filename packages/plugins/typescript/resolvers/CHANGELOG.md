@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.18.2
+
+### Patch Changes
+
+- 5749cb8a: chore: fix type-level incompatibilities of the `avoidOptionals`
+- Updated dependencies [34b8087e]
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/typescript@1.21.0
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.18.1
 
 ### Patch Changes

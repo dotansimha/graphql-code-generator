@@ -1,7 +1,6 @@
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import {
   parse,
-  printSchema,
   visit,
   GraphQLSchema,
   TypeInfo,
@@ -16,6 +15,7 @@ import {
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
 import { TypeScriptPluginConfig } from './config';
+import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 
 export * from './typescript-variables-to-object';
 export * from './visitor';
@@ -27,11 +27,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
 ) => {
-  const visitor = new TsVisitor(schema, config);
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
-  const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
+  const { schema: _schema, ast } = transformSchemaAST(schema, config);
+
+  const visitor = new TsVisitor(_schema, config);
+
+  const visitorResult = visit(ast, { leave: visitor });
+  const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
   return {

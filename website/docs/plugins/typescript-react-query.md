@@ -141,7 +141,7 @@ export const MyComponent = () => {
 
 ### Using Custom Fetcher
 
-If you wish to create a custom fetcher, you can provide a Mapper string (`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
+If you wish to create a custom fetcher, you can provide your own function as a Mapper string (`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
 
 ```yml
 schema: MY_SCHEMA_PATH
@@ -153,7 +153,16 @@ generates:
       - typescript-operations
       - typescript-react-query
     config:
-      fetcher: './my-file#myFetcher'
+      fetcher:
+        func: './my-file#myFetcher'
+        isReactHook: false # optional, defaults to false, controls the function's signature. Read below
+```
+
+As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
+```yml
+    #...
+    config:
+      fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
 ```
 
 Codegen will use `myFetcher`, and you can just use the hook directly:
@@ -166,13 +175,17 @@ export const MyComponent = () => {
 };
 ```
 
-Your `myFetcher` should be in the following signature:
+Depending on the `isReactHook` property, your `myFetcher` should be in the following signature:
+* `isReactHook: false`
+  ```ts
+  type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables): (() => Promise<TData>)
+  ```
+* `isReactHook: true`
+  ```ts
+  type MyFetcher<TData, TVariables> = (operation: string): ((variables?: TVariables) => Promise<TData>)
+  ```
 
-```ts
-type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables): (() => Promise<TData>)
-```
-
-#### Usage example
+#### Usage example (`isReactHook: false`)
 ```tsx
 export const fetchData = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
   return async () => {
@@ -180,6 +193,36 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0] || 'Error..';
+      throw new Error(message);
+    }
+
+    return json.data;
+  };
+};
+```
+
+#### Usage example (`isReactHook: true`)
+```tsx
+export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
+  // it is safe to call React Hooks here.
+  const {url, headers} = React.useContext(FetchParamsContext);
+  return async (variables?: TVariables) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers
       },
       body: JSON.stringify({
         query,

@@ -74,13 +74,13 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   private createFetcher(raw: ReactQueryRawPluginConfig['fetcher']): FetcherRenderer {
     if (raw === 'fetch') {
       return new FetchFetcher(this);
-    } else if (typeof raw === 'object' && raw.endpoint) {
+    } else if (typeof raw === 'object' && 'endpoint' in raw) {
       return new HardcodedFetchFetcher(this, raw);
     } else if (raw === 'graphql-request') {
       return new GraphQLRequestClientFetcher(this);
     }
 
-    return new CustomMapperFetcher(this, raw as string);
+    return new CustomMapperFetcher(this, raw);
   }
 
   public getImports(): string[] {

@@ -2,6 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
@@ -37,10 +38,12 @@ export const HeroNameDocument = gql`
  * });
  */
 export function useHeroNameQuery(baseOptions?: Apollo.QueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
-  return Apollo.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, options);
 }
 export function useHeroNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HeroNameQuery, HeroNameQueryVariables>) {
-  return Apollo.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<HeroNameQuery, HeroNameQueryVariables>(HeroNameDocument, options);
 }
 export type HeroNameQueryHookResult = ReturnType<typeof useHeroNameQuery>;
 export type HeroNameLazyQueryHookResult = ReturnType<typeof useHeroNameLazyQuery>;

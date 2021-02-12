@@ -14,7 +14,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 
   ...
   using var client = new GraphQLHttpClient("https://gqlserver", new NewtonsoftJsonSerializer());
-  var response = await client.SendQueryAsync<Types.Query>(UsersGQL.getUsersGQL());
+  var response = await client.SendQueryAsync<Types.Query>(UsersGQL.Request());
 ```
 
 {@import ../plugins/client-note.md}
