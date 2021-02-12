@@ -2,6 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = { __typename?: 'Query' } & {
@@ -38,12 +39,14 @@ export const HeroAppearsInDocument = gql`
 export function useHeroAppearsInQuery(
   baseOptions?: Apollo.QueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return Apollo.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, options);
 }
 export function useHeroAppearsInLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<HeroAppearsInQuery, HeroAppearsInQueryVariables>
 ) {
-  return Apollo.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<HeroAppearsInQuery, HeroAppearsInQueryVariables>(HeroAppearsInDocument, options);
 }
 export type HeroAppearsInQueryHookResult = ReturnType<typeof useHeroAppearsInQuery>;
 export type HeroAppearsInLazyQueryHookResult = ReturnType<typeof useHeroAppearsInLazyQuery>;
