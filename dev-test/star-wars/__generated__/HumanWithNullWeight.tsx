@@ -4,6 +4,7 @@ import { HumanFieldsFragment } from './HumanFields';
 import { gql } from '@apollo/client';
 import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
@@ -37,17 +38,19 @@ export const HumanWithNullHeightDocument = gql`
 export function useHumanWithNullHeightQuery(
   baseOptions?: Apollo.QueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
     HumanWithNullHeightDocument,
-    baseOptions
+    options
   );
 }
 export function useHumanWithNullHeightLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>(
     HumanWithNullHeightDocument,
-    baseOptions
+    options
   );
 }
 export type HumanWithNullHeightQueryHookResult = ReturnType<typeof useHumanWithNullHeightQuery>;

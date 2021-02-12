@@ -2,6 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
   includeName: Types.Scalars['Boolean'];
@@ -54,9 +55,10 @@ export const HeroNameConditionalInclusionDocument = gql`
 export function useHeroNameConditionalInclusionQuery(
   baseOptions: Apollo.QueryHookOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
-    baseOptions
+    options
   );
 }
 export function useHeroNameConditionalInclusionLazyQuery(
@@ -65,9 +67,10 @@ export function useHeroNameConditionalInclusionLazyQuery(
     HeroNameConditionalInclusionQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>(
     HeroNameConditionalInclusionDocument,
-    baseOptions
+    options
   );
 }
 export type HeroNameConditionalInclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalInclusionQuery>;
@@ -106,9 +109,10 @@ export const HeroNameConditionalExclusionDocument = gql`
 export function useHeroNameConditionalExclusionQuery(
   baseOptions: Apollo.QueryHookOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,
-    baseOptions
+    options
   );
 }
 export function useHeroNameConditionalExclusionLazyQuery(
@@ -117,9 +121,10 @@ export function useHeroNameConditionalExclusionLazyQuery(
     HeroNameConditionalExclusionQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>(
     HeroNameConditionalExclusionDocument,
-    baseOptions
+    options
   );
 }
 export type HeroNameConditionalExclusionQueryHookResult = ReturnType<typeof useHeroNameConditionalExclusionQuery>;
