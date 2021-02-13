@@ -16176,10 +16176,10 @@ react-monaco-editor@0.42.0:
     monaco-editor "*"
     prop-types "^15.7.2"
 
-react-query@3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.8.3.tgz#1310e710537c24483e4d167c4e84861771345281"
-  integrity sha512-hLnTC/pZLrc6KxmGJ3O0w1qATjRIOpEFTG4RbHIWcN/xXsfogsINzSppFSknBAJjxBxylobDkyi8Z5c90BeI8Q==
+react-query@3.9.2:
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.9.2.tgz#1cd6797d64b2d05b656826c32fcca8abfffbc786"
+  integrity sha512-zIY7ePPTjP1Eaai3Cv3LNMhJFKqNGb+QFVi1kQ2cRM754lJ6b500bm6rFP3ZY+7BVqFo3R4atU4GHaNtPt2E5w==
   dependencies:
     "@babel/runtime" "^7.5.5"
     match-sorter "^6.0.2"
