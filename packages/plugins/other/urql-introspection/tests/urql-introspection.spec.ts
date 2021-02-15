@@ -102,9 +102,7 @@ describe('Urql Introspection Plugin', () => {
           outputFile: 'foo.jsx',
         }
       );
-      const output = `
-        export default ${introspection}
-      `;
+      const output = `export default ${introspection}`;
 
       expect(jsContent).toBeSimilarStringTo(output);
       expect(jsxContent).toBeSimilarStringTo(output);
@@ -158,9 +156,8 @@ describe('Urql Introspection Plugin', () => {
           outputFile: 'foo.tsx',
         }
       );
-      const output = `
-        export default ${introspection};
-      `;
+      const output = `import { IntrospectionQuery } from 'graphql';
+export default ${introspection} as unknown as IntrospectionQuery;`;
 
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
@@ -187,9 +184,8 @@ describe('Urql Introspection Plugin', () => {
           outputFile: 'foo.tsx',
         }
       );
-      const output = `
-        export default ${introspection};
-      `;
+      const output = `import { IntrospectionQuery } from 'graphql';
+export default ${introspection} as unknown as IntrospectionQuery;`;
 
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);

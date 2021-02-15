@@ -63,15 +63,12 @@ export const plugin: PluginFunction = async (
   if (extensions.js.includes(ext)) {
     const defaultExportStatement = config.module === 'es2015' ? `export default` : 'module.exports =';
 
-    return `
-      ${defaultExportStatement} ${content}
-    `;
+    return `${defaultExportStatement} ${content}`;
   }
 
   if (extensions.ts.includes(ext)) {
-    return `
-      export default ${content};
-    `;
+    return `import { IntrospectionQuery } from 'graphql';
+export default ${content} as unknown as IntrospectionQuery;`;
   }
 
   throw new Error(`Extension ${ext} is not supported`);
