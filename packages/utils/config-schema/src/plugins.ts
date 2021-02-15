@@ -175,4 +175,9 @@ export const pluginsConfigurations: PluginConfig[] = [
     identifier: 'FragmentMatcherConfig',
     name: 'fragment-matcher',
   },
+  {
+    file: '../../plugins/other/urql-introspection/src/index.ts',
+    identifier: 'UrqlIntrospectionConfig',
+    name: 'urql-introspection',
+  },
 ];

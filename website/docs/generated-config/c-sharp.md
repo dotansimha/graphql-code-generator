@@ -20,15 +20,6 @@ type: `EnumValuesMap`
 
 Overrides the default value of enum values declared in your GraphQL schema.
 
-#### Usage Examples
-
-##### With Custom Values
-```yml
-  config:
-    enumValues:
-      MyEnum:
-        A: 'foo'
-```
 
 ### `namespaceName`
 
@@ -69,7 +60,7 @@ generates:
 ### `listType`
 
 type: `string`
-default: `IEnumberable`
+default: `IEnumerable`
 
 Allow you to customize the list type
 
@@ -84,20 +75,30 @@ generates:
       listType: Map
 ```
 
+### `emitRecords`
+
+type: `boolean`
+default: `false`
+
+Emit C# 9.0+ records instead of classes
+
+#### Usage Examples
+
+```yml
+generates:
+  src/main/c-sharp/my-org/my-app/Types.cs:
+    plugins:
+      - c-sharp
+    config:
+      emitRecords: true
+```
+
 ### `scalars`
 
 type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `namingConvention`
 
@@ -112,35 +113,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep names as is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `typesPrefix`
 

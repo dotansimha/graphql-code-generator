@@ -27,35 +27,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep name as-is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `namePrefix`
 
@@ -275,20 +246,20 @@ default: `false`
 This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
 
 
+### `experimentalFragmentVariables`
+
+type: `boolean`
+default: `false`
+
+If set to true, it will enable support for parsing variables on fragments.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `typesPrefix`
 

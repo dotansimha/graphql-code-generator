@@ -43,7 +43,7 @@ instead of `myField?: Maybe<string>`.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    avoidOptionals: true
 ```
@@ -53,7 +53,7 @@ path/to/file.ts:
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    avoidOptionals:
      field: true
@@ -75,7 +75,7 @@ Will prefix every generated `enum` with `const`, you can read more about const e
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    constEnums: true
 ```
@@ -93,7 +93,7 @@ Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to gen
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    enumsAsTypes: true
 ```
@@ -111,7 +111,7 @@ Controls whether to preserve typescript enum values as numbers
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    numericEnums: true
 ```
@@ -130,10 +130,29 @@ This is useful if you are using `relay`.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    enumsAsTypes: true
    futureProofEnums: true
+```
+
+### `futureProofUnions`
+
+type: `boolean`
+default: `false`
+
+This option controls whether or not a catch-all entry is added to union type definitions for values that may be added in the future.
+This is useful if you are using `relay`.
+
+#### Usage Examples
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   futureProofUnions: true
 ```
 
 ### `enumsAsConst`
@@ -149,7 +168,7 @@ Generates enum as TypeScript `const assertions` instead of `enum`. This can even
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    enumsAsConst: true
 ```
@@ -168,10 +187,10 @@ Override all definition types
 ```yml
 generates:
 path/to/file.ts:
-  plugins:
-    - typescript-type-graphql
-  config:
-    onlyOperationTypes: true
+plugins:
+- typescript
+config:
+onlyOperationTypes: true
 ```
 
 ### `immutableTypes`
@@ -187,7 +206,7 @@ Generates immutable types by adding `readonly` to properties and uses `ReadonlyA
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    immutableTypes: true
 ```
@@ -206,7 +225,7 @@ Allow to override the type value of `Maybe`.
 generates:
  path/to/file.ts:
    plugins:
-     - typescript-type-graphql
+     - typescript
    config:
      maybeValue: T | null | undefined
 ```
@@ -216,7 +235,7 @@ generates:
 generates:
  path/to/file.ts:
    plugins:
-     - typescript-type-graphql
+     - typescript
      - typescript-resolvers
    config:
      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
@@ -237,9 +256,28 @@ This is useful if you are generating `.d.ts` file and want it to be globally ava
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    noExport: true
+```
+
+### `disableDescriptions`
+
+type: `boolean`
+default: `false`
+
+Set the value to `true` in order to disable all description generation.
+
+#### Usage Examples
+
+##### Disable description generation
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   disableDescriptions: true
 ```
 
 ### `useImplementingTypes`
@@ -256,7 +294,7 @@ When a GraphQL interface is used for a field, this flag will use the implementin
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    useImplementingTypes: true
 ```
@@ -282,28 +320,6 @@ type: `EnumValuesMap`
 Overrides the default value of enum values declared in your GraphQL schema.
 You can also map the entire enum to an external type by providing a string that of `module#type`.
 
-#### Usage Examples
-
-##### With Custom Values
-```yml
-  config:
-    enumValues:
-      MyEnum:
-        A: 'foo'
-```
-
-##### With External Enum
-```yml
-  config:
-    enumValues:
-      MyEnum: ./my-file#MyCustomEnum
-```
-
-##### Import All Enums from a file
-```yml
-  config:
-    enumValues: ./my-file
-```
 
 ### `declarationKind`
 
@@ -357,7 +373,7 @@ Allow you to add wrapper for field type, use T as the generic value. Make sure t
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    wrapFieldDefinitions: true
    fieldWrapperValue: T | Promise<T>
@@ -378,9 +394,28 @@ This is useful to allow return types such as Promises and functions.
 generates:
 path/to/file.ts:
  plugins:
-   - typescript-type-graphql
+   - typescript
  config:
    wrapFieldDefinitions: true
+```
+
+### `ignoreEnumValuesFromSchema`
+
+type: `boolean`
+default: `false`
+
+This will cause the generator to ignore enum values defined in GraphQLSchema
+
+#### Usage Examples
+
+##### Ignore enum values from schema
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   ignoreEnumValuesFromSchema: true
 ```
 
 ### `scalars`
@@ -389,14 +424,6 @@ type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `namingConvention`
 
@@ -411,35 +438,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep names as is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `typesPrefix`
 

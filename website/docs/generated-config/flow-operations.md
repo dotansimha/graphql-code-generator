@@ -150,6 +150,14 @@ default: `false`
 If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
 
 
+### `experimentalFragmentVariables`
+
+type: `boolean`
+default: `false`
+
+If set to true, it will enable support for parsing variables on fragments.
+
+
 ### `addUnderscoreToArgsType`
 
 type: `boolean`
@@ -171,28 +179,6 @@ type: `EnumValuesMap`
 Overrides the default value of enum values declared in your GraphQL schema.
 You can also map the entire enum to an external type by providing a string that of `module#type`.
 
-#### Usage Examples
-
-##### With Custom Values
-```yml
-  config:
-    enumValues:
-      MyEnum:
-        A: 'foo'
-```
-
-##### With External Enum
-```yml
-  config:
-    enumValues:
-      MyEnum: ./my-file#MyCustomEnum
-```
-
-##### Import All Enums from a file
-```yml
-  config:
-    enumValues: ./my-file
-```
 
 ### `declarationKind`
 
@@ -291,20 +277,31 @@ path/to/file.ts:
    onlyOperationTypes: true
 ```
 
+### `ignoreEnumValuesFromSchema`
+
+type: `boolean`
+default: `false`
+
+This will cause the generator to ignore enum values defined in GraphQLSchema
+
+#### Usage Examples
+
+##### Ignore enum values from schema
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   ignoreEnumValuesFromSchema: true
+```
+
 ### `scalars`
 
 type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `namingConvention`
 
@@ -319,35 +316,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep names as is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `typesPrefix`
 
