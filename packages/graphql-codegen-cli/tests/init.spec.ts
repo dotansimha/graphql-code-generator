@@ -486,7 +486,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.angular]);
 
       // available
-      expect(available).toHaveLength(6);
+      expect(available).toHaveLength(7);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-apollo-angular');
@@ -504,7 +504,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.react]);
 
       // available
-      expect(available).toHaveLength(8);
+      expect(available).toHaveLength(9);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-react-apollo');
@@ -523,7 +523,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.react, Tags.typescript]);
 
       // available
-      expect(available).toHaveLength(6);
+      expect(available).toHaveLength(7);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-react-apollo');
@@ -541,7 +541,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.react, Tags.flow]);
 
       // available
-      expect(available).toHaveLength(3);
+      expect(available).toHaveLength(4);
       expect(available).toContainEqual('flow');
       expect(available).toContainEqual('flow-operations');
       expect(available).toContainEqual('fragment-matcher');
@@ -555,7 +555,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.stencil]);
 
       // available
-      expect(available).toHaveLength(6);
+      expect(available).toHaveLength(7);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-stencil-apollo');
@@ -573,7 +573,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.browser]);
 
       // available
-      expect(available).toHaveLength(7);
+      expect(available).toHaveLength(8);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-graphql-files-modules');
