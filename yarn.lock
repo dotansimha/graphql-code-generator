@@ -125,10 +125,10 @@
     "@algolia/logger-common" "4.4.0"
     "@algolia/requester-common" "4.4.0"
 
-"@apollo/client@3.3.10":
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.10.tgz#4fbba049e6b92ac47638cb472db9e653462fa514"
-  integrity sha512-OL5y8q5evSbvsqMAHKZJgfgB/MS9PLGF7f0MtHEkGGCDvmcmA81lsjYwk0xpDm/3XdnrYp/duN2tYUu2LnpJmw==
+"@apollo/client@3.3.11":
+  version "3.3.11"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.11.tgz#125051405e83dc899d471d43b79fd6045d92a802"
+  integrity sha512-54+D5FB6RJlQ+g37f432gaexnyvDsG5X6L9VO5kqN54HJlbF8hCf/8CXtAQEHCWodAwZhy6kOLp2RM96829q3A==
   dependencies:
     "@graphql-typed-document-node/core" "^3.0.0"
     "@types/zen-observable" "^0.8.0"
