@@ -841,6 +841,11 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.12.11.tgz#9ce3595bcd74bc5c466905e86c535b8b25011e79"
   integrity sha512-N3UxG+uuF4CMYoNj8AhnbAcJF0PiuJ9KHuy1lQmkYsxTer/MAH9UBNHsBoAX/4s6NvlDD047No8mYVGGzLL4hg==
 
+"@babel/parser@7.12.16":
+  version "7.12.16"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.12.16.tgz#cc31257419d2c3189d394081635703f549fc1ed4"
+  integrity sha512-c/+u9cqV6F0+4Hpq01jnJO+GLp2DdT63ppz9Xa+6cHaajM9VFzK/iDXiKK65YtpeVwu+ctfS6iqlMqRgQRzeCw==
+
 "@babel/parser@^7.0.0", "@babel/parser@^7.1.0", "@babel/parser@^7.7.5", "@babel/parser@^7.8.6", "@babel/parser@^7.9.0":
   version "7.9.4"
   resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.9.4.tgz#68a35e6b0319bbc014465be43828300113f2f2e8"
@@ -1952,6 +1957,21 @@
     globals "^11.1.0"
     lodash "^4.17.19"
 
+"@babel/traverse@7.12.13", "@babel/traverse@^7.12.13":
+  version "7.12.13"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.12.13.tgz#689f0e4b4c08587ad26622832632735fb8c4e0c0"
+  integrity sha512-3Zb4w7eE/OslI0fTp8c7b286/cQps3+vdLW3UcwC8VSJC6GbKn55aeVVu2QJNuCDoeKyptLOFrPq8WqZZBodyA==
+  dependencies:
+    "@babel/code-frame" "^7.12.13"
+    "@babel/generator" "^7.12.13"
+    "@babel/helper-function-name" "^7.12.13"
+    "@babel/helper-split-export-declaration" "^7.12.13"
+    "@babel/parser" "^7.12.13"
+    "@babel/types" "^7.12.13"
+    debug "^4.1.0"
+    globals "^11.1.0"
+    lodash "^4.17.19"
+
 "@babel/traverse@^7.0.0":
   version "7.10.3"
   resolved "https://registry.npmjs.org/@babel/traverse/-/traverse-7.10.3.tgz#0b01731794aa7b77b214bcd96661f18281155d7e"
@@ -2027,21 +2047,6 @@
     globals "^11.1.0"
     lodash "^4.17.19"
 
-"@babel/traverse@^7.12.13":
-  version "7.12.13"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.12.13.tgz#689f0e4b4c08587ad26622832632735fb8c4e0c0"
-  integrity sha512-3Zb4w7eE/OslI0fTp8c7b286/cQps3+vdLW3UcwC8VSJC6GbKn55aeVVu2QJNuCDoeKyptLOFrPq8WqZZBodyA==
-  dependencies:
-    "@babel/code-frame" "^7.12.13"
-    "@babel/generator" "^7.12.13"
-    "@babel/helper-function-name" "^7.12.13"
-    "@babel/helper-split-export-declaration" "^7.12.13"
-    "@babel/parser" "^7.12.13"
-    "@babel/types" "^7.12.13"
-    debug "^4.1.0"
-    globals "^11.1.0"
-    lodash "^4.17.19"
-
 "@babel/traverse@^7.8.6":
   version "7.9.5"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.9.5.tgz#6e7c56b44e2ac7011a948c21e283ddd9d9db97a2"
@@ -2061,6 +2066,15 @@
   version "7.12.12"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.12.12.tgz#4608a6ec313abbd87afa55004d373ad04a96c299"
   integrity sha512-lnIX7piTxOH22xE7fDXDbSHg9MM1/6ORnafpJmov5rs0kX5g4BZxeXNJLXsMRiO0U5Rb8/FvMS6xlTnTHvxonQ==
+  dependencies:
+    "@babel/helper-validator-identifier" "^7.12.11"
+    lodash "^4.17.19"
+    to-fast-properties "^2.0.0"
+
+"@babel/types@7.12.13", "@babel/types@^7.12.13":
+  version "7.12.13"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.12.13.tgz#8be1aa8f2c876da11a9cf650c0ecf656913ad611"
+  integrity sha512-oKrdZTld2im1z8bDwTOQvUbxKwE+854zc16qWZQlcTqMN00pWxHQ4ZeOq0yDMnisOpRykH2/5Qqcrk/OlbAjiQ==
   dependencies:
     "@babel/helper-validator-identifier" "^7.12.11"
     lodash "^4.17.19"
@@ -2090,15 +2104,6 @@
   integrity sha512-BzSY3NJBKM4kyatSOWh3D/JJ2O3CVzBybHWxtgxnggaxEuaSTTDqeiSb/xk9lrkw2Tbqyivw5ZU4rT+EfznQsA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.10.4"
-    lodash "^4.17.19"
-    to-fast-properties "^2.0.0"
-
-"@babel/types@^7.12.13":
-  version "7.12.13"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.12.13.tgz#8be1aa8f2c876da11a9cf650c0ecf656913ad611"
-  integrity sha512-oKrdZTld2im1z8bDwTOQvUbxKwE+854zc16qWZQlcTqMN00pWxHQ4ZeOq0yDMnisOpRykH2/5Qqcrk/OlbAjiQ==
-  dependencies:
-    "@babel/helper-validator-identifier" "^7.12.11"
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
@@ -2862,14 +2867,14 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/code-file-loader@6.2.6":
-  version "6.2.6"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-6.2.6.tgz#f89ffb1a5ca48c67dcf2cff97e1a5d06eabc81c2"
-  integrity sha512-oDuMiXy1Rj1KszY7no+PFNzw2H25PVJKg9K/deK+IHL1631Q+VLK6/czBIw4TMEsbYhlKErgWDI+XBzK73VZSQ==
+"@graphql-tools/code-file-loader@6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-6.3.0.tgz#c42f1cf9ccb09fee13a8e720540156b791c33d60"
+  integrity sha512-/lhog8/nijZbgEpEJM92mWaGknFpHm37YhbalIXtQgYj9mVX144cMaGxsqj6u0gwNQv3ukrxgE/vVAmg+p6CBA==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "^6.2.6"
+    "@graphql-tools/graphql-tag-pluck" "^6.5.0"
     "@graphql-tools/utils" "^7.0.0"
-    tslib "~2.0.1"
+    tslib "~2.1.0"
 
 "@graphql-tools/code-file-loader@^6":
   version "6.2.5"
@@ -2965,6 +2970,17 @@
     tslib "~2.1.0"
   optionalDependencies:
     "@vue/compiler-sfc" "^3.0.4"
+
+"@graphql-tools/graphql-tag-pluck@^6.5.0":
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-6.5.0.tgz#e38559f247f58a61a9354461c092715764b0953e"
+  integrity sha512-TO9sArmdmuUYqqh1yxfJLLcrPFd8WZRByR5J2VlA0usy6h4aI2vIrBrWsKQENU9BnaDkD+K/JpF8o66MBJAung==
+  dependencies:
+    "@babel/parser" "7.12.16"
+    "@babel/traverse" "7.12.13"
+    "@babel/types" "7.12.13"
+    "@graphql-tools/utils" "^7.0.0"
+    tslib "~2.1.0"
 
 "@graphql-tools/import@^6.2.5":
   version "6.2.5"
