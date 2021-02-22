@@ -224,6 +224,16 @@ describe('React-Query', () => {
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
     });
+    it('Should support useTypeImports', async () => {
+      const config = {
+        fetcher: 'graphql-request',
+        useTypeImports: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(`import type { GraphQLClient } from 'graphql-request';`);
+    });
   });
 
   describe('fetcher: hardcoded-fetch', () => {
