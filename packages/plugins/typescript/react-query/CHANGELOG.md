@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 1.2.2
+
+### Patch Changes
+
+- e69869aa: enhance(react-query): Don't generate fetcher without operations (#5601)
+
 ## 1.2.1
 
 ### Patch Changes

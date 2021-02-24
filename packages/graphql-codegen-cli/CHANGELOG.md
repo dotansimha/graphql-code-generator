@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.21.0
+
+### Minor Changes
+
+- dfef1c7c: feat(cli): pass parameters to loaders from plugin config
+
 ## 1.20.1
 
 ### Patch Changes
