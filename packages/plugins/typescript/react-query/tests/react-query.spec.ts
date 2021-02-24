@@ -44,12 +44,32 @@ describe('React-Query', () => {
       }
     }
   `);
+  const basicFragment = parse(/* GraphQL */ `
+    fragment EntryData on Entry {
+      feed {
+        id
+        commentCount
+        repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      }
+    }
+  `);
   const docs = [
     {
       document: basicDoc,
     },
     {
       document: basicMutation,
+    },
+  ];
+  const notOperationDocs = [
+    {
+      document: basicFragment,
     },
   ];
 
@@ -459,5 +479,17 @@ describe('React-Query', () => {
         `useTestQuery.getKey = (variables?: TestQueryVariables) => ['test', variables];`
       );
     });
+  });
+
+  it('Should not generate fetcher if there are no operations', async () => {
+    const out = (await plugin(schema, notOperationDocs, {})) as Types.ComplexPluginOutput;
+    expect(out.prepend).not.toBeSimilarStringTo(`function fetcher<TData, TVariables>(`);
+
+    const config = {
+      fetcher: 'graphql-request',
+    };
+
+    const outGraphqlRequest = (await plugin(schema, notOperationDocs, config)) as Types.ComplexPluginOutput;
+    expect(outGraphqlRequest.prepend).not.toContain(`import { GraphQLClient } from 'graphql-request';`);
   });
 });

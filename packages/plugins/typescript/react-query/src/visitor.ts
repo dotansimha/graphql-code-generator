@@ -83,11 +83,14 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     return new CustomMapperFetcher(this, raw);
   }
 
+  public get hasOperations() {
+    return this._collectedOperations.length > 0;
+  }
+
   public getImports(): string[] {
     const baseImports = super.getImports();
-    const hasOperations = this._collectedOperations.length > 0;
 
-    if (!hasOperations) {
+    if (!this.hasOperations) {
       return baseImports;
     }
 
