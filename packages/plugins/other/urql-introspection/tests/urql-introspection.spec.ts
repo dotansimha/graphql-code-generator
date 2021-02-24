@@ -68,9 +68,7 @@ describe('Urql Introspection Plugin', () => {
       const content = await plugin(
         schema,
         [],
-        {
-          apolloClientVersion: 2,
-        },
+        {},
         {
           outputFile: 'foo.json',
         }
@@ -85,9 +83,7 @@ describe('Urql Introspection Plugin', () => {
       const jsContent = await plugin(
         schema,
         [],
-        {
-          apolloClientVersion: 2,
-        },
+        {},
         {
           outputFile: 'foo.js',
         }
@@ -95,9 +91,7 @@ describe('Urql Introspection Plugin', () => {
       const jsxContent = await plugin(
         schema,
         [],
-        {
-          apolloClientVersion: 2,
-        },
+        {},
         {
           outputFile: 'foo.jsx',
         }
