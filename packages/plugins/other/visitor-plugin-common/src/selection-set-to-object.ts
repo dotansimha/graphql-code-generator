@@ -29,7 +29,7 @@ import {
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import {
   LinkField,
@@ -380,7 +380,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          isConditional ? realSelectedFieldType : selectedFieldType
+          isConditional ? removeNonNullWrapper(selectedFieldType) : selectedFieldType
         ),
       });
     }

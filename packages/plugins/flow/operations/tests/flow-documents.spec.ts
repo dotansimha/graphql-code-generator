@@ -1222,6 +1222,7 @@ describe('Flow Operations Plugin', () => {
           id: String!
           name: String!
           address: Address!
+          friends: [User!]!
         }
 
         type Address {
@@ -1236,6 +1237,9 @@ describe('Flow Operations Plugin', () => {
             name @include(if: $showName)
             address @include(if: $showAddress) {
               city
+            }
+            friends @include(if: $isFriendly) {
+              id
             }
           }
         }
@@ -1261,7 +1265,7 @@ describe('Flow Operations Plugin', () => {
       };
       export type UserQuery = { user: ({
             ...$MakeOptional<$Pick<User, { id: *, name: * }>, { name: * }>,
-          ...{ address?: ?$Pick<Address, { city: * }> }
+          ...{ address?: ?$Pick<Address, { city: * }>, friends?: ?Array<$Pick<User, { id: * }>> }
         }) };
       `);
 
@@ -1277,6 +1281,7 @@ describe('Flow Operations Plugin', () => {
           id: String!
           name: String!
           address: Address!
+          friends: [User!]!
         }
         type Address {
           city: String!
@@ -1290,6 +1295,9 @@ describe('Flow Operations Plugin', () => {
             name @include(if: $showName)
             address @include(if: $showAddress) {
               city
+            }
+            friends @include(if: $isFriendly) {
+              id
             }
           }
         }
@@ -1314,7 +1322,7 @@ describe('Flow Operations Plugin', () => {
         showAddress: $ElementType<Scalars, 'Boolean'>,
         showName: $ElementType<Scalars, 'Boolean'>,
       };
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: ?string, address?: ?{ __typename?: 'Address', city: string } } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: ?string, address?: ?{ __typename?: 'Address', city: string }, friends?: ?Array<{ __typename?: 'User', id: string }> } };
       `);
 
       validateFlow(result);
