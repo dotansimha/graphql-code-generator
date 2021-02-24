@@ -27,8 +27,15 @@ export const plugin: PluginFunction<ReactQueryRawPluginConfig, Types.ComplexPlug
   const visitor = new ReactQueryVisitor(schema, allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 
+  if (visitor.hasOperations) {
+    return {
+      prepend: [...visitor.getImports(), visitor.getFetcherImplementation()],
+      content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    };
+  }
+
   return {
-    prepend: [...visitor.getImports(), visitor.getFetcherImplementation()],
+    prepend: [...visitor.getImports()],
     content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
   };
 };
