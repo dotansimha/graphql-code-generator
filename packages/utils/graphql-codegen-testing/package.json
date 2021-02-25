@@ -31,7 +31,7 @@
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.2.3",
-    "nock": "13.0.7",
+    "nock": "13.0.8",
     "open": "^7.3.0",
     "tslib": "~2.1.0"
   },
