@@ -42,10 +42,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
-    if (this.config.documentMode !== DocumentMode.string) {
-      this._additionalImports.push(`import { print } from 'graphql';`);
-    }
-
     if (this.config.rawRequest) {
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
     }
@@ -100,7 +96,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
         const docVarName = this.getDocumentNodeVariable(o.documentVariableName);
-        const doc = this.config.documentMode === DocumentMode.string ? docVarName : `print(${docVarName})`;
 
         if (this.config.rawRequest) {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
@@ -108,7 +103,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables, requestHeaders));
+    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${docVarName}, variables, requestHeaders));
 }`;
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
