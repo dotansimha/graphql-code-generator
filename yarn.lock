@@ -3627,12 +3627,12 @@
     treeverse "^1.0.4"
     walk-up-path "^1.0.0"
 
-"@npmcli/arborist@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.2.4.tgz#f2f5974b35164dedc944f3e3ee15361ebaf8d3d7"
-  integrity sha512-JajrhRKOgHe/s3kC5OKc6j5hKv2C6dDLMXx0lDP3jU70rUyHV0w0bqUTYeJAcu1y+eyA4szj6/PUcIQUsQmCVQ==
+"@npmcli/arborist@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.2.5.tgz#e1bacf20d168a74112a9d7fab56b34cb8099161b"
+  integrity sha512-nLnhRZsUa1kPryyI0N6hLGX6lsQTFDqBJRTNHmZNmjgzP7ZBKiqz8y6ItsouT2CpWhvmoIpnstLyoglIQyo0YQ==
   dependencies:
-    "@npmcli/installed-package-contents" "^1.0.6"
+    "@npmcli/installed-package-contents" "^1.0.7"
     "@npmcli/map-workspaces" "^1.0.2"
     "@npmcli/metavuln-calculator" "^1.1.0"
     "@npmcli/move-file" "^1.1.0"
@@ -3723,7 +3723,7 @@
     read-package-json-fast "^1.1.1"
     readdir-scoped-modules "^1.1.0"
 
-"@npmcli/installed-package-contents@^1.0.6":
+"@npmcli/installed-package-contents@^1.0.6", "@npmcli/installed-package-contents@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@npmcli/installed-package-contents/-/installed-package-contents-1.0.7.tgz#ab7408c6147911b970a8abe261ce512232a3f4fa"
   integrity sha512-9rufe0wnJusCQoLpV9ZPKIVP55itrM5BxOXs10DmdbRfgWtHy1LDyskbwRnBghuB0PrF7pNPOqREVtpz4HqzKw==
@@ -14171,12 +14171,12 @@ npm-user-validate@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz#31428fc5475fe8416023f178c0ab47935ad8c561"
   integrity sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw==
 
-npm@7.5.6:
-  version "7.5.6"
-  resolved "https://registry.yarnpkg.com/npm/-/npm-7.5.6.tgz#b9891691d96130b61e964fe7044b18d6c238f1f3"
-  integrity sha512-l9o94uRgIwRDpz4CSX9BUWL/Igc2jbuyAT7CC25r0lxIy4odsuVbXKFQorxZy/9m3JulVJzq4322kZgo4dXEAg==
+npm@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/npm/-/npm-7.6.0.tgz#c366ffc31d4d85acc72fddf9ad33799183033812"
+  integrity sha512-1Jexc9EoGJEMEdWWLQMs2a7a5nNtD0INmBY4Gzv+RI727VZO05kruXhL8NnHtsvBfVn+eoMmBJKzy1exJRfymQ==
   dependencies:
-    "@npmcli/arborist" "^2.2.4"
+    "@npmcli/arborist" "^2.2.5"
     "@npmcli/ci-detect" "^1.2.0"
     "@npmcli/config" "^1.2.9"
     "@npmcli/run-script" "^1.8.3"
