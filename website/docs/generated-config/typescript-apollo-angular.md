@@ -4,7 +4,7 @@ It will generate a strongly typed Angular service for every defined query, mutat
 
 It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
 
-To shed some more light regards this template, it's recommended to go through the this article: https://apollo-angular.com/docs/1.0/basics/services , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
+To shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
 
 ## Installation
 
@@ -156,6 +156,22 @@ default: `'apollo-angular'`
 
 Allows to define a custom Apollo-Angular package to import types from.
 
+
+### `additionalDI`
+
+type: `string[]`
+default: ``
+
+Add additional dependency injections for generated services
+
+#### Usage Examples
+
+```yml
+config:
+  additionalDI
+     - 'testService: TestService'
+     - 'testService1': TestService1'
+```
 
 ### `noGraphQLTag`
 
@@ -321,20 +337,20 @@ default: `false`
 This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
 
 
+### `experimentalFragmentVariables`
+
+type: `boolean`
+default: `false`
+
+If set to true, it will enable support for parsing variables on fragments.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `namingConvention`
 
@@ -349,35 +365,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep names as is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `typesPrefix`
 

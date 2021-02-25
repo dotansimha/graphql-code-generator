@@ -24,8 +24,6 @@
         },
         "config": {
           "$ref": "#/definitions/Types.PluginConfig",
-          "type": "object",
-          "additionalProperties": true,
           "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/config-field"
         },
         "generates": {
@@ -125,9 +123,28 @@
               }
             },
             {
+              "type": "object",
+              "properties": {
+                "func": {
+                  "type": "string"
+                },
+                "isReactHook": {
+                  "type": "boolean"
+                }
+              }
+            },
+            {
               "type": "string"
             }
           ]
+        },
+        "exposeQueryKeys": {
+          "description": "For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. Example:\nconst query = useUserDetailsQuery(...);\nconst key = useUserDetailsQuery.getKey({id: theUsersId});\n// use key in a cache update after a mutation\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "errorType": {
+          "description": "Changes the default \"TError\" generic type.\nDefault value: \"unknown\"",
+          "type": "string"
         },
         "dedupeOperationSuffix": {
           "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.\nDefault value: \"false\"",
@@ -163,6 +180,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -217,18 +238,8 @@
           "type": "string"
         },
         "content": {
-          "description": "The actual content you wish to add, either a string or array of strings.\nYou can also specify a path to a local file and the content if it will be loaded by codegen.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "string"
-            }
-          ]
+          "$ref": "#/definitions/Types.RequireExtension",
+          "description": "The actual content you wish to add, either a string or array of strings.\r\nYou can also specify a path to a local file and the content if it will be loaded by codegen."
         }
       }
     },
@@ -276,6 +287,10 @@
           "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "futureProofUnions": {
+          "description": "This option controls whether or not a catch-all entry is added to union type definitions for values that may be added in the future.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "enumsAsConst": {
           "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.\nDefault value: \"false\"",
           "type": "boolean"
@@ -294,6 +309,10 @@
         },
         "noExport": {
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "disableDescriptions": {
+          "description": "Set the value to `true` in order to disable all description generation.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "useImplementingTypes": {
@@ -330,6 +349,10 @@
         },
         "wrapFieldDefinitions": {
           "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "ignoreEnumValuesFromSchema": {
+          "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -420,6 +443,10 @@
           "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -454,6 +481,10 @@
         },
         "onlyOperationTypes": {
           "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "ignoreEnumValuesFromSchema": {
+          "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -503,8 +534,12 @@
           "type": "string"
         },
         "listType": {
-          "description": "Allow you to customize the list type\nDefault value: \"IEnumberable\"",
+          "description": "Allow you to customize the list type\nDefault value: \"IEnumerable\"",
           "type": "string"
+        },
+        "emitRecords": {
+          "description": "Emit C# 9.0+ records instead of classes\nDefault value: \"false\"",
+          "type": "boolean"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -559,6 +594,10 @@
         "subscriptionSuffix": {
           "description": "Allows to define a custom suffix for Subscription operations.\nDefault value: \"GQL\"",
           "type": "string"
+        },
+        "typesafeOperation": {
+          "description": "Allows to generate operation methods with class definitions for request/response parameters\nDefault value: \"false\"",
+          "type": "boolean"
         },
         "noGraphQLTag": {
           "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
@@ -622,6 +661,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -713,6 +756,10 @@
           "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "futureProofUnions": {
+          "description": "This option controls whether or not a catch-all entry is added to union type definitions for values that may be added in the future.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "enumsAsConst": {
           "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.\nDefault value: \"false\"",
           "type": "boolean"
@@ -731,6 +778,10 @@
         },
         "noExport": {
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "disableDescriptions": {
+          "description": "Set the value to `true` in order to disable all description generation.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "useImplementingTypes": {
@@ -767,6 +818,10 @@
         },
         "wrapFieldDefinitions": {
           "description": "Set the to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "ignoreEnumValuesFromSchema": {
+          "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -903,6 +958,10 @@
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -934,7 +993,7 @@
       }
     },
     "CompatibilityPluginRawConfig": {
-      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
+      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
       "type": "object",
       "properties": {
         "noNamespaces": {
@@ -1003,7 +1062,7 @@
           "type": "boolean"
         },
         "avoidOptionals": {
-          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\r\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\r\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1037,7 +1096,7 @@
       }
     },
     "TypeScriptResolversPluginConfig": {
-      "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen",
+      "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen",
       "type": "object",
       "properties": {
         "useIndexSignature": {
@@ -1045,11 +1104,11 @@
           "type": "boolean"
         },
         "noSchemaStitching": {
-          "description": "Disables Schema Stitching support.\n\nNote: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.\nDefault value: \"false\"",
+          "description": "Disables Schema Stitching support.\r\n\r\nNote: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "wrapFieldDefinitions": {
-          "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions. Needed for\ncompatibility with `federation: true` when\nDefault value: \"true\"",
+          "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\r\nThis is useful to allow return types such as Promises and functions. Needed for\r\ncompatibility with `federation: true` when\nDefault value: \"true\"",
           "type": "boolean"
         },
         "customResolveInfo": {
@@ -1061,7 +1120,7 @@
           "type": "string"
         },
         "allowParentTypeOverride": {
-          "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\n\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
+          "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\r\n\r\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
           "type": "boolean"
         },
         "optionalInfoArgument": {
@@ -1101,7 +1160,14 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AvoidOptionalsConfig"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
@@ -1225,6 +1291,13 @@
           "description": "Allows to define a custom Apollo-Angular package to import types from.\nDefault value: \"'apollo-angular'\"",
           "type": "string"
         },
+        "additionalDI": {
+          "description": "Add additional dependency injections for generated services\nDefault value: \"\"",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "noGraphQLTag": {
           "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
           "type": "boolean"
@@ -1287,6 +1360,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1332,7 +1409,7 @@
           "type": "boolean"
         },
         "urqlImportFrom": {
-          "description": "You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs\nThis is useful for further abstraction of some common tasks (eg. error handling).\nFilepath relative to generated file can be also specified.\nDefault value: \"urql\"",
+          "description": "You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs\r\nThis is useful for further abstraction of some common tasks (eg. error handling).\r\nFilepath relative to generated file can be also specified.\nDefault value: \"urql\"",
           "type": "string"
         },
         "noGraphQLTag": {
@@ -1397,6 +1474,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1490,6 +1571,12 @@
           "description": "Allows you to enable/disable the generation of docblocks in generated code.\nSome IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your preferred IDE does not.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "defaultBaseOptions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "noGraphQLTag": {
           "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
           "type": "boolean"
@@ -1552,6 +1639,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1668,6 +1759,10 @@
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1699,7 +1794,7 @@
       }
     },
     "StencilApolloRawPluginConfig": {
-      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "componentType": {
@@ -1770,6 +1865,10 @@
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1806,7 +1905,7 @@
       "properties": {
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\r\nYou can either override all namings, or specify an object with specific custom naming convention per output.\r\nThe format of the converter must be a valid `module#method`.\r\nAllowed values for specific output are: `typeNames`, `enumValues`.\r\nYou can also use \"keep\" to keep all GraphQL names as-is.\r\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\r\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
         },
         "namePrefix": {
           "description": "Adds prefix to the name\nDefault value: \"\"",
@@ -1886,6 +1985,10 @@
         },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1971,14 +2074,14 @@
           "type": "string"
         },
         "mappers": {
-          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\r\nThe default value is the values set by `defaultMapper` configuration.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "defaultMapper": {
-          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\r\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
           "type": "string"
         },
         "className": {
@@ -2069,7 +2172,7 @@
       }
     },
     "FlowPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2114,6 +2217,10 @@
         },
         "onlyOperationTypes": {
           "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "ignoreEnumValuesFromSchema": {
+          "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -2183,7 +2290,14 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AvoidOptionalsConfig"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
@@ -2260,7 +2374,7 @@
       }
     },
     "FlowDocumentsPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2303,6 +2417,10 @@
           "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -2337,6 +2455,10 @@
         },
         "onlyOperationTypes": {
           "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "ignoreEnumValuesFromSchema": {
+          "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -2421,6 +2543,17 @@
         }
       }
     },
+    "UrqlIntrospectionConfig": {
+      "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.",
+      "type": "object",
+      "properties": {
+        "module": {
+          "description": "Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.\nDefault value: \"es2015\"",
+          "enum": ["commonjs", "es2015"],
+          "type": "string"
+        }
+      }
+    },
     "ModulesConfig": {
       "type": "object",
       "properties": {
@@ -2462,7 +2595,7 @@
           "type": ["string", "object"]
         },
         "extension": {
-          "description": "Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)\nDefault value: \".generates.ts\"",
+          "description": "Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)\nDefault value: \".generated.ts\"",
           "type": "string"
         },
         "cwd": {
@@ -2509,6 +2642,7 @@
         {
           "type": "array",
           "items": {
+            "description": "A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).",
             "anyOf": [
               {
                 "$ref": "#/definitions/Types.SchemaWithLoader"
@@ -2639,7 +2773,7 @@
           "type": "boolean"
         },
         "experimentalFragmentVariables": {
-          "description": "EXPERIMENTAL:\n\nIf enabled, the parser will understand and parse variable definitions\ncontained in a fragment definition. They'll be represented in the\n`variableDefinitions` field of the FragmentDefinitionNode.\n\nThe syntax is identical to normal, query-defined variables. For example:\n\n   fragment A($var: Boolean = false) on T  {\n     ...\n   }\n\nNote: this feature is experimental and may change or be removed in the\nfuture.\nDefault value: \"false\"",
+          "description": "EXPERIMENTAL:\n\nIf enabled, the parser will understand and parse variable definitions\ncontained in a fragment definition. They'll be represented in the\n`variableDefinitions` field of the FragmentDefinitionNode.\n\nThe syntax is identical to normal, query-defined variables. For example:\n\n  fragment A($var: Boolean = false) on T  {\n    ...\n  }\n\nNote: this feature is experimental and may change or be removed in the\nfuture.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -3350,10 +3484,30 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "urql-introspection"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/UrqlIntrospectionConfig"
+              }
+            }
+          }
         }
       ]
     },
     "__type_1": {
+      "description": "Make all properties in T optional",
       "type": "object",
       "properties": {
         "afterStart": {
@@ -3429,6 +3583,8 @@
       }
     },
     "__type_3": {
+      "description": "All available lifecycle hooks",
+      "additionalProperties": false,
       "type": "object",
       "properties": {
         "afterStart": {
@@ -3469,6 +3625,7 @@
       "$ref": "#/definitions/__type_3"
     },
     "__type_4": {
+      "description": "Construct a type with a set of properties K of type T",
       "type": "object"
     },
     "Record": {
@@ -3512,661 +3669,6 @@
           "type": "boolean"
         }
       }
-    },
-    "FragmentDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["FragmentDefinition"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "variableDefinitions": {
-          "$ref": "#/definitions/ReadonlyArray"
-        },
-        "typeCondition": {
-          "$ref": "#/definitions/NamedTypeNode"
-        },
-        "directives": {
-          "$ref": "#/definitions/ReadonlyArray_3"
-        },
-        "selectionSet": {
-          "$ref": "#/definitions/SelectionSetNode"
-        }
-      }
-    },
-    "Location": {
-      "description": "Contains a range of UTF-8 character offsets and token references that\nidentify the region of the source from which the AST derived.",
-      "type": "object",
-      "properties": {
-        "start": {
-          "description": "The character offset at which this Node begins.",
-          "type": "number"
-        },
-        "end": {
-          "description": "The character offset at which this Node ends.",
-          "type": "number"
-        },
-        "startToken": {
-          "$ref": "#/definitions/Token",
-          "description": "The Token at which this Node begins."
-        },
-        "endToken": {
-          "$ref": "#/definitions/Token",
-          "description": "The Token at which this Node ends."
-        },
-        "source": {
-          "$ref": "#/definitions/Source",
-          "description": "The Source document the AST represents."
-        }
-      }
-    },
-    "Token": {
-      "description": "Represents a range of characters represented by a lexical token\nwithin a Source.",
-      "type": "object",
-      "properties": {
-        "kind": {
-          "$ref": "#/definitions/TokenKindEnum",
-          "description": "The kind of Token."
-        },
-        "start": {
-          "description": "The character offset at which this Node begins.",
-          "type": "number"
-        },
-        "end": {
-          "description": "The character offset at which this Node ends.",
-          "type": "number"
-        },
-        "line": {
-          "description": "The 1-indexed line number on which this Token appears.",
-          "type": "number"
-        },
-        "column": {
-          "description": "The 1-indexed column number at which this Token begins.",
-          "type": "number"
-        },
-        "value": {
-          "description": "For non-punctuation tokens, represents the interpreted value of the token.",
-          "type": "string"
-        },
-        "prev": {
-          "$ref": "#/definitions/Token",
-          "description": "Tokens exist as nodes in a double-linked-list amongst all tokens\nincluding ignored tokens. <SOF> is always the first node and <EOF>\nthe last."
-        },
-        "next": {
-          "$ref": "#/definitions/Token"
-        }
-      }
-    },
-    "TokenKindEnum": {
-      "description": "The enum type representing the token kinds values.",
-      "enum": [
-        "!",
-        "$",
-        "&",
-        "(",
-        ")",
-        "...",
-        ":",
-        "<EOF>",
-        "<SOF>",
-        "=",
-        "@",
-        "BlockString",
-        "Comment",
-        "Float",
-        "Int",
-        "Name",
-        "String",
-        "[",
-        "]",
-        "{",
-        "|",
-        "}"
-      ],
-      "type": "string"
-    },
-    "Source": {
-      "description": "A representation of source input to GraphQL. The `name` and `locationOffset` parameters are\noptional, but they are useful for clients who store GraphQL documents in source files.\nFor example, if the GraphQL input starts at line 40 in a file named `Foo.graphql`, it might\nbe useful for `name` to be `\"Foo.graphql\"` and location to be `{ line: 40, column: 1 }`.\nThe `line` and `column` properties in `locationOffset` are 1-indexed.",
-      "type": "object",
-      "properties": {
-        "body": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "locationOffset": {
-          "$ref": "#/definitions/Location_1"
-        }
-      }
-    },
-    "Location_1": {
-      "type": "object",
-      "properties": {
-        "line": {
-          "type": "number"
-        },
-        "column": {
-          "type": "number"
-        }
-      }
-    },
-    "NameNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["Name"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "string"
-        }
-      }
-    },
-    "ReadonlyArray": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/VariableDefinitionNode"
-      }
-    },
-    "VariableDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["VariableDefinition"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "variable": {
-          "$ref": "#/definitions/VariableNode"
-        },
-        "type": {
-          "$ref": "#/definitions/TypeNode"
-        },
-        "defaultValue": {
-          "$ref": "#/definitions/ValueNode"
-        },
-        "directives": {
-          "$ref": "#/definitions/ReadonlyArray_3"
-        }
-      }
-    },
-    "VariableNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["Variable"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        }
-      }
-    },
-    "TypeNode": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/NamedTypeNode"
-        },
-        {
-          "$ref": "#/definitions/ListTypeNode"
-        },
-        {
-          "$ref": "#/definitions/NonNullTypeNode"
-        }
-      ]
-    },
-    "NamedTypeNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["NamedType"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        }
-      }
-    },
-    "ListTypeNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["ListType"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "type": {
-          "$ref": "#/definitions/TypeNode"
-        }
-      }
-    },
-    "NonNullTypeNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["NonNullType"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "type": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/NamedTypeNode"
-            },
-            {
-              "$ref": "#/definitions/ListTypeNode"
-            }
-          ]
-        }
-      }
-    },
-    "ValueNode": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/VariableNode"
-        },
-        {
-          "$ref": "#/definitions/IntValueNode"
-        },
-        {
-          "$ref": "#/definitions/FloatValueNode"
-        },
-        {
-          "$ref": "#/definitions/StringValueNode"
-        },
-        {
-          "$ref": "#/definitions/BooleanValueNode"
-        },
-        {
-          "$ref": "#/definitions/NullValueNode"
-        },
-        {
-          "$ref": "#/definitions/EnumValueNode"
-        },
-        {
-          "$ref": "#/definitions/ListValueNode"
-        },
-        {
-          "$ref": "#/definitions/ObjectValueNode"
-        }
-      ]
-    },
-    "IntValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["IntValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "string"
-        }
-      }
-    },
-    "FloatValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["FloatValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "string"
-        }
-      }
-    },
-    "StringValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["StringValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "string"
-        },
-        "block": {
-          "type": "boolean"
-        }
-      }
-    },
-    "BooleanValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["BooleanValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "boolean"
-        }
-      }
-    },
-    "NullValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["NullValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        }
-      }
-    },
-    "EnumValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["EnumValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "value": {
-          "type": "string"
-        }
-      }
-    },
-    "ListValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["ListValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "values": {
-          "$ref": "#/definitions/ReadonlyArray_1"
-        }
-      }
-    },
-    "ReadonlyArray_1": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/VariableNode"
-          },
-          {
-            "$ref": "#/definitions/IntValueNode"
-          },
-          {
-            "$ref": "#/definitions/FloatValueNode"
-          },
-          {
-            "$ref": "#/definitions/StringValueNode"
-          },
-          {
-            "$ref": "#/definitions/BooleanValueNode"
-          },
-          {
-            "$ref": "#/definitions/NullValueNode"
-          },
-          {
-            "$ref": "#/definitions/EnumValueNode"
-          },
-          {
-            "$ref": "#/definitions/ListValueNode"
-          },
-          {
-            "$ref": "#/definitions/ObjectValueNode"
-          }
-        ]
-      }
-    },
-    "ObjectValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["ObjectValue"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "fields": {
-          "$ref": "#/definitions/ReadonlyArray_2"
-        }
-      }
-    },
-    "ReadonlyArray_2": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ObjectFieldNode"
-      }
-    },
-    "ObjectFieldNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["ObjectField"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "value": {
-          "$ref": "#/definitions/ValueNode"
-        }
-      }
-    },
-    "ReadonlyArray_3": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/DirectiveNode"
-      }
-    },
-    "DirectiveNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["Directive"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "arguments": {
-          "$ref": "#/definitions/ReadonlyArray_4"
-        }
-      }
-    },
-    "ReadonlyArray_4": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ArgumentNode"
-      }
-    },
-    "ArgumentNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["Argument"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "value": {
-          "$ref": "#/definitions/ValueNode"
-        }
-      }
-    },
-    "SelectionSetNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["SelectionSet"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "selections": {
-          "$ref": "#/definitions/ReadonlyArray_5"
-        }
-      }
-    },
-    "ReadonlyArray_5": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/FieldNode"
-          },
-          {
-            "$ref": "#/definitions/FragmentSpreadNode"
-          },
-          {
-            "$ref": "#/definitions/InlineFragmentNode"
-          }
-        ]
-      }
-    },
-    "FieldNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["Field"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "alias": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "arguments": {
-          "$ref": "#/definitions/ReadonlyArray_4"
-        },
-        "directives": {
-          "$ref": "#/definitions/ReadonlyArray_3"
-        },
-        "selectionSet": {
-          "$ref": "#/definitions/SelectionSetNode"
-        }
-      }
-    },
-    "FragmentSpreadNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["FragmentSpread"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "name": {
-          "$ref": "#/definitions/NameNode"
-        },
-        "directives": {
-          "$ref": "#/definitions/ReadonlyArray_3"
-        }
-      }
-    },
-    "InlineFragmentNode": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["InlineFragment"]
-        },
-        "loc": {
-          "$ref": "#/definitions/Location"
-        },
-        "typeCondition": {
-          "$ref": "#/definitions/NamedTypeNode"
-        },
-        "directives": {
-          "$ref": "#/definitions/ReadonlyArray_3"
-        },
-        "selectionSet": {
-          "$ref": "#/definitions/SelectionSetNode"
-        }
-      }
-    },
-    "__type_5": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "description": "Source path, relative to the `baseOutputDir`",
-          "type": "string"
-        },
-        "namespace": {
-          "description": "Namespace to import source as",
-          "type": "string"
-        },
-        "identifiers": {
-          "description": "Entity names to import",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "kind": {
-                "enum": ["document", "type"],
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "ImportSource": {
-      "$ref": "#/definitions/__type_5"
     },
     "AvoidOptionalsConfig": {
       "type": "object",
@@ -4247,7 +3749,8 @@
       "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
     },
-    "__type_6": {
+    "__type_5": {
+      "description": "Make all properties in T optional",
       "type": "object",
       "properties": {
         "type": {
@@ -4268,7 +3771,7 @@
       }
     },
     "Partial_1": {
-      "$ref": "#/definitions/__type_6"
+      "$ref": "#/definitions/__type_5"
     },
     "Array_1": {
       "type": "array",
@@ -4537,6 +4040,14 @@
             "@graphql-codegen/fragment-matcher": {
               "additionalProperties": false,
               "$ref": "#/definitions/FragmentMatcherConfig"
+            },
+            "urql-introspection": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/UrqlIntrospectionConfig"
+            },
+            "@graphql-codegen/urql-introspection": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/UrqlIntrospectionConfig"
             }
           }
         },
@@ -4649,11 +4160,11 @@
             },
             {
               "const": "typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-mongodb",
@@ -4665,11 +4176,11 @@
             },
             {
               "const": "typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-apollo-angular",
@@ -4705,11 +4216,11 @@
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
@@ -4753,11 +4264,11 @@
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
@@ -4769,11 +4280,11 @@
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",
@@ -4790,6 +4301,14 @@
             {
               "const": "@graphql-codegen/fragment-matcher",
               "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "urql-introspection",
+              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/urql-introspection",
+              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
             }
           ]
         },

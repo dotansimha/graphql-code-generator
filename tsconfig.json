@@ -35,6 +35,7 @@
       "@graphql-codegen/java-resolvers": ["packages/plugins/java/resolvers/src/index.ts"],
       "@graphql-codegen/add": ["packages/plugins/other/add/src/index.ts"],
       "@graphql-codegen/fragment-matcher": ["packages/plugins/other/fragment-matcher/src/index.ts"],
+      "@graphql-codegen/urql-introspection": ["packages/plugins/other/urql-introspection/src/index.ts"],
       "@graphql-codegen/introspection": ["packages/plugins/other/introspection/src/index.ts"],
       "@graphql-codegen/schema-ast": ["packages/plugins/other/schema-ast/src/index.ts"],
       "@graphql-codegen/time": ["packages/plugins/other/time/src/index.ts"],

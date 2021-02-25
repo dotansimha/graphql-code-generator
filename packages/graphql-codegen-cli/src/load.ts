@@ -47,6 +47,7 @@ export async function loadSchema(
       ...defaultSchemaLoadOptions,
       loaders,
       ...config,
+      ...config.config,
     });
     return schema;
   } catch (e) {
@@ -83,6 +84,7 @@ export async function loadDocuments(
     ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
     loaders,
     ...config,
+    ...config.config,
   });
 
   return loadedFromToolkit;

@@ -18,7 +18,7 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
 ### `fetcher`
 
-type: `object | string`
+type: `object | object | string`
 
 Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetcing layer, so you should provide it, or use a custom one.
 
@@ -27,6 +27,25 @@ The following options are available to use:
 - `{ endpoint: string, fetchParams: RequestInit }`: hardcode your endpoint and fetch options into the generated output, using the environment `fetch` method. You can also use `process.env.MY_VAR` as endpoint or header value.
 - `file#identifier` - You can use custom fetcher method that should implement the exported `ReactQueryFetcher` interface. Example: `./my-fetcher#myCustomFetcher`.
 - `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).
+
+
+### `exposeQueryKeys`
+
+type: `boolean`
+default: `false`
+
+For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. Example:
+const query = useUserDetailsQuery(...);
+const key = useUserDetailsQuery.getKey({id: theUsersId});
+// use key in a cache update after a mutation
+
+
+### `errorType`
+
+type: `string`
+default: `unknown`
+
+Changes the default "TError" generic type.
 
 
 ### `dedupeOperationSuffix`
@@ -102,20 +121,20 @@ default: `false`
 This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.
 
 
+### `experimentalFragmentVariables`
+
+type: `boolean`
+default: `false`
+
+If set to true, it will enable support for parsing variables on fragments.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
 
-#### Usage Examples
-
-```yml
-config:
-  scalars:
-    DateTime: Date
-    JSON: "{ [key: string]: any }"
-```
 
 ### `namingConvention`
 
@@ -130,35 +149,6 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
-#### Usage Examples
-
-##### Override All Names
-```yml
-config:
-  namingConvention: lower-case#lowerCase
-```
-
-##### Upper-case enum values
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
-```
-
-##### Keep names as is
-```yml
-config:
-  namingConvention: keep
-```
-
-##### Remove Underscores
-```yml
-config:
-  namingConvention:
-    typeNames: pascal-case#pascalCase
-    transformUnderscore: true
-```
 
 ### `typesPrefix`
 

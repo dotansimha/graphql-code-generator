@@ -31,6 +31,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withResultType: boolean;
   withMutationOptionsType: boolean;
   addDocBlocks: boolean;
+  defaultBaseOptions: { [key: string]: string };
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -72,6 +73,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
+      defaultBaseOptions: getConfigValue(rawConfig.defaultBaseOptions, {}),
       gqlImport: getConfigValue(
         rawConfig.gqlImport,
         rawConfig.reactApolloVersion === 2 ? null : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}#gql`
@@ -136,6 +138,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   private getOmitDeclaration(): string {
     return OMIT_TYPE;
+  }
+
+  private getDefaultOptions(): string {
+    return `const defaultOptions =  ${JSON.stringify(this.config.defaultBaseOptions)}`;
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
@@ -328,15 +334,17 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     this.imports.add(this.getApolloReactCommonImport(true));
     this.imports.add(this.getApolloReactHooksImport(false));
+    this.imports.add(this.getDefaultOptions());
 
     const hookFns = [
       `export function use${operationName}(baseOptions${
         hasRequiredVariables && operationType !== 'Mutation' ? '' : '?'
       }: ${this.getApolloReactHooksIdentifier()}.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+        const options = {...defaultOptions, ...baseOptions}
         return ${this.getApolloReactHooksIdentifier()}.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
         node,
         documentVariableName
-      )}, baseOptions);
+      )}, options);
       }`,
     ];
 
@@ -353,10 +361,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       });
       hookFns.push(
         `export function use${lazyOperationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+          const options = {...defaultOptions, ...baseOptions}
           return ${this.getApolloReactHooksIdentifier()}.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
           node,
           documentVariableName
-        )}, baseOptions);
+        )}, options);
         }`
       );
       hookResults.push(`export type ${lazyOperationName}HookResult = ReturnType<typeof use${lazyOperationName}>;`);

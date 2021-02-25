@@ -2,6 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
@@ -45,9 +46,10 @@ export const HeroTypeDependentAliasedFieldDocument = gql`
 export function useHeroTypeDependentAliasedFieldQuery(
   baseOptions?: Apollo.QueryHookOptions<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
     HeroTypeDependentAliasedFieldDocument,
-    baseOptions
+    options
   );
 }
 export function useHeroTypeDependentAliasedFieldLazyQuery(
@@ -56,9 +58,10 @@ export function useHeroTypeDependentAliasedFieldLazyQuery(
     HeroTypeDependentAliasedFieldQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>(
     HeroTypeDependentAliasedFieldDocument,
-    baseOptions
+    options
   );
 }
 export type HeroTypeDependentAliasedFieldQueryHookResult = ReturnType<typeof useHeroTypeDependentAliasedFieldQuery>;

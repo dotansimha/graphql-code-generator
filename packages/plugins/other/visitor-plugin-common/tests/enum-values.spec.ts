@@ -147,4 +147,55 @@ describe('enumValues', () => {
       },
     });
   });
+
+  const schemaWithNonStringEnumValues = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: {
+        test: {
+          type: new GraphQLEnumType({
+            name: 'Test',
+            values: {
+              A: {
+                value: 1,
+              },
+              B: {
+                value: true,
+              },
+              C: {
+                value: null,
+              },
+              D: {
+                value: undefined,
+              },
+            },
+          }),
+        },
+      },
+    }),
+  });
+
+  it('should respect non-string enum values', () => {
+    const result = parseEnumValues({
+      schema: schemaWithNonStringEnumValues,
+      mapOrStr: {},
+      ignoreEnumValuesFromSchema: false,
+    });
+
+    expect(result).not.toEqual({
+      Test: {
+        isDefault: false,
+        typeIdentifier: 'Test',
+        sourceFile: null,
+        importIdentifier: null,
+        sourceIdentifier: null,
+        mappedValues: {
+          A: '1',
+          B: 'true',
+          C: 'null',
+          D: 'undefined',
+        },
+      },
+    });
+  });
 });

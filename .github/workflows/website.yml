@@ -33,6 +33,9 @@ jobs:
           SINGLE_COMMIT: true
       - name: Index Docs
         uses: darrenjennings/algolia-docsearch-action@master
+        env:
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        if: env.ALGOLIA_API_KEY != null
         with:
           algolia_api_key: ${{ secrets.ALGOLIA_API_KEY }}
           algolia_application_id: ${{ secrets.ALGOLIA_APPLICATION_ID }}

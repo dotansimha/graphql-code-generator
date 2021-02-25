@@ -4,6 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -355,9 +356,10 @@ export function useOnCommentAddedSubscription(
     OnCommentAddedSubscriptionVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useSubscription<OnCommentAddedSubscriptionMyOperation, OnCommentAddedSubscriptionVariables>(
     OnCommentAddedDocument,
-    baseOptions
+    options
   );
 }
 export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
@@ -412,12 +414,14 @@ export const CommentDocument = gql`
  * });
  */
 export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQueryMyOperation, CommentQueryVariables>) {
-  return Apollo.useQuery<CommentQueryMyOperation, CommentQueryVariables>(CommentDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CommentQueryMyOperation, CommentQueryVariables>(CommentDocument, options);
 }
 export function useCommentLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<CommentQueryMyOperation, CommentQueryVariables>
 ) {
-  return Apollo.useLazyQuery<CommentQueryMyOperation, CommentQueryVariables>(CommentDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CommentQueryMyOperation, CommentQueryVariables>(CommentDocument, options);
 }
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
@@ -449,17 +453,19 @@ export const CurrentUserForProfileDocument = gql`
 export function useCurrentUserForProfileQuery(
   baseOptions?: Apollo.QueryHookOptions<CurrentUserForProfileQueryMyOperation, CurrentUserForProfileQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<CurrentUserForProfileQueryMyOperation, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
-    baseOptions
+    options
   );
 }
 export function useCurrentUserForProfileLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<CurrentUserForProfileQueryMyOperation, CurrentUserForProfileQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<CurrentUserForProfileQueryMyOperation, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
-    baseOptions
+    options
   );
 }
 export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
@@ -499,10 +505,12 @@ export const FeedDocument = gql`
  * });
  */
 export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQueryMyOperation, FeedQueryVariables>) {
-  return Apollo.useQuery<FeedQueryMyOperation, FeedQueryVariables>(FeedDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FeedQueryMyOperation, FeedQueryVariables>(FeedDocument, options);
 }
 export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQueryMyOperation, FeedQueryVariables>) {
-  return Apollo.useLazyQuery<FeedQueryMyOperation, FeedQueryVariables>(FeedDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FeedQueryMyOperation, FeedQueryVariables>(FeedDocument, options);
 }
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
@@ -539,9 +547,10 @@ export type SubmitRepositoryMutationFn = Apollo.MutationFunction<
 export function useSubmitRepositoryMutation(
   baseOptions?: Apollo.MutationHookOptions<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>(
     SubmitRepositoryDocument,
-    baseOptions
+    options
   );
 }
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
@@ -584,9 +593,10 @@ export type SubmitCommentMutationFn = Apollo.MutationFunction<
 export function useSubmitCommentMutation(
   baseOptions?: Apollo.MutationHookOptions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>(
     SubmitCommentDocument,
-    baseOptions
+    options
   );
 }
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
@@ -629,7 +639,8 @@ export type VoteMutationFn = Apollo.MutationFunction<VoteMutationMyOperation, Vo
 export function useVoteMutation(
   baseOptions?: Apollo.MutationHookOptions<VoteMutationMyOperation, VoteMutationVariables>
 ) {
-  return Apollo.useMutation<VoteMutationMyOperation, VoteMutationVariables>(VoteDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<VoteMutationMyOperation, VoteMutationVariables>(VoteDocument, options);
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
 export type VoteMutationResult = Apollo.MutationResult<VoteMutationMyOperation>;

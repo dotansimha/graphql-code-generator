@@ -4,6 +4,7 @@ import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDe
 import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
+const defaultOptions = {};
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
@@ -42,17 +43,19 @@ export const HeroDetailsWithFragmentDocument = gql`
 export function useHeroDetailsWithFragmentQuery(
   baseOptions?: Apollo.QueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
-    baseOptions
+    options
   );
 }
 export function useHeroDetailsWithFragmentLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>(
     HeroDetailsWithFragmentDocument,
-    baseOptions
+    options
   );
 }
 export type HeroDetailsWithFragmentQueryHookResult = ReturnType<typeof useHeroDetailsWithFragmentQuery>;

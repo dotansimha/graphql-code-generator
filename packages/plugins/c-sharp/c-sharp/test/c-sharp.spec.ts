@@ -248,7 +248,15 @@ describe('C#', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain('public class User {');
     });
-
+    it('Should generate C# record for type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type User {
+          id: Int
+        }
+      `);
+      const result = await plugin(schema, [], { emitRecords: true }, { outputFile: '' });
+      expect(result).toContain('public record User(int? Id) {');
+    });
     it('Should wrap generated classes in Type class', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type User {

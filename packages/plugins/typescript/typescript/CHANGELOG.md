@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript
 
+## 1.21.0
+
+### Minor Changes
+
+- 34b8087e: Adds futureProofUnion option to account for a possible unknown new type added to union types
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.20.2
 
 ### Patch Changes

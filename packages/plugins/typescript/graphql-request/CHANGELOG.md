@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.0.2
+
+### Patch Changes
+
+- 387d136f: fix(typescript-graphql-request): declare a peer dependency on graphql-request
+- ed8cab50: fix(plugin: graphql-requests): Fix type errors in auto-generated methods
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 3.0.1
 
 ### Patch Changes

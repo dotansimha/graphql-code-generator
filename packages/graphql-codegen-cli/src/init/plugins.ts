@@ -129,6 +129,15 @@ export const plugins: Array<PluginOption> = [
     shouldBeSelected: () => false,
     defaultExtension: '.ts',
   },
+  {
+    name: `Urql Introspection ${italic('(for Urql Client)')}`,
+    package: '@graphql-codegen/urql-introspection',
+    value: 'urql-introspection',
+    pathInRepo: 'other/urql-introspection',
+    available: hasTag(Tags.browser),
+    shouldBeSelected: () => false,
+    defaultExtension: '.ts',
+  },
 ];
 
 function hasTag(tag: Tags) {

@@ -1,5 +1,32 @@
 # @graphql-codegen/c-sharp
 
+## 1.18.0
+
+### Minor Changes
+
+- 9e0f6395: This release adds support to optionally emit c# 9 records instead of classes.
+
+  To enable this, add `emitRecords: true` to your codegen yaml or json configuration file. Example:
+
+  ```yaml
+  schema: './types.graphql'
+  generates:
+    ./src/types.cs:
+      plugins:
+        - c-sharp
+  config:
+    namespaceName: My.Types
+    emitRecords: true
+    scalars:
+      DateTime: DateTime
+  ```
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.17.10
 
 ### Patch Changes

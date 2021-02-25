@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/typescript-urql",
   "version": "2.0.3",
-  "description": "GraphQL Code Generator plugin for generating a ready-to-use React Components/HOC/Hooks based on GraphQL operations with urql",
+  "description": "GraphQL Code Generator plugin for generating an introspection file for Urql's Schema Awareness",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
