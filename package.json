@@ -127,6 +127,6 @@
   },
   "dependencies": {
     "dotenv": "8.2.0",
-    "patch-package": "6.2.2"
+    "patch-package": "6.3.1"
   }
 }
