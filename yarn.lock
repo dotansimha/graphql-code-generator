@@ -14434,6 +14434,14 @@ open@^7.0.2, open@^7.3.0:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
+open@^7.4.2:
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/open/-/open-7.4.2.tgz#b8147e26dcf3e426316c730089fd71edd29c2321"
+  integrity sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==
+  dependencies:
+    is-docker "^2.0.0"
+    is-wsl "^2.1.1"
+
 opencollective-postinstall@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
@@ -14854,10 +14862,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-patch-package@6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.3.1.tgz#aae3840608c2e8a230b6acb7ba80055c40a2bc6d"
-  integrity sha512-k0KunE/OiUf+KhcatbSjKp/VYZTlace7RmAvuX7YnGNknA34a9HLOwrUOnKz9/Vl94WCV8J1vmlzVRcopeyxow==
+patch-package@6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.4.0.tgz#e307742a57ae51e177c63b994f81cf46e43eecc3"
+  integrity sha512-KePc85SXRoN//6T4uSDvWpH05xfyH+VGbtzgeNNsGgallox5l4UKWFHCd26SCfAI9ob9DB7MZqsxMjGMweIY+A==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^2.4.2"
@@ -14867,6 +14875,7 @@ patch-package@6.3.1:
     is-ci "^2.0.0"
     klaw-sync "^6.0.0"
     minimist "^1.2.0"
+    open "^7.4.2"
     rimraf "^2.6.3"
     semver "^5.6.0"
     slash "^2.0.0"
