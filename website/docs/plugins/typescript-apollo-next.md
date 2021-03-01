@@ -329,15 +329,15 @@ which is to preserves underscores.
 ##### Override All Names
 ```yml
 config:
-  namingConvention: lower-case#lowerCase
+  namingConvention: change-case-all#lowerCase
 ```
 
 ##### Upper-case enum values
 ```yml
 config:
   namingConvention:
-    typeNames: pascal-case#pascalCase
-    enumValues: upper-case#upperCase
+    typeNames: change-case-all#pascalCase
+    enumValues: change-case-all#upperCase
 ```
 
 ##### Keep names as is
@@ -350,7 +350,7 @@ config:
 ```yml
 config:
   namingConvention:
-    typeNames: pascal-case#pascalCase
+    typeNames: change-case-all#pascalCase
     transformUnderscore: true
 ```
 

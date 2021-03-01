@@ -354,6 +354,9 @@ You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
 
+Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
+[See more](https://github.com/btxtiger/change-case-all)
+
 
 ### `typesPrefix`
 
