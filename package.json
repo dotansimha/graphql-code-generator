@@ -2,7 +2,7 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
     "build": "tsc --project tsconfig.json && bob build",
@@ -17,11 +17,6 @@
     "release": "changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "workspaces": {
     "packages": [
@@ -88,7 +83,7 @@
     "graphql": "15.5.0",
     "graphql-config": "3.2.0",
     "graphql-tag": "2.11.0",
-    "husky": "4.3.8",
+    "husky": "5.1.2",
     "java-ast": "0.3.0",
     "jest": "26.6.3",
     "jest-docblock": "26.0.0",
