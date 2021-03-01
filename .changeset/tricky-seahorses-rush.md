@@ -24,7 +24,6 @@
 '@graphql-codegen/typescript-vue-apollo': patch
 '@graphql-codegen/graphql-modules-preset': patch
 '@graphql-codegen/plugin-helpers': patch
-'@graphql-codegen/website': patch
 ---
 
 enhance(namingConvention): use change-case-all instead of individual packages for naming convention
