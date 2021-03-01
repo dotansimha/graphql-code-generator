@@ -9,7 +9,7 @@ export function resolveExternalModuleAndFn(pointer: any): any {
   // eslint-disable-next-line prefer-const
   let [moduleName, functionName] = pointer.split('#');
   // Temp workaround until v2
-  if (moduleName === 'change-case-all') {
+  if (moduleName === 'change-case') {
     moduleName = 'change-case-all';
   }
   const { resolve } = importExternally('path');
