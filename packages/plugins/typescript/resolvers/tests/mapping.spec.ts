@@ -178,8 +178,8 @@ describe('ResolversTypes', () => {
         typesPrefix: 'Gql',
         defaultMapper: 'Partial<{T}>',
         namingConvention: {
-          typeNames: 'pascal-case#pascalCase',
-          enumValues: 'upper-case#upperCase',
+          typeNames: 'change-case-all#pascalCase',
+          enumValues: 'change-case-all#upperCase',
         },
         noSchemaStitching: true,
       },

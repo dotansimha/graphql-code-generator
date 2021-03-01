@@ -1,6 +1,6 @@
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, visit } from 'graphql';
-import { capitalCase } from 'change-case';
+import { capitalCase } from 'change-case-all';
 
 export interface NamedOperationsObjectPluginConfig {
   /**

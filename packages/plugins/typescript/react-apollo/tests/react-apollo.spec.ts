@@ -318,7 +318,7 @@ describe('React Apollo', () => {
         withHOC: false,
         skipTypename: true,
         namingConvention: {
-          typeNames: 'pascal-case#pascalCase',
+          typeNames: 'change-case-all#pascalCase',
           enumValues: 'keep',
           transformUnderscore: true,
         },

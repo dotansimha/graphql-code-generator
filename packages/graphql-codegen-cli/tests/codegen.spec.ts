@@ -423,7 +423,7 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'lower-case#lowerCase',
+          namingConvention: 'change-case-all#lowerCase',
         },
         generates: {
           'out1.ts': {
@@ -444,13 +444,13 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             config: {
-              namingConvention: 'lower-case#lowerCase',
+              namingConvention: 'change-case-all#lowerCase',
             },
             plugins: ['typescript', 'typescript-operations'],
           },
           'out2.ts': {
             config: {
-              namingConvention: 'upper-case#upperCase',
+              namingConvention: 'change-case-all#upperCase',
             },
             plugins: ['typescript', 'typescript-operations'],
           },
@@ -471,7 +471,7 @@ describe('Codegen Executor', () => {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'lower-case#lowerCase',
+                  namingConvention: 'change-case-all#lowerCase',
                 },
               },
             ],
@@ -489,14 +489,14 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'lower-case#lowerCase',
+          namingConvention: 'change-case-all#lowerCase',
         },
         generates: {
           'out1.ts': {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'upper-case#upperCase',
+                  namingConvention: 'change-case-all#upperCase',
                 },
               },
             ],
@@ -505,7 +505,7 @@ describe('Codegen Executor', () => {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'pascal-case#pascalCase',
+                  namingConvention: 'change-case-all#pascalCase',
                 },
               },
             ],

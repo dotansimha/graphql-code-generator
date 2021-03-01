@@ -16,7 +16,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^1.18.2",
     "@graphql-codegen/visitor-plugin-common": "^1.17.20",
-    "pascal-case": "^3.1.1",
+    "change-case-all": "^1.0.12",
     "tslib": "~2.1.0"
   },
   "peerDependencies": {

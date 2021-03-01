@@ -144,7 +144,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'camel-case#camelCase' },
+      { namingConvention: 'change-case-all#camelCase' },
       { outputFile: '' }
     ) as Types.ComplexPluginOutput;
 
@@ -171,7 +171,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'pascal-case#pascalCase', transformUnderscore: false } as any,
+      { namingConvention: 'change-case-all#pascalCase', transformUnderscore: false } as any,
       { outputFile: '' }
     ) as Types.ComplexPluginOutput;
 
@@ -200,7 +200,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {
         namingConvention: {
-          typeNames: 'pascal-case#pascalCase',
+          typeNames: 'change-case-all#pascalCase',
           transformUnderscore: true,
         },
       },
@@ -230,7 +230,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'constant-case#constantCase' },
+      { namingConvention: 'change-case-all#constantCase' },
       { outputFile: '' }
     ) as Types.ComplexPluginOutput;
 

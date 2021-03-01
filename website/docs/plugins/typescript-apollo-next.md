@@ -314,7 +314,7 @@ config:
 ### `namingConvention`
 
 type: `NamingConvention`
-default: `pascal-case#pascalCase`
+default: `change-case-all#pascalCase`
 
 Allow you to override the naming convention of the output.
 You can either override all namings, or specify an object with specific custom naming convention per output.

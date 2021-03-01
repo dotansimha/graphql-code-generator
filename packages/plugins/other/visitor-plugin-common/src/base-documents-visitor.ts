@@ -13,7 +13,7 @@ import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
 import { BaseVisitor } from './base-visitor';
 import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
