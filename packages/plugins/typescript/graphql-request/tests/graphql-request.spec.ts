@@ -87,7 +87,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(result.content).toContain(`(print(FeedDocument), variables, requestHeaders));`);
+      expect(result.content).toContain(`(FeedDocument, variables, requestHeaders));`);
       expect(output).toMatchSnapshot();
     });
 
@@ -215,9 +215,9 @@ async function test() {
       const output = await validate(result, config, docs, schema, '');
 
       expect(output).toContain(`import * as Operations from './operations';`);
-      expect(output).toContain(`(print(Operations.FeedDocument), variables, requestHeaders));`);
-      expect(output).toContain(`(print(Operations.Feed2Document), variables, requestHeaders));`);
-      expect(output).toContain(`(print(Operations.Feed3Document), variables, requestHeaders));`);
+      expect(output).toContain(`(Operations.FeedDocument, variables, requestHeaders));`);
+      expect(output).toContain(`(Operations.Feed2Document, variables, requestHeaders));`);
+      expect(output).toContain(`(Operations.Feed3Document, variables, requestHeaders));`);
     });
   });
 });
