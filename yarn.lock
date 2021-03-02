@@ -14834,10 +14834,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-patch-package@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.4.2.tgz#e2a9754122f68bbec9101ffece3b49d981c403a0"
-  integrity sha512-V5NuU4kb13TKI3vJxaV1gKDt3yl7aBBf4ILOX7HeOo0eIMKhBfQYNmTB+GzEUX1HreVF07qz+wbq2QcIhptslQ==
+patch-package@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.4.3.tgz#93cfec05e3a2c94ac026a50a3e461ed8492a65d2"
+  integrity sha512-PtvwyuKGXPAnu9qpDaNEYZJ2vHuxJqoSfJ6ZSH7/MpSVbqO8g+I+9zxdf++Lb1L/I4mna21BmyG14kjZ92l0yQ==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^2.4.2"
