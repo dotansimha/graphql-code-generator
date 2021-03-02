@@ -14,7 +14,7 @@ import { FetchFetcher } from './fetcher-fetch';
 import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
 import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 import { generateQueryKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {

@@ -237,7 +237,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'lower-case#lowerCase', immutableTypes: true };
+      const config = { namingConvention: 'change-case-all#lowerCase', immutableTypes: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -377,7 +377,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'lower-case#lowerCase' };
+      const config = { namingConvention: 'change-case-all#lowerCase' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -421,7 +421,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
 
-      const config = { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' };
+      const config = { typesPrefix: 'i', namingConvention: 'change-case-all#lowerCase' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });

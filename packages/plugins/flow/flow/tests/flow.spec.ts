@@ -367,7 +367,7 @@ describe('Flow Plugin', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase' },
+        { namingConvention: 'change-case-all#lowerCase' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
@@ -402,7 +402,7 @@ describe('Flow Plugin', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' },
+        { namingConvention: 'change-case-all#lowerCase', typesPrefix: 'I' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
@@ -472,7 +472,7 @@ describe('Flow Plugin', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase' },
+        { namingConvention: 'change-case-all#lowerCase' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 

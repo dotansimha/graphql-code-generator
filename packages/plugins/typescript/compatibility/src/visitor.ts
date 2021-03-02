@@ -10,7 +10,7 @@ import {
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 
 export interface CompatibilityPluginConfig extends ParsedConfig {
   reactApollo: any;

@@ -192,7 +192,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -361,7 +361,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -493,7 +493,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -547,7 +547,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -673,7 +673,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -830,7 +830,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -968,7 +968,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1014,7 +1014,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1071,7 +1071,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1219,7 +1219,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1372,7 +1372,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1486,7 +1486,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1651,7 +1651,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1769,7 +1769,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1875,7 +1875,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1905,7 +1905,7 @@
       "properties": {
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\r\nYou can either override all namings, or specify an object with specific custom naming convention per output.\r\nThe format of the converter must be a valid `module#method`.\r\nAllowed values for specific output are: `typeNames`, `enumValues`.\r\nYou can also use \"keep\" to keep all GraphQL names as-is.\r\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\r\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\r\nYou can either override all namings, or specify an object with specific custom naming convention per output.\r\nThe format of the converter must be a valid `module#method`.\r\nAllowed values for specific output are: `typeNames`, `enumValues`.\r\nYou can also use \"keep\" to keep all GraphQL names as-is.\r\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\r\nwhich is to preserves underscores.\r\n\r\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\r\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "namePrefix": {
           "description": "Adds prefix to the name\nDefault value: \"\"",
@@ -2042,7 +2042,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2098,7 +2098,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2147,7 +2147,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2229,7 +2229,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2349,7 +2349,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2467,7 +2467,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",

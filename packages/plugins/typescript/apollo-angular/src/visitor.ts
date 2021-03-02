@@ -9,7 +9,7 @@ import {
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './config';
-import { camelCase } from 'camel-case';
+import { camelCase } from 'change-case-all';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 const R_MOD = /module:\s*"([^"]+)"/; // matches: module: "..."
