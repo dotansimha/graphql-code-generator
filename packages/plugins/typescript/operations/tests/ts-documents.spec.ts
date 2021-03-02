@@ -4875,7 +4875,7 @@ function test(q: GetEntityBrandDataQuery): void {
           id: String!
           name: String!
           address: Address!
-          firends: [User!]!
+          friends: [User!]!
         }
         type Address {
           city: String!
@@ -4890,7 +4890,7 @@ function test(q: GetEntityBrandDataQuery): void {
             address @include(if: $showAddress) {
               city
             }
-            firends @include(if: $isFriendly) {
+            friends @include(if: $isFriendly) {
               id
             }
           }
@@ -4921,7 +4921,7 @@ function test(q: GetEntityBrandDataQuery): void {
           & { address?: Maybe<(
             { __typename?: 'Address' }
             & Pick<Address, 'city'>
-          )>, firends?: Maybe<Array<(
+          )>, friends?: Maybe<Array<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
           )>> }
