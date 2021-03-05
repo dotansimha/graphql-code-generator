@@ -8316,10 +8316,10 @@ depd@^1.1.2, depd@~1.1.2:
   resolved "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
-dependency-graph@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.10.0.tgz#dfebe384f1f36faf7782be203a7a71102a6335a6"
-  integrity sha512-c9amUgpgxSi1bE5/sbLwcs5diLD0ygCQYmhfM5H1s5VH1mCsYkcmAL3CcNdv4kdSw6JuMoHeDGzLgj/gAXdWVg==
+dependency-graph@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.11.0.tgz#ac0ce7ed68a54da22165a85e97a01d53f5eb2e27"
+  integrity sha512-JeMq7fEshyepOWDfcfHK06N3MhyPhz++vtqWhMT5O9A3K42rdsEDpfdVqjaqaAhsw6a+ZqeDvQVtD0hFHQWrzg==
 
 deprecated-decorator@^0.1.6:
   version "0.1.6"
@@ -16360,10 +16360,10 @@ react-router@5.2.0, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-select@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-4.1.0.tgz#7ce06b4e8e79b8f58d09a15d25c705abb1ac4885"
-  integrity sha512-OYn+jL8TXMMaZtosErpkdvoI1UWN4ZqMFulIRp5r5bbuqe4OaZN7yv1BNq7PdAJgRu2E19ODFiV1SgJ6wPUaeA==
+react-select@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-4.2.1.tgz#15c4837dffc1c23e91b7fde606c468cc10000a06"
+  integrity sha512-JwwZjsR10AD5RXmx4iEkN0Ndim/uSaQ8j8cxMwOg8SJFeyXwu/m+sdSQ0ds0AWFm7hhXG9kusC3CQ/s4UNcOIg==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.0.0"
