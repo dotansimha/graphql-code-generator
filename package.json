@@ -98,7 +98,7 @@
     "stencil-apollo": "0.1.6",
     "ts-jest": "26.5.3",
     "tslib": "2.1.0",
-    "typescript": "4.2.2",
+    "typescript": "4.2.3",
     "urql": "2.0.1",
     "vue": "2.6.12"
   },
