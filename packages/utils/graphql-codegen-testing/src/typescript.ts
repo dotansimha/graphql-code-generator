@@ -9,6 +9,8 @@ import {
   flattenDiagnosticMessageText,
   createCompilerHost,
   createProgram,
+  ScriptKind,
+  Diagnostic,
 } from 'typescript';
 import { resolve, join, dirname } from 'path';
 
@@ -39,7 +41,8 @@ export function validateTs(
   },
   isTsx = false,
   isStrict = false,
-  suspenseErrors: string[] = []
+  suspenseErrors: string[] = [],
+  compileProgram = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
@@ -59,50 +62,75 @@ export function validateTs(
       : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
 
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-
-  const host = createCompilerHost(options);
-  const program = createProgram([testFile], options, {
-    ...host,
-    getSourceFile: (
-      fileName: string,
-      languageVersion: ScriptTarget,
-      onError?: (message: string) => void,
-      shouldCreateNewSourceFile?: boolean
-    ) => {
-      if (fileName === testFile) {
-        return createSourceFile(fileName, contents, options.target);
-      }
-
-      return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
-    },
-    writeFile: function () {},
-    useCaseSensitiveFileNames: function () {
-      return false;
-    },
-    getCanonicalFileName: function (filename) {
-      return filename;
-    },
-    getCurrentDirectory: function () {
-      return '';
-    },
-    getNewLine: function () {
-      return '\n';
-    },
-  });
-  const emitResult = program.emit();
-  const allDiagnostics = emitResult.diagnostics;
   const errors: string[] = [];
 
-  allDiagnostics.forEach(diagnostic => {
-    if (diagnostic.file) {
-      const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-      const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      errors.push(`${line + 1},${character + 1}: ${message} ->
+  if (compileProgram) {
+    const host = createCompilerHost(options);
+    const program = createProgram([testFile], options, {
+      ...host,
+      getSourceFile: (
+        fileName: string,
+        languageVersion: ScriptTarget,
+        onError?: (message: string) => void,
+        shouldCreateNewSourceFile?: boolean
+      ) => {
+        if (fileName === testFile) {
+          return createSourceFile(fileName, contents, options.target);
+        }
+
+        return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
+      },
+      writeFile: function () {},
+      useCaseSensitiveFileNames: function () {
+        return false;
+      },
+      getCanonicalFileName: function (filename) {
+        return filename;
+      },
+      getCurrentDirectory: function () {
+        return '';
+      },
+      getNewLine: function () {
+        return '\n';
+      },
+    });
+    const emitResult = program.emit();
+    const allDiagnostics = emitResult.diagnostics;
+
+    allDiagnostics.forEach(diagnostic => {
+      if (diagnostic.file) {
+        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+        const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        errors.push(`${line + 1},${character + 1}: ${message} ->
+    ${contents.split('\n')[line]}`);
+      } else {
+        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+      }
+    });
+  } else {
+    const result = createSourceFile(
+      testFile,
+      contents,
+      ScriptTarget.ES2016,
+      false,
+      isTsx ? ScriptKind.TSX : undefined
+    ) as { parseDiagnostics?: Diagnostic[] };
+
+    const allDiagnostics = result.parseDiagnostics;
+
+    if (allDiagnostics && allDiagnostics.length > 0) {
+      allDiagnostics.forEach(diagnostic => {
+        if (diagnostic.file) {
+          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
-    } else {
-      errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        } else {
+          errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        }
+      });
     }
-  });
+  }
 
   const relevantErrors = errors.filter(e => {
     if (e.includes('Cannot find module')) {
