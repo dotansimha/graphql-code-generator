@@ -26,6 +26,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-react-query',
   },
   {
+    file: '../../plugins/typescript/generic-sdk/src/config.ts',
+    identifier: 'RawGenericSdkPluginConfig',
+    name: 'typescript-generic-sdk',
+  },
+  {
     file: '../../plugins/typescript/apollo-client-helpers/src/config.ts',
     identifier: 'ApolloClientHelpersConfig',
     name: 'typescript-apollo-client-helpers',

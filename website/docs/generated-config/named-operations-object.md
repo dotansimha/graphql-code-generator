@@ -30,3 +30,10 @@ path/to/file.ts:
  config:
    identifierName: ListAllOperations
 ```
+
+### `useConsts`
+
+type: `boolean`
+default: `false`
+
+Will generate a const string instead of regular string.

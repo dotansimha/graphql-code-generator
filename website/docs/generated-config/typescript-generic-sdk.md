@@ -1,43 +1,26 @@
-This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
+This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.
 
 ## Installation
 
 
 
-<img alt="typescript-urql plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-urql?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
+<img alt="typescript-generic-sdk plugin version" src="https://img.shields.io/npm/v/@graphql-codegen/typescript-generic-sdk?color=%23e15799&label=plugin&nbsp;version&style=for-the-badge"/>
 
 
     
 :::shell Using `yarn`
-    yarn add -D @graphql-codegen/typescript-urql
+    yarn add -D @graphql-codegen/typescript-generic-sdk
 :::
 
 ## API Reference
 
-### `withComponent`
-
-type: `boolean`
-default: `false`
-
-Customized the output by enabling/disabling the generated Component.
-
-
-### `withHooks`
-
-type: `boolean`
-default: `true`
-
-Customized the output by enabling/disabling the generated React Hooks.
-
-
-### `urqlImportFrom`
+### `usingObservableFrom`
 
 type: `string`
-default: `urql`
 
-You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
-This is useful for further abstraction of some common tasks (eg. error handling).
-Filepath relative to generated file can be also specified.
+usingObservableFrom: "import Observable from 'zen-observable';"
+OR
+usingObservableFrom: "import { Observable } from 'rxjs';"
 
 
 ### `noGraphQLTag`

@@ -148,6 +148,8 @@ Declares how DocumentNode are created:
 - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
 - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
 
+Note that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.
+
 
 ### `optimizeDocumentNode`
 

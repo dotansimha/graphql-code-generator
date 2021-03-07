@@ -456,6 +456,14 @@ Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers
 If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
 
 
+### `onlyResolveTypeForInterfaces`
+
+type: `boolean`
+default: `false`
+
+Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
