@@ -56,13 +56,12 @@ describe('Vue Apollo', () => {
     output: Types.PluginOutput,
     testSchema: GraphQLSchema,
     documents: Types.DocumentFile[],
-    config: any,
-    playground = false
+    config: any
   ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    validateTs(merged, undefined, true, false, playground);
+    validateTs(merged, undefined, true, false);
 
     return merged;
   };

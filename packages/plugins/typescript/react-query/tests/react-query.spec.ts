@@ -9,13 +9,12 @@ const validateTypeScript = async (
   output: Types.PluginOutput,
   testSchema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: any,
-  playground = false
+  config: any
 ) => {
   const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
   const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
   const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-  validateTs(merged, undefined, true, false, playground);
+  validateTs(merged, undefined, true, false);
 
   return merged;
 };
@@ -118,7 +117,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with internal mapper', async () => {
@@ -155,7 +154,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate mutation correctly with lazy variables', async () => {
@@ -195,7 +194,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
   });
 
@@ -242,7 +241,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
     it('Should support useTypeImports', async () => {
       const config = {
@@ -312,7 +311,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with fetch config', async () => {
@@ -352,7 +351,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with hardcoded endpoint from env var', async () => {
@@ -386,7 +385,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with hardcoded endpoint from just identifier', async () => {
@@ -420,7 +419,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
   });
 
@@ -464,7 +463,7 @@ describe('React-Query', () => {
         );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
   });
 

@@ -32,7 +32,6 @@
     "lz-string": "^1.4.4",
     "graphql-helix": "1.2.3",
     "nock": "13.0.10",
-    "open": "^7.3.0",
     "tslib": "~2.1.0"
   },
   "publishConfig": {
