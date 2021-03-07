@@ -538,7 +538,6 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(mergedOutputs).toContain(
       `something?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QuerySomethingArgs, 'arg'>>;`
     );
-    validate(mergedOutputs);
   });
 
   it('Test for enum usage in resolvers (to verify compatibility with enumValues)', async () => {
