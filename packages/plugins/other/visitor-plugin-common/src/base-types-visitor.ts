@@ -345,7 +345,7 @@ export class BaseTypesVisitor<
     originalNode: ObjectTypeDefinitionNode
   ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
-    const { type } = this._parsedConfig.declarationKind;
+    const { type, interface: interfacesType } = this._parsedConfig.declarationKind;
     const allFields = [
       ...(this.config.addTypename
         ? [
@@ -368,7 +368,9 @@ export class BaseTypesVisitor<
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
-        declarationBlock.withContent('extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+        const keyword = interfacesType === 'interface' && type === 'class' ? 'implements' : 'extends';
+
+        declarationBlock.withContent(`${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
       }
 
       declarationBlock.withBlock(this.mergeAllFields(allFields, false));

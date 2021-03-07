@@ -495,6 +495,37 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#5643 - Incorrect combinations of declartionKinds leads to syntax error', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Base {
+          id: ID!
+        }
+
+        type MyType implements Base {
+          id: ID!
+        }
+
+        type Query {
+          t: MyType!
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          declarationKind: {
+            type: 'class',
+            interface: 'interface',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain(`export class MyType extends Base {`);
+      expect(output).toContain(`export class MyType implements Base {`);
+    });
+
     it('#4564 - numeric enum values set on schema level', async () => {
       const testSchema = new GraphQLSchema({
         types: [
