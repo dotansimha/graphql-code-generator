@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/named-operations-object",
-  "version": "1.17.9",
+  "version": "1.18.0",
   "description": "GraphQL Code Generator plugin for generating an enum with all loaded operations, for simpler and type-safe access",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/plugin-helpers": "^1.18.3",
     "change-case-all": "^1.0.12",
     "tslib": "~2.1.0"
   },

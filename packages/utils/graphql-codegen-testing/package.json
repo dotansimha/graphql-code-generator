@@ -27,7 +27,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/plugin-helpers": "^1.18.3",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.2.3",

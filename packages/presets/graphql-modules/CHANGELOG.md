@@ -1,5 +1,20 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 1.2.2
+
+### Patch Changes
+
+- f7a94f9d: Include enum resolvers
+- 3cba8833: Fixed issue with preset breaking when pattern doesn't match
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.2.1
 
 ### Patch Changes
