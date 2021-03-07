@@ -2,9 +2,15 @@ type User {
   id: ID!
   firstName: String!
   lastName: String!
+  type: UserType!
 }
 
 extend type Query {
   users: [User!]
   userById(id: ID!): User
+}
+
+enum UserType {
+  Regular
+  Admin
 }

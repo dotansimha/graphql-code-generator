@@ -354,6 +354,7 @@ test('should generate an aggregation of individual resolver signatures', () => {
       User?: UserResolvers;
       DateTime?: core.Resolvers['DateTime'];
       URL?: core.Resolvers['URL'];
+      UserKind?: core.Resolvers['UserKind'];
     };
   `);
 });

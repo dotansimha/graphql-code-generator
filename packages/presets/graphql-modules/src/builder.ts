@@ -241,9 +241,7 @@ export function buildModule(
         const types = registry[k];
 
         types.forEach(typeName => {
-          if (k === 'enums') {
-            return;
-          } else if (k === 'scalars') {
+          if (k === 'scalars' || k === 'enums') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);
