@@ -64,7 +64,7 @@
     "glob": "^7.1.6",
     "graphql-config": "^3.2.0",
     "indent-string": "^4.0.0",
-    "inquirer": "^7.3.3",
+    "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
     "latest-version": "5.1.0",
