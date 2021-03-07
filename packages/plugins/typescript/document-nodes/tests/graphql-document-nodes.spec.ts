@@ -1,8 +1,7 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { parse } from 'graphql';
-
 import { plugin } from '../src/index';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('graphql-codegen typescript-graphql-document-nodes', () => {
   it('Should generate simple module with one file', async () => {
@@ -29,7 +28,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate correctly for mutiple files', async () => {
@@ -70,7 +69,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should ignore unnamed documents', async () => {
@@ -91,7 +90,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo('');
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate simple module with two documents in one file', async () => {
@@ -128,7 +127,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with a name as a camel case', async () => {
@@ -155,7 +154,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with a name as a pascal case with underscores', async () => {
@@ -182,7 +181,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with a name as a pascal case without underscores', async () => {
@@ -214,7 +213,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with a name as a contant case', async () => {
@@ -241,7 +240,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with prefix for a name', async () => {
@@ -268,7 +267,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate module with suffix for a name', async () => {
@@ -295,7 +294,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       \`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('Should generate simple module without graphql-tag', async () => {
@@ -318,7 +317,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     expect(result.content).toBeSimilarStringTo(`
     export const MyQuery: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}}]}}]};
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 
   it('should contain fragment definitions', async () => {
@@ -378,6 +377,6 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       }
     \${Fragment1}\`;
     `);
-    validateTs(result.content);
+    validateTs(mergeOutputs([result]));
   });
 });

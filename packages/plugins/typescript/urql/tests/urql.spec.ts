@@ -125,7 +125,7 @@ describe('urql', () => {
               full_name
             }
 
-            query {
+            query test {
               feed {
                 id
               }

@@ -56,13 +56,12 @@ describe('Vue Apollo', () => {
     output: Types.PluginOutput,
     testSchema: GraphQLSchema,
     documents: Types.DocumentFile[],
-    config: any,
-    playground = false
+    config: any
   ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    validateTs(merged, undefined, true, false, playground);
+    validateTs(merged, undefined, true, false);
 
     return merged;
   };
@@ -536,15 +535,11 @@ query MyFeed {
         }
       `);
       const docs = [{ location: '', document: documents }];
+      const config = { dedupeOperationSuffix: true };
 
-      const content = (await plugin(
-        schema,
-        docs,
-        { dedupeOperationSuffix: true },
-        {
-          outputFile: 'graphql.ts',
-        }
-      )) as Types.ComplexPluginOutput;
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
@@ -557,7 +552,7 @@ query MyFeed {
            return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryMutationDocument, options);
         }`
       );
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, config);
     });
 
     it(`Should generate deduped and type omitted compositions functions`, async () => {

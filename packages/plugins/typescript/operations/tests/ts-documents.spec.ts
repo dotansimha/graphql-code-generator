@@ -10,6 +10,10 @@ describe('TypeScript Operations Plugin', () => {
   const schema = buildSchema(/* GraphQL */ `
     scalar DateTime
 
+    input InputType {
+      t: String
+    }
+
     type User {
       id: ID!
       username: String!
@@ -90,10 +94,10 @@ describe('TypeScript Operations Plugin', () => {
     config: any = {},
     pluginSchema = schema,
     usage = '',
-    openPlayground = false
+    suspenseErrors = []
   ) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
-    await validateTs(m, null, null, null, openPlayground);
+    validateTs(m, undefined, undefined, undefined, suspenseErrors);
 
     return m;
   };
@@ -173,7 +177,7 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
     });
 
     it('Should handle "namespacedImportName" and "preResolveTypes" together', async () => {
@@ -215,7 +219,7 @@ describe('TypeScript Operations Plugin', () => {
         `export type TestQuery = { __typename?: 'Query', f?: Types.Maybe<Types.E>, user: { __typename?: 'User', id: string, f?: Types.Maybe<Types.E>, j?: Types.Maybe<any> } };`
       );
 
-      await validate(content, config);
+      await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
     });
 
     it('Should generate the correct output when using immutableTypes config', async () => {
@@ -1850,7 +1854,7 @@ describe('TypeScript Operations Plugin', () => {
         ) }
       );
       `);
-      await validate(content, config);
+      await validate(content, config, schema);
     });
 
     it('Should generate the correct intersection for fragments when using with interfaces with same type', async () => {
@@ -2456,7 +2460,7 @@ describe('TypeScript Operations Plugin', () => {
           innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
-      await validate(content, config);
+      await validate(content, config, schema);
     });
 
     it('Should handle operation variables correctly when they use custom scalars', async () => {
@@ -3919,6 +3923,70 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#4212 - Should merge TS arrays in a more elegant way', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Item {
+          id: ID!
+          name: String!
+        }
+
+        type Object {
+          items: [Item!]!
+        }
+
+        type Query {
+          obj: Object
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        fragment Object1 on Object {
+          items {
+            id
+          }
+        }
+
+        fragment Object2 on Object {
+          items {
+            name
+          }
+        }
+
+        fragment CombinedObject on Object {
+          ...Object1
+          ...Object2
+        }
+
+        query test {
+          obj {
+            ...CombinedObject
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: '', document: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      await validate(
+        content,
+        {},
+        testSchema,
+        `
+          function test (t: TestQuery) {
+            for (const item of t.obj!.items) {
+              console.log(item.id, item.name, item.__typename);
+            }
+          }
+      `
+      );
+    });
+
     it('#5422 - Error when interface doesnt have implemeting types', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface A {

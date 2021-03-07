@@ -55,7 +55,7 @@ describe('graphql-request', () => {
       usage,
     ]);
 
-    await validateTs(m);
+    validateTs(m);
 
     return m;
   };
@@ -165,7 +165,8 @@ async function test() {
 
       const usage = `
 async function test() {
-  const client = new GraphQLClient('');
+  const Client = require('graphql-request').GraphQLClient;
+  const client = new Client('');
   const sdk = getSdk(client);
   
   await sdk.feed();
