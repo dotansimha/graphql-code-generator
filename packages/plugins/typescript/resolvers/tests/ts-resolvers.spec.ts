@@ -136,6 +136,19 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   describe('Config', () => {
+    it('onlyResolveTypeForInterfaces - should allow to have only resolveType for interfaces', async () => {
+      const config = {
+        onlyResolveTypeForInterfaces: true,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+      const content = await validate(result, config, schema);
+
+      expect(content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+      };`);
+    });
+
     it('optionalInfoArgument - should allow to have optional info argument', async () => {
       const config = {
         noSchemaStitching: true,
