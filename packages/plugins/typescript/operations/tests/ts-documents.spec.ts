@@ -4823,6 +4823,8 @@ function test(q: GetEntityBrandDataQuery): void {
           id: String!
           name: String!
           address: Address!
+          friends: [User!]!
+          moreFriends: [User!]!
         }
 
         type Address {
@@ -4837,6 +4839,9 @@ function test(q: GetEntityBrandDataQuery): void {
             name @include(if: $showName)
             address @include(if: $showAddress) {
               city
+            }
+            friends @include(if: $isFriendly) {
+              id
             }
           }
         }
@@ -4858,7 +4863,7 @@ function test(q: GetEntityBrandDataQuery): void {
         showAddress: Scalars['Boolean'];
         showName: Scalars['Boolean'];
       }>;
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: Maybe<string>, address?: Maybe<{ __typename?: 'Address', city: string }> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: Maybe<string>, address?: Maybe<{ __typename?: 'Address', city: string }>, friends?: Maybe<Array<{ __typename?: 'User', id: string }>> } };`);
     });
 
     it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
@@ -4870,6 +4875,7 @@ function test(q: GetEntityBrandDataQuery): void {
           id: String!
           name: String!
           address: Address!
+          friends: [User!]!
         }
         type Address {
           city: String!
@@ -4883,6 +4889,9 @@ function test(q: GetEntityBrandDataQuery): void {
             name @include(if: $showName)
             address @include(if: $showAddress) {
               city
+            }
+            friends @include(if: $isFriendly) {
+              id
             }
           }
         }
@@ -4912,7 +4921,10 @@ function test(q: GetEntityBrandDataQuery): void {
           & { address?: Maybe<(
             { __typename?: 'Address' }
             & Pick<Address, 'city'>
-          )> }
+          )>, friends?: Maybe<Array<(
+            { __typename?: 'User' }
+            & Pick<User, 'id'>
+          )>> }
         ) }
       );`);
     });
