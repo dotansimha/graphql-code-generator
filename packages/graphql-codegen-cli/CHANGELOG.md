@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 1.21.2
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.21.0
 
 ### Minor Changes
