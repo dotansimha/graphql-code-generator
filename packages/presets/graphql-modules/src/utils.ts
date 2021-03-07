@@ -135,27 +135,37 @@ export function buildBlock({ name, lines }: { name: string; lines: string[] }): 
   return [`${name} {`, ...lines.map(indent(2)), '};'].join('\n');
 }
 
+const getRelativePath = function (filepath: string, basePath: string) {
+  const normalizedFilepath = normalize(filepath);
+  const normalizedBasePath = ensureStartsWithSeparator(normalize(ensureEndsWithSeparator(basePath)));
+  const [, relativePath] = normalizedFilepath.split(normalizedBasePath);
+  return relativePath;
+};
+
 export function groupSourcesByModule(sources: Source[], basePath: string): Record<string, Source[]> {
   const grouped: Record<string, Source[]> = {};
 
   sources.forEach(source => {
-    // PERF: we could guess the module by matching source.location with a list of already resolved paths
-    const mod = extractModuleDirectory(source.name, basePath);
+    const relativePath = getRelativePath(source.name, basePath);
 
-    if (!grouped[mod]) {
-      grouped[mod] = [];
+    if (relativePath) {
+      // PERF: we could guess the module by matching source.location with a list of already resolved paths
+      const mod = extractModuleDirectory(source.name, basePath);
+
+      if (!grouped[mod]) {
+        grouped[mod] = [];
+      }
+
+      grouped[mod].push(source);
     }
-
-    grouped[mod].push(source);
   });
 
   return grouped;
 }
 
 function extractModuleDirectory(filepath: string, basePath: string): string {
-  const normalizedFilepath = normalize(filepath);
-  const normalizedBasePath = ensureStartsWithSeparator(normalize(ensureEndsWithSeparator(basePath)));
-  const [, relativePath] = normalizedFilepath.split(normalizedBasePath);
+  const relativePath = getRelativePath(filepath, basePath);
+
   const [moduleDirectory] = relativePath.split(sep);
 
   return moduleDirectory;
