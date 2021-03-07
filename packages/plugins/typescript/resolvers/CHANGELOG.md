@@ -1,5 +1,23 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.19.0
+
+### Minor Changes
+
+- d4942d04: NEW CONFIG (`onlyResolveTypeForInterfaces`): Allow to generate only \_\_resolveType for interfaces
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/typescript@1.21.1
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.18.2
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @graphql-codegen/typescript
 
+## 1.21.1
+
+### Patch Changes
+
+- e947f8e3: Allow to have declarationKind of type: class, interface: interface
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.21.0
 
 ### Minor Changes

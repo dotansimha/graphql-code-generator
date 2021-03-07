@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-operations
 
+## 1.17.15
+
+### Patch Changes
+
+- 1f6f3db6: Fix for @skip @include directives upon arrays
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/typescript@1.21.1
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.17.14
 
 ### Patch Changes
