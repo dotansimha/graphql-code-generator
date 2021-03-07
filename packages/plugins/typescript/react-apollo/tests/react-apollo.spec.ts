@@ -61,7 +61,7 @@ describe('React Apollo', () => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    validateTs(merged, undefined, true, false);
+    validateTs(merged, undefined, true, false, [`Cannot find namespace 'Types'.`]);
 
     return merged;
   };
@@ -605,7 +605,7 @@ describe('React Apollo', () => {
               full_name
             }
 
-            query {
+            query test {
               feed {
                 id
               }
@@ -1023,14 +1023,10 @@ query MyFeed {
   describe('HOC', () => {
     it('should generate HOCs correctly', async () => {
       const docs = [{ location: '', document: basicDoc }];
-      const content = (await plugin(
-        schema,
-        docs,
-        { withHOC: true },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      )) as Types.ComplexPluginOutput;
+      const config = { withHOC: true };
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
         `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
@@ -1049,19 +1045,15 @@ query MyFeed {
           ...operationOptions
         });
     }`);
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, config);
     });
 
     it('should generate HOC props with correct operation result type name', async () => {
       const docs = [{ location: '', document: basicDoc }];
-      const content = (await plugin(
-        schema,
-        docs,
-        { operationResultSuffix: 'Response', withHOC: true },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      )) as Types.ComplexPluginOutput;
+      const config = { operationResultSuffix: 'Response', withHOC: true };
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
         `export type TestProps<TChildProps = {}, TDataName extends string = 'data'> = {
@@ -1069,7 +1061,7 @@ query MyFeed {
         } & TChildProps;`
       );
 
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, config);
     });
 
     it('should not generate HOCs by default', async () => {
@@ -1203,15 +1195,11 @@ export function useSubmitRepositoryMutation(baseOptions?: Apollo.MutationHookOpt
         }
       `);
       const docs = [{ location: '', document: documents }];
+      const config = { withHooks: true, withComponent: false, withHOC: false, dedupeOperationSuffix: true };
 
-      const content = (await plugin(
-        schema,
-        docs,
-        { withHooks: true, withComponent: false, withHOC: false, dedupeOperationSuffix: true },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      )) as Types.ComplexPluginOutput;
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
       export function useFeedQuery(baseOptions?: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
@@ -1224,7 +1212,7 @@ export function useSubmitRepositoryMutation(baseOptions?: Apollo.MutationHookOpt
         const options = {...defaultOptions, ...baseOptions}
       return Apollo.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryMutationDocument, options);
     }`);
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, config);
     });
 
     it('Should not generate hooks for query and mutation', async () => {

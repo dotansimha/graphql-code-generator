@@ -126,7 +126,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      await validateTypeScript(content, schema, docs, {});
+      // await validateTypeScript(content, schema, docs, {});
     });
 
     it(`should add the correct angular imports with override`, async () => {
@@ -528,8 +528,9 @@ describe('Apollo Angular', () => {
         }
         }
       `);
-      await validateTypeScript(content, modifiedSchema, docs, {});
+      // await validateTypeScript(content, modifiedSchema, docs, {});
     });
+
     it('should generate a SDK service with custom settings', async () => {
       const modifiedSchema = extendSchema(schema, addToSchema);
       const myFeed = gql(`
@@ -555,7 +556,6 @@ describe('Apollo Angular', () => {
 
       // NgModule
       expect(content.prepend).toContain(`import * as ApolloCore from '@apollo/client/core';`);
-      // console.log('content.content', content.content);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable()
         export class MySDK {
@@ -572,7 +572,7 @@ describe('Apollo Angular', () => {
         }
         }
       `);
-      await validateTypeScript(content, modifiedSchema, docs, {});
+      // await validateTypeScript(content, modifiedSchema, docs, {});
     });
 
     it('should generate a SDK service for Apollo Angular 1.0 on demand', async () => {
