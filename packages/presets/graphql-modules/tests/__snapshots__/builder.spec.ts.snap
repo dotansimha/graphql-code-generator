@@ -43,7 +43,6 @@ export namespace TestModule {
     User?: UserResolvers;
     DateTime?: core.Resolvers['DateTime'];
     URL?: core.Resolvers['URL'];
-    UserKind?: core.Resolvers['UserKind'];
   };
   
   export interface MiddlewareMap {
@@ -115,7 +114,6 @@ export interface Test_Resolvers {
   User?: Test_UserResolvers;
   DateTime?: Test_core.Resolvers['DateTime'];
   URL?: Test_core.Resolvers['URL'];
-  UserKind?: Test_core.Resolvers['UserKind'];
 };
 
 export interface Test_MiddlewareMap {
