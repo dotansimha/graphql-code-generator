@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript-react-offix
 
+## 1.17.11
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.17.10
 
 ### Patch Changes

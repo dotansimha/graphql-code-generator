@@ -38,7 +38,7 @@ import {
   wrapFieldType,
   getListTypeField,
 } from '../../common/common';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'change-case-all';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;

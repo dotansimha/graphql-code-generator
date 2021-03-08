@@ -7,8 +7,8 @@ import {
 import { StencilComponentType, StencilApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { paramCase } from 'param-case';
-import { pascalCase } from 'pascal-case';
+import { paramCase } from 'change-case-all';
+import { pascalCase } from 'change-case-all';
 
 export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
   componentType: StencilComponentType;

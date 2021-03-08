@@ -1,5 +1,17 @@
 # @graphql-codegen/named-operations-object
 
+## 1.18.0
+
+### Minor Changes
+
+- 65cc0185: Added a new config flat (useConsts) for generating const strings
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.17.9
 
 ### Patch Changes

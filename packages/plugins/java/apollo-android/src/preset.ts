@@ -10,7 +10,7 @@ import {
 } from 'graphql';
 import { join } from 'path';
 import { FileType } from './file-type';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 
 const packageNameToDirectory = (packageName: string): string => {
   return `./${packageName.split('.').join('/')}/`;

@@ -8,7 +8,7 @@ import {
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {}
 

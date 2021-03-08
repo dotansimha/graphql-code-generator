@@ -178,8 +178,8 @@ describe('ResolversTypes', () => {
         typesPrefix: 'Gql',
         defaultMapper: 'Partial<{T}>',
         namingConvention: {
-          typeNames: 'pascal-case#pascalCase',
-          enumValues: 'upper-case#upperCase',
+          typeNames: 'change-case-all#pascalCase',
+          enumValues: 'change-case-all#upperCase',
         },
         noSchemaStitching: true,
       },
@@ -248,7 +248,7 @@ describe('ResolversTypes', () => {
     `;
 
     await validate(
-      [mergeOutputs(result), usage].join('\n\n'),
+      mergeOutputs([usage, result]),
       {
         scalars: {
           ID: 'number',
@@ -422,7 +422,7 @@ describe('ResolversTypes', () => {
       }
     `;
 
-    await validate([mergeOutputs(result), usage].join('\n\n'), config, testSchema);
+    await validate(mergeOutputs([result, usage]), config, testSchema);
   });
 
   it('Should build ResolversTypes with mapper set for concrete type using renamed external identifier', async () => {

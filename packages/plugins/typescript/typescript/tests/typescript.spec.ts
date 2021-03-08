@@ -495,6 +495,37 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#5643 - Incorrect combinations of declartionKinds leads to syntax error', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Base {
+          id: ID!
+        }
+
+        type MyType implements Base {
+          id: ID!
+        }
+
+        type Query {
+          t: MyType!
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          declarationKind: {
+            type: 'class',
+            interface: 'interface',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain(`export class MyType extends Base {`);
+      expect(output).toContain(`export class MyType implements Base {`);
+    });
+
     it('#4564 - numeric enum values set on schema level', async () => {
       const testSchema = new GraphQLSchema({
         types: [
@@ -683,7 +714,7 @@ describe('TypeScript', () => {
         [],
         {
           typesPrefix: 'I',
-          namingConvention: { enumValues: 'constant-case#constantCase' },
+          namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
             MyEnum: './files#default as MyEnum',
           },
@@ -730,7 +761,7 @@ describe('TypeScript', () => {
         [],
         {
           typesPrefix: 'I',
-          namingConvention: { enumValues: 'constant-case#constantCase' },
+          namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
             MyEnum: './files#MyEnum',
           },
@@ -1112,7 +1143,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            typeNames: 'lower-case#lowerCase',
+            typeNames: 'change-case-all#lowerCase',
             enumValues: 'keep',
           },
         },
@@ -1159,7 +1190,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            enumValues: 'lower-case#lowerCase',
+            enumValues: 'change-case-all#lowerCase',
           },
         },
         { outputFile: '' }
@@ -1188,7 +1219,7 @@ describe('TypeScript', () => {
         {
           namingConvention: {
             typeNames: 'keep',
-            enumValues: 'lower-case#lowerCase',
+            enumValues: 'change-case-all#lowerCase',
           },
         },
         { outputFile: '' }
@@ -2117,7 +2148,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase' },
+        { namingConvention: 'change-case-all#lowerCase' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
@@ -2144,7 +2175,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' },
+        { namingConvention: 'change-case-all#lowerCase', typesPrefix: 'I' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
@@ -2238,7 +2269,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { namingConvention: 'lower-case#lowerCase' },
+        { namingConvention: 'change-case-all#lowerCase' },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 

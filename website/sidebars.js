@@ -31,6 +31,7 @@ module.exports = {
           'plugins/typed-document-node',
           'plugins/typescript-apollo-client-helpers',
           'plugins/typescript-graphql-request',
+          'plugins/typescript-generic-sdk',
           'plugins/typescript-react-query',
           'plugins/typescript-react-apollo',
           'plugins/typescript-vue-apollo',

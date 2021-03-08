@@ -68,7 +68,9 @@ const validate = async (
     usage,
   ]);
 
-  await validateTs(m);
+  validateTs(m, {
+    allowSyntheticDefaultImports: true,
+  });
 
   return m;
 };

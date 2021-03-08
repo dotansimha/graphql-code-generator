@@ -33,8 +33,8 @@ import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
 
-import { camelCase } from 'camel-case';
-import { pascalCase } from 'pascal-case';
+import { camelCase } from 'change-case-all';
+import { pascalCase } from 'change-case-all';
 
 export interface ChildField {
   type: GraphQLNamedType;

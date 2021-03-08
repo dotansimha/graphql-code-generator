@@ -456,6 +456,14 @@ Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers
 If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
 
 
+### `onlyResolveTypeForInterfaces`
+
+type: `boolean`
+default: `false`
+
+Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
+
+
 ### `scalars`
 
 type: `ScalarsMap`
@@ -466,7 +474,7 @@ Extends or overrides the built-in scalars and custom GraphQL scalars to a custom
 ### `namingConvention`
 
 type: `NamingConvention`
-default: `pascal-case#pascalCase`
+default: `change-case-all#pascalCase`
 
 Allow you to override the naming convention of the output.
 You can either override all namings, or specify an object with specific custom naming convention per output.
@@ -475,6 +483,9 @@ Allowed values for specific output are: `typeNames`, `enumValues`.
 You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
+
+Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
+[See more](https://github.com/btxtiger/change-case-all)
 
 
 ### `typesPrefix`

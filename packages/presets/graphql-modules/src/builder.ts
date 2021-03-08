@@ -15,7 +15,7 @@ import {
   InterfaceTypeDefinitionNode,
   InterfaceTypeExtensionNode,
 } from 'graphql';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'change-case-all';
 import {
   unique,
   withQuotes,

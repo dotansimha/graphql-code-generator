@@ -71,6 +71,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
+  onlyResolveTypeForInterfaces: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -323,6 +324,12 @@ export interface RawResolversConfig extends RawConfig {
    * If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
    */
   internalResolversPrefix?: string;
+  /**
+   * @type boolean
+   * @default false
+   * @description Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
+   */
+  onlyResolveTypeForInterfaces?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -366,6 +373,7 @@ export class BaseResolversVisitor<
         mapOrStr: rawConfig.enumValues,
       }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+      onlyResolveTypeForInterfaces: getConfigValue(rawConfig.onlyResolveTypeForInterfaces, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       resolverTypeSuffix: getConfigValue(rawConfig.resolverTypeSuffix, 'Resolvers'),
@@ -1206,6 +1214,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
     const parentType = this.getParentTypeToUse((node.name as any) as string);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+    const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1218,7 +1227,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
-          ...(node.fields || []).map((f: any) => f(node.name)),
+          ...fields.map((f: any) => f(node.name)),
         ].join('\n')
       ).string;
   }

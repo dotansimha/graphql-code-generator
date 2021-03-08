@@ -16,7 +16,7 @@ import { getConfigValue, buildScalars } from './utils';
 import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 import { generateFragmentImportStatement } from './imports';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
@@ -110,6 +110,9 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
    * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+   *
+   * Note that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.
+   *
    */
   documentMode?: DocumentMode;
   /**

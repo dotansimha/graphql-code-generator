@@ -17,7 +17,7 @@ This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graph
 ### `namingConvention`
 
 type: `NamingConvention`
-default: `pascal-case#pascalCase`
+default: `change-case-all#pascalCase`
 
 Allow you to override the naming convention of the output.
 You can either override all namings, or specify an object with specific custom naming convention per output.
@@ -26,6 +26,9 @@ Allowed values for specific output are: `typeNames`, `enumValues`.
 You can also use "keep" to keep all GraphQL names as-is.
 Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
 which is to preserves underscores.
+
+Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
+[See more](https://github.com/btxtiger/change-case-all)
 
 
 ### `namePrefix`
@@ -195,6 +198,8 @@ Declares how DocumentNode are created:
 - `documentNode`: document nodes will be generated as objects when we generate the templates.
 - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
 - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+
+Note that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.
 
 
 ### `optimizeDocumentNode`

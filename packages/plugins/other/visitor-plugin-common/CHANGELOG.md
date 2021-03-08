@@ -1,5 +1,20 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.19.0
+
+### Minor Changes
+
+- d4942d04: NEW CONFIG (`onlyResolveTypeForInterfaces`): Allow to generate only \_\_resolveType for interfaces
+
+### Patch Changes
+
+- e947f8e3: Allow to have declarationKind of type: class, interface: interface
+- 29b75b1e: enhance(docs): improve docs for naming convention
+- 1f6f3db6: Fix for @skip @include directives upon arrays
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.18.3
 
 ### Patch Changes

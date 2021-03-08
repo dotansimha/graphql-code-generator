@@ -685,7 +685,7 @@ describe('Compatibility Plugin', () => {
 
   describe('Config', () => {
     it('Should produce valid ts code with naming convention', async () => {
-      const config = { namingConvention: 'lower-case#lowerCase' };
+      const config = { namingConvention: 'change-case-all#lowerCase' };
       const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config);
       const usage = `const myVar: me.__friends = { name: '1' }`;
@@ -733,7 +733,7 @@ describe('Compatibility Plugin', () => {
         withComponent: false,
         noNamespaces: true,
         preResolveTypes: true,
-        namingConvention: { typeNames: 'pascal-case#pascalCase' },
+        namingConvention: { typeNames: 'change-case-all#pascalCase' },
         transformUnderscore: true,
       };
       const ast = [{ location: '', document: basicQuery }];
@@ -751,9 +751,9 @@ describe('Compatibility Plugin', () => {
     });
 
     it('Should produce valid ts code with react-apollo', async () => {
-      const config = {};
+      const config = { withHOC: true, withComponent: true };
       const ast = [{ location: '', document: basicQuery }];
-      const result = await plugin(schema, ast, config, {
+      const result = await plugin(schema, ast, config as any, {
         allPlugins: [
           {
             'typescript-react-apollo': {},
@@ -779,7 +779,7 @@ describe('Compatibility Plugin', () => {
     });
 
     it('Should produce valid ts code with react-apollo and noNamespaces', async () => {
-      const config = { noNamespaces: true, withHooks: true };
+      const config = { noNamespaces: true, withHooks: true, withHOC: true };
       const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config, {
         allPlugins: [
@@ -810,6 +810,8 @@ describe('Compatibility Plugin', () => {
     it('Should produce valid ts code with react-apollo with hooks', async () => {
       const config = {
         withHooks: true,
+        withComponent: true,
+        withHOC: true,
       };
       const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config as any, {
@@ -841,6 +843,7 @@ describe('Compatibility Plugin', () => {
     it('Should not refer to Props and HOC type when withHOC = false', async () => {
       const config = {
         withHOC: false,
+        withComponent: true,
       };
       const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config as any, {

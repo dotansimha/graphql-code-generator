@@ -2,7 +2,7 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
     "build": "tsc --project tsconfig.json && bob build",
@@ -17,11 +17,6 @@
     "release": "changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "workspaces": {
     "packages": [
@@ -45,7 +40,7 @@
   "devDependencies": {
     "@apollo/client": "3.3.11",
     "@babel/preset-typescript": "7.13.0",
-    "@changesets/cli": "2.14.0",
+    "@changesets/cli": "2.14.1",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
     "@graphql-tools/code-file-loader": "6.3.1",
     "@graphql-tools/git-loader": "6.2.6",
@@ -61,10 +56,10 @@
     "@types/glob": "7.1.3",
     "@types/jest": "26.0.20",
     "@types/mkdirp": "1.0.1",
-    "@types/node": "14.14.31",
-    "@types/react": "17.0.2",
-    "@typescript-eslint/eslint-plugin": "4.15.2",
-    "@typescript-eslint/parser": "4.15.2",
+    "@types/node": "14.14.32",
+    "@types/react": "17.0.3",
+    "@typescript-eslint/eslint-plugin": "4.16.1",
+    "@typescript-eslint/parser": "4.16.1",
     "@vue/apollo-composable": "4.0.0-alpha.12",
     "@vue/composition-api": "0.6.7",
     "apollo-cache": "1.3.5",
@@ -73,8 +68,8 @@
     "apollo-server": "2.21.0",
     "apollo-utilities": "1.3.4",
     "auto-bind": "4.0.0",
-    "bob-the-bundler": "1.1.0",
-    "eslint": "7.20.0",
+    "bob-the-bundler": "1.2.0",
+    "eslint": "7.21.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-config-standard": "16.0.2",
     "eslint-plugin-import": "2.22.1",
@@ -82,28 +77,28 @@
     "eslint-plugin-promise": "4.3.1",
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-standard": "5.0.0",
-    "flow-bin": "0.145.0",
-    "flow-parser": "0.145.0",
+    "flow-bin": "0.146.0",
+    "flow-parser": "0.146.0",
     "fs-extra": "9.1.0",
     "graphql": "15.5.0",
     "graphql-config": "3.2.0",
     "graphql-tag": "2.11.0",
-    "husky": "4.3.8",
+    "husky": "5.1.3",
     "java-ast": "0.3.0",
     "jest": "26.6.3",
     "jest-docblock": "26.0.0",
     "jest-junit": "12.0.0",
     "lint-staged": "10.5.4",
     "lodash": "4.17.21",
-    "npm": "7.5.6",
+    "npm": "7.6.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-query": "3.12.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
-    "ts-jest": "26.5.2",
+    "ts-jest": "26.5.3",
     "tslib": "2.1.0",
-    "typescript": "4.2.2",
+    "typescript": "4.2.3",
     "urql": "2.0.1",
     "vue": "2.6.12"
   },
@@ -123,10 +118,10 @@
     "graphql-language-service-interface": "2.8.2",
     "**/apollo-language-server/graphql": "^15.0.0",
     "**/@types/graphql-upload/graphql": "^15.0.0",
-    "@changesets/apply-release-plan": "4.0.0"
+    "@changesets/git": "1.1.0"
   },
   "dependencies": {
     "dotenv": "8.2.0",
-    "patch-package": "6.2.2"
+    "patch-package": "6.4.5"
   }
 }

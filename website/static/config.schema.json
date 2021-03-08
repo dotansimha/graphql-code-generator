@@ -192,7 +192,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -209,6 +209,112 @@
         "nonOptionalTypename": {
           "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
           "type": "boolean"
+        }
+      }
+    },
+    "RawGenericSdkPluginConfig": {
+      "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.",
+      "type": "object",
+      "properties": {
+        "usingObservableFrom": {
+          "description": "usingObservableFrom: \"import Observable from 'zen-observable';\"\nOR\nusingObservableFrom: \"import { Observable } from 'rxjs';\"",
+          "type": "string"
+        },
+        "noGraphQLTag": {
+          "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "gqlImport": {
+          "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.\nDefault value: \"graphql-tag#gql\"",
+          "type": "string"
+        },
+        "documentNodeImport": {
+          "description": "Customize from which module will `DocumentNode` be imported from.\nThis is useful if you want to use modules other than `graphql`, e.g. `@graphql-typed-document-node`.\nDefault value: \"graphql#DocumentNode\"",
+          "type": "string"
+        },
+        "noExport": {
+          "description": "Set this configuration to `true` if you wish to tell codegen to generate code with no `export` identifier.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "dedupeOperationSuffix": {
+          "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "omitOperationSuffix": {
+          "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "operationResultSuffix": {
+          "description": "Adds a suffix to generated operation result type names\nDefault value: \"\"",
+          "type": "string"
+        },
+        "documentVariablePrefix": {
+          "description": "Changes the GraphQL operations variables prefix.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "documentVariableSuffix": {
+          "description": "Changes the GraphQL operations variables suffix.\nDefault value: \"Document\"",
+          "type": "string"
+        },
+        "fragmentVariablePrefix": {
+          "description": "Changes the GraphQL fragments variables prefix.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "fragmentVariableSuffix": {
+          "description": "Changes the GraphQL fragments variables suffix.\nDefault value: \"FragmentDoc\"",
+          "type": "string"
+        },
+        "documentMode": {
+          "$ref": "#/definitions/DocumentMode",
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
+        },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "importOperationTypesFrom": {
+          "description": "This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.\nThis is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "importDocumentNodeExternallyFrom": {
+          "description": "This config should be used if `documentMode` is `external`. This has 2 usage:\n- any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document\n- 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "pureMagicComment": {
+          "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "experimentalFragmentVariables": {
+          "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
+        },
+        "typesPrefix": {
+          "description": "Prefixes all the generated types.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "typesSuffix": {
+          "description": "Suffixes all the generated types.\nDefault value: \"\"",
+          "type": "string"
+        },
+        "skipTypename": {
+          "description": "Does not add __typename to the generated types, unless it was specified in the selection set.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "nonOptionalTypename": {
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "useTypeImports": {
+          "type": "boolean",
+          "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         }
       }
     },
@@ -239,7 +345,7 @@
         },
         "content": {
           "$ref": "#/definitions/Types.RequireExtension",
-          "description": "The actual content you wish to add, either a string or array of strings.\r\nYou can also specify a path to a local file and the content if it will be loaded by codegen."
+          "description": "The actual content you wish to add, either a string or array of strings.\nYou can also specify a path to a local file and the content if it will be loaded by codegen."
         }
       }
     },
@@ -361,7 +467,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -493,7 +599,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -547,7 +653,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -645,7 +751,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -673,7 +779,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -830,7 +936,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -883,6 +989,10 @@
         "identifierName": {
           "description": "Allow you to customize the name of the exported identifier\nDefault value: \"namedOperations\"",
           "type": "string"
+        },
+        "useConsts": {
+          "description": "Will generate a const string instead of regular string.\nDefault value: \"false\"",
+          "type": "boolean"
         }
       }
     },
@@ -940,7 +1050,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -968,7 +1078,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -993,7 +1103,7 @@
       }
     },
     "CompatibilityPluginRawConfig": {
-      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
+      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
       "type": "object",
       "properties": {
         "noNamespaces": {
@@ -1014,7 +1124,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1062,7 +1172,7 @@
           "type": "boolean"
         },
         "avoidOptionals": {
-          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\r\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\r\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "scalars": {
@@ -1071,7 +1181,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1096,7 +1206,7 @@
       }
     },
     "TypeScriptResolversPluginConfig": {
-      "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen",
+      "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen",
       "type": "object",
       "properties": {
         "useIndexSignature": {
@@ -1104,11 +1214,11 @@
           "type": "boolean"
         },
         "noSchemaStitching": {
-          "description": "Disables Schema Stitching support.\r\n\r\nNote: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.\nDefault value: \"false\"",
+          "description": "Disables Schema Stitching support.\n\nNote: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "wrapFieldDefinitions": {
-          "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\r\nThis is useful to allow return types such as Promises and functions. Needed for\r\ncompatibility with `federation: true` when\nDefault value: \"true\"",
+          "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions. Needed for\ncompatibility with `federation: true` when\nDefault value: \"true\"",
           "type": "boolean"
         },
         "customResolveInfo": {
@@ -1120,7 +1230,7 @@
           "type": "string"
         },
         "allowParentTypeOverride": {
-          "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\r\n\r\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
+          "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\n\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
           "type": "boolean"
         },
         "optionalInfoArgument": {
@@ -1213,13 +1323,17 @@
           "type": "string",
           "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
         },
+        "onlyResolveTypeForInterfaces": {
+          "type": "boolean",
+          "description": "Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1344,7 +1458,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -1372,7 +1486,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1409,7 +1523,7 @@
           "type": "boolean"
         },
         "urqlImportFrom": {
-          "description": "You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs\r\nThis is useful for further abstraction of some common tasks (eg. error handling).\r\nFilepath relative to generated file can be also specified.\nDefault value: \"urql\"",
+          "description": "You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs\nThis is useful for further abstraction of some common tasks (eg. error handling).\nFilepath relative to generated file can be also specified.\nDefault value: \"urql\"",
           "type": "string"
         },
         "noGraphQLTag": {
@@ -1458,7 +1572,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -1486,7 +1600,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1623,7 +1737,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -1651,7 +1765,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1741,7 +1855,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -1769,7 +1883,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1794,7 +1908,7 @@
       }
     },
     "StencilApolloRawPluginConfig": {
-      "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "componentType": {
@@ -1847,7 +1961,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -1875,7 +1989,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -1905,7 +2019,7 @@
       "properties": {
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\r\nYou can either override all namings, or specify an object with specific custom naming convention per output.\r\nThe format of the converter must be a valid `module#method`.\r\nAllowed values for specific output are: `typeNames`, `enumValues`.\r\nYou can also use \"keep\" to keep all GraphQL names as-is.\r\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\r\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "namePrefix": {
           "description": "Adds prefix to the name\nDefault value: \"\"",
@@ -1969,7 +2083,7 @@
         },
         "documentMode": {
           "$ref": "#/definitions/DocumentMode",
-          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\nDefault value: \"graphQLTag\""
+          "description": "Declares how DocumentNode are created:\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
           "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
@@ -2042,7 +2156,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2074,14 +2188,14 @@
           "type": "string"
         },
         "mappers": {
-          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\r\nThe default value is the values set by `defaultMapper` configuration.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "defaultMapper": {
-          "description": "Sets the default mapper value in case it's not specified by `mappers`.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\r\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
           "type": "string"
         },
         "className": {
@@ -2098,7 +2212,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2147,7 +2261,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2172,7 +2286,7 @@
       }
     },
     "FlowPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2229,7 +2343,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2343,13 +2457,17 @@
           "type": "string",
           "description": "Defines the prefix value used for `__resolveType` and and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatiblity.\nDefault value: \"'__'\""
         },
+        "onlyResolveTypeForInterfaces": {
+          "type": "boolean",
+          "description": "Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2374,7 +2492,7 @@
       }
     },
     "FlowDocumentsPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2467,7 +2585,7 @@
         },
         "namingConvention": {
           "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\nDefault value: \"pascal-case#pascalCase\""
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserves underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": {
           "description": "Prefixes all the generated types.\nDefault value: \"\"",
@@ -2911,6 +3029,25 @@
             "properties": {
               "config": {
                 "$ref": "#/definitions/ReactQueryRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-generic-sdk"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/RawGenericSdkPluginConfig"
               }
             }
           }
@@ -3670,6 +3807,10 @@
         }
       }
     },
+    "DocumentMode": {
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
+      "type": "string"
+    },
     "AvoidOptionalsConfig": {
       "type": "object",
       "properties": {
@@ -3745,10 +3886,6 @@
       "enum": ["abstract class", "class", "interface", "type"],
       "type": "string"
     },
-    "DocumentMode": {
-      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
-      "type": "string"
-    },
     "__type_5": {
       "description": "Make all properties in T optional",
       "type": "object",
@@ -3800,6 +3937,14 @@
             "@graphql-codegen/typescript-react-query": {
               "additionalProperties": false,
               "$ref": "#/definitions/ReactQueryRawPluginConfig"
+            },
+            "typescript-generic-sdk": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawGenericSdkPluginConfig"
+            },
+            "@graphql-codegen/typescript-generic-sdk": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RawGenericSdkPluginConfig"
             },
             "typescript-apollo-client-helpers": {
               "additionalProperties": false,
@@ -4063,6 +4208,14 @@
               "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
+              "const": "typescript-generic-sdk",
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-generic-sdk",
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
               "const": "typescript-apollo-client-helpers",
               "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
             },
@@ -4160,11 +4313,11 @@
             },
             {
               "const": "typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-mongodb",
@@ -4176,11 +4329,11 @@
             },
             {
               "const": "typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\r\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\r\n\r\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-apollo-angular",
@@ -4216,11 +4369,11 @@
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
@@ -4264,11 +4417,11 @@
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
@@ -4280,11 +4433,11 @@
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",
