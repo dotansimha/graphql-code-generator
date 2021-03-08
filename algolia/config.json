@@ -1,6 +1,8 @@
 {
   "index_name": "theguild",
   "start_urls": [
+    "https://graphql-code-generator.com/",
+    "https://graphql-code-generator.com/docs/getting-started/index",
     "https://graphql-mesh.com/docs/",
     "https://graphql-mesh.com/docs/getting-started/introduction",
     "https://www.graphql-tools.com/docs/",
@@ -19,7 +21,8 @@
     "https://graphql-inspector.com/sitemap.xml",
     "https://graphql-modules.com/sitemap.xml",
     "https://graphql-cli.com/sitemap.xml",
-    "https://the-guild.dev/sitemap.xml"
+    "https://the-guild.dev/sitemap.xml",
+    "https://graphql-code-generator.com/sitemap.xml"
   ],
   "sitemap_alternate_links": true,
   "stop_urls": [],
