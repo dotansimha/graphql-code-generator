@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 1.2.3
+
+### Patch Changes
+
+- 7615c6cd: Revery enum-resolvers since it's causing issues
+
 ## 1.2.2
 
 ### Patch Changes
