@@ -93,7 +93,7 @@
     "npm": "7.6.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-query": "3.12.0",
+    "react-query": "3.12.1",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
     "ts-jest": "26.5.3",
