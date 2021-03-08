@@ -1,0 +1,38 @@
+diff --git a/node_modules/@docusaurus/theme-search-algolia/src/theme/SearchBar/index.js b/node_modules/@docusaurus/theme-search-algolia/src/theme/SearchBar/index.js
+index c3d6f55..dd496a4 100644
+--- a/node_modules/@docusaurus/theme-search-algolia/src/theme/SearchBar/index.js
++++ b/node_modules/@docusaurus/theme-search-algolia/src/theme/SearchBar/index.js
+@@ -5,16 +5,16 @@
+  * LICENSE file in the root directory of this source tree.
+  */
+ 
+-import React, {useState, useRef, useCallback, useMemo} from 'react';
+-import {createPortal} from 'react-dom';
+-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+-import {useHistory} from '@docusaurus/router';
+-import {useBaseUrlUtils} from '@docusaurus/useBaseUrl';
+-import Link from '@docusaurus/Link';
++import { DocSearchButton, useDocSearchKeyboardEvents } from '@docsearch/react';
+ import Head from '@docusaurus/Head';
+-import useSearchQuery from '@theme/hooks/useSearchQuery';
+-import {DocSearchButton, useDocSearchKeyboardEvents} from '@docsearch/react';
++import Link from '@docusaurus/Link';
++import { useHistory } from '@docusaurus/router';
++import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
++import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+ import useAlgoliaContextualFacetFilters from '@theme/hooks/useAlgoliaContextualFacetFilters';
++import useSearchQuery from '@theme/hooks/useSearchQuery';
++import React, { useCallback, useMemo, useRef, useState } from 'react';
++import { createPortal } from 'react-dom';
+ 
+ let DocSearchModal = null;
+ 
+@@ -93,7 +93,7 @@ function DocSearch({contextualSearch, ...props}) {
+ 
+   const navigator = useRef({
+     navigate({itemUrl}) {
+-      history.push(itemUrl);
++      window.location.assign(itemUrl);
+     },
+   }).current;
+ 
