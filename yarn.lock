@@ -3607,10 +3607,10 @@
     treeverse "^1.0.4"
     walk-up-path "^1.0.0"
 
-"@npmcli/arborist@^2.2.7":
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.2.7.tgz#05feb1da148da7d5aeda84c25b7282ef87e2830c"
-  integrity sha512-NulX/tVu45PIXO4DSNpVQkLrN94OjzAUxgLQ7Vsdb1macSmklJwQF0+4jBgC2riMpdWJP+IiFsxg1k9T9RoRRg==
+"@npmcli/arborist@^2.2.8":
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.2.8.tgz#914252e23ebc25316d7b6565a8050f00d739c461"
+  integrity sha512-Wct6W0oXYqc0SU3ad2zr3xIZ0+mOcBRO/hO4JpuYalKIwha+X6es8pj7iexZKLU7ichBSdkEqo+3dqeJg1+qVQ==
   dependencies:
     "@npmcli/installed-package-contents" "^1.0.7"
     "@npmcli/map-workspaces" "^1.0.2"
@@ -14013,12 +14013,12 @@ npm-user-validate@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz#31428fc5475fe8416023f178c0ab47935ad8c561"
   integrity sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw==
 
-npm@7.6.2:
-  version "7.6.2"
-  resolved "https://registry.yarnpkg.com/npm/-/npm-7.6.2.tgz#c3501b6d8e351e2ae6c149734271525fff07d079"
-  integrity sha512-XXlLw6+HNG5GXt/T+xOAK8QXQ3x3VhIOBmWtiTw6yavFeTelleN2uAf8zG7HwSv9pBxLA4FHx7vGmlMKxAkqDQ==
+npm@7.6.3:
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/npm/-/npm-7.6.3.tgz#29c048b8522fc846af1b66fbb8ce7f356584b121"
+  integrity sha512-+Cs8TEtkfdQGTIPw8AeqVtNNHyo1Zw8HATzAFFWYnK7jQYgT/CatEy85+BlEoEpqvga2uaKqVrXsTAYj28emjg==
   dependencies:
-    "@npmcli/arborist" "^2.2.7"
+    "@npmcli/arborist" "^2.2.8"
     "@npmcli/ci-detect" "^1.2.0"
     "@npmcli/config" "^1.2.9"
     "@npmcli/run-script" "^1.8.3"
