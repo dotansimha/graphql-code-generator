@@ -14,13 +14,13 @@ import {
   DeclarationBlockConfig,
   indent,
   getBaseTypeNode,
-  buildScalars,
   getConfigValue,
   getRootTypeNames,
   stripMapperTypeInterpolation,
   OMIT_TYPE,
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
+  buildScalarsFromConfig,
 } from './utils';
 import {
   NameNode,
@@ -385,7 +385,7 @@ export class BaseResolversVisitor<
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
-      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
       ...(additionalConfig || {}),
     } as TPluginConfig);
