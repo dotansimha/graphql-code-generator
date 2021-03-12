@@ -266,13 +266,13 @@ export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType: string | undefined = 'any'
+  defaultScalarType = 'any'
 ): ParsedScalarsMap {
   return buildScalars(
     schema,
     config.scalars,
     defaultScalarsMapping,
-    config.strictScalars ? undefined : config.defaultScalarType || defaultScalarType
+    config.strictScalars ? null : config.defaultScalarType || defaultScalarType
   );
 }
 
@@ -280,7 +280,7 @@ export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType: string | undefined = 'any'
+  defaultScalarType: string | null = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -308,7 +308,7 @@ export function buildScalars(
             type: JSON.stringify(scalarsMapping[name]),
           };
         } else if (!defaultScalarsMapping[name]) {
-          if (defaultScalarType === undefined) {
+          if (defaultScalarType === null) {
             throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
           }
           result[name] = {
