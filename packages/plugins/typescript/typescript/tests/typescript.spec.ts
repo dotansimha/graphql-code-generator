@@ -1797,7 +1797,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should correctly throw an error when an unknown scalar is detected while using `strictScalars`', async () => {
+    it('Should correctly throw an error when an unknown scalar is detected while using `strictScalars`', () => {
       const schema = buildSchema(`
       scalar MyScalar
 
