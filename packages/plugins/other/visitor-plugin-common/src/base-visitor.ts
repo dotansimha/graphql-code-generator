@@ -49,7 +49,6 @@ export interface RawConfig {
   strictScalars?: boolean;
   /**
    * @description Allows you to override the type that unknown scalars will have.
-   *
    * @default any
    *
    * @exampleMarkdown
