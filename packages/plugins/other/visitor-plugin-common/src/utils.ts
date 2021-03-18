@@ -403,7 +403,9 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
+export function hasConditionalDirectives(directives: readonly DirectiveNode[] | null | undefined): boolean {
+  if (!directives) return false;
+
   if (directives.length === 0) return false;
 
   for (const directive of directives) {
