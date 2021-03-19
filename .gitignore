@@ -20,5 +20,4 @@ out.txt
 .cache
 tsconfig.tsbuildinfo
 .yarn
-.yarnrc
 recompile.sh
