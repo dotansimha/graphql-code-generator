@@ -1,0 +1,21 @@
+{
+  "name": "graphql-codegen",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/graphql-codegen-bin"
+  },
+  "scripts": {
+    "build": "pkg src/index.js"
+  },
+  "dependencies": {
+    "@graphql-codegen/cli": "1.21.3",
+    "graphql": "15.5.0"
+  },
+  "devDependencies": {
+    "pkg": "4.5.0"
+  }
+}
