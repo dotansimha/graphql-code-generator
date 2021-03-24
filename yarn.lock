@@ -3804,10 +3804,10 @@
     valid-url "1.0.9"
     websocket "1.0.32"
 
-"@graphql-tools/utils@7.6.0":
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.6.0.tgz#ac570a2b5a9bcd5d6446995f58ba22609e01ca7d"
-  integrity sha512-YCZDDdhfb4Yhie0IH031eGdvQG8C73apDuNg6lqBNbauNw45OG/b8wi3+vuMiDnJTJN32GQUb1Gt9gxDKoRDKw==
+"@graphql-tools/utils@7.7.0":
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.7.0.tgz#71e575320720775c183009ed13f818b2952c7fbf"
+  integrity sha512-gOfUzSkjUXG5c2xSAay9rdKEK5qxXn9pUcQuf25fXErWmUVJhtyB+gkwt+4h9p2EqBpwDyfhqhvzmSHcXLloJw==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.2"
