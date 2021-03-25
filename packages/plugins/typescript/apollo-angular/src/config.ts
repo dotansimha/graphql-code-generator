@@ -22,6 +22,17 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    */
   apolloAngularVersion?: number;
   /**
+   * @description Add generic types to gql and graphql tags
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   inlineTypes: true
+   * ```
+   */
+  inlineTypes?: boolean;
+  /**
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
    * @exampleMarkdown

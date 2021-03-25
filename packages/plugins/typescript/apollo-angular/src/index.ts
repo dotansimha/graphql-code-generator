@@ -28,6 +28,8 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 
+  visitor.inlineTypes();
+
   return {
     prepend: visitor.getImports(),
     content: [

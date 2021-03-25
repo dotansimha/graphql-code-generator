@@ -7,7 +7,8 @@ import {
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
+import * as ts from 'typescript';
+import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind, NameNode } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './config';
 import { camelCase } from 'change-case-all';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -21,6 +22,7 @@ function R_DEF(directive: string) {
 
 export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   apolloAngularVersion: number;
+  inlineTypes?: boolean;
   ngModule?: string;
   namedClient?: string;
   serviceName?: string;
@@ -49,6 +51,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }[] = [];
   private dependencyInjections = '';
   private dependencyInjectionArgs = '';
+  private typesToInline = new Map<string, [string, string]>();
 
   constructor(
     schema: GraphQLSchema,
@@ -74,6 +77,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         additionalDI: getConfigValue(rawConfig.additionalDI, []),
         apolloAngularPackage: getConfigValue(rawConfig.apolloAngularPackage, 'apollo-angular'),
         apolloAngularVersion: getConfigValue(rawConfig.apolloAngularVersion, 2),
+        inlineTypes: rawConfig.inlineTypes,
         gqlImport: getConfigValue(
           rawConfig.gqlImport,
           !rawConfig.apolloAngularVersion || rawConfig.apolloAngularVersion === 2 ? `apollo-angular#gql` : null
@@ -290,6 +294,12 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
 
+    this.requestInline({
+      operationName: node.name,
+      result: operationResultType,
+      variables: operationVariablesTypes,
+    });
+
     const content = `
   @Injectable({
     providedIn: ${this._providedIn(node)}
@@ -390,5 +400,54 @@ ${injections}
     ) {}
   ${allPossibleActions.join('\n')}
   }`;
+  }
+
+  inlineTypes() {
+    if (this.typesToInline.size) {
+      const program = ts.createProgram({
+        rootNames: [],
+        options: {},
+      });
+      const operationFileMap = new Map<string, Types.DocumentFile>();
+      this._documents.forEach(doc => {
+        // we only want to inline types in typescript files
+        if (doc.document && doc.location && doc.location.toLowerCase().endsWith('.ts')) {
+          const op = doc.document.definitions.find(
+            def => def.kind === 'OperationDefinition' && def.name
+          ) as OperationDefinitionNode;
+          if (op) {
+            operationFileMap.set(op.name.value, doc);
+          }
+        }
+      });
+
+      this.typesToInline.forEach(([result, variables], operationName) => {
+        if (operationFileMap.has(operationName)) {
+          const source = operationFileMap.get(operationName);
+          // transform
+
+          const sourceFile = program.getSourceFile(source.location!);
+
+          program.emit(sourceFile, (fileName, data) => {});
+        }
+      });
+    }
+  }
+
+  private requestInline({
+    operationName,
+    result,
+    variables,
+  }: {
+    operationName: NameNode | string;
+    result: string;
+    variables: string;
+  }) {
+    if (this.config.inlineTypes) {
+      this.typesToInline.set(typeof operationName === 'string' ? operationName : operationName.value, [
+        result,
+        variables,
+      ]);
+    }
   }
 }
