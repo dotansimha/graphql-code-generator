@@ -41,6 +41,10 @@
   text-align: center;
 }
 
+.homeContainer {
+  position: relative;
+}
+
 .homeContainer .projectTitle small {
   text-align: center;
   margin-left: auto;
