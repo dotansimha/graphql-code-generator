@@ -2038,7 +2038,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { entireWrapFieldDefinitions: true },
+        { wrapEntireFieldDefinitions: true },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
