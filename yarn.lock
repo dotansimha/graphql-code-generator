@@ -14715,10 +14715,10 @@ npm-user-validate@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz#31428fc5475fe8416023f178c0ab47935ad8c561"
   integrity sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw==
 
-npm@7.7.4:
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/npm/-/npm-7.7.4.tgz#479fa9612e33ace8be712377c787c5e36c1decb8"
-  integrity sha512-+gUjp4hbUnN7S1z2S3uDTnac94uRiztzFkMLNimHsB4KpuvhO+xjg30ARoptq7UYqF6KTXA4L8XLDMuriyB9Fg==
+npm@7.7.5:
+  version "7.7.5"
+  resolved "https://registry.yarnpkg.com/npm/-/npm-7.7.5.tgz#84570a5dc1b32d4f2365d17b1e01053f9c14778e"
+  integrity sha512-Og1lKsev2CLw8fYzGQ3190FEXzgIGys9Cpm+kgl3SEWx+EhQL4ecyOO1VHGPZo06fdVPp3/CtPjPHro1u2n2rQ==
   dependencies:
     "@npmcli/arborist" "^2.2.9"
     "@npmcli/ci-detect" "^1.2.0"
