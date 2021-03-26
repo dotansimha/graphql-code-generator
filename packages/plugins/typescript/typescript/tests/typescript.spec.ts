@@ -2025,6 +2025,40 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build list type correctly when wrapping entire field definitions', async () => {
+      const schema = buildSchema(`
+        type ListOfStrings {
+          foo: [String!]!
+        }
+
+        type ListOfMaybeStrings {
+          foo: [String]!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { entireWrapFieldDefinitions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfStrings = {
+          __typename?: 'ListOfStrings';
+          foo: EntireFieldWrapper<Array<Scalars['String']>>;
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfMaybeStrings = {
+          __typename?: 'ListOfMaybeStrings';
+          foo: EntireFieldWrapper<Array<Maybe<Scalars['String']>>>;
+        };
+      `);
+
+      validateTs(result);
+    });
+
     it('Should not wrap input type fields', async () => {
       const schema = buildSchema(`
         input MyInput {
