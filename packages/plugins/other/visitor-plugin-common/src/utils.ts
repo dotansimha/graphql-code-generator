@@ -403,17 +403,9 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(directives: readonly DirectiveNode[] | null | undefined): boolean {
-  if (!directives) return false;
-
-  if (directives.length === 0) return false;
-
-  for (const directive of directives) {
-    if (['skip', 'include'].includes(directive.name.value)) {
-      return true;
-    }
-  }
-  return false;
+export function hasConditionalDirectives(field: FieldNode): boolean {
+  const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
+  return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {
