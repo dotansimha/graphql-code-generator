@@ -20,7 +20,6 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
-  DirectiveNode,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
