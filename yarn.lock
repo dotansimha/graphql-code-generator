@@ -13210,10 +13210,10 @@ libnpmteam@^2.0.2:
     aproba "^2.0.0"
     npm-registry-fetch "^9.0.0"
 
-libnpmversion@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/libnpmversion/-/libnpmversion-1.0.12.tgz#1d4bbf6ca7937a582fdec173d284b17c930b18d8"
-  integrity sha512-Z5L2+JXUHC4xH9VkN/3BiVflnMag2bH1Ijy8ISKFw8fBQv9IXNSQgZbzwtfo4VBg0y+ieaKYbzpfbgjfUr31mw==
+libnpmversion@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/libnpmversion/-/libnpmversion-1.1.0.tgz#699412e7083bc3d229d461c611e9f5eb3fc06a44"
+  integrity sha512-ktMHbbGpVVwmvSNQ+dG5fXgC2rB81i1hA94SaR5OCqPQ01Kuipshq6OLo8maD3xK+ulUCIfHxcAi/JYL8J9SWg==
   dependencies:
     "@npmcli/git" "^2.0.6"
     "@npmcli/run-script" "^1.8.3"
@@ -14715,10 +14715,10 @@ npm-user-validate@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz#31428fc5475fe8416023f178c0ab47935ad8c561"
   integrity sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw==
 
-npm@7.7.5:
-  version "7.7.5"
-  resolved "https://registry.yarnpkg.com/npm/-/npm-7.7.5.tgz#84570a5dc1b32d4f2365d17b1e01053f9c14778e"
-  integrity sha512-Og1lKsev2CLw8fYzGQ3190FEXzgIGys9Cpm+kgl3SEWx+EhQL4ecyOO1VHGPZo06fdVPp3/CtPjPHro1u2n2rQ==
+npm@7.7.6:
+  version "7.7.6"
+  resolved "https://registry.yarnpkg.com/npm/-/npm-7.7.6.tgz#8cd025b76498809cdea4bf1bfff9b049115cc6a9"
+  integrity sha512-4dOo2M/SRzRNWH1e0tmcJMFkDjHJKsJQlxpi3OgJ/N/BsIvbdQFFMioG0vmuFVAev7P2f/rShApb18jk5RpdXA==
   dependencies:
     "@npmcli/arborist" "^2.2.9"
     "@npmcli/ci-detect" "^1.2.0"
@@ -14752,7 +14752,7 @@ npm@7.7.5:
     libnpmpublish "^4.0.0"
     libnpmsearch "^3.1.0"
     libnpmteam "^2.0.2"
-    libnpmversion "^1.0.12"
+    libnpmversion "^1.1.0"
     make-fetch-happen "^8.0.14"
     minipass "^3.1.3"
     minipass-pipeline "^1.2.4"
