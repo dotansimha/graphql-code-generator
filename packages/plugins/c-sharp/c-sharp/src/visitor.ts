@@ -334,7 +334,7 @@ ${classMembers}
 
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
 
-        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} ${getterSetter}`);
+        return fieldHeader + indent(`${csharpFieldType} ${fieldName} ${getterSetter}`);
       })
       .join('\n\n');
 
