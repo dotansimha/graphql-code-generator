@@ -16,7 +16,7 @@
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
     "file-loader": "6.2.0",
-    "monaco": "^1.201704190613.0",
+    "monaco": "1.201704190613.0",
     "monaco-editor-webpack-plugin": "3.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -62,12 +62,13 @@
     "@graphql-codegen/typescript-type-graphql": "1.18.3",
     "@graphql-codegen/typescript-urql": "2.0.5",
     "@graphql-codegen/typescript-vue-apollo": "2.3.3",
+    "@monaco-editor/react": "4.1.0",
     "js-yaml": "4.0.0",
+    "monaco-editor": "0.23.0",
     "monaco-yaml": "2.5.1",
     "react-markdown": "5.0.3",
-    "react-monaco-editor": "0.43.0",
     "react-select": "4.3.0",
-    "the-guild-components": "^1.0.6"
+    "the-guild-components": "1.0.6"
   },
   "browserslist": {
     "production": [

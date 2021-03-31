@@ -12,7 +12,7 @@ import { Header } from 'the-guild-components';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import { Button } from '../components/ui/Button';
-// import { LiveDemo } from '../components/live-demo/LiveDemo';
+import { LiveDemo } from '../components/live-demo/LiveDemo';
 
 const features = [
   {
@@ -149,7 +149,7 @@ function Home() {
         <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
           <a id="live-demo" />
 
-          {/* <LiveDemo /> */}
+          <LiveDemo />
         </div>
         <main>
           {features && features.length && (
