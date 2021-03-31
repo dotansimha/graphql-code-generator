@@ -8,10 +8,11 @@ import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import { Header } from 'the-guild-components';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import { Button } from '../components/ui/Button';
-import { LiveDemo } from '../components/live-demo/LiveDemo';
+// import { LiveDemo } from '../components/live-demo/LiveDemo';
 
 const features = [
   {
@@ -122,40 +123,48 @@ function ProjectTitle() {
 
 function Home() {
   return (
-    <Layout title={`GraphQL Code Generator`} description="">
-      <header>
-        <SplashContainer>
-          <div className={styles.inner}>
-            <ProjectTitle />
-            <div className={styles.buttonsWrapper}>
-              <Button mobileHide={true}>
-                <Link to={'#live-demo'}>Try It Out Live</Link>
-              </Button>
-              <Button>
-                <Link to={`/docs/getting-started/index`}>View Docs</Link>
-              </Button>
-            </div>
-          </div>
-        </SplashContainer>
-      </header>
-      <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
-        <a id="live-demo" />
-        <LiveDemo />
-      </div>
-      <main>
-        {features && features.length && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
+    <>
+      <Header
+        linkUrl="https://the-guild.dev"
+        navbarBackgroundColor="var(--ifm-navbar-background-color)"
+        navbarLinkColor="var(--ifm-navbar-link-color)"
+      />
+      <Layout title={`GraphQL Code Generator`} description="">
+        <header>
+          <SplashContainer>
+            <div className={styles.inner}>
+              <ProjectTitle />
+              <div className={styles.buttonsWrapper}>
+                <Button mobileHide={true}>
+                  <Link to={'#live-demo'}>Try It Out Live</Link>
+                </Button>
+                <Button>
+                  <Link to={`/docs/getting-started/index`}>View Docs</Link>
+                </Button>
               </div>
             </div>
-          </section>
-        )}
-      </main>
-    </Layout>
+          </SplashContainer>
+        </header>
+        <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
+          <a id="live-demo" />
+
+          {/* <LiveDemo /> */}
+        </div>
+        <main>
+          {features && features.length && (
+            <section className={styles.features}>
+              <div className="container">
+                <div className="row">
+                  {features.map((props, idx) => (
+                    <Feature key={idx} {...props} />
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+        </main>
+      </Layout>
+    </>
   );
 }
 

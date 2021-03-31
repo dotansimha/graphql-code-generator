@@ -80,7 +80,6 @@ module.exports = {
   },
   scripts: [
     '/js/fix-location.js',
-    'https://the-guild.dev/static/banner.js'
   ],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [

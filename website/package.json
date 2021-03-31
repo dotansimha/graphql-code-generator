@@ -10,26 +10,24 @@
     "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
-    "worker-loader": "3.0.8",
-    "file-loader": "6.2.0",
-    "style-loader": "2.0.0",
-    "monaco-editor-webpack-plugin": "1.9.1",
     "@docusaurus/core": "2.0.0-alpha.ffe8b6106",
     "@docusaurus/preset-classic": "2.0.0-alpha.ffe8b6106",
     "@graphql-codegen/config-schema": "1.17.9",
     "babel-preset-minify": "0.5.1",
     "classnames": "2.2.6",
+    "file-loader": "6.2.0",
+    "monaco": "^1.201704190613.0",
+    "monaco-editor-webpack-plugin": "3.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "remark-code-import": "0.2.0",
     "remark-import-partial": "0.0.2",
+    "style-loader": "2.0.0",
     "ts-node": "9.1.1",
-    "vscode-languageserver-types": "3.16.0"
+    "vscode-languageserver-types": "3.16.0",
+    "worker-loader": "3.0.8"
   },
   "dependencies": {
-    "react-markdown": "5.0.3",
-    "monaco-yaml": "2.5.1",
-    "react-select": "4.3.0",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/c-sharp": "1.18.2",
     "@graphql-codegen/c-sharp-operations": "1.18.2",
@@ -47,9 +45,10 @@
     "@graphql-codegen/near-operation-file-preset": "1.17.13",
     "@graphql-codegen/schema-ast": "1.18.1",
     "@graphql-codegen/time": "2.0.2",
-    "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typed-document-node": "1.18.4",
+    "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typescript-apollo-angular": "2.3.2",
+    "@graphql-codegen/typescript-apollo-client-helpers": "1.1.4",
     "@graphql-codegen/typescript-compatibility": "2.0.3",
     "@graphql-codegen/typescript-generic-sdk": "1.17.9",
     "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
@@ -63,9 +62,12 @@
     "@graphql-codegen/typescript-type-graphql": "1.18.3",
     "@graphql-codegen/typescript-urql": "2.0.5",
     "@graphql-codegen/typescript-vue-apollo": "2.3.3",
-    "@graphql-codegen/typescript-apollo-client-helpers": "1.1.4",
+    "js-yaml": "4.0.0",
+    "monaco-yaml": "2.5.1",
+    "react-markdown": "5.0.3",
     "react-monaco-editor": "0.43.0",
-    "js-yaml": "4.0.0"
+    "react-select": "4.3.0",
+    "the-guild-components": "^1.0.5"
   },
   "browserslist": {
     "production": [
