@@ -16334,10 +16334,10 @@ text-table@0.2.0, text-table@^0.2.0, text-table@~0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.5.tgz#f61c34896b5f979396cd4bb3bffa953baa216cd1"
-  integrity sha512-7gGnFad0B3YR2fq6W/hDw4/bfNALIW4Hm7TNIktr8dZ+s9cz+SruiSAoMbw0lN/E0wY7JfHNB3lBVaP34U6wug==
+the-guild-components@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.6.tgz#7f6b1c70ea107650175e1bd342e85d9e8dd27e28"
+  integrity sha512-+ZQtrAuwIoKiIovvpROM5MZie+ApSuGo2AwZ5YEqu3IcCwgn/GihLp1dsIPVDGnxcf8xXjr2lwCWTpNPCoDfIg==
   dependencies:
     core-js "^3.8.3"
     tailwindcss "^2.0.3"

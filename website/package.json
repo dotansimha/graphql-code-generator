@@ -67,7 +67,7 @@
     "react-markdown": "5.0.3",
     "react-monaco-editor": "0.43.0",
     "react-select": "4.3.0",
-    "the-guild-components": "^1.0.5"
+    "the-guild-components": "^1.0.6"
   },
   "browserslist": {
     "production": [
