@@ -344,8 +344,18 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/definitions/Types.RequireExtension",
-          "description": "The actual content you wish to add, either a string or array of strings.\nYou can also specify a path to a local file and the content if it will be loaded by codegen."
+          "description": "The actual content you wish to add, either a string or array of strings.\nYou can also specify a path to a local file and the content if it will be loaded by codegen.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1649,19 +1659,19 @@
           "type": "boolean"
         },
         "apolloReactCommonImportFrom": {
-          "description": "Customize the package where apollo-react common lib is loaded from.\nDefault value: \"\"\"",
+          "description": "Customize the package where apollo-react common lib is loaded from.\nDefault value: \"@apollo/react-common\"",
           "type": "string"
         },
         "apolloReactComponentsImportFrom": {
-          "description": "Customize the package where apollo-react component lib is loaded from.\nDefault value: \"\"\"",
+          "description": "Customize the package where apollo-react component lib is loaded from.\nDefault value: \"@apollo/react-components\"",
           "type": "string"
         },
         "apolloReactHocImportFrom": {
-          "description": "Customize the package where apollo-react HOC lib is loaded from.\nDefault value: \"\"\"",
+          "description": "Customize the package where apollo-react HOC lib is loaded from.\nDefault value: \"@apollo/react-hoc\"",
           "type": "string"
         },
         "apolloReactHooksImportFrom": {
-          "description": "Customize the package where apollo-react hooks lib is loaded from.\nDefault value: \"\"\"",
+          "description": "Customize the package where apollo-react hooks lib is loaded from.\nDefault value: \"@apollo/react-hooks\"",
           "type": "string"
         },
         "componentSuffix": {
@@ -3644,7 +3654,6 @@
       ]
     },
     "__type_1": {
-      "description": "Make all properties in T optional",
       "type": "object",
       "properties": {
         "afterStart": {
@@ -3762,7 +3771,6 @@
       "$ref": "#/definitions/__type_3"
     },
     "__type_4": {
-      "description": "Construct a type with a set of properties K of type T",
       "type": "object"
     },
     "Record": {
@@ -3887,7 +3895,6 @@
       "type": "string"
     },
     "__type_5": {
-      "description": "Make all properties in T optional",
       "type": "object",
       "properties": {
         "type": {
