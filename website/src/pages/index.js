@@ -1,4 +1,5 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import { Header } from 'the-guild-components';
 
 if (ExecutionEnvironment.canUseDOM) {
   process.hrtime = () => null;
@@ -122,40 +123,48 @@ function ProjectTitle() {
 
 function Home() {
   return (
-    <Layout title={`GraphQL Code Generator`} description="">
-      <header>
-        <SplashContainer>
-          <div className={styles.inner}>
-            <ProjectTitle />
-            <div className={styles.buttonsWrapper}>
-              <Button mobileHide={true}>
-                <Link to={'#live-demo'}>Try It Out Live</Link>
-              </Button>
-              <Button>
-                <Link to={`/docs/getting-started/index`}>View Docs</Link>
-              </Button>
-            </div>
-          </div>
-        </SplashContainer>
-      </header>
-      <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
-        <a id="live-demo" />
-        <LiveDemo />
-      </div>
-      <main>
-        {features && features.length && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
+    <>
+      <Header
+        linkUrl="https://the-guild.dev"
+        navbarBackgroundColor="var(--ifm-navbar-background-color)"
+        navbarLinkColor="var(--ifm-navbar-link-color)"
+        navbarLinkHoverColor="var(--ifm-link-hover-color)"
+      />
+      <Layout title={`GraphQL Code Generator`} description="">
+        <header>
+          <SplashContainer>
+            <div className={styles.inner}>
+              <ProjectTitle />
+              <div className={styles.buttonsWrapper}>
+                <Button mobileHide={true}>
+                  <Link to={'#live-demo'}>Try It Out Live</Link>
+                </Button>
+                <Button>
+                  <Link to={`/docs/getting-started/index`}>View Docs</Link>
+                </Button>
               </div>
             </div>
-          </section>
-        )}
-      </main>
-    </Layout>
+          </SplashContainer>
+        </header>
+        <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
+          <a id="live-demo" />
+          <LiveDemo />
+        </div>
+        <main>
+          {features && features.length && (
+            <section className={styles.features}>
+              <div className="container">
+                <div className="row">
+                  {features.map((props, idx) => (
+                    <Feature key={idx} {...props} />
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+        </main>
+      </Layout>
+    </>
   );
 }
 

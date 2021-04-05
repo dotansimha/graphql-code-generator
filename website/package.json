@@ -27,6 +27,7 @@
     "vscode-languageserver-types": "3.16.0"
   },
   "dependencies": {
+    "the-guild-components": "1.0.6",
     "react-markdown": "5.0.3",
     "monaco-yaml": "2.5.1",
     "react-select": "4.3.0",
