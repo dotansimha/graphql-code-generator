@@ -41,7 +41,7 @@
     "@graphql-codegen/plugin-helpers": "^1.18.2",
     "@graphql-tools/merge": "^6",
     "@graphql-tools/utils": "^7.0.0",
-    "tslib": "~2.1.0"
+    "tslib": "~2.2.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
