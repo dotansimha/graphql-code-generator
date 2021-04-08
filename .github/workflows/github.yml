@@ -1,21 +1,18 @@
-name: github
-
-on: push
-
+name: Sync labels
+on:
+  push:
+    branches:
+      - github-labels-1
+    paths:
+      - .github/labels.yml
 jobs:
-  labeler:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Run Labeler
-        if: success()
-        uses: crazy-max/ghaction-github-labeler@v3
+      - uses: actions/checkout@v2
+      - uses: micnncim/action-label-syncer@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          yaml-file: .github/labels.yml
-          skip-delete: true
-          dry-run: false
-          exclude: |
-            help*
-            *issue
+          manifest: .github/labels.yml
+          prune: false
