@@ -40,7 +40,7 @@
   "devDependencies": {
     "@apollo/client": "3.3.14",
     "@babel/preset-typescript": "7.13.0",
-    "@changesets/cli": "2.15.0",
+    "@changesets/cli": "2.16.0",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
     "@graphql-tools/code-file-loader": "6.3.1",
     "@graphql-tools/git-loader": "6.2.6",
