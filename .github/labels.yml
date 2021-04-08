@@ -8,7 +8,7 @@
 
 - name: 'kind/bug'
   color: '0052cc'
-  description: 'More information is needed for reproduction.'
+  description: 'Bug :-('
   from_name: 'bug'
 
 - name: 'kind/enhancement'
