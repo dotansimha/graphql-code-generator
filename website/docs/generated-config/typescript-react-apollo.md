@@ -119,7 +119,7 @@ path/to/file.ts:
 ### `apolloReactCommonImportFrom`
 
 type: `string`
-default: `"`
+default: `@apollo/react-common`
 
 Customize the package where apollo-react common lib is loaded from.
 
@@ -127,7 +127,7 @@ Customize the package where apollo-react common lib is loaded from.
 ### `apolloReactComponentsImportFrom`
 
 type: `string`
-default: `"`
+default: `@apollo/react-components`
 
 Customize the package where apollo-react component lib is loaded from.
 
@@ -135,7 +135,7 @@ Customize the package where apollo-react component lib is loaded from.
 ### `apolloReactHocImportFrom`
 
 type: `string`
-default: `"`
+default: `@apollo/react-hoc`
 
 Customize the package where apollo-react HOC lib is loaded from.
 
@@ -143,7 +143,7 @@ Customize the package where apollo-react HOC lib is loaded from.
 ### `apolloReactHooksImportFrom`
 
 type: `string`
-default: `"`
+default: `@apollo/react-hooks`
 
 Customize the package where apollo-react hooks lib is loaded from.
 

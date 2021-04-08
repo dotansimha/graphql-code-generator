@@ -34,10 +34,15 @@
 .cover {
   width: 100%;
   max-width: 512px;
+  margin-top: 25px;
 }
 
 .coverContainer {
   text-align: center;
+}
+
+.homeContainer {
+  position: relative;
 }
 
 .homeContainer .projectTitle small {

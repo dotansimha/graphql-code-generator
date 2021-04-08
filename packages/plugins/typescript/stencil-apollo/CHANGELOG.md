@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-stencil-apollo
 
+## 1.18.3
+
+### Patch Changes
+
+- 23862e7e: fix(naming-convention): revert and pin change-case-all dependency for workaround #3256
+- Updated dependencies [23862e7e]
+  - @graphql-codegen/visitor-plugin-common@1.19.1
+  - @graphql-codegen/plugin-helpers@1.18.4
+
 ## 1.18.2
 
 ### Patch Changes

@@ -1,10 +1,10 @@
 export function resolveExternalModuleAndFn(pointer: any): any {
-  // eslint-disable-next-line no-eval
-  const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
-
   if (typeof pointer === 'function') {
     return pointer;
   }
+
+  // eslint-disable-next-line no-eval
+  const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
 
   // eslint-disable-next-line prefer-const
   let [moduleName, functionName] = pointer.split('#');
