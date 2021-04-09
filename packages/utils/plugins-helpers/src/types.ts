@@ -19,6 +19,7 @@ export namespace Types {
   export type FileOutput = {
     filename: string;
     content: string;
+    noEmit?: boolean;
     hooks?: {
       beforeOneFileWrite?: LifecycleHooksDefinition['beforeOneFileWrite'];
       afterOneFileWrite?: LifecycleHooksDefinition['afterOneFileWrite'];

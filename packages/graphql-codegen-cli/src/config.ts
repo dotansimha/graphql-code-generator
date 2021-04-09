@@ -1,5 +1,5 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { resolve } from 'path';
+import { resolve, isAbsolute } from 'path';
 import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
@@ -8,6 +8,8 @@ import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
+import { Source } from '@graphql-tools/utils';
+import { cwd } from 'process';
 
 export type YamlCliFlags = {
   config: string;
@@ -17,6 +19,7 @@ export type YamlCliFlags = {
   project: string;
   silent: boolean;
   errorsOnly: boolean;
+  experimentalCache: boolean;
 };
 
 function generateSearchPlaces(moduleName: string) {
@@ -171,6 +174,10 @@ export function buildOptions() {
       describe: 'Name of a project in GraphQL Config',
       type: 'string' as const,
     },
+    experimentalCache: {
+      describe: 'Use experimental cache for watch mode',
+      type: 'boolean' as const,
+    },
   };
 }
 
@@ -190,12 +197,16 @@ export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.a
 }
 
 export function updateContextWithCliFlags(context: CodegenContext, cliFlags: YamlCliFlags) {
-  const config: Partial<Types.Config & { configFilePath?: string }> = {
+  const config: Partial<Types.Config & { configFilePath?: string; experimentalCache?: boolean }> = {
     configFilePath: context.filepath,
   };
 
   if (cliFlags.watch) {
     config.watch = cliFlags.watch;
+  }
+
+  if (cliFlags.experimentalCache) {
+    config.experimentalCache = true;
   }
 
   if (cliFlags.overwrite === true) {
@@ -217,12 +228,97 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
   context.updateConfig(config);
 }
 
+function isPromiseLike<T>(value: Promise<T> | T): value is Promise<T> {
+  return typeof (value as any).then === 'function';
+}
+
+class Cache {
+  isEnabled: () => boolean = () => false;
+  private invalidated: string[] = [];
+  private sources = new Map<string, Source>();
+  private dependencies = new Map<string, string[]>();
+
+  cacheSource(fn: (pointer: string, options: any) => Source, pointer: string, options: any): Source;
+  cacheSource(fn: (pointer: string, options: any) => Promise<Source>, pointer: string, options: any): Promise<Source>;
+  cacheSource(fn: (pointer: string, options: any) => Promise<Source> | Source, pointer: string, options: any) {
+    if (!this.isEnabled()) {
+      return fn(pointer, options);
+    }
+
+    const absolutePointer = ensureAbsolutePath(pointer, options);
+
+    if (this.sources.has(absolutePointer)) {
+      return this.sources.get(absolutePointer)!;
+    }
+
+    const result = fn(pointer, options);
+
+    if (isPromiseLike(result)) {
+      return result.then(source => {
+        this.sources.set(absolutePointer, source);
+        return source;
+      });
+    }
+
+    this.sources.set(absolutePointer, result);
+
+    return result;
+  }
+
+  invalidate(filepaths: string[]) {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    this.invalidated = filepaths.map(filepath => {
+      const absoluteFilepath = ensureAbsolutePath(filepath, {});
+      this.sources.delete(absoluteFilepath);
+
+      return absoluteFilepath;
+    });
+  }
+
+  shouldGenerate(filepath: string): boolean {
+    if (!this.isEnabled()) {
+      return true;
+    }
+
+    // TODO: if new file - generate everything
+    if (this.dependencies.has(filepath)) {
+      if (this.invalidated.length) {
+        const regenerate = this.dependencies.get(filepath).some(f => this.invalidated.includes(f));
+
+        if (regenerate) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  setDependencies(filepath: string, deps: string[]) {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    this.dependencies.set(
+      filepath,
+      deps.map(dep => ensureAbsolutePath(dep, {}))
+    );
+  }
+}
+
 export class CodegenContext {
   private _config: Types.Config;
   private _graphqlConfig?: GraphQLConfig;
   private config: Types.Config;
   private _project?: string;
   private _pluginContext: { [key: string]: any } = {};
+  private cache = new Cache();
+
   cwd: string;
   filepath: string;
 
@@ -239,6 +335,7 @@ export class CodegenContext {
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
     this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.cache.isEnabled = () => (this.config as any).experimentalCache === true;
   }
 
   useProject(name?: string) {
@@ -264,6 +361,9 @@ export class CodegenContext {
     return {
       ...extraConfig,
       ...this.config,
+      includeSources: true,
+      cacheable: this.cacheable.bind(this),
+      cacheableSync: this.cacheableSync.bind(this),
     };
   }
 
@@ -298,8 +398,37 @@ export class CodegenContext {
 
     return loadDocuments(pointer, config);
   }
+
+  invalidate(filepaths: string[]): void {
+    this.cache.invalidate(filepaths);
+  }
+
+  shouldGenerate(filepath: string) {
+    return this.cache.shouldGenerate(filepath);
+  }
+
+  setDependencies(filepath: string, deps: string[]) {
+    return this.cache.setDependencies(filepath, deps);
+  }
+
+  private cacheable(fn: (pointer: string, options: any) => Promise<Source>, pointer: string, options: any) {
+    return this.cache.cacheSource(fn, pointer, options);
+  }
+
+  private cacheableSync(fn: (pointer: string, options: any) => Source, pointer: string, options: any) {
+    return this.cache.cacheSource(fn, pointer, options);
+  }
 }
 
 export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
+}
+
+function ensureAbsolutePath(
+  pointer: string,
+  options: {
+    cwd?: string;
+  }
+): string {
+  return isAbsolute(pointer) ? pointer : resolve(options.cwd || cwd(), pointer);
 }

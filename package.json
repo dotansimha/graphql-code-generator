@@ -117,7 +117,12 @@
     "graphql": "15.5.0",
     "graphql-language-service-interface": "2.8.2",
     "**/apollo-language-server/graphql": "^15.0.0",
-    "**/@types/graphql-upload/graphql": "^15.0.0"
+    "**/@types/graphql-upload/graphql": "^15.0.0",
+    "@graphql-tools/utils": "7.8.0-alpha-1dce565c.0",
+    "@graphql-tools/code-file-loader": "6.4.0-alpha-1dce565c.0",
+    "@graphql-tools/graphql-file-loader": "6.3.0-alpha-1dce565c.0",
+    "@graphql-tools/json-file-loader": "6.3.0-alpha-1dce565c.0",
+    "@graphql-tools/module-loader": "6.3.0-alpha-1dce565c.0"
   },
   "dependencies": {
     "dotenv": "8.2.0",

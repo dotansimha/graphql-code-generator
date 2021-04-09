@@ -9,7 +9,7 @@ import {
 import { codegen } from '@graphql-codegen/core';
 
 import { Renderer, ErrorRenderer } from './utils/listr-renderer';
-import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode, parse, Source as GraphQLSource } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
@@ -186,6 +186,24 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             title: hasPreset
               ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")`
               : `Generate ${filename}`,
+            skip() {
+              const skip = !context.shouldGenerate(filename);
+
+              if (skip) {
+                // TODO: support presets
+                // preset.buildGeneratesSection creates a list of files that we can't predict at that point...
+
+                // Super important to still push a result even though it's not generated,
+                // otherwise file is going to be removed in watch mode
+                result.push({
+                  filename,
+                  content: 'Skipped because of cache...',
+                  noEmit: true, // prevent an empty file from being emitted
+                });
+              }
+
+              return skip;
+            },
             task: () => {
               let outputSchemaAst: GraphQLSchema;
               let outputSchema: DocumentNode;
@@ -231,6 +249,14 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     title: 'Generate',
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Generating output`);
+
+                      context.setDependencies(
+                        filename,
+                        []
+                          .concat(outputSchemaAst.extensions?.sources?.map((source: GraphQLSource) => source.name))
+                          .concat(outputDocuments.map(d => d.location))
+                          .filter(Boolean)
+                      );
 
                       const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                       const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);

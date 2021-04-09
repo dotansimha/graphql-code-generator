@@ -2,8 +2,7 @@ import { lifecycleHooks } from './hooks';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
-import { sync as mkdirpSync } from 'mkdirp';
+import { fileExists, readFile, writeFile, unlinkFile, mkdirp } from './utils/file-system';
 import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
@@ -42,18 +41,20 @@ export async function generate(
   const recentOutputHash = new Map<string, string>();
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
-      return generationResult;
+      return;
     }
 
     if (config.watch) {
       removeStaleFiles(config, generationResult);
     }
 
-    await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
+    const resultsToEmit = generationResult.filter(f => !f.noEmit);
+
+    await lifecycleHooks(config.hooks).beforeAllFileWrite(resultsToEmit.map(r => r.filename));
 
     await Promise.all(
-      generationResult.map(async (result: Types.FileOutput) => {
-        const exists = fileExists(result.filename);
+      resultsToEmit.map(async (result: Types.FileOutput) => {
+        const exists = await fileExists(result.filename);
 
         if (!shouldOverwrite(config, result.filename) && exists) {
           return;
@@ -64,7 +65,7 @@ export async function generate(
         let previousHash = recentOutputHash.get(result.filename);
 
         if (!previousHash && exists) {
-          previousHash = hash(readSync(result.filename));
+          previousHash = hash(await readFile(result.filename));
         }
 
         if (previousHash && currentHash === previousHash) {
@@ -81,19 +82,17 @@ export async function generate(
         const basedir = dirname(result.filename);
         await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-        mkdirpSync(basedir);
+        await mkdirp(basedir);
         const absolutePath = isAbsolute(result.filename)
           ? result.filename
           : join(input.cwd || process.cwd(), result.filename);
-        writeSync(absolutePath, result.content);
+        await writeFile(absolutePath, result.content);
         await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
       })
     );
 
-    await lifecycleHooks(config.hooks).afterAllFileWrite(generationResult.map(r => r.filename));
-
-    return generationResult;
+    await lifecycleHooks(config.hooks).afterAllFileWrite(resultsToEmit.map(r => r.filename));
   }
 
   // watch mode

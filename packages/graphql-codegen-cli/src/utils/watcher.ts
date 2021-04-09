@@ -2,7 +2,6 @@ import { executeCodegen } from '../codegen';
 import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
 
 import isGlob from 'is-glob';
-import debounce from 'debounce';
 import logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
@@ -23,7 +22,7 @@ function emitWatching() {
 
 export const createWatcher = (
   initalContext: CodegenContext,
-  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
+  onNext: (result: Types.FileOutput[]) => Promise<void>
 ): Promise<void> => {
   debugLog(`[Watcher] Starting watcher...`);
   let config: Types.Config & { configFilePath?: string } = initalContext.getConfig();
@@ -65,11 +64,22 @@ export const createWatcher = (
     const chokidar = await import('chokidar');
     let isShutdown = false;
 
-    const debouncedExec = debounce(() => {
+    const enqueue = createQueue();
+    const debouncedExec = debounceAndCollect((filepaths: string[]) => {
       if (!isShutdown) {
-        executeCodegen(initalContext)
-          .then(onNext, () => Promise.resolve())
-          .then(() => emitWatching());
+        filepaths.forEach(filepath => {
+          getLogger().info(`  ${logSymbols.info} File: ${filepath}`);
+        });
+        enqueue(() => {
+          const startedAt = Date.now();
+          initalContext.invalidate(filepaths);
+          return executeCodegen(initalContext)
+            .then(onNext, () => Promise.resolve())
+            .then(() => {
+              log(`${logSymbols.success} Done in ${((Date.now() - startedAt) / 1000).toFixed(2)}s.`);
+              emitWatching();
+            });
+        });
       }
     }, 100);
     emitWatching();
@@ -133,7 +143,7 @@ export const createWatcher = (
         initalContext.updateConfig(config);
       }
 
-      debouncedExec();
+      debouncedExec(path);
     });
 
     process.once('SIGINT', shutdown);
@@ -151,3 +161,37 @@ export const createWatcher = (
       });
   });
 };
+
+/**
+ * Debounce but also collect arguments
+ */
+function debounceAndCollect<A>(fn: (arg: A[]) => any, time: number) {
+  let t: any;
+  let args: A[] = [];
+
+  return function debounced(arg: A) {
+    args.push(arg);
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const collected = args.slice().filter(unique);
+      args = [];
+      fn(collected);
+    }, time);
+  };
+}
+
+function unique<T>(value: T, i: number, list: T[]): boolean {
+  return list.indexOf(value) === i;
+}
+
+/**
+ * Creates a queue when resolved Promise starts next Promise, concurrency 1
+ */
+function createQueue() {
+  let active: Promise<void> = Promise.resolve();
+
+  return function enqueue(fn: () => Promise<void>) {
+    active = active.then(fn, fn);
+    return active;
+  };
+}
