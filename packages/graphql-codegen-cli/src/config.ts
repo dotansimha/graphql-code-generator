@@ -175,7 +175,8 @@ export function buildOptions() {
       type: 'string' as const,
     },
     experimentalCache: {
-      describe: 'Use experimental cache for watch mode',
+      describe: 'Experimental cache for watch mode',
+      default: false,
       type: 'boolean' as const,
     },
   };
