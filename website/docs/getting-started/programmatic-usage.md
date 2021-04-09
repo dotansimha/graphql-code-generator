@@ -16,12 +16,11 @@ import { codegen } from '@graphql-codegen/core';
 Then, create a configuration object ([complete signature](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/codegen.ts#L7-L16)):
 
 ```ts
-import { buildSchema } from 'graphql';
+import { buildSchema, printSchema, parse, GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
-import { printSchema, parse, GraphQLSchema } from 'graphql';
 
-const schema: GraphQLSchema = buildSchema(`type A {}`);
+const schema: GraphQLSchema = buildSchema(`type A { name: String }`);
 const outputFile = 'relative/pathTo/filename.ts';
 const config = {
   // used by a plugin internally, although the 'typescript' plugin currently
