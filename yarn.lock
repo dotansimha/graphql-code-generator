@@ -10834,10 +10834,10 @@ graphql-helix@1.2.3:
   resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.2.3.tgz#eaad4db338e2cdf6f5799478d1b05125ff19cd04"
   integrity sha512-psBs23Md/Nt0qsNOv5K+MqqsJ09lTyYtoujGAlFuE1+twUBQiKyanOYk3cqs9BtnJ7JsS+JlsS2/0ceE+20RCA==
 
-graphql-language-service-interface@2.8.2:
-  version "2.8.2"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.2.tgz#b3bb2aef7eaf0dff0b4ea419fa412c5f66fa268b"
-  integrity sha512-otbOQmhgkAJU1QJgQkMztNku6SbJLu/uodoFOYOOtJsizTjrMs93vkYaHCcYnLA3oi1Goj27XcHjMnRCYQOZXQ==
+graphql-language-service-interface@2.8.3:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.3.tgz#bb579742cd021ee5b63207a20b1974b7e01d855d"
+  integrity sha512-Gh4Q3dlCT1MrZGO0eaz7v31gkp8fh+ig94YH/A+1Th2q+k3RsRqfSJm5tKZ8TJ4rSADZ/dj+hzOpWCGzLyCiHQ==
   dependencies:
     graphql-language-service-parser "^1.9.0"
     graphql-language-service-types "^1.8.0"
