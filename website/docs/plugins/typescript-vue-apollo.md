@@ -1,6 +1,6 @@
 ---
 id: typescript-vue-apollo
-title: TypeScript Vue Apollo
+title: TypeScript Vue Apollo Composition API
 ---
 
 {@import ../plugins/client-note.md}
