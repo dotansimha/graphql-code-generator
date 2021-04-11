@@ -1918,7 +1918,7 @@
       }
     },
     "VueApolloSmartOpsRawPluginConfig": {
-      "description": "This plugin generates Vue Apollo smart query functions with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "withSmartOperationFunctions": {
@@ -4541,11 +4541,11 @@
             },
             {
               "const": "typescript-vue-apollo-smart-ops",
-              "description": "This plugin generates Vue Apollo smart query functions with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-vue-apollo-smart-ops",
-              "description": "This plugin generates Vue Apollo smart query functions with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-stencil-apollo",
