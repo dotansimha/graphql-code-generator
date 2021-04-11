@@ -43,7 +43,7 @@ export const validate: PluginValidateFn<any> = (
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-    throw new Error(`Plugin "vue-apollo" requires extension to be ".ts" or ".tsx"!`);
+    throw new Error(`Plugin "typescript-vue-apollo-smart-ops" requires extension to be ".ts" or ".tsx"!`);
   }
 };
 
