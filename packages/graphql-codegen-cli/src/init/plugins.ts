@@ -76,6 +76,15 @@ export const plugins: Array<PluginOption> = [
     defaultExtension: '.ts',
   },
   {
+    name: `TypeScript Vue Apollo Smart Operations ${italic('(typed functions)')}`,
+    package: '@graphql-codegen/typescript-vue-apollo-smart-ops',
+    value: 'typescript-vue-apollo-smart-ops',
+    pathInRepo: 'typescript/vue-apollo-smart-ops',
+    available: tags => allOf(tags, Tags.vue, Tags.typescript),
+    shouldBeSelected: () => true,
+    defaultExtension: '.ts',
+  },
+  {
     name: `TypeScript React Apollo ${italic('(typed components and HOCs)')}`,
     package: '@graphql-codegen/typescript-react-apollo',
     value: 'typescript-react-apollo',
