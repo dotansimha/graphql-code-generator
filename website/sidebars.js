@@ -35,6 +35,7 @@ module.exports = {
           'plugins/typescript-react-query',
           'plugins/typescript-react-apollo',
           'plugins/typescript-vue-apollo',
+          'plugins/typescript-vue-apollo-smart-ops',
           'plugins/typescript-apollo-angular',
           'plugins/typescript-stencil-apollo',
           'plugins/typescript-compatibility',

@@ -1,9 +1,15 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
- * @description This plugin generates Vue Apollo smart query functions with TypeScript typings.
+ * @description This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with
+ * TypeScript typings.
  *
- * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ * This plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds
+ * some optional functionality for improved error handling in Vue Apollo operations which can be configured in the
+ * generated code from this plugin.
+ *
+ * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -
+ * and thus shares a similar configuration.
  *
  */
 export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePluginConfig {
