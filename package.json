@@ -50,7 +50,7 @@
     "@graphql-tools/load": "6.2.7",
     "@graphql-tools/prisma-loader": "6.3.0",
     "@graphql-tools/url-loader": "6.8.2",
-    "@graphql-tools/utils": "7.7.1",
+    "@graphql-tools/utils": "7.7.2",
     "@graphql-typed-document-node/core": "3.1.0",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.3",
