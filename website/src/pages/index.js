@@ -1,5 +1,6 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import { Header } from 'the-guild-components';
+import SearchBar from '../theme/SearchBar';
 
 if (ExecutionEnvironment.canUseDOM) {
   process.hrtime = () => null;
@@ -124,13 +125,9 @@ function ProjectTitle() {
 function Home() {
   return (
     <>
-      <Header
-        linkUrl="https://the-guild.dev"
-        navbarBackgroundColor="var(--ifm-navbar-background-color)"
-        navbarLinkColor="var(--ifm-navbar-link-color)"
-        navbarLinkHoverColor="var(--ifm-link-hover-color)"
-      />
+      <Header accentColor="var(--ifm-color-primary)" themeSwitch />
       <Layout title={`GraphQL Code Generator`} description="">
+        {/* <Header accentColor="var(--ifm-color-primary)" themeSwitch searchComponent={<SearchBar />} /> */}
         <header>
           <SplashContainer>
             <div className={styles.inner}>

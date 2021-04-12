@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "docusaurus start",
+    "swizzle": "docusaurus swizzle",
     "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
     "prebuild:website": "yarn generate:config-docs",
     "prestart": "yarn generate:config-docs",
@@ -27,10 +28,6 @@
     "vscode-languageserver-types": "3.16.0"
   },
   "dependencies": {
-    "the-guild-components": "1.0.6",
-    "react-markdown": "5.0.3",
-    "monaco-yaml": "2.5.1",
-    "react-select": "4.3.0",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/c-sharp": "1.18.2",
     "@graphql-codegen/c-sharp-operations": "1.18.2",
@@ -48,9 +45,10 @@
     "@graphql-codegen/near-operation-file-preset": "1.17.13",
     "@graphql-codegen/schema-ast": "1.18.1",
     "@graphql-codegen/time": "2.0.2",
-    "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typed-document-node": "1.18.4",
+    "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typescript-apollo-angular": "2.3.2",
+    "@graphql-codegen/typescript-apollo-client-helpers": "1.1.4",
     "@graphql-codegen/typescript-compatibility": "2.0.3",
     "@graphql-codegen/typescript-generic-sdk": "1.17.9",
     "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
@@ -64,9 +62,12 @@
     "@graphql-codegen/typescript-type-graphql": "1.18.3",
     "@graphql-codegen/typescript-urql": "2.0.5",
     "@graphql-codegen/typescript-vue-apollo": "2.3.3",
-    "@graphql-codegen/typescript-apollo-client-helpers": "1.1.4",
+    "js-yaml": "4.0.0",
+    "monaco-yaml": "2.5.1",
+    "react-markdown": "5.0.3",
     "react-monaco-editor": "0.43.0",
-    "js-yaml": "4.0.0"
+    "react-select": "4.3.0",
+    "the-guild-components": "github:FrontWorkDotDev/the-guild-components#header-implementation"
   },
   "browserslist": {
     "production": [
