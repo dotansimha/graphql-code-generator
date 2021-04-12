@@ -257,6 +257,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           .concat(outputDocuments.map(d => d.location))
                           .filter(Boolean)
                       );
+                      context.setPointers(filename, [
+                        ...rootSchemas,
+                        ...outputSpecificSchemas,
+                        ...rootDocuments,
+                        ...outputSpecificDocuments,
+                      ]);
 
                       const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                       const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);

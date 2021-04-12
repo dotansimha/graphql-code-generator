@@ -1,15 +1,17 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve, isAbsolute } from 'path';
-import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import isGlob from 'is-glob';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
-import { findAndLoadGraphQLConfig } from './graphql-config';
-import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
+import minimatch from 'minimatch';
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
 import { Source } from '@graphql-tools/utils';
 import { cwd } from 'process';
+import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import { findAndLoadGraphQLConfig } from './graphql-config';
+import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
 
 export type YamlCliFlags = {
   config: string;
@@ -237,7 +239,15 @@ class Cache {
   isEnabled: () => boolean = () => false;
   private invalidated: string[] = [];
   private sources = new Map<string, Source>();
-  private dependencies = new Map<string, string[]>();
+  private outputs = new Map<
+    string,
+    {
+      pointers: string[];
+      dependencies: string[];
+    }
+  >();
+
+  constructor(private cwd: string) {}
 
   cacheSource(fn: (pointer: string, options: any) => Source, pointer: string, options: any): Source;
   cacheSource(fn: (pointer: string, options: any) => Promise<Source>, pointer: string, options: any): Promise<Source>;
@@ -272,7 +282,9 @@ class Cache {
     }
 
     this.invalidated = filepaths.map(filepath => {
-      const absoluteFilepath = ensureAbsolutePath(filepath, {});
+      const absoluteFilepath = ensureAbsolutePath(filepath, {
+        cwd: this.cwd,
+      });
       this.sources.delete(absoluteFilepath);
 
       return absoluteFilepath;
@@ -285,11 +297,31 @@ class Cache {
     }
 
     // TODO: if new file - generate everything
-    if (this.dependencies.has(filepath)) {
-      if (this.invalidated.length) {
-        const regenerate = this.dependencies.get(filepath).some(f => this.invalidated.includes(f));
 
-        if (regenerate) {
+    // check if output was already processeed
+    // if not, mark as "to generate"
+    if (this.outputs.has(filepath)) {
+      // if nothing to invalidate, do not generate
+      if (this.invalidated.length) {
+        // filepath matches a pointer
+        if (
+          // iterate over all related pointers
+          this.outputs.get(filepath).pointers.some(
+            pointer =>
+              // collect only matching paths and check if the list is not empty
+              this.invalidated.filter(
+                minimatch.filter(pointer, {
+                  matchBase: true,
+                })
+              ).length > 0
+          )
+        ) {
+          // in case we found matching files, generate the output
+          return true;
+        }
+
+        // filepath is already a dependency of the output
+        if (this.outputs.get(filepath).dependencies.some(f => this.invalidated.includes(f))) {
           return true;
         }
       }
@@ -305,10 +337,48 @@ class Cache {
       return;
     }
 
-    this.dependencies.set(
-      filepath,
-      deps.map(dep => ensureAbsolutePath(dep, {}))
-    );
+    this.ensureOutput(filepath);
+    this.outputs.get(filepath).dependencies = deps.map(dep => ensureAbsolutePath(dep, {}));
+  }
+
+  setPointers(filepath: string, pointers: (Types.Schema | Types.OperationDocument)[]) {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    this.ensureOutput(filepath);
+    this.outputs.get(filepath).pointers = pointers
+      .map(pointer => {
+        if (typeof pointer === 'string') {
+          // collect only globs
+          return isGlob(pointer) ? ensureAbsolutePath(pointer, { cwd: this.cwd }) : null;
+        }
+
+        if (typeof pointer === 'object') {
+          for (const key in pointer) {
+            const options = pointer[key];
+
+            // if it has a loader, we can't assume it's pure and does not provide any extra contents
+            if (options && 'loader' in options) {
+              return null;
+            }
+
+            return isGlob(key) ? ensureAbsolutePath(key, { cwd: this.cwd }) : null;
+          }
+        }
+
+        return null;
+      })
+      .filter(val => typeof val === 'string');
+  }
+
+  private ensureOutput(filepath: string) {
+    if (!this.outputs.has(filepath)) {
+      this.outputs.set(filepath, {
+        pointers: [],
+        dependencies: [],
+      });
+    }
   }
 }
 
@@ -318,7 +388,7 @@ export class CodegenContext {
   private config: Types.Config;
   private _project?: string;
   private _pluginContext: { [key: string]: any } = {};
-  private cache = new Cache();
+  private cache: Cache;
 
   cwd: string;
   filepath: string;
@@ -336,6 +406,7 @@ export class CodegenContext {
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
     this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.cache = new Cache(this.cwd);
     this.cache.isEnabled = () => (this.config as any).experimentalCache === true;
   }
 
@@ -410,6 +481,10 @@ export class CodegenContext {
 
   setDependencies(filepath: string, deps: string[]) {
     return this.cache.setDependencies(filepath, deps);
+  }
+
+  setPointers(filepath: string, pointers: (Types.Schema | Types.OperationDocument)[]) {
+    return this.cache.setPointers(filepath, pointers);
   }
 
   private cacheable(fn: (pointer: string, options: any) => Promise<Source>, pointer: string, options: any) {
