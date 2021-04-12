@@ -1,7 +1,7 @@
 import React from 'react';
+import classes from './styles.module.css';
 import { Editor } from './Editor';
 import { CodegenOutput } from './CodegenOutput';
-import classes from './styles.module.css';
 
 export default function LiveDemoEditors({
   setSchema,
