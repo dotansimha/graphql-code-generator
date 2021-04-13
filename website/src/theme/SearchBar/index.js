@@ -5,26 +5,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useState, useRef, useCallback, useMemo} from 'react';
-import {createPortal} from 'react-dom';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {useHistory} from '@docusaurus/router';
-import {useBaseUrlUtils} from '@docusaurus/useBaseUrl';
+import { useHistory } from '@docusaurus/router';
+import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
 import Link from '@docusaurus/Link';
 import Head from '@docusaurus/Head';
 import useSearchQuery from '@theme/hooks/useSearchQuery';
-import {DocSearchButton, useDocSearchKeyboardEvents} from '@docsearch/react';
+import { DocSearchButton, useDocSearchKeyboardEvents } from '@docsearch/react';
 import useAlgoliaContextualFacetFilters from '@theme/hooks/useAlgoliaContextualFacetFilters';
-import {translate} from '@docusaurus/Translate';
+import { translate } from '@docusaurus/Translate';
+import { CallEnum } from '@algolia/transporter';
 
 let DocSearchModal = null;
 
-function Hit({hit, children}) {
+function Hit({ hit, children }) {
   return <Link to={hit.url}>{children}</Link>;
 }
 
-function ResultsFooter({state, onClose}) {
-  const {generateSearchPageLink} = useSearchQuery();
+function ResultsFooter({ state, onClose }) {
+  const { generateSearchPageLink } = useSearchQuery();
 
   return (
     <Link to={generateSearchPageLink(state.query)} onClick={onClose}>
@@ -33,8 +34,8 @@ function ResultsFooter({state, onClose}) {
   );
 }
 
-function DocSearch({contextualSearch, ...props}) {
-  const {siteMetadata} = useDocusaurusContext();
+function DocSearch({ contextualSearch, ...props }) {
+  const { siteMetadata } = useDocusaurusContext();
 
   const contextualSearchFacetFilters = useAlgoliaContextualFacetFilters();
 
@@ -52,7 +53,7 @@ function DocSearch({contextualSearch, ...props}) {
     facetFilters,
   };
 
-  const {withBaseUrl} = useBaseUrlUtils();
+  const { withBaseUrl } = useBaseUrlUtils();
   const history = useHistory();
   const searchContainer = useRef(null);
   const searchButtonRef = useRef(null);
@@ -68,7 +69,7 @@ function DocSearch({contextualSearch, ...props}) {
       import('@docsearch/react/modal'),
       import('@docsearch/react/style'),
       import('./styles.css'),
-    ]).then(([{DocSearchModal: Modal}]) => {
+    ]).then(([{ DocSearchModal: Modal }]) => {
       DocSearchModal = Modal;
     });
   }, []);
@@ -76,10 +77,7 @@ function DocSearch({contextualSearch, ...props}) {
   const onOpen = useCallback(() => {
     importDocSearchModalIfNeeded().then(() => {
       searchContainer.current = document.createElement('div');
-      document.body.insertBefore(
-        searchContainer.current,
-        document.body.firstChild,
-      );
+      document.body.insertBefore(searchContainer.current, document.body.firstChild);
       setIsOpen(true);
     });
   }, [importDocSearchModalIfNeeded, setIsOpen]);
@@ -90,23 +88,23 @@ function DocSearch({contextualSearch, ...props}) {
   }, [setIsOpen]);
 
   const onInput = useCallback(
-    (event) => {
+    event => {
       importDocSearchModalIfNeeded().then(() => {
         setIsOpen(true);
         setInitialQuery(event.key);
       });
     },
-    [importDocSearchModalIfNeeded, setIsOpen, setInitialQuery],
+    [importDocSearchModalIfNeeded, setIsOpen, setInitialQuery]
   );
 
   const navigator = useRef({
-    navigate({itemUrl}) {
-      history.push(itemUrl);
+    navigate({ itemUrl }) {
+      window.location.assign(itemUrl);
     },
   }).current;
 
-  const transformItems = useRef((items) => {
-    return items.map((item) => {
+  const transformItems = useRef(items => {
+    return items.map(item => {
       // We transform the absolute URL into a relative URL.
       // Alternatively, we can use `new URL(item.url)` but it's not
       // supported in IE.
@@ -120,21 +118,24 @@ function DocSearch({contextualSearch, ...props}) {
     });
   }).current;
 
-  const resultsFooterComponent = useMemo(
-    () => (footerProps) => <ResultsFooter {...footerProps} onClose={onClose} />,
-    [onClose],
-  );
+  const resultsFooterComponent = useMemo(() => footerProps => <ResultsFooter {...footerProps} onClose={onClose} />, [
+    onClose,
+  ]);
 
   const transformSearchClient = useCallback(
-    (searchClient) => {
-      searchClient.addAlgoliaAgent(
-        'docusaurus',
-        siteMetadata.docusaurusVersion,
-      );
+    searchClient => {
+      searchClient.addAlgoliaAgent('docusaurus', siteMetadata.docusaurusVersion);
+
+      const algoliaHost = 'the-guild.dev/api/algolia';
+      searchClient.transporter.hosts.forEach(host => {
+        if ((host.accept & CallEnum.Read) !== 0) {
+          host.url = algoliaHost;
+        }
+      });
 
       return searchClient;
     },
-    [siteMetadata.docusaurusVersion],
+    [siteMetadata.docusaurusVersion]
   );
 
   useDocSearchKeyboardEvents({
@@ -157,11 +158,7 @@ function DocSearch({contextualSearch, ...props}) {
         {/* This hints the browser that the website will load data from Algolia,
         and allows it to preconnect to the DocSearch cluster. It makes the first
         query faster, especially on mobile. */}
-        <link
-          rel="preconnect"
-          href={`https://${props.appId}-dsn.algolia.net`}
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href={`https://${props.appId}-dsn.algolia.net`} crossOrigin="anonymous" />
       </Head>
 
       <DocSearchButton
@@ -190,14 +187,14 @@ function DocSearch({contextualSearch, ...props}) {
             {...props}
             searchParameters={searchParameters}
           />,
-          searchContainer.current,
+          searchContainer.current
         )}
     </>
   );
 }
 
 function SearchBar() {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return <DocSearch {...siteConfig.themeConfig.algolia} />;
 }
 
