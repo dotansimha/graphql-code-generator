@@ -10839,10 +10839,10 @@ graphql-extensions@^0.13.0:
     apollo-server-env "^3.0.0"
     apollo-server-types "^0.7.0"
 
-graphql-helix@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.2.3.tgz#eaad4db338e2cdf6f5799478d1b05125ff19cd04"
-  integrity sha512-psBs23Md/Nt0qsNOv5K+MqqsJ09lTyYtoujGAlFuE1+twUBQiKyanOYk3cqs9BtnJ7JsS+JlsS2/0ceE+20RCA==
+graphql-helix@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.3.0.tgz#5ce23b0f041a90bfc98477916459849a4605f43a"
+  integrity sha512-hBfCOoW7KRU7mbHS1lgpCiq/yWotz1ctT2a/9XUv3T9gC3yr3biiPNKUjmtFwR8SfhjXDeK3C139a9Jx5TDIWQ==
 
 graphql-language-service-interface@2.8.3:
   version "2.8.3"
