@@ -96,7 +96,7 @@
     "@types/valid-url": "1.0.3",
     "bdd-stdin": "0.2.0",
     "dotenv": "8.2.0",
-    "js-yaml": "4.0.0",
+    "js-yaml": "4.1.0",
     "make-dir": "3.1.0",
     "prettier": "2.2.1"
   },
