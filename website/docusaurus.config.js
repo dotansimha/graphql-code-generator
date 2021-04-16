@@ -9,6 +9,9 @@ module.exports = {
   baseUrl: '/',
   favicon: 'img/favicon.png',
   themeConfig: {
+    colorMode: {
+      disableSwitch: true,
+    },
     googleAnalytics: {
       trackingID: 'UA-128969121-3',
     },
