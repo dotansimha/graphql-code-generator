@@ -467,6 +467,17 @@ describe('React-Query', () => {
     });
   });
 
+  describe('exposeDocument: true', () => {
+    it('Should generate document field for each query', async () => {
+      const config = {
+        fetcher: 'fetch',
+        exposeDocument: true,
+      };
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(`useTestQuery.document = TestDocument;`);
+    });
+  });
+
   describe('exposeQueryKeys: true', () => {
     it('Should generate getKey for each query', async () => {
       const config = {
