@@ -44,6 +44,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     if (this.config.rawRequest) {
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
+      if (this.config.documentMode !== DocumentMode.string) {
+        this._additionalImports.push(`${typeImport} { print } from 'graphql'`);
+      }
     }
   }
 
@@ -88,6 +91,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   }
 
   public get sdkContent(): string {
+    const extraVariables: string[] = [];
     const allPossibleActions = this._operationsToInclude
       .map(o => {
         const operationName = o.node.name.value;
@@ -98,12 +102,17 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         const docVarName = this.getDocumentNodeVariable(o.documentVariableName);
 
         if (this.config.rawRequest) {
+          let docArg = docVarName;
+          if (this.config.documentMode !== DocumentMode.string) {
+            docArg = `${docVarName}String`;
+            extraVariables.push(`const ${docArg} = print(${docVarName});`);
+          }
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${docVarName}, variables, requestHeaders));
+    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${docArg}, variables, requestHeaders));
 }`;
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
@@ -119,6 +128,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     return `${additionalExportedTypes}
 
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
+${extraVariables.join('\n')}
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
 ${allPossibleActions.join(',\n')}
