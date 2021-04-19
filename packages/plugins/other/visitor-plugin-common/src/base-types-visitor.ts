@@ -33,12 +33,12 @@ import {
 } from './types';
 import {
   transformComment,
-  buildScalars,
   DeclarationBlock,
   DeclarationBlockConfig,
   indent,
   wrapWithSingleQuotes,
   getConfigValue,
+  buildScalarsFromConfig,
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
@@ -215,7 +215,7 @@ export class BaseTypesVisitor<
         ignoreEnumValuesFromSchema: rawConfig.ignoreEnumValuesFromSchema,
       }),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
-      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
       wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
