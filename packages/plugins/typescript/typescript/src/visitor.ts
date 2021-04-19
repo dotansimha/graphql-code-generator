@@ -64,6 +64,8 @@ export class TsVisitor<
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
+      entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
+      wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -125,6 +127,9 @@ export class TsVisitor<
 
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
+    }
+    if (this.config.wrapEntireDefinitions) {
+      definitions.push(this.getEntireFieldWrapperValue());
     }
 
     return definitions;
@@ -204,7 +209,9 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = (node.type as any) as string;
+    const typeString = this.config.wrapEntireDefinitions
+      ? `EntireFieldWrapper<${node.type}>`
+      : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);

@@ -1,7 +1,7 @@
 import { NormalizedScalarsMap } from './types';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, getConfigValue, buildScalarsFromConfig } from './utils';
 import {
   GraphQLSchema,
   FragmentDefinitionNode,
@@ -136,7 +136,7 @@ export class BaseDocumentsVisitor<
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
-      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       ...((additionalConfig || {}) as any),
     });
 

@@ -5,8 +5,8 @@ import {
   LoadedFragment,
   indentMultiline,
   getBaseTypeNode,
-  buildScalars,
   indent,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import {
@@ -88,7 +88,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix || defaultSuffix,
         mutationSuffix: rawConfig.mutationSuffix || defaultSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix || defaultSuffix,
-        scalars: buildScalars(schema, rawConfig.scalars, C_SHARP_SCALARS),
+        scalars: buildScalarsFromConfig(schema, rawConfig, C_SHARP_SCALARS),
         typesafeOperation: rawConfig.typesafeOperation || false,
       },
       documents

@@ -372,7 +372,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
-      const isConditional = hasConditionalDirectives(field.directives);
+      const isConditional = hasConditionalDirectives(field);
 
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
@@ -397,7 +397,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
-          isConditional: hasConditionalDirectives(field.directives),
+          isConditional: hasConditionalDirectives(field),
           fieldName: field.name.value,
         }))
       ),

@@ -20,11 +20,11 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
-  DirectiveNode,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
+import { RawConfig } from './base-visitor';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -261,11 +261,25 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
     .join('_');
 }
 
+export function buildScalarsFromConfig(
+  schema: GraphQLSchema | undefined,
+  config: RawConfig,
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
+  defaultScalarType = 'any'
+): ParsedScalarsMap {
+  return buildScalars(
+    schema,
+    config.scalars,
+    defaultScalarsMapping,
+    config.strictScalars ? null : config.defaultScalarType || defaultScalarType
+  );
+}
+
 export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType = 'any'
+  defaultScalarType: string | null = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -293,6 +307,9 @@ export function buildScalars(
             type: JSON.stringify(scalarsMapping[name]),
           };
         } else if (!defaultScalarsMapping[name]) {
+          if (defaultScalarType === null) {
+            throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
+          }
           result[name] = {
             isExternal: false,
             type: defaultScalarType,
@@ -403,15 +420,9 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
-  if (directives.length === 0) return false;
-
-  for (const directive of directives) {
-    if (['skip', 'include'].includes(directive.name.value)) {
-      return true;
-    }
-  }
-  return false;
+export function hasConditionalDirectives(field: FieldNode): boolean {
+  const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
+  return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {

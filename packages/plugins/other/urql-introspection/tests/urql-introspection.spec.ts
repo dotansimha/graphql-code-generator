@@ -53,6 +53,19 @@ describe('Urql Introspection Plugin', () => {
       }
     });
 
+    it('should throw on useTypeImports + not ts env', async () => {
+      const extensions = ['.json', '.js', '.jsx'];
+      const allCases = extensions.concat(extensions.map(val => val.toUpperCase()));
+
+      try {
+        await Promise.all(allCases.map(ext => validate(schema, [], { useTypeImports: true }, `foo${ext}`, [])));
+
+        throw new Error('DONE');
+      } catch (e) {
+        expect(e.message).not.toEqual('DONE');
+      }
+    });
+
     it('should throw on unsupported extension', async () => {
       try {
         await validate(schema, [], {}, 'foo.yml', []);
@@ -179,6 +192,34 @@ export default ${introspection} as unknown as IntrospectionQuery;`;
         }
       );
       const output = `import { IntrospectionQuery } from 'graphql';
+export default ${introspection} as unknown as IntrospectionQuery;`;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should emit type imports if useTypeImports config value is used', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          useTypeImports: true,
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          useTypeImports: true,
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `import type { IntrospectionQuery } from 'graphql';
 export default ${introspection} as unknown as IntrospectionQuery;`;
 
       expect(tsContent).toBeSimilarStringTo(output);
