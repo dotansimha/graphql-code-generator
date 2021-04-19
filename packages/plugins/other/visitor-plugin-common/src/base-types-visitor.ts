@@ -51,6 +51,8 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumPrefix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
+  entireFieldWrapperValue: string;
+  wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
 }
 
@@ -191,6 +193,44 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   ignoreEnumValuesFromSchema?: boolean;
+  /**
+   * @name wrapEntireFieldDefinitions
+   * @type boolean
+   * @description Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+   * This is useful to allow return types such as Promises and functions for fields.
+   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+   * `wrapFieldDefinitions` will wrap every single value inside the array.
+   * @default true
+   *
+   * @example Enable wrapping entire fields
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapEntireFieldDefinitions: false
+   * ```
+   */
+  wrapEntireFieldDefinitions?: boolean;
+  /**
+   * @name entireFieldWrapperValue
+   * @type string
+   * @description Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe
+   * unlike `fieldWrapperValue`, that will wrap the inner type.
+   * @default T | Promise<T> | (() => T | Promise<T>)
+   *
+   * @example Only allow values
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    entireFieldWrapperValue: T
+   * ```
+   */
+  entireFieldWrapperValue?: string;
 }
 
 export class BaseTypesVisitor<
@@ -218,6 +258,8 @@ export class BaseTypesVisitor<
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
       wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
+      entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
+      wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       ...additionalConfig,
     });
@@ -232,6 +274,14 @@ export class BaseTypesVisitor<
   public getFieldWrapperValue(): string {
     if (this.config.fieldWrapperValue) {
       return `${this.getExportPrefix()}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
+    }
+
+    return '';
+  }
+
+  public getEntireFieldWrapperValue(): string {
+    if (this.config.entireFieldWrapperValue) {
+      return `${this.getExportPrefix()}type EntireFieldWrapper<T> = ${this.config.entireFieldWrapperValue};`;
     }
 
     return '';
