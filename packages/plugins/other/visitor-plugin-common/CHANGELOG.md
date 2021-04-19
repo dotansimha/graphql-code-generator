@@ -1,5 +1,18 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.20.0
+
+### Minor Changes
+
+- f0b5ea53: Add entireFieldWrapperValue configuration option, to wrap arrays
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.19.1
 
 ### Patch Changes

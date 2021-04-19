@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "description": "GraphQL Code Generator plugin for generating Java code based on a GraphQL schema",
   "repository": {
     "type": "git",
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@graphql-codegen/java-common": "^1.17.9",
-    "@graphql-codegen/plugin-helpers": "^1.18.2",
-    "@graphql-codegen/visitor-plugin-common": "^1.17.21",
+    "@graphql-codegen/plugin-helpers": "^1.18.5",
+    "@graphql-codegen/visitor-plugin-common": "^1.20.0",
     "tslib": "~2.2.0"
   },
   "peerDependencies": {
