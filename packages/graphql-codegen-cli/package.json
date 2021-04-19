@@ -55,7 +55,7 @@
     "ansi-escapes": "^4.3.1",
     "chalk": "^4.1.0",
     "change-case-all": "1.0.14",
-    "chokidar": "^3.4.3",
+    "chokidar": "^3.5.1",
     "common-tags": "^1.8.0",
     "cosmiconfig": "^7.0.0",
     "debounce": "^1.2.0",
