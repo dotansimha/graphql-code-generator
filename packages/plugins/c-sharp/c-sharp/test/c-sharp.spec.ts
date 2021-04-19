@@ -452,6 +452,25 @@ describe('C#', () => {
           public bool? boolOpt { get; set; }
         `);
       });
+
+      it('Should properly treat DateTime nullability', async () => {
+        const schema = buildSchema(/* GraphQL */ `
+          type Test {
+            dateOptional: Date
+            dateMandatory: Date!
+          }
+
+          scalar Date
+        `);
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result).toBeSimilarStringTo(`
+          [JsonProperty("dateOptional")]
+          public DateTime? dateOptional { get; set; }
+          [JsonProperty("dateMandatory")]
+          public DateTime dateMandatory { get; set; }
+        `);
+      });
     });
 
     describe('Array', () => {
