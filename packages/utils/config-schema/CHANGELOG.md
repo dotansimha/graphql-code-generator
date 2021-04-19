@@ -1,5 +1,11 @@
 # @graphql-codegen/config-schema
 
+## 1.17.10
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+
 ## 1.17.9
 
 ### Patch Changes
