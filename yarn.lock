@@ -3724,7 +3724,46 @@
     "@graphql-tools/utils" "^7.1.2"
     tslib "~2.0.1"
 
-"@graphql-tools/url-loader@6.8.2", "@graphql-tools/url-loader@^6.8.2":
+"@graphql-tools/url-loader@6.8.3":
+  version "6.8.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.8.3.tgz#4bcf0ad97392f53d3daee438a85674d6fcdac01e"
+  integrity sha512-X1IxyURTbynqBPBJJeSW3hvvc+Pgw/P5IpT/yyTkA7utjRRiNCaGdLbBQO5MaXvD1HpVzBiMgdKG8v7Um3ft7w==
+  dependencies:
+    "@graphql-tools/delegate" "^7.0.1"
+    "@graphql-tools/utils" "^7.1.5"
+    "@graphql-tools/wrap" "^7.0.4"
+    "@types/websocket" "1.0.2"
+    cross-fetch "3.1.4"
+    eventsource "1.1.0"
+    extract-files "9.0.0"
+    form-data "4.0.0"
+    graphql-upload "^11.0.0"
+    graphql-ws "^4.4.1"
+    is-promise "4.0.0"
+    isomorphic-ws "4.0.1"
+    sse-z "0.3.0"
+    sync-fetch "0.3.0"
+    tslib "~2.2.0"
+    valid-url "1.0.9"
+    ws "7.4.5"
+
+"@graphql-tools/url-loader@^6", "@graphql-tools/url-loader@^6.0.0", "@graphql-tools/url-loader@^6.3.1":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.4.0.tgz#e13aa701f334aaaa73975ccf25336f1bd5fae35e"
+  integrity sha512-M3mS/VH6vpnai3b3Fa33kYcdCgZvhFh7RqFE1R3NMfhYjphQ10EWwgf31P+VQcBNB2zz+ubxttI6UcJLiGqwuQ==
+  dependencies:
+    "@graphql-tools/delegate" "^7.0.1"
+    "@graphql-tools/utils" "^7.0.1"
+    "@graphql-tools/wrap" "^7.0.0"
+    "@types/websocket" "1.0.1"
+    cross-fetch "3.0.6"
+    subscriptions-transport-ws "0.9.18"
+    sync-fetch "0.3.0"
+    tslib "~2.0.1"
+    valid-url "1.0.9"
+    websocket "1.0.32"
+
+"@graphql-tools/url-loader@^6.8.2":
   version "6.8.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.8.2.tgz#a62b3e1988b4c49c6c488aaba66b1c7078886023"
   integrity sha512-YzsXSCOwlSj8UqOMhQThPzgEChgS/MonyWV7f0WKmN9gAT/f3fPaUcYhVamsH0vGbvTkfNM4JdoZO/39amRs5Q==
@@ -3746,22 +3785,6 @@
     tslib "~2.1.0"
     valid-url "1.0.9"
     ws "7.4.4"
-
-"@graphql-tools/url-loader@^6", "@graphql-tools/url-loader@^6.0.0", "@graphql-tools/url-loader@^6.3.1":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.4.0.tgz#e13aa701f334aaaa73975ccf25336f1bd5fae35e"
-  integrity sha512-M3mS/VH6vpnai3b3Fa33kYcdCgZvhFh7RqFE1R3NMfhYjphQ10EWwgf31P+VQcBNB2zz+ubxttI6UcJLiGqwuQ==
-  dependencies:
-    "@graphql-tools/delegate" "^7.0.1"
-    "@graphql-tools/utils" "^7.0.1"
-    "@graphql-tools/wrap" "^7.0.0"
-    "@types/websocket" "1.0.1"
-    cross-fetch "3.0.6"
-    subscriptions-transport-ws "0.9.18"
-    sync-fetch "0.3.0"
-    tslib "~2.0.1"
-    valid-url "1.0.9"
-    websocket "1.0.32"
 
 "@graphql-tools/utils@7.7.3", "@graphql-tools/utils@^7.7.0":
   version "7.7.3"
@@ -8366,6 +8389,13 @@ cross-fetch@3.1.1:
   dependencies:
     node-fetch "2.6.1"
 
+cross-fetch@3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
+  dependencies:
+    node-fetch "2.6.1"
+
 cross-fetch@^3.0.4:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.2.tgz#ee0c2f18844c4fde36150c2a4ddc068d20c1bc41"
@@ -10943,6 +10973,11 @@ graphql-ws@4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-4.2.2.tgz#73ede40c064fe76c48c6869df7fc0bfbef80cc20"
   integrity sha512-b6TLtWLAmKunD72muL9EeItRGpio9+V3Cx4zJsBkRA+3wxzTWXDvQr9/3qSwJ3D/2abz0ys2KHTM6lB1uH7KIQ==
+
+graphql-ws@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-4.4.1.tgz#69f472f362b57366af23265c6c6b967077b9d1dc"
+  integrity sha512-kHgDohfRQFDdzXzLqsV4wZM141sO1ukaXW/RSLlmIUsxT4N3r/4eQYTbkeLd4yRXaDkmv/rYf1EHL09Y5KO+Uw==
 
 graphql@15.5.0:
   version "15.5.0"
@@ -20442,6 +20477,11 @@ ws@7.4.4:
   version "7.4.4"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.4.tgz#383bc9742cb202292c9077ceab6f6047b17f2d59"
   integrity sha512-Qm8k8ojNQIMx7S+Zp8u/uHOx7Qazv3Yv4q68MiWWWOJhiwG5W3x7iqmRtJo8xxrciZUY4vRxUTJCKuRnF28ZZw==
+
+ws@7.4.5:
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
+  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
 
 ws@^5.2.0:
   version "5.2.2"
