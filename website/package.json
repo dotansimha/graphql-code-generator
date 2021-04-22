@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "docusaurus start",
+    "swizzle": "docusaurus swizzle",
     "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
     "prebuild:website": "yarn generate:config-docs",
     "prestart": "yarn generate:config-docs",
@@ -27,9 +28,6 @@
     "vscode-languageserver-types": "3.16.0"
   },
   "dependencies": {
-    "react-markdown": "5.0.3",
-    "monaco-yaml": "2.5.1",
-    "react-select": "4.3.0",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/c-sharp": "1.19.0",
     "@graphql-codegen/c-sharp-operations": "1.19.0",
@@ -47,6 +45,9 @@
     "@graphql-codegen/near-operation-file-preset": "1.18.0",
     "@graphql-codegen/schema-ast": "1.18.2",
     "@graphql-codegen/time": "2.0.2",
+    "js-yaml": "4.1.0",
+    "monaco-yaml": "2.5.1",
+    "react-markdown": "5.0.3",
     "@graphql-codegen/typescript": "1.22.0",
     "@graphql-codegen/typed-document-node": "1.18.5",
     "@graphql-codegen/typescript-apollo-angular": "2.3.3",
@@ -65,7 +66,9 @@
     "@graphql-codegen/typescript-vue-apollo": "2.3.4",
     "@graphql-codegen/typescript-apollo-client-helpers": "1.1.5",
     "react-monaco-editor": "0.43.0",
-    "js-yaml": "4.1.0"
+    "react-select": "4.3.0",
+    "styled-components": "^5.2.3",
+    "the-guild-components": "^1.0.10"
   },
   "browserslist": {
     "production": [

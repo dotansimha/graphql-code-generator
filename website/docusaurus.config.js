@@ -9,6 +9,9 @@ module.exports = {
   baseUrl: '/',
   favicon: 'img/favicon.png',
   themeConfig: {
+    colorMode: {
+      disableSwitch: true,
+    },
     googleAnalytics: {
       trackingID: 'UA-128969121-3',
     },
@@ -78,8 +81,7 @@ module.exports = {
     }
   },
   scripts: [
-    '/js/fix-location.js',
-    'https://the-guild.dev/static/banner.js'
+    '/js/fix-location.js'
   ],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
