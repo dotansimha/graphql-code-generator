@@ -1,5 +1,16 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.5
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.18.4
 
 ### Patch Changes

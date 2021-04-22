@@ -4,8 +4,8 @@ import {
   EnumValuesMap,
   indentMultiline,
   indent,
-  buildScalars,
   getBaseTypeNode,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { CSharpResolversPluginRawConfig } from './config';
 import {
@@ -58,7 +58,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
       emitRecords: rawConfig.emitRecords || false,
-      scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
   }
 

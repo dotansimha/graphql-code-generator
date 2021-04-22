@@ -1797,6 +1797,54 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should correctly throw an error when an unknown scalar is detected while using `strictScalars`', () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+
+      expect(() => {
+        plugin(schema, [], { strictScalars: true }, { outputFile: '' });
+      }).toThrow('Unknown scalar type MyScalar');
+    });
+
+    it('Should allow overriding default scalar type', async () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { defaultScalarType: 'unknown' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+        MyScalar: unknown;
+      };`);
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyType = {
+        __typename?: 'MyType';
+        foo?: Maybe<Scalars['String']>;
+        bar: Scalars['MyScalar'];
+      };`);
+      validateTs(result);
+    });
+
     it('Should add FieldWrapper when field definition wrapping is enabled', async () => {
       const schema = buildSchema(`
       scalar A
@@ -2019,6 +2067,74 @@ describe('TypeScript', () => {
         export type ListOfMaybeStrings = {
           __typename?: 'ListOfMaybeStrings';
           foo: Array<Maybe<FieldWrapper<Scalars['String']>>>;
+        };
+      `);
+
+      validateTs(result);
+    });
+
+    it('Should build list type correctly when wrapping entire field definitions', async () => {
+      const schema = buildSchema(`
+        type ListOfStrings {
+          foo: [String!]!
+        }
+
+        type ListOfMaybeStrings {
+          foo: [String]!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { wrapEntireFieldDefinitions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfStrings = {
+          __typename?: 'ListOfStrings';
+          foo: EntireFieldWrapper<Array<Scalars['String']>>;
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfMaybeStrings = {
+          __typename?: 'ListOfMaybeStrings';
+          foo: EntireFieldWrapper<Array<Maybe<Scalars['String']>>>;
+        };
+      `);
+
+      validateTs(result);
+    });
+
+    it('Should build list type correctly when wrapping both field definitions and entire field definitions', async () => {
+      const schema = buildSchema(`
+        type ListOfStrings {
+          foo: [String!]!
+        }
+
+        type ListOfMaybeStrings {
+          foo: [String]!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { wrapEntireFieldDefinitions: true, wrapFieldDefinitions: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfStrings = {
+          __typename?: 'ListOfStrings';
+          foo: EntireFieldWrapper<Array<FieldWrapper<Scalars['String']>>>;
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ListOfMaybeStrings = {
+          __typename?: 'ListOfMaybeStrings';
+          foo: EntireFieldWrapper<Array<Maybe<FieldWrapper<Scalars['String']>>>>;
         };
       `);
 

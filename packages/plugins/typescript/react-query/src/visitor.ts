@@ -19,6 +19,7 @@ import { generateQueryKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
+  exposeDocument: boolean;
   exposeQueryKeys: boolean;
 }
 
@@ -58,6 +59,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     super(schema, fragments, rawConfig, {
       documentMode: DocumentMode.string,
       errorType: getConfigValue(rawConfig.errorType, 'unknown'),
+      exposeDocument: getConfigValue(rawConfig.exposeDocument, false),
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -126,6 +128,9 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         operationVariablesTypes,
         hasRequiredVariables
       );
+      if (this.config.exposeDocument) {
+        query += `\nuse${operationName}.document = ${documentVariableName};\n`;
+      }
       if (this.config.exposeQueryKeys) {
         query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
       }

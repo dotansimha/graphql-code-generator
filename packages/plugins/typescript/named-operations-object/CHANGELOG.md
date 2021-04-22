@@ -1,5 +1,13 @@
 # @graphql-codegen/named-operations-object
 
+## 1.18.2
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.18.1
 
 ### Patch Changes

@@ -5,8 +5,7 @@ import {
   getConfigValue,
   ParsedConfig,
   BaseVisitor,
-  buildScalars,
-  DEFAULT_SCALARS,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './config';
@@ -64,7 +63,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       idFieldName: pluginConfig.idFieldName || '_id',
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false),
-      scalars: buildScalars(_schema, pluginConfig.scalars, DEFAULT_SCALARS),
+      scalars: buildScalarsFromConfig(_schema, pluginConfig),
     } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
     autoBind(this);
   }
