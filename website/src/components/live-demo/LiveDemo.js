@@ -1,13 +1,13 @@
 import React from 'react';
-import { Editor } from './Editor';
 import { load } from 'js-yaml';
 import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
+import { Loading } from '../ui/Loading';
 import classes from './styles.module.css';
-import { CodegenOutput } from './CodegenOutput';
 import Select from 'react-select';
 import useThemeContext from '@theme/hooks/useThemeContext';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import ReactMarkdown from 'react-markdown';
 
 const groupedExamples = Object.keys(EXAMPLES).map(catName => {
@@ -48,6 +48,31 @@ const DEFAULT_EXAMPLE = {
   index: 0,
 };
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Fallback
+      return <span>Something went wrong.</span>;
+    }
+
+    return this.props.children;
+  }
+}
+
 export const LiveDemo = () => {
   const { isDarkTheme } = useThemeContext();
   const [template, setTemplate] = React.useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
@@ -63,6 +88,7 @@ export const LiveDemo = () => {
     setConfig(EXAMPLES[catName][index].config);
     setTemplate(value);
   };
+  const LiveDemoEditors = React.lazy(() => import('./LiveDemoEditors'));
 
   let mode = null;
 
@@ -91,7 +117,11 @@ export const LiveDemo = () => {
               menu: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               control: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               container: styles => ({ ...styles, display: 'inline-block', width: '100%', textAlign: 'left' }),
-              option: (styles, { isFocused }) => ({ ...styles, fontSize: 13, ...(isDarkTheme && isFocused ? { backgroundColor: 'gray' } : {}) }),
+              option: (styles, { isFocused }) => ({
+                ...styles,
+                fontSize: 13,
+                ...(isDarkTheme && isFocused ? { backgroundColor: 'gray' } : {}),
+              }),
               singleValue: styles => ({ ...styles, width: '100%', ...(isDarkTheme ? { color: 'white' } : {}) }),
             }}
             isMulti={false}
@@ -121,43 +151,29 @@ export const LiveDemo = () => {
             defaultValue={groupedExamples[0].options[0]}
             options={groupedExamples}
           />
-          <div className={classes.exampleDesc}>
-            {description ? <ReactMarkdown source={description} /> : null}
-          </div>
+          <div className={classes.exampleDesc}>{description ? <ReactMarkdown source={description} /> : null}</div>
         </div>
       </div>
       <div className={classes.container}>
-        <div className={classes.column}>
-          <div className={classes.title}>
-            <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
-            <span className={classes.iconText}>schema.graphql</span>
-          </div>
-          <Editor lang={'graphql'} onEdit={setSchema} value={schema} />
-        </div>
-        <div className={classes.column}>
-          <div className={classes.title}>
-            <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
-            <span className={classes.iconText}>operation.graphql</span>
-          </div>
-          <Editor lang={'graphql'} onEdit={setDocuments} value={documents || `# This example isn't\n# using GraphQL operations` } />
-        </div>
-        <div className={classes.column}>
-          <div className={classes.title}>
-            <img className={classes.logo} alt={'Codegen'} src="/img/logo.svg" />
-            <span className={classes.iconText}>codegen.yml</span>
-          </div>
-          <Editor lang={'yaml'} onEdit={setConfig} value={config} />
-        </div>
-        <div className={classes.column} style={{ minWidth: '34vw', maxWidth: '34vw' }}>
-          <CodegenOutput
-            editorProps={{
-              lang: mode,
-              readOnly: true,
-            }}
-            error={error}
-            outputArray={output}
-          />
-        </div>
+        <BrowserOnly>
+          {() => (
+            <ErrorBoundary>
+              <React.Suspense fallback={<Loading color={isDarkTheme ? '#fff' : '#000'} height="450px" />}>
+                <LiveDemoEditors
+                  setSchema={setSchema}
+                  schema={schema}
+                  setDocuments={setDocuments}
+                  documents={documents}
+                  setConfig={setConfig}
+                  config={config}
+                  mode={mode}
+                  error={error}
+                  output={output}
+                />
+              </React.Suspense>
+            </ErrorBoundary>
+          )}
+        </BrowserOnly>
       </div>
     </div>
   );
