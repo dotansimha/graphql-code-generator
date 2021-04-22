@@ -67,8 +67,8 @@
     "@graphql-codegen/typescript-apollo-client-helpers": "1.1.5",
     "react-monaco-editor": "0.43.0",
     "react-select": "4.3.0",
-    "styled-components": "^5.2.3",
-    "the-guild-components": "^1.0.10"
+    "styled-components": "5.2.3",
+    "the-guild-components": "1.0.10"
   },
   "browserslist": {
     "production": [

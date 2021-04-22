@@ -19192,7 +19192,7 @@ style-to-object@0.3.0, style-to-object@^0.3.0:
   dependencies:
     inline-style-parser "0.1.1"
 
-styled-components@^5.2.3:
+styled-components@5.2.3:
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.2.3.tgz#752669fd694aac10de814d96efc287dde0d11385"
   integrity sha512-BlR+KrLW3NL1yhvEB+9Nu9Dt51CuOnHoxd+Hj+rYPdtyR8X11uIW9rvhpy3Dk4dXXBsiW1u5U78f00Lf/afGoA==
@@ -19468,7 +19468,7 @@ text-table@0.2.0, text-table@^0.2.0, text-table@~0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@^1.0.10:
+the-guild-components@1.0.10:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.10.tgz#eb43c53be254f945fd4debc7810e5e3e6e5a1d58"
   integrity sha512-g6gWOpxQ7YKFDBXrNnkATWlBKtfOM41H3uqEqzvSqeqYgUzB4qLik1pXdmwJAULCV3eP+QADHbG8zmOcccrNIw==
