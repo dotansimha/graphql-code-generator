@@ -125,7 +125,7 @@ function Home() {
   return (
     <>
       <ThemeProvider>
-        <Header accentColor="var(--ifm-color-primary)" themeSwitch />
+        <Header themeSwitch activeLink={'/open-source'} accentColor="var(--ifm-color-primary)" />
       </ThemeProvider>
 
       <Layout title={`GraphQL Code Generator`} description="">
