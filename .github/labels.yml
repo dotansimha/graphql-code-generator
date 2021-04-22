@@ -1,0 +1,19 @@
+# Please add the repo specific custom labels here
+
+- name: 'core'
+  color: '0366d6'
+  description: 'Related to codegen core/cli'
+
+- name: 'dependencies'
+  color: 'd4c5f9'
+
+- name: 'new-preset'
+  color: '006b75'
+  description: 'Suggestion for a new preset'
+
+- name: 'plugins'
+  color: 'c2e0c6'
+
+- name: 'presets'
+  color: '0e8a16'
+  description: 'Related to Codegen presets'

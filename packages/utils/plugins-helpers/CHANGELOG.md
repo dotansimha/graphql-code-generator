@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 1.18.5
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+
 ## 1.18.4
 
 ### Patch Changes

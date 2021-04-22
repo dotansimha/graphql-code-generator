@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-react-query
 
+## 1.3.0
+
+### Minor Changes
+
+- 5c119438: Added an option exposeDocument to expose a document from the hook
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.2.4
 
 ### Patch Changes

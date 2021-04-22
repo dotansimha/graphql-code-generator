@@ -31,6 +31,21 @@ export interface UrqlIntrospectionConfig {
    * ```
    */
   module?: 'commonjs' | 'es2015';
+
+  /**
+   * @name useTypeImports
+   * @type boolean
+   * @default false
+   * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
+   * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
+   *
+   * @example
+   * ```yml
+   * config:
+   *   useTypeImports: true
+   * ```
+   */
+  useTypeImports?: boolean;
 }
 
 const extensions = {
@@ -47,6 +62,7 @@ export const plugin: PluginFunction = async (
 ): Promise<string> => {
   const config: Required<UrqlIntrospectionConfig> = {
     module: 'es2015',
+    useTypeImports: false,
     ...pluginConfig,
   };
 
@@ -67,7 +83,8 @@ export const plugin: PluginFunction = async (
   }
 
   if (extensions.ts.includes(ext)) {
-    return `import { IntrospectionQuery } from 'graphql';
+    const typeImport = config.useTypeImports ? 'import type' : 'import';
+    return `${typeImport} { IntrospectionQuery } from 'graphql';
 export default ${content} as unknown as IntrospectionQuery;`;
   }
 
@@ -91,5 +108,9 @@ export const validate: PluginValidateFn<any> = async (
 
   if (config.module === 'commonjs' && extensions.ts.includes(ext)) {
     throw new Error(`Plugin "urql-introspection" doesn't support commonjs modules combined with TypeScript!`);
+  }
+
+  if (config.useTypeImports && !extensions.ts.includes(ext)) {
+    throw new Error(`Plugin "urql-introspection" doesn't support useTypeImports modules not combined with TypeScript!`);
   }
 };

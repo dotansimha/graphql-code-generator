@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.1.1
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- 74e5afa4: fix(graphql-request): print document for rawRequest if documentMode is not string
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 3.1.0
 
 ### Minor Changes

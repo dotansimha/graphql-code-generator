@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/introspection",
-  "version": "1.18.1",
+  "version": "1.18.2",
   "description": "GraphQL Code Generator plugin for generating an introspection JSON file for a GraphQLSchema",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/plugin-helpers": "^1.18.5",
     "tslib": "~2.2.0"
   },
   "peerDependencies": {

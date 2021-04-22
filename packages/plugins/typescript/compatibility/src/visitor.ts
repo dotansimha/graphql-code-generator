@@ -4,8 +4,8 @@ import {
   DeclarationBlock,
   indent,
   getConfigValue,
-  buildScalars,
   ParsedConfig,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 
@@ -26,7 +26,7 @@ export class CompatibilityPluginVisitor extends BaseVisitor<CompatibilityPluginR
       noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
       preResolveTypes: getConfigValue<boolean>(rawConfig.preResolveTypes, false),
       strict: getConfigValue<boolean>(rawConfig.strict, false),
-      scalars: buildScalars(_schema, rawConfig.scalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig),
     } as any);
   }
 

@@ -1,5 +1,13 @@
 # @graphql-cli/codegen
 
+## 1.17.23
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/cli@1.21.4
+
 ## 1.17.22
 
 ### Patch Changes

@@ -34,6 +34,31 @@ export interface ParsedConfig {
 
 export interface RawConfig {
   /**
+   * @description Makes scalars strict.
+   *
+   * If scalars are found in the schema that are not defined in `scalars`
+   * an error will be thrown during codegen.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   strictScalars: true
+   * ```
+   */
+  strictScalars?: boolean;
+  /**
+   * @description Allows you to override the type that unknown scalars will have.
+   * @default any
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   defaultScalarType: unknown
+   * ```
+   */
+  defaultScalarType?: string;
+  /**
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
    * @exampleMarkdown
