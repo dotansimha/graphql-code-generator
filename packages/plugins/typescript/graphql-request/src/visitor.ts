@@ -15,7 +15,7 @@ export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
 }
 
 const additionalExportedTypes = `
-export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 `;
 
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
@@ -112,13 +112,17 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${docArg}, variables, requestHeaders));
+    return withWrapper((wrappedRequestHeaders) => client.rawRequest<${
+      o.operationResultType
+    }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');
 }`;
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
-  return withWrapper(() => client.request<${o.operationResultType}>(${docVarName}, variables, requestHeaders));
+  return withWrapper((wrappedRequestHeaders) => client.request<${
+    o.operationResultType
+  }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');
 }`;
         }
       })
@@ -127,7 +131,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     return `${additionalExportedTypes}
 
-const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 ${extraVariables.join('\n')}
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
