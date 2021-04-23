@@ -1,4 +1,5 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import { ThemeProvider, Header } from 'the-guild-components';
 
 if (ExecutionEnvironment.canUseDOM) {
@@ -124,9 +125,13 @@ function ProjectTitle() {
 function Home() {
   return (
     <>
-      <ThemeProvider>
-        <Header themeSwitch activeLink={'/open-source'} accentColor="var(--ifm-color-primary)" />
-      </ThemeProvider>
+      <BrowserOnly>
+        {() => (
+          <ThemeProvider>
+            <Header themeSwitch activeLink={'/open-source'} accentColor="var(--ifm-color-primary)" />
+          </ThemeProvider>
+        )}
+      </BrowserOnly>
 
       <Layout title={`GraphQL Code Generator`} description="">
         <header>

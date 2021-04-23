@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "start": "docusaurus start",
-    "swizzle": "docusaurus swizzle",
     "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
     "prebuild:website": "yarn generate:config-docs",
     "prestart": "yarn generate:config-docs",
