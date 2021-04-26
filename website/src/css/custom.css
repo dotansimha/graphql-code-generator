@@ -37,10 +37,6 @@ button {
   padding: 0 var(--ifm-pre-padding);
 }
 
-.DocSearch {
-  display: none !important;
-}
-
 button[class^='copyButton'] {
   color: white;
 }
