@@ -19590,10 +19590,10 @@ text-table@0.2.0, text-table@^0.2.0, text-table@~0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.12.tgz#1bbdfe56fd8fcfa2778aa596f809f65136a22f81"
-  integrity sha512-Nbu103ZhC+Z2R2z1vCFxly4vj9JjacKunx+eCFsk+ycoEW5OUKZIpX3DLRvNaueFHcHqpOBPReL0KQb7KXJXTg==
+the-guild-components@1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.13.tgz#f2ac6d66fea20f9bfcf3f007474bb9a7e662f581"
+  integrity sha512-hbhy2RmG6CXvmhRVZSube77KpoPBHZCyPK/xovxGcBIubKxoPSFSltwQZghLGjSEhbCwlBMQziwSE+7Q1Ru3Cg==
   dependencies:
     algoliasearch "^4.9.0"
     core-js "^3.8.3"
