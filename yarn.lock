@@ -2941,7 +2941,7 @@
     "@manypkg/get-packages" "^1.0.1"
     semver "^5.4.1"
 
-"@changesets/cli@2.16.0", "@changesets/cli@^2.16.0":
+"@changesets/cli@2.16.0":
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.16.0.tgz#9f794005d0503efba5e348b929821a1732fd0f0d"
   integrity sha512-VFkXSyyk/WRjjUoBI7g7cDy09qBjPbBQOloPMEshTzMo/NY9muWHl2yB/FSSkV/6PxGimPtJ7aEJPYfk8HCfXw==
@@ -3876,14 +3876,14 @@
     relay-compiler "10.0.1"
     tslib "~2.0.1"
 
-"@graphql-tools/schema@7.1.4":
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-7.1.4.tgz#34ea86af336c7ff9fb294d25317cb5952cf1f86a"
-  integrity sha512-kkDLbCIMwGRUZAPdeRcnUFXu6wSaMWXNmDigWsIsepzhVx0nLQ2k58Ec7pBylKaut5xWi0344GctQ3qDhBUHDA==
+"@graphql-tools/schema@7.1.5":
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-7.1.5.tgz#07b24e52b182e736a6b77c829fc48b84d89aa711"
+  integrity sha512-uyn3HSNSckf4mvQSq0Q07CPaVZMNFCYEVxroApOaw802m9DcZPgf9XVPy/gda5GWj9AhbijfRYVTZQgHnJ4CXA==
   dependencies:
     "@graphql-tools/utils" "^7.1.2"
     tslib "~2.2.0"
-    value-or-promise "~1.0.5"
+    value-or-promise "1.0.6"
 
 "@graphql-tools/schema@^7.0.0":
   version "7.0.0"
@@ -3901,10 +3901,10 @@
     "@graphql-tools/utils" "^7.1.2"
     tslib "~2.0.1"
 
-"@graphql-tools/url-loader@6.8.3":
-  version "6.8.3"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.8.3.tgz#4bcf0ad97392f53d3daee438a85674d6fcdac01e"
-  integrity sha512-X1IxyURTbynqBPBJJeSW3hvvc+Pgw/P5IpT/yyTkA7utjRRiNCaGdLbBQO5MaXvD1HpVzBiMgdKG8v7Um3ft7w==
+"@graphql-tools/url-loader@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-6.9.0.tgz#a0c3cf5adf9cfb3637fa107759b69b6e00f509e1"
+  integrity sha512-42BrGYv6JgPQ9qBy7DOA2RftXaTv60idpjB3zi5gxTD2YIxEZk21pnliPbZpSb18rrd7JnqQ/TfBS54j8nyNww==
   dependencies:
     "@graphql-tools/delegate" "^7.0.1"
     "@graphql-tools/utils" "^7.1.5"
@@ -3919,6 +3919,7 @@
     is-promise "4.0.0"
     isomorphic-ws "4.0.1"
     sse-z "0.3.0"
+    subscriptions-transport-ws "^0.9.18"
     sync-fetch "0.3.0"
     tslib "~2.2.0"
     valid-url "1.0.9"
@@ -19344,9 +19345,9 @@ stylis@^4.0.3:
   resolved "https://registry.npmjs.org/stylis/-/stylis-4.0.6.tgz#0d8b97b6bc4748bea46f68602b6df27641b3c548"
   integrity sha512-1igcUEmYFBEO14uQHAJhCUelTR5jPztfdVKrYxRnDa5D5Dn3w0NxXupJNPr/VV/yRfZYEAco8sTIRZzH3sRYKg==
 
-subscriptions-transport-ws@0.9.18, subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.16:
+subscriptions-transport-ws@0.9.18, subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.16, subscriptions-transport-ws@^0.9.18:
   version "0.9.18"
-  resolved "https://registry.npmjs.org/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.18.tgz#bcf02320c911fbadb054f7f928e51c6041a37b97"
+  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.18.tgz#bcf02320c911fbadb054f7f928e51c6041a37b97"
   integrity sha512-tztzcBTNoEbuErsVQpTN2xUNN/efAZXyCyL5m3x4t6SKrEiTL2N8SaKWBFWM4u56pL79ULif3zjyeq+oV+nOaA==
   dependencies:
     backo2 "^1.0.2"
@@ -20524,12 +20525,10 @@ value-equal@^1.0.1:
   resolved "https://registry.npmjs.org/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
   integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
-value-or-promise@~1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.5.tgz#6c9c5496288df3be9c71c60def01262e95d30adf"
-  integrity sha512-9ZmqlFSp5ihOF8jh8zykx3wGJG83jz1jiXmSxm0onPIlt9Vak4FTyHrvTVaL5Ykj3UpSPvbCbnuYxnzUQyLBHA==
-  dependencies:
-    "@changesets/cli" "^2.16.0"
+value-or-promise@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.6.tgz#218aa4794aa2ee24dcf48a29aba4413ed584747f"
+  integrity sha512-9r0wQsWD8z/BxPOvnwbPf05ZvFngXyouE9EKB+5GbYix+BYnAwrIChCUyFIinfbf2FL/U71z+CPpbnmTdxrwBg==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
