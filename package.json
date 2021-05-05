@@ -120,7 +120,7 @@
     "**/@types/graphql-upload/graphql": "^15.0.0"
   },
   "dependencies": {
-    "dotenv": "8.5.1",
+    "dotenv": "8.6.0",
     "patch-package": "6.4.7"
   }
 }
