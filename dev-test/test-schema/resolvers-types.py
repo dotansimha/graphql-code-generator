@@ -1,4 +1,4 @@
-from typing import Optional, List, Literal, Union, Any
+from typing import Optional, List, Union, Any, Literal
 from enum import Enum
 class Scalars:
   ID = Union[str]
