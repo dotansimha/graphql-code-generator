@@ -95,6 +95,7 @@ module.exports = {
       'integrations/gatsby',
       'integrations/prettier',
       'integrations/federation',
+      'integrations/vscode',
     ],
     'Custom Plugins': [
       'custom-codegen/index',
