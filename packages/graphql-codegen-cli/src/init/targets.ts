@@ -17,6 +17,7 @@ export async function guessTargets(): Promise<Record<Tags, boolean>> {
     [Tags.angular]: isAngular(dependencies),
     [Tags.react]: isReact(dependencies),
     [Tags.stencil]: isStencil(dependencies),
+    [Tags.svelte]: isSvelte(dependencies),
     [Tags.vue]: isVue(dependencies),
     [Tags.browser]: false,
     [Tags.node]: false,
@@ -35,6 +36,10 @@ function isReact(dependencies: string[]): boolean {
 
 function isStencil(dependencies: string[]): boolean {
   return dependencies.includes('@stencil/core');
+}
+
+function isSvelte(dependencies: string[]): boolean {
+  return dependencies.includes('svelte');
 }
 
 function isVue(dependencies: string[]): boolean {

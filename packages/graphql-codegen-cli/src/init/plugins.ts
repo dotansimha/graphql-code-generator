@@ -94,6 +94,15 @@ export const plugins: Array<PluginOption> = [
     defaultExtension: '.tsx',
   },
   {
+    name: `TypeScript Svelte Apollo ${italic('(typed components)')}`,
+    package: '@graphql-codegen/typescript-svelte-apollo',
+    value: 'typescript-svelte-apollo',
+    pathInRepo: 'typescript/svelte-apollo',
+    available: hasTag(Tags.svelte),
+    shouldBeSelected: () => true,
+    defaultExtension: '.ts',
+  },
+  {
     name: `TypeScript MongoDB ${italic('(typed MongoDB objects)')}`,
     package: '@graphql-codegen/typescript-mongodb',
     value: 'typescript-mongodb',

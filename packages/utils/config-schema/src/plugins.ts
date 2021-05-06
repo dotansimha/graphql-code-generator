@@ -131,6 +131,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-stencil-apollo',
   },
   {
+    file: '../../plugins/typescript/svelte-apollo/src/config.ts',
+    identifier: 'SvelteApolloVisitorConfig',
+    name: 'typescript-svelte-apollo',
+  },
+  {
     file: '../../plugins/typescript/document-nodes/src/index.ts',
     identifier: 'TypeScriptDocumentNodesRawPluginConfig',
     name: 'typescript-document-nodes',

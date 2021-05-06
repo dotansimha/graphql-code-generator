@@ -424,6 +424,7 @@ describe('init', () => {
         [Tags.angular]: targets.includes(Tags.angular),
         [Tags.react]: targets.includes(Tags.react),
         [Tags.stencil]: targets.includes(Tags.stencil),
+        [Tags.svelte]: targets.includes(Tags.svelte),
         [Tags.browser]: targets.includes(Tags.browser),
         [Tags.node]: targets.includes(Tags.node),
         [Tags.typescript]: targets.includes(Tags.typescript),
