@@ -60,6 +60,7 @@
     "@graphql-codegen/typescript-react-query": "1.3.0",
     "@graphql-codegen/typescript-resolvers": "1.19.1",
     "@graphql-codegen/typescript-stencil-apollo": "1.18.4",
+    "@graphql-codegen/typescript-svelte-apollo": "1.0.0",
     "@graphql-codegen/typescript-type-graphql": "1.18.4",
     "@graphql-codegen/typescript-urql": "2.0.6",
     "@graphql-codegen/typescript-vue-apollo": "2.3.4",

@@ -37,6 +37,7 @@ module.exports = {
           'plugins/typescript-vue-apollo',
           'plugins/typescript-apollo-angular',
           'plugins/typescript-stencil-apollo',
+          'plugins/typescript-svelte-apollo',
           'plugins/typescript-compatibility',
           'plugins/typescript-graphql-files-modules',
           'plugins/typescript-document-nodes',

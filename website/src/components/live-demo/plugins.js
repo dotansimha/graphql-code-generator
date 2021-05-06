@@ -20,6 +20,7 @@ export const pluginLoaderMap = {
   'typescript-react-apollo': () => import('@graphql-codegen/typescript-react-apollo'),
   'typescript-vue-apollo': () => import('@graphql-codegen/typescript-vue-apollo'),
   'typescript-stencil-apollo': () => import('@graphql-codegen/typescript-stencil-apollo'),
+  'typescript-svelte-apollo': () => import('@graphql-codegen/typescript-svelte-apollo'),
   'typescript-graphql-files-modules': () => import('@graphql-codegen/typescript-graphql-files-modules'),
   'typescript-graphql-request': () => import('@graphql-codegen/typescript-graphql-request'),
   'typescript-generic-sdk': () => import('@graphql-codegen/typescript-generic-sdk'),
