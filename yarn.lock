@@ -4411,10 +4411,10 @@
     treeverse "^1.0.4"
     walk-up-path "^1.0.0"
 
-"@npmcli/arborist@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.4.1.tgz#e98c77f7e17924876b89907237516eb65d46005f"
-  integrity sha512-LivXfK+LjtvzFjnwK6E41Pkw1C8+MYrgdXinzqpDc8MDYp7gMT0nvGvnpQd47OV2GhLRyBkbUSEcLk6P1d1s0g==
+"@npmcli/arborist@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@npmcli/arborist/-/arborist-2.4.2.tgz#7c22eb0d7b66f31e250e1927047d0bd497dbdf8a"
+  integrity sha512-QrsMrRWzO1D2EmPQheyPz1yRnnmln6vPe4SujV4cRF0v9qIAQbD8M0dMH6K3y+w/2X3t7vg5lx20LHXsbcu7lw==
   dependencies:
     "@npmcli/installed-package-contents" "^1.0.7"
     "@npmcli/map-workspaces" "^1.0.2"
@@ -13575,10 +13575,10 @@ libnpmdiff@^2.0.4:
     pacote "^11.3.0"
     tar "^6.1.0"
 
-libnpmexec@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/libnpmexec/-/libnpmexec-1.0.1.tgz#a23f5bbe2bd4f8103a4f53eea8b113f7742f1903"
-  integrity sha512-YK2kEhZNCcaDEqOIUWjadhJl9MgS69YHgMmGD5P3yntF0UXNOQfEqABoMTZv9ngPOJTJQGlU4Dfp2xb3bpUKzw==
+libnpmexec@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/libnpmexec/-/libnpmexec-1.1.0.tgz#daa79d4545e21d0eb6887a33e0bbc8ab466099b2"
+  integrity sha512-OWpsPWtD6CAn66JouyjBfhQ9eS1mAtXgZXXd1SoAyUP3Mol+ao9IJ2THcJQcgX96keVmZkUA11uJS5ZNEd9DwA==
   dependencies:
     "@npmcli/arborist" "^2.3.0"
     "@npmcli/ci-detect" "^1.3.0"
@@ -13590,6 +13590,7 @@ libnpmexec@^1.0.1:
     proc-log "^1.0.0"
     read "^1.0.7"
     read-package-json-fast "^2.0.2"
+    walk-up-path "^1.0.0"
 
 libnpmfund@^1.0.2:
   version "1.0.2"
@@ -15205,12 +15206,12 @@ npm-user-validate@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz#31428fc5475fe8416023f178c0ab47935ad8c561"
   integrity sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw==
 
-npm@7.11.2:
-  version "7.11.2"
-  resolved "https://registry.yarnpkg.com/npm/-/npm-7.11.2.tgz#abd932492d3d11e5e4bc1306e935b874233f906b"
-  integrity sha512-NxcaNqAfdLEubG5dlPFWbXrVAG2zb45lB5y6W3PK1PK2feHaffpCN4rnXPD/BPp1kCJespCAv8Kw/QUYR85BRw==
+npm@7.12.0:
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/npm/-/npm-7.12.0.tgz#c2fb58bbb4f7bbef339a945a28b7c75117799bdd"
+  integrity sha512-8Zvas3+1zKtE4uXIxHWRpg1bqGNrOta9RTDZWJ2k+EfOfzOggPQh9N4jHtsrIuGLawXv9xCWyvauke1UWMOMoA==
   dependencies:
-    "@npmcli/arborist" "^2.4.1"
+    "@npmcli/arborist" "^2.4.2"
     "@npmcli/ci-detect" "^1.2.0"
     "@npmcli/config" "^2.2.0"
     "@npmcli/run-script" "^1.8.5"
@@ -15235,7 +15236,7 @@ npm@7.11.2:
     leven "^3.1.0"
     libnpmaccess "^4.0.2"
     libnpmdiff "^2.0.4"
-    libnpmexec "^1.0.1"
+    libnpmexec "^1.1.0"
     libnpmfund "^1.0.2"
     libnpmhook "^6.0.2"
     libnpmorg "^2.0.2"
