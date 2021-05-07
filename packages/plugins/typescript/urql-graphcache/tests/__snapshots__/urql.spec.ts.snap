@@ -33,13 +33,16 @@ type GraphCacheResolvers = {
     todo?: GraphCacheResolver<RequireFields<Textbook, '__typename'>, null, RequireFields<Todo, '__typename'> | string>
   }
 };
+
 type GraphCacheOptimisticUpdaters = {
   {}
 };
+
 type GraphCacheUpdaters = {
   Mutation?: {},
   Subscription?: {},
 };
+
 export type GraphCacheConfig = {
   updates: GraphCacheUpdaters;
   keys: GraphCacheKeysConfig;
@@ -72,13 +75,16 @@ type GraphCacheResolvers = {
     duration?: GraphCacheResolver<RequireFields<Movie, '__typename'>, null, Scalars['Int']>
   }
 };
+
 type GraphCacheOptimisticUpdaters = {
   updateMedia?: GraphCacheOptimisticMutationResolver<MutationUpdateMediaArgs, Maybe<RequireFields<Media, '__typename'>>>
 };
+
 type GraphCacheUpdaters = {
   Mutation?: updateMedia?: GraphCacheUpdateResolver<{ updateMedia: Maybe<RequireFields<Media, '__typename'>> }, MutationUpdateMediaArgs>,
   Subscription?: {},
 };
+
 export type GraphCacheConfig = {
   updates: GraphCacheUpdaters;
   keys: GraphCacheKeysConfig;
@@ -113,6 +119,7 @@ type GraphCacheResolvers = {
     author?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, RequireFields<Author, '__typename'> | string>
   }
 };
+
 type GraphCacheOptimisticUpdaters = {
   toggleTodo?: GraphCacheOptimisticMutationResolver<MutationToggleTodoArgs, RequireFields<Todo, '__typename'>>
   toggleTodos?: GraphCacheOptimisticMutationResolver<MutationToggleTodosArgs, Array<RequireFields<Todo, '__typename'>>>
@@ -120,6 +127,7 @@ type GraphCacheOptimisticUpdaters = {
   toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalEntityArgs, Array<RequireFields<Todo, '__typename'>>>
   toggleTodosOptional?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
 };
+
 type GraphCacheUpdaters = {
   Mutation?: toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: RequireFields<Todo, '__typename'> }, MutationToggleTodoArgs>
     toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosArgs>
@@ -128,6 +136,7 @@ type GraphCacheUpdaters = {
     toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArgs>,
   Subscription?: {},
 };
+
 export type GraphCacheConfig = {
   updates: GraphCacheUpdaters;
   keys: GraphCacheKeysConfig;

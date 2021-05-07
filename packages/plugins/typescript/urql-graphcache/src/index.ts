@@ -100,7 +100,7 @@ function getKeysConfig(schema: GraphQLSchema) {
     return keys;
   }, []);
 
-  return '\ntype GraphCacheKeysConfig = {\n  ' + keys.join('\n  ') + '\n}\n';
+  return 'type GraphCacheKeysConfig = {\n  ' + keys.join('\n  ') + '\n}';
 }
 
 function getResolversConfig(schema: GraphQLSchema) {
@@ -230,6 +230,6 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
         '};',
     ]
       .filter(Boolean)
-      .join('\n'),
+      .join('\n\n'),
   };
 };
