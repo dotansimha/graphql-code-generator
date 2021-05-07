@@ -100,7 +100,7 @@ function getKeysConfig(schema: GraphQLSchema) {
     return keys;
   }, []);
 
-  return 'type GraphCacheKeysConfig = {\n  ' + keys.join('\n  ') + '\n}';
+  return 'type GraphCacheKeysConfig = {\n  ' + keys.join(',\n  ') + '\n}';
 }
 
 function getResolversConfig(schema: GraphQLSchema) {
@@ -121,7 +121,7 @@ function getResolversConfig(schema: GraphQLSchema) {
       return fields;
     }, []);
 
-    resolvers.push(`  ${parentType.name}?: {\n    ` + fields.join('\n    ') + '\n  }');
+    resolvers.push(`  ${parentType.name}?: {\n    ` + fields.join(',\n    ') + '\n  }');
 
     return resolvers;
   }, []);
@@ -163,7 +163,7 @@ function getMutationUpdaterConfig(schema: GraphQLSchema): string[] | null {
       const type = unwrapType(fieldNode.type);
 
       updaters.push(
-        `    ${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ` +
+        `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ` +
           `${fieldNode.name.value}: ` +
           `${constructType(type, schema)} }, ` +
           `${argsName}>`
@@ -187,7 +187,7 @@ function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
       const type = unwrapType(fieldNode.type);
       const outputType = constructType(type, schema);
       optimistic.push(
-        `    ${fieldNode.name.value}?: GraphCacheOptimisticMutationResolver<` + `${argsName}, ` + `${outputType}>`
+        `${fieldNode.name.value}?: GraphCacheOptimisticMutationResolver<` + `${argsName}, ` + `${outputType}>`
       );
     });
 
@@ -211,25 +211,25 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
 
       keys,
 
-      'type GraphCacheResolvers = {\n' + resolvers.join('\n') + '\n};',
+      'type GraphCacheResolvers = {\n' + resolvers.join(',\n') + '\n};',
 
       'type GraphCacheOptimisticUpdaters = {\n  ' +
-        (optimisticUpdaters ? optimisticUpdaters.join('\n  ') : '{}') +
+        (optimisticUpdaters ? optimisticUpdaters.join(',\n  ') : '{}') +
         '\n};',
 
       'type GraphCacheUpdaters = {\n' +
         '  Mutation?: ' +
-        (mutationUpdaters ? `{\n${mutationUpdaters.join('\n    ')}\n  }` : '{}') +
+        (mutationUpdaters ? `{\n    ${mutationUpdaters.join(',\n    ')}\n  }` : '{}') +
         ',\n' +
         '  Subscription?: ' +
-        (subscriptionUpdaters ? `{\n${subscriptionUpdaters.join('\n    ')}\n  }` : '{}') +
+        (subscriptionUpdaters ? `{\n    ${subscriptionUpdaters.join(',\n    ')}\n  }` : '{}') +
         ',\n};',
 
       'export type GraphCacheConfig = {\n' +
-        '  updates: GraphCacheUpdaters;\n' +
-        '  keys: GraphCacheKeysConfig;\n' +
-        '  optimistic: GraphCacheOptimisticUpdaters;\n' +
-        '  resolvers: GraphCacheResolvers;\n' +
+        '  updates: GraphCacheUpdaters,\n' +
+        '  keys: GraphCacheKeysConfig,\n' +
+        '  optimistic: GraphCacheOptimisticUpdaters,\n' +
+        '  resolvers: GraphCacheResolvers\n' +
         '};',
     ]
       .filter(Boolean)
