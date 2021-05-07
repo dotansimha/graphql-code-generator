@@ -161,11 +161,12 @@ function getMutationUpdaterConfig(schema: GraphQLSchema): string[] | null {
     fields.forEach(fieldNode => {
       const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
       const type = unwrapType(fieldNode.type);
+
       updaters.push(
-        `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ${fieldNode.name.value}: ${constructType(
-          type,
-          schema
-        )} }, ${argsName}>`
+        `    ${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ` +
+          `${fieldNode.name.value}: ` +
+          `${constructType(type, schema)} }, ` +
+          `${argsName}>`
       );
     });
 
@@ -185,7 +186,9 @@ function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
       const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
       const type = unwrapType(fieldNode.type);
       const outputType = constructType(type, schema);
-      optimistic.push(`${fieldNode.name.value}?: GraphCacheOptimisticMutationResolver<${argsName}, ${outputType}>`);
+      optimistic.push(
+        `    ${fieldNode.name.value}?: GraphCacheOptimisticMutationResolver<` + `${argsName}, ` + `${outputType}>`
+      );
     });
 
     return optimistic;
@@ -216,10 +219,10 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
 
       'type GraphCacheUpdaters = {\n' +
         '  Mutation?: ' +
-        (mutationUpdaters ? mutationUpdaters.join('\n    ') : '{}') +
+        (mutationUpdaters ? `{\n${mutationUpdaters.join('\n    ')}\n  }` : '{}') +
         ',\n' +
         '  Subscription?: ' +
-        (subscriptionUpdaters ? subscriptionUpdaters.join('\n    ') : '{}') +
+        (subscriptionUpdaters ? `{\n${subscriptionUpdaters.join('\n    ')}\n  }` : '{}') +
         ',\n};',
 
       'export type GraphCacheConfig = {\n' +

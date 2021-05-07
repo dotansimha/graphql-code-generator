@@ -77,11 +77,13 @@ type GraphCacheResolvers = {
 };
 
 type GraphCacheOptimisticUpdaters = {
-  updateMedia?: GraphCacheOptimisticMutationResolver<MutationUpdateMediaArgs, Maybe<RequireFields<Media, '__typename'>>>
+      updateMedia?: GraphCacheOptimisticMutationResolver<MutationUpdateMediaArgs, Maybe<RequireFields<Media, '__typename'>>>
 };
 
 type GraphCacheUpdaters = {
-  Mutation?: updateMedia?: GraphCacheUpdateResolver<{ updateMedia: Maybe<RequireFields<Media, '__typename'>> }, MutationUpdateMediaArgs>,
+  Mutation?: {
+    updateMedia?: GraphCacheUpdateResolver<{ updateMedia: Maybe<RequireFields<Media, '__typename'>> }, MutationUpdateMediaArgs>
+  },
   Subscription?: {},
 };
 
@@ -121,19 +123,21 @@ type GraphCacheResolvers = {
 };
 
 type GraphCacheOptimisticUpdaters = {
-  toggleTodo?: GraphCacheOptimisticMutationResolver<MutationToggleTodoArgs, RequireFields<Todo, '__typename'>>
-  toggleTodos?: GraphCacheOptimisticMutationResolver<MutationToggleTodosArgs, Array<RequireFields<Todo, '__typename'>>>
-  toggleTodosOptionalArray?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArrayArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
-  toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalEntityArgs, Array<RequireFields<Todo, '__typename'>>>
-  toggleTodosOptional?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
+      toggleTodo?: GraphCacheOptimisticMutationResolver<MutationToggleTodoArgs, RequireFields<Todo, '__typename'>>
+      toggleTodos?: GraphCacheOptimisticMutationResolver<MutationToggleTodosArgs, Array<RequireFields<Todo, '__typename'>>>
+      toggleTodosOptionalArray?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArrayArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
+      toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalEntityArgs, Array<RequireFields<Todo, '__typename'>>>
+      toggleTodosOptional?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
 };
 
 type GraphCacheUpdaters = {
-  Mutation?: toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: RequireFields<Todo, '__typename'> }, MutationToggleTodoArgs>
-    toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosArgs>
-    toggleTodosOptionalArray?: GraphCacheUpdateResolver<{ toggleTodosOptionalArray: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArrayArgs>
-    toggleTodosOptionalEntity?: GraphCacheUpdateResolver<{ toggleTodosOptionalEntity: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosOptionalEntityArgs>
-    toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArgs>,
+  Mutation?: {
+    toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: RequireFields<Todo, '__typename'> }, MutationToggleTodoArgs>
+        toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosArgs>
+        toggleTodosOptionalArray?: GraphCacheUpdateResolver<{ toggleTodosOptionalArray: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArrayArgs>
+        toggleTodosOptionalEntity?: GraphCacheUpdateResolver<{ toggleTodosOptionalEntity: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosOptionalEntityArgs>
+        toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArgs>
+  },
   Subscription?: {},
 };
 
