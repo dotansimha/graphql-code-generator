@@ -5694,10 +5694,10 @@
     "@typescript-eslint/types" "4.22.1"
     eslint-visitor-keys "^2.0.0"
 
-"@urql/core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.0.0.tgz#b4936dd51fe84cb570506d9ee2579149689f7535"
-  integrity sha512-Qj24CG8ullqZZsYmjrSH0JhH+nY7kj8GbVbA9si3KUjlYs75A/MBQU3i97j6oWyGldDBapyis2CfaQeXKbv8rA==
+"@urql/core@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.1.0.tgz#b141562a4ff641654d1f1b25acac218f348a725e"
+  integrity sha512-YxjTJT/RcYHaaCP+RtkjYnnzBpxjaX0WZx36exgwOqlqWrukROYDnA2Ejmqn11GqLayWBtDGpHP71uGpZ3vz0Q==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.0"
     wonka "^4.0.14"
@@ -20432,12 +20432,12 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-2.0.2.tgz#53e8f22747eff4550e46b9bbc8b44aa9c6de3e68"
-  integrity sha512-ku5lT0vq7Efpd6Mg1r40C/z39GbGxFtuK2+le26+v125cQL7OVGzE2XzG3jSiHa5m6abCoZO9xS6N2QIfoJ/gg==
+urql@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-2.0.3.tgz#41bc4ad3ea7a1c995bbc8002f9ee82af1396bd26"
+  integrity sha512-CEfCsODKbAloDuAaT3NeMvibKpWxfS86DucI/HGam9uuqiZLpunuKb4p9+SWwoWLRf6Q1kUeQKGZoI5GqudOCg==
   dependencies:
-    "@urql/core" "^2.0.0"
+    "@urql/core" "^2.1.0"
     wonka "^4.0.14"
 
 use-composed-ref@^1.0.0:
