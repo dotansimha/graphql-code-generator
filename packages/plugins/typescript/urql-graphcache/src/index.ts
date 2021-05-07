@@ -25,7 +25,7 @@ const getObjectTypes = (schema: GraphQLSchema): GraphQLObjectType[] => {
   const objectTypes: GraphQLObjectType[] = [];
 
   for (const key in typeMap) {
-    if (!typeMap.hasOwnProperty(key)) continue;
+    if (!typeMap[key] || !typeMap[key].name) continue;
 
     const type = typeMap[key];
     switch (type.name) {
@@ -121,7 +121,7 @@ function getResolversConfig(schema: GraphQLSchema) {
       return fields;
     }, []);
 
-    resolvers.push(`${parentType.name}?: {\n` + fields.join('\n    ') + '\n  }');
+    resolvers.push(`  ${parentType.name}?: {\n    ` + fields.join('\n    ') + '\n  }');
 
     return resolvers;
   }, []);
@@ -208,9 +208,11 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
 
       keys,
 
-      'type GraphCacheResolvers = {' + resolvers.join('\n  ') + '\n};',
+      'type GraphCacheResolvers = {\n' + resolvers.join('\n') + '\n};',
 
-      'type GraphCacheOptimisticUpdaters = {\n' + optimisticUpdaters.join('\n  ') + '\n};',
+      'type GraphCacheOptimisticUpdaters = {\n  ' +
+        (optimisticUpdaters ? optimisticUpdaters.join('\n  ') : '{}') +
+        '\n};',
 
       'type GraphCacheUpdaters = {\n' +
         '  Mutation?: ' +
