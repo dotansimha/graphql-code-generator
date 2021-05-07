@@ -1,7 +1,6 @@
 import {
   GraphQLSchema,
   isWrappingType,
-  Kind,
   GraphQLWrappingType,
   TypeNode,
   GraphQLAbstractType,
@@ -130,13 +129,12 @@ function getResolversConfig(schema: GraphQLSchema) {
   return resolvers;
 }
 
-function getSubscriptionUpdatersConfig(schema: GraphQLSchema, subscriptionName: string) {
-  const updaters = [];
-  const typemap = schema.getTypeMap();
-  const subscriptionType = typemap[subscriptionName];
-
-  if (subscriptionType.astNode.kind === Kind.OBJECT_TYPE_DEFINITION) {
+function getSubscriptionUpdatersConfig(schema: GraphQLSchema): string[] | null {
+  const subscriptionType = schema.getSubscriptionType();
+  if (subscriptionType) {
+    const updaters: string[] = [];
     const { fields } = subscriptionType.astNode;
+
     fields.forEach(fieldNode => {
       const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
       const type = unwrapType(fieldNode.type);
@@ -147,18 +145,19 @@ function getSubscriptionUpdatersConfig(schema: GraphQLSchema, subscriptionName: 
         )} }, ${argsName}>`
       );
     });
-  }
 
-  return updaters;
+    return updaters;
+  } else {
+    return null;
+  }
 }
 
-function getMutationUpdaterConfig(schema: GraphQLSchema, mutationName: string) {
-  const updaters = [];
-  const typemap = schema.getTypeMap();
-  const mutationType = typemap[mutationName];
-
-  if (mutationType.astNode.kind === Kind.OBJECT_TYPE_DEFINITION) {
+function getMutationUpdaterConfig(schema: GraphQLSchema): string[] | null {
+  const mutationType = schema.getMutationType();
+  if (mutationType) {
+    const updaters: string[] = [];
     const { fields } = mutationType.astNode;
+
     fields.forEach(fieldNode => {
       const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
       const type = unwrapType(fieldNode.type);
@@ -169,85 +168,64 @@ function getMutationUpdaterConfig(schema: GraphQLSchema, mutationName: string) {
         )} }, ${argsName}>`
       );
     });
-  }
 
-  return updaters;
+    return updaters;
+  } else {
+    return null;
+  }
 }
 
-function getOptimisticUpdatersConfig(schema: GraphQLSchema, mutationName: string) {
-  const optimistic = [];
-  const typemap = schema.getTypeMap();
-  const mutationType = typemap[mutationName];
-
-  if (mutationType.astNode.kind === Kind.OBJECT_TYPE_DEFINITION) {
+function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
+  const mutationType = schema.getMutationType();
+  if (mutationType) {
+    const optimistic: string[] = [];
     const { fields } = mutationType.astNode;
+
     fields.forEach(fieldNode => {
       const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
       const type = unwrapType(fieldNode.type);
       const outputType = constructType(type, schema);
       optimistic.push(`${fieldNode.name.value}?: GraphCacheOptimisticMutationResolver<${argsName}, ${outputType}>`);
     });
+
+    return optimistic;
+  } else {
+    return null;
   }
-
-  return optimistic;
-}
-
-function createCacheGeneric() {
-  return `export type GraphCacheConfig = {
-  updates: GraphCacheUpdaters;
-  keys: GraphCacheKeysConfig;
-  optimistic: GraphCacheOptimisticUpdaters;
-  resolvers: GraphCacheResolvers;
-}`;
 }
 
 export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOutput> = (schema: GraphQLSchema) => {
-  const mutationName = schema.getMutationType()?.name;
-  const subscriptionsName = schema.getSubscriptionType()?.name;
-
   const keys = getKeysConfig(schema);
   const resolvers = getResolversConfig(schema);
-  let mutationUpdaters, subscriptionUpaters, optimisticUpdaters;
-  if (mutationName) {
-    mutationUpdaters = getMutationUpdaterConfig(schema, mutationName);
-    optimisticUpdaters = getOptimisticUpdatersConfig(schema, mutationName);
-  }
-
-  if (subscriptionsName) {
-    subscriptionUpaters = getSubscriptionUpdatersConfig(schema, subscriptionsName);
-  }
+  const mutationUpdaters = getMutationUpdaterConfig(schema);
+  const optimisticUpdaters = getOptimisticUpdatersConfig(schema);
+  const subscriptionUpdaters = getSubscriptionUpdatersConfig(schema);
 
   return {
     prepend: [imports],
     content: [
       `type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`,
+
       keys,
-      `type GraphCacheResolvers = {
-  ${resolvers.join('\n  ')}
-}`,
-      mutationName &&
-        `type GraphCacheOptimisticUpdaters = {
-  ${optimisticUpdaters.join('\n  ')}
-}`,
-      mutationName || subscriptionsName
-        ? `type GraphCacheUpdaters = {
-  Mutation?: ${
-    mutationName
-      ? `{
-    ${mutationUpdaters.join('\n    ')}
-  }`
-      : '{}'
-  }
-  Subscription?: ${
-    subscriptionsName
-      ? `{
-    ${subscriptionUpaters.join('\n    ')}
-  }`
-      : '{}'
-  }
-}`
-        : null,
-      createCacheGeneric(),
+
+      'type GraphCacheResolvers = {' + resolvers.join('\n  ') + '\n};',
+
+      'type GraphCacheOptimisticUpdaters = {\n' + optimisticUpdaters.join('\n  ') + '\n};',
+
+      'type GraphCacheUpdaters = {\n' +
+        '  Mutation?: ' +
+        (mutationUpdaters ? mutationUpdaters.join('\n    ') : '{}') +
+        ',\n' +
+        '  Subscription?: ' +
+        (subscriptionUpdaters ? subscriptionUpdaters.join('\n    ') : '{}') +
+        ',\n};',
+
+      'export type GraphCacheConfig = {\n' +
+        '  updates: GraphCacheUpdaters;\n' +
+        '  keys: GraphCacheKeysConfig;\n' +
+        '  optimistic: GraphCacheOptimisticUpdaters;\n' +
+        '  resolvers: GraphCacheResolvers;\n' +
+        '};',
     ]
       .filter(Boolean)
       .join('\n'),
