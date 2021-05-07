@@ -1,30 +1,64 @@
+import {
+  GraphQLSchema,
+  isWrappingType,
+  Kind,
+  GraphQLWrappingType,
+  TypeNode,
+  GraphQLAbstractType,
+  GraphQLObjectType,
+} from 'graphql';
+
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, isWrappingType, Kind, GraphQLWrappingType, TypeNode, GraphQLAbstractType } from 'graphql';
 import { UrqlGraphCacheConfig } from './config';
-import { baseTypes, imports } from './constants';
+import { imports } from './constants';
 
 type GraphQLFlatType = Exclude<TypeNode, GraphQLWrappingType>;
 
-const unwrapType = (type: null | undefined | TypeNode): GraphQLFlatType | null => {
-  if (isWrappingType(type)) {
-    return unwrapType(type.ofType);
+const unwrapType = (type: null | undefined | TypeNode): GraphQLFlatType | null =>
+  isWrappingType(type) ? unwrapType(type.ofType) : type || null;
+
+const getObjectTypes = (schema: GraphQLSchema): GraphQLObjectType[] => {
+  const typeMap = schema.getTypeMap();
+  const queryType = schema.getQueryType();
+  const mutationType = schema.getMutationType();
+  const subscriptionType = schema.getSubscriptionType();
+
+  const objectTypes: GraphQLObjectType[] = [];
+
+  for (const key in typeMap) {
+    if (!typeMap.hasOwnProperty(key)) continue;
+
+    const type = typeMap[key];
+    switch (type.name) {
+      case '__Directive':
+      case '__DirectiveLocation':
+      case '__EnumValue':
+      case '__InputValue':
+      case '__Field':
+      case '__Type':
+      case '__TypeKind':
+      case '__Schema':
+        continue;
+      default:
+        if (!(type instanceof GraphQLObjectType)) continue;
+    }
+
+    if (type !== queryType && type !== mutationType && type !== subscriptionType) {
+      objectTypes.push(type);
+    }
   }
 
-  return type || null;
+  return objectTypes;
 };
 
-function constructType(
-  typeNode: TypeNode,
-  schema: GraphQLSchema,
-  nullable = true,
-  allowString = false
-): string {
+function constructType(typeNode: TypeNode, schema: GraphQLSchema, nullable = true, allowString = false): string {
   switch (typeNode.kind) {
     case 'ListType': {
       return nullable
         ? `Maybe<Array<${constructType(typeNode.type, schema, false, allowString)}>>`
         : `Array<${constructType(typeNode.type, schema, false, allowString)}>`;
     }
+
     case 'NamedType': {
       const type = schema.getType(typeNode.name.value);
       if (!type.astNode) {
@@ -40,6 +74,7 @@ function constructType(
           const finalType = `RequireFields<${typeNode.name.value}, '__typename'>${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
+
         case 'InterfaceTypeDefinition': {
           const possibleTypes = schema.getPossibleTypes(type as GraphQLAbstractType).map(function contruct(x) {
             return `RequireFields<${x}, '__typename'>`;
@@ -48,8 +83,10 @@ function constructType(
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
       }
+
       break;
     }
+
     case 'NonNullType': {
       return constructType(typeNode.type, schema, false, allowString);
     }
@@ -59,62 +96,36 @@ function constructType(
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
 function getKeysConfig(schema: GraphQLSchema) {
-  const keys = [];
-
-  const roots = [
-    schema.getQueryType()?.name,
-    schema.getMutationType()?.name,
-    schema.getSubscriptionType()?.name,
-  ].filter(Boolean);
-
-  const typemap = schema.getTypeMap();
-  const isValidType = (type: string) => !roots.includes(type) && !type.startsWith('__') && !baseTypes.includes(type);
-
-  Object.keys(typemap).forEach(function (key) {
-    if (!isValidType(key)) return;
-
-    const type = typemap[key];
-    if (type.astNode?.kind !== Kind.OBJECT_TYPE_DEFINITION) return;
-
+  const keys = getObjectTypes(schema).reduce((keys, type) => {
     keys.push(`${type.name}?: (data: RequireFields<${type.name}, '__typename'>) => null | string`);
-  });
+    return keys;
+  }, []);
 
-  return `
-type GraphCacheKeysConfig = {
-  ${keys.join('\n  ')}
-}
-  `;
+  return '\ntype GraphCacheKeysConfig = {\n  ' + keys.join('\n  ') + '\n}\n';
 }
 
 function getResolversConfig(schema: GraphQLSchema) {
-  const resolvers = [];
+  const objectTypes = [schema.getQueryType(), ...getObjectTypes(schema)];
 
-  const roots = [schema.getMutationType()?.name, schema.getSubscriptionType()?.name].filter(Boolean);
-
-  const typemap = schema.getTypeMap();
-  const isValidType = (type: string) => !roots.includes(type) && !type.startsWith('__') && !baseTypes.includes(type);
-
-  Object.keys(typemap).forEach(function (key) {
-    if (!isValidType(key)) return;
-
-    const parentType = typemap[key];
-    if (parentType.astNode?.kind !== Kind.OBJECT_TYPE_DEFINITION) return;
-    const fields = [];
-    parentType.astNode.fields.forEach(function (field) {
+  const resolvers = objectTypes.reduce((resolvers, parentType) => {
+    const fields = parentType.astNode.fields.reduce((fields, field) => {
       const argsName =
         field.arguments && field.arguments.length ? `${parentType.name}${capitalize(field.name.value)}Args` : 'null';
       const type = unwrapType(field.type);
-      fields.push(
-        `${field.name.value}?: GraphCacheResolver<RequireFields<${
-          parentType.name
-        }, '__typename'>, ${argsName}, ${constructType(type, schema, false, true)}>`
-      );
-    });
 
-    resolvers.push(`${parentType.name}?: {
-    ${fields.join('\n    ')}
-  }`);
-  });
+      fields.push(
+        `${field.name.value}?: GraphCacheResolver<RequireFields<` +
+          `${parentType.name}, '__typename'>, ${argsName}, ` +
+          `${constructType(type, schema, false, true)}>`
+      );
+
+      return fields;
+    }, []);
+
+    resolvers.push(`${parentType.name}?: {\n` + fields.join('\n    ') + '\n  }');
+
+    return resolvers;
+  }, []);
 
   return resolvers;
 }
