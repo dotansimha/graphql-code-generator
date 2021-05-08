@@ -5702,10 +5702,10 @@
     "@graphql-typed-document-node/core" "^3.1.0"
     wonka "^4.0.14"
 
-"@urql/introspection@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.2.0.tgz#7fee8f17bb3911abb08c36c427cfc1ee4ef53662"
-  integrity sha512-wA3zsEbMOhfivUtUibEaguYs+QqT9SaJ+hPhXBLyXJkml4dbDlmBJnhLq+nCoduP8Gy8Saksxh0UzMoUEM9JzA==
+"@urql/introspection@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.0.tgz#545f2425b68d95892afa5961433a19aab1867268"
+  integrity sha512-dw87YiSmCgEUFnWj7fYu+wnrFcSEhYyQ8DykTvL1UzCKPm9uLDeey1z0yiSxZeX2qP9oD+TSGIq+61AZHhQO0w==
 
 "@vue/apollo-composable@4.0.0-alpha.12":
   version "4.0.0-alpha.12"
