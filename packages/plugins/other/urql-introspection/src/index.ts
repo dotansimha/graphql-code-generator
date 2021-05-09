@@ -46,6 +46,58 @@ export interface UrqlIntrospectionConfig {
    * ```
    */
   useTypeImports?: boolean;
+  /**
+   * @name includeScalars
+   * @type boolean
+   * @default false
+   * @description Includes scalar names (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeScalars: true
+   * ```
+   */
+  includeScalars?: boolean;
+  /**
+   * @name includeEnums
+   * @type boolean
+   * @default false
+   * @description Includes enums (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeEnums: true
+   * ```
+   */
+  includeEnums?: boolean;
+  /**
+   * @name includeInputs
+   * @type boolean
+   * @default false
+   * @description Includes all input objects (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeInputs: true
+   * ```
+   */
+  includeInputs?: boolean;
+  /**
+   * @name includeDirectives
+   * @type boolean
+   * @default false
+   * @description Includes all directives in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeDirectives: true
+   * ```
+   */
+  includeDirectives?: boolean;
 }
 
 const extensions = {
@@ -60,7 +112,7 @@ export const plugin: PluginFunction = async (
   pluginConfig: UrqlIntrospectionConfig,
   info
 ): Promise<string> => {
-  const config: Required<UrqlIntrospectionConfig> = {
+  const config: UrqlIntrospectionConfig = {
     module: 'es2015',
     useTypeImports: false,
     ...pluginConfig,
@@ -68,7 +120,14 @@ export const plugin: PluginFunction = async (
 
   const ext = extname(info.outputFile).toLowerCase();
 
-  const minifiedData = minifyIntrospectionQuery(minifyIntrospectionQuery(getIntrospectedSchema(schema)));
+  const minifiedData = minifyIntrospectionQuery(
+    minifyIntrospectionQuery(getIntrospectedSchema(schema), {
+      includeDirectives: config.includeDirectives,
+      includeEnums: config.includeEnums,
+      includeInputs: config.includeInputs,
+      includeScalars: config.includeScalars,
+    })
+  );
 
   const content = JSON.stringify(minifiedData, null, 2);
 

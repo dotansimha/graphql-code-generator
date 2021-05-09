@@ -468,6 +468,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Entry',
+                ofType: null,
               },
             },
             args: [
@@ -502,6 +503,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -521,6 +523,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'User',
+              ofType: null,
             },
             args: [],
           },
@@ -538,6 +541,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Repository',
+                ofType: null,
               },
             },
             args: [],
@@ -549,6 +553,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'User',
+                ofType: null,
               },
             },
             args: [],
@@ -595,6 +600,7 @@ export default ({
                 ofType: {
                   kind: 'OBJECT',
                   name: 'Comment',
+                  ofType: null,
                 },
               },
             },
@@ -644,6 +650,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Vote',
+                ofType: null,
               },
             },
             args: [],
@@ -720,6 +727,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'User',
+              ofType: null,
             },
             args: [],
           },
@@ -788,6 +796,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'User',
+                ofType: null,
               },
             },
             args: [],
@@ -855,6 +864,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -874,6 +884,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -903,6 +914,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Comment',
+              ofType: null,
             },
             args: [
               {
@@ -939,6 +951,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Comment',
+              ofType: null,
             },
             args: [
               {
