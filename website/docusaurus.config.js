@@ -77,7 +77,7 @@ module.exports = {
   },
   scripts: [
     '/js/fix-location.js',
-    'https://the-guild.dev/static/banner.js'
+    'https://the-guild.dev/static/crisp.js'
   ],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
