@@ -75,7 +75,10 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} GraphQL Code Generator, The Guild, Inc. Built with Docusaurus.`,
     },
   },
-  scripts: ['/js/fix-location.js'],
+  scripts: [
+    '/js/fix-location.js',
+    'https://the-guild.dev/static/banner.js'
+  ],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
     [
