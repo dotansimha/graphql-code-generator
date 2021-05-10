@@ -8,39 +8,39 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface SvelteApolloVisitorConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name addSvelteContext
-   * @description Generates a custom Svelte context for Apollo Client.
-   * @default false
-   *
-   * @exampleMarkdown
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-svelte-apollo
-   *  config:
-   *    addSvelteContext: true
-   * ```
-   */
-  addSvelteContext?: boolean;
-  /**
    * @name loadGetClientFrom
-   * @description Overrides the path from where getClient is load. The function returns ApolloClient instance. The parameter is ignored when addSvelteContext is true. Compatible with Svelte-Apollo package (from Microsoft).
+   * @description Overrides the path from where getClient is load. The function should return ApolloClient instance. Compatible with Svelte-Apollo package (from Microsoft).
    * @default svelte-apollo
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-svelte-apollo
-   *  config:
-   *    loadGetClientFrom: ./client
+   *   plugins:
+   *     - typescript
+   *     - typescript-operations
+   *     - typescript-svelte-apollo
+   *   config:
+   *     loadGetClientFrom: ./client
    * ```
    */
   loadGetClientFrom?: string;
+  /**
+   * @name exportOnlyFunctions
+   * @description If true, the generated file exports only functions (getClient, setClient, queries, mutations, subscriptions). The graphql documents, data types, input and output formats are not exported.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yaml
+   * generates:
+   * path/to/file.ts:
+   *   plugins:
+   *     - typescript
+   *     - typescript-operations
+   *     - typescript-svelte-apollo
+   *   config:
+   *     exportOnlyFunctions: true
+   * ```
+   */
+  exportOnlyFunctions?: boolean;
 }

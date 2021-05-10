@@ -16,44 +16,44 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
 ## API Reference
 
-### `addSvelteContext`
-
-type: `boolean`
-default: `false`
-
-Generates a custom Svelte context for Apollo Client.
-
-#### Usage Examples
-
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - typescript
-   - typescript-operations
-   - typescript-svelte-apollo
- config:
-   addSvelteContext: true
-```
-
 ### `loadGetClientFrom`
 
 type: `string`
 default: `svelte-apollo`
 
-Overrides the path from where getClient is load. The function returns ApolloClient instance. The parameter is ignored when addSvelteContext is true. Compatible with Svelte-Apollo package (from Microsoft).
+Overrides the path from where getClient is load. The function should return ApolloClient instance. Compatible with Svelte-Apollo package (from Microsoft).
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
- plugins:
-   - typescript
-   - typescript-operations
-   - typescript-svelte-apollo
- config:
-   loadGetClientFrom: ./client
+  plugins:
+    - typescript
+    - typescript-operations
+    - typescript-svelte-apollo
+  config:
+    loadGetClientFrom: ./client
+```
+
+### `exportOnlyFunctions`
+
+type: `boolean`
+default: `false`
+
+If true, the generated file exports only functions (getClient, setClient, queries, mutations, subscriptions). The graphql documents, data types, input and output formats are not exported.
+
+#### Usage Examples
+
+```yaml
+generates:
+path/to/file.ts:
+  plugins:
+    - typescript
+    - typescript-operations
+    - typescript-svelte-apollo
+  config:
+    exportOnlyFunctions: true
 ```
 
 ### `noGraphQLTag`

@@ -223,8 +223,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-svelte-apollo
-    config:
-      addSvelteContext: true
   ./dev-test/githunt/types.stencilApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

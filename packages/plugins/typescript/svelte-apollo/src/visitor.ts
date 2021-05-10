@@ -6,33 +6,30 @@ import { SvelteApolloVisitorConfig } from './config';
 
 export class SvelteApolloVisitor extends ClientSideBaseVisitor {
   private imports = new Set<string>();
-  private basicConfig: {
-    addSvelteContext: boolean;
-    loadGetClientFrom: string;
+  private svelteConfig: {
+    loadGetClientFrom?: string;
     noExport: boolean;
   };
 
   constructor(
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
-    { addSvelteContext, loadGetClientFrom = 'svelte-apollo', noExport, ...config }: SvelteApolloVisitorConfig,
+    { loadGetClientFrom, exportOnlyFunctions = false, noExport = false, ...config }: SvelteApolloVisitorConfig,
     documents?: Types.DocumentFile[]
   ) {
-    super(schema, fragments, { ...config, noExport }, {}, documents);
-    this.basicConfig = { addSvelteContext, loadGetClientFrom, noExport };
+    super(schema, fragments, { ...config, noExport: exportOnlyFunctions || noExport }, {}, documents);
+    this.svelteConfig = { loadGetClientFrom, noExport: exportOnlyFunctions && noExport };
   }
 
   getImports(): string[] {
     const loads = {};
     const apolloImports = [];
 
-    if (this.basicConfig.addSvelteContext) {
+    if (this.svelteConfig.loadGetClientFrom) {
+      loads[this.svelteConfig.loadGetClientFrom] = ['getClient'];
+    } else {
       apolloImports.push('ApolloClient');
       loads['svelte'] = ['getContext', 'setContext'];
-    } else {
-      if (this.basicConfig.loadGetClientFrom) {
-        loads[this.basicConfig.loadGetClientFrom] = ['getClient'];
-      }
     }
 
     if (this.imports.size) {
@@ -47,7 +44,7 @@ export class SvelteApolloVisitor extends ClientSideBaseVisitor {
   }
 
   getExecutions(): string {
-    return !this.basicConfig.addSvelteContext ? '' : this.getSvelteContext();
+    return this.svelteConfig.loadGetClientFrom ? '' : this.getSvelteContext();
   }
 
   protected buildOperation(
@@ -102,7 +99,7 @@ export class SvelteApolloVisitor extends ClientSideBaseVisitor {
     operationVariablesTypes: string,
     requiresVariables: boolean
   ): string {
-    const $e = this.basicConfig.noExport ? '' : 'export ';
+    const $e = this.svelteConfig.noExport ? '' : 'export ';
     const $d = requiresVariables ? ' = {}' : '';
     return `${$e}const Query${name} = (
       options: Omit<QueryOptions<${operationVariablesTypes}>, "query">${$d}
@@ -117,7 +114,7 @@ export class SvelteApolloVisitor extends ClientSideBaseVisitor {
     operationVariablesTypes: string,
     requiresVariables: boolean
   ): string {
-    const $e = this.basicConfig.noExport ? '' : 'export ';
+    const $e = this.svelteConfig.noExport ? '' : 'export ';
     const $d = requiresVariables ? ' = {}' : '';
     return `${$e}const Mutation${name} = (
       options: Omit<MutationOptions<${operationResultType}, ${operationVariablesTypes}>, "mutation">${$d}
@@ -132,7 +129,7 @@ export class SvelteApolloVisitor extends ClientSideBaseVisitor {
     operationVariablesTypes: string,
     requiresVariables: boolean
   ): string {
-    const $e = this.basicConfig.noExport ? '' : 'export ';
+    const $e = this.svelteConfig.noExport ? '' : 'export ';
     const $d = requiresVariables ? ' = {}' : '';
     return `${$e}const Subscription${name} = (
       options: Omit<SubscriptionOptions<${operationVariablesTypes}>, "query">${$d}
@@ -141,12 +138,10 @@ export class SvelteApolloVisitor extends ClientSideBaseVisitor {
   }
 
   private getSvelteContext(): string {
-    const $e = this.basicConfig.noExport ? '' : 'export ';
     return `
-// addSvelteContext
 const CLIENT = typeof Symbol !== "undefined" ? Symbol("client") : "@@client";
 
-${$e}function getClient<TCache = any>() {
+export function getClient<TCache = any>() {
 	const client = getContext(CLIENT);
 	if (!client) {
 		throw new Error(
@@ -156,8 +151,9 @@ ${$e}function getClient<TCache = any>() {
 	return client as ApolloClient<TCache>;
 }
 
-${$e}function setClient<TCache = any>(client: ApolloClient<TCache>): void {
+export function setClient<TCache = any>(client: ApolloClient<TCache>): void {
 	setContext(CLIENT, client);
-}`;
+}
+`;
   }
 }

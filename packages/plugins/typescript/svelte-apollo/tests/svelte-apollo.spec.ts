@@ -176,7 +176,7 @@ describe('Svelte Apollo', () => {
       mutationDoc,
       subsComments,
       mutationNoVariableDoc,
-    };
+    } as const;
   })();
 
   const plugins = {
@@ -185,7 +185,7 @@ describe('Svelte Apollo', () => {
     'typescript-svelte-apollo': plugin,
   } as const;
 
-  const runPlugin = mockPlugin<Types.ComplexPluginOutput>(
+  const runPlugin = mockPlugin<Types.ComplexPluginOutput, keyof typeof documents, keyof typeof plugins>(
     buildClientSchema(require('../../../../../dev-test/githunt/schema.json')),
     documents,
     plugins,
@@ -196,10 +196,8 @@ describe('Svelte Apollo', () => {
     it('Should import SvelteApollo (from Microsoft) and ApolloClient dependencies', async () => {
       const { prepend } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -209,18 +207,16 @@ describe('Svelte Apollo', () => {
       `);
 
       expect(prepend).toContain(`import gql from 'graphql-tag';`);
-      expect(prepend).toContain('import type { QueryOptions } from "@apollo/client";');
-      expect(prepend).toContain('import { getClient } from "svelte-apollo";');
+      expect(prepend).toContain('import type { ApolloClient, QueryOptions } from "@apollo/client";');
+      expect(prepend).toContain('import { getContext, setContext } from "svelte";');
     });
 
     it('Should load getClient from a specified path', async () => {
       const path = './client';
       const { prepend } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -236,21 +232,17 @@ describe('Svelte Apollo', () => {
       expect(prepend).toContain(`import { getClient } from "${path}";`);
     });
 
-    it('Should import svelte context builder when using addSvelteContext', async () => {
+    it('Should import svelte context builder when using empty config', async () => {
       const { prepend } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
               - typescript
               - typescript-operations
               - typescript-svelte-apollo
-            config:
-              addSvelteContext: true
       `);
 
       expect(prepend).toContain(`import gql from 'graphql-tag';`);
@@ -258,14 +250,11 @@ describe('Svelte Apollo', () => {
       expect(prepend).toContain('import { getContext, setContext } from "svelte";');
     });
 
-    it('Should silent loadGetClientFrom when using addSvelteContext', async () => {
-      const path = './client';
-      const { prepend } = await runPlugin(yaml`
+    it('Should export only functions when using exportOnlyFunctions', async () => {
+      const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -273,20 +262,55 @@ describe('Svelte Apollo', () => {
               - typescript-operations
               - typescript-svelte-apollo
             config:
-              loadGetClientFrom: ${path}
-              addSvelteContext: true
+              exportOnlyFunctions: true
       `);
 
-      expect(prepend).not.toContain(`import { getClient } from "${path}";`);
+      expect(content).toBeSimilarStringTo(`
+        const CLIENT = typeof Symbol !== "undefined" ? Symbol("client") : "@@client";
+
+        export function getClient<TCache = any>() {
+        	const client = getContext(CLIENT);
+        	if (!client) {
+        		throw new Error(
+        			"ApolloClient has not been set yet, use setClient(new ApolloClient({ ... })) to define it"
+        		);
+        	}
+        	return client as ApolloClient<TCache>;
+        }
+
+        export function setClient<TCache = any>(client: ApolloClient<TCache>): void {
+        	setContext(CLIENT, client);
+        }
+
+
+
+
+         const ListFeedDocument = gql\`
+            query listFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+            \`;
+        export const QueryListFeed = (
+              options: Omit<QueryOptions<ListFeedQueryVariables>, "query">
+            ) => getClient().query<ListFeedQuery>({ query: ListFeedDocument, ...options })
+      `);
     });
 
     it('Should import DocumentNode when using noGraphQLTag', async () => {
       const { prepend, content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -308,10 +332,8 @@ describe('Svelte Apollo', () => {
       const errorFn = () =>
         runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - unnamedQueryDoc
+        schema: data/src/**/*.graphql
+        documents: unnamedQueryDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -326,10 +348,8 @@ describe('Svelte Apollo', () => {
     it('Should generate Document variables for inline fragments', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - myFeed
+        schema: data/src/**/*.graphql
+        documents: myFeed
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -339,6 +359,23 @@ describe('Svelte Apollo', () => {
       `);
 
       expect(content).toBeSimilarStringTo(`
+        const CLIENT = typeof Symbol !== "undefined" ? Symbol("client") : "@@client";
+
+        export function getClient<TCache = any>() {
+          const client = getContext(CLIENT);
+          if (!client) {
+            throw new Error(
+              "ApolloClient has not been set yet, use setClient(new ApolloClient({ ... })) to define it"
+            );
+          }
+          return client as ApolloClient<TCache>;
+        }
+
+        export function setClient<TCache = any>(client: ApolloClient<TCache>): void {
+          setContext(CLIENT, client);
+        }
+
+
         export const RepositoryWithOwnerFragmentDoc = gql\`
             fragment RepositoryWithOwner on Repository {
           full_name
@@ -374,8 +411,7 @@ describe('Svelte Apollo', () => {
     it('Should avoid generating duplicate fragments', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
+        schema: data/src/**/*.graphql
         documents:
           - simpleFeed
           - mySecondFeed
@@ -413,10 +449,8 @@ describe('Svelte Apollo', () => {
     it('Should generate fragments in proper order (when one depends on other)', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - myThirdFeed
+        schema: data/src/**/*.graphql
+        documents: myThirdFeed
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -433,10 +467,8 @@ describe('Svelte Apollo', () => {
     it('Should translate graphql to DocumentNode when using noGraphQLTag', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - basicDoc
+        schema: data/src/**/*.graphql
+        documents: basicDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -460,10 +492,8 @@ describe('Svelte Apollo', () => {
     it('Should generate composition functions for query and mutation', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - submitter
+        schema: data/src/**/*.graphql
+        documents: submitter
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -507,10 +537,8 @@ describe('Svelte Apollo', () => {
     it('Should generate deduped composition functions for query and mutation', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - documentDedupe
+        schema: data/src/**/*.graphql
+        documents: documentDedupe
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -556,10 +584,8 @@ describe('Svelte Apollo', () => {
     it('Should generate subscription composition functions', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - subsComments
+        schema: data/src/**/*.graphql
+        documents: subsComments
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -585,10 +611,8 @@ describe('Svelte Apollo', () => {
     it('Should generate a mutation composition function with no variables if not specified in graphql document', async () => {
       const { content } = await runPlugin(yaml`
         overwrite: true
-        schema:
-          - data/src/**/*.graphql
-        documents:
-          - mutationNoVariableDoc
+        schema: data/src/**/*.graphql
+        documents: mutationNoVariableDoc
         generates:
           src/graphql/generated.ts:
             plugins:
@@ -597,8 +621,8 @@ describe('Svelte Apollo', () => {
               - typescript-svelte-apollo
       `);
 
-      expect(content).toMatchInlineSnapshot(`
-        "export const SubmitRepositoryDocument = gql\`
+      expect(content).toBeSimilarStringTo(`
+        export const SubmitRepositoryDocument = gql\`
             mutation submitRepository {
           submitRepository {
             id
@@ -606,8 +630,8 @@ describe('Svelte Apollo', () => {
         }
             \`;
         export const MutationSubmitRepository = (
-              options: Omit<MutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, \\"mutation\\">
-            ) => getClient().mutate({ mutation: SubmitRepositoryDocument, ...options })"
+              options: Omit<MutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, "mutation">
+            ) => getClient().mutate({ mutation: SubmitRepositoryDocument, ...options })
       `);
     });
   });

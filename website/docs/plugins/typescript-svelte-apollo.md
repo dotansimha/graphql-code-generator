@@ -23,7 +23,7 @@ query Message {
 }
 ```
 
-We can use the generated code by setting AppoloClient context:
+We can use the generated code by setting ApolloClient context:
 
 ```svelte
 // file: src/modules/App.svelte

@@ -1,3 +1,5 @@
+// The function `injectImports` below helps you to create easy import syntax in you typescript file.
+
 const isString = (item: unknown): item is string => typeof item === 'string';
 
 const isObject = <K extends string | number | symbol = string | number | symbol, V = any>(
@@ -28,6 +30,30 @@ const stringShouldMatch = (text: string, rx: RegExp, errorMessage: string): stri
 
 const shouldBeVariableName = (text: string): string =>
   stringShouldMatch(text, /^[_A-Za-z]\w*$/, `Syntax error, string ${ellipsisQuoted(text)} is not a variable name`);
+
+/**
+ * Function `injectImports` helps you to create `import` syntax in you typescript file.
+ * @name injectImports
+ * @param {Object} source is a dictionary associating `keys` as paths to `values` as imported variables
+ * @param {boolean} isTypeOnly transforms `import` to `import type`.
+ * @returns {string[]} imports lines separated by paths.
+ *
+ * @example
+ * // returns [
+ * //   'import gql from "graphql-tag"',
+ * //   'import type { QueryOptions } from "@apollo/client"',
+ * //   'import { getContext as getSvelteContext, setContext } from "svelte"',
+ * //   'import "../common"',
+ * //   'import * as allStyles from "./styles"'
+ * // ];
+ * injectImports({
+ *   "graphql-tag": "gql",
+ *   "@apollo/client": { "type": [ QueryOptions ] },
+ *   "svelte": [ { "getContext": "getSvelteContext" }, "setContext" ],
+ *   "../common": true,
+ *   "./styles": { "*": "allStyles" }
+ * });
+ */
 
 export default function injectImports<T extends string | Record<string, string> | (string | Record<string, string>)[]>(
   source: Record<string, T>,

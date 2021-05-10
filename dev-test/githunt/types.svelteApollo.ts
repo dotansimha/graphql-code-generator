@@ -270,7 +270,6 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-// addSvelteContext
 const CLIENT = typeof Symbol !== 'undefined' ? Symbol('client') : '@@client';
 
 export function getClient<TCache = any>() {
