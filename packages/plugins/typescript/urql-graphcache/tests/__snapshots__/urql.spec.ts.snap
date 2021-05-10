@@ -2,35 +2,35 @@
 
 exports[`urql graphcache Should output the cache-generic correctly (with interfaces) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
-type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { ['__typename']-?: NonNullable<T['__typename']> };
 
 type GraphCacheKeysConfig = {
-  Author?: (data: RequireFields<Author, '__typename'>) => null | string,
-  Todo?: (data: RequireFields<Todo, '__typename'>) => null | string,
-  Textbook?: (data: RequireFields<Textbook, '__typename'>) => null | string
+  Author?: (data: WithTypename<Author>) => null | string,
+  Todo?: (data: WithTypename<Todo>) => null | string,
+  Textbook?: (data: WithTypename<Textbook>) => null | string
 }
 
 type GraphCacheResolvers = {
   Query?: {
-    schoolBooks?: GraphCacheResolver<RequireFields<Query, '__typename'>, null, Array<RequireFields<Textbook, '__typename'> | string>>
+    schoolBooks?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Textbook> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Scalars['ID']>,
-    name?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Scalars['String']>,
-    friends?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Array<RequireFields<Author, '__typename'> | string>>,
-    friendsPaginated?: GraphCacheResolver<RequireFields<Author, '__typename'>, AuthorFriendsPaginatedArgs, Array<RequireFields<Author, '__typename'> | string>>
+    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID']>,
+    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String']>,
+    friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
+    friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['ID']>,
-    text?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['String']>,
-    complete?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['Boolean']>,
-    author?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, RequireFields<Author, '__typename'> | string>
+    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID']>,
+    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String']>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean']>,
+    author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
   },
   Textbook?: {
-    id?: GraphCacheResolver<RequireFields<Textbook, '__typename'>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<RequireFields<Textbook, '__typename'>, null, Scalars['String']>,
-    author?: GraphCacheResolver<RequireFields<Textbook, '__typename'>, null, RequireFields<Author, '__typename'> | string>,
-    todo?: GraphCacheResolver<RequireFields<Textbook, '__typename'>, null, RequireFields<Todo, '__typename'> | string>
+    id?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['ID']>,
+    title?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['String']>,
+    author?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Author> | string>,
+    todo?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Todo> | string>
   }
 };
 
@@ -53,36 +53,36 @@ export type GraphCacheConfig = {
 
 exports[`urql graphcache Should output the cache-generic correctly (with unions) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
-type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { ['__typename']-?: NonNullable<T['__typename']> };
 
 type GraphCacheKeysConfig = {
-  Book?: (data: RequireFields<Book, '__typename'>) => null | string,
-  Movie?: (data: RequireFields<Movie, '__typename'>) => null | string
+  Book?: (data: WithTypename<Book>) => null | string,
+  Movie?: (data: WithTypename<Movie>) => null | string
 }
 
 type GraphCacheResolvers = {
   Query?: {
-    media?: GraphCacheResolver<RequireFields<Query, '__typename'>, null, Array<RequireFields<Media, '__typename'> | string>>
+    media?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Media> | string>>
   },
   Book?: {
-    id?: GraphCacheResolver<RequireFields<Book, '__typename'>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<RequireFields<Book, '__typename'>, null, Scalars['String']>,
-    pages?: GraphCacheResolver<RequireFields<Book, '__typename'>, null, Scalars['Int']>
+    id?: GraphCacheResolver<WithTypename<Book>, null, Scalars['ID']>,
+    title?: GraphCacheResolver<WithTypename<Book>, null, Scalars['String']>,
+    pages?: GraphCacheResolver<WithTypename<Book>, null, Scalars['Int']>
   },
   Movie?: {
-    id?: GraphCacheResolver<RequireFields<Movie, '__typename'>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<RequireFields<Movie, '__typename'>, null, Scalars['String']>,
-    duration?: GraphCacheResolver<RequireFields<Movie, '__typename'>, null, Scalars['Int']>
+    id?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['ID']>,
+    title?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['String']>,
+    duration?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['Int']>
   }
 };
 
 type GraphCacheOptimisticUpdaters = {
-  updateMedia?: GraphCacheOptimisticMutationResolver<MutationUpdateMediaArgs, Maybe<RequireFields<Media, '__typename'>>>
+  updateMedia?: GraphCacheOptimisticMutationResolver<MutationUpdateMediaArgs, Maybe<WithTypename<Media>>>
 };
 
 type GraphCacheUpdaters = {
   Mutation?: {
-    updateMedia?: GraphCacheUpdateResolver<{ updateMedia: Maybe<RequireFields<Media, '__typename'>> }, MutationUpdateMediaArgs>
+    updateMedia?: GraphCacheUpdateResolver<{ updateMedia: Maybe<WithTypename<Media>> }, MutationUpdateMediaArgs>
   },
   Subscription?: {},
 };
@@ -97,46 +97,46 @@ export type GraphCacheConfig = {
 
 exports[`urql graphcache Should output the cache-generic correctly 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
-type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { ['__typename']-?: NonNullable<T['__typename']> };
 
 type GraphCacheKeysConfig = {
-  Author?: (data: RequireFields<Author, '__typename'>) => null | string,
-  Todo?: (data: RequireFields<Todo, '__typename'>) => null | string
+  Author?: (data: WithTypename<Author>) => null | string,
+  Todo?: (data: WithTypename<Todo>) => null | string
 }
 
 type GraphCacheResolvers = {
   Query?: {
-    todos?: GraphCacheResolver<RequireFields<Query, '__typename'>, null, Array<RequireFields<Todo, '__typename'> | string>>
+    todos?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Todo> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Scalars['ID']>,
-    name?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Scalars['String']>,
-    friends?: GraphCacheResolver<RequireFields<Author, '__typename'>, null, Array<RequireFields<Author, '__typename'> | string>>,
-    friendsPaginated?: GraphCacheResolver<RequireFields<Author, '__typename'>, AuthorFriendsPaginatedArgs, Array<RequireFields<Author, '__typename'> | string>>
+    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID']>,
+    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String']>,
+    friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
+    friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['ID']>,
-    text?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['String']>,
-    complete?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, Scalars['Boolean']>,
-    author?: GraphCacheResolver<RequireFields<Todo, '__typename'>, null, RequireFields<Author, '__typename'> | string>
+    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID']>,
+    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String']>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean']>,
+    author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
   }
 };
 
 type GraphCacheOptimisticUpdaters = {
-  toggleTodo?: GraphCacheOptimisticMutationResolver<MutationToggleTodoArgs, RequireFields<Todo, '__typename'>>,
-  toggleTodos?: GraphCacheOptimisticMutationResolver<MutationToggleTodosArgs, Array<RequireFields<Todo, '__typename'>>>,
-  toggleTodosOptionalArray?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArrayArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>,
-  toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalEntityArgs, Array<RequireFields<Todo, '__typename'>>>,
-  toggleTodosOptional?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArgs, Maybe<Array<RequireFields<Todo, '__typename'>>>>
+  toggleTodo?: GraphCacheOptimisticMutationResolver<MutationToggleTodoArgs, WithTypename<Todo>>,
+  toggleTodos?: GraphCacheOptimisticMutationResolver<MutationToggleTodosArgs, Array<WithTypename<Todo>>>,
+  toggleTodosOptionalArray?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArrayArgs, Maybe<Array<WithTypename<Todo>>>>,
+  toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalEntityArgs, Array<WithTypename<Todo>>>,
+  toggleTodosOptional?: GraphCacheOptimisticMutationResolver<MutationToggleTodosOptionalArgs, Maybe<Array<WithTypename<Todo>>>>
 };
 
 type GraphCacheUpdaters = {
   Mutation?: {
-    toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: RequireFields<Todo, '__typename'> }, MutationToggleTodoArgs>,
-    toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosArgs>,
-    toggleTodosOptionalArray?: GraphCacheUpdateResolver<{ toggleTodosOptionalArray: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArrayArgs>,
-    toggleTodosOptionalEntity?: GraphCacheUpdateResolver<{ toggleTodosOptionalEntity: Array<RequireFields<Todo, '__typename'>> }, MutationToggleTodosOptionalEntityArgs>,
-    toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<RequireFields<Todo, '__typename'>>> }, MutationToggleTodosOptionalArgs>
+    toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: WithTypename<Todo> }, MutationToggleTodoArgs>,
+    toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<WithTypename<Todo>> }, MutationToggleTodosArgs>,
+    toggleTodosOptionalArray?: GraphCacheUpdateResolver<{ toggleTodosOptionalArray: Maybe<Array<WithTypename<Todo>>> }, MutationToggleTodosOptionalArrayArgs>,
+    toggleTodosOptionalEntity?: GraphCacheUpdateResolver<{ toggleTodosOptionalEntity: Array<WithTypename<Todo>> }, MutationToggleTodosOptionalEntityArgs>,
+    toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<WithTypename<Todo>>> }, MutationToggleTodosOptionalArgs>
   },
   Subscription?: {},
 };
