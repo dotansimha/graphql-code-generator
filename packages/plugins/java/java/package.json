@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java",
-  "version": "1.19.0",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator plugin for generating Java code based on a GraphQL schema",
   "repository": {
     "type": "git",

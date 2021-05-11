@@ -37,7 +37,7 @@
     "@graphql-codegen/fragment-matcher": "2.0.1",
     "@graphql-codegen/import-types-preset": "1.18.1",
     "@graphql-codegen/introspection": "1.18.2",
-    "@graphql-codegen/java": "1.19.0",
+    "@graphql-codegen/java": "2.0.0",
     "@graphql-codegen/java-apollo-android": "1.17.12",
     "@graphql-codegen/java-resolvers": "1.18.0",
     "@graphql-codegen/jsdoc": "1.17.9",
