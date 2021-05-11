@@ -1,5 +1,11 @@
 # @graphql-codegen/java
 
+## 2.0.0
+
+### Major Changes
+
+- 9481e469: Replace java reserved keyword new with \_new
+
 ## 1.19.0
 
 ### Minor Changes
