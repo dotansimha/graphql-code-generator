@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.2.0
+
+### Minor Changes
+
+- 9b59605d: feat(typescript-graphql-request): Add enhancements to request middleware function (#5883, #5807) #5884
+
+### Patch Changes
+
+- Updated dependencies [637338cb]
+  - @graphql-codegen/plugin-helpers@1.18.6
+
 ## 3.1.1
 
 ### Patch Changes

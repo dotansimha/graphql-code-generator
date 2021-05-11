@@ -1,5 +1,16 @@
 # @graphql-codegen/urql-introspection
 
+## 1.3.0
+
+### Minor Changes
+
+- 3736a3b2: feat(urql-introspection): add more options
+
+### Patch Changes
+
+- Updated dependencies [637338cb]
+  - @graphql-codegen/plugin-helpers@1.18.6
+
 ## 1.2.0
 
 ### Minor Changes
