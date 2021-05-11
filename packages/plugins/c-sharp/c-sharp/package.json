@@ -12,7 +12,6 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^1.18.5",
     "@graphql-codegen/visitor-plugin-common": "^1.20.0",
-    "strip-indent": "^4.0.0",
     "tslib": "~2.2.0",
     "unixify": "^1.0.0",
     "change-case-all": "1.0.14"
