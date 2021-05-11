@@ -46,7 +46,7 @@
     "@graphql-codegen/time": "2.0.2",
     "js-yaml": "4.1.0",
     "monaco-yaml": "2.5.1",
-    "react-markdown": "5.0.3",
+    "react-markdown": "6.0.2",
     "@graphql-codegen/typescript": "1.22.0",
     "@graphql-codegen/typed-document-node": "1.18.5",
     "@graphql-codegen/typescript-apollo-angular": "2.3.3",
