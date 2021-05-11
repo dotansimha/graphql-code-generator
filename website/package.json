@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@graphql-codegen/add": "2.0.2",
-    "@graphql-codegen/c-sharp": "1.19.0",
+    "@graphql-codegen/c-sharp": "2.0.0",
     "@graphql-codegen/c-sharp-operations": "1.19.0",
     "@graphql-codegen/cli": "1.21.4",
     "@graphql-codegen/flow": "1.19.0",
@@ -53,7 +53,7 @@
     "@graphql-codegen/typescript-compatibility": "2.1.0",
     "@graphql-codegen/typescript-generic-sdk": "1.17.10",
     "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
-    "@graphql-codegen/typescript-graphql-request": "3.1.1",
+    "@graphql-codegen/typescript-graphql-request": "3.2.0",
     "@graphql-codegen/typescript-mongodb": "1.19.0",
     "@graphql-codegen/typescript-operations": "1.17.16",
     "@graphql-codegen/typescript-react-apollo": "2.2.4",
