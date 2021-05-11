@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import indentString from 'indent-string';
+import { indentString } from './indent-string';
 import logSymbol from 'log-symbols';
 import ansiEscapes from 'ansi-escapes';
 import wrapAnsi from 'wrap-ansi';
