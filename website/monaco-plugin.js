@@ -16,6 +16,8 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const MONACO_DIR = path.resolve(__dirname, '../node_modules/monaco-editor');
 
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+
 module.exports = function () {
   return {
     name: 'monaco-plugin',
@@ -32,20 +34,17 @@ module.exports = function () {
           rules: [
             {
               test: /\.ttf$/,
-              use: ['file-loader']
+              use: ['file-loader'],
             },
             {
               test: /\.css$/,
               include: MONACO_DIR,
               use: ['style-loader', 'css-loader'],
-            }
-          ]
+            },
+          ],
         },
-        plugins: [
-          ...(config.plugins || []),
-          new MonacoWebpackPlugin()
-        ],
-      }
+        plugins: [...(config.plugins || []), new MonacoWebpackPlugin(), new NodePolyfillPlugin()],
+      };
     },
   };
 };

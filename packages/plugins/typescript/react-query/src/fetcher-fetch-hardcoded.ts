@@ -2,7 +2,6 @@ import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
 import { HardcodedFetch } from './config';
-import { URL } from 'url';
 import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
