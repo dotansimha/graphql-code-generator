@@ -207,7 +207,7 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
   return {
     prepend: [imports],
     content: [
-      `type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { ['__typename']-?: NonNullable<T['__typename']> };`,
+      `type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };`,
 
       keys,
 
