@@ -14803,10 +14803,10 @@ node-notifier@^8.0.0:
     uuid "^8.3.0"
     which "^2.0.2"
 
-node-polyfill-webpack-plugin@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/node-polyfill-webpack-plugin/-/node-polyfill-webpack-plugin-1.1.1.tgz#75cf1681d623b059f8807a5345f3876129b90b22"
-  integrity sha512-7XluenXhlJ3hEfdVP24ShDTSI8jYx0C0gQ8JpH7eAH+Wlv5dnX9+tHXY2xMBt2re9FuHIabFiyHLy+3eY+SfRA==
+node-polyfill-webpack-plugin@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/node-polyfill-webpack-plugin/-/node-polyfill-webpack-plugin-1.1.2.tgz#3e8e8640a920b566d5842df84f1c8c077554250e"
+  integrity sha512-ubwf7M73V13RDlKaDmMh1+giB/D8KL75umXEGabGtxSt/WRCirl01urhK1qsr6Cdt77escQ9SNb5OoTR8IwEHg==
   dependencies:
     assert "^2.0.0"
     browserify-zlib "^0.2.0"

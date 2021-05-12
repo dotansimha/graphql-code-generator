@@ -64,7 +64,7 @@
     "@graphql-codegen/typescript-urql": "2.0.6",
     "@graphql-codegen/typescript-vue-apollo": "2.3.4",
     "@graphql-codegen/typescript-apollo-client-helpers": "1.1.5",
-    "node-polyfill-webpack-plugin": "1.1.1",
+    "node-polyfill-webpack-plugin": "1.1.2",
     "react-monaco-editor": "0.43.0",
     "react-select": "4.3.1",
     "styled-components": "5.3.0",
