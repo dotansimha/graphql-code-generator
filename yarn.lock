@@ -3963,10 +3963,10 @@
     valid-url "1.0.9"
     ws "7.4.4"
 
-"@graphql-tools/utils@7.9.1":
-  version "7.9.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.9.1.tgz#265e12a0b8a396be97f459599f2f1150fceee4b1"
-  integrity sha512-k4bQWsOnSJSW7suBnVUJf3Sc8uXuvIYLHXujbEoSrwOEHjC+707GvXbQ7rg+8l7v8NMgpyARyuKFlqz3cfoxBQ==
+"@graphql-tools/utils@7.10.0":
+  version "7.10.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.10.0.tgz#07a4cb5d1bec1ff1dc1d47a935919ee6abd38699"
+  integrity sha512-d334r6bo9mxdSqZW6zWboEnnOOFRrAPVQJ7LkU8/6grglrbcu6WhwCLzHb90E94JI3TD3ricC3YGbUqIi9Xg0w==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.2"
