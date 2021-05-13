@@ -38,7 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@apollo/client": "3.3.17",
+    "@apollo/client": "3.3.18",
     "@babel/preset-typescript": "7.13.0",
     "@changesets/cli": "2.16.0",
     "@graphql-tools/apollo-engine-loader": "6.2.5",
