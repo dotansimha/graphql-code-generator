@@ -21,13 +21,21 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 module.exports = function () {
   return {
     name: 'monaco-plugin',
-    configureWebpack(config) {
+    configureWebpack(config, isServer) {
       const existingCssRule = config.module.rules.find(r => r.test.toString() === '/\\.css$/');
 
       existingCssRule.exclude = [
         existingCssRule.exclude,
         MONACO_DIR
       ];
+
+      const { plugins = [] } = config; 
+
+      if (!isServer) {
+        plugins.push(new NodePolyfillPlugin());
+      }
+
+      plugins.push(new MonacoWebpackPlugin());
 
       return {
         module: {
@@ -43,7 +51,7 @@ module.exports = function () {
             },
           ],
         },
-        plugins: [...(config.plugins || []), new MonacoWebpackPlugin(), new NodePolyfillPlugin()],
+        plugins
       };
     },
   };
