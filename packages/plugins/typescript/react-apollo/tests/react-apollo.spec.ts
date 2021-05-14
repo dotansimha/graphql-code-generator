@@ -370,6 +370,29 @@ describe('React Apollo', () => {
         content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length
       ).toBe(3);
     });
+
+    it('#6001 - Should not use TypesSuffix on function names', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query user {
+              user(id: 1) {
+                id
+                username
+                email
+              }
+            }
+          `),
+        },
+      ];
+
+      const content = await plugin(schema, docs, { typesSuffix: 'Type' });
+
+      expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
+      // String matching `useUserQuery` but not `useUserQueryType`.
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQuery)(?!.useUserQueryType)(.+)/));
+    });
   });
 
   describe('Imports', () => {
@@ -447,36 +470,44 @@ describe('React Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
@@ -500,36 +531,44 @@ describe('React Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<Notifications, NotificationsVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
