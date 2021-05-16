@@ -108,8 +108,7 @@ function getResolversConfig(schema: GraphQLSchema) {
 
   const resolvers = objectTypes.reduce((resolvers, parentType) => {
     const fields = parentType.astNode.fields.reduce((fields, field) => {
-      const argsName =
-        field.arguments && field.arguments.length ? `${parentType.name}${capitalize(field.name.value)}Args` : 'null';
+      const argsName = field.arguments?.length ? `${parentType.name}${capitalize(field.name.value)}Args` : 'null';
       const type = unwrapType(field.type);
 
       fields.push(
@@ -136,7 +135,7 @@ function getSubscriptionUpdatersConfig(schema: GraphQLSchema): string[] | null {
     const { fields } = subscriptionType.astNode;
 
     fields.forEach(fieldNode => {
-      const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
+      const argsName = fieldNode.arguments?.length ? `Mutation${capitalize(fieldNode.name.value)}Args` : '{}';
       const type = unwrapType(fieldNode.type);
       updaters.push(
         `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ${fieldNode.name.value}: ${constructType(
@@ -159,7 +158,7 @@ function getMutationUpdaterConfig(schema: GraphQLSchema): string[] | null {
     const { fields } = mutationType.astNode;
 
     fields.forEach(fieldNode => {
-      const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
+      const argsName = fieldNode.arguments?.length ? `Mutation${capitalize(fieldNode.name.value)}Args` : '{}';
       const type = unwrapType(fieldNode.type);
 
       updaters.push(
@@ -183,7 +182,7 @@ function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
     const { fields } = mutationType.astNode;
 
     fields.forEach(fieldNode => {
-      const argsName = `Mutation${capitalize(fieldNode.name.value)}Args`;
+      const argsName = fieldNode.arguments?.length ? `Mutation${capitalize(fieldNode.name.value)}Args` : '{}';
       const type = unwrapType(fieldNode.type);
       const outputType = constructType(type, schema);
       optimistic.push(

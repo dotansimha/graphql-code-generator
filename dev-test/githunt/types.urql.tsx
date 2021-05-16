@@ -450,7 +450,7 @@ export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 }
 import { IntrospectionQuery } from 'graphql';
-export default ({
+export default {
   __schema: {
     queryType: {
       name: 'Query',
@@ -473,6 +473,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Entry',
+                ofType: null,
               },
             },
             args: [
@@ -507,6 +508,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -526,6 +528,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'User',
+              ofType: null,
             },
             args: [],
           },
@@ -543,6 +546,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Repository',
+                ofType: null,
               },
             },
             args: [],
@@ -554,6 +558,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'User',
+                ofType: null,
               },
             },
             args: [],
@@ -600,6 +605,7 @@ export default ({
                 ofType: {
                   kind: 'OBJECT',
                   name: 'Comment',
+                  ofType: null,
                 },
               },
             },
@@ -649,6 +655,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'Vote',
+                ofType: null,
               },
             },
             args: [],
@@ -725,6 +732,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'User',
+              ofType: null,
             },
             args: [],
           },
@@ -793,6 +801,7 @@ export default ({
               ofType: {
                 kind: 'OBJECT',
                 name: 'User',
+                ofType: null,
               },
             },
             args: [],
@@ -860,6 +869,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -879,6 +889,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Entry',
+              ofType: null,
             },
             args: [
               {
@@ -908,6 +919,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Comment',
+              ofType: null,
             },
             args: [
               {
@@ -944,6 +956,7 @@ export default ({
             type: {
               kind: 'OBJECT',
               name: 'Comment',
+              ofType: null,
             },
             args: [
               {
@@ -968,7 +981,7 @@ export default ({
     ],
     directives: [],
   },
-} as unknown) as IntrospectionQuery;
+} as unknown as IntrospectionQuery;
 type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & {
   __typename: NonNullable<T['__typename']>;
 };
