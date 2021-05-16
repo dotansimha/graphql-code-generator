@@ -67,8 +67,10 @@ function constructType(
 
     case 'NamedType': {
       const type = schema.getType(typeNode.name.value);
-      if (!type.astNode) {
-        return nullable ? `Maybe<Scalars['${type.name}']>` : `Scalars['${type.name}']`;
+      if (!type.astNode || type?.astNode?.kind === 'ScalarTypeDefinition') {
+        return nullable
+          ? `Maybe<Scalars['${type.name}']${allowString ? ' | string' : ''}>`
+          : `Scalars['${type.name}']${allowString ? ' | string' : ''}`;
       }
 
       const tsTypeName = convertName(typeNode);
@@ -80,8 +82,7 @@ function constructType(
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
-        case 'EnumTypeDefinition':
-        case 'ScalarTypeDefinition': {
+        case 'EnumTypeDefinition': {
           const finalType = `${tsTypeName}${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
@@ -232,10 +233,10 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
         ',\n};',
 
       'export type GraphCacheConfig = {\n' +
-        '  updates: GraphCacheUpdaters,\n' +
-        '  keys: GraphCacheKeysConfig,\n' +
-        '  optimistic: GraphCacheOptimisticUpdaters,\n' +
-        '  resolvers: GraphCacheResolvers\n' +
+        '  updates?: GraphCacheUpdaters,\n' +
+        '  keys?: GraphCacheKeysConfig,\n' +
+        '  optimistic?: GraphCacheOptimisticUpdaters,\n' +
+        '  resolvers?: GraphCacheResolvers\n' +
         '};',
     ]
       .filter(Boolean)

@@ -15,20 +15,20 @@ export type GraphCacheResolvers = {
     schoolBooks?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Textbook> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID']>,
-    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String']>,
+    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID'] | string>,
+    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String'] | string>,
     friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
     friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID']>,
-    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String']>,
-    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean']>,
+    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean'] | string>,
     author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
   },
   Textbook?: {
-    id?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['String']>,
+    id?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['String'] | string>,
     author?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Author> | string>,
     todo?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Todo> | string>
   }
@@ -44,10 +44,10 @@ export type GraphCacheUpdaters = {
 };
 
 export type GraphCacheConfig = {
-  updates: GraphCacheUpdaters,
-  keys: GraphCacheKeysConfig,
-  optimistic: GraphCacheOptimisticUpdaters,
-  resolvers: GraphCacheResolvers
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers
 };"
 `;
 
@@ -65,14 +65,14 @@ export type GraphCacheResolvers = {
     media?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Media> | string>>
   },
   Book?: {
-    id?: GraphCacheResolver<WithTypename<Book>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<WithTypename<Book>, null, Scalars['String']>,
-    pages?: GraphCacheResolver<WithTypename<Book>, null, Scalars['Int']>
+    id?: GraphCacheResolver<WithTypename<Book>, null, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Book>, null, Scalars['String'] | string>,
+    pages?: GraphCacheResolver<WithTypename<Book>, null, Scalars['Int'] | string>
   },
   Movie?: {
-    id?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['ID']>,
-    title?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['String']>,
-    duration?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['Int']>
+    id?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['String'] | string>,
+    duration?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['Int'] | string>
   }
 };
 
@@ -88,10 +88,10 @@ export type GraphCacheUpdaters = {
 };
 
 export type GraphCacheConfig = {
-  updates: GraphCacheUpdaters,
-  keys: GraphCacheKeysConfig,
-  optimistic: GraphCacheOptimisticUpdaters,
-  resolvers: GraphCacheResolvers
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers
 };"
 `;
 
@@ -109,15 +109,15 @@ export type GraphCacheResolvers = {
     todos?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Todo> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID']>,
-    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String']>,
+    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID'] | string>,
+    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String'] | string>,
     friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
     friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID']>,
-    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String']>,
-    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean']>,
+    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean'] | string>,
     author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
   }
 };
@@ -142,9 +142,9 @@ export type GraphCacheUpdaters = {
 };
 
 export type GraphCacheConfig = {
-  updates: GraphCacheUpdaters,
-  keys: GraphCacheKeysConfig,
-  optimistic: GraphCacheOptimisticUpdaters,
-  resolvers: GraphCacheResolvers
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers
 };"
 `;

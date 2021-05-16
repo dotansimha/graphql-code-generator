@@ -1003,37 +1003,37 @@ export type GraphCacheResolvers = {
   Entry?: {
     repository?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<Repository> | string>;
     postedBy?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<User> | string>;
-    createdAt?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float']>;
-    score?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
-    hotScore?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float']>;
+    createdAt?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float'] | string>;
+    score?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int'] | string>;
+    hotScore?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float'] | string>;
     comments?: GraphCacheResolver<WithTypename<Entry>, EntryCommentsArgs, Array<WithTypename<Comment> | string>>;
-    commentCount?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
-    id?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
+    commentCount?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int'] | string>;
+    id?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int'] | string>;
     vote?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<Vote> | string>;
   };
   Repository?: {
-    name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
-    full_name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
-    description?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
-    html_url?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
-    stargazers_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int']>;
-    open_issues_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int']>;
+    name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String'] | string>;
+    full_name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String'] | string>;
+    description?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String'] | string>;
+    html_url?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String'] | string>;
+    stargazers_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int'] | string>;
+    open_issues_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int'] | string>;
     owner?: GraphCacheResolver<WithTypename<Repository>, null, WithTypename<User> | string>;
   };
   User?: {
-    login?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
-    avatar_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
-    html_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
+    login?: GraphCacheResolver<WithTypename<User>, null, Scalars['String'] | string>;
+    avatar_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String'] | string>;
+    html_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String'] | string>;
   };
   Comment?: {
-    id?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Int']>;
+    id?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Int'] | string>;
     postedBy?: GraphCacheResolver<WithTypename<Comment>, null, WithTypename<User> | string>;
-    createdAt?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Float']>;
-    content?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String']>;
-    repoName?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String']>;
+    createdAt?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Float'] | string>;
+    content?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String'] | string>;
+    repoName?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String'] | string>;
   };
   Vote?: {
-    vote_value?: GraphCacheResolver<WithTypename<Vote>, null, Scalars['Int']>;
+    vote_value?: GraphCacheResolver<WithTypename<Vote>, null, Scalars['Int'] | string>;
   };
 };
 
@@ -1064,8 +1064,8 @@ export type GraphCacheUpdaters = {
 };
 
 export type GraphCacheConfig = {
-  updates: GraphCacheUpdaters;
-  keys: GraphCacheKeysConfig;
-  optimistic: GraphCacheOptimisticUpdaters;
-  resolvers: GraphCacheResolvers;
+  updates?: GraphCacheUpdaters;
+  keys?: GraphCacheKeysConfig;
+  optimistic?: GraphCacheOptimisticUpdaters;
+  resolvers?: GraphCacheResolvers;
 };
