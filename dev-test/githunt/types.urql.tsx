@@ -1,3 +1,8 @@
+import {
+  Resolver as GraphCacheResolver,
+  UpdateResolver as GraphCacheUpdateResolver,
+  OptimisticMutationResolver as GraphCacheOptimisticMutationResolver,
+} from '@urql/exchange-graphcache';
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Maybe<T> = T | null;
@@ -977,3 +982,90 @@ export default {
     directives: [],
   },
 } as unknown as IntrospectionQuery;
+export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & {
+  __typename: NonNullable<T['__typename']>;
+};
+
+export type GraphCacheKeysConfig = {
+  Entry?: (data: WithTypename<Entry>) => null | string;
+  Repository?: (data: WithTypename<Repository>) => null | string;
+  User?: (data: WithTypename<User>) => null | string;
+  Comment?: (data: WithTypename<Comment>) => null | string;
+  Vote?: (data: WithTypename<Vote>) => null | string;
+};
+
+export type GraphCacheResolvers = {
+  Query?: {
+    feed?: GraphCacheResolver<WithTypename<Query>, QueryFeedArgs, Array<WithTypename<Entry> | string>>;
+    entry?: GraphCacheResolver<WithTypename<Query>, QueryEntryArgs, WithTypename<Entry> | string>;
+    currentUser?: GraphCacheResolver<WithTypename<Query>, null, WithTypename<User> | string>;
+  };
+  Entry?: {
+    repository?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<Repository> | string>;
+    postedBy?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<User> | string>;
+    createdAt?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float']>;
+    score?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
+    hotScore?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Float']>;
+    comments?: GraphCacheResolver<WithTypename<Entry>, EntryCommentsArgs, Array<WithTypename<Comment> | string>>;
+    commentCount?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
+    id?: GraphCacheResolver<WithTypename<Entry>, null, Scalars['Int']>;
+    vote?: GraphCacheResolver<WithTypename<Entry>, null, WithTypename<Vote> | string>;
+  };
+  Repository?: {
+    name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
+    full_name?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
+    description?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
+    html_url?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['String']>;
+    stargazers_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int']>;
+    open_issues_count?: GraphCacheResolver<WithTypename<Repository>, null, Scalars['Int']>;
+    owner?: GraphCacheResolver<WithTypename<Repository>, null, WithTypename<User> | string>;
+  };
+  User?: {
+    login?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
+    avatar_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
+    html_url?: GraphCacheResolver<WithTypename<User>, null, Scalars['String']>;
+  };
+  Comment?: {
+    id?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Int']>;
+    postedBy?: GraphCacheResolver<WithTypename<Comment>, null, WithTypename<User> | string>;
+    createdAt?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['Float']>;
+    content?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String']>;
+    repoName?: GraphCacheResolver<WithTypename<Comment>, null, Scalars['String']>;
+  };
+  Vote?: {
+    vote_value?: GraphCacheResolver<WithTypename<Vote>, null, Scalars['Int']>;
+  };
+};
+
+export type GraphCacheOptimisticUpdaters = {
+  submitRepository?: GraphCacheOptimisticMutationResolver<MutationSubmitRepositoryArgs, Maybe<WithTypename<Entry>>>;
+  vote?: GraphCacheOptimisticMutationResolver<MutationVoteArgs, Maybe<WithTypename<Entry>>>;
+  submitComment?: GraphCacheOptimisticMutationResolver<MutationSubmitCommentArgs, Maybe<WithTypename<Comment>>>;
+};
+
+export type GraphCacheUpdaters = {
+  Mutation?: {
+    submitRepository?: GraphCacheUpdateResolver<
+      { submitRepository: Maybe<WithTypename<Entry>> },
+      MutationSubmitRepositoryArgs
+    >;
+    vote?: GraphCacheUpdateResolver<{ vote: Maybe<WithTypename<Entry>> }, MutationVoteArgs>;
+    submitComment?: GraphCacheUpdateResolver<
+      { submitComment: Maybe<WithTypename<Comment>> },
+      MutationSubmitCommentArgs
+    >;
+  };
+  Subscription?: {
+    commentAdded?: GraphCacheUpdateResolver<
+      { commentAdded: Maybe<WithTypename<Comment>> },
+      SubscriptionCommentAddedArgs
+    >;
+  };
+};
+
+export type GraphCacheConfig = {
+  updates: GraphCacheUpdaters;
+  keys: GraphCacheKeysConfig;
+  optimistic: GraphCacheOptimisticUpdaters;
+  resolvers: GraphCacheResolvers;
+};

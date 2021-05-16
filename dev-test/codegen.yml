@@ -231,6 +231,7 @@ generates:
       - typescript-operations
       - typescript-urql
       - urql-introspection
+      - typescript-urql-graphcache
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
