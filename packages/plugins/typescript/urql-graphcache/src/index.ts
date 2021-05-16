@@ -113,7 +113,7 @@ function getKeysConfig(schema: GraphQLSchema, convertName: ConvertFn) {
     return keys;
   }, []);
 
-  return 'type GraphCacheKeysConfig = {\n  ' + keys.join(',\n  ') + '\n}';
+  return 'export type GraphCacheKeysConfig = {\n  ' + keys.join(',\n  ') + '\n}';
 }
 
 function getResolversConfig(schema: GraphQLSchema, convertName: ConvertFn) {
@@ -213,17 +213,17 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
   return {
     prepend: [imports],
     content: [
-      `type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };`,
+      `export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };`,
 
       keys,
 
-      'type GraphCacheResolvers = {\n' + resolvers.join(',\n') + '\n};',
+      'export type GraphCacheResolvers = {\n' + resolvers.join(',\n') + '\n};',
 
-      'type GraphCacheOptimisticUpdaters = {\n  ' +
+      'export type GraphCacheOptimisticUpdaters = {\n  ' +
         (optimisticUpdaters ? optimisticUpdaters.join(',\n  ') : '{}') +
         '\n};',
 
-      'type GraphCacheUpdaters = {\n' +
+      'export type GraphCacheUpdaters = {\n' +
         '  Mutation?: ' +
         (mutationUpdaters ? `{\n    ${mutationUpdaters.join(',\n    ')}\n  }` : '{}') +
         ',\n' +
