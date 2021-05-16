@@ -982,11 +982,11 @@ export default {
     directives: [],
   },
 } as unknown as IntrospectionQuery;
-type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & {
+export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & {
   __typename: NonNullable<T['__typename']>;
 };
 
-type GraphCacheKeysConfig = {
+export type GraphCacheKeysConfig = {
   Entry?: (data: WithTypename<Entry>) => null | string;
   Repository?: (data: WithTypename<Repository>) => null | string;
   User?: (data: WithTypename<User>) => null | string;
@@ -994,7 +994,7 @@ type GraphCacheKeysConfig = {
   Vote?: (data: WithTypename<Vote>) => null | string;
 };
 
-type GraphCacheResolvers = {
+export type GraphCacheResolvers = {
   Query?: {
     feed?: GraphCacheResolver<WithTypename<Query>, QueryFeedArgs, Array<WithTypename<Entry> | string>>;
     entry?: GraphCacheResolver<WithTypename<Query>, QueryEntryArgs, WithTypename<Entry> | string>;
@@ -1037,13 +1037,13 @@ type GraphCacheResolvers = {
   };
 };
 
-type GraphCacheOptimisticUpdaters = {
+export type GraphCacheOptimisticUpdaters = {
   submitRepository?: GraphCacheOptimisticMutationResolver<MutationSubmitRepositoryArgs, Maybe<WithTypename<Entry>>>;
   vote?: GraphCacheOptimisticMutationResolver<MutationVoteArgs, Maybe<WithTypename<Entry>>>;
   submitComment?: GraphCacheOptimisticMutationResolver<MutationSubmitCommentArgs, Maybe<WithTypename<Comment>>>;
 };
 
-type GraphCacheUpdaters = {
+export type GraphCacheUpdaters = {
   Mutation?: {
     submitRepository?: GraphCacheUpdateResolver<
       { submitRepository: Maybe<WithTypename<Entry>> },
