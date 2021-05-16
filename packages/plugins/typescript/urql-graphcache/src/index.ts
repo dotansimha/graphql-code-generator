@@ -65,12 +65,16 @@ function constructType(typeNode: TypeNode, schema: GraphQLSchema, nullable = tru
       }
 
       switch (type.astNode.kind) {
-        case 'EnumTypeDefinition':
         case 'UnionTypeDefinition':
         case 'InputObjectTypeDefinition':
-        case 'ObjectTypeDefinition':
-        case 'ScalarTypeDefinition': {
+        case 'ObjectTypeDefinition': {
           const finalType = `WithTypename<${typeNode.name.value}>${allowString ? ' | string' : ''}`;
+          return nullable ? `Maybe<${finalType}>` : finalType;
+        }
+
+        case 'EnumTypeDefinition':
+        case 'ScalarTypeDefinition': {
+          const finalType = `${typeNode.name.value}${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
