@@ -1056,7 +1056,10 @@ type GraphCacheUpdaters = {
     >;
   };
   Subscription?: {
-    commentAdded?: GraphCacheUpdateResolver<{ commentAdded: Maybe<WithTypename<Comment>> }, MutationCommentAddedArgs>;
+    commentAdded?: GraphCacheUpdateResolver<
+      { commentAdded: Maybe<WithTypename<Comment>> },
+      SubscriptionCommentAddedArgs
+    >;
   };
 };
 

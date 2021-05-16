@@ -132,51 +132,36 @@ function getResolversConfig(schema: GraphQLSchema) {
   return resolvers;
 }
 
-function getSubscriptionUpdatersConfig(schema: GraphQLSchema): string[] | null {
-  const subscriptionType = schema.getSubscriptionType();
-  if (subscriptionType) {
-    const updaters: string[] = [];
-    const { fields } = subscriptionType.astNode;
+function getRootUpdatersConfig(schema: GraphQLSchema) {
+  const [mutationUpdaters, subscriptionUpdaters] = [schema.getMutationType(), schema.getSubscriptionType()].map(
+    rootType => {
+      if (rootType) {
+        const updaters: string[] = [];
+        const { fields } = rootType.astNode;
 
-    fields.forEach(fieldNode => {
-      const argsName = fieldNode.arguments?.length ? `Mutation${capitalize(fieldNode.name.value)}Args` : '{}';
-      const type = unwrapType(fieldNode.type);
-      updaters.push(
-        `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ${fieldNode.name.value}: ${constructType(
-          type,
-          schema
-        )} }, ${argsName}>`
-      );
-    });
+        fields.forEach(fieldNode => {
+          const argsName = fieldNode.arguments?.length
+            ? `${rootType.name}${capitalize(fieldNode.name.value)}Args`
+            : '{}';
+          const type = unwrapType(fieldNode.type);
+          updaters.push(
+            `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ${fieldNode.name.value}: ${constructType(
+              type,
+              schema
+            )} }, ${argsName}>`
+          );
+        });
 
-    return updaters;
-  } else {
-    return null;
-  }
-}
-
-function getMutationUpdaterConfig(schema: GraphQLSchema): string[] | null {
-  const mutationType = schema.getMutationType();
-  if (mutationType) {
-    const updaters: string[] = [];
-    const { fields } = mutationType.astNode;
-
-    fields.forEach(fieldNode => {
-      const argsName = fieldNode.arguments?.length ? `Mutation${capitalize(fieldNode.name.value)}Args` : '{}';
-      const type = unwrapType(fieldNode.type);
-
-      updaters.push(
-        `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ` +
-          `${fieldNode.name.value}: ` +
-          `${constructType(type, schema)} }, ` +
-          `${argsName}>`
-      );
-    });
-
-    return updaters;
-  } else {
-    return null;
-  }
+        return updaters;
+      } else {
+        return null;
+      }
+    }
+  );
+  return {
+    mutationUpdaters,
+    subscriptionUpdaters,
+  };
 }
 
 function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
@@ -203,9 +188,8 @@ function getOptimisticUpdatersConfig(schema: GraphQLSchema): string[] | null {
 export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOutput> = (schema: GraphQLSchema) => {
   const keys = getKeysConfig(schema);
   const resolvers = getResolversConfig(schema);
-  const mutationUpdaters = getMutationUpdaterConfig(schema);
+  const { mutationUpdaters, subscriptionUpdaters } = getRootUpdatersConfig(schema);
   const optimisticUpdaters = getOptimisticUpdatersConfig(schema);
-  const subscriptionUpdaters = getSubscriptionUpdatersConfig(schema);
 
   return {
     prepend: [imports],
