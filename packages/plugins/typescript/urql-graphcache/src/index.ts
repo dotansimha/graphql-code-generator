@@ -87,8 +87,8 @@ function constructType(
         }
 
         case 'InterfaceTypeDefinition': {
-          const possibleTypes = schema.getPossibleTypes(type as GraphQLAbstractType).map(function contruct(x) {
-            const tsPossibleTypeName = convertName(type.astNode);
+          const possibleTypes = schema.getPossibleTypes(type as GraphQLAbstractType).map(possibleType => {
+            const tsPossibleTypeName = convertName(possibleType.astNode);
             return `WithTypename<${tsPossibleTypeName}>`;
           });
           const finalType = allowString ? possibleTypes.join(' | ') + ' | string' : possibleTypes.join(' | ');

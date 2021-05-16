@@ -12,7 +12,7 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
-    schoolBooks?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<CoolBook> | string>>
+    schoolBooks?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Textbook> | string>>
   },
   Author?: {
     id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID']>,
