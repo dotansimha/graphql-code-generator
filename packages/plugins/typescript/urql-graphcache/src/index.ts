@@ -61,7 +61,7 @@ function constructType(typeNode: TypeNode, schema: GraphQLSchema, nullable = tru
     case 'NamedType': {
       const type = schema.getType(typeNode.name.value);
       if (!type.astNode) {
-        return nullable ? `Maybe<Scalars['${typeNode.name.value}']}>` : `Scalars['${typeNode.name.value}']`;
+        return nullable ? `Maybe<Scalars['${typeNode.name.value}']>` : `Scalars['${typeNode.name.value}']`;
       }
 
       switch (type.astNode.kind) {
