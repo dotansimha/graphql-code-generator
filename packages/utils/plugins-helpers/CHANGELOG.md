@@ -1,5 +1,29 @@
 # @graphql-codegen/plugin-helpers
 
+## 1.18.6
+
+### Patch Changes
+
+- 637338cb: fix: make lifecycle hooks definition a partial
+
+## 1.18.5
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+
+## 1.18.4
+
+### Patch Changes
+
+- 23862e7e: fix(naming-convention): revert and pin change-case-all dependency for workaround #3256
+
+## 1.18.3
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+
 ## 1.18.2
 
 ### Patch Changes

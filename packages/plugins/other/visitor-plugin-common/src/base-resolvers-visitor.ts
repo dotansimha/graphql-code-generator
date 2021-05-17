@@ -1,19 +1,26 @@
 import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap, DeclarationKind, ConvertOptions } from './types';
+import {
+  NormalizedScalarsMap,
+  EnumValuesMap,
+  ParsedEnumValuesMap,
+  DeclarationKind,
+  ConvertOptions,
+  AvoidOptionalsConfig,
+} from './types';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
   indent,
   getBaseTypeNode,
-  buildScalars,
   getConfigValue,
   getRootTypeNames,
   stripMapperTypeInterpolation,
   OMIT_TYPE,
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
+  buildScalarsFromConfig,
 } from './utils';
 import {
   NameNode,
@@ -52,7 +59,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
     [typeName: string]: ParsedMapper;
   };
   defaultMapper: ParsedMapper | null;
-  avoidOptionals: boolean;
+  avoidOptionals: AvoidOptionalsConfig;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
@@ -64,6 +71,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
+  onlyResolveTypeForInterfaces: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -212,6 +220,7 @@ export interface RawResolversConfig extends RawConfig {
    * @default false
    *
    * @exampleMarkdown
+   * ## Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -221,8 +230,22 @@ export interface RawResolversConfig extends RawConfig {
    *  config:
    *    avoidOptionals: true
    * ```
+   *
+   * ## Override only specific definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidOptionals:
+   *      field: true
+   *      inputValue: true
+   *      object: true
+   *      defaultValue: true
+   * ```
    */
-  avoidOptionals?: boolean;
+  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @description Warns about unused mappers.
    * @default true
@@ -301,6 +324,12 @@ export interface RawResolversConfig extends RawConfig {
    * If you are using `mercurius-js`, please set this field to empty string for better compatiblity.
    */
   internalResolversPrefix?: string;
+  /**
+   * @type boolean
+   * @default false
+   * @description Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
+   */
+  onlyResolveTypeForInterfaces?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -344,6 +373,7 @@ export class BaseResolversVisitor<
         mapOrStr: rawConfig.enumValues,
       }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+      onlyResolveTypeForInterfaces: getConfigValue(rawConfig.onlyResolveTypeForInterfaces, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       resolverTypeSuffix: getConfigValue(rawConfig.resolverTypeSuffix, 'Resolvers'),
@@ -355,7 +385,7 @@ export class BaseResolversVisitor<
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
-      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
       ...(additionalConfig || {}),
     } as TPluginConfig);
@@ -1184,6 +1214,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
     const parentType = this.getParentTypeToUse((node.name as any) as string);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+    const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1196,7 +1227,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
-          ...(node.fields || []).map((f: any) => f(node.name)),
+          ...fields.map((f: any) => f(node.name)),
         ].join('\n')
       ).string;
   }

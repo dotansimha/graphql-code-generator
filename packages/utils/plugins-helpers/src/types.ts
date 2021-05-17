@@ -475,7 +475,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
      */
-    hooks?: LifecycleHooksDefinition;
+    hooks?: Partial<LifecycleHooksDefinition>;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };

@@ -1,18 +1,16 @@
-import { paramCase } from 'param-case';
-
 export function resolveExternalModuleAndFn(pointer: any): any {
-  // eslint-disable-next-line no-eval
-  const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
-
   if (typeof pointer === 'function') {
     return pointer;
   }
+
+  // eslint-disable-next-line no-eval
+  const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
 
   // eslint-disable-next-line prefer-const
   let [moduleName, functionName] = pointer.split('#');
   // Temp workaround until v2
   if (moduleName === 'change-case') {
-    moduleName = paramCase(functionName);
+    moduleName = 'change-case-all';
   }
   const { resolve } = importExternally('path');
   const localFilePath = resolve(process.cwd(), moduleName);

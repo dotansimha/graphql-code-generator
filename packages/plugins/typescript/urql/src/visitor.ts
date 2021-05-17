@@ -8,7 +8,7 @@ import {
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { pascalCase } from 'pascal-case';
+import { pascalCase } from 'change-case-all';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;

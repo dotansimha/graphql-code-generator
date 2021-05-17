@@ -1,5 +1,30 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 1.17.11
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.17.10
+
+### Patch Changes
+
+- 29b75b1e: enhance(docs): improve docs for naming convention
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.17.9
 
 ### Patch Changes

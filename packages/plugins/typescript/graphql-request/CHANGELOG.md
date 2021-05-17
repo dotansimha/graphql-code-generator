@@ -1,5 +1,54 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 3.2.0
+
+### Minor Changes
+
+- 9b59605d: feat(typescript-graphql-request): Add enhancements to request middleware function (#5883, #5807) #5884
+
+### Patch Changes
+
+- Updated dependencies [637338cb]
+  - @graphql-codegen/plugin-helpers@1.18.6
+
+## 3.1.1
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- 74e5afa4: fix(graphql-request): print document for rawRequest if documentMode is not string
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 3.1.0
+
+### Minor Changes
+
+- af6fb509: Removed the unnecessary call to the print function, since graphql-request would call this function internally if needed.
+
+### Patch Changes
+
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
+## 3.0.2
+
+### Patch Changes
+
+- 387d136f: fix(typescript-graphql-request): declare a peer dependency on graphql-request
+- ed8cab50: fix(plugin: graphql-requests): Fix type errors in auto-generated methods
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 3.0.1
 
 ### Patch Changes

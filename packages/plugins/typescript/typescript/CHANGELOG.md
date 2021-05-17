@@ -1,5 +1,47 @@
 # @graphql-codegen/typescript
 
+## 1.22.0
+
+### Minor Changes
+
+- f0b5ea53: Add entireFieldWrapperValue configuration option, to wrap arrays
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.21.1
+
+### Patch Changes
+
+- e947f8e3: Allow to have declarationKind of type: class, interface: interface
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
+## 1.21.0
+
+### Minor Changes
+
+- 34b8087e: Adds futureProofUnion option to account for a possible unknown new type added to union types
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.20.2
 
 ### Patch Changes

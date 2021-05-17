@@ -9,13 +9,12 @@ const validateTypeScript = async (
   output: Types.PluginOutput,
   testSchema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: any,
-  playground = false
+  config: any
 ) => {
   const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
   const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
   const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-  validateTs(merged, undefined, true, false, playground);
+  validateTs(merged, undefined, true, false);
 
   return merged;
 };
@@ -44,12 +43,32 @@ describe('React-Query', () => {
       }
     }
   `);
+  const basicFragment = parse(/* GraphQL */ `
+    fragment EntryData on Entry {
+      feed {
+        id
+        commentCount
+        repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      }
+    }
+  `);
   const docs = [
     {
       document: basicDoc,
     },
     {
       document: basicMutation,
+    },
+  ];
+  const notOperationDocs = [
+    {
+      document: basicFragment,
     },
   ];
 
@@ -98,7 +117,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with internal mapper', async () => {
@@ -135,7 +154,47 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+
+    it('Should generate mutation correctly with lazy variables', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#useCustomFetcher',
+          isReactHook: true,
+        },
+        typesPrefix: 'T',
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(
+        `import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';`
+      );
+      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
+      expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
+          TData = TTestQuery,
+          TError = unknown
+        >(
+          variables?: TTestQueryVariables, 
+          options?: UseQueryOptions<TTestQuery, TError, TData>
+        ) => 
+        useQuery<TTestQuery, TError, TData>(
+          ['test', variables],
+          useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
+          options
+        );`);
+      expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
+        TError = unknown,
+        TContext = unknown
+      >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) => 
+      useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
+        options
+      );`);
+
+      expect(out.content).toMatchSnapshot();
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
   });
 
@@ -182,7 +241,17 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+    it('Should support useTypeImports', async () => {
+      const config = {
+        fetcher: 'graphql-request',
+        useTypeImports: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(`import type { GraphQLClient } from 'graphql-request';`);
     });
   });
 
@@ -242,7 +311,7 @@ describe('React-Query', () => {
       );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with fetch config', async () => {
@@ -282,7 +351,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with hardcoded endpoint from env var', async () => {
@@ -316,7 +385,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
     it('Should generate query correctly with hardcoded endpoint from just identifier', async () => {
@@ -350,7 +419,7 @@ describe('React-Query', () => {
       }`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
   });
 
@@ -394,7 +463,18 @@ describe('React-Query', () => {
         );`);
 
       expect(out.content).toMatchSnapshot();
-      await validateTypeScript(mergeOutputs(out), schema, docs, config, false);
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+  });
+
+  describe('exposeDocument: true', () => {
+    it('Should generate document field for each query', async () => {
+      const config = {
+        fetcher: 'fetch',
+        exposeDocument: true,
+      };
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(`useTestQuery.document = TestDocument;`);
     });
   });
 
@@ -409,5 +489,17 @@ describe('React-Query', () => {
         `useTestQuery.getKey = (variables?: TestQueryVariables) => ['test', variables];`
       );
     });
+  });
+
+  it('Should not generate fetcher if there are no operations', async () => {
+    const out = (await plugin(schema, notOperationDocs, {})) as Types.ComplexPluginOutput;
+    expect(out.prepend).not.toBeSimilarStringTo(`function fetcher<TData, TVariables>(`);
+
+    const config = {
+      fetcher: 'graphql-request',
+    };
+
+    const outGraphqlRequest = (await plugin(schema, notOperationDocs, config)) as Types.ComplexPluginOutput;
+    expect(outGraphqlRequest.prepend).not.toContain(`import { GraphQLClient } from 'graphql-request';`);
   });
 });

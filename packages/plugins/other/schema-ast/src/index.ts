@@ -1,4 +1,11 @@
-import { GraphQLSchema, lexicographicSortSchema, printSchema } from 'graphql';
+import {
+  GraphQLSchema,
+  lexicographicSortSchema,
+  printSchema,
+  visit,
+  buildASTSchema,
+  parse as parseSchema,
+} from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
@@ -76,3 +83,24 @@ export const validate: PluginValidateFn<any> = async (
     throw new Error(`Plugin "schema-ast" requires extension to be ".graphql"!`);
   }
 };
+
+export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
+  const printedSchema = printSchema(schema);
+  const astNode = parseSchema(printedSchema);
+
+  const transformedAST = config.disableDescriptions
+    ? visit(astNode, {
+        leave: node => ({
+          ...node,
+          description: undefined,
+        }),
+      })
+    : astNode;
+
+  const transformedSchema = config.disableDescriptions ? buildASTSchema(transformedAST) : schema;
+
+  return {
+    schema: transformedSchema,
+    ast: transformedAST,
+  };
+}

@@ -7,8 +7,8 @@ import {
   indent,
   indentMultiline,
   getBaseTypeNode,
-  buildScalars,
   ExternalParsedMapper,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './config';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
@@ -39,7 +39,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       defaultMapper: parseMapper(rawConfig.defaultMapper || 'Object'),
       className: rawConfig.className || 'Resolvers',
       listType: rawConfig.listType || 'Iterable',
-      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, JAVA_SCALARS, 'Object'),
     });
   }
 

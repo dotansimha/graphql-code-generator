@@ -1,5 +1,80 @@
 # @graphql-codegen/c-sharp
 
+## 2.0.0
+
+### Major Changes
+
+- 0d3b202a: According to feedback, it is needed to remove the access modifiers for interface properties.
+
+### Patch Changes
+
+- Updated dependencies [637338cb]
+  - @graphql-codegen/plugin-helpers@1.18.6
+
+## 1.19.0
+
+### Minor Changes
+
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.18.2
+
+### Patch Changes
+
+- 23862e7e: fix(naming-convention): revert and pin change-case-all dependency for workaround #3256
+- Updated dependencies [23862e7e]
+  - @graphql-codegen/visitor-plugin-common@1.19.1
+  - @graphql-codegen/plugin-helpers@1.18.4
+
+## 1.18.1
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/plugin-helpers@1.18.3
+
+## 1.18.0
+
+### Minor Changes
+
+- 9e0f6395: This release adds support to optionally emit c# 9 records instead of classes.
+
+  To enable this, add `emitRecords: true` to your codegen yaml or json configuration file. Example:
+
+  ```yaml
+  schema: './types.graphql'
+  generates:
+    ./src/types.cs:
+      plugins:
+        - c-sharp
+  config:
+    namespaceName: My.Types
+    emitRecords: true
+    scalars:
+      DateTime: DateTime
+  ```
+
+### Patch Changes
+
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.17.10
 
 ### Patch Changes

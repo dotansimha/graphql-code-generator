@@ -1,5 +1,48 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.20.0
+
+### Minor Changes
+
+- f0b5ea53: Add entireFieldWrapperValue configuration option, to wrap arrays
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.19.1
+
+### Patch Changes
+
+- 23862e7e: fix(naming-convention): revert and pin change-case-all dependency for workaround #3256
+- Updated dependencies [23862e7e]
+  - @graphql-codegen/plugin-helpers@1.18.4
+
+## 1.19.0
+
+### Minor Changes
+
+- d4942d04: NEW CONFIG (`onlyResolveTypeForInterfaces`): Allow to generate only \_\_resolveType for interfaces
+
+### Patch Changes
+
+- e947f8e3: Allow to have declarationKind of type: class, interface: interface
+- 29b75b1e: enhance(docs): improve docs for naming convention
+- 1f6f3db6: Fix for @skip @include directives upon arrays
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/plugin-helpers@1.18.3
+
+## 1.18.3
+
+### Patch Changes
+
+- 5749cb8a: chore: fix type-level incompatibilities of the `avoidOptionals`
+- 5a12fe58: fix type error on parsing enums
+
 ## 1.18.2
 
 ### Patch Changes

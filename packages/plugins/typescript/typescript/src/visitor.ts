@@ -22,6 +22,7 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   isEnumType,
+  UnionTypeDefinitionNode,
   GraphQLObjectType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
@@ -31,6 +32,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   constEnums: boolean;
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
+  futureProofUnions: boolean;
   enumsAsConst: boolean;
   numericEnums: boolean;
   onlyOperationTypes: boolean;
@@ -56,11 +58,14 @@ export class TsVisitor<
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
+      futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
+      entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
+      wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -123,6 +128,9 @@ export class TsVisitor<
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
     }
+    if (this.config.wrapEntireDefinitions) {
+      definitions.push(this.getEntireFieldWrapperValue());
+    }
 
     return definitions;
   }
@@ -167,6 +175,29 @@ export class TsVisitor<
     return `Maybe<${super.ListType(node)}>`;
   }
 
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    if (this.config.onlyOperationTypes) return '';
+    let withFutureAddedValue: string[] = [];
+    if (this.config.futureProofUnions) {
+      withFutureAddedValue = [
+        this.config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
+      ];
+    }
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .concat(...withFutureAddedValue)
+      .join(' | ');
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
+      .withContent(possibleTypes).string;
+    // return super.UnionTypeDefinition(node, key, parent).concat(withFutureAddedValue).join("");
+  }
+
   protected wrapWithListType(str: string): string {
     return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
   }
@@ -178,7 +209,9 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = (node.type as any) as string;
+    const typeString = this.config.wrapEntireDefinitions
+      ? `EntireFieldWrapper<${node.type}>`
+      : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);

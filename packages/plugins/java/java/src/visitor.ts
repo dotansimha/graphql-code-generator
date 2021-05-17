@@ -4,8 +4,8 @@ import {
   EnumValuesMap,
   indentMultiline,
   indent,
-  buildScalars,
   getBaseTypeNode,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './config';
 import {
@@ -44,7 +44,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       className: rawConfig.className || 'Types',
       classMembersPrefix: rawConfig.classMembersPrefix || '',
       package: rawConfig.package || defaultPackageName,
-      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS, 'Object'),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, JAVA_SCALARS, 'Object'),
     });
   }
 

@@ -29,7 +29,7 @@ import {
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import {
   LinkField,
@@ -372,7 +372,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
-      const isConditional = hasConditionalDirectives(field.directives);
+      const isConditional = hasConditionalDirectives(field);
 
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
@@ -380,7 +380,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          isConditional ? realSelectedFieldType : selectedFieldType
+          isConditional ? removeNonNullWrapper(selectedFieldType) : selectedFieldType
         ),
       });
     }
@@ -397,7 +397,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
-          isConditional: hasConditionalDirectives(field.directives),
+          isConditional: hasConditionalDirectives(field),
           fieldName: field.name.value,
         }))
       ),

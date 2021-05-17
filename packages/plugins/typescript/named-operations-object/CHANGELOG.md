@@ -1,5 +1,33 @@
 # @graphql-codegen/named-operations-object
 
+## 1.18.2
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.18.1
+
+### Patch Changes
+
+- 23862e7e: fix(naming-convention): revert and pin change-case-all dependency for workaround #3256
+- Updated dependencies [23862e7e]
+  - @graphql-codegen/plugin-helpers@1.18.4
+
+## 1.18.0
+
+### Minor Changes
+
+- 65cc0185: Added a new config flat (useConsts) for generating const strings
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/plugin-helpers@1.18.3
+
 ## 1.17.9
 
 ### Patch Changes

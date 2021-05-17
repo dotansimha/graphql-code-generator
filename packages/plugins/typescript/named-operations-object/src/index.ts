@@ -1,6 +1,6 @@
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, visit } from 'graphql';
-import { capitalCase } from 'change-case';
+import { capitalCase } from 'change-case-all';
 
 export interface NamedOperationsObjectPluginConfig {
   /**
@@ -19,6 +19,11 @@ export interface NamedOperationsObjectPluginConfig {
    * ```
    */
   identifierName?: string;
+  /**
+   * @description Will generate a const string instead of regular string.
+   * @default false
+   */
+  useConsts?: boolean;
 }
 
 export const plugin: PluginFunction<NamedOperationsObjectPluginConfig, string> = (
@@ -57,7 +62,7 @@ export const plugin: PluginFunction<NamedOperationsObjectPluginConfig, string> =
 
         return `  ${rootFieldName}: {
 ${Array.from(relevantOperations)
-  .map(t => `    ${t}: '${t}'`)
+  .map(t => `    ${t}: '${t}'${config.useConsts ? ' as const' : ''}`)
   .join(',\n')}
   }`;
       }

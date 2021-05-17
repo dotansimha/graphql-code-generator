@@ -26,6 +26,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-react-query',
   },
   {
+    file: '../../plugins/typescript/generic-sdk/src/config.ts',
+    identifier: 'RawGenericSdkPluginConfig',
+    name: 'typescript-generic-sdk',
+  },
+  {
     file: '../../plugins/typescript/apollo-client-helpers/src/config.ts',
     identifier: 'ApolloClientHelpersConfig',
     name: 'typescript-apollo-client-helpers',
@@ -174,5 +179,10 @@ export const pluginsConfigurations: PluginConfig[] = [
     file: '../../plugins/other/fragment-matcher/src/index.ts',
     identifier: 'FragmentMatcherConfig',
     name: 'fragment-matcher',
+  },
+  {
+    file: '../../plugins/other/urql-introspection/src/index.ts',
+    identifier: 'UrqlIntrospectionConfig',
+    name: 'urql-introspection',
   },
 ];

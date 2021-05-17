@@ -16,10 +16,12 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const MONACO_DIR = path.resolve(__dirname, '../node_modules/monaco-editor');
 
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+
 module.exports = function () {
   return {
     name: 'monaco-plugin',
-    configureWebpack(config) {
+    configureWebpack(config, isServer) {
       const existingCssRule = config.module.rules.find(r => r.test.toString() === '/\\.css$/');
 
       existingCssRule.exclude = [
@@ -27,25 +29,30 @@ module.exports = function () {
         MONACO_DIR
       ];
 
+      const { plugins = [] } = config; 
+
+      if (!isServer) {
+        plugins.push(new NodePolyfillPlugin());
+      }
+
+      plugins.push(new MonacoWebpackPlugin());
+
       return {
         module: {
           rules: [
             {
               test: /\.ttf$/,
-              use: ['file-loader']
+              use: ['file-loader'],
             },
             {
               test: /\.css$/,
               include: MONACO_DIR,
               use: ['style-loader', 'css-loader'],
-            }
-          ]
+            },
+          ],
         },
-        plugins: [
-          ...(config.plugins || []),
-          new MonacoWebpackPlugin()
-        ],
-      }
+        plugins
+      };
     },
   };
 };

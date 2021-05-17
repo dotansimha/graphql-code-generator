@@ -101,6 +101,22 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   futureProofEnums?: boolean;
   /**
+   * @description This option controls whether or not a catch-all entry is added to union type definitions for values that may be added in the future.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    futureProofUnions: true
+   * ```
+   */
+  futureProofUnions?: boolean;
+  /**
    * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
    * @default false
    *
@@ -191,6 +207,22 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   noExport?: boolean;
   /**
+   * @description Set the value to `true` in order to disable all description generation.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Disable description generation
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    disableDescriptions: true
+   * ```
+   */
+  disableDescriptions?: boolean;
+  /**
    * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
    * @default false
    *
@@ -206,4 +238,42 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   useImplementingTypes?: boolean;
+  /**
+   * @name wrapEntireFieldDefinitions
+   * @type boolean
+   * @description Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+   * This is useful to allow return types such as Promises and functions for fields.
+   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+   * `wrapFieldDefinitions` will wrap every single value inside the array.
+   * @default true
+   *
+   * @example Enable wrapping entire fields
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    wrapEntireFieldDefinitions: false
+   * ```
+   */
+  wrapEntireFieldDefinitions?: boolean
+  /**
+   * @name entireFieldWrapperValue
+   * @type string
+   * @description Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe
+   * unlike `fieldWrapperValue`, that will wrap the inner type.
+   * @default T | Promise<T> | (() => T | Promise<T>)
+   *
+   * @example Only allow values
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    entireFieldWrapperValue: T
+   * ```
+   */;
+  entireFieldWrapperValue?: string;
 }

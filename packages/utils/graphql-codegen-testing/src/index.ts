@@ -91,3 +91,4 @@ export function useMonorepo({ dirname }: { dirname: string }) {
 }
 
 export * from './typescript';
+export * from './mock-graphql-server';

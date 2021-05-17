@@ -3,6 +3,30 @@ import { plugin } from '../src';
 import { parse } from 'graphql';
 
 describe('named-operations-object', () => {
+  it('Should generate const strings when useConsts: true is set', async () => {
+    const result = await plugin(
+      null,
+      [
+        {
+          document: parse(/* GraphQL */ `
+            query myQuery {
+              id
+            }
+          `),
+        },
+      ],
+      {
+        useConsts: true,
+      }
+    );
+
+    expect(result).toBeSimilarStringTo(`export const namedOperations = {
+      Query: {
+        myQuery: 'myQuery' as const
+      }
+    }`);
+  });
+
   it('Should generate the correct output with a single query', async () => {
     const result = await plugin(
       null,

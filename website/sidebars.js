@@ -31,6 +31,7 @@ module.exports = {
           'plugins/typed-document-node',
           'plugins/typescript-apollo-client-helpers',
           'plugins/typescript-graphql-request',
+          'plugins/typescript-generic-sdk',
           'plugins/typescript-react-query',
           'plugins/typescript-react-apollo',
           'plugins/typescript-vue-apollo',
@@ -72,6 +73,7 @@ module.exports = {
         label: 'Utilities',
         items: [
           'plugins/fragment-matcher',
+          'plugins/urql-introspection',
           'plugins/introspection',
           'plugins/schema-ast',
           'plugins/jsdoc',
@@ -93,6 +95,7 @@ module.exports = {
       'integrations/gatsby',
       'integrations/prettier',
       'integrations/federation',
+      'integrations/vscode',
     ],
     'Custom Plugins': [
       'custom-codegen/index',

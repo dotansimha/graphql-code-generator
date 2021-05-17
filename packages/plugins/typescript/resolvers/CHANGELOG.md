@@ -1,5 +1,46 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.19.1
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/typescript@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
+## 1.19.0
+
+### Minor Changes
+
+- d4942d04: NEW CONFIG (`onlyResolveTypeForInterfaces`): Allow to generate only \_\_resolveType for interfaces
+
+### Patch Changes
+
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- Updated dependencies [e947f8e3]
+- Updated dependencies [29b75b1e]
+- Updated dependencies [d4942d04]
+- Updated dependencies [1f6f3db6]
+- Updated dependencies [29b75b1e]
+  - @graphql-codegen/visitor-plugin-common@1.19.0
+  - @graphql-codegen/typescript@1.21.1
+  - @graphql-codegen/plugin-helpers@1.18.3
+
+## 1.18.2
+
+### Patch Changes
+
+- 5749cb8a: chore: fix type-level incompatibilities of the `avoidOptionals`
+- Updated dependencies [34b8087e]
+- Updated dependencies [5749cb8a]
+- Updated dependencies [5a12fe58]
+  - @graphql-codegen/typescript@1.21.0
+  - @graphql-codegen/visitor-plugin-common@1.18.3
+
 ## 1.18.1
 
 ### Patch Changes

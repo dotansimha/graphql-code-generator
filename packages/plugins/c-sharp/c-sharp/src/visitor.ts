@@ -4,8 +4,8 @@ import {
   EnumValuesMap,
   indentMultiline,
   indent,
-  buildScalars,
   getBaseTypeNode,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { CSharpResolversPluginRawConfig } from './config';
 import {
@@ -38,12 +38,14 @@ import {
   wrapFieldType,
   getListTypeField,
 } from '../../common/common';
+import { pascalCase } from 'change-case-all';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
   className: string;
   listType: string;
   enumValues: EnumValuesMap;
+  emitRecords: boolean;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
@@ -55,7 +57,8 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       listType: rawConfig.listType || 'List',
       namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
-      scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
+      emitRecords: rawConfig.emitRecords || false,
+      scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
   }
 
@@ -240,6 +243,42 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return result;
   }
 
+  protected buildRecord(
+    name: string,
+    description: StringValueNode,
+    inputValueArray: ReadonlyArray<FieldDefinitionNode>,
+    interfaces?: ReadonlyArray<NamedTypeNode>
+  ): string {
+    const classSummary = transformComment(description?.value);
+    const interfaceImpl =
+      interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
+    const recordMembers = inputValueArray
+      .map(arg => {
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldHeader = this.getFieldHeader(arg, fieldType);
+        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; init; } = ${fieldName};`);
+      })
+      .join('\n\n');
+    const recordInitializer = inputValueArray
+      .map(arg => {
+        const fieldType = this.resolveInputFieldType(arg.type);
+        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+        return `${csharpFieldType} ${fieldName}`;
+      })
+      .join(', ');
+    return `
+#region ${name}
+${classSummary}public record ${this.convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
+  #region members
+${recordMembers}
+  #endregion
+}
+#endregion`;
+  }
+
   protected buildClass(
     name: string,
     description: StringValueNode,
@@ -279,9 +318,23 @@ ${classMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+
+        let fieldName: string;
+        let getterSetter: string;
+
+        if (this.config.emitRecords) {
+          // record
+          fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+          getterSetter = '{ get; }';
+        } else {
+          // class
+          fieldName = this.convertSafeName(arg.name);
+          getterSetter = '{ get; set; }';
+        }
+
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
-        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
+
+        return fieldHeader + indent(`${csharpFieldType} ${fieldName} ${getterSetter}`);
       })
       .join('\n\n');
 
@@ -344,6 +397,10 @@ ${classMembers}
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+    if (this.config.emitRecords) {
+      return this.buildRecord(node.name.value, node.description, node.fields, node.interfaces);
+    }
+
     return this.buildClass(node.name.value, node.description, node.fields, node.interfaces);
   }
 
