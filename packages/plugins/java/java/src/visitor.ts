@@ -217,7 +217,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
             `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
   this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
 } else {
-  // TODO: Tzach - remove the args from the ctor
+  this.${this.config.classMembersPrefix}${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
 }`,
             3
           );
