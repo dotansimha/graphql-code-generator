@@ -30,6 +30,7 @@ export interface JavaResolverParsedConfig extends ParsedConfig {
   listType: string;
   enumValues: EnumValuesMap;
   classMembersPrefix: string;
+  useEmptyCtor: boolean;
 }
 
 export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConfig, JavaResolverParsedConfig> {
@@ -45,6 +46,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       classMembersPrefix: rawConfig.classMembersPrefix || '',
       package: rawConfig.package || defaultPackageName,
       scalars: buildScalarsFromConfig(_schema, rawConfig, JAVA_SCALARS, 'Object'),
+      useEmptyCtor: rawConfig.useEmptyCtor || false,
     });
   }
 
@@ -123,15 +125,19 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(
-    typeNode: TypeNode
-  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } {
+  protected resolveInputFieldType(typeNode: TypeNode): {
+    baseType: string;
+    typeName: string;
+    isScalar: boolean;
+    isArray: boolean;
+    isEnum: boolean;
+  } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray =
       typeNode.kind === Kind.LIST_TYPE ||
       (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } = null;
+    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean };
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
@@ -273,7 +279,17 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       })
       .join('\n');
 
-    return `public static class ${name} {
+    if (this.config.useEmptyCtor) {
+      return `public static class ${name} {
+${classMembers}
+
+  public ${name}() {}
+
+${getters}
+${setters}
+}`;
+    } else {
+      return `public static class ${name} {
 ${classMembers}
 
   public ${name}(Map<String, Object> args) {
@@ -285,6 +301,7 @@ ${ctorSet}
 ${getters}
 ${setters}
 }`;
+    }
   }
 
   FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {
