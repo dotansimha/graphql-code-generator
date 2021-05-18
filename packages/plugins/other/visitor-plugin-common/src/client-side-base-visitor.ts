@@ -334,7 +334,7 @@ export class ClientSideBaseVisitor<
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this.getFragmentVariableName(fragmentDocument);
     const fragmentTypeSuffix = this.getFragmentSuffix(fragmentDocument);
-    return `export const ${name}=${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(
+    return `export const ${name} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(
       fragmentDocument
     )}${this.getDocumentNodeSignature(
       this.convertName(fragmentDocument.name.value, {
