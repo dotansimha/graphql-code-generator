@@ -34,6 +34,7 @@ module.exports = {
           'plugins/typescript-generic-sdk',
           'plugins/typescript-react-query',
           'plugins/typescript-react-apollo',
+          'plugins/typescript-svelte-apollo',
           'plugins/typescript-vue-apollo',
           'plugins/typescript-apollo-angular',
           'plugins/typescript-stencil-apollo',
