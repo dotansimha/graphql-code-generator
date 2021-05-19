@@ -56,6 +56,6 @@ describe('TypeDocumentNode', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect((res.content.match(/"value":"JobSimpleRecruiterData"/g) || []).length).toBeLessThan(3);
+    expect(res.content).toContain(`"definitions":deDupeDefinitions`);
   });
 });
