@@ -270,7 +270,7 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
 
 export const CommentsPageCommentFragmentDoc = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
@@ -299,7 +299,7 @@ export const CommentsPageCommentFragmentDoc = {
 } as unknown as DocumentNode<CommentsPageCommentFragment, unknown>;
 export const VoteButtonsFragmentDoc = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
@@ -323,7 +323,7 @@ export const VoteButtonsFragmentDoc = {
 } as unknown as DocumentNode<VoteButtonsFragment, unknown>;
 export const RepoInfoFragmentDoc = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
@@ -362,7 +362,7 @@ export const RepoInfoFragmentDoc = {
 } as unknown as DocumentNode<RepoInfoFragment, unknown>;
 export const FeedEntryFragmentDoc = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'FeedEntry' },
@@ -402,7 +402,7 @@ export const FeedEntryFragmentDoc = {
 } as unknown as DocumentNode<FeedEntryFragment, unknown>;
 export const OnCommentAddedDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'subscription',
@@ -454,7 +454,7 @@ export const OnCommentAddedDocument = {
 } as unknown as DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
 export const CommentDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'query',
@@ -571,7 +571,7 @@ export const CommentDocument = {
 } as unknown as DocumentNode<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'query',
@@ -597,7 +597,7 @@ export const CurrentUserForProfileDocument = {
 } as unknown as DocumentNode<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 export const FeedDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'query',
@@ -663,7 +663,7 @@ export const FeedDocument = {
 } as unknown as DocumentNode<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
@@ -700,7 +700,7 @@ export const SubmitRepositoryDocument = {
 } as unknown as DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 export const SubmitCommentDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
@@ -748,7 +748,7 @@ export const SubmitCommentDocument = {
 } as unknown as DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export const VoteDocument = {
   kind: 'Document',
-  definitions: [
+  definitions: deDupeDefinitions([
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
