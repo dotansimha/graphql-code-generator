@@ -52,7 +52,7 @@
     "@graphql-tools/prisma-loader": "^6.3.0",
     "@graphql-tools/url-loader": "^6.10.1",
     "@graphql-tools/utils": "^7.9.1",
-    "ansi-escapes": "^4.3.1",
+    "ansi-escapes": "^5.0.0",
     "chalk": "^4.1.0",
     "change-case-all": "1.0.14",
     "chokidar": "^3.5.1",
