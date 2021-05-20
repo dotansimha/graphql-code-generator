@@ -9,22 +9,22 @@ export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
 
 export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-              >
-            >
-          >;
-        })
     | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
           friends?: Types.Maybe<
             Array<
               Types.Maybe<
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
                 | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
+          friends?: Types.Maybe<
+            Array<
+              Types.Maybe<
+                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
               >
             >
           >;
