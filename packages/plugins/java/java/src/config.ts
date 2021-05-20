@@ -73,4 +73,19 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * ```
    */
   listType?: string;
+  /**
+   * @default Boolean, false
+   * @description If true, will create empty constructor instead of args map
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/java/my-org/my-app/Types.java:
+   *     plugins:
+   *       - java
+   *     config:
+   *       useEmptyCtor: true
+   * ```
+   */
+  useEmptyCtor?: boolean;
 }

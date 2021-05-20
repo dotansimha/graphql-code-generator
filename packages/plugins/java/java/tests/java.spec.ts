@@ -140,7 +140,7 @@ describe('Java', () => {
     });
   });
 
-  describe('Input Types / Arguments', () => {
+  describe('Input Types / Arguments useEmptyCtor default false', () => {
     it('Should generate arguments correctly when using Array', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
@@ -148,7 +148,14 @@ describe('Java', () => {
         private Iterable<String> f;
         private Iterable<SearchUserInput> g;
       
-        public InputWithArrayInput() {}          
+        public InputWithArrayInput(Map<String, Object> args) {
+          if (args != null) {
+            this.f = (Iterable<String>) args.get("f");
+            if (args.get("g") != null) {
+              this.g = (Iterable<SearchUserInput>) args.get("g");
+            }
+          }
+        }
       
         public Iterable<String> getF() { return this.f; }
         public Iterable<SearchUserInput> getG() { return this.g; }
@@ -164,7 +171,12 @@ describe('Java', () => {
         private Integer skip;
         private Integer limit;
       
-        public UserFriendsArgs() {}         
+        public UserFriendsArgs(Map<String, Object> args) {
+          if (args != null) {
+            this.skip = (Integer) args.get("skip");
+            this.limit = (Integer) args.get("limit");
+          }
+        }
       
         public Integer getSkip() { return this.skip; }
         public Integer getLimit() { return this.limit; }
@@ -179,7 +191,11 @@ describe('Java', () => {
       expect(result).toBeSimilarStringTo(`public static class CustomInput {
         private Object id;
       
-        public CustomInput() {}          
+        public CustomInput(Map<String, Object> args) {
+          if (args != null) {
+            this.id = (Object) args.get("id");
+          }
+        }
       
         public Object getId() { return this.id; }
         public void setId(Object id) { this.id = id; }
@@ -188,6 +204,184 @@ describe('Java', () => {
 
     it('Should generate input class per each query with arguments', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class QueryUserArgs {
+        private Object id;
+      
+        public QueryUserArgs(Map<String, Object> args) {
+          if (args != null) {
+            this.id = (Object) args.get("id");
+          }
+        }
+      
+        public Object getId() { return this.id; }
+        public void setId(Object id) { this.id = id; }
+      }`);
+
+      expect(result).toBeSimilarStringTo(`public static class QuerySearchUserArgs {
+        private SearchUserInput searchFields;
+      
+        public QuerySearchUserArgs(Map<String, Object> args) {
+          if (args != null) {
+            this.searchFields = new SearchUserInput((Map<String, Object>) args.get("searchFields"));
+          }
+        }
+      
+        public SearchUserInput getSearchFields() { return this.searchFields; }
+        public void setSearchFields(SearchUserInput searchFields) { this.searchFields = searchFields; }
+      }`);
+    });
+
+    it('Should generate check type for enum', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
+        this.sort = (ResultSort) args.get("sort");
+      } else {
+        this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
+      }`);
+    });
+
+    it('Should generate input class per each input, also with nested input types', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class MetadataSearchInput {
+        private Integer something;
+      
+        public MetadataSearchInput(Map<String, Object> args) {
+          if (args != null) {
+            this.something = (Integer) args.get("something");
+          }
+        }
+      
+        public Integer getSomething() { return this.something; }
+        public void setSomething(Integer something) { this.something = something; }
+      }`);
+
+      expect(result).toBeSimilarStringTo(`public static class SearchUserInput {
+        private String username;
+        private String email;
+        private String name;
+        private Object dateOfBirth;
+        private ResultSort sort;
+        private MetadataSearchInput metadata;
+      
+        public SearchUserInput(Map<String, Object> args) {
+          if (args != null) {
+            this.username = (String) args.get("username");
+            this.email = (String) args.get("email");
+            this.name = (String) args.get("name");
+            this.dateOfBirth = (Object) args.get("dateOfBirth");
+            if (args.get("sort") instanceof ResultSort) {
+              this.sort = (ResultSort) args.get("sort");
+            } else {
+              this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
+            }
+            this.metadata = new MetadataSearchInput((Map<String, Object>) args.get("metadata"));
+          }
+        }
+      
+        public String getUsername() { return this.username; }
+        public String getEmail() { return this.email; }
+        public String getName() { return this.name; }
+        public Object getDateOfBirth() { return this.dateOfBirth; }
+        public ResultSort getSort() { return this.sort; }
+        public MetadataSearchInput getMetadata() { return this.metadata; }
+        public void setUsername(String username) { this.username = username; }
+        public void setEmail(String email) { this.email = email; }
+        public void setName(String name) { this.name = name; }
+        public void setDateOfBirth(Object dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+        public void setSort(ResultSort sort) { this.sort = sort; }
+        public void setMetadata(MetadataSearchInput metadata) { this.metadata = metadata; }
+      }`);
+    });
+
+    it('Should generate nested inputs with out duplicated `Input` suffix', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class UpdateUserMetadataInput {
+        private Integer something;
+      
+        public UpdateUserMetadataInput(Map<String, Object> args) {
+          if (args != null) {
+            this.something = (Integer) args.get("something");
+          }
+        }
+      
+        public Integer getSomething() { return this.something; }
+        public void setSomething(Integer something) { this.something = something; }
+      }`);
+
+      expect(result).toBeSimilarStringTo(`public static class UpdateUserInput {
+        private Object id;
+        private String username;
+        private UpdateUserMetadataInput metadata;
+      
+        public UpdateUserInput(Map<String, Object> args) {
+          if (args != null) {
+            this.id = (Object) args.get("id");
+            this.username = (String) args.get("username");
+            this.metadata = new UpdateUserMetadataInput((Map<String, Object>) args.get("metadata"));
+          }
+        }
+      
+        public Object getId() { return this.id; }
+        public String getUsername() { return this.username; }
+        public UpdateUserMetadataInput getMetadata() { return this.metadata; }
+        public void setId(Object id) { this.id = id; }
+        public void setUsername(String username) { this.username = username; }
+        public void setMetadata(UpdateUserMetadataInput metadata) { this.metadata = metadata; }
+      }`);
+    });
+  });
+
+  describe('Input Types / Arguments useEmptyCtor true', () => {
+    it('Should generate arguments correctly when using Array', async () => {
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class InputWithArrayInput {
+        private Iterable<String> f;
+        private Iterable<SearchUserInput> g;
+      
+        public InputWithArrayInput() {}          
+      
+        public Iterable<String> getF() { return this.f; }
+        public Iterable<SearchUserInput> getG() { return this.g; }
+        public void setF(Iterable<String> f) { this.f = f; }
+        public void setG(Iterable<SearchUserInput> g) { this.g = g; }
+      }`);
+    });
+
+    it('Should generate input class per each type with field arguments', async () => {
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class UserFriendsArgs {
+        private Integer skip;
+        private Integer limit;
+      
+        public UserFriendsArgs() {}         
+      
+        public Integer getSkip() { return this.skip; }
+        public Integer getLimit() { return this.limit; }
+        public void setSkip(Integer skip) { this.skip = skip; }
+        public void setLimit(Integer limit) { this.limit = limit; }
+      }`);
+    });
+
+    it('Should omit extra Input suffix from input class name if schema name already includes the "Input" suffix', async () => {
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
+
+      expect(result).toBeSimilarStringTo(`public static class CustomInput {
+        private Object id;
+      
+        public CustomInput() {}          
+      
+        public Object getId() { return this.id; }
+        public void setId(Object id) { this.id = id; }
+      }`);
+    });
+
+    it('Should generate input class per each query with arguments', async () => {
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class QueryUserArgs {
         private Object id;
@@ -211,14 +405,14 @@ describe('Java', () => {
     // it('Should generate check type for enum', async () => {
     //   const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
     //   expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
-    //     this._sort = (ResultSort) args.get("sort");
+    //     this.sort = (ResultSort) args.get("sort");
     //   } else {
-    //     this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
+    //     this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
     //   }`);
     // });
 
     it('Should generate input class per each input, also with nested input types', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class MetadataSearchInput {
         private Integer something;
@@ -256,7 +450,7 @@ describe('Java', () => {
     });
 
     it('Should generate nested inputs with out duplicated `Input` suffix', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      const result = await plugin(schema, [], { useEmptyCtor: true }, { outputFile: OUTPUT_FILE });
 
       expect(result).toBeSimilarStringTo(`public static class UpdateUserMetadataInput {
         private Integer something;
