@@ -5,7 +5,7 @@ import {
   getConfigValue,
   OMIT_TYPE,
 } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlRawPluginConfig } from './config';
+import { VueUrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'change-case-all';
@@ -15,8 +15,8 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   urqlImportFrom: string;
 }
 
-export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
+export class UrqlVisitor extends ClientSideBaseVisitor<VueUrqlRawPluginConfig, UrqlPluginConfig> {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: VueUrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComposition: getConfigValue(rawConfig.withComposition, true),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),

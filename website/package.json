@@ -63,6 +63,7 @@
     "@graphql-codegen/typescript-type-graphql": "1.18.5",
     "@graphql-codegen/typescript-urql": "2.0.7",
     "@graphql-codegen/typescript-vue-apollo": "2.3.5",
+    "@graphql-codegen/typescript-vue-urql": "1.0.0",
     "@graphql-codegen/typescript-apollo-client-helpers": "1.1.6",
     "node-polyfill-webpack-plugin": "1.1.2",
     "react-monaco-editor": "0.43.0",

@@ -3,7 +3,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 /**
  * @description This plugin generates `urql` (https://github.com/FormidableLabs/urql) composition functions with TypeScript typings.
  */
-export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
+export interface VueUrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
    * @description Customized the output by enabling/disabling the generated Vue Composition functions.
    * @default true
