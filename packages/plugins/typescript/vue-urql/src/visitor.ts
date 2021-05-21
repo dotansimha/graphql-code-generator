@@ -43,7 +43,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<VueUrqlRawPluginConfig, U
     return [...baseImports, ...imports];
   }
 
-  private _buildCompositionFunctions(
+  private _buildCompositionFn(
     node: OperationDefinitionNode,
     operationType: string,
     documentVariableName: string,
@@ -83,7 +83,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<a
     operationVariablesTypes: string
   ): string {
     const composition = this.config.withComposition
-      ? this._buildCompositionFunctions(
+      ? this._buildCompositionFn(
           node,
           operationType,
           documentVariableName,
