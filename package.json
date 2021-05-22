@@ -56,7 +56,7 @@
     "apollo-server": "2.24.1",
     "auto-bind": "4.0.0",
     "bob-the-bundler": "1.2.0",
-    "eslint": "7.26.0",
+    "eslint": "7.27.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.2",
     "eslint-plugin-import": "2.23.3",
