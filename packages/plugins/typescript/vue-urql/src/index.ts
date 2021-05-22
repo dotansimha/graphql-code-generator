@@ -3,12 +3,12 @@ import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'g
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlVisitor } from './visitor';
 import { extname } from 'path';
-import { UrqlRawPluginConfig } from './config';
+import { VueUrqlRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<VueUrqlRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: UrqlRawPluginConfig
+  config: VueUrqlRawPluginConfig
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
@@ -34,7 +34,7 @@ export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutp
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: UrqlRawPluginConfig,
+  config: VueUrqlRawPluginConfig,
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.ts') {
