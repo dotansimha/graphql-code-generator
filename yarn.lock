@@ -17872,16 +17872,17 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.15.tgz#1b7185140745aa61f41eb3f2dac6718c9ff03b97"
-  integrity sha512-G/pTdkDhKKcudaG4KxSPLXVTAIOUiPKaZiiqmGt3ufuBF1pslPdSAfJ+0dTjHL6oZPsG7KYdSA6pyLmNomupfA==
+the-guild-components@1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.16.tgz#e58b09134b63c241756c836d7c30b7aa762b98f0"
+  integrity sha512-xZwjZGW/fgQPnXWImPt0zKLtUGeai3gyycpItfP6W615nGeYIFJo+jQo+f++2bPijhh3Vmhv6ZGahTU0Rr7Zyw==
   dependencies:
     algoliasearch "^4.9.0"
     core-js "^3.8.3"
     react-instantsearch-dom "^6.10.3"
     tailwindcss "^2.0.3"
     twin.macro "^2.2.3"
+    use-debounce "^6.0.1"
 
 throat@^5.0.0:
   version "5.0.0"
@@ -18638,6 +18639,11 @@ use-composed-ref@^1.0.0:
   integrity sha512-my1lNHGWsSDAhhVAT4MKs6IjBUtG6ZG11uUqexPH9PptiIZDQOzaF4f5tEbJ2+7qvNbtXNBbU3SfmN+fXlWDhg==
   dependencies:
     ts-essentials "^2.0.3"
+
+use-debounce@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-6.0.1.tgz#ed1eb2b30189408fb9792ea2887f4c6c3cb401a3"
+  integrity sha512-kpvIxpa0vOLz/2I2sfNJ72mUeaT2CMNCu5BT1f2HkV9qZK27UVSOFf1sSSu+wjJE4TcR2VTXS2SM569+m3TN7Q==
 
 use-isomorphic-layout-effect@^1.0.0:
   version "1.1.1"
