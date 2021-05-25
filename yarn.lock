@@ -16029,8 +16029,6 @@ rechoir@^0.6.2:
   version "0.6.2"
   resolved "https://registry.npmjs.org/rechoir/-/rechoir-0.6.2.tgz#85204b54dba82d5742e28c96756ef43af50e3384"
   integrity sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
-  dependencies:
-    resolve "^1.1.6"
 
 recursive-readdir@2.2.2:
   version "2.2.2"
@@ -17892,10 +17890,10 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@1.0.16:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.0.16.tgz#e58b09134b63c241756c836d7c30b7aa762b98f0"
-  integrity sha512-xZwjZGW/fgQPnXWImPt0zKLtUGeai3gyycpItfP6W615nGeYIFJo+jQo+f++2bPijhh3Vmhv6ZGahTU0Rr7Zyw==
+the-guild-components@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.1.0.tgz#5b023aa4acb65d5166de5eb2af44917704b1f282"
+  integrity sha512-togGO4o6ArbtgSpF3zPUkrs0Mzw8f1QCkcfhLLVlV2HT7ywF7h7pNLVTh35Eh0mwhHXbxelUx2kr5j9zYqfKKQ==
   dependencies:
     algoliasearch "^4.9.0"
     core-js "^3.8.3"
