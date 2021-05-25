@@ -105,7 +105,7 @@
     "**/@types/graphql-upload/graphql": "^15.0.0"
   },
   "dependencies": {
-    "dotenv": "9.0.2",
+    "dotenv": "10.0.0",
     "patch-package": "6.4.7"
   }
 }
