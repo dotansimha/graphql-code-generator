@@ -1,7 +1,7 @@
 import { oneLine, stripIndent } from 'common-tags';
 import { resolve } from 'path';
 import { existsSync } from 'fs';
-import diff from 'jest-diff';
+import { diff } from 'jest-diff';
 
 declare global {
   // eslint-disable-next-line no-redeclare
