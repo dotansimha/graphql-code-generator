@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^1.18.2",
-    "@graphql-codegen/visitor-plugin-common": "^1.17.20",
+    "@graphql-codegen/visitor-plugin-common": "1.20.0",
     "tslib": "~2.2.0"
   },
   "peerDependencies": {
