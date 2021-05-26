@@ -11,11 +11,10 @@ on:
 jobs:
   test:
     name: Testing on Node ${{matrix.node_version}}
-    runs-on: ${{matrix.os}}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         node_version: [12, 16]
     steps:
       - name: Checkout
@@ -45,7 +44,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test --logHeapUsage
+        run: yarn test
         env:
           CI: true
       - name: Test dev-tests
