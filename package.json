@@ -7,7 +7,7 @@
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
     "build": "tsc --project tsconfig.json && bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "test": "jest --no-watchman",
+    "test": "jest --forceExit --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
