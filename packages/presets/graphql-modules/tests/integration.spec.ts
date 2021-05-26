@@ -26,6 +26,7 @@ describe('Integration', () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
+    jest.setTimeout(20000);
   });
 
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
