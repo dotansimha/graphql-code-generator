@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 1.18.7
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+
 ## 1.18.6
 
 ### Patch Changes
