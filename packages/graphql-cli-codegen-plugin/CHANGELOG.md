@@ -1,5 +1,12 @@
 # @graphql-cli/codegen
 
+## 1.17.24
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/cli@1.21.5
+
 ## 1.17.23
 
 ### Patch Changes
