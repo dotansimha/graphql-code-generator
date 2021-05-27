@@ -10554,10 +10554,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
   integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
-flow-bin@0.151.0:
-  version "0.151.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.151.0.tgz#f1339f4c90b2c4242e5a9a2063e1e0efa0520084"
-  integrity sha512-V2UNOFUtCkWjDVws9htqBSHzHVBEW1xe6IHp4RYr7hVJPOri36cFWS2ssFM8Y0yFOz2EV79QdrhNf57wFSLEgg==
+flow-bin@0.152.0:
+  version "0.152.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.152.0.tgz#6980d0cd58f59e9aefd580b11109a1d56eba46b1"
+  integrity sha512-b4ijbZIQovcx5l/T7VnwyBPIikj60A2qk7hKqQKVWiuftQMrUmC5ct2/0SuVvheX6ZbPdZfeyw2EHO1/n3eAmw==
 
 flow-parser@0.151.0:
   version "0.151.0"
@@ -18595,11 +18595,6 @@ typescript-json-schema@0.50.0:
     ts-node "^9.1.1"
     typescript "^4.2.3"
     yargs "^16.2.0"
-
-typescript@4.2.4:
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
-  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
 typescript@4.3.2:
   version "4.3.2"
