@@ -198,6 +198,17 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
+  ./dev-test/githunt/types.rtk-query.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query
+    config:
+      importBaseApiFrom: '../../packages/plugins/typescript/rtk-query/tests/baseApi'
+      exportHooks: true
+
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

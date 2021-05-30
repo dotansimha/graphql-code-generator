@@ -15,7 +15,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false, // TODO: revert this once https://github.com/reduxjs/redux-toolkit/issues/1090 is fixed
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noImplicitReturns": true,

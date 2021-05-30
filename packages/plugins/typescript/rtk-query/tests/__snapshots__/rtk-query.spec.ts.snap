@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RTK Query Injection Without hooks 1`] = `
+"
+
+const injectedRtkApi = api.injectEndpoints({
+  endpoints: (build) => ({
+    Comment: build.query<CommentQuery, CommentQueryVariables>({
+      query: (variables) => ({ document: CommentDocument, variables })
+    }),
+    Feed: build.query<FeedQuery, FeedQueryVariables>({
+      query: (variables) => ({ document: FeedDocument, variables })
+    }),
+    submitRepository: builder.mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>({
+      query: (variables) => ({ document: SubmitRepositoryDocument, variables })
+    }),
+  }),
+});
+
+export { injectedRtkApi as api };
+
+
+"
+`;
+
+exports[`RTK Query With hooks 1`] = `
+"
+
+const injectedRtkApi = api.injectEndpoints({
+  endpoints: (build) => ({
+    Comment: build.query<CommentQuery, CommentQueryVariables>({
+      query: (variables) => ({ document: CommentDocument, variables })
+    }),
+    Feed: build.query<FeedQuery, FeedQueryVariables>({
+      query: (variables) => ({ document: FeedDocument, variables })
+    }),
+    submitRepository: builder.mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>({
+      query: (variables) => ({ document: SubmitRepositoryDocument, variables })
+    }),
+  }),
+});
+
+export { injectedRtkApi as api };
+export const { useCommentQuery, useLazyCommentQuery, useFeedQuery, useLazyFeedQuery, useSubmitRepositoryMutation } = injectedRtkApi;
+
+"
+`;
