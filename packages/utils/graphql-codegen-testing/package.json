@@ -31,7 +31,7 @@
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.6.1",
-    "nock": "13.0.11",
+    "nock": "13.1.0",
     "tslib": "~2.2.0"
   },
   "publishConfig": {
