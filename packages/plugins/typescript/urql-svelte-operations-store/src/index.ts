@@ -1,4 +1,4 @@
-import { concatAST, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { concatAST, OperationDefinitionNode } from 'graphql';
 import { pascalCase } from 'change-case-all';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { convertFactory, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
