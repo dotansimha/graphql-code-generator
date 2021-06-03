@@ -540,6 +540,10 @@
       "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.",
       "type": "object",
       "properties": {
+        "arrayInputCoercion": {
+          "description": "The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}\nallows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "anyOf": [
@@ -560,7 +564,7 @@
           "type": "boolean"
         },
         "noExport": {
-          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "globalNamespace": {
