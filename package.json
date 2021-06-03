@@ -2,6 +2,7 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
+    "preinstall": "npx yarn-deduplicate",
     "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
@@ -53,7 +54,7 @@
     "@typescript-eslint/eslint-plugin": "4.26.0",
     "@typescript-eslint/parser": "4.26.0",
     "@vue/apollo-composable": "4.0.0-alpha.12",
-    "@vue/composition-api": "0.6.7",
+    "@vue/composition-api": "1.0.0-beta.16",
     "apollo-client": "2.6.10",
     "apollo-server": "2.25.0",
     "auto-bind": "4.0.0",
@@ -66,7 +67,6 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "5.1.0",
     "eslint-plugin-react-hooks": "4.2.0",
-    "eslint-plugin-standard": "5.0.0",
     "flow-bin": "0.152.0",
     "flow-parser": "0.152.0",
     "fs-extra": "10.0.0",
@@ -99,6 +99,9 @@
     ],
     "**/*.json": [
       "prettier --write"
+    ],
+    "yarn.lock": [
+      "npx yarn-deduplicate"
     ]
   },
   "resolutions": {
