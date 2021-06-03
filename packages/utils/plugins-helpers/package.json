@@ -19,7 +19,7 @@
   "dependencies": {
     "@graphql-tools/utils": "^7.9.1",
     "common-tags": "1.8.0",
-    "import-from": "3.0.0",
+    "import-from": "4.0.0",
     "lodash": "~4.17.0",
     "tslib": "~2.2.0"
   },
