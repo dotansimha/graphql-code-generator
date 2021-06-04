@@ -4952,10 +4952,10 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@reduxjs/toolkit@^1.6.0-beta.0":
-  version "1.6.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.6.0-beta.0.tgz#634f9e7f32df3d242bb1f2fc9c6e4a35e61c0a27"
-  integrity sha512-cCW6iYoMv4YPhZHx5ExAMRkpAGKr00THQJpRYjdmMyRh1rMoHRRO69gYvwoMoTjgtFwNw+4D0tgDTJ92/jf5Lw==
+"@reduxjs/toolkit@1.6.0-rc.1":
+  version "1.6.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.6.0-rc.1.tgz#933659be137f00836ed3e5cba0151a9918a7ac29"
+  integrity sha512-waJ5BVjOTCKyQ+GWffQCAHV39j/9x6d+dvSaCQbZUR3EGPme1uHqTXtnz9plqZ3BqRacURjg2mX9bH45qevd+w==
   dependencies:
     immer "^9.0.1"
     redux "^4.1.0"
