@@ -228,11 +228,11 @@
       "type": "object",
       "properties": {
         "importBaseApiFrom": {
-          "description": "Define where to import the base api to extend from",
+          "description": "Define where to import the base api to inject endpoints into",
           "type": "string"
         },
         "exportHooks": {
-          "description": "Whether to export hooks from the generated api. Enable only when using the \"@reduxjs/query/react\" import of `createApi`\nDefault value: \"false\"",
+          "description": "Whether to export React Hooks from the generated api. Enable only when using the `\"@reduxjs/toolkit/query/react\"` import of `createApi`\nDefault value: \"false\"",
           "type": "boolean"
         }
       }

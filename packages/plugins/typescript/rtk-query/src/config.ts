@@ -19,7 +19,7 @@ export interface RTKConfig {
   importBaseApiFrom: string;
   /**
    * @name exportHooks
-   * @description Whether to export React Hooks from the generated api. Enable only when using the `"@reduxjs/query/react"` import of `createApi`
+   * @description Whether to export React Hooks from the generated api. Enable only when using the `"@reduxjs/toolkit/query/react"` import of `createApi`
    * @default false
    * 
 
