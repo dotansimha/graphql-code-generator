@@ -43,7 +43,7 @@ export const api = createApi({
 // highlight-end
 ```
 
-From that on you can just import the generated hooks from `src/app/api/generated.ts`:
+From that point on, you can import the generated hooks from `src/app/api/generated.ts`:
 
 ```ts title="src/components/MyComponent.ts"
 import { useMyQuery } from 'src/app/api/generated';
@@ -74,11 +74,11 @@ export const api = generatedApi.enhanceEndpoints({
 export const { useGetUserByIdQuery } = api;
 ```
 
-Make sure that this file is referenced from your code so the enhancing is actually taking place - easiest way to do this is to re-export the hooks in this file and import them exclusively from it.
+Make sure that this file is referenced from your code so that the enhanced endpoints are usable. The easiest way to do this is to re-export the hooks in this file and import them exclusively from it.
 
 #### Setting an authentication header after a Mutation
 
-You can also use this to set a "authentication" header after a login mutation:
+You can also use this to set an "authentication" header after a login mutation:
 
 ```ts
 import { api as generatedApi } from 'src/app/api/generated';
