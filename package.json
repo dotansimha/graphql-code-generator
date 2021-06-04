@@ -2,6 +2,7 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
+    "preinstall": "npx yarn-deduplicate",
     "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
@@ -45,21 +46,21 @@
     "@changesets/cli": "2.16.0",
     "@graphql-typed-document-node/core": "3.1.0",
     "@reduxjs/toolkit": "1.6.0-rc.1",
+    "@urql/exchange-graphcache": "4.1.3",
     "@types/common-tags": "1.8.0",
     "@types/jest": "26.0.23",
     "@types/mkdirp": "1.0.1",
-    "@types/node": "14.17.1",
-    "@types/react": "17.0.8",
-    "@typescript-eslint/eslint-plugin": "4.25.0",
-    "@typescript-eslint/parser": "4.25.0",
-    "@urql/exchange-graphcache": "4.1.2",
+    "@types/node": "14.17.2",
+    "@types/react": "17.0.9",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
+    "@typescript-eslint/parser": "4.26.0",
     "@vue/apollo-composable": "4.0.0-alpha.12",
-    "@vue/composition-api": "0.6.7",
+    "@vue/composition-api": "1.0.0-rc.10",
     "apollo-client": "2.6.10",
     "apollo-server": "2.25.0",
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.2",
-    "bob-the-bundler": "1.2.0",
+    "bob-the-bundler": "1.2.1",
     "eslint": "7.27.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
@@ -67,7 +68,6 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "5.1.0",
     "eslint-plugin-react-hooks": "4.2.0",
-    "eslint-plugin-standard": "5.0.0",
     "flow-bin": "0.152.0",
     "flow-parser": "0.152.0",
     "fs-extra": "10.0.0",
@@ -75,7 +75,7 @@
     "graphql-tag": "2.12.4",
     "husky": "6.0.0",
     "java-ast": "0.3.0",
-    "jest": "27.0.3",
+    "jest": "27.0.4",
     "jest-docblock": "27.0.1",
     "jest-junit": "12.1.0",
     "lint-staged": "11.0.0",
@@ -85,11 +85,11 @@
     "react-query": "3.16.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
-    "ts-jest": "27.0.1",
+    "ts-jest": "27.0.2",
     "tslib": "2.2.0",
     "typescript": "4.3.2",
     "urql": "2.0.3",
-    "vue": "2.6.12"
+    "vue": "2.6.13"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
@@ -100,11 +100,14 @@
     ],
     "**/*.json": [
       "prettier --write"
+    ],
+    "yarn.lock": [
+      "npx yarn-deduplicate"
     ]
   },
   "resolutions": {
     "babel-jest": "27.0.2",
-    "jest-runner": "27.0.3",
+    "jest-runner": "27.0.4",
     "graphql": "15.5.0",
     "graphql-language-service-interface": "2.8.4",
     "**/apollo-language-server/graphql": "^15.0.0",
