@@ -26,6 +26,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-react-query',
   },
   {
+    file: '../../plugins/typescript/rtk-query/src/config.ts',
+    identifier: 'RTKConfig',
+    name: 'typescript-rtk-query',
+  },
+  {
     file: '../../plugins/typescript/generic-sdk/src/config.ts',
     identifier: 'RawGenericSdkPluginConfig',
     name: 'typescript-generic-sdk',

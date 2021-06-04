@@ -1,25 +1,39 @@
 import { ClientSideBasePluginConfig, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
-interface RTKConfig {
+export interface RTKConfig {
   /**
-   * @name rtkQueryImportBaseApiFrom
-   * @description Define where to import the base api to extend from
+   * @name importBaseApiFrom
+   * @description Define where to import the base api to inject endpoints into
    *
-   * @example Change the name
+   * @exampleMarkdown
    * ```yml
    * generates:
-   *   path/to/file.ts:
-   *    plugins:
-   *      - rtk-query
-   *    config:
-   *      name: src/app/services/api.ts
+   *   ./src/app/api/generated.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-rtk-query:
+   *           importBaseApiFrom: 'src/app/api/baseApi'
    * ```
    */
   importBaseApiFrom: string;
   /**
    * @name buildHooks
-   * @description Whether to export hooks from the generated api. Enable only when using the "@reduxjs/query/react" import of `createApi`
+   * @description Whether to export hooks from the generated api. Enable only when using the `"@reduxjs/query/react"` import of `createApi`
    * @default false
+   * 
+
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   ./src/app/api/generated.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-rtk-query:
+   *           importBaseApiFrom: 'src/app/api/baseApi'
+   *           exportHooks: true
+   * ```
    */
   exportHooks: boolean;
 }

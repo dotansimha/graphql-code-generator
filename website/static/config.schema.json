@@ -224,6 +224,19 @@
         }
       }
     },
+    "RTKConfig": {
+      "type": "object",
+      "properties": {
+        "importBaseApiFrom": {
+          "description": "Define where to import the base api to extend from",
+          "type": "string"
+        },
+        "exportHooks": {
+          "description": "Whether to export hooks from the generated api. Enable only when using the \"@reduxjs/query/react\" import of `createApi`\nDefault value: \"false\"",
+          "type": "boolean"
+        }
+      }
+    },
     "RawGenericSdkPluginConfig": {
       "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.",
       "type": "object",
@@ -540,6 +553,10 @@
       "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.",
       "type": "object",
       "properties": {
+        "arrayInputCoercion": {
+          "description": "The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}\nallows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "anyOf": [
@@ -560,7 +577,7 @@
           "type": "boolean"
         },
         "noExport": {
-          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "globalNamespace": {
@@ -1203,7 +1220,7 @@
       }
     },
     "CompatibilityPluginRawConfig": {
-      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
+      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
       "type": "object",
       "properties": {
         "noNamespaces": {
@@ -1280,7 +1297,7 @@
           "type": "boolean"
         },
         "avoidOptionals": {
-          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\r\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\r\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "strictScalars": {
@@ -2064,7 +2081,7 @@
       }
     },
     "StencilApolloRawPluginConfig": {
-      "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "componentType": {
@@ -2368,14 +2385,14 @@
           "type": "string"
         },
         "mappers": {
-          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\r\nThe default value is the values set by `defaultMapper` configuration.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "defaultMapper": {
-          "description": "Sets the default mapper value in case it's not specified by `mappers`.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\r\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
           "type": "string"
         },
         "className": {
@@ -2482,7 +2499,7 @@
       }
     },
     "FlowPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2712,7 +2729,7 @@
       }
     },
     "FlowDocumentsPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -3285,6 +3302,25 @@
             "properties": {
               "config": {
                 "$ref": "#/definitions/ReactQueryRawPluginConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
+                  "const": "typescript-rtk-query"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/RTKConfig"
               }
             }
           }
@@ -4149,6 +4185,14 @@
               "additionalProperties": false,
               "$ref": "#/definitions/ReactQueryRawPluginConfig"
             },
+            "typescript-rtk-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RTKConfig"
+            },
+            "@graphql-codegen/typescript-rtk-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RTKConfig"
+            },
             "typescript-generic-sdk": {
               "additionalProperties": false,
               "$ref": "#/definitions/RawGenericSdkPluginConfig"
@@ -4419,6 +4463,14 @@
               "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
+              "const": "typescript-rtk-query",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-rtk-query",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
               "const": "typescript-generic-sdk",
               "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
             },
@@ -4524,11 +4576,11 @@
             },
             {
               "const": "typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-mongodb",
@@ -4580,11 +4632,11 @@
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
@@ -4628,11 +4680,11 @@
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
@@ -4644,11 +4696,11 @@
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",

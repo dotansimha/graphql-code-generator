@@ -204,10 +204,9 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-rtk-query
-    config:
-      importBaseApiFrom: '../../packages/plugins/typescript/rtk-query/tests/baseApi'
-      exportHooks: true
+      - typescript-rtk-query:
+          importBaseApiFrom: '../../packages/plugins/typescript/rtk-query/tests/baseApi'
+          exportHooks: true
 
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json
