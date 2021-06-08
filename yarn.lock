@@ -2625,10 +2625,10 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@reduxjs/toolkit@1.6.0-rc.1":
-  version "1.6.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.6.0-rc.1.tgz#933659be137f00836ed3e5cba0151a9918a7ac29"
-  integrity sha512-waJ5BVjOTCKyQ+GWffQCAHV39j/9x6d+dvSaCQbZUR3EGPme1uHqTXtnz9plqZ3BqRacURjg2mX9bH45qevd+w==
+"@reduxjs/toolkit@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.6.0.tgz#0a17c6941c57341f8b31e982352b495ab69d5add"
+  integrity sha512-eGL50G+Vj5AG5uD0lineb6rRtbs96M8+hxbcwkHpZ8LQcmt0Bm33WyBSnj5AweLkjQ7ZP+KFRDHiLMznljRQ3A==
   dependencies:
     immer "^9.0.1"
     redux "^4.1.0"
