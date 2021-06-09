@@ -13,8 +13,9 @@ import {
   Diagnostic,
 } from 'typescript';
 import { resolve, join, dirname } from 'path';
+import * as lzString from 'lz-string';
 
-const { compressToEncodedURIComponent } = require('lz-string');
+const { compressToEncodedURIComponent } = lzString;
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,

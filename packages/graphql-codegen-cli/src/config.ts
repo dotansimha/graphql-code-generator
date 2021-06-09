@@ -180,7 +180,7 @@ export function parseArgv(argv = process.argv): YamlCliFlags {
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
-    await Promise.all(cliFlags.require.map(mod => import(require.resolve(mod, { paths: [process.cwd()] }))));
+    await Promise.all(cliFlags.require.map(mod => import(mod)));
   }
 
   const customConfigPath = getCustomConfigPath(cliFlags);
