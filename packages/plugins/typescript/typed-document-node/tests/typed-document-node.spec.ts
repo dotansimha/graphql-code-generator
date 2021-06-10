@@ -52,10 +52,10 @@ describe('TypeDocumentNode', () => {
     const res = (await plugin(
       schema,
       [{ location: '', document: ast }],
-      {},
+      { dedupeFragments: true },
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(res.content).toContain(`"definitions":deDupeDefinitions`);
+    expect((res.content.match(/JobSimpleRecruiterDataFragmentDoc.definitions/g) || []).length).toBe(1);
   });
 });

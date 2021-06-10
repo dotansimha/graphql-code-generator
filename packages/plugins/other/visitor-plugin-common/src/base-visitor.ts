@@ -30,6 +30,7 @@ export interface ParsedConfig {
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
   useTypeImports: boolean;
+  dedupeFragments: boolean;
 }
 
 export interface RawConfig {
@@ -186,6 +187,10 @@ export interface RawConfig {
    * @ignore
    */
   globalNamespace?: boolean;
+  /**
+   * @ignore
+   */
+  dedupeFragments?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -203,6 +208,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       useTypeImports: !!rawConfig.useTypeImports,
+      dedupeFragments: !!rawConfig.dedupeFragments,
       ...((additionalConfig || {}) as any),
     };
 

@@ -262,7 +262,9 @@ export class ClientSideBaseVisitor<
   }
 
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
-    const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
+    const includeNestedFragments =
+      this.config.documentMode === DocumentMode.documentNode ||
+      (this.config.dedupeFragments && document.kind === 'OperationDefinition');
 
     return this._extractFragments(document, includeNestedFragments).map(document =>
       this.getFragmentVariableName(document)
@@ -312,7 +314,7 @@ export class ClientSideBaseVisitor<
         gqlObj = optimizeDocumentNode(gqlObj);
       }
 
-      if (fragments.length > 0) {
+      if (fragments.length > 0 && (!this.config.dedupeFragments || node.kind === 'OperationDefinition')) {
         const definitions = [
           ...gqlObj.definitions.map(t => JSON.stringify(t)),
           ...fragments.map(name => `...${name}.definitions`),
