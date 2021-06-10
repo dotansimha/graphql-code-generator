@@ -19,7 +19,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<VueUrqlRawPluginConfig, U
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: VueUrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComposition: getConfigValue(rawConfig.withComposition, true),
-      urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
+      urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, '@urql/vue'),
     });
 
     autoBind(this);
@@ -35,7 +35,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<VueUrqlRawPluginConfig, U
     }
 
     if (this.config.withComposition) {
-      imports.push(`import * as Urql from '${this.config.urqlImportFrom || '@urql/vue'}';`);
+      imports.push(`import * as Urql from '${this.config.urqlImportFrom}';`);
     }
 
     imports.push(OMIT_TYPE);

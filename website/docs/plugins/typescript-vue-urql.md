@@ -30,7 +30,7 @@ query Test {
 We can use the generated code like this:
 
 ```ts
-  const [ result ] = useTestQuery(...);
+  const { data } = useTestQuery(...);
 ```
 
 ## Configuration
