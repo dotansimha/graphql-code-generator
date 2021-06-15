@@ -9,7 +9,7 @@ describe('TypeDocumentNode', () => {
     expect(result.prepend.length).toBe(0);
   });
 
-  it('Duplicated nested fragments handle', async () => {
+  it('Duplicated nested fragments handle (dedupeFragments=true)', async () => {
     const schema = buildSchema(/* GraphQL */ `
       schema {
         query: Query
@@ -57,5 +57,55 @@ describe('TypeDocumentNode', () => {
     )) as Types.ComplexPluginOutput;
 
     expect((res.content.match(/JobSimpleRecruiterDataFragmentDoc.definitions/g) || []).length).toBe(1);
+  });
+
+  it('Ignore duplicated nested fragments handle (dedupeFragments=false)', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      schema {
+        query: Query
+      }
+
+      type Query {
+        jobs: [Job!]!
+      }
+
+      type Job {
+        id: ID!
+        recruiterName: String!
+        title: String!
+      }
+    `);
+
+    const ast = parse(/* GraphQL */ `
+      query GetJobs {
+        jobs {
+          ...DataForPageA
+          ...DataForPageB
+        }
+      }
+
+      fragment DataForPageA on Job {
+        id
+        ...JobSimpleRecruiterData
+      }
+
+      fragment DataForPageB on Job {
+        title
+        ...JobSimpleRecruiterData
+      }
+
+      fragment JobSimpleRecruiterData on Job {
+        recruiterName
+      }
+    `);
+
+    const res = (await plugin(
+      schema,
+      [{ location: '', document: ast }],
+      { dedupeFragments: false },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect((res.content.match(/JobSimpleRecruiterDataFragmentDoc.definitions/g) || []).length).toBe(2);
   });
 });
