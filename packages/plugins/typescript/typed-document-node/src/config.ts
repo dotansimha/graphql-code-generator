@@ -17,11 +17,4 @@ export interface TypeScriptTypedDocumentNodesConfig extends RawClientSideBasePlu
    * ```
    */
   flattenGeneratedTypes?: boolean;
-  /**
-   * @description  Removes fragment duplicants for reducing data transfer.
-   * It is done by removing sub-fragments imports from fragment definition
-   * Instead - import all of them are imported to the Operation node.
-   * @default false
-   */
-  dedupeFragments?: boolean;
 }
