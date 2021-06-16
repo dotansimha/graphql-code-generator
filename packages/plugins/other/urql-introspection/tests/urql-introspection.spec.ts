@@ -225,5 +225,60 @@ export default ${introspection} as unknown as IntrospectionQuery;`;
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
     });
+
+    it('Should emit scalars if includeScalars config value is used', async () => {
+      const schema = buildSchema(`
+        scalar MyScalar
+        type Query {
+          myScalar: MyScalar
+        }
+      `);
+      const result = await plugin(schema, [], { includeScalars: true }, { outputFile: 'foo.ts' });
+
+      expect(result).toContain('MyScalar');
+    });
+
+    it('Should emit directives if includeDirectives config value is used', async () => {
+      const schema = buildSchema(`
+        directive @myDirective on FIELD_DEFINITION
+
+        type Query {
+          foo: Int @myDirective
+        }
+      `);
+      const result = await plugin(schema, [], { includeDirectives: true }, { outputFile: 'foo.ts' });
+
+      expect(result).toContain('myDirective');
+    });
+
+    it('Should emit enums if includeEnums config value is used', async () => {
+      const schema = buildSchema(`
+        enum MyEnum {
+          FOO
+        }
+
+        type Query {
+          myEnum: MyEnum
+        }
+      `);
+      const result = await plugin(schema, [], { includeEnums: true }, { outputFile: 'foo.ts' });
+
+      expect(result).toContain('MyEnum');
+    });
+
+    it('Should emit inputs if includeInputs config value is used', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          foo: Int
+        }
+        
+        type Query {
+          foo(myInput: MyInput): Int
+        }
+      `);
+      const result = await plugin(schema, [], { includeInputs: true }, { outputFile: 'foo.ts' });
+
+      expect(result).toContain('MyInput');
+    });
   });
 });
