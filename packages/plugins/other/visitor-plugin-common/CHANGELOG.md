@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.21.0
+
+### Minor Changes
+
+- 8da7dff6: Skip typechecking on generated values by casting to unknown
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/plugin-helpers@1.18.7
+
 ## 1.20.0
 
 ### Minor Changes

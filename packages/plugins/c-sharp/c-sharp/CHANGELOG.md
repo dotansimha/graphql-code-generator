@@ -1,5 +1,25 @@
 # @graphql-codegen/c-sharp
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+- Updated dependencies [8da7dff6]
+  - @graphql-codegen/visitor-plugin-common@1.21.0
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 2.0.0
+
+### Major Changes
+
+- 0d3b202a: According to feedback, it is needed to remove the access modifiers for interface properties.
+
+### Patch Changes
+
+- Updated dependencies [637338cb]
+  - @graphql-codegen/plugin-helpers@1.18.6
+
 ## 1.19.0
 
 ### Minor Changes

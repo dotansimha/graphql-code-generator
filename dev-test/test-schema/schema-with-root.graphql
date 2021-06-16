@@ -1,7 +1,10 @@
-type User {
-  id: Int!
-  name: String!
-  email: String!
+schema {
+  query: QueryRoot
+  subscription: SubscriptionRoot
+}
+
+type Query {
+  someDummyField: Int!
 }
 
 type QueryRoot {
@@ -12,11 +15,12 @@ type QueryRoot {
   answer: [Int!]!
 }
 
-type SubscriptionRoot {
-  newUser: User
+type User {
+  id: Int!
+  name: String!
+  email: String!
 }
 
-schema {
-  query: QueryRoot
-  subscription: SubscriptionRoot
+type SubscriptionRoot {
+  newUser: User
 }

@@ -72,7 +72,7 @@ describe('graphql-request', () => {
 async function test() {
   const client = new GraphQLClient('');
   const sdk = getSdk(client);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -87,7 +87,9 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(result.content).toContain(`(FeedDocument, variables, requestHeaders));`);
+      expect(result.content).toContain(
+        `(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed');`
+      );
       expect(output).toMatchSnapshot();
     });
 
@@ -102,7 +104,7 @@ async function test() {
 async function test() {
   const client = new GraphQLClient('');
   const sdk = getSdk(client);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -138,7 +140,7 @@ async function test() {
   }
 
   const sdk = getSdk(client, functionWrapper);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -168,7 +170,7 @@ async function test() {
   const Client = require('graphql-request').GraphQLClient;
   const client = new Client('');
   const sdk = getSdk(client);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -198,7 +200,7 @@ async function test() {
   const Client = require('graphql-request').GraphQLClient;
   const client = new Client('');
   const sdk = getSdk(client);
-  
+
   await sdk.feed();
   await sdk.feed3();
   await sdk.feed4();
@@ -246,9 +248,15 @@ async function test() {
       const output = await validate(result, config, docs, schema, '');
 
       expect(output).toContain(`import * as Operations from './operations';`);
-      expect(output).toContain(`(Operations.FeedDocument, variables, requestHeaders));`);
-      expect(output).toContain(`(Operations.Feed2Document, variables, requestHeaders));`);
-      expect(output).toContain(`(Operations.Feed3Document, variables, requestHeaders));`);
+      expect(output).toContain(
+        `(Operations.FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed');`
+      );
+      expect(output).toContain(
+        `(Operations.Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2');`
+      );
+      expect(output).toContain(
+        `(Operations.Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3');`
+      );
     });
   });
 });

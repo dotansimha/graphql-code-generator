@@ -28,7 +28,7 @@ export type ModulesConfig = {
   /**
    * @name cwd
    * @type string
-   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
+   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execution path is not your project root directory.
    * @default process.cwd()
    *
    * @example

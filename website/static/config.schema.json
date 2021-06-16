@@ -99,7 +99,7 @@
           }
         },
         "hooks": {
-          "$ref": "#/definitions/Types.LifecycleHooksDefinition",
+          "$ref": "#/definitions/Partial",
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
         }
       }
@@ -137,6 +137,10 @@
               "type": "string"
             }
           ]
+        },
+        "exposeDocument": {
+          "description": "For each generate query hook adds `document` field with a\ncorrespoding GraphQL query. Useful for `queryClient.fetchQuery`. Example:\nqueryClient.fetchQuery(\nuseUserDetailsQuery.getKey(variables),\n() => gqlRequest(useUserDetailsQuery.document, variables),\n)\nDefault value: \"false\"",
+          "type": "boolean"
         },
         "exposeQueryKeys": {
           "description": "For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. Example:\nconst query = useUserDetailsQuery(...);\nconst key = useUserDetailsQuery.getKey({id: theUsersId});\n// use key in a cache update after a mutation\nDefault value: \"false\"",
@@ -185,6 +189,14 @@
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -287,6 +299,14 @@
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -435,6 +455,13 @@
           "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "wrapEntireFieldDefinitions": {
+          "type": "boolean",
+          "description": "Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.\nThis is useful to allow return types such as Promises and functions for fields.\nDiffers from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while\n`wrapFieldDefinitions` will wrap every single value inside the array.\nDefault value: \"true\""
+        },
+        "entireFieldWrapperValue": {
+          "type": "string"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -471,6 +498,14 @@
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -505,6 +540,10 @@
       "description": "This plugin generates TypeScript types based on your GraphQLSchema *and* your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.",
       "type": "object",
       "properties": {
+        "arrayInputCoercion": {
+          "description": "The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}\nallows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "anyOf": [
@@ -525,7 +564,7 @@
           "type": "boolean"
         },
         "noExport": {
-          "description": "Set the to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
+          "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "globalNamespace": {
@@ -603,6 +642,22 @@
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "wrapEntireFieldDefinitions": {
+          "type": "boolean",
+          "description": "Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.\nThis is useful to allow return types such as Promises and functions for fields.\nDiffers from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while\n`wrapFieldDefinitions` will wrap every single value inside the array.\nDefault value: \"true\""
+        },
+        "entireFieldWrapperValue": {
+          "type": "string",
+          "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -656,6 +711,14 @@
         "emitRecords": {
           "description": "Emit C# 9.0+ records instead of classes\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -783,6 +846,14 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -904,6 +975,13 @@
           "description": "When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "wrapEntireFieldDefinitions": {
+          "type": "boolean",
+          "description": "Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.\nThis is useful to allow return types such as Promises and functions for fields.\nDiffers from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while\n`wrapFieldDefinitions` will wrap every single value inside the array.\nDefault value: \"true\""
+        },
+        "entireFieldWrapperValue": {
+          "type": "string"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -939,6 +1017,14 @@
         "ignoreEnumValuesFromSchema": {
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1082,6 +1168,14 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1113,7 +1207,7 @@
       }
     },
     "CompatibilityPluginRawConfig": {
-      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
+      "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.",
       "type": "object",
       "properties": {
         "noNamespaces": {
@@ -1127,6 +1221,14 @@
         "preResolveTypes": {
           "description": "Avoid using `Pick` in `typescript-operations` and make sure to optimize this package as well.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1182,8 +1284,16 @@
           "type": "boolean"
         },
         "avoidOptionals": {
-          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\r\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\r\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1336,6 +1446,14 @@
         "onlyResolveTypeForInterfaces": {
           "type": "boolean",
           "description": "Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1490,6 +1608,14 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1603,6 +1729,14 @@
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -1769,6 +1903,14 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -1886,6 +2028,14 @@
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2056,7 +2206,7 @@
       }
     },
     "StencilApolloRawPluginConfig": {
-      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "componentType": {
@@ -2130,6 +2280,14 @@
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2253,6 +2411,14 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2298,6 +2464,14 @@
         "fileType": {
           "$ref": "#/definitions/FileType"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2336,14 +2510,14 @@
           "type": "string"
         },
         "mappers": {
-          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\r\nThe default value is the values set by `defaultMapper` configuration.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "defaultMapper": {
-          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\r\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
           "type": "string"
         },
         "className": {
@@ -2352,6 +2526,14 @@
         },
         "listType": {
           "description": "Allow you to customize the list type.\nDefault value: \"Iterable\"",
+          "type": "string"
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
           "type": "string"
         },
         "scalars": {
@@ -2403,6 +2585,14 @@
           "description": "Allow you to enable generation for the types\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2434,7 +2624,7 @@
       }
     },
     "FlowPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2484,6 +2674,22 @@
         "ignoreEnumValuesFromSchema": {
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "wrapEntireFieldDefinitions": {
+          "type": "boolean",
+          "description": "Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.\nThis is useful to allow return types such as Promises and functions for fields.\nDiffers from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while\n`wrapFieldDefinitions` will wrap every single value inside the array.\nDefault value: \"true\""
+        },
+        "entireFieldWrapperValue": {
+          "type": "string",
+          "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2609,6 +2815,14 @@
           "type": "boolean",
           "description": "Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
         },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
+        },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
@@ -2640,7 +2854,7 @@
       }
     },
     "FlowDocumentsPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2726,6 +2940,22 @@
         "ignoreEnumValuesFromSchema": {
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "wrapEntireFieldDefinitions": {
+          "type": "boolean",
+          "description": "Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.\nThis is useful to allow return types such as Promises and functions for fields.\nDiffers from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while\n`wrapFieldDefinitions` will wrap every single value inside the array.\nDefault value: \"true\""
+        },
+        "entireFieldWrapperValue": {
+          "type": "string",
+          "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "strictScalars": {
+          "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "defaultScalarType": {
+          "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
+          "type": "string"
         },
         "scalars": {
           "$ref": "#/definitions/ScalarsMap",
@@ -2817,6 +3047,26 @@
           "description": "Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.\nDefault value: \"es2015\"",
           "enum": ["commonjs", "es2015"],
           "type": "string"
+        },
+        "useTypeImports": {
+          "type": "boolean",
+          "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
+        },
+        "includeScalars": {
+          "type": "boolean",
+          "description": "Includes scalar names (instead of an `Any` replacement) in the output when enabled.\nDefault value: \"false\""
+        },
+        "includeEnums": {
+          "type": "boolean",
+          "description": "Includes enums (instead of an `Any` replacement) in the output when enabled.\nDefault value: \"false\""
+        },
+        "includeInputs": {
+          "type": "boolean",
+          "description": "Includes all input objects (instead of an `Any` replacement) in the output when enabled.\nDefault value: \"false\""
+        },
+        "includeDirectives": {
+          "type": "boolean",
+          "description": "Includes all directives in the output when enabled.\nDefault value: \"false\""
         }
       }
     },
@@ -3886,52 +4136,10 @@
       }
     },
     "__type_3": {
-      "description": "All available lifecycle hooks",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "afterStart": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).\n\nSpecify a shell command to run."
-        },
-        "beforeDone": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.\n\nSpecify a shell command to run."
-        },
-        "onWatchTriggered": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered every time a file changes when using watch mode.\nTriggered with two arguments: the type of the event (for example, `changed`) and the path of the file."
-        },
-        "onError": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered in case of a general error in the codegen. The argument is a string containing the error."
-        },
-        "afterOneFileWrite": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered after a file is written to the file-system. Executed with the path for the file.\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered.\n\n> This is a very useful hook, you can use it for integration with Prettier or other linters."
-        },
-        "afterAllFileWrite": {
-          "$ref": "#/definitions/T_1",
-          "description": "Executed after writing all the files to the file-system.\nTriggered with multiple arguments - paths for all files."
-        },
-        "beforeOneFileWrite": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered before a file is written to the file-system. Executed with the path for the file.\n\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered."
-        },
-        "beforeAllFileWrite": {
-          "$ref": "#/definitions/T_1",
-          "description": "Executed after the codegen has done creating the output and before writing the files to the file-system.\n\nTriggered with multiple arguments - paths for all relevant files.\n\n> Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution."
-        }
-      }
-    },
-    "Types.LifecycleHooksDefinition": {
-      "$ref": "#/definitions/__type_3"
-    },
-    "__type_4": {
       "type": "object"
     },
     "Record": {
-      "$ref": "#/definitions/__type_4"
+      "$ref": "#/definitions/__type_3"
     },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
@@ -4051,7 +4259,7 @@
       "enum": ["abstract class", "class", "interface", "type"],
       "type": "string"
     },
-    "__type_5": {
+    "__type_4": {
       "type": "object",
       "properties": {
         "type": {
@@ -4072,7 +4280,7 @@
       }
     },
     "Partial_1": {
-      "$ref": "#/definitions/__type_5"
+      "$ref": "#/definitions/__type_4"
     },
     "Array_1": {
       "type": "array",
@@ -4485,11 +4693,11 @@
             },
             {
               "const": "typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-compatibility",
-              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\n\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
+              "description": "If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.\r\n\r\nIt generates types that are pointing to the new form of types. It supports _most_ of the use-cases.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-compatibility\n\n=> Make sure to include \"@graphql-codegen/typescript-compatibility\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-mongodb",
@@ -4549,11 +4757,11 @@
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
@@ -4597,11 +4805,11 @@
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
@@ -4613,11 +4821,11 @@
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",

@@ -9,7 +9,7 @@ export type HeroNameQueryVariables = Types.Exact<{
 
 export type HeroNameQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
   >;
 };
 

@@ -142,7 +142,7 @@ export function buildOptions() {
         if (typeof watch === 'string' || Array.isArray(watch)) {
           return watch;
         }
-        return true;
+        return !!watch;
       },
     },
     r: {

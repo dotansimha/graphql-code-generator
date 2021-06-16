@@ -253,7 +253,7 @@ function test(q: QQuery) {
         if (q.hotel) {
             const t1 = q.hotel.gpsPosition.lat
         }
-        
+
         if (q.transport) {
             const t2 = q.transport.id;
         }
