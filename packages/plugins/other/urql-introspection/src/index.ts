@@ -120,14 +120,12 @@ export const plugin: PluginFunction = async (
 
   const ext = extname(info.outputFile).toLowerCase();
 
-  const minifiedData = minifyIntrospectionQuery(
-    minifyIntrospectionQuery(getIntrospectedSchema(schema), {
-      includeDirectives: config.includeDirectives,
-      includeEnums: config.includeEnums,
-      includeInputs: config.includeInputs,
-      includeScalars: config.includeScalars,
-    })
-  );
+  const minifiedData = minifyIntrospectionQuery(getIntrospectedSchema(schema), {
+    includeDirectives: config.includeDirectives,
+    includeEnums: config.includeEnums,
+    includeInputs: config.includeInputs,
+    includeScalars: config.includeScalars,
+  });
 
   const content = JSON.stringify(minifiedData, null, 2);
 
