@@ -42,6 +42,7 @@ module.exports = {
           'plugins/typescript-document-nodes',
           'plugins/typescript-mongodb',
           'plugins/typescript-urql',
+          'plugins/typescript-vue-urql',
           'plugins/typescript-oclif',
           'plugins/named-operations-object',
           'plugins/typescript-type-graphql',
