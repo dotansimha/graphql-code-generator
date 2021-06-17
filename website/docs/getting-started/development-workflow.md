@@ -60,6 +60,14 @@ watchConfig:
   interval: 1000
 ```
 
+Be default there is a generation run prior setup watcher (in order to avoid missing files from watcher), however you can opt-out from it with `watchConfig.skipFirst` config flag or via `--watchSkipFirst` CLI argument.
+
+```yml
+watch: true
+watchConfig:
+  skipFirst: true
+```
+
 
 ### Monorepo and Yarn Workspaces
 
