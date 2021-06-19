@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/urql-svelte-operations-store",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "GraphQL Code Generator plugin for generating wrapper for OperationsStore for Svelte & Urql",
   "repository": {
     "type": "git",
