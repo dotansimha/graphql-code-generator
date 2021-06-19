@@ -13,10 +13,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Use Node 14
+      - name: Use Node
         uses: actions/setup-node@master
         with:
-          node-version: 14
+          node-version: 16
+      - name: Cache Yarn
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{matrix.node_version}}-yarn-
       - name: Install Dependencies
         run: yarn install
       - name: Build Plugins

@@ -10,17 +10,16 @@ on:
 
 jobs:
   test:
-    name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
-    runs-on: ${{matrix.os}}
+    name: Testing on Node ${{matrix.node_version}}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        node_version: [10, 14]
+        node_version: [12, 16]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Use Node ${{matrix.node_version}}
+      - name: Use Node
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
@@ -45,7 +44,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test --logHeapUsage
+        run: yarn test
         env:
           CI: true
       - name: Test dev-tests

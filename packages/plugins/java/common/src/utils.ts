@@ -1,4 +1,5 @@
 import { Kind, TypeNode } from 'graphql';
+import minIndent from 'min-indent';
 
 export function buildPackageNameFromPath(path: string): string {
   const unixify = require('unixify');
@@ -17,4 +18,16 @@ export function wrapTypeWithModifiers(baseType: string, typeNode: TypeNode, list
   } else {
     return baseType;
   }
+}
+
+export function stripIndent(string: string) {
+  const indent = minIndent(string);
+
+  if (indent === 0) {
+    return string;
+  }
+
+  const regex = new RegExp(`^[ \\t]{${indent}}`, 'gm');
+
+  return string.replace(regex, '');
 }

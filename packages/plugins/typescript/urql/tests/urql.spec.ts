@@ -345,7 +345,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export const TestDocument: DocumentNode = {"kind":"Document","defin`
+        `[{"kind":"Field","name":{"kind":"Name","value":"avatar_url"}}]}}]}}]}}]}}]} as unknown as DocumentNode;`
       );
 
       // For issue #1599 - make sure there are not `loc` properties

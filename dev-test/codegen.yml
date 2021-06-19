@@ -198,8 +198,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
-    config:
-      fetcher:
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -231,6 +229,7 @@ generates:
       - typescript-operations
       - typescript-urql
       - urql-introspection
+      - typescript-urql-graphcache
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

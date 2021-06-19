@@ -59,6 +59,7 @@
       "@graphql-codegen/typed-document-node": ["packages/plugins/typescript/typed-document-node/src/index.ts"],
       "@graphql-codegen/typescript": ["packages/plugins/typescript/typescript/src/index.ts"],
       "@graphql-codegen/typescript-urql": ["packages/plugins/typescript/urql/src/index.ts"],
+      "@graphql-codegen/typescript-vue-urql": ["packages/plugins/typescript/urql/src/index.ts"],
       "@graphql-codegen/typescript-vue-apollo": ["packages/plugins/typescript/vue-apollo/src/index.ts"],
       "@graphql-codegen/typescript-vue-apollo-smart-ops": [
         "packages/plugins/typescript/vue-apollo-smart-ops/src/index.ts"

@@ -19,6 +19,7 @@ import fs from 'fs';
 import path from 'path';
 // eslint-disable-next-line
 import { createRequire, createRequireFromPath } from 'module';
+import Listr from 'listr';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -54,8 +55,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const commonListrOptions = {
     exitOnError: true,
   };
-  const Listr = await import('listr').then(m => ('default' in m ? m.default : m));
-  let listr: import('listr');
+  let listr: Listr;
 
   if (process.env.VERBOSE) {
     listr = new Listr({

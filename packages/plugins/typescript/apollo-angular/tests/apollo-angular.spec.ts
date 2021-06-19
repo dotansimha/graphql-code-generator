@@ -215,7 +215,7 @@ describe('Apollo Angular', () => {
     });
 
     it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
-      spyOn(console, 'warn');
+      jest.spyOn(console, 'warn');
       const docs = [{ location: '', document: basicDoc }];
       await plugin(
         schema,
@@ -235,7 +235,7 @@ describe('Apollo Angular', () => {
     });
 
     it('output warning if importOperationTypesFrom is set to something other than "Operations"', async () => {
-      spyOn(console, 'warn');
+      jest.spyOn(console, 'warn');
       const docs = [{ location: '', document: basicDoc }];
       await plugin(
         schema,
@@ -256,7 +256,7 @@ describe('Apollo Angular', () => {
     });
 
     it('output warning if importOperationTypesFrom is set and documentMode is not "external"', async () => {
-      spyOn(console, 'warn');
+      jest.spyOn(console, 'warn');
       const docs = [{ location: '', document: basicDoc }];
       await plugin(
         schema,
@@ -276,7 +276,7 @@ describe('Apollo Angular', () => {
     });
 
     it('output warning if importOperationTypesFrom is set and importDocumentNodeExternallyFrom is not', async () => {
-      spyOn(console, 'warn');
+      jest.spyOn(console, 'warn');
       const docs = [{ location: '', document: basicDoc }];
       await plugin(
         schema,

@@ -43,6 +43,7 @@ module.exports = {
           'plugins/typescript-document-nodes',
           'plugins/typescript-mongodb',
           'plugins/typescript-urql',
+          'plugins/typescript-vue-urql',
           'plugins/typescript-oclif',
           'plugins/named-operations-object',
           'plugins/typescript-type-graphql',
@@ -96,6 +97,7 @@ module.exports = {
       'integrations/gatsby',
       'integrations/prettier',
       'integrations/federation',
+      'integrations/vscode',
     ],
     'Custom Plugins': [
       'custom-codegen/index',

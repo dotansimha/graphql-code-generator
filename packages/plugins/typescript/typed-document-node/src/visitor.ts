@@ -47,7 +47,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       this.config.documentMode === DocumentMode.documentNodeImportFragments ||
       this.config.documentMode === DocumentMode.graphQLTag
     ) {
-      return `: DocumentNode<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as DocumentNode<${resultType}, ${variablesTypes}>`;
     }
 
     return super.getDocumentNodeSignature(resultType, variablesTypes, node);

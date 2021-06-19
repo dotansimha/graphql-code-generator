@@ -8,6 +8,25 @@ import { RawDocumentsConfig, AvoidOptionalsConfig } from '@graphql-codegen/visit
  */
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
+   * @description The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}
+   * allows arrays and a single primitive value for list input. This allows to
+   * deactivate that behavior to only accept arrays instead of single values. If
+   * set to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output
+   * `bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.
+   * @default true
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    arrayInputCoercion: false
+   * ```
+   */
+  arrayInputCoercion?: boolean;
+  /**
    * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
@@ -73,7 +92,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
   flattenGeneratedTypes?: boolean;
   /**
-   * @description Set the to `true` in order to generate output without `export` modifier.
+   * @description Set to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false
    *

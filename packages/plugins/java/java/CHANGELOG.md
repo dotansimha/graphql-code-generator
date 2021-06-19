@@ -1,5 +1,28 @@
 # @graphql-codegen/java
 
+## 2.0.0
+
+### Major Changes
+
+- 7ae711cc: Replace java reserved keyword new with \_new
+
+### Minor Changes
+
+- 7ae711cc: Empty constructor changed to be a configuration option (default false) to fix breaking change
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+- Updated dependencies [8da7dff6]
+  - @graphql-codegen/visitor-plugin-common@1.21.0
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 2.0.0
+
+### Major Changes
+
+- 9481e469: Replace java reserved keyword new with \_new
+
 ## 1.19.0
 
 ### Minor Changes

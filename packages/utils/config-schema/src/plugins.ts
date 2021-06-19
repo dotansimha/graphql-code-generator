@@ -131,6 +131,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-vue-apollo-smart-ops',
   },
   {
+    file: '../../plugins/typescript/vue-urql/src/config.ts',
+    identifier: 'VueUrqlRawPluginConfig',
+    name: 'typescript-vue-urql',
+  },
+  {
     file: '../../plugins/typescript/stencil-apollo/src/config.ts',
     identifier: 'StencilApolloRawPluginConfig',
     name: 'typescript-stencil-apollo',
