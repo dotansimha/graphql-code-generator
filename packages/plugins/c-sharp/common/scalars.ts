@@ -3,7 +3,7 @@ export const C_SHARP_SCALARS = {
   String: 'string',
   Boolean: 'bool',
   Int: 'int',
-  Float: 'float',
+  Float: 'double',
   Date: 'DateTime',
 };
 
