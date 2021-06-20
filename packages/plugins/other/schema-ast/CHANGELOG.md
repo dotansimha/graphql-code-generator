@@ -1,5 +1,13 @@
 # @graphql-codegen/schema-ast
 
+## 1.18.3
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/plugin-helpers@1.18.7
+
 ## 1.18.2
 
 ### Patch Changes

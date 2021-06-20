@@ -12,35 +12,20 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  /** A feed of repository submissions */
-  feed?: Maybe<Array<Maybe<Entry>>>;
-  /** A single entry */
-  entry?: Maybe<Entry>;
-  /** Return the currently logged in user, or null if nobody is logged in */
-  currentUser?: Maybe<User>;
+/** A comment about an entry, submitted by a user */
+export type Comment = {
+  __typename?: 'Comment';
+  /** The SQL ID of this entry */
+  id: Scalars['Int'];
+  /** The GitHub user who posted the comment */
+  postedBy: User;
+  /** A timestamp of when the comment was posted */
+  createdAt: Scalars['Float'];
+  /** The text of the comment */
+  content: Scalars['String'];
+  /** The repository which this comment is about */
+  repoName: Scalars['String'];
 };
-
-export type QueryFeedArgs = {
-  type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-export type QueryEntryArgs = {
-  repoFullName: Scalars['String'];
-};
-
-/** A list of options for the sort order of the feed */
-export enum FeedType {
-  /** Sort by a combination of freshness and score, using Reddit's algorithm */
-  Hot = 'HOT',
-  /** Newest entries first */
-  New = 'NEW',
-  /** Highest score entries first */
-  Top = 'TOP',
-}
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
@@ -71,59 +56,15 @@ export type EntryCommentsArgs = {
   offset?: Maybe<Scalars['Int']>;
 };
 
-/**
- * A repository object from the GitHub API. This uses the exact field names returned by the
- * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
-export type Repository = {
-  __typename?: 'Repository';
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: Scalars['String'];
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: Scalars['String'];
-  /** The description of the repository */
-  description?: Maybe<Scalars['String']>;
-  /** The link to the repository on GitHub */
-  html_url: Scalars['String'];
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: Scalars['Int'];
-  /** The number of open issues on this repository on GitHub */
-  open_issues_count?: Maybe<Scalars['Int']>;
-  /** The owner of this repository on GitHub, e.g. apollostack */
-  owner?: Maybe<User>;
-};
-
-/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
-export type User = {
-  __typename?: 'User';
-  /** The name of the user, e.g. apollostack */
-  login: Scalars['String'];
-  /** The URL to a directly embeddable image for this user's avatar */
-  avatar_url: Scalars['String'];
-  /** The URL of this user's GitHub page */
-  html_url: Scalars['String'];
-};
-
-/** A comment about an entry, submitted by a user */
-export type Comment = {
-  __typename?: 'Comment';
-  /** The SQL ID of this entry */
-  id: Scalars['Int'];
-  /** The GitHub user who posted the comment */
-  postedBy: User;
-  /** A timestamp of when the comment was posted */
-  createdAt: Scalars['Float'];
-  /** The text of the comment */
-  content: Scalars['String'];
-  /** The repository which this comment is about */
-  repoName: Scalars['String'];
-};
-
-/** XXX to be removed */
-export type Vote = {
-  __typename?: 'Vote';
-  vote_value: Scalars['Int'];
-};
+/** A list of options for the sort order of the feed */
+export enum FeedType {
+  /** Sort by a combination of freshness and score, using Reddit's algorithm */
+  Hot = 'HOT',
+  /** Newest entries first */
+  New = 'NEW',
+  /** Highest score entries first */
+  Top = 'TOP',
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -149,12 +90,47 @@ export type MutationSubmitCommentArgs = {
   commentContent: Scalars['String'];
 };
 
-/** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
-  Cancel = 'CANCEL',
-}
+export type Query = {
+  __typename?: 'Query';
+  /** A feed of repository submissions */
+  feed?: Maybe<Array<Maybe<Entry>>>;
+  /** A single entry */
+  entry?: Maybe<Entry>;
+  /** Return the currently logged in user, or null if nobody is logged in */
+  currentUser?: Maybe<User>;
+};
+
+export type QueryFeedArgs = {
+  type: FeedType;
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+export type QueryEntryArgs = {
+  repoFullName: Scalars['String'];
+};
+
+/**
+ * A repository object from the GitHub API. This uses the exact field names returned by the
+ * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
+ */
+export type Repository = {
+  __typename?: 'Repository';
+  /** Just the name of the repository, e.g. GitHunt-API */
+  name: Scalars['String'];
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  full_name: Scalars['String'];
+  /** The description of the repository */
+  description?: Maybe<Scalars['String']>;
+  /** The link to the repository on GitHub */
+  html_url: Scalars['String'];
+  /** The number of people who have starred this repository on GitHub */
+  stargazers_count: Scalars['Int'];
+  /** The number of open issues on this repository on GitHub */
+  open_issues_count?: Maybe<Scalars['Int']>;
+  /** The owner of this repository on GitHub, e.g. apollostack */
+  owner?: Maybe<User>;
+};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -165,6 +141,30 @@ export type Subscription = {
 export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
+
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export type User = {
+  __typename?: 'User';
+  /** The name of the user, e.g. apollostack */
+  login: Scalars['String'];
+  /** The URL to a directly embeddable image for this user's avatar */
+  avatar_url: Scalars['String'];
+  /** The URL of this user's GitHub page */
+  html_url: Scalars['String'];
+};
+
+/** XXX to be removed */
+export type Vote = {
+  __typename?: 'Vote';
+  vote_value: Scalars['Int'];
+};
+
+/** The type of vote to record, when submitting a vote */
+export enum VoteType {
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL',
+}
 
 export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
@@ -268,7 +268,7 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFragment, unknown> = {
+export const CommentsPageCommentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -296,8 +296,8 @@ export const CommentsPageCommentFragmentDoc: DocumentNode<CommentsPageCommentFra
       },
     },
   ],
-};
-export const VoteButtonsFragmentDoc: DocumentNode<VoteButtonsFragment, unknown> = {
+} as unknown as DocumentNode<CommentsPageCommentFragment, unknown>;
+export const VoteButtonsFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -320,8 +320,8 @@ export const VoteButtonsFragmentDoc: DocumentNode<VoteButtonsFragment, unknown> 
       },
     },
   ],
-};
-export const RepoInfoFragmentDoc: DocumentNode<RepoInfoFragment, unknown> = {
+} as unknown as DocumentNode<VoteButtonsFragment, unknown>;
+export const RepoInfoFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -359,8 +359,8 @@ export const RepoInfoFragmentDoc: DocumentNode<RepoInfoFragment, unknown> = {
       },
     },
   ],
-};
-export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = {
+} as unknown as DocumentNode<RepoInfoFragment, unknown>;
+export const FeedEntryFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -399,8 +399,8 @@ export const FeedEntryFragmentDoc: DocumentNode<FeedEntryFragment, unknown> = {
     ...VoteButtonsFragmentDoc.definitions,
     ...RepoInfoFragmentDoc.definitions,
   ],
-};
-export const OnCommentAddedDocument: DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> = {
+} as unknown as DocumentNode<FeedEntryFragment, unknown>;
+export const OnCommentAddedDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -451,8 +451,8 @@ export const OnCommentAddedDocument: DocumentNode<OnCommentAddedSubscription, On
       },
     },
   ],
-};
-export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> = {
+} as unknown as DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+export const CommentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -568,11 +568,8 @@ export const CommentDocument: DocumentNode<CommentQuery, CommentQueryVariables> 
     },
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
-};
-export const CurrentUserForProfileDocument: DocumentNode<
-  CurrentUserForProfileQuery,
-  CurrentUserForProfileQueryVariables
-> = {
+} as unknown as DocumentNode<CommentQuery, CommentQueryVariables>;
+export const CurrentUserForProfileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -597,8 +594,8 @@ export const CurrentUserForProfileDocument: DocumentNode<
       },
     },
   ],
-};
-export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = {
+} as unknown as DocumentNode<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+export const FeedDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -663,8 +660,8 @@ export const FeedDocument: DocumentNode<FeedQuery, FeedQueryVariables> = {
     },
     ...FeedEntryFragmentDoc.definitions,
   ],
-};
-export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> = {
+} as unknown as DocumentNode<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -700,8 +697,8 @@ export const SubmitRepositoryDocument: DocumentNode<SubmitRepositoryMutation, Su
       },
     },
   ],
-};
-export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables> = {
+} as unknown as DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export const SubmitCommentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -748,8 +745,8 @@ export const SubmitCommentDocument: DocumentNode<SubmitCommentMutation, SubmitCo
     },
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
-};
-export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = {
+} as unknown as DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables>;
+export const VoteDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -806,4 +803,4 @@ export const VoteDocument: DocumentNode<VoteMutation, VoteMutationVariables> = {
       },
     },
   ],
-};
+} as unknown as DocumentNode<VoteMutation, VoteMutationVariables>;

@@ -7,8 +7,8 @@ export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name' | 'appearsIn'>)
     | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name' | 'appearsIn'>)
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name' | 'appearsIn'>)
   >;
 };
 

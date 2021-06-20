@@ -10,8 +10,8 @@ export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
 
 export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Types.MakeOptional<Pick<Types.Human, 'name'>, 'name'>)
     | ({ __typename?: 'Droid' } & Types.MakeOptional<Pick<Types.Droid, 'name'>, 'name'>)
+    | ({ __typename?: 'Human' } & Types.MakeOptional<Pick<Types.Human, 'name'>, 'name'>)
   >;
 };
 
@@ -22,8 +22,8 @@ export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
 
 export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Types.MakeOptional<Pick<Types.Human, 'name'>, 'name'>)
     | ({ __typename?: 'Droid' } & Types.MakeOptional<Pick<Types.Droid, 'name'>, 'name'>)
+    | ({ __typename?: 'Human' } & Types.MakeOptional<Pick<Types.Human, 'name'>, 'name'>)
   >;
 };
 

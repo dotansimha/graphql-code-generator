@@ -14,22 +14,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type CreateMessageInput = {
+  description: Scalars['String'];
+};
+
 export type Message = {
   __typename?: 'Message';
   id: Scalars['String'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  messages?: Maybe<Array<Maybe<Message>>>;
-};
-
-export type QueryMessagesArgs = {
-  tab: Scalars['String'];
-};
-
-export type CreateMessageInput = {
-  description: Scalars['String'];
 };
 
 export type Mutation = {
@@ -55,6 +46,15 @@ export type MutationDeclineArgs = {
 
 export type MutationEscalateArgs = {
   id: Scalars['ID'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  messages?: Maybe<Array<Maybe<Message>>>;
+};
+
+export type QueryMessagesArgs = {
+  tab: Scalars['String'];
 };
 
 export type GetMessagesQueryVariables = Exact<{

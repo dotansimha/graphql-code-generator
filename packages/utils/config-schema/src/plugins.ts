@@ -26,6 +26,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-react-query',
   },
   {
+    file: '../../plugins/typescript/rtk-query/src/config.ts',
+    identifier: 'RTKConfig',
+    name: 'typescript-rtk-query',
+  },
+  {
     file: '../../plugins/typescript/generic-sdk/src/config.ts',
     identifier: 'RawGenericSdkPluginConfig',
     name: 'typescript-generic-sdk',
@@ -124,6 +129,16 @@ export const pluginsConfigurations: PluginConfig[] = [
     file: '../../plugins/typescript/vue-apollo/src/config.ts',
     identifier: 'VueApolloRawPluginConfig',
     name: 'typescript-vue-apollo',
+  },
+  {
+    file: '../../plugins/typescript/vue-apollo-smart-ops/src/config.ts',
+    identifier: 'VueApolloSmartOpsRawPluginConfig',
+    name: 'typescript-vue-apollo-smart-ops',
+  },
+  {
+    file: '../../plugins/typescript/vue-urql/src/config.ts',
+    identifier: 'VueUrqlRawPluginConfig',
+    name: 'typescript-vue-urql',
   },
   {
     file: '../../plugins/typescript/stencil-apollo/src/config.ts',

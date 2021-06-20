@@ -7,10 +7,10 @@ export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type TwoHeroesQuery = { __typename?: 'Query' } & {
   r2?: Types.Maybe<
-    ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
   >;
   luke?: Types.Maybe<
-    ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
   >;
 };
 

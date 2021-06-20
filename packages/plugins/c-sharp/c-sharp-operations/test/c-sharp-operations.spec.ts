@@ -1028,8 +1028,8 @@ describe('C# Operations', () => {
       expect(result.content).toBeSimilarStringTo(`
         /// <summary>
         /// RunScalarGQL.Request
-        /// <para>Required variables:<br/> { idr=(int), namer=(string), flagr=(bool), fltr=(float)  }</para>
-        /// <para>Optional variables:<br/> { id=(int), name=(string), flag=(bool), flt=(float) }</para>
+        /// <para>Required variables:<br/> { idr=(int), namer=(string), flagr=(bool), fltr=(double)  }</para>
+        /// <para>Optional variables:<br/> { id=(int), name=(string), flag=(bool), flt=(double) }</para>
         /// </summary>
       `);
     });
