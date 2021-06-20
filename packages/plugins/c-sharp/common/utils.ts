@@ -1,6 +1,6 @@
 import { Kind, TypeNode, StringValueNode } from 'graphql';
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { csharpNativeValueTypes } from './scalars';
+import { csharpValueTypes } from './scalars';
 import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -26,7 +26,7 @@ function isStringValueNode(node: any): node is StringValueNode {
 export function isValueType(type: string): boolean {
   // Limitation: only checks the list of known built in value types
   // Eg .NET types and struct types won't be detected correctly
-  return csharpNativeValueTypes.includes(type);
+  return csharpValueTypes.includes(type);
 }
 
 export function getListTypeField(typeNode: TypeNode): ListTypeField | undefined {
