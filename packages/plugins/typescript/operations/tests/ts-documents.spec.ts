@@ -4701,6 +4701,64 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
+    it('#3950 - Invalid output with fragments and skipTypename: true', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          animals: [Animal!]!
+        }
+
+        interface Animal {
+          id: ID!
+        }
+        type Duck implements Animal {
+          id: ID!
+        }
+        type Lion implements Animal {
+          id: ID!
+        }
+        type Puma implements Animal {
+          id: ID!
+        }
+        type Wolf implements Animal {
+          id: ID!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        fragment CatFragment on Animal {
+          ... on Lion {
+            id
+          }
+          ... on Puma {
+            id
+          }
+        }
+
+        query kitty {
+          animals {
+            ...CatFragment
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: query }],
+        {
+          skipTypename: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toContain('type CatFragment_Duck_Fragment = {}');
+      expect(content).toContain('type CatFragment_Wolf_Fragment = {}');
+      expect(content).toContain(
+        'export type KittyQuery = { animals: Array<CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment> };'
+      );
+    });
+
     it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type NotFoundError {
