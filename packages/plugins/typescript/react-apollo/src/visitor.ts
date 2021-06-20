@@ -110,11 +110,23 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return GROUPED_APOLLO_CLIENT_3_IDENTIFIER;
   }
 
+  private usesExternalHooksOnly(): boolean {
+    const apolloReactCommonIdentifier = this.getApolloReactCommonIdentifier();
+    return (
+      apolloReactCommonIdentifier === GROUPED_APOLLO_CLIENT_3_IDENTIFIER &&
+      this.config.apolloReactHooksImportFrom !== APOLLO_CLIENT_3_UNIFIED_PACKAGE &&
+      this.config.withHooks &&
+      !this.config.withComponent &&
+      !this.config.withHOC
+    );
+  }
+
   private getApolloReactCommonImport(isTypeImport: boolean): string {
     const apolloReactCommonIdentifier = this.getApolloReactCommonIdentifier();
 
     return `${this.getImportStatement(
-      isTypeImport && apolloReactCommonIdentifier !== GROUPED_APOLLO_CLIENT_3_IDENTIFIER
+      isTypeImport &&
+        (apolloReactCommonIdentifier !== GROUPED_APOLLO_CLIENT_3_IDENTIFIER || this.usesExternalHooksOnly())
     )} * as ${apolloReactCommonIdentifier} from '${this.config.apolloReactCommonImportFrom}';`;
   }
 
