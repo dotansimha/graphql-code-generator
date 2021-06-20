@@ -58,7 +58,7 @@
     "@graphql-codegen/typescript-operations": "1.18.1",
     "@graphql-codegen/typescript-react-apollo": "2.2.6",
     "@graphql-codegen/typescript-react-query": "1.3.2",
-    "@graphql-codegen/typescript-rtk-query": "1.0.0",
+    "@graphql-codegen/typescript-rtk-query": "1.1.0",
     "@graphql-codegen/typescript-resolvers": "1.19.3",
     "@graphql-codegen/typescript-stencil-apollo": "1.18.6",
     "@graphql-codegen/typescript-type-graphql": "1.18.6",
