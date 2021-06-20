@@ -21,7 +21,7 @@
     "common-tags": "1.8.0",
     "import-from": "4.0.0",
     "lodash": "~4.17.0",
-    "tslib": "~2.2.0"
+    "tslib": "~2.3.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

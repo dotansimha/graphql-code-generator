@@ -257,7 +257,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *    wrapEntireFieldDefinitions: false
    * ```
    */
-  wrapEntireFieldDefinitions?: boolean
+  wrapEntireFieldDefinitions?: boolean;
   /**
    * @name entireFieldWrapperValue
    * @type string
@@ -274,6 +274,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *  config:
    *    entireFieldWrapperValue: T
    * ```
-   */;
+   */
   entireFieldWrapperValue?: string;
 }
