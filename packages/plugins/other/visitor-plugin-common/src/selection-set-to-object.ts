@@ -130,7 +130,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           }
         } else {
           // it must be an interface type that is spread on an interface field
-
           for (const possibleType of possibleTypes) {
             if (!node.typeCondition) {
               throw new Error('Invalid state. Expected type condition for interface spread on a interface field.');
@@ -497,12 +496,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const subTypes: { name: string; content: string }[] = Object.keys(grouped)
       .map(typeName => {
         const possibleFields = grouped[typeName].filter(Boolean);
+        const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
         if (possibleFields.length === 0) {
+          if (!this._config.addTypename) {
+            return { name: declarationName, content: '{}' };
+          }
+
           return null;
         }
-
-        const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
         return { name: declarationName, content: possibleFields.join(' & ') };
       })
