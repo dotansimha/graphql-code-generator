@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 1.0.4
+
+### Patch Changes
+
+- 71e381cf: Default resolver-args to empty object just like urql itself does
+
 ## 1.0.3
 
 ### Patch Changes

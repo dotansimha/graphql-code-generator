@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-urql-graphcache",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "GraphQL Code Generator plugin for generating a generic to be used in graphcache cache config",
   "repository": {
     "type": "git",
