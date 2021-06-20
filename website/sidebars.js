@@ -12,6 +12,7 @@ module.exports = {
           'getting-started/documents-field',
           'getting-started/config-field',
           'getting-started/require-field',
+          'getting-started/naming-convention',
           'getting-started/lifecycle-hooks',
         ],
       },
