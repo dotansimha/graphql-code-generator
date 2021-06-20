@@ -5,8 +5,6 @@ import { RTKQueryVisitor } from './visitor';
 import { extname } from 'path';
 import { RTKQueryRawPluginConfig } from './config';
 
-export { graphqlRequestBaseQuery } from './graphqlRequestBaseQuery';
-
 export const plugin: PluginFunction<RTKQueryRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],

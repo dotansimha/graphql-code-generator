@@ -31,7 +31,7 @@ The generated `src/app/api/generated.ts` would try to `import { api } from 'src/
 
 ```ts title="src/app/api/baseApi.ts"
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { graphqlRequestBaseQuery } from '@graphql-codegen/typescript-rtk-query';
+import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 import { GraphQLClient } from 'graphql-request';
 
 export const client = new GraphQLClient('/graphql');
