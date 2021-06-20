@@ -1,5 +1,13 @@
 # @graphql-codegen/c-sharp-operations
 
+## 1.19.2
+
+### Patch Changes
+
+- 49a2c3b0: Replace float with double
+- Updated dependencies [cf1e5abc]
+  - @graphql-codegen/visitor-plugin-common@1.21.1
+
 ## 1.19.1
 
 ### Patch Changes

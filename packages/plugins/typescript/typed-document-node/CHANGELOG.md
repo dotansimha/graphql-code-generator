@@ -1,5 +1,13 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.7
+
+### Patch Changes
+
+- cf1e5abc: Introduce new feature for removing duplicated fragments
+- Updated dependencies [cf1e5abc]
+  - @graphql-codegen/visitor-plugin-common@1.21.1
+
 ## 1.18.6
 
 ### Patch Changes

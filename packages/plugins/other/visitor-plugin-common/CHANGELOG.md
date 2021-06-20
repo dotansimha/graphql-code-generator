@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.21.1
+
+### Patch Changes
+
+- cf1e5abc: Introduce new feature for removing duplicated fragments
+
 ## 1.21.0
 
 ### Minor Changes

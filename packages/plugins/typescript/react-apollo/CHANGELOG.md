@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.2.6
+
+### Patch Changes
+
+- 0c989a9a: Fix missing use of type import when using custom apollo hooks import
+- 34c37992: No longer use TypesSuffix on function names.
+- Updated dependencies [cf1e5abc]
+  - @graphql-codegen/visitor-plugin-common@1.21.1
+
 ## 2.2.5
 
 ### Patch Changes
