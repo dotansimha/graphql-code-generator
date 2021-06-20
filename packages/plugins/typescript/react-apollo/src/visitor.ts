@@ -330,6 +330,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const operationName: string = this.convertName(nodeName, {
       suffix,
       useTypesPrefix: false,
+      useTypesSuffix: false,
     });
 
     this.imports.add(this.getApolloReactCommonImport(true));

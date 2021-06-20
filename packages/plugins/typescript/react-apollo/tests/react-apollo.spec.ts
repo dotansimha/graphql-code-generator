@@ -370,6 +370,29 @@ describe('React Apollo', () => {
         content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length
       ).toBe(3);
     });
+
+    it('#6001 - Should not use TypesSuffix on function names', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query user {
+              user(id: 1) {
+                id
+                username
+                email
+              }
+            }
+          `),
+        },
+      ];
+
+      const content = await plugin(schema, docs, { typesSuffix: 'Type' });
+
+      expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
+      // String matching `useUserQuery` but not `useUserQueryType`.
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQuery)(?!.useUserQueryType)(.+)/));
+    });
   });
 
   describe('Imports', () => {
