@@ -404,6 +404,37 @@ default: `false`
 If set to true, it will enable support for parsing variables on fragments.
 
 
+### `strictScalars`
+
+type: `boolean`
+default: `false`
+
+Makes scalars strict.
+
+If scalars are found in the schema that are not defined in `scalars`
+an error will be thrown during codegen.
+
+#### Usage Examples
+
+```yml
+config:
+  strictScalars: true
+```
+
+### `defaultScalarType`
+
+type: `string`
+default: `any`
+
+Allows you to override the type that unknown scalars will have.
+
+#### Usage Examples
+
+```yml
+config:
+  defaultScalarType: unknown
+```
+
 ### `scalars`
 
 type: `ScalarsMap`
@@ -492,3 +523,13 @@ default: `false`
 
 Will use `import type {}` rather than `import {}` when importing only types. This gives
 compatibility with TypeScript's "importsNotUsedAsValues": "error" option
+
+
+### `dedupeFragments`
+
+type: `boolean`
+default: `false`
+
+Removes fragment duplicants for reducing data transfer.
+It is done by removing sub-fragments imports from fragment definition
+Instead - import all of them are imported to the Operation node.

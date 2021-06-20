@@ -113,6 +113,7 @@ export const LiveDemo = () => {
         </div>
         <div>
           <Select
+            isSearchable={false}
             styles={{
               menu: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
               control: styles => ({ ...styles, ...(isDarkTheme ? { backgroundColor: 'black' } : {}) }),
