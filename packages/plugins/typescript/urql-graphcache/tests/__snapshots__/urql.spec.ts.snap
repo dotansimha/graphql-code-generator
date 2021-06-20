@@ -12,25 +12,25 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
-    schoolBooks?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Textbook> | string>>
+    schoolBooks?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Array<WithTypename<Textbook> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID'] | string>,
-    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String'] | string>,
-    friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
+    id?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Scalars['ID'] | string>,
+    name?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Scalars['String'] | string>,
+    friends?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Array<WithTypename<Author> | string>>,
     friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID'] | string>,
-    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String'] | string>,
-    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean'] | string>,
-    author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
+    id?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['Boolean'] | string>,
+    author?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, WithTypename<Author> | string>
   },
   Textbook?: {
-    id?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['ID'] | string>,
-    title?: GraphCacheResolver<WithTypename<Textbook>, null, Scalars['String'] | string>,
-    author?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Author> | string>,
-    todo?: GraphCacheResolver<WithTypename<Textbook>, null, WithTypename<Todo> | string>
+    id?: GraphCacheResolver<WithTypename<Textbook>, Record<string, never>, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Textbook>, Record<string, never>, Scalars['String'] | string>,
+    author?: GraphCacheResolver<WithTypename<Textbook>, Record<string, never>, WithTypename<Author> | string>,
+    todo?: GraphCacheResolver<WithTypename<Textbook>, Record<string, never>, WithTypename<Todo> | string>
   }
 };
 
@@ -62,17 +62,17 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
-    media?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Media> | string>>
+    media?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Array<WithTypename<Media> | string>>
   },
   Book?: {
-    id?: GraphCacheResolver<WithTypename<Book>, null, Scalars['ID'] | string>,
-    title?: GraphCacheResolver<WithTypename<Book>, null, Scalars['String'] | string>,
-    pages?: GraphCacheResolver<WithTypename<Book>, null, Scalars['Int'] | string>
+    id?: GraphCacheResolver<WithTypename<Book>, Record<string, never>, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Book>, Record<string, never>, Scalars['String'] | string>,
+    pages?: GraphCacheResolver<WithTypename<Book>, Record<string, never>, Scalars['Int'] | string>
   },
   Movie?: {
-    id?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['ID'] | string>,
-    title?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['String'] | string>,
-    duration?: GraphCacheResolver<WithTypename<Movie>, null, Scalars['Int'] | string>
+    id?: GraphCacheResolver<WithTypename<Movie>, Record<string, never>, Scalars['ID'] | string>,
+    title?: GraphCacheResolver<WithTypename<Movie>, Record<string, never>, Scalars['String'] | string>,
+    duration?: GraphCacheResolver<WithTypename<Movie>, Record<string, never>, Scalars['Int'] | string>
   }
 };
 
@@ -106,19 +106,19 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
-    todos?: GraphCacheResolver<WithTypename<Query>, null, Array<WithTypename<Todo> | string>>
+    todos?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Array<WithTypename<Todo> | string>>
   },
   Author?: {
-    id?: GraphCacheResolver<WithTypename<Author>, null, Scalars['ID'] | string>,
-    name?: GraphCacheResolver<WithTypename<Author>, null, Scalars['String'] | string>,
-    friends?: GraphCacheResolver<WithTypename<Author>, null, Array<WithTypename<Author> | string>>,
+    id?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Scalars['ID'] | string>,
+    name?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Scalars['String'] | string>,
+    friends?: GraphCacheResolver<WithTypename<Author>, Record<string, never>, Array<WithTypename<Author> | string>>,
     friendsPaginated?: GraphCacheResolver<WithTypename<Author>, AuthorFriendsPaginatedArgs, Array<WithTypename<Author> | string>>
   },
   Todo?: {
-    id?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['ID'] | string>,
-    text?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['String'] | string>,
-    complete?: GraphCacheResolver<WithTypename<Todo>, null, Scalars['Boolean'] | string>,
-    author?: GraphCacheResolver<WithTypename<Todo>, null, WithTypename<Author> | string>
+    id?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['Boolean'] | string>,
+    author?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, WithTypename<Author> | string>
   }
 };
 

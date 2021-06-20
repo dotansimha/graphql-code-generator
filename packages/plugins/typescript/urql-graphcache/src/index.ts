@@ -124,7 +124,7 @@ function getResolversConfig(schema: GraphQLSchema, convertName: ConvertFn) {
     const fields = parentType.astNode.fields.reduce((fields, field) => {
       const argsName = field.arguments?.length
         ? convertName(`${parentType.name}${capitalize(field.name.value)}Args`)
-        : 'null';
+        : 'Record<string, never>';
       const type = unwrapType(field.type);
 
       fields.push(
@@ -154,7 +154,8 @@ function getRootUpdatersConfig(schema: GraphQLSchema, convertName: ConvertFn) {
         fields.forEach(fieldNode => {
           const argsName = fieldNode.arguments?.length
             ? convertName(`${rootType.name}${capitalize(fieldNode.name.value)}Args`)
-            : '{}';
+            : 'Record<string, never>';
+
           const type = unwrapType(fieldNode.type);
           updaters.push(
             `${fieldNode.name.value}?: GraphCacheUpdateResolver<{ ${fieldNode.name.value}: ${constructType(
@@ -186,7 +187,7 @@ function getOptimisticUpdatersConfig(schema: GraphQLSchema, convertName: Convert
     fields.forEach(fieldNode => {
       const argsName = fieldNode.arguments?.length
         ? convertName(`Mutation${capitalize(fieldNode.name.value)}Args`)
-        : '{}';
+        : 'Record<string, never>';
       const type = unwrapType(fieldNode.type);
       const outputType = constructType(type, schema, convertName);
       optimistic.push(
