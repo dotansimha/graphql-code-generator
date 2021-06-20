@@ -555,9 +555,14 @@ export function useSubmitRepositoryMutation(
 }
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
 export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutationMyOperation>;
-export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
+export type SubmitRepositoryMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<
   SubmitRepositoryMutationMyOperation,
-  SubmitRepositoryMutationVariables
+  SubmitRepositoryMutationVariables,
+  TContext,
+  TCache
 >;
 export const SubmitCommentDocument = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
@@ -601,10 +606,10 @@ export function useSubmitCommentMutation(
 }
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
 export type SubmitCommentMutationResult = Apollo.MutationResult<SubmitCommentMutationMyOperation>;
-export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
-  SubmitCommentMutationMyOperation,
-  SubmitCommentMutationVariables
->;
+export type SubmitCommentMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables, TContext, TCache>;
 export const VoteDocument = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {
     vote(repoFullName: $repoFullName, type: $type) {
@@ -644,4 +649,7 @@ export function useVoteMutation(
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
 export type VoteMutationResult = Apollo.MutationResult<VoteMutationMyOperation>;
-export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutationMyOperation, VoteMutationVariables>;
+export type VoteMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<VoteMutationMyOperation, VoteMutationVariables, TContext, TCache>;

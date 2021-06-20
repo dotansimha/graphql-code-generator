@@ -442,7 +442,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       useTypesPrefix: false,
     });
 
-    return `export type ${mutationOptionsType} = ${this.getApolloReactCommonIdentifier()}.BaseMutationOptions<${operationResultType}, ${operationVariablesTypes}>;`;
+    return `export type ${mutationOptionsType}<TContext = unknown, TCache extends ${this.getApolloReactCommonIdentifier()}.ApolloCache<any> = ${this.getApolloReactCommonIdentifier()}.ApolloCache<any>> = ${this.getApolloReactCommonIdentifier()}.BaseMutationOptions<${operationResultType}, ${operationVariablesTypes}, TContext, TCache>;`;
   }
 
   private _buildRefetchFn(

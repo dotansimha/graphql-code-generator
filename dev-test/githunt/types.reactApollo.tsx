@@ -550,10 +550,10 @@ export function useSubmitRepositoryMutation(
 }
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
 export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
-export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<
-  SubmitRepositoryMutation,
-  SubmitRepositoryMutationVariables
->;
+export type SubmitRepositoryMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables, TContext, TCache>;
 export const SubmitCommentDocument = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
     submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -590,10 +590,10 @@ export function useSubmitCommentMutation(
 }
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
 export type SubmitCommentMutationResult = Apollo.MutationResult<SubmitCommentMutation>;
-export type SubmitCommentMutationOptions = Apollo.BaseMutationOptions<
-  SubmitCommentMutation,
-  SubmitCommentMutationVariables
->;
+export type SubmitCommentMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables, TContext, TCache>;
 export const VoteDocument = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {
     vote(repoFullName: $repoFullName, type: $type) {
@@ -631,4 +631,7 @@ export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMut
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
 export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
-export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
+export type VoteMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables, TContext, TCache>;

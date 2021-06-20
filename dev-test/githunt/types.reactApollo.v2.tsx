@@ -553,9 +553,14 @@ export function useSubmitRepositoryMutation(
 }
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
 export type SubmitRepositoryMutationResult = ApolloReactCommon.MutationResult<SubmitRepositoryMutation>;
-export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SubmitRepositoryMutationOptions<
+  TContext = unknown,
+  TCache extends ApolloReactCommon.ApolloCache<any> = ApolloReactCommon.ApolloCache<any>
+> = ApolloReactCommon.BaseMutationOptions<
   SubmitRepositoryMutation,
-  SubmitRepositoryMutationVariables
+  SubmitRepositoryMutationVariables,
+  TContext,
+  TCache
 >;
 export const SubmitCommentDocument = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
@@ -599,10 +604,10 @@ export function useSubmitCommentMutation(
 }
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
 export type SubmitCommentMutationResult = ApolloReactCommon.MutationResult<SubmitCommentMutation>;
-export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SubmitCommentMutation,
-  SubmitCommentMutationVariables
->;
+export type SubmitCommentMutationOptions<
+  TContext = unknown,
+  TCache extends ApolloReactCommon.ApolloCache<any> = ApolloReactCommon.ApolloCache<any>
+> = ApolloReactCommon.BaseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables, TContext, TCache>;
 export const VoteDocument = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {
     vote(repoFullName: $repoFullName, type: $type) {
@@ -642,4 +647,7 @@ export function useVoteMutation(
 }
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
 export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutation>;
-export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
+export type VoteMutationOptions<
+  TContext = unknown,
+  TCache extends ApolloReactCommon.ApolloCache<any> = ApolloReactCommon.ApolloCache<any>
+> = ApolloReactCommon.BaseMutationOptions<VoteMutation, VoteMutationVariables, TContext, TCache>;

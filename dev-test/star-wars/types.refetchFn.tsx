@@ -299,9 +299,14 @@ export function useCreateReviewForEpisodeMutation(
 }
 export type CreateReviewForEpisodeMutationHookResult = ReturnType<typeof useCreateReviewForEpisodeMutation>;
 export type CreateReviewForEpisodeMutationResult = Apollo.MutationResult<CreateReviewForEpisodeMutation>;
-export type CreateReviewForEpisodeMutationOptions = Apollo.BaseMutationOptions<
+export type CreateReviewForEpisodeMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<
   CreateReviewForEpisodeMutation,
-  CreateReviewForEpisodeMutationVariables
+  CreateReviewForEpisodeMutationVariables,
+  TContext,
+  TCache
 >;
 export const HeroAndFriendsNamesDocument = gql`
   query HeroAndFriendsNames($episode: Episode) {

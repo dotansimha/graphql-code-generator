@@ -153,10 +153,10 @@ export function useCreateMessageMutation(
 }
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
-export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<
-  CreateMessageMutation,
-  CreateMessageMutationVariables
->;
+export type CreateMessageMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables, TContext, TCache>;
 
 /**
  * __useDeclineMutation__
@@ -184,7 +184,10 @@ export function useDeclineMutation(
 }
 export type DeclineMutationHookResult = ReturnType<typeof useDeclineMutation>;
 export type DeclineMutationResult = Apollo.MutationResult<DeclineMutation>;
-export type DeclineMutationOptions = Apollo.BaseMutationOptions<DeclineMutation, DeclineMutationVariables>;
+export type DeclineMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<DeclineMutation, DeclineMutationVariables, TContext, TCache>;
 
 /**
  * __useApproveMutation__
@@ -211,7 +214,10 @@ export function useApproveMutation(
 }
 export type ApproveMutationHookResult = ReturnType<typeof useApproveMutation>;
 export type ApproveMutationResult = Apollo.MutationResult<ApproveMutation>;
-export type ApproveMutationOptions = Apollo.BaseMutationOptions<ApproveMutation, ApproveMutationVariables>;
+export type ApproveMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<ApproveMutation, ApproveMutationVariables, TContext, TCache>;
 
 /**
  * __useEscalateMutation__
@@ -238,4 +244,7 @@ export function useEscalateMutation(
 }
 export type EscalateMutationHookResult = ReturnType<typeof useEscalateMutation>;
 export type EscalateMutationResult = Apollo.MutationResult<EscalateMutation>;
-export type EscalateMutationOptions = Apollo.BaseMutationOptions<EscalateMutation, EscalateMutationVariables>;
+export type EscalateMutationOptions<
+  TContext = unknown,
+  TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>
+> = Apollo.BaseMutationOptions<EscalateMutation, EscalateMutationVariables, TContext, TCache>;
