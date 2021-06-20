@@ -45,6 +45,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@rtk-query/graphql-request-base-query": "^1.0.3"
+    "@rtk-query/graphql-request-base-query": "1.0.3"
   }
 }
