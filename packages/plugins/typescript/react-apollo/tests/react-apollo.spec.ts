@@ -1659,7 +1659,7 @@ export function useListenToCommentsSubscription(baseOptions?: Apollo.Subscriptio
 
       expect(content.prepend).toContain(`import * as Apollo from '@apollo/client';`);
       expect(content.content).toContain(
-        `export type TestMutationOptions = Apollo.BaseMutationOptions<TestMutation, TestMutationVariables>;`
+        `export type TestMutationOptions<TContext = unknown, TCache extends Apollo.ApolloCache<any> = Apollo.ApolloCache<any>> = Apollo.BaseMutationOptions<TestMutation, TestMutationVariables, TContext, TCache>;`
       );
       await validateTypeScript(content, schema, docs, {});
     });
