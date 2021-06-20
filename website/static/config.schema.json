@@ -224,6 +224,19 @@
         }
       }
     },
+    "RTKConfig": {
+      "type": "object",
+      "properties": {
+        "importBaseApiFrom": {
+          "description": "Define where to import the base api to inject endpoints into",
+          "type": "string"
+        },
+        "exportHooks": {
+          "description": "Whether to export React Hooks from the generated api. Enable only when using the `\"@reduxjs/toolkit/query/react\"` import of `createApi`\nDefault value: \"false\"",
+          "type": "boolean"
+        }
+      }
+    },
     "RawGenericSdkPluginConfig": {
       "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.",
       "type": "object",
@@ -3555,6 +3568,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "typescript-rtk-query"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/RTKConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "typescript-generic-sdk"
                 }
               }
@@ -4447,6 +4479,14 @@
               "additionalProperties": false,
               "$ref": "#/definitions/ReactQueryRawPluginConfig"
             },
+            "typescript-rtk-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RTKConfig"
+            },
+            "@graphql-codegen/typescript-rtk-query": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/RTKConfig"
+            },
             "typescript-generic-sdk": {
               "additionalProperties": false,
               "$ref": "#/definitions/RawGenericSdkPluginConfig"
@@ -4731,6 +4771,14 @@
             {
               "const": "@graphql-codegen/typescript-react-query",
               "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-rtk-query",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-rtk-query",
+              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-generic-sdk",
