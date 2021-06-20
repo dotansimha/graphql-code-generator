@@ -268,7 +268,7 @@ export type VoteMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export const CommentsPageCommentFragmentDoc = {
+export const CommentsPageCommentFragmentDoc = ({
   kind: 'Document',
   definitions: [
     {
@@ -296,8 +296,8 @@ export const CommentsPageCommentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<CommentsPageCommentFragment, unknown>;
-export const VoteButtonsFragmentDoc = {
+} as unknown) as DocumentNode<CommentsPageCommentFragment, unknown>;
+export const VoteButtonsFragmentDoc = ({
   kind: 'Document',
   definitions: [
     {
@@ -320,8 +320,8 @@ export const VoteButtonsFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<VoteButtonsFragment, unknown>;
-export const RepoInfoFragmentDoc = {
+} as unknown) as DocumentNode<VoteButtonsFragment, unknown>;
+export const RepoInfoFragmentDoc = ({
   kind: 'Document',
   definitions: [
     {
@@ -359,8 +359,8 @@ export const RepoInfoFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<RepoInfoFragment, unknown>;
-export const FeedEntryFragmentDoc = {
+} as unknown) as DocumentNode<RepoInfoFragment, unknown>;
+export const FeedEntryFragmentDoc = ({
   kind: 'Document',
   definitions: [
     {
@@ -399,8 +399,8 @@ export const FeedEntryFragmentDoc = {
     ...VoteButtonsFragmentDoc.definitions,
     ...RepoInfoFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<FeedEntryFragment, unknown>;
-export const OnCommentAddedDocument = {
+} as unknown) as DocumentNode<FeedEntryFragment, unknown>;
+export const OnCommentAddedDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -451,8 +451,8 @@ export const OnCommentAddedDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
-export const CommentDocument = {
+} as unknown) as DocumentNode<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+export const CommentDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -568,8 +568,8 @@ export const CommentDocument = {
     },
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<CommentQuery, CommentQueryVariables>;
-export const CurrentUserForProfileDocument = {
+} as unknown) as DocumentNode<CommentQuery, CommentQueryVariables>;
+export const CurrentUserForProfileDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -594,8 +594,8 @@ export const CurrentUserForProfileDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
-export const FeedDocument = {
+} as unknown) as DocumentNode<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+export const FeedDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -660,8 +660,8 @@ export const FeedDocument = {
     },
     ...FeedEntryFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<FeedQuery, FeedQueryVariables>;
-export const SubmitRepositoryDocument = {
+} as unknown) as DocumentNode<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -697,8 +697,8 @@ export const SubmitRepositoryDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export const SubmitCommentDocument = {
+} as unknown) as DocumentNode<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export const SubmitCommentDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -745,8 +745,8 @@ export const SubmitCommentDocument = {
     },
     ...CommentsPageCommentFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables>;
-export const VoteDocument = {
+} as unknown) as DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables>;
+export const VoteDocument = ({
   kind: 'Document',
   definitions: [
     {
@@ -803,4 +803,4 @@ export const VoteDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<VoteMutation, VoteMutationVariables>;
+} as unknown) as DocumentNode<VoteMutation, VoteMutationVariables>;

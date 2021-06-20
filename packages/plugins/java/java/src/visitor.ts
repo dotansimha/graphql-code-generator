@@ -125,7 +125,9 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(typeNode: TypeNode): {
+  protected resolveInputFieldType(
+    typeNode: TypeNode
+  ): {
     baseType: string;
     typeName: string;
     isScalar: boolean;

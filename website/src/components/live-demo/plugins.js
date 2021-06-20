@@ -19,6 +19,7 @@ export const pluginLoaderMap = {
   'typescript-apollo-angular': () => import('@graphql-codegen/typescript-apollo-angular'),
   'typescript-react-apollo': () => import('@graphql-codegen/typescript-react-apollo'),
   'typescript-vue-apollo': () => import('@graphql-codegen/typescript-vue-apollo'),
+  'typescript-vue-apollo-smart-ops': () => import('@graphql-codegen/typescript-vue-apollo-smart-ops'),
   'typescript-vue-urql': () => import('@graphql-codegen/typescript-vue-urql'),
   'typescript-stencil-apollo': () => import('@graphql-codegen/typescript-stencil-apollo'),
   'typescript-graphql-files-modules': () => import('@graphql-codegen/typescript-graphql-files-modules'),

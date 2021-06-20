@@ -61,6 +61,9 @@
       "@graphql-codegen/typescript-urql": ["packages/plugins/typescript/urql/src/index.ts"],
       "@graphql-codegen/typescript-vue-urql": ["packages/plugins/typescript/urql/src/index.ts"],
       "@graphql-codegen/typescript-vue-apollo": ["packages/plugins/typescript/vue-apollo/src/index.ts"],
+      "@graphql-codegen/typescript-vue-apollo-smart-ops": [
+        "packages/plugins/typescript/vue-apollo-smart-ops/src/index.ts"
+      ],
       "@graphql-codegen/c-sharp": ["packages/plugins/c-sharp/c-sharp/src/index.ts"],
       "@graphql-codegen/c-sharp-apollo": ["packages/plugins/c-sharp/apollo-dot-net/src/index.ts"],
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],

@@ -450,7 +450,7 @@ export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 }
 import { IntrospectionQuery } from 'graphql';
-export default {
+export default ({
   __schema: {
     queryType: {
       name: 'Query',
@@ -981,7 +981,7 @@ export default {
     ],
     directives: [],
   },
-} as unknown as IntrospectionQuery;
+} as unknown) as IntrospectionQuery;
 export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & {
   __typename: NonNullable<T['__typename']>;
 };
