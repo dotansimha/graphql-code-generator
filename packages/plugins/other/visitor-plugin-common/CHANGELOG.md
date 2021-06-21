@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.21.2
+
+### Patch Changes
+
+- 6aaecf1c: Fix issues with missing sub-fragments when skipTypename: true
+
 ## 1.21.1
 
 ### Patch Changes

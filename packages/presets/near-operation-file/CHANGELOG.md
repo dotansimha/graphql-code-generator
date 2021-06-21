@@ -1,5 +1,12 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 1.18.3
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
 ## 1.18.2
 
 ### Patch Changes

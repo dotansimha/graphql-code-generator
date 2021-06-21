@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-type-graphql
 
+## 1.18.7
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+  - @graphql-codegen/typescript@1.22.3
+
 ## 1.18.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-vue-urql
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
 ## 1.0.0
 
 ### Major Changes

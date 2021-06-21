@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 1.18.2
+
+### Patch Changes
+
+- 6aaecf1c: Fix issues with missing sub-fragments when skipTypename: true
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+  - @graphql-codegen/typescript@1.22.3
+
 ## 1.18.1
 
 ### Patch Changes

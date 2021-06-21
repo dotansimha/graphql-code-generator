@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-mongodb
 
+## 1.19.3
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+  - @graphql-codegen/typescript@1.22.3
+
 ## 1.19.2
 
 ### Patch Changes
