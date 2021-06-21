@@ -1,5 +1,14 @@
 # @graphql-codegen/flow-operations
 
+## 1.18.11
+
+### Patch Changes
+
+- 6aaecf1c: Fix issues with missing sub-fragments when skipTypename: true
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+  - @graphql-codegen/flow@1.19.3
+
 ## 1.18.10
 
 ### Patch Changes

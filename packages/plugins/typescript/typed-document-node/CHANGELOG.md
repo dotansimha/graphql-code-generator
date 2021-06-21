@@ -1,5 +1,12 @@
 # @graphql-codegen/typed-document-node
 
+## 1.18.8
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
 ## 1.18.7
 
 ### Patch Changes

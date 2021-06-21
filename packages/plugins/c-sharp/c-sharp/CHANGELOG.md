@@ -1,5 +1,16 @@
 # @graphql-codegen/c-sharp
 
+## 3.0.0
+
+### Major Changes
+
+- 562e6a85: Consider DateTime as builtin C# value type
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
 ## 2.0.2
 
 ### Patch Changes
