@@ -59,7 +59,7 @@
     "apollo-client": "2.6.10",
     "apollo-server": "2.25.1",
     "auto-bind": "4.0.0",
-    "babel-jest": "27.0.2",
+    "babel-jest": "27.0.5",
     "bob-the-bundler": "1.2.1",
     "eslint": "7.29.0",
     "eslint-config-prettier": "8.3.0",
@@ -75,7 +75,7 @@
     "graphql-tag": "2.12.4",
     "husky": "6.0.0",
     "java-ast": "0.3.0",
-    "jest": "27.0.4",
+    "jest": "27.0.5",
     "jest-docblock": "27.0.1",
     "jest-junit": "12.2.0",
     "lint-staged": "11.0.0",
@@ -107,8 +107,8 @@
     ]
   },
   "resolutions": {
-    "babel-jest": "27.0.2",
-    "jest-runner": "27.0.4",
+    "babel-jest": "27.0.5",
+    "jest-runner": "27.0.5",
     "graphql": "15.5.1",
     "graphql-language-service-interface": "2.8.4",
     "**/apollo-language-server/graphql": "^15.0.0",
