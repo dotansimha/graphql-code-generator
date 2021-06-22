@@ -2859,10 +2859,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.3.1.tgz#8a16e2ece3f59a5d2af769d0e21b348585ca303d"
-  integrity sha512-ZgLZfUVclh42tU3FThjx9hK6sXJzDnhl9wolv42vfzuntmXfK/64St6mmUZzEH8cB0vBPh6CCa5MfMN4u+H/UQ==
+"@theguild/components@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.4.0.tgz#7484e9f30196899f435b6f836c1eaa97e332fdb6"
+  integrity sha512-BKsiq6QN9LXFnGmOyMRgKlR3E3qYdAQsFys8SWOf/1CFidzEMQXmtNNn0RaWxW4f9BtNBPm4BvAu6wR2CHr21w==
   dependencies:
     "@emotion/react" "^11.4.0"
     "@emotion/styled" "^11.3.0"
@@ -2875,7 +2875,8 @@
     react-player "^2.9.0"
     tailwindcss "^2.1.4"
     twin.macro "^2.4.2"
-    use-debounce "^6.0.1"
+    use-debounce "^7.0.0"
+    validator "13.6.0"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -14681,12 +14682,12 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-guild-components@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.3.1.tgz#f660711ee9f035bb0b128bd12b36596d9c97d553"
-  integrity sha512-Bx2Y5+wbqPPuu6Kcl0f0jW1CEKEK8DziL71DN0o0KH5StYcEJIHmQcMStw+d32BmPPz5WVSdWCRH5TqAcswpDg==
+the-guild-components@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.4.0.tgz#3b9f8c0655c933ed61cf688f073184b9c91461ca"
+  integrity sha512-cnZk/vgTrV6IP948kkfcH+jOhX0CIrLf7htSdv5VZRomJNXc0uHw/sLuYlJXqObqItmYAQ9Cl0WskmyModfB8g==
   dependencies:
-    "@theguild/components" "1.3.1"
+    "@theguild/components" "1.4.0"
 
 throat@^6.0.1:
   version "6.0.1"
@@ -15410,10 +15411,10 @@ use-composed-ref@^1.0.0:
   dependencies:
     ts-essentials "^2.0.3"
 
-use-debounce@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-6.0.1.tgz#ed1eb2b30189408fb9792ea2887f4c6c3cb401a3"
-  integrity sha512-kpvIxpa0vOLz/2I2sfNJ72mUeaT2CMNCu5BT1f2HkV9qZK27UVSOFf1sSSu+wjJE4TcR2VTXS2SM569+m3TN7Q==
+use-debounce@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-7.0.0.tgz#00a67d23d4fe09905e11145a99278da06c01c880"
+  integrity sha512-4fvxEEs7ztdNMh+c497HAgysdq2+Ascem6EaDANGlCIap1JzqfL03Xw8xkYc2lShfXm4uO6PA6V5zcXN7gJdFA==
 
 use-isomorphic-layout-effect@^1.0.0:
   version "1.1.1"
@@ -15510,6 +15511,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@13.6.0:
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.6.0.tgz#1e71899c14cdc7b2068463cb24c1cc16f6ec7059"
+  integrity sha512-gVgKbdbHgtxpRyR8K0O6oFZPhhB5tT1jeEHZR0Znr9Svg03U0+r9DXWMrnRAB+HtCStDQKlaIZm42tVsVjqtjg==
 
 value-equal@^1.0.1:
   version "1.0.1"
