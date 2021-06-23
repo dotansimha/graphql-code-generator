@@ -69,7 +69,7 @@
     "eslint-plugin-promise": "5.1.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "flow-bin": "0.153.0",
-    "flow-parser": "0.153.0",
+    "flow-parser": "0.154.0",
     "fs-extra": "10.0.0",
     "graphql": "15.5.1",
     "graphql-tag": "2.12.4",
