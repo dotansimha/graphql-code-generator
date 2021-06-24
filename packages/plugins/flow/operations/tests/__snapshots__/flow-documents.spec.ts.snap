@@ -39,23 +39,6 @@ export type CurrentUserQuery = {| +me?: ?({
 "
 `;
 
-exports[`Flow Operations Plugin Selection Set Should support fragment spread correctly with simple type with no other fields 1`] = `
-"// @flow
-
-type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
-
-export type UserFieldsFragment = ({
-    ...$Pick<User, {| id: *, username: *, role?: * |}>,
-  ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
-});
-
-export type MeQueryVariables = {};
-
-
-export type MeQuery = {| me?: ?UserFieldsFragment |};
-"
-`;
-
 exports[`Flow Operations Plugin Selection Set Should support fragment spread with flattenGeneratedTypes 1`] = `
 "// @flow
 
