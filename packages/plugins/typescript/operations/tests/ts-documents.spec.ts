@@ -4766,11 +4766,23 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toContain('type CatFragment_Duck_Fragment = Record<string, never>;');
-      expect(content).toContain('type CatFragment_Wolf_Fragment = Record<string, never>;');
-      expect(content).toContain(
-        "export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | Record<string, never>> };"
-      );
+      expect(content).toMatchInlineSnapshot(`
+"type CatFragment_Duck_Fragment = {};
+
+type CatFragment_Lion_Fragment = Pick<Lion, 'id'>;
+
+type CatFragment_Puma_Fragment = Pick<Puma, 'id'>;
+
+type CatFragment_Wolf_Fragment = {};
+
+export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+
+export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | {}> };
+"
+`);
     });
 
     it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
@@ -4814,7 +4826,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: Pick<User, 'id' | 'login'> | Record<string, never> };
+        export type UserQuery = { user: Pick<User, 'id' | 'login'> | {} };
       `);
     });
 
