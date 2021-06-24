@@ -12,7 +12,20 @@ declare global {
 
   export type FeedQuery = { __typename?: 'Query' } & {
     currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login'>>;
-    feed?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
+    feed?: Types.Maybe<
+      Array<
+        Types.Maybe<
+          { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'commentCount' | 'score' | 'createdAt'> & {
+              repository: { __typename?: 'Repository' } & Pick<
+                Types.Repository,
+                'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
+              > & { owner?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'avatar_url'>> };
+              vote: { __typename?: 'Vote' } & Pick<Types.Vote, 'vote_value'>;
+              postedBy: { __typename?: 'User' } & Pick<Types.User, 'html_url' | 'login'>;
+            }
+        >
+      >
+    >;
   };
 }
 

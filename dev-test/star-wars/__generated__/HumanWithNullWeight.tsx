@@ -1,6 +1,5 @@
 import * as Types from '../types.d';
 
-import { HumanFieldsFragment } from './HumanFields';
 import { gql } from '@apollo/client';
 import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as Apollo from '@apollo/client';
@@ -8,7 +7,7 @@ const defaultOptions = {};
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
-  human?: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
+  human?: Types.Maybe<{ __typename?: 'Human' } & Pick<Types.Human, 'name' | 'mass'>>;
 };
 
 export const HumanWithNullHeightDocument = gql`
