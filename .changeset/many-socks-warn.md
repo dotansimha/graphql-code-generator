@@ -4,4 +4,6 @@
 '@graphql-codegen/typescript-operations': patch
 ---
 
-generate correct operation types by inlining all fragment types
+Add option `inlineFragmentTypes` for deep inlining fragment types within operation types. This `inlineFragmentTypes` is set to `true` by default.
+
+This behavior is the better default for users that only use Fragments for building operations and then want to have access to all the data via the operation type (instead of accessing slices of the data via fragments).
