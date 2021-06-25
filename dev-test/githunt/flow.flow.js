@@ -212,7 +212,13 @@ export type CommentQuery = {
         },
         comments: Array<?{
           ...{ __typename?: 'Comment' },
-          ...CommentsPageCommentFragment,
+          ...$Pick<Comment, {| id: *, createdAt: *, content: * |}>,
+          ...{|
+            postedBy: {
+              ...{ __typename?: 'User' },
+              ...$Pick<User, {| login: *, html_url: * |}>,
+            },
+          |},
         }>,
         repository: {
           ...{ __typename?: 'Repository' },
@@ -251,11 +257,14 @@ export type CurrentUserForProfileQuery = {
 
 export type FeedEntryFragment = {
   ...{ __typename?: 'Entry' },
-  ...$Pick<Entry, {| id: *, commentCount: * |}>,
+  ...$Pick<Entry, {| id: *, commentCount: *, score: *, createdAt: * |}>,
   ...{|
     repository: {
       ...{ __typename?: 'Repository' },
-      ...$Pick<Repository, {| full_name: *, html_url: * |}>,
+      ...$Pick<
+        Repository,
+        {| full_name: *, html_url: *, description?: *, stargazers_count: *, open_issues_count?: * |}
+      >,
       ...{|
         owner?: ?{
           ...{ __typename?: 'User' },
@@ -263,9 +272,15 @@ export type FeedEntryFragment = {
         },
       |},
     },
+    vote: {
+      ...{ __typename?: 'Vote' },
+      ...$Pick<Vote, {| vote_value: * |}>,
+    },
+    postedBy: {
+      ...{ __typename?: 'User' },
+      ...$Pick<User, {| html_url: *, login: * |}>,
+    },
   |},
-  ...VoteButtonsFragment,
-  ...RepoInfoFragment,
 };
 
 export type FeedQueryVariables = {
@@ -283,7 +298,30 @@ export type FeedQuery = {
     },
     feed?: ?Array<?{
       ...{ __typename?: 'Entry' },
-      ...FeedEntryFragment,
+      ...$Pick<Entry, {| id: *, commentCount: *, score: *, createdAt: * |}>,
+      ...{|
+        repository: {
+          ...{ __typename?: 'Repository' },
+          ...$Pick<
+            Repository,
+            {| full_name: *, html_url: *, description?: *, stargazers_count: *, open_issues_count?: * |}
+          >,
+          ...{|
+            owner?: ?{
+              ...{ __typename?: 'User' },
+              ...$Pick<User, {| avatar_url: * |}>,
+            },
+          |},
+        },
+        vote: {
+          ...{ __typename?: 'Vote' },
+          ...$Pick<Vote, {| vote_value: * |}>,
+        },
+        postedBy: {
+          ...{ __typename?: 'User' },
+          ...$Pick<User, {| html_url: *, login: * |}>,
+        },
+      |},
     }>,
   |},
 };
@@ -327,7 +365,13 @@ export type SubmitCommentMutation = {
   ...{|
     submitComment?: ?{
       ...{ __typename?: 'Comment' },
-      ...CommentsPageCommentFragment,
+      ...$Pick<Comment, {| id: *, createdAt: *, content: * |}>,
+      ...{|
+        postedBy: {
+          ...{ __typename?: 'User' },
+          ...$Pick<User, {| login: *, html_url: * |}>,
+        },
+      |},
     },
   |},
 };
