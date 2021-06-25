@@ -1,0 +1,26 @@
+{
+  "name": "example-programmatic-typescript",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev:cjs": "tsup --watch src --onSuccess \"node dist/index.js\"",
+    "dev:mjs": "tsup --watch src --onSuccess \"node dist/index.mjs\""
+  },
+  "dependencies": {
+    "@graphql-codegen/core": "*",
+    "@graphql-codegen/typed-document-node": "^1.18.8",
+    "@graphql-codegen/typescript": "*",
+    "@graphql-codegen/typescript-operations": "^1.18.2",
+    "@graphql-codegen/typescript-resolvers": "^1.19.4",
+    "@graphql-ez/fastify": "^0.2.0",
+    "@graphql-tools/graphql-file-loader": "^6.2.7",
+    "@graphql-tools/load": "^6.2.8",
+    "fastify": "^3.18.0",
+    "graphql": "^15.5.1",
+    "prettier": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.4",
+    "tsup": "^4.11.2"
+  }
+}

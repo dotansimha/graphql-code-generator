@@ -30,7 +30,8 @@
       "packages/plugins/other/*",
       "packages/presets/*",
       "website",
-      "website/live-demo"
+      "website/live-demo",
+      "examples/*"
     ],
     "nohoist": [
       "@graphql-codegen/website/@docusaurus/*",
