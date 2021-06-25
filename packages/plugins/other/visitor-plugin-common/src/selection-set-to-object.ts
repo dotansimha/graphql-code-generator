@@ -342,6 +342,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       }
     >();
     let requireTypename = false;
+
+    // usages via fragment typescript type
     const fragmentsSpreadUsages: string[] = [];
 
     // ensure we mutate no function params
@@ -393,6 +395,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         } else {
           throw new TypeError('Unexpected type.');
         }
+        continue;
+      }
+
+      if (!this._config.inlineFragmentTypes) {
+        fragmentsSpreadUsages.push(selectionNode.typeName);
         continue;
       }
 
