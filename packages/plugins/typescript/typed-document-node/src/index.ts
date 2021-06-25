@@ -53,3 +53,5 @@ export const validate: PluginValidateFn<RawClientSideBasePluginConfig> = async (
     throw new Error(`Plugin "typed-document-node" requires extension to be ".ts" or ".tsx"!`);
   }
 };
+
+export { TypeScriptTypedDocumentNodesConfig };
