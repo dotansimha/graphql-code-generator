@@ -232,7 +232,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             fragmentName: spread.name.value,
             typeName: usage,
             onType: fragmentSpreadObject.onType,
-            selectionNodes: fragmentSpreadObject.node.selectionSet.selections as Array<SelectionNode>,
+            selectionNodes: [...fragmentSpreadObject.node.selectionSet.selections],
           });
         }
       }
@@ -379,10 +379,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
                 selectedFieldType: selectedField.type,
                 field: selectionNode,
               };
-              linkFieldSelectionSets.set(fieldName, linkFieldNode);
             } else {
-              mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet);
+              linkFieldNode = {
+                ...linkFieldNode,
+                field: {
+                  ...linkFieldNode.field,
+                  selectionSet: mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet),
+                },
+              };
             }
+            linkFieldSelectionSets.set(fieldName, linkFieldNode);
           }
         } else {
           throw new TypeError('Unexpected type.');
