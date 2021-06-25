@@ -72,7 +72,7 @@
     "flow-parser": "0.154.0",
     "fs-extra": "10.0.0",
     "graphql": "15.5.1",
-    "graphql-tag": "2.12.4",
+    "graphql-tag": "2.12.5",
     "husky": "6.0.0",
     "java-ast": "0.3.0",
     "jest": "27.0.5",
