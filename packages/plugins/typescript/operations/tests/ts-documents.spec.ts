@@ -4785,6 +4785,91 @@ export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | 
 `);
     });
 
+    it('#3950 - Invalid output with fragments and skipTypename: false', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          animals: [Animal!]!
+        }
+
+        interface Animal {
+          id: ID!
+        }
+        type Duck implements Animal {
+          id: ID!
+        }
+        type Lion implements Animal {
+          id: ID!
+        }
+        type Puma implements Animal {
+          id: ID!
+        }
+        type Wolf implements Animal {
+          id: ID!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        fragment CatFragment on Animal {
+          ... on Lion {
+            id
+          }
+          ... on Puma {
+            id
+          }
+        }
+
+        query kitty {
+          animals {
+            ...CatFragment
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: query }],
+        {
+          skipTypename: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toMatchInlineSnapshot(`
+"type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
+
+type CatFragment_Lion_Fragment = (
+  { __typename?: 'Lion' }
+  & Pick<Lion, 'id'>
+);
+
+type CatFragment_Puma_Fragment = (
+  { __typename?: 'Puma' }
+  & Pick<Puma, 'id'>
+);
+
+type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
+
+export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+
+export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type KittyQuery = (
+  { __typename?: 'Query' }
+  & { animals: Array<{ __typename?: 'Duck' } | (
+    { __typename?: 'Lion' }
+    & Pick<Lion, 'id'>
+  ) | (
+    { __typename?: 'Puma' }
+    & Pick<Puma, 'id'>
+  ) | { __typename?: 'Wolf' }> }
+);
+"
+`);
+    });
+
     it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type NotFoundError {
