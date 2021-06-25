@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import Fastify from 'fastify';
 import { promises } from 'fs';
 import { parse, printSchema } from 'graphql';

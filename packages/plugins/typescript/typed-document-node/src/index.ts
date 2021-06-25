@@ -1,6 +1,6 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptTypedDocumentNodesConfig } from 'packages/plugins/typescript/typed-document-node/src/config';
+import { TypeScriptTypedDocumentNodesConfig } from './config';
 import { extname } from 'path';
 import {
   LoadedFragment,
