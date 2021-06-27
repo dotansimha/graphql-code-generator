@@ -238,6 +238,10 @@
         "exportHooks": {
           "description": "Whether to export React Hooks from the generated api. Enable only when using the `\"@reduxjs/toolkit/query/react\"` import of `createApi`\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "overrideExisting": {
+          "description": "Sets the `overrideExisting` option, for example to allow for hot module reloading when running graphql-codegen in watch mode.\nWill directly be injected as code.\nDefault value: \"undefined\"",
+          "type": "string"
         }
       }
     },
