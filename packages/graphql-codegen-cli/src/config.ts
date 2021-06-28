@@ -8,6 +8,7 @@ import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
+import { createRequire, createRequireFromPath } from 'module';
 
 export type YamlCliFlags = {
   config: string;
@@ -180,7 +181,17 @@ export function parseArgv(argv = process.argv): YamlCliFlags {
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
-    await Promise.all(cliFlags.require.map(mod => import(mod)));
+    const relativeRequire = (createRequire || createRequireFromPath)(process.cwd());
+    await Promise.all(
+      cliFlags.require.map(
+        mod =>
+          import(
+            relativeRequire.resolve(mod, {
+              paths: [process.cwd()],
+            })
+          )
+      )
+    );
   }
 
   const customConfigPath = getCustomConfigPath(cliFlags);
