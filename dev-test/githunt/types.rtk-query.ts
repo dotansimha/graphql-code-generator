@@ -1,4 +1,5 @@
 import { api } from '../../packages/plugins/typescript/rtk-query/tests/baseApi';
+module.hot?.accept();
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -404,6 +405,7 @@ export const VoteDocument = `
     `;
 
 const injectedRtkApi = api.injectEndpoints({
+  overrideExisting: module.hot?.status() === 'apply',
   endpoints: build => ({
     Comment: build.query<CommentQuery, CommentQueryVariables>({
       query: variables => ({ document: CommentDocument, variables }),

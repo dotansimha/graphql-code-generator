@@ -530,6 +530,6 @@ compatibility with TypeScript's "importsNotUsedAsValues": "error" option
 type: `boolean`
 default: `false`
 
-Removes fragment duplicants for reducing data transfer.
+Removes fragment duplicates for reducing data transfer.
 It is done by removing sub-fragments imports from fragment definition
-Instead - import all of them are imported to the Operation node.
+Instead - all of them are imported to the Operation node.

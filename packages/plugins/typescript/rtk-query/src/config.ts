@@ -35,7 +35,29 @@ export interface RTKConfig {
    *           exportHooks: true
    * ```
    */
-  exportHooks: boolean;
+  exportHooks?: boolean;
+  /**
+   * @name overrideExisting
+   * @description Sets the `overrideExisting` option, for example to allow for hot module reloading when running graphql-codegen in watch mode.
+   * Will directly be injected as code.
+   * @default undefined
+   * 
+
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   ./src/app/api/generated.ts:
+   *     plugins:
+   *       - add:
+   *           content: 'module.hot?.accept();'
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-rtk-query:
+   *           importBaseApiFrom: 'src/app/api/baseApi'
+   *           overrideExisting: 'module.hot?.status() === "apply"'
+   * ```
+   */
+  overrideExisting?: string;
 }
 
 export interface RTKQueryRawPluginConfig extends RawClientSideBasePluginConfig, RTKConfig {}

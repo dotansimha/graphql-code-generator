@@ -202,11 +202,14 @@ generates:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
+      - add:
+          content: 'module.hot?.accept();'
       - typescript
       - typescript-operations
       - typescript-rtk-query:
           importBaseApiFrom: '../../packages/plugins/typescript/rtk-query/tests/baseApi'
           exportHooks: true
+          overrideExisting: 'module.hot?.status() === "apply"'
 
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json

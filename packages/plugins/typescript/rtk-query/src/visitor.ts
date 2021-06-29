@@ -26,6 +26,7 @@ export class RTKQueryVisitor extends ClientSideBaseVisitor<RTKQueryRawPluginConf
       documentMode: DocumentMode.string,
       importBaseApiFrom: getConfigValue(rawConfig.importBaseApiFrom, ''),
       exportHooks: getConfigValue(rawConfig.exportHooks, false),
+      overrideExisting: getConfigValue(rawConfig.overrideExisting, ''),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -55,7 +56,12 @@ export class RTKQueryVisitor extends ClientSideBaseVisitor<RTKQueryRawPluginConf
     return (
       `
 const injectedRtkApi = api.injectEndpoints({
-  endpoints: (build) => ({${this._endpoints.join('')}
+  ${
+    !this.config.overrideExisting
+      ? ''
+      : `overrideExisting: ${this.config.overrideExisting},
+  `
+  }endpoints: (build) => ({${this._endpoints.join('')}
   }),
 });
 

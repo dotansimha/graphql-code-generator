@@ -223,7 +223,7 @@
           "type": "boolean"
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -238,6 +238,10 @@
         "exportHooks": {
           "description": "Whether to export React Hooks from the generated api. Enable only when using the `\"@reduxjs/toolkit/query/react\"` import of `createApi`\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "overrideExisting": {
+          "description": "Sets the `overrideExisting` option, for example to allow for hot module reloading when running graphql-codegen in watch mode.\nWill directly be injected as code.\nDefault value: \"undefined\"",
+          "type": "string"
         }
       }
     },
@@ -354,7 +358,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -557,7 +561,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -713,7 +717,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -779,7 +783,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -917,7 +921,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1094,7 +1098,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1248,7 +1252,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1306,7 +1310,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1375,7 +1379,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1539,7 +1543,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1704,7 +1708,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1830,7 +1834,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2007,7 +2011,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2137,7 +2141,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2287,7 +2291,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2409,7 +2413,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2527,7 +2531,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2657,7 +2661,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2718,7 +2722,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2786,7 +2790,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2847,7 +2851,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2949,7 +2953,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -3085,7 +3089,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -3223,7 +3227,7 @@
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
         "dedupeFragments": {
-          "description": "Removes fragment duplicants for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - import all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
