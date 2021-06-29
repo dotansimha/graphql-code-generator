@@ -4939,6 +4939,8 @@ function test(q: GetEntityBrandDataQuery): void {
         type User {
           name: String!
           address: String!
+          nicknames: [String!]
+          parents: [User!]!
         }
       `);
 
@@ -4947,6 +4949,8 @@ function test(q: GetEntityBrandDataQuery): void {
           user {
             name
             address @include(if: $showAddress)
+            nicknames @include(if: $showNicknames)
+            parents @include(if: $showParents)
           }
         }
       `);
@@ -4968,7 +4972,7 @@ function test(q: GetEntityBrandDataQuery): void {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: Maybe<string> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: Maybe<string>, nicknames?: Maybe<Array<string>>, parents?: Maybe<Array<User>> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
