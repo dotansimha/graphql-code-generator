@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.21.6
+
+### Patch Changes
+
+- 3b82d1bd: update chokidar
+
 ## 1.21.5
 
 ### Patch Changes

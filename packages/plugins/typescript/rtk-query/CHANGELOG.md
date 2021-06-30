@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-rtk-query
 
+## 1.2.0
+
+### Minor Changes
+
+- c11011e7: adds option to specify `overrideExisting` for rtk-query
+
+### Patch Changes
+
+- Updated dependencies [6762aff5]
+  - @graphql-codegen/visitor-plugin-common@1.21.3
+
 ## 1.1.1
 
 ### Patch Changes
