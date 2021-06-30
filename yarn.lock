@@ -2842,10 +2842,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@@1.4.2-alpha-ec153e7.0":
-  version "1.4.2-alpha-ec153e7.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.4.2-alpha-ec153e7.0.tgz#79d6e11bf1eb5cbb8f60fc00cb96c68bb3551b7b"
-  integrity sha512-WLq7rxR3GBa4eqo+8iATAYp0Ll5lsX+KZWadI+T7voziakW5vrqyzJzRlwapRs1nrBj+wfEX7lWBJzg7qzJy0Q==
+"@theguild/components@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.4.1.tgz#cf8210febd6fa5fc353d449ec74567e79c3b1ef4"
+  integrity sha512-qPcOv/MxlqDan1wLwY9gKhGJb9EWqd9rdRXZtH4X4agbB+7uYm3K5xomWOONA/SivtDzouVXlFhL0xfW+Di68Q==
   dependencies:
     "@emotion/react" "^11.4.0"
     "@emotion/styled" "^11.3.0"
@@ -14614,6 +14614,13 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+the-guild-components@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/the-guild-components/-/the-guild-components-1.4.1.tgz#9104cd11eba2ce2ab37292eab9eabee9e63fe749"
+  integrity sha512-Yhib4mreTCwW7DnzQqyQeGsOZ/2QbQuvPcpd1W65M3ZkLfI2C9BIThSs0mUHfOhbEDZ65TFmzaCYRTZ6im8RrA==
+  dependencies:
+    "@theguild/components" "1.4.1"
 
 throat@^6.0.1:
   version "6.0.1"

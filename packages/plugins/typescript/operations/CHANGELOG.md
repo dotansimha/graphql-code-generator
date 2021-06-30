@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 1.18.3
+
+### Patch Changes
+
+- 6762aff5: Fix for array types with @skip @include directives
+- Updated dependencies [6762aff5]
+  - @graphql-codegen/visitor-plugin-common@1.21.3
+  - @graphql-codegen/typescript@1.22.4
+
 ## 1.18.2
 
 ### Patch Changes
