@@ -71,7 +71,7 @@
     "react-monaco-editor": "0.43.0",
     "react-select": "4.3.1",
     "styled-components": "5.3.0",
-    "the-guild-components": "1.4.0"
+    "the-guild-components": "1.4.1"
   },
   "browserslist": {
     "production": [
