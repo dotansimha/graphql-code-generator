@@ -1,5 +1,12 @@
 # @graphql-codegen/urql-svelte-operations-store
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [6762aff5]
+  - @graphql-codegen/visitor-plugin-common@1.21.3
+
 ## 0.0.2
 
 ### Patch Changes

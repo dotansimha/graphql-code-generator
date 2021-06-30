@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.21.3
+
+### Patch Changes
+
+- 6762aff5: Fix for array types with @skip @include directives
+
 ## 1.21.2
 
 ### Patch Changes
