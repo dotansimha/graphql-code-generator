@@ -1,5 +1,5 @@
 import React from 'react';
-import useThemeContext from '@theme/hooks/useThemeContext';
+import { useThemeContext } from '@theguild/components';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import CodegenYamlSchema from '../../../static/config.schema.json';
 
@@ -21,10 +21,10 @@ if (ExecutionEnvironment.canUseDOM) {
           fileMatch: ['*'],
           schema: {
             id: 'http://codegen/schema.json',
-            ...CodegenYamlSchema
+            ...CodegenYamlSchema,
           },
-        }
-      ]
+        },
+      ],
     });
   }
 }
@@ -33,7 +33,7 @@ export const Editor = ({ value, lang, readOnly, onEdit }) => {
   if (typeof window === 'undefined') {
     return null;
   }
-  
+
   const { isDarkTheme } = useThemeContext();
   const options = {
     readOnly,

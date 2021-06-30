@@ -6,10 +6,10 @@ import { generate } from './generate';
 import { Loading } from '../ui/Loading';
 import classes from './styles.module.css';
 import Select from 'react-select';
-import useThemeContext from '@theme/hooks/useThemeContext';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ReactMarkdown from 'react-markdown';
 import LiveDemoEditors from './LiveDemoEditors';
+import { useThemeContext } from '@theguild/components';
 
 const groupedExamples = Object.keys(EXAMPLES).map(catName => {
   return {
