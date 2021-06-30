@@ -32,6 +32,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withMutationOptionsType: boolean;
   addDocBlocks: boolean;
   defaultBaseOptions: { [key: string]: string };
+  hooksSuffix: string;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -78,6 +79,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
         rawConfig.gqlImport,
         rawConfig.reactApolloVersion === 2 ? null : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}#gql`
       ),
+      hooksSuffix: getConfigValue(rawConfig.hooksSuffix, ''),
     });
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -389,15 +391,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   private _getHookSuffix(name: string, operationType: string) {
     if (this.config.omitOperationSuffix) {
-      return '';
+      return this.config.hooksSuffix;
     }
     if (!this.config.dedupeOperationSuffix) {
-      return pascalCase(operationType);
+      return pascalCase(operationType) + this.config.hooksSuffix;
     }
     if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
-      return '';
+      return this.config.hooksSuffix;
     }
-    return pascalCase(operationType);
+    return pascalCase(operationType) + this.config.hooksSuffix;
   }
 
   private _buildResultType(

@@ -393,6 +393,29 @@ describe('React Apollo', () => {
       // String matching `useUserQuery` but not `useUserQueryType`.
       expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQuery)(?!.useUserQueryType)(.+)/));
     });
+
+    it('#6001 - Should use TypesSuffix on function names if hooksSuffix provided', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query user {
+              user(id: 1) {
+                id
+                username
+                email
+              }
+            }
+          `),
+        },
+      ];
+
+      const content = await plugin(schema, docs, { typesSuffix: 'Type', hooksSuffix: 'Hook' });
+
+      expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
+      // String matching `useUserQuery` but not `useUserQueryType`.
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQueryHook)(?!.useUserQueryType)(.+)/));
+    });
   });
 
   describe('Imports', () => {
