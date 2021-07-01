@@ -640,7 +640,7 @@ describe('near-operation-file preset', () => {
         {
           location: './test.graphql',
           document: parse(/* GraphQL */ `
-            query($id: String) {
+            query ($id: String) {
               user(id: $id) {
                 ...UserFields
               }
@@ -931,6 +931,87 @@ describe('near-operation-file preset', () => {
 
     expect(getFragmentImportsFromResult(result)).toContain(
       `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated';`
+    );
+  });
+
+  it('Should import relevamt fragment on dedupeFragments', async () => {
+    const testSchema = parse(/* GraphQL */ `
+      schema {
+        query: Query
+      }
+
+      type Query {
+        animals: [Animal!]!
+      }
+
+      type Group {
+        id: ID!
+        name: String!
+      }
+      type Animal {
+        id: ID!
+        name: String!
+        group: Group
+      }
+    `);
+
+    const operations = [
+      {
+        location: '/operations/document.graphql',
+        document: parse(/* GraphQL */ `
+          #import "./fragments/MyAnimalFragment.graphql"
+
+          query Test {
+            animals {
+              ...MyAnimalFragment
+            }
+          }
+        `),
+      },
+      {
+        location: '/operations/fragments/MyAnimalFragment.graphql',
+        document: parse(/* GraphQL */ `
+          #import "./fragments/MyGroupFragment.graphql"
+
+          fragment MyAnimalFragment on Animal {
+            name
+            group {
+              ...MyGroupFragment
+            }
+          }
+        `),
+      },
+      {
+        location: '/operations/fragments/MyGroupFragment.graphql',
+        document: parse(/* GraphQL */ `
+          fragment MyGroupFragment on Group {
+            id
+            name
+          }
+        `),
+      },
+    ];
+
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        skipTypename: true,
+        dedupeFragments: true,
+        exportFragmentSpreadSubTypes: true,
+      },
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: '../types',
+      },
+      schema: testSchema,
+      schemaAst: buildASTSchema(testSchema),
+      documents: operations,
+      plugins: [{ typescript: {} }, { 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { typescript: {} as any, 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result)).toContain(
+      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment';`
     );
   });
 });
