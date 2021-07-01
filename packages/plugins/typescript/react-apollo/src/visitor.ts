@@ -341,11 +341,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ): string {
     const nodeName = node.name?.value ?? '';
     const suffix = this._getHookSuffix(nodeName, operationType);
-    const operationName: string = this.convertName(nodeName, {
-      suffix,
-      useTypesPrefix: false,
-      useTypesSuffix: false,
-    });
+    const operationName: string =
+      this.convertName(nodeName, {
+        suffix,
+        useTypesPrefix: false,
+        useTypesSuffix: false,
+      }) + this.config.hooksSuffix;
 
     this.imports.add(this.getApolloReactCommonImport(true));
     this.imports.add(this.getApolloReactHooksImport(false));
@@ -391,15 +392,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   private _getHookSuffix(name: string, operationType: string) {
     if (this.config.omitOperationSuffix) {
-      return this.config.hooksSuffix;
+      return '';
     }
     if (!this.config.dedupeOperationSuffix) {
-      return pascalCase(operationType) + this.config.hooksSuffix;
+      return pascalCase(operationType);
     }
     if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
-      return this.config.hooksSuffix;
+      return '';
     }
-    return pascalCase(operationType) + this.config.hooksSuffix;
+    return pascalCase(operationType);
   }
 
   private _buildResultType(
@@ -458,10 +459,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     }
 
     const nodeName = node.name?.value ?? '';
-    const operationName: string = this.convertName(nodeName, {
-      suffix: this._getHookSuffix(nodeName, operationType),
-      useTypesPrefix: false,
-    });
+    const operationName: string =
+      this.convertName(nodeName, {
+        suffix: this._getHookSuffix(nodeName, operationType),
+        useTypesPrefix: false,
+      }) + this.config.hooksSuffix;
 
     return `export function refetch${operationName}(variables?: ${operationVariablesTypes}) {
       return { query: ${this.getDocumentNodeVariable(node, documentVariableName)}, variables: variables }

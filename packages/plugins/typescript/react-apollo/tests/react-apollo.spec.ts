@@ -394,7 +394,7 @@ describe('React Apollo', () => {
       expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQuery)(?!.useUserQueryType)(.+)/));
     });
 
-    it('#6001 - Should use TypesSuffix on function names if hooksSuffix provided', async () => {
+    it('#6212 - Should use TypesSuffix on function names if hooksSuffix provided', async () => {
       const docs = [
         {
           location: '',
@@ -410,11 +410,11 @@ describe('React Apollo', () => {
         },
       ];
 
-      const content = await plugin(schema, docs, { typesSuffix: 'Type', hooksSuffix: 'Hook' });
+      const content = await plugin(schema, docs, { typesSuffix: 'Type', hooksSuffix: 'HookXYZ' });
 
       expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
       // String matching `useUserQuery` but not `useUserQueryType`.
-      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQueryHook)(?!.useUserQueryType)(.+)/));
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQueryHookXYZ)(?!.useUserQueryType)(.+)/));
     });
   });
 
