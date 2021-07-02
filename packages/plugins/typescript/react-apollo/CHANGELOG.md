@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 2.3.0
+
+### Minor Changes
+
+- 0538923f: feat(react-apollo): add hooksSuffix option
+
 ## 2.2.8
 
 ### Patch Changes
