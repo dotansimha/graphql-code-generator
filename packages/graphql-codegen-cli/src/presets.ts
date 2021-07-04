@@ -18,12 +18,12 @@ export async function getPresetByName(
 
       return loaded as Types.OutputPreset;
     } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND' || !err.message.includes(moduleName)) {
+      if (err.code !== 'MODULE_NOT_FOUND') {
         throw new DetailedError(
           `Unable to load preset matching ${name}`,
           `
               Unable to load preset matching '${name}'.
-              Reason: 
+              Reason:
                 ${err.message}
             `
         );
@@ -44,7 +44,7 @@ export async function getPresetByName(
     `
         Unable to find preset matching '${name}'
         Install one of the following packages:
-        
+
         ${possibleNamesMsg}
       `
   );
