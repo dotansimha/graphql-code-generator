@@ -50,7 +50,7 @@ export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
 };
 
 export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
+  selectionSet?: string;
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
 export type StitchingResolver<TResult, TParent, TContext, TArgs> =
