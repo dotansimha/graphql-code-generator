@@ -2908,6 +2908,29 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('allowEnumStringTypes', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+        type Query {
+          a: MyEnum
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { allowEnumStringTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      validateTs(result);
+
+      expect(result.content).toBeSimilarStringTo('a?: Maybe<MyEnum | `${MyEnum}`>;');
+    });
   });
 
   it('should not have [object Object]', async () => {
