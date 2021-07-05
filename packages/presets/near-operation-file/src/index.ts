@@ -4,7 +4,12 @@ import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
 import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
-import { FragmentImport, ImportDeclaration, ImportSource } from '@graphql-codegen/visitor-plugin-common';
+import {
+  FragmentImport,
+  getConfigValue,
+  ImportDeclaration,
+  ImportSource,
+} from '@graphql-codegen/visitor-plugin-common';
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
@@ -152,19 +157,24 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
-    const sources = resolveDocumentImports(options, schemaObject, {
-      baseDir,
-      generateFilePath(location: string) {
-        const newFilePath = defineFilepathSubfolder(location, folder);
+    const sources = resolveDocumentImports(
+      options,
+      schemaObject,
+      {
+        baseDir,
+        generateFilePath(location: string) {
+          const newFilePath = defineFilepathSubfolder(location, folder);
 
-        return appendExtensionToFilePath(newFilePath, extension);
+          return appendExtensionToFilePath(newFilePath, extension);
+        },
+        schemaTypesSource: {
+          path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
+          namespace: importTypesNamespace,
+        },
+        typesImport: options.config.useTypeImports ?? false,
       },
-      schemaTypesSource: {
-        path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
-        namespace: importTypesNamespace,
-      },
-      typesImport: options.config.useTypeImports ?? false,
-    });
+      getConfigValue(options.config.dedupeFragments, false)
+    );
 
     return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
       let fragmentImportsArr = fragmentImports;

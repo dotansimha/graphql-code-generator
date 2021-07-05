@@ -128,14 +128,15 @@ function buildFragmentRegistry(
 export default function buildFragmentResolver<T>(
   collectorOptions: DocumentImportResolverOptions,
   presetOptions: Types.PresetFnArgs<T>,
-  schemaObject: GraphQLSchema
+  schemaObject: GraphQLSchema,
+  dedupeFragments = false
 ) {
   const fragmentRegistry = buildFragmentRegistry(collectorOptions, presetOptions, schemaObject);
   const { baseOutputDir } = presetOptions;
   const { baseDir, typesImport } = collectorOptions;
 
   function resolveFragments(generatedFilePath: string, documentFileContent: DocumentNode) {
-    const fragmentsInUse = extractExternalFragmentsInUse(documentFileContent, fragmentRegistry);
+    const fragmentsInUse = extractExternalFragmentsInUse(documentFileContent, fragmentRegistry, dedupeFragments);
 
     const externalFragments: LoadedFragment<{ level: number }>[] = [];
     // fragment files to import names
