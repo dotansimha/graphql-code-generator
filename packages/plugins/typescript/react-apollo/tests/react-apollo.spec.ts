@@ -66,6 +66,46 @@ describe('React Apollo', () => {
     return merged;
   };
 
+  describe('Apollo Client Sdk generation', () => {
+    it('should generate output correctly', async () => {
+      const documents = parse(/* GraphQL */ `
+        query Feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+
+        mutation SubmitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          withSdk: true,
+          withHOC: false,
+          withHooks: false,
+          addDocBlocks: false,
+          withMutationFn: false,
+        },
+        { outputFile: 'graphql.tsx' }
+      )) as Types.ComplexPluginOutput;
+      expect(content).toMatchSnapshot();
+    });
+  });
+
   describe('Apollo Client v2 Backward Compatible', () => {
     it('Should generate output correctly and backward compatible output', async () => {
       const documents = parse(/* GraphQL */ `

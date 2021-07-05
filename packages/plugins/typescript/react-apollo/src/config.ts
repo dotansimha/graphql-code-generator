@@ -91,6 +91,25 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * ```
    */
   withRefetchFn?: boolean;
+
+  /**
+   * @description Customize the output by enabling/disabling the generated Sdk.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withSdk: true
+   * ```
+   */
+  withSdk?: boolean;
+
   /**
    * @description Customize the package where apollo-react common lib is loaded from.
    * @default "@apollo/react-common"

@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React Apollo Apollo Client Sdk generation should generate output correctly 1`] = `
+Object {
+  "content": "
+export const FeedDocument = gql\`
+    query Feed {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
+export const SubmitRepositoryDocument = gql\`
+    mutation SubmitRepository($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export const getSdk = (client: ApolloClient<any>) => {
+      FeedQuery(variables?: FeedQueryVariables) {
+          return client.query<FeedQuery>({variables, query: FeedDocument)
+      },
+SubmitRepositoryMutation(variables?: SubmitRepositoryMutationVariables) {
+          return client.query<SubmitRepositoryMutation>({variables, query: SubmitRepositoryDocument)
+      }
+    };",
+  "prepend": Array [
+    "import { gql } from '@apollo/client';",
+    "import * as Apollo from '@apollo/client';",
+  ],
+}
+`;
+
 exports[`React Apollo Issues Issue #2742 - Incorrect import prefix 1`] = `
 "export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

@@ -22,6 +22,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHooks: boolean;
   withMutationFn: boolean;
   withRefetchFn: boolean;
+  withSdk: boolean;
   apolloReactCommonImportFrom: string;
   apolloReactComponentsImportFrom: string;
   apolloReactHocImportFrom: string;
@@ -38,6 +39,13 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
   private _externalImportPrefix: string;
   private imports = new Set<string>();
+  private _operationsToInclude: {
+    node: OperationDefinitionNode;
+    documentVariableName: string;
+    operationType: string;
+    operationResultType: string;
+    operationVariablesTypes: string;
+  }[] = [];
 
   constructor(
     schema: GraphQLSchema,
@@ -52,6 +60,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withHooks: getConfigValue(rawConfig.withHooks, true),
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
       withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),
+      withSdk: getConfigValue(rawConfig.withSdk, false),
       apolloReactCommonImportFrom: getConfigValue(
         rawConfig.apolloReactCommonImportFrom,
         rawConfig.reactApolloVersion === 2 ? '@apollo/react-common' : APOLLO_CLIENT_3_UNIFIED_PACKAGE
@@ -478,6 +487,13 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
+    this._operationsToInclude.push({
+      node,
+      documentVariableName,
+      operationType,
+      operationResultType,
+      operationVariablesTypes,
+    });
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
 
@@ -512,5 +528,26 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       : null;
 
     return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType, refetchFn].filter(a => a).join('\n');
+  }
+
+  public get sdkContent(): string {
+    const sdkOperations = this._operationsToInclude.map(x => {
+      const optionalVariables =
+        !x.node.variableDefinitions ||
+        x.node.variableDefinitions.length === 0 ||
+        x.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
+
+      const documentVariableName = this.getDocumentNodeVariable(x.node, x.documentVariableName);
+
+      const operationName = x.node.name.value;
+      return `${operationName}${x.operationType}(variables${optionalVariables ? '?' : ''}: ${
+        x.operationVariablesTypes
+      }) {
+          return client.query<${x.operationResultType}>({variables, query: ${documentVariableName})
+      }`;
+    });
+    return `export const getSdk = (client: ApolloClient<any>) => {
+      ${sdkOperations.join(',\n')}
+    };`;
   }
 }
