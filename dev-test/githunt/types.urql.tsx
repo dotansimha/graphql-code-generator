@@ -2,6 +2,7 @@ import {
   Resolver as GraphCacheResolver,
   UpdateResolver as GraphCacheUpdateResolver,
   OptimisticMutationResolver as GraphCacheOptimisticMutationResolver,
+  StorageAdapter as GraphCacheStorageAdapter,
 } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
 import gql from 'graphql-tag';
@@ -1070,4 +1071,5 @@ export type GraphCacheConfig = {
   keys?: GraphCacheKeysConfig;
   optimistic?: GraphCacheOptimisticUpdaters;
   resolvers?: GraphCacheResolvers;
+  storage?: GraphCacheStorageAdapter;
 };

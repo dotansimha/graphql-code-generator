@@ -238,7 +238,8 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
         '  updates?: GraphCacheUpdaters,\n' +
         '  keys?: GraphCacheKeysConfig,\n' +
         '  optimistic?: GraphCacheOptimisticUpdaters,\n' +
-        '  resolvers?: GraphCacheResolvers\n' +
+        '  resolvers?: GraphCacheResolvers,\n' +
+        '  storage?: GraphCacheStorageAdapter\n' +
         '};',
     ]
       .filter(Boolean)
