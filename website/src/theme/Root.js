@@ -1,11 +1,12 @@
 import React from 'react';
-import { ThemeProvider, Header } from '@theguild/components';
+import { ThemeProvider, Header, FooterExtended } from '@theguild/components';
 
 function Root({ children }) {
   return (
     <ThemeProvider>
       <Header themeSwitch activeLink={'/open-source'} accentColor="var(--ifm-color-primary)" />
       {children}
+      <FooterExtended />
     </ThemeProvider>
   );
 }
