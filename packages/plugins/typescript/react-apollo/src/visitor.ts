@@ -546,7 +546,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
           return client.query<${x.operationResultType}>({variables, query: ${documentVariableName})
       }`;
     });
-    return `export const getSdk = (client: ApolloClient<any>) => {
+    return `export const getSdk = (client: Apollo.ApolloClient<any>) => {
       ${sdkOperations.join(',\n')}
     };`;
   }

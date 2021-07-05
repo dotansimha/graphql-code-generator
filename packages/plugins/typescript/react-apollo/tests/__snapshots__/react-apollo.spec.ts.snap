@@ -28,7 +28,7 @@ export const SubmitRepositoryDocument = gql\`
     \`;
 export type SubmitRepositoryMutationResult = Apollo.MutationResult<SubmitRepositoryMutation>;
 export type SubmitRepositoryMutationOptions = Apollo.BaseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export const getSdk = (client: ApolloClient<any>) => {
+export const getSdk = (client: Apollo.ApolloClient<any>) => {
       FeedQuery(variables?: FeedQueryVariables) {
           return client.query<FeedQuery>({variables, query: FeedDocument)
       },
