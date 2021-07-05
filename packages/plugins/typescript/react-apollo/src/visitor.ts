@@ -548,6 +548,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     });
     return `export const getSdk = (client: Apollo.ApolloClient<any>) => {
       ${sdkOperations.join(',\n')}
-    };`;
+    };
+    export const useSdk = () => {
+      const client = Apollo.useApolloClient();
+      return getSdk(client);
+    }`;
   }
 }

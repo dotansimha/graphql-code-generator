@@ -35,7 +35,11 @@ export const getSdk = (client: Apollo.ApolloClient<any>) => {
 SubmitRepositoryMutation(variables?: SubmitRepositoryMutationVariables) {
           return client.query<SubmitRepositoryMutation>({variables, query: SubmitRepositoryDocument)
       }
-    };",
+    };
+    export const useSdk = () => {
+      const client = Apollo.useApolloClient();
+      return getSdk(client);
+    }",
   "prepend": Array [
     "import { gql } from '@apollo/client';",
     "import * as Apollo from '@apollo/client';",
