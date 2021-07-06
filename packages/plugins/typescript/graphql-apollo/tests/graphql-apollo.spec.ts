@@ -69,7 +69,7 @@ describe('apollo-client', () => {
 
       const usage = `
 async function test() {
-  const Client = require('graphql-request').GraphQLClient;
+  const Client = require('@apollo/client').ApolloClient;
   const client = new Client('');
   const sdk = getSdk(client);
 
