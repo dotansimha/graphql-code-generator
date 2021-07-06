@@ -238,7 +238,8 @@ export function useGet_SomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
         }
 export type Get_SomethingQueryHookResult = ReturnType<typeof useGet_SomethingQuery>;
 export type Get_SomethingLazyQueryHookResult = ReturnType<typeof useGet_SomethingLazyQuery>;
-export type Get_SomethingQueryResult = Apollo.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;"
+export type Get_SomethingQueryResult = Apollo.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;
+"
 `;
 
 exports[`React Apollo Issues Issue #2826 - Incorrect prefix 1`] = `
@@ -432,7 +433,8 @@ export function useGet_SomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
         }
 export type Get_SomethingQueryHookResult = ReturnType<typeof useGet_SomethingQuery>;
 export type Get_SomethingLazyQueryHookResult = ReturnType<typeof useGet_SomethingLazyQuery>;
-export type Get_SomethingQueryResult = Apollo.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;"
+export type Get_SomethingQueryResult = Apollo.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;
+"
 `;
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 1`] = `
@@ -626,7 +628,8 @@ export function useGetSomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
         }
 export type GetSomethingQueryHookResult = ReturnType<typeof useGetSomethingQuery>;
 export type GetSomethingLazyQueryHookResult = ReturnType<typeof useGetSomethingLazyQuery>;
-export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
+export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;
+"
 `;
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 2`] = `
@@ -820,7 +823,8 @@ export function useGetSomethingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
         }
 export type GetSomethingQueryHookResult = ReturnType<typeof useGetSomethingQuery>;
 export type GetSomethingLazyQueryHookResult = ReturnType<typeof useGetSomethingLazyQuery>;
-export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
+export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;
+"
 `;
 
 exports[`React Apollo documentMode and importDocumentNodeExternallyFrom should generate definitions Document variable when documentMode is "documentNode" and nested fragments 1`] = `
@@ -828,5 +832,6 @@ exports[`React Apollo documentMode and importDocumentNodeExternallyFrom should g
 export const BFieldsFragmentDoc = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"}}]}}]} as unknown as DocumentNode;
 export const AFieldsFragmentDoc = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"bs\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"}}]}}]} as unknown as DocumentNode;
 export const TestDocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"Test\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"AFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"bs\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"BFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"cs\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"FragmentSpread\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"}}]}}]}},{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"CFields\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"greeting\\"}}]}}]} as unknown as DocumentNode;
-export type TestQueryResult = Apollo.QueryResult<TestQuery, TestQueryVariables>;"
+export type TestQueryResult = Apollo.QueryResult<TestQuery, TestQueryVariables>;
+"
 `;
