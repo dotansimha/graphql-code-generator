@@ -15,7 +15,7 @@
   "dependencies": {
     "@graphql-tools/optimize": "^1.0.1",
     "@graphql-codegen/plugin-helpers": "^1.18.8",
-    "@graphql-tools/relay-operation-optimizer": "^6.3.0",
+    "@graphql-tools/relay-operation-optimizer": "^6.3.2",
     "array.prototype.flatmap": "^1.2.4",
     "auto-bind": "~4.0.0",
     "dependency-graph": "^0.11.0",

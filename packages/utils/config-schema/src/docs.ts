@@ -21,7 +21,10 @@ export function generateDocs(schema: TJS.Definition, types: (PluginConfig | Pres
 :::shell Using \`yarn\`
     yarn add -D @graphql-codegen/${p.name}
 :::\n\n`;
-    content += `## API Reference\n\n${apiDocs}`;
+
+    if (apiDocs) {
+      content += `## API Reference\n\n${apiDocs}`;
+    }
 
     result[p.name] = content;
   }

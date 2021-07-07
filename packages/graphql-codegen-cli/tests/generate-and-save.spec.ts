@@ -145,9 +145,11 @@ describe('generate-and-save', () => {
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           [filename]: {
-            schema: `
-            type OtherType { a: String }
-          `,
+            schema: /* GraphQL */ `
+              type OtherType {
+                a: String
+              }
+            `,
             plugins: ['typescript'],
           },
         },

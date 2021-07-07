@@ -61,7 +61,8 @@ generates:
       - typescript
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
+    documents:
+      - ./dev-test/githunt/**/*.graphql
     plugins:
       - typescript-graphql-files-modules
   ./dev-test/githunt/typed-document-nodes.ts:
@@ -245,7 +246,10 @@ generates:
       - typescript-urql-graphcache
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
+    documents:
+      - ./dev-test/githunt/**/*.graphql
+      - ./dev-test/githunt-invalid/**/*.graphql
+      - '!./dev-test/githunt-invalid/**/*.graphql'
     preset: near-operation-file
     presetConfig:
       extension: .stencil-component.tsx
@@ -393,3 +397,7 @@ generates:
       gqlImport: graphql-tag
       hooksImportFrom: '@apollo/react-hooks'
       withMutationFn: false
+  ./dev-test/gql-tag-operations/gql:
+    schema: ./dev-test/gql-tag-operations/schema.graphql
+    documents: './dev-test/gql-tag-operations/src/**/*.ts'
+    preset: gql-tag-operations-preset
