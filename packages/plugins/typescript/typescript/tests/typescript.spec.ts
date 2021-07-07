@@ -1136,7 +1136,8 @@ describe('TypeScript', () => {
         }
         
         type MyType {
-          myEnum: MyEnum!
+          required: MyEnum!
+          optional: MyEnum
         }
       `);
       const result = (await plugin(
@@ -1156,7 +1157,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
           __typename?: 'MyType';
-          myEnum: MyEnum | '%future added value';
+          required: MyEnum | '%future added value';
+          optional?: Maybe<MyEnum | '%future added value'>
         }
       `);
       validateTs(result);
