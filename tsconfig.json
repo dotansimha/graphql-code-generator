@@ -43,6 +43,7 @@
       "@graphql-codegen/typescript-apollo-angular": ["packages/plugins/typescript/apollo-angular/src/index.ts"],
       "@graphql-codegen/typescript-compatibility": ["packages/plugins/typescript/compatibility/src/index.ts"],
       "@graphql-codegen/typescript-document-nodes": ["packages/plugins/typescript/document-nodes/src/index.ts"],
+      "@graphql-codegen/typescript-enum-array": ["packages/plugins/typescript/enum-array/src/index.ts"],
       "@graphql-codegen/typescript-generic-sdk": ["packages/plugins/typescript/generic-sdk/src/index.ts"],
       "@graphql-codegen/typescript-graphql-files-modules": [
         "packages/plugins/typescript/graphql-files-modules/src/index.ts"
