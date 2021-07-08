@@ -85,7 +85,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   /**
-   * traverse the inline fragment nodes recursively for colleting the selectionSets on each type
+   * traverse the inline fragment nodes recursively for collecting the selectionSets on each type
    */
   _collectInlineFragments(
     parentType: GraphQLNamedType,
