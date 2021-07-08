@@ -85,6 +85,8 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
     });
     return `export const getSdk = (client: ApolloClient<any>) => ({
       ${sdkOperations.join(',\n')}
-    });`;
+    });
+    export type SdkType = ReturnType<typeof getSdk>
+`;
   }
 }

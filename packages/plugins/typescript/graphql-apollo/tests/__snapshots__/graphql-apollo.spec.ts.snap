@@ -281,6 +281,8 @@ feed4Query(variables?: Feed4QueryVariables) {
           return client.query<Feed4Query>({variables, query: Feed4Document})
       }
     });
+    export type SdkType = ReturnType<typeof getSdk>
+
 async function test() {
   const Client = require('@apollo/client').ApolloClient;
   const client = new Client('');
@@ -581,6 +583,8 @@ feed4Query(variables?: Feed4QueryVariables) {
           return client.query<Feed4Query>({variables, query: Feed4Document})
       }
     });
+    export type SdkType = ReturnType<typeof getSdk>
+
 async function test() {
   const Client = require('@apollo/client').ApolloClient;
   const client = new Client('');
