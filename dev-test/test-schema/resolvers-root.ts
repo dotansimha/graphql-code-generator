@@ -55,7 +55,13 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
 };
 export type StitchingResolver<TResult, TParent, TContext, TArgs> =
   | LegacyStitchingResolver<TResult, TParent, TContext, TArgs>
-  | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
+  | NewStitchingResolver<TResult, TParent, TContext, TArgs>
+  | StitchingWithoutSelectionSetResolver<TResult, TParent, TContext, TArgs>;
+
+export type StitchingWithoutSelectionSetResolver<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+
 export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | StitchingResolver<TResult, TParent, TContext, TArgs>;
