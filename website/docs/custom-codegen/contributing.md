@@ -198,7 +198,7 @@ export type MyPluginConfig = {
 };
 ```
 
-Now, open `./website/generate-config.js` and add a record to the mapping in that filee, point the file with the configuration annotation, and the output file:
+Now, open `./website/generate-config.js` and add a record to the mapping in that file, point the file with the configuration annotation, and the output file:
 
 ```js
 const mapping = {

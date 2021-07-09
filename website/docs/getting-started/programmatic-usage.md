@@ -18,11 +18,14 @@ Then, create a configuration object ([complete signature](https://github.com/dot
 ```ts
 import { buildSchema, printSchema, parse, GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 
 const schema: GraphQLSchema = buildSchema(`type A { name: String }`);
 const outputFile = 'relative/pathTo/filename.ts';
 const config = {
+  documents: [],
+  config: {},
   // used by a plugin internally, although the 'typescript' plugin currently
   // returns the string output, rather than writing to a file
   filename: outputFile,
