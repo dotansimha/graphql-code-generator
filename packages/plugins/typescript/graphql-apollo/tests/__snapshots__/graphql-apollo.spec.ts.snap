@@ -311,10 +311,10 @@ export const getSdk = (client: ApolloClient<any>) => ({
       feedQuery(variables?: FeedQueryVariables) {
           return client.query<FeedQuery>({variables, query: FeedDocument})
       },
-ListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
+listenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
           return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
       },
-MutationOperationMutation(variables: MutationOperationMutationVariables) {
+mutationOperationMutation(variables: MutationOperationMutationVariables) {
           return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
       },
 feed2Query(variables: Feed2QueryVariables) {
@@ -659,10 +659,10 @@ export const getSdk = (client: ApolloClient<any>) => ({
       feedQuery(variables?: FeedQueryVariables) {
           return client.query<FeedQuery>({variables, query: FeedDocument})
       },
-ListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
+listenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
           return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
       },
-MutationOperationMutation(variables: MutationOperationMutationVariables) {
+mutationOperationMutation(variables: MutationOperationMutationVariables) {
           return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
       },
 feed2Query(variables: Feed2QueryVariables) {

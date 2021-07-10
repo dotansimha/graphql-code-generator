@@ -71,7 +71,7 @@ describe('GraphQL Request Integration', () => {
       cache: new InMemoryCache(),
       link: new HttpLink({ uri: 'http://localhost:4000/graphql', fetch }),
     });
-    const queryResult = await getSdk(apolloClient).AddQuery({ x: 2, y: 3 });
+    const queryResult = await getSdk(apolloClient).addQuery({ x: 2, y: 3 });
     expect(queryResult.data.add).toBe(5);
     mockServer.done();
     await remove(sdkFilePath);

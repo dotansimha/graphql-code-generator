@@ -4,6 +4,7 @@ import {
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
+import { camelCase } from 'change-case-all';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
 import { RawGraphQLApolloPluginConfig } from './config';
 
@@ -77,7 +78,7 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
       const documentVariableName = x.documentVariableName;
 
       const operationName = x.node.name.value;
-      return `${operationName}${x.operationType}(variables${optionalVariables ? '?' : ''}: ${
+      return `${camelCase(operationName)}${x.operationType}(variables${optionalVariables ? '?' : ''}: ${
         x.operationVariablesTypes
       }) {
           return client.${GraphQLApolloVisitor.getApolloOperation(x.operationType)}<${
@@ -100,7 +101,7 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
       case 'Query':
         return 'query';
       default:
-        throw new Error('unknown type: ' + operationType);
+        throw new Error('unknown operation type: ' + operationType);
     }
   }
 }
