@@ -40,3 +40,4 @@ export const getSdk = (client: ApolloClient<any>) => ({
     return client.query<AddQuery>({ variables, query: AddDocument });
   },
 });
+export type SdkType = ReturnType<typeof getSdk>;

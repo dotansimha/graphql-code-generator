@@ -21,6 +21,18 @@ describe('apollo-client', () => {
       }
     }
 
+    subscription ListenToComments($name: String) {
+      commentAdded(repoFullName: $name) {
+        id
+      }
+    }
+
+    mutation MutationOperation($comment: Comment!) {
+      submitComment(Comment: $comment) {
+        id
+      }
+    }
+
     query feed2($v: String!) {
       feed {
         id

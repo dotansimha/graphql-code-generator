@@ -80,7 +80,9 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
       return `${operationName}${x.operationType}(variables${optionalVariables ? '?' : ''}: ${
         x.operationVariablesTypes
       }) {
-          return client.query<${x.operationResultType}>({variables, query: ${documentVariableName}})
+          return client.${GraphQLApolloVisitor.getApolloOperation(x.operationType)}<${
+        x.operationResultType
+      }>({variables, query: ${documentVariableName}})
       }`;
     });
     return `export const getSdk = (client: ApolloClient<any>) => ({
@@ -88,5 +90,17 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
     });
     export type SdkType = ReturnType<typeof getSdk>
 `;
+  }
+  private static getApolloOperation(operationType: string): string {
+    switch (operationType) {
+      case 'Subscription':
+        return 'subscribe';
+      case 'Mutation':
+        return 'mutate';
+      case 'Query':
+        return 'query';
+      default:
+        throw new Error('unknown type: ' + operationType);
+    }
   }
 }

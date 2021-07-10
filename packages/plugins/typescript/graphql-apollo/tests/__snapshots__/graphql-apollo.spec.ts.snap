@@ -194,6 +194,32 @@ export type FeedQuery = (
   )>>> }
 );
 
+export type ListenToCommentsSubscriptionVariables = Exact<{
+  name?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ListenToCommentsSubscription = (
+  { __typename?: 'Subscription' }
+  & { commentAdded?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  )> }
+);
+
+export type MutationOperationMutationVariables = Exact<{
+  comment: Comment;
+}>;
+
+
+export type MutationOperationMutation = (
+  { __typename?: 'Mutation' }
+  & { submitComment?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  )> }
+);
+
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
@@ -246,6 +272,20 @@ export const FeedDocument = gql\`
   }
 }
     \`;
+export const ListenToCommentsDocument = gql\`
+    subscription ListenToComments($name: String) {
+  commentAdded(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const MutationOperationDocument = gql\`
+    mutation MutationOperation($comment: Comment!) {
+  submitComment(Comment: $comment) {
+    id
+  }
+}
+    \`;
 export const Feed2Document = gql\`
     query feed2($v: String!) {
   feed {
@@ -270,6 +310,12 @@ export const Feed4Document = gql\`
 export const getSdk = (client: ApolloClient<any>) => ({
       feedQuery(variables?: FeedQueryVariables) {
           return client.query<FeedQuery>({variables, query: FeedDocument})
+      },
+ListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
+          return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
+      },
+MutationOperationMutation(variables: MutationOperationMutationVariables) {
+          return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
       },
 feed2Query(variables: Feed2QueryVariables) {
           return client.query<Feed2Query>({variables, query: Feed2Document})
@@ -496,6 +542,32 @@ export type FeedQuery = (
   )>>> }
 );
 
+export type ListenToCommentsSubscriptionVariables = Exact<{
+  name?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ListenToCommentsSubscription = (
+  { __typename?: 'Subscription' }
+  & { commentAdded?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  )> }
+);
+
+export type MutationOperationMutationVariables = Exact<{
+  comment: Comment;
+}>;
+
+
+export type MutationOperationMutation = (
+  { __typename?: 'Mutation' }
+  & { submitComment?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  )> }
+);
+
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
@@ -548,6 +620,20 @@ export const FeedDocument = gql\`
   }
 }
     \`;
+export const ListenToCommentsDocument = gql\`
+    subscription ListenToComments($name: String) {
+  commentAdded(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const MutationOperationDocument = gql\`
+    mutation MutationOperation($comment: Comment!) {
+  submitComment(Comment: $comment) {
+    id
+  }
+}
+    \`;
 export const Feed2Document = gql\`
     query feed2($v: String!) {
   feed {
@@ -572,6 +658,12 @@ export const Feed4Document = gql\`
 export const getSdk = (client: ApolloClient<any>) => ({
       feedQuery(variables?: FeedQueryVariables) {
           return client.query<FeedQuery>({variables, query: FeedDocument})
+      },
+ListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
+          return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
+      },
+MutationOperationMutation(variables: MutationOperationMutationVariables) {
+          return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
       },
 feed2Query(variables: Feed2QueryVariables) {
           return client.query<Feed2Query>({variables, query: Feed2Document})
