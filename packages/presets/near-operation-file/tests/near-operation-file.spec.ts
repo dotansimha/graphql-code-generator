@@ -934,7 +934,7 @@ describe('near-operation-file preset', () => {
     );
   });
 
-  it('Should import relevamt fragment on dedupeFragments', async () => {
+  it('Should import relevant fragments on dedupeFragments', async () => {
     const testSchema = parse(/* GraphQL */ `
       schema {
         query: Query
@@ -969,9 +969,17 @@ describe('near-operation-file preset', () => {
         `),
       },
       {
+        location: '/operations/fragments/AnotherGroupFragment.graphql',
+        document: parse(/* GraphQL */ `
+          fragment AnotherGroupFragment on Group {
+            id
+          }
+        `),
+      },
+      {
         location: '/operations/fragments/MyAnimalFragment.graphql',
         document: parse(/* GraphQL */ `
-          #import "./fragments/MyGroupFragment.graphql"
+          #import "./MyGroupFragment.graphql"
 
           fragment MyAnimalFragment on Animal {
             name
@@ -984,8 +992,10 @@ describe('near-operation-file preset', () => {
       {
         location: '/operations/fragments/MyGroupFragment.graphql',
         document: parse(/* GraphQL */ `
+          #import "./AnotherGroupFragment.graphql"
+
           fragment MyGroupFragment on Group {
-            id
+            ...AnotherGroupFragment
             name
           }
         `),
@@ -1012,6 +1022,10 @@ describe('near-operation-file preset', () => {
 
     expect(getFragmentImportsFromResult(result)).toContain(
       `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment';`
+    );
+
+    expect(getFragmentImportsFromResult(result)).toContain(
+      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment';`
     );
   });
 });
