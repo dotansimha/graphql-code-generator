@@ -49,7 +49,7 @@ export function extractExternalFragmentsInUse(
                 fragmentNameToFile,
                 dedupeFragments,
                 result,
-                level + (documentNode.kind === 'Document' && dedupeFragments ? 0 : 1)
+                dedupeFragments ? 0 : level + 1
               );
             }
           }
