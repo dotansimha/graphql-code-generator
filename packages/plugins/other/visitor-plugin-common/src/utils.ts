@@ -360,6 +360,7 @@ export function stripMapperTypeInterpolation(identifier: string): string {
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
 export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
+export const USE_EXTERNAL_MAPPERS_TYPE = `type UseExternalMapper<TDictinary extends Record<string, unknown>, TTypeName extends string, TFallback> = TTypeName extends keyof TDictinary ? TDictinary[TTypeName]: TFallback;`;
 
 export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): void {
   const newSelections = [...selectionSet1.selections];
@@ -398,9 +399,11 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
   return (node.alias || node.name).value;
 };
 
-export function separateSelectionSet(
-  selections: ReadonlyArray<SelectionNode>
-): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
+  fields: FieldNode[];
+  spreads: FragmentSpreadNode[];
+  inlines: InlineFragmentNode[];
+} {
   return {
     fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
     inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],

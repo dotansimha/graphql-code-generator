@@ -21,6 +21,7 @@ import {
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
   buildScalarsFromConfig,
+  USE_EXTERNAL_MAPPERS_TYPE,
 } from './utils';
 import {
   NameNode,
@@ -72,6 +73,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
+  externalMappersFrom: ParsedMapper | null;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -330,6 +332,12 @@ export interface RawResolversConfig extends RawConfig {
    * @description Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
    */
   onlyResolveTypeForInterfaces?: boolean;
+  /**
+   * @type string
+   * @description Uses TypeScript type inference for generting TypeScript mappers, using a single TS type. This is useful if you don't want to maintain `mappers` list in your YAML file.
+   * Note: This configuration flag applies only to `typescript-resolvers` plugin, and NOT for `flow-resolvers`.
+   */
+  externalMappersFrom?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -380,6 +388,7 @@ export class BaseResolversVisitor<
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
+      externalMappersFrom: rawConfig.externalMappersFrom ? parseMapper(rawConfig.externalMappersFrom) : null,
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
@@ -427,6 +436,10 @@ export class BaseResolversVisitor<
 
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
       return false;
+    }
+
+    if (this.config.externalMappersFrom && isObjectType(type)) {
+      return true;
     }
 
     if (this.config.mappers[type.name]) {
@@ -502,7 +515,7 @@ export class BaseResolversVisitor<
 
       let shouldApplyOmit = false;
       const isRootType = this._rootTypeNames.includes(typeName);
-      const isMapped = this.config.mappers[typeName];
+      const isMappedDirectly = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
 
@@ -510,7 +523,7 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
-      } else if (isMapped && this.config.mappers[typeName].type) {
+      } else if (isMappedDirectly && this.config.mappers[typeName].type) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
@@ -544,6 +557,8 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
+      } else if (this.config.externalMappersFrom) {
+        prev[typeName] = applyWrapper(this.applyUseExternalMappers(typeName));
       } else {
         shouldApplyOmit = true;
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
@@ -588,11 +603,11 @@ export class BaseResolversVisitor<
         }
       }
 
-      if (isMapped && hasPlaceholder(prev[typeName])) {
+      if (isMappedDirectly && hasPlaceholder(prev[typeName])) {
         prev[typeName] = replacePlaceholder(prev[typeName], typeName);
       }
 
-      if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+      if (!isMappedDirectly && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
         // Make sure the inner type has no ResolverTypeWrapper
         const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
         const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
@@ -758,6 +773,14 @@ export class BaseResolversVisitor<
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
 
+    if (this.config.externalMappersFrom && this.config.externalMappersFrom.isExternal) {
+      addMapper(
+        this.config.externalMappersFrom.source,
+        this.config.externalMappersFrom.import,
+        this.config.externalMappersFrom.default
+      );
+    }
+
     Object.values(this._fieldContextTypeMap).forEach(parsedMapper => {
       if (parsedMapper.isExternal) {
         addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
@@ -868,7 +891,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ListType(node: ListTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return this.wrapWithArray(asString);
   }
@@ -878,7 +901,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   NamedType(node: NamedTypeNode): string {
-    const nameStr = (node.name as any) as string;
+    const nameStr = node.name as any as string;
 
     if (this.config.scalars[nameStr]) {
       return this._getScalar(nameStr);
@@ -888,7 +911,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   NonNullType(node: NonNullTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return asString;
   }
@@ -1007,6 +1030,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     };
   }
 
+  protected applyUseExternalMappers(typeName: string): string {
+    this._globalDeclarations.add(USE_EXTERNAL_MAPPERS_TYPE);
+
+    return `UseExternalMapper<${this.config.externalMappersFrom.type}, '${typeName}', ${typeName}>`;
+  }
+
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
     return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
@@ -1022,7 +1051,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
-    const typeName = (node.name as any) as string;
+    const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
     const isRootType = [
       this.schema.getQueryType()?.name,
@@ -1065,7 +1094,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .join(' | ');
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';
-    const parentType = this.getParentTypeToUse((node.name as any) as string);
+    const parentType = this.getParentTypeToUse(node.name as any as string);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1081,7 +1110,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    const nameAsString = (node.name as any) as string;
+    const nameAsString = node.name as any as string;
     const baseName = this.getTypeToUse(nameAsString);
 
     if (this._federation.skipScalar(nameAsString)) {
@@ -1206,13 +1235,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
         const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+        if (allInterfaces.find(int => int.name === (node.name as any as string))) {
           implementingTypes.push(graphqlType.name);
         }
       }
     }
 
-    const parentType = this.getParentTypeToUse((node.name as any) as string);
+    const parentType = this.getParentTypeToUse(node.name as any as string);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
     const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 

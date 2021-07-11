@@ -76,6 +76,34 @@ generates:
       - typescript-resolvers
 ```
 
+If you wish to leverage TypeScript type-system and TypeScript type-inference (and you are using TS > 4), you can use `externalMappersFrom` config flag for defining your GraphQL resolvers mappers in a TypeScript file, instead in the codegen YAML config file.
+
+You can point to an external TS `type` identifier as a general mapper:
+
+```yaml
+schema: schema.graphql
+generates:
+  ./resolvers-types.ts:
+    config:
+      externalMappersFrom: "./my-mappers#TypeMapping"
+    plugins:
+      - typescript
+      - typescript-resolvers
+```
+
+And then in `my-mappers.ts` file, export an identifier called `TypeMapping` with a custom type mapping:
+
+```ts
+import { UserModel, UserProfile } from "./models";
+
+export type TypeMapping = {
+  User: UserModel,
+  Profile: UserProfile,
+}
+```
+
+Now, the generated TypeScript code will check if `TypeMapping` has a key with the GraphQL type name, and if so, it will use the type specified instead of the default type.
+
 ## Enum Resolvers
 
 [Apollo-Server](https://www.apollographql.com/docs/apollo-server/) and schemas built with [`graphql-tools`](https://www.graphql-tools.com/) supports creating resolvers for GraphQL `enum`s. 

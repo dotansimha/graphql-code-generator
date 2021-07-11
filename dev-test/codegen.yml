@@ -29,6 +29,13 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/typings-external-mappers.ts:
+    schema: ./dev-test/test-schema/schema.json
+    config:
+      externalMappersFrom: './external-mappers#Mappers'
+    plugins:
+      - typescript
+      - typescript-resolvers
   ./dev-test/test-schema/typings.avoidOptionals.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
