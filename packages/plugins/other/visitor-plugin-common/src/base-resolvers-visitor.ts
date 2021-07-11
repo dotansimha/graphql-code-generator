@@ -577,7 +577,11 @@ export class BaseResolversVisitor<
             const baseType = getBaseType(field.type);
             const isUnion = isUnionType(baseType);
 
-            if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
+            if (
+              (!this.config.mappers[baseType.name] || !this.config.externalMappersFrom) &&
+              !isUnion &&
+              !nestedMapping[baseType.name]
+            ) {
               return null;
             }
 
