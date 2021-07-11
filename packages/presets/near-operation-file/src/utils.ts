@@ -17,7 +17,6 @@ export function appendExtensionToFilePath(baseFilePath: string, extension: strin
 export function extractExternalFragmentsInUse(
   documentNode: DocumentNode | FragmentDefinitionNode,
   fragmentNameToFile: FragmentRegistry,
-  dedupeFragments = false,
   result: { [fragmentName: string]: number } = {},
   level = 0
 ): { [fragmentName: string]: number } {
@@ -47,9 +46,8 @@ export function extractExternalFragmentsInUse(
               extractExternalFragmentsInUse(
                 fragmentNameToFile[node.name.value].node,
                 fragmentNameToFile,
-                dedupeFragments,
                 result,
-                dedupeFragments ? 0 : level + 1
+                level + 1
               );
             }
           }
