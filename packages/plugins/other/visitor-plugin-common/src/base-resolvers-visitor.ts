@@ -438,7 +438,7 @@ export class BaseResolversVisitor<
       return false;
     }
 
-    if (this.config.externalMappersFrom && isObjectType(type)) {
+    if (this.config.externalMappersFrom && (isObjectType(type) || isInterfaceType(type))) {
       return true;
     }
 
@@ -578,7 +578,8 @@ export class BaseResolversVisitor<
             const isUnion = isUnionType(baseType);
 
             if (
-              (!this.config.mappers[baseType.name] || !this.config.externalMappersFrom) &&
+              !this.config.externalMappersFrom &&
+              !this.config.mappers[baseType.name] &&
               !isUnion &&
               !nestedMapping[baseType.name]
             ) {
