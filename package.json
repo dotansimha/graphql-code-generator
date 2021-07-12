@@ -56,7 +56,7 @@
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
     "@vue/apollo-composable": "4.0.0-alpha.13",
-    "@vue/composition-api": "1.0.0-rc.13",
+    "@vue/composition-api": "1.0.0-rc.14",
     "apollo-client": "2.6.10",
     "apollo-server": "2.25.2",
     "auto-bind": "4.0.0",
