@@ -565,7 +565,6 @@ export class BaseResolversVisitor<
           .map(type => getTypeToUse(type.name))
           .join(' | ');
       } else if (this.config.externalMappersFrom) {
-        shouldApplyOmit = true;
         prev[typeName] = applyWrapper(this.applyUseExternalMappers(typeName));
       } else {
         shouldApplyOmit = true;
