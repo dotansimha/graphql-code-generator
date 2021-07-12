@@ -443,7 +443,7 @@ export class BaseResolversVisitor<
     // In case we are using external mappers that are inferred using TypeScript, we don't want to map them manually
     // And we can safely assume that using `UseExtermalMapper` will return the correct type, so the fallback is done there
     // instead of during during code-generation
-    if (this.config.externalMappersFrom) {
+    if (this.config.externalMappersFrom && (isObjectType(type) || isInterfaceType(type))) {
       return true;
     }
 
@@ -564,7 +564,7 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
-      } else if (this.config.externalMappersFrom) {
+      } else if (this.config.externalMappersFrom && nestedMapping[typeName]) {
         prev[typeName] = this.applyUseExternalMappers(typeName);
         shouldApplyOmit = true;
       } else {

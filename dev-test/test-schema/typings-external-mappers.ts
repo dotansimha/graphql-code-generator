@@ -9,6 +9,7 @@ type UseExternalMapper<
   TTypeName extends string,
   TFallback
 > = TTypeName extends keyof TDictinary ? TDictinary[TTypeName] : TFallback;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
   { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -143,9 +144,14 @@ export type ResolversTypes = {
   Profile: ResolverTypeWrapper<UseExternalMapper<Mappers, 'Profile', Profile>>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
-  QueryRoot: ResolverTypeWrapper<UseExternalMapper<Mappers, 'QueryRoot', QueryRoot>>;
+  QueryRoot: ResolverTypeWrapper<
+    Omit<QueryRoot, 'allUsers' | 'userById'> & {
+      allUsers: Array<Maybe<ResolversTypes['User']>>;
+      userById?: Maybe<ResolversTypes['User']>;
+    }
+  >;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<UseExternalMapper<Mappers, 'User', User>>;
+  User: ResolverTypeWrapper<Omit<User, 'profile'> & { profile: ResolversTypes['Profile'] }>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -155,9 +161,12 @@ export type ResolversParentTypes = {
   Profile: UseExternalMapper<Mappers, 'Profile', Profile>;
   Int: Scalars['Int'];
   Query: {};
-  QueryRoot: UseExternalMapper<Mappers, 'QueryRoot', QueryRoot>;
+  QueryRoot: Omit<QueryRoot, 'allUsers' | 'userById'> & {
+    allUsers: Array<Maybe<ResolversParentTypes['User']>>;
+    userById?: Maybe<ResolversParentTypes['User']>;
+  };
   SubscriptionRoot: {};
-  User: UseExternalMapper<Mappers, 'User', User>;
+  User: Omit<User, 'profile'> & { profile: ResolversParentTypes['Profile'] };
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
 };
