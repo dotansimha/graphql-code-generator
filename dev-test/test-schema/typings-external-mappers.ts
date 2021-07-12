@@ -146,12 +146,14 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   QueryRoot: ResolverTypeWrapper<
     Omit<QueryRoot, 'allUsers' | 'userById'> & {
-      allUsers: Array<Maybe<ResolversTypes['User']>>;
-      userById?: Maybe<ResolversTypes['User']>;
+      allUsers: Array<Maybe<UseExternalMapper<Mappers, 'User', ResolversTypes['User']>>>;
+      userById?: Maybe<UseExternalMapper<Mappers, 'User', ResolversTypes['User']>>;
     }
   >;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<Omit<User, 'profile'> & { profile: ResolversTypes['Profile'] }>;
+  User: ResolverTypeWrapper<
+    Omit<User, 'profile'> & { profile: UseExternalMapper<Mappers, 'Profile', ResolversTypes['Profile']> }
+  >;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -162,11 +164,11 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   Query: {};
   QueryRoot: Omit<QueryRoot, 'allUsers' | 'userById'> & {
-    allUsers: Array<Maybe<ResolversParentTypes['User']>>;
-    userById?: Maybe<ResolversParentTypes['User']>;
+    allUsers: Array<Maybe<UseExternalMapper<Mappers, 'User', ResolversParentTypes['User']>>>;
+    userById?: Maybe<UseExternalMapper<Mappers, 'User', ResolversParentTypes['User']>>;
   };
   SubscriptionRoot: {};
-  User: Omit<User, 'profile'> & { profile: ResolversParentTypes['Profile'] };
+  User: Omit<User, 'profile'> & { profile: UseExternalMapper<Mappers, 'Profile', ResolversParentTypes['Profile']> };
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
 };

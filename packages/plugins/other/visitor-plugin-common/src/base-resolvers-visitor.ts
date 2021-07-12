@@ -594,10 +594,16 @@ export class BaseResolversVisitor<
             return {
               addOptionalSign,
               fieldName,
-              replaceWithType: wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type, {
-                wrapOptional: this.applyMaybe,
-                wrapArray: this.wrapWithArray,
-              }),
+              replaceWithType: wrapTypeWithModifiers(
+                nestedMapping[baseType.name] && this.config.externalMappersFrom
+                  ? this.applyUseExternalMappers(baseType.name, getTypeToUse(baseType.name))
+                  : getTypeToUse(baseType.name),
+                field.type,
+                {
+                  wrapOptional: this.applyMaybe,
+                  wrapArray: this.wrapWithArray,
+                }
+              ),
             };
           })
           .filter(a => a);
@@ -1045,10 +1051,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     };
   }
 
-  protected applyUseExternalMappers(typeName: string): string {
+  protected applyUseExternalMappers(typeName: string, fallbackType: string = typeName): string {
     this._globalDeclarations.add(USE_EXTERNAL_MAPPERS_TYPE);
 
-    return `UseExternalMapper<${this.config.externalMappersFrom.type}, '${typeName}', ${typeName}>`;
+    return `UseExternalMapper<${this.config.externalMappersFrom.type}, '${typeName}', ${fallbackType}>`;
   }
 
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
