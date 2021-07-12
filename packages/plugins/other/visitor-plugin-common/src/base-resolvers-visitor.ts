@@ -596,7 +596,9 @@ export class BaseResolversVisitor<
               fieldName,
               replaceWithType: wrapTypeWithModifiers(
                 nestedMapping[baseType.name] && this.config.externalMappersFrom
-                  ? this.applyUseExternalMappers(baseType.name, getTypeToUse(baseType.name))
+                  ? this.applyUseExternalMappers(
+                      this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true)
+                    )
                   : getTypeToUse(baseType.name),
                 field.type,
                 {
