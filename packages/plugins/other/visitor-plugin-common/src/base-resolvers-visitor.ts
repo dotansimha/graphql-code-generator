@@ -444,7 +444,7 @@ export class BaseResolversVisitor<
     // And we can safely assume that using `UseExtermalMapper` will return the correct type, so the fallback is done there
     // instead of during during code-generation
     if (this.config.externalMappersFrom) {
-      return false;
+      return true;
     }
 
     // In case we are using `mappers` configuration, we need to mark the GraphQL type
