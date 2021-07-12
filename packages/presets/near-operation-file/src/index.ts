@@ -152,6 +152,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const shouldAbsolute = !baseTypesPath.startsWith('~');
 
+    if (Object.keys(options.pluginMap).length === 0) {
+      throw new Error(`Preset "near-operation-file" requires you to specify plugins, that generate code.`);
+    }
+
     const pluginMap: { [name: string]: CodegenPlugin } = {
       ...options.pluginMap,
       add: addPlugin,
