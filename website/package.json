@@ -70,7 +70,7 @@
     "node-polyfill-webpack-plugin": "1.1.4",
     "react-monaco-editor": "0.43.0",
     "react-select": "4.3.1",
-    "@theguild/components": "1.4.3"
+    "@theguild/components": "1.4.4"
   },
   "browserslist": {
     "production": [
