@@ -564,6 +564,9 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
+      } else if (this.config.externalMappersFrom) {
+        prev[typeName] = this.applyUseExternalMappers(typeName);
+        shouldApplyOmit = true;
       } else {
         shouldApplyOmit = true;
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
@@ -601,7 +604,14 @@ export class BaseResolversVisitor<
 
         if (relevantFields.length > 0) {
           // Puts ResolverTypeWrapper on top of an entire type
-          prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
+          prev[typeName] = applyWrapper(
+            this.replaceFieldsInType(
+              this.config.externalMappersFrom
+                ? this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true)
+                : prev[typeName],
+              relevantFields
+            )
+          );
         } else {
           // We still want to use ResolverTypeWrapper, even if we don't touch any fields
           prev[typeName] = applyWrapper(prev[typeName]);
