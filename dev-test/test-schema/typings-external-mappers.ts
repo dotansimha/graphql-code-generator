@@ -20,14 +20,30 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  allUsers: Array<Maybe<User>>;
-  userById?: Maybe<User>;
+export type Profile = {
+  __typename?: 'Profile';
+  age: Scalars['Int'];
 };
 
-export type QueryUserByIdArgs = {
+export type Query = {
+  __typename?: 'Query';
+  someDummyField: Scalars['Int'];
+};
+
+export type QueryRoot = {
+  __typename?: 'QueryRoot';
+  allUsers: Array<Maybe<User>>;
+  userById?: Maybe<User>;
+  answer: Array<Scalars['Int']>;
+};
+
+export type QueryRootUserByIdArgs = {
   id: Scalars['Int'];
+};
+
+export type SubscriptionRoot = {
+  __typename?: 'SubscriptionRoot';
+  newUser?: Maybe<User>;
 };
 
 export type User = {
@@ -35,9 +51,14 @@ export type User = {
   id: Scalars['Int'];
   name: Scalars['String'];
   email: Scalars['String'];
+  profile: Profile;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
 
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -53,6 +74,7 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> =
   | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
 export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>
   | StitchingResolver<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -118,8 +140,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
+  Profile: ResolverTypeWrapper<UseExternalMapper<Mappers, 'Profile', Profile>>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Query: ResolverTypeWrapper<{}>;
+  QueryRoot: ResolverTypeWrapper<UseExternalMapper<Mappers, 'QueryRoot', QueryRoot>>;
+  SubscriptionRoot: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<UseExternalMapper<Mappers, 'User', User>>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -127,19 +152,51 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
+  Profile: UseExternalMapper<Mappers, 'Profile', Profile>;
   Int: Scalars['Int'];
+  Query: {};
+  QueryRoot: UseExternalMapper<Mappers, 'QueryRoot', QueryRoot>;
+  SubscriptionRoot: {};
   User: UseExternalMapper<Mappers, 'User', User>;
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
+};
+
+export type ProfileResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
+  someDummyField?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+};
+
+export type QueryRootResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['QueryRoot'] = ResolversParentTypes['QueryRoot']
+> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
-  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
+  userById?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryRootUserByIdArgs, 'id'>
+  >;
+  answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionRootResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SubscriptionRoot'] = ResolversParentTypes['SubscriptionRoot']
+> = {
+  newUser?: SubscriptionResolver<Maybe<ResolversTypes['User']>, 'newUser', ParentType, ContextType>;
 };
 
 export type UserResolvers<
@@ -149,11 +206,15 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  QueryRoot?: QueryRootResolvers<ContextType>;
+  SubscriptionRoot?: SubscriptionRootResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

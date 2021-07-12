@@ -30,7 +30,7 @@ generates:
       - typescript
       - typescript-resolvers
   ./dev-test/test-schema/typings-external-mappers.ts:
-    schema: ./dev-test/test-schema/schema.json
+    schema: ./dev-test/test-schema/schema-with-root.graphql
     config:
       externalMappersFrom: './external-mappers#Mappers'
     plugins:

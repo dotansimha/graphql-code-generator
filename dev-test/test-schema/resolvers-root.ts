@@ -14,6 +14,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  age: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   someDummyField: Scalars['Int'];
@@ -40,6 +45,7 @@ export type User = {
   id: Scalars['Int'];
   name: Scalars['String'];
   email: Scalars['String'];
+  profile: Profile;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -128,8 +134,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
+  Profile: ResolverTypeWrapper<Profile>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Query: ResolverTypeWrapper<{}>;
   QueryRoot: ResolverTypeWrapper<QueryRoot>;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
@@ -139,13 +146,22 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
+  Profile: Profile;
   Int: Scalars['Int'];
+  Query: {};
   QueryRoot: QueryRoot;
   SubscriptionRoot: {};
   User: User;
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
+};
+
+export type ProfileResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -184,10 +200,12 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   QueryRoot?: QueryRootResolvers<ContextType>;
   SubscriptionRoot?: SubscriptionRootResolvers<ContextType>;

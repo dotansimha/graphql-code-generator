@@ -430,22 +430,29 @@ export class BaseResolversVisitor<
     checkedBefore: { [typeName: string]: boolean } = {},
     duringCheck: string[] = []
   ): boolean {
+    // Stop condifition for running recursively on types.
     if (checkedBefore[type.name] !== undefined) {
       return checkedBefore[type.name];
     }
 
+    // If the type is internal GraphQL type or a scalar, we can skip it and use the type from there.
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
       return false;
     }
 
-    if (this.config.externalMappersFrom && (isObjectType(type) || isInterfaceType(type))) {
-      return true;
+    // In case we are using external mappers that are inferred using TypeScript, we don't want to map them manually
+    // And we can safely assume that using `UseExtermalMapper` will return the correct type, so the fallback is done there
+    // instead of during during code-generation
+    if (this.config.externalMappersFrom) {
+      return false;
     }
 
+    // In case we are using `mappers` configuration, we need to mark the GraphQL type
     if (this.config.mappers[type.name]) {
       return true;
     }
 
+    // If we have fields, we can continue to run recusriely on them and check again if we should map them or not
     if (isObjectType(type) || isInterfaceType(type)) {
       const fields = type.getFields();
 
@@ -558,6 +565,7 @@ export class BaseResolversVisitor<
           .map(type => getTypeToUse(type.name))
           .join(' | ');
       } else if (this.config.externalMappersFrom) {
+        shouldApplyOmit = true;
         prev[typeName] = applyWrapper(this.applyUseExternalMappers(typeName));
       } else {
         shouldApplyOmit = true;
@@ -577,12 +585,7 @@ export class BaseResolversVisitor<
             const baseType = getBaseType(field.type);
             const isUnion = isUnionType(baseType);
 
-            if (
-              !this.config.externalMappersFrom &&
-              !this.config.mappers[baseType.name] &&
-              !isUnion &&
-              !nestedMapping[baseType.name]
-            ) {
+            if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
               return null;
             }
 
