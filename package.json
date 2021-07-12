@@ -58,7 +58,7 @@
     "@vue/apollo-composable": "4.0.0-alpha.13",
     "@vue/composition-api": "1.0.0-rc.14",
     "apollo-client": "2.6.10",
-    "apollo-server": "2.25.2",
+    "apollo-server": "3.0.0",
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.6",
     "bob-the-bundler": "1.2.1",
