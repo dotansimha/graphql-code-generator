@@ -56,8 +56,13 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
   const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
+  const resolverWithResolve = `
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};`;
   const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
+  const resolverWithResolveUsage = `ResolverWithResolve<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
   if (visitor.hasFederation()) {
@@ -82,13 +87,15 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
     `);
   }
 
+  defsToInclude.push(resolverWithResolve);
   if (noSchemaStitching) {
-    // Resolver = ResolverFn;
-    defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
+    // Resolver = ResolverFn | ResolverWithResolve;
+    defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
   } else {
     // StitchingResolver
     // Resolver =
     // | ResolverFn
+    // | ResolverWithResolve
     // | StitchingResolver;
     defsToInclude.push(
       [
@@ -97,6 +104,7 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
         stitchingResolverType,
         resolverType,
         `  | ${resolverFnUsage}`,
+        `  | ${resolverWithResolveUsage}`,
         `  | ${stitchingResolverUsage};`,
       ].join('\n')
     );

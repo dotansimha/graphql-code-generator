@@ -129,6 +129,7 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
+        | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
@@ -515,12 +516,13 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.content).not.toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
+        | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-        ResolverFn<TResult, TParent, TContext, TArgs>;
+        ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
     await validate(result);
