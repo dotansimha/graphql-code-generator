@@ -801,7 +801,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  ProductsCollection: ResolverTypeWrapper<Omit<ProductsCollection, 'products'> & { products: Array<UseExternalMapper<Mappers, 'Product', ResolversTypes['Product']>> }>;
+  ProductsCollection: ResolverTypeWrapper<Omit<ProductsCollection, 'products'> & { products: Array<UseExternalMapper<Mappers, 'Product', Product>> }>;
   TestEnum: TestEnum;
   Product: ResolverTypeWrapper<UseExternalMapper<Mappers, 'Product', Product>>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -812,7 +812,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  ProductsCollection: Omit<ProductsCollection, 'products'> & { products: Array<UseExternalMapper<Mappers, 'Product', ResolversParentTypes['Product']>> };
+  ProductsCollection: Omit<ProductsCollection, 'products'> & { products: Array<UseExternalMapper<Mappers, 'Product', Product>> };
   Product: UseExternalMapper<Mappers, 'Product', Product>;
   ID: Scalars['ID'];
   String: Scalars['String'];
