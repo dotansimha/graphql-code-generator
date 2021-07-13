@@ -25,7 +25,7 @@ export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
 }
 
 export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
-  return typeof type === 'object' && type.plugins;
+  return (typeof type === 'object' && type.plugins) || type.preset;
 }
 
 export function normalizeOutputParam(config: Types.OutputConfig | Types.ConfiguredOutput): Types.ConfiguredOutput {

@@ -124,9 +124,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     }
 
     for (const filename of generateKeys) {
-      generates[filename] = normalizeOutputParam(config.generates[filename]);
+      const output = (generates[filename] = normalizeOutputParam(config.generates[filename]));
 
-      if (generates[filename].plugins.length === 0) {
+      if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
         throw new DetailedError(
           'Invalid Codegen Configuration!',
           `
