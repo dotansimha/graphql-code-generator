@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 1.22.0
+
+### Minor Changes
+
+- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types from resolvers in addition to enum values.\_
+
+### Patch Changes
+
+- df19a4ed: Allow multiple `{T}` instances in defaultMapper
+- Updated dependencies [470336a1]
+  - @graphql-codegen/plugin-helpers@1.18.8
+
 ## 1.21.3
 
 ### Patch Changes

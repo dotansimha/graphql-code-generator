@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-react-offix
 
+## 1.17.18
+
+### Patch Changes
+
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+
 ## 1.17.17
 
 ### Patch Changes

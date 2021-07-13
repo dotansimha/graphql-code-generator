@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-oclif",
-  "version": "1.17.13",
+  "version": "1.17.14",
   "description": "GraphQL Code Generator plugin for generating a CLI tool with oclif",
   "repository": {
     "type": "git",
@@ -19,8 +19,8 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.7",
-    "@graphql-codegen/visitor-plugin-common": "1.21.3",
+    "@graphql-codegen/plugin-helpers": "^1.18.8",
+    "@graphql-codegen/visitor-plugin-common": "1.22.0",
     "auto-bind": "~4.0.0",
     "tslib": "~2.3.0"
   },
