@@ -868,7 +868,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ListType(node: ListTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return this.wrapWithArray(asString);
   }
@@ -878,7 +878,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   NamedType(node: NamedTypeNode): string {
-    const nameStr = (node.name as any) as string;
+    const nameStr = node.name as any as string;
 
     if (this.config.scalars[nameStr]) {
       return this._getScalar(nameStr);
@@ -888,7 +888,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   NonNullType(node: NonNullTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return asString;
   }
@@ -1022,7 +1022,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
-    const typeName = (node.name as any) as string;
+    const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
     const isRootType = [
       this.schema.getQueryType()?.name,
@@ -1065,7 +1065,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .join(' | ');
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';
-    const parentType = this.getParentTypeToUse((node.name as any) as string);
+    const parentType = this.getParentTypeToUse(node.name as any as string);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1081,7 +1081,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    const nameAsString = (node.name as any) as string;
+    const nameAsString = node.name as any as string;
     const baseName = this.getTypeToUse(nameAsString);
 
     if (this._federation.skipScalar(nameAsString)) {
@@ -1206,13 +1206,13 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
         const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+        if (allInterfaces.find(int => int.name === (node.name as any as string))) {
           implementingTypes.push(graphqlType.name);
         }
       }
     }
 
-    const parentType = this.getParentTypeToUse((node.name as any) as string);
+    const parentType = this.getParentTypeToUse(node.name as any as string);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
     const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
@@ -1238,7 +1238,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 }
 
 function replacePlaceholder(pattern: string, typename: string): string {
-  return pattern.replace('{T}', typename);
+  return pattern.replace(/\{T\}/g, typename);
 }
 
 function hasPlaceholder(pattern: string): boolean {
