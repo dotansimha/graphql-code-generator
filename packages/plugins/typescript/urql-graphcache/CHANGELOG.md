@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 1.0.7
+
+### Patch Changes
+
+- 50bc2883: Added missing schema and storage properties to GraphCacheConfig
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+
 ## 1.0.6
 
 ### Patch Changes

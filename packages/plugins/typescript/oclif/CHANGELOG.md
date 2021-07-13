@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-oclif
 
+## 1.17.14
+
+### Patch Changes
+
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+
 ## 1.17.13
 
 ### Patch Changes

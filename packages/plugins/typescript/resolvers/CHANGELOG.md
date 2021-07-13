@@ -1,5 +1,22 @@
 # @graphql-codegen/typescript-resolvers
 
+## 1.20.0
+
+### Minor Changes
+
+- 8e4d5826: Add a new type for StitchResolver without selectionSet
+- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types from resolvers in addition to enum values.\_
+
+### Patch Changes
+
+- df19a4ed: Allow multiple `{T}` instances in defaultMapper
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+  - @graphql-codegen/typescript@1.23.0
+
 ## 1.19.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 1.18.8
+
+### Patch Changes
+
+- 470336a1: don't require plugins for for config if preset provides plugin. Instead the preset should throw if no plugins were provided.
+
 ## 1.18.7
 
 ### Patch Changes
