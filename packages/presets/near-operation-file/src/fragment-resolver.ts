@@ -136,7 +136,7 @@ export default function buildFragmentResolver<T>(
   const { baseDir, typesImport } = collectorOptions;
 
   function resolveFragments(generatedFilePath: string, documentFileContent: DocumentNode) {
-    const fragmentsInUse = extractExternalFragmentsInUse(documentFileContent, fragmentRegistry, dedupeFragments);
+    const fragmentsInUse = extractExternalFragmentsInUse(documentFileContent, fragmentRegistry);
 
     const externalFragments: LoadedFragment<{ level: number }>[] = [];
     // fragment files to import names
@@ -147,7 +147,12 @@ export default function buildFragmentResolver<T>(
       if (fragmentDetails) {
         // add top level references to the import object
         // we don't checkf or global namespace because the calling config can do so
-        if (level === 0) {
+        if (
+          level === 0 ||
+          (dedupeFragments &&
+            documentFileContent.definitions[0].kind === 'OperationDefinition' &&
+            documentFileContent.definitions[0].operation === 'query')
+        ) {
           if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
             fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;
           } else {
