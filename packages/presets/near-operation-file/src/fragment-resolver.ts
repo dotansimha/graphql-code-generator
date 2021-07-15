@@ -150,8 +150,7 @@ export default function buildFragmentResolver<T>(
         if (
           level === 0 ||
           (dedupeFragments &&
-            documentFileContent.definitions[0].kind === 'OperationDefinition' &&
-            documentFileContent.definitions[0].operation === 'query')
+            ['OperationDefinition', 'FragmentDefinition'].includes(documentFileContent.definitions[0].kind))
         ) {
           if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
             fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;

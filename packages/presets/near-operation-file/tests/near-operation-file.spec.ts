@@ -1028,9 +1028,82 @@ describe('near-operation-file preset', () => {
       `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment';`
     );
   });
+
+  it('Should import relevant nested fragments on dedupeFragments', async () => {
+    const schema = parse(/* GraphQL */ `
+      type Address {
+        city: String
+      }
+
+      type Author {
+        address: Address
+      }
+
+      type Book {
+        author: Author
+      }
+
+      type Query {
+        book: Book
+      }
+    `);
+
+    const operations = [
+      {
+        location: '/author.graphql',
+        document: parse(/* GraphQL */ `
+          fragment Address on Address {
+            city
+          }
+
+          fragment Author on Author {
+            address {
+              ...Address
+            }
+          }
+        `),
+      },
+      {
+        location: '/book.graphql',
+        document: parse(/* GraphQL */ `
+          fragment Book on Book {
+            author {
+              ...Author
+            }
+          }
+
+          query Book {
+            book {
+              ...Book
+            }
+          }
+        `),
+      },
+    ];
+
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        dedupeFragments: true,
+      },
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: './types',
+      },
+      schema,
+      schemaAst: buildASTSchema(schema),
+      documents: operations,
+      plugins: [{ typescript: {} }, { 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { typescript: {} as any, 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result, 1)).toContain(
+      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author';`
+    );
+  });
 });
 
-const getFragmentImportsFromResult = (result: Types.GenerateOptions[]) =>
-  result[0].config.fragmentImports
+const getFragmentImportsFromResult = (result: Types.GenerateOptions[], index = 0) =>
+  result[index].config.fragmentImports
     .map(importStatement => generateFragmentImportStatement(importStatement, 'both'))
     .join('\n');
