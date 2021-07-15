@@ -41,7 +41,7 @@
     "@graphql-codegen/java-apollo-android": "1.17.17",
     "@graphql-codegen/java-resolvers": "1.18.5",
     "@graphql-codegen/jsdoc": "1.17.14",
-    "@graphql-codegen/near-operation-file-preset": "1.18.5",
+    "@graphql-codegen/near-operation-file-preset": "1.18.6",
     "@graphql-codegen/schema-ast": "1.18.3",
     "@graphql-codegen/time": "2.0.2",
     "js-yaml": "4.1.0",
