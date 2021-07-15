@@ -132,7 +132,7 @@ generates:
       baseTypesPath: ../types.ts
     plugins:
       - typescript-oclif:
-          client: ../../client
+          handlerPath: ../../client
 ```
 
 Breaking that down:
@@ -145,9 +145,9 @@ Breaking that down:
   This is _required_ for `oclif` to work, since it uses the file structure to generate the command structure.
 - Note: `typescript-operations` plugin isn't required, since this library isn't meant to be consumed
   programmatically (and so nothing reads the types that `typescript-operations` would produce)
-- The `client` path is to the file which has a default export of your `graphql-request` client,
-  relative to the generated files (ie here, `src/commands/something/file.graphql`).
-  Note that it has no extension.
+- The `handlerPath` (default: `../../handler`) is a _relative_ path from your generated command files
+  to the handler which will actually send them to the server and then display the output. See Step 3
+  above for more information.
 
 With that configured, just run `yarn graphql-codegen` or `npx graphql-codegen` to generate all the
 necessary `oclif` command files. With that complete, follow the directions in the

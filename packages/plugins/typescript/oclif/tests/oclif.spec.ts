@@ -17,7 +17,7 @@ describe('oclif', () => {
         }
       `);
 
-      const config = {};
+      const config = { handlerPath: '../../handler' };
       const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -36,7 +36,7 @@ describe('oclif', () => {
         }
       `);
 
-      const config = {};
+      const config = { handlerPath: '../../handler' };
       const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -55,7 +55,7 @@ describe('oclif', () => {
         }
       `);
 
-      const config = {};
+      const config = { handlerPath: '../../handler' };
       const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -73,7 +73,7 @@ describe('oclif', () => {
         }
       `);
 
-      const config = {};
+      const config = { handlerPath: '../../handler' };
       const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -91,7 +91,7 @@ describe('oclif', () => {
         }
       `);
 
-      const config = {};
+      const config = { handlerPath: '../../handler' };
       const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
