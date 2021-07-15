@@ -970,7 +970,9 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (e) {
-      expect(e).toBeFalsy();
+      // eslint-disable-next-line no-console
+      console.error(e);
+      throw new Error('This should not throw as the invalid file is excluded via glob.');
     }
   });
   it('Should allow plugins to extend schema with custom root', async () => {

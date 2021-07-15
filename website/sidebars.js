@@ -90,6 +90,7 @@ module.exports = {
     ],
     Presets: [
       'presets/presets-index',
+      'presets/gql-tag',
       'presets/near-operation-file',
       'presets/import-types',
       'presets/graphql-modules',

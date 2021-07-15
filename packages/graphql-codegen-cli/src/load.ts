@@ -77,7 +77,16 @@ export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
   config: Types.Config
 ): Promise<Types.DocumentFile[]> {
-  const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()];
+  const loaders = [
+    new CodeFileLoader({
+      pluckConfig: {
+        skipIndent: true,
+      },
+    }),
+    new GitLoader(),
+    new GithubLoader(),
+    new GraphQLFileLoader(),
+  ];
 
   const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
     ...defaultDocumentsLoadOptions,

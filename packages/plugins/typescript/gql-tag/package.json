@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/typescript-graphql-request",
-  "version": "3.2.5",
-  "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK based on graphql-request and GraphQL operations",
+  "name": "@graphql-codegen/gql-tag",
+  "version": "0.0.1",
+  "description": "GraphQL Code Generator plugin for generating a typed gql tag function",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/typescript/graphql-request"
+    "directory": "packages/plugins/typescript/gql-tag"
   },
   "license": "MIT",
   "scripts": {
@@ -13,20 +13,16 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js",
     "prepack": "bob prepack"
   },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
+    "graphql-tag": "^2.0.0"
+  },
   "dependencies": {
+    "@graphql-tools/utils": "8.0.0-alpha-fa9b61b3.0",
     "@graphql-codegen/plugin-helpers": "^1.18.8",
     "@graphql-codegen/visitor-plugin-common": "1.22.0",
     "auto-bind": "~4.0.0",
     "tslib": "~2.3.0"
-  },
-  "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
-    "graphql-request": "^3.4.0",
-    "graphql-tag": "^2.0.0"
-  },
-  "devDependencies": {
-    "@graphql-tools/schema": "8.0.0-alpha-fa9b61b3.0",
-    "graphql-request": "3.4.0"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

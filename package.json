@@ -2,7 +2,6 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "preinstall": "npx yarn-deduplicate",
     "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
@@ -113,7 +112,18 @@
     "graphql": "15.5.1",
     "graphql-language-service-interface": "2.8.4",
     "**/apollo-language-server/graphql": "^15.0.0",
-    "**/@types/graphql-upload/graphql": "^15.0.0"
+    "**/@types/graphql-upload/graphql": "^15.0.0",
+    "@graphql-tools/utils": "8.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/apollo-engine-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/code-file-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/git-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/github-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/graphql-file-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/module-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/json-file-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/prisma-loader": "6.3.1-alpha-fa9b61b3.0",
+    "@graphql-tools/url-loader": "7.0.0-alpha-fa9b61b3.0",
+    "@graphql-tools/load": "7.0.0-alpha-fa9b61b3.0"
   },
   "dependencies": {
     "dotenv": "10.0.0",
