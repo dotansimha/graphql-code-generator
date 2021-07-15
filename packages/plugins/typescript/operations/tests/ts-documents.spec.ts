@@ -5521,4 +5521,116 @@ export type KittyQuery = (
       );
     `);
   });
+
+  it('reproduction https://github.com/dotansimha/graphql-code-generator/issues/6149#issuecomment-879320765', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Item {
+        string: String!
+        number: Int!
+      }
+
+      type Foo {
+        id: String
+        label: String
+        nested: FooConnection
+        somethingNotInBasic: String
+      }
+
+      type FooEdge {
+        node: Foo!
+      }
+
+      type FooConnection {
+        edges: [FooEdge!]!
+      }
+
+      type Query {
+        allFoo: FooConnection
+      }
+    `);
+
+    const query = parse(/* GraphQL */ `
+      query Extended {
+        allFoo {
+          edges {
+            node {
+              ...Basic
+              nested {
+                id
+                somethingNotInBasic
+              }
+            }
+          }
+        }
+      }
+      fragment Basic on Foo {
+        id
+        label
+        nested {
+          edges {
+            node {
+              id
+              label
+            }
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: query }],
+      {
+        avoidOptionals: true,
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+    expect(content).toMatchInlineSnapshot(`
+"export type ExtendedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ExtendedQuery = (
+  { __typename?: 'Query' }
+  & { allFoo: Maybe<(
+    { __typename?: 'FooConnection' }
+    & { edges: Array<(
+      { __typename?: 'FooEdge' }
+      & { node: (
+        { __typename?: 'Foo' }
+        & Pick<Foo, 'id' | 'label'>
+        & { nested: Maybe<(
+          { __typename?: 'FooConnection' }
+          & Pick<FooConnection, 'id' | 'somethingNotInBasic'>
+          & { edges: Array<(
+            { __typename?: 'FooEdge' }
+            & { node: (
+              { __typename?: 'Foo' }
+              & Pick<Foo, 'id' | 'label'>
+            ) }
+          )> }
+        )> }
+      ) }
+    )> }
+  )> }
+);
+
+export type BasicFragment = (
+  { __typename?: 'Foo' }
+  & Pick<Foo, 'id' | 'label'>
+  & { nested: Maybe<(
+    { __typename?: 'FooConnection' }
+    & { edges: Array<(
+      { __typename?: 'FooEdge' }
+      & { node: (
+        { __typename?: 'Foo' }
+        & Pick<Foo, 'id' | 'label'>
+      ) }
+    )> }
+  )> }
+);
+"
+`);
+  });
 });
