@@ -3445,6 +3445,11 @@
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.0.tgz#545f2425b68d95892afa5961433a19aab1867268"
   integrity sha512-dw87YiSmCgEUFnWj7fYu+wnrFcSEhYyQ8DykTvL1UzCKPm9uLDeey1z0yiSxZeX2qP9oD+TSGIq+61AZHhQO0w==
 
+"@vercel/ncc@0.28.3":
+  version "0.28.3"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.28.3.tgz#9461bdbf334d616759b0e7e5415e2f480b9aa30f"
+  integrity sha512-g3gk4D9itbhUQa5MtN7TOdeoQnNLkPDCox5SBaQ/H3Or5lo59TOaZWrLb+x47StiAJ+8DXZS/9MJ67cIBWSsRw==
+
 "@vue/apollo-composable@4.0.0-alpha.13":
   version "4.0.0-alpha.13"
   resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.13.tgz#2e1499d77b155567c6477ef9b94a96be553b9aed"
@@ -4750,12 +4755,13 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
-bob-the-bundler@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.2.1.tgz#ed759de2ac59f5bda71cb625d17f1cd787984e4e"
-  integrity sha512-mrmiqX10ghyMB6v4T/VXjmhQie8xrqoOCWZ0b3N8JmTqnzYpOZbSw9UaAygxGzg4V2hjwTz0Wl7H1GlXQnawVA==
+bob-the-bundler@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.4.1.tgz#794382f60f0d2a68c57d85a41d06caf4a45cb1b4"
+  integrity sha512-Ho7JLV8ePKjWgV1USjoZK7w0rJ64RXv8WTBjP/J+l3wILem+TekcBPjKvpYvAqmWBZIliaKVyZhGHgTOaqjabw==
   dependencies:
     "@rollup/plugin-node-resolve" "7.1.1"
+    "@vercel/ncc" "0.28.3"
     builtins "4.0.0"
     consola "2.11.3"
     cosmiconfig "6.0.0"
