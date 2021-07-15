@@ -21,6 +21,7 @@ import {
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
   buildScalarsFromConfig,
+  USE_EXTERNAL_MAPPERS_TYPE,
 } from './utils';
 import {
   NameNode,
@@ -72,6 +73,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
+  externalMappersFrom: ParsedMapper | null;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -330,6 +332,12 @@ export interface RawResolversConfig extends RawConfig {
    * @description Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
    */
   onlyResolveTypeForInterfaces?: boolean;
+  /**
+   * @type string
+   * @description Uses TypeScript type inference for generting TypeScript mappers, using a single TS type. This is useful if you don't want to maintain `mappers` list in your YAML file.
+   * Note: This configuration flag applies only to `typescript-resolvers` plugin, and NOT for `flow-resolvers`.
+   */
+  externalMappersFrom?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -380,6 +388,7 @@ export class BaseResolversVisitor<
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
+      externalMappersFrom: rawConfig.externalMappersFrom ? parseMapper(rawConfig.externalMappersFrom) : null,
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
@@ -421,18 +430,29 @@ export class BaseResolversVisitor<
     checkedBefore: { [typeName: string]: boolean } = {},
     duringCheck: string[] = []
   ): boolean {
+    // Stop condifition for running recursively on types.
     if (checkedBefore[type.name] !== undefined) {
       return checkedBefore[type.name];
     }
 
+    // If the type is internal GraphQL type or a scalar, we can skip it and use the type from there.
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
       return false;
     }
 
+    // In case we are using external mappers that are inferred using TypeScript, we don't want to map them manually
+    // And we can safely assume that using `UseExtermalMapper` will return the correct type, so the fallback is done there
+    // instead of during during code-generation
+    if (this.config.externalMappersFrom && (isObjectType(type) || isInterfaceType(type))) {
+      return true;
+    }
+
+    // In case we are using `mappers` configuration, we need to mark the GraphQL type
     if (this.config.mappers[type.name]) {
       return true;
     }
 
+    // If we have fields, we can continue to run recusriely on them and check again if we should map them or not
     if (isObjectType(type) || isInterfaceType(type)) {
       const fields = type.getFields();
 
@@ -502,7 +522,7 @@ export class BaseResolversVisitor<
 
       let shouldApplyOmit = false;
       const isRootType = this._rootTypeNames.includes(typeName);
-      const isMapped = this.config.mappers[typeName];
+      const isMappedDirectly = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
 
@@ -510,7 +530,7 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
-      } else if (isMapped && this.config.mappers[typeName].type) {
+      } else if (isMappedDirectly && this.config.mappers[typeName].type) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
@@ -544,6 +564,9 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
+      } else if (this.config.externalMappersFrom && nestedMapping[typeName]) {
+        prev[typeName] = this.applyUseExternalMappers(typeName);
+        shouldApplyOmit = true;
       } else {
         shouldApplyOmit = true;
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
@@ -571,28 +594,43 @@ export class BaseResolversVisitor<
             return {
               addOptionalSign,
               fieldName,
-              replaceWithType: wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type, {
-                wrapOptional: this.applyMaybe,
-                wrapArray: this.wrapWithArray,
-              }),
+              replaceWithType: wrapTypeWithModifiers(
+                nestedMapping[baseType.name] && this.config.externalMappersFrom
+                  ? this.applyUseExternalMappers(
+                      this.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix }, true)
+                    )
+                  : getTypeToUse(baseType.name),
+                field.type,
+                {
+                  wrapOptional: this.applyMaybe,
+                  wrapArray: this.wrapWithArray,
+                }
+              ),
             };
           })
           .filter(a => a);
 
         if (relevantFields.length > 0) {
           // Puts ResolverTypeWrapper on top of an entire type
-          prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
+          prev[typeName] = applyWrapper(
+            this.replaceFieldsInType(
+              this.config.externalMappersFrom
+                ? this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true)
+                : prev[typeName],
+              relevantFields
+            )
+          );
         } else {
           // We still want to use ResolverTypeWrapper, even if we don't touch any fields
           prev[typeName] = applyWrapper(prev[typeName]);
         }
       }
 
-      if (isMapped && hasPlaceholder(prev[typeName])) {
+      if (isMappedDirectly && hasPlaceholder(prev[typeName])) {
         prev[typeName] = replacePlaceholder(prev[typeName], typeName);
       }
 
-      if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+      if (!isMappedDirectly && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
         // Make sure the inner type has no ResolverTypeWrapper
         const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
         const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
@@ -756,6 +794,14 @@ export class BaseResolversVisitor<
     if (this.config.defaultMapper && this.config.defaultMapper.isExternal) {
       const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.import);
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
+    }
+
+    if (this.config.externalMappersFrom && this.config.externalMappersFrom.isExternal) {
+      addMapper(
+        this.config.externalMappersFrom.source,
+        this.config.externalMappersFrom.import,
+        this.config.externalMappersFrom.default
+      );
     }
 
     Object.values(this._fieldContextTypeMap).forEach(parsedMapper => {
@@ -1005,6 +1051,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         )}>${this.getPunctuation(declarationKind)}`
       );
     };
+  }
+
+  protected applyUseExternalMappers(typeName: string, fallbackType: string = typeName): string {
+    this._globalDeclarations.add(USE_EXTERNAL_MAPPERS_TYPE);
+
+    return `UseExternalMapper<${this.config.externalMappersFrom.type}, '${typeName}', ${fallbackType}>`;
   }
 
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {

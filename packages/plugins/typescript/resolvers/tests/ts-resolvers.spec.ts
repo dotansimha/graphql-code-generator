@@ -7,6 +7,40 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('TypeScript Resolvers Plugin', () => {
+  describe('External TS Mapper', () => {
+    it('should generate nested types correctly', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          products: ProductsCollection!
+        }
+
+        type ProductsCollection {
+          products: [Product!]!
+          testEnum: TestEnum
+        }
+
+        enum TestEnum {
+          VALUE
+        }
+
+        type Product {
+          id: ID!
+          name: String!
+        }
+      `);
+      const result = await plugin(
+        testSchema,
+        [],
+        {
+          externalMappersFrom: './mappers#Mappers',
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toMatchSnapshot();
+    });
+  });
+
   describe('Backward Compatability', () => {
     it('Should generate IDirectiveResolvers by default', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });

@@ -19,6 +19,11 @@ type User {
   id: Int!
   name: String!
   email: String!
+  profile: Profile!
+}
+
+type Profile {
+  age: Int!
 }
 
 type SubscriptionRoot {

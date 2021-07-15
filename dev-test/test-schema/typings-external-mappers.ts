@@ -1,8 +1,15 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { Mappers } from './external-mappers';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type UseExternalMapper<
+  TDictinary extends Record<string, unknown>,
+  TTypeName extends string,
+  TFallback
+> = TTypeName extends keyof TDictinary ? TDictinary[TTypeName] : TFallback;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
   { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -134,24 +141,34 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Profile: ResolverTypeWrapper<Profile>;
+  Profile: ResolverTypeWrapper<UseExternalMapper<Mappers, 'Profile', Profile>>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
-  QueryRoot: ResolverTypeWrapper<QueryRoot>;
+  QueryRoot: ResolverTypeWrapper<
+    Omit<QueryRoot, 'allUsers' | 'userById'> & {
+      allUsers: Array<Maybe<UseExternalMapper<Mappers, 'User', ResolversTypes['User']>>>;
+      userById?: Maybe<UseExternalMapper<Mappers, 'User', ResolversTypes['User']>>;
+    }
+  >;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<
+    Omit<User, 'profile'> & { profile: UseExternalMapper<Mappers, 'Profile', ResolversTypes['Profile']> }
+  >;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Profile: Profile;
+  Profile: UseExternalMapper<Mappers, 'Profile', Profile>;
   Int: Scalars['Int'];
   Query: {};
-  QueryRoot: QueryRoot;
+  QueryRoot: Omit<QueryRoot, 'allUsers' | 'userById'> & {
+    allUsers: Array<Maybe<UseExternalMapper<Mappers, 'User', ResolversParentTypes['User']>>>;
+    userById?: Maybe<UseExternalMapper<Mappers, 'User', ResolversParentTypes['User']>>;
+  };
   SubscriptionRoot: {};
-  User: User;
+  User: Omit<User, 'profile'> & { profile: UseExternalMapper<Mappers, 'Profile', ResolversParentTypes['Profile']> };
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
 };
