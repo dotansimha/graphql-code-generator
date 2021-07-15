@@ -3453,10 +3453,10 @@
     throttle-debounce "^2.3.0"
     vue-demi "^0.9.1"
 
-"@vue/composition-api@1.0.0-rc.14":
-  version "1.0.0-rc.14"
-  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.0.0-rc.14.tgz#4803fbccf3f3c770416e69095010c7bc0c4aa1c3"
-  integrity sha512-WKbOiy1zk8loM7ma88fOH0yacOEfMIQb0IZJEq561A+4C8GvLSqVSLT5K1iBVkzzJ07Pha8ntbeWSUQlBhRDKg==
+"@vue/composition-api@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.0.0.tgz#d0f73081676a2907d4421144621185329df8c5f5"
+  integrity sha512-VXK5+hk81ngZTgTC9anDwL5jUqh/SGH4BisKheQh3okwqgSESR27McR9DDPfJ9mqba6jJCnlTbWJRFScSoSU1A==
   dependencies:
     tslib "^2.3.0"
 
