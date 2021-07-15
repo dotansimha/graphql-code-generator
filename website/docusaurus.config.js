@@ -43,42 +43,8 @@ module.exports = {
         },
       ],
     },
-    footer: {
-      links: [
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Discord',
-              href: 'http://bit.ly/guild-chat',
-            },
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/graphql-code-generator',
-            },
-          ],
-        },
-        {
-          title: 'Social',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/dotansimha/graphql-code-generator/',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/TheGuildDev',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} GraphQL Code Generator, The Guild, Inc. Built with Docusaurus.`,
-    },
   },
-  scripts: [
-    '/js/fix-location.js',
-    'https://the-guild.dev/static/crisp.js'
-  ],
+  scripts: ['/js/fix-location.js', 'https://the-guild.dev/static/crisp.js'],
   plugins: [resolve(__dirname, './monaco-plugin.js')],
   presets: [
     [
