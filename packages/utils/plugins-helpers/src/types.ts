@@ -424,6 +424,7 @@ export namespace Types {
     watchConfig?: {
       usePolling: boolean;
       interval?: number;
+      skipFirst?: boolean;
     };
     /**
      * @description A flag to suppress printing errors when they occur.
