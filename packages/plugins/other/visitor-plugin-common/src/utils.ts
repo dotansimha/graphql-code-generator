@@ -361,10 +361,13 @@ export function stripMapperTypeInterpolation(identifier: string): string {
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
 export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
 
-export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): void {
+/**
+ * merge selection sets into a new selection set without mutating the inputs.
+ */
+export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): SelectionSetNode {
   const newSelections = [...selectionSet1.selections];
 
-  for (const selection2 of selectionSet2.selections) {
+  for (let selection2 of selectionSet2.selections) {
     if (selection2.kind === 'FragmentSpread') {
       newSelections.push(selection2);
       continue;
@@ -376,31 +379,38 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
 
     const match = newSelections.find(
       selection1 =>
-        selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2)
+        selection1.kind === 'Field' &&
+        getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
     );
 
     if (match) {
       // recursively merge all selection sets
       if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        mergeSelectionSets(match.selectionSet, selection2.selectionSet);
+        selection2 = {
+          ...selection2,
+          selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
+        };
       }
-      continue;
     }
 
     newSelections.push(selection2);
   }
 
-  // replace existing selections
-  selectionSet1.selections = newSelections;
+  return {
+    kind: 'SelectionSet',
+    selections: newSelections,
+  };
 }
 
 export const getFieldNodeNameValue = (node: FieldNode): string => {
   return (node.alias || node.name).value;
 };
 
-export function separateSelectionSet(
-  selections: ReadonlyArray<SelectionNode>
-): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
+  fields: FieldNode[];
+  spreads: FragmentSpreadNode[];
+  inlines: InlineFragmentNode[];
+} {
   return {
     fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
     inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],

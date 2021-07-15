@@ -122,7 +122,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace
+    return !this.config.globalNamespace && !this.config.inlineFragmentTypes
       ? this.config.fragmentImports
           // In flow, all non ` * as x` imports must be type imports
           .map(fragmentImport => ({ ...fragmentImport, typesImport: true }))

@@ -1,6 +1,5 @@
 import * as Types from '../types.d';
 
-import { HeroDetails_Droid_Fragment, HeroDetails_Human_Fragment } from './HeroDetailsFragment';
 import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
@@ -11,7 +10,8 @@ export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
 
 export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   hero?: Types.Maybe<
-    ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment) | ({ __typename?: 'Human' } & HeroDetails_Human_Fragment)
+    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'primaryFunction' | 'name'>)
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
   >;
 };
 

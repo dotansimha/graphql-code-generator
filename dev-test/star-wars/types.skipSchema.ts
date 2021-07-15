@@ -301,7 +301,8 @@ export type HeroDetailsWithFragmentQueryVariables = Exact<{
 
 export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
   hero?: Maybe<
-    ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment) | ({ __typename?: 'Human' } & HeroDetails_Human_Fragment)
+    | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)
+    | ({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
   >;
 };
 
@@ -382,7 +383,7 @@ export type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Human, 'name' 
 export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
-  human?: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
+  human?: Maybe<{ __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>>;
 };
 
 export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;

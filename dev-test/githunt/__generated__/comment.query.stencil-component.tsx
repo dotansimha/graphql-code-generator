@@ -15,7 +15,13 @@ declare global {
     entry?: Types.Maybe<
       { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'createdAt' | 'commentCount'> & {
           postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
-          comments: Array<Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
+          comments: Array<
+            Types.Maybe<
+              { __typename?: 'Comment' } & Pick<Types.Comment, 'id' | 'createdAt' | 'content'> & {
+                  postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
+                }
+            >
+          >;
           repository: { __typename?: 'Repository' } & Pick<
             Types.Repository,
             'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'

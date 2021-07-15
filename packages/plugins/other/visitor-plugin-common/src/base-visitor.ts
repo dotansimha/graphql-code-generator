@@ -32,6 +32,7 @@ export interface ParsedConfig {
   useTypeImports: boolean;
   dedupeFragments: boolean;
   allowEnumStringTypes: boolean;
+  inlineFragmentTypes: boolean;
 }
 
 export interface RawConfig {
@@ -200,6 +201,12 @@ export interface RawConfig {
    * @ignore
    */
   allowEnumStringTypes?: boolean;
+  /**
+   * @description Whether fragment types should be inlined into other operations.
+   * @type boolean
+   * @default true
+   */
+  inlineFragmentTypes?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -219,6 +226,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       useTypeImports: !!rawConfig.useTypeImports,
       dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
+      inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? true,
       ...((additionalConfig || {}) as any),
     };
 

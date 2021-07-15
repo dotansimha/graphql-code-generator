@@ -24,24 +24,56 @@ export type GetEntityBrandDataQuery = (
   { __typename?: 'Query' }
   & { node: (
     { __typename: 'Company' }
-    & Pick<Company, 'active' | 'id'>
-    & EntityBrandData_Company_Fragment
-    & ElementMetadata_Company_Fragment
+    & Pick<Company, 'active' | 'id' | 'createdAt' | 'updatedAt'>
+    & { brandData?: Maybe<(
+      { __typename?: 'EntityBrandData' }
+      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+    )>, createdBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )>, updatedBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )> }
   ) | (
     { __typename: 'Theater' }
-    & Pick<Theater, 'active' | 'id'>
-    & EntityBrandData_Theater_Fragment
-    & ElementMetadata_Theater_Fragment
+    & Pick<Theater, 'active' | 'id' | 'createdAt' | 'updatedAt'>
+    & { brandData?: Maybe<(
+      { __typename?: 'EntityBrandData' }
+      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+    )>, createdBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )>, updatedBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )> }
   ) | (
     { __typename: 'Movie' }
-    & Pick<Movie, 'id'>
-    & EntityBrandData_Movie_Fragment
-    & ElementMetadata_Movie_Fragment
+    & Pick<Movie, 'id' | 'createdAt' | 'updatedAt'>
+    & { brandData?: Maybe<(
+      { __typename?: 'EntityBrandData' }
+      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+    )>, createdBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )>, updatedBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )> }
   ) | (
     { __typename: 'User' }
-    & Pick<User, 'id'>
-    & EntityBrandData_User_Fragment
-    & ElementMetadata_User_Fragment
+    & Pick<User, 'id' | 'createdAt' | 'updatedAt'>
+    & { brandData?: Maybe<(
+      { __typename?: 'EntityBrandData' }
+      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+    )>, createdBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )>, updatedBy?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -163,10 +195,14 @@ export type QQuery = (
   { __typename?: 'Query' }
   & { hotel: (
     { __typename?: 'Hotel' }
-    & Venue_Hotel_Fragment
+    & Pick<Hotel, 'id'>
+    & { gpsPosition: (
+      { __typename?: 'GPSPosition' }
+      & Pick<GpsPosition, 'lat' | 'lng'>
+    ) }
   ), transport: (
     { __typename?: 'Transport' }
-    & Venue_Transport_Fragment
+    & Pick<Transport, 'id'>
   ) }
 );
 "
@@ -243,10 +279,14 @@ export type QQuery = (
   { __typename?: 'Query' }
   & { hotel: (
     { __typename?: 'Hotel' }
-    & Venue_Hotel_Fragment
+    & Pick<Hotel, 'id'>
+    & { gpsPosition: (
+      { __typename?: 'GPSPosition' }
+      & Pick<GpsPosition, 'lat' | 'lng'>
+    ) }
   ), transport: (
     { __typename?: 'Transport' }
-    & Venue_Transport_Fragment
+    & Pick<Transport, 'id'>
   ) }
 );
 function test(q: QQuery) {
@@ -268,7 +308,7 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & UserFragment
+    & Pick<User, 'id' | 'name'>
   )> }
 );
 
@@ -301,7 +341,7 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & UserFragment
+    & Pick<User, 'id' | 'name'>
   )> }
 );
 
@@ -325,7 +365,7 @@ export type AaaQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & UserFragmentFragment
+    & Pick<User, 'id'>
   ) | { __typename?: 'Error' } }
 );
 "
@@ -339,8 +379,7 @@ export type Unnamed_1_Query = (
   { __typename?: 'Query' }
   & { b?: Maybe<(
     { __typename?: 'A' }
-    & AFragment
-    & BFragment
+    & Pick<A, 'id' | 'x'>
   ) | { __typename?: 'B' }> }
 );
 
@@ -375,11 +414,11 @@ export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 export type QqQuery = (
   { __typename?: 'Query' }
   & { routes: Array<(
-    { __typename?: 'IPV4Route' }
-    & NetRoute_Ipv4Route_Fragment
+    { __typename: 'IPV4Route' }
+    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
   ) | (
-    { __typename?: 'IPV6Route' }
-    & NetRoute_Ipv6Route_Fragment
+    { __typename: 'IPV6Route' }
+    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
   )> }
 );
 "
@@ -393,7 +432,7 @@ exports[`TypeScript Operations Plugin Selection Set Should have valid __typename
 
 type NetRoute_Ipv6Route_Fragment = (
   { __typename: 'IPV6Route' }
-  & TestFragment
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
 );
 
 export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
@@ -409,11 +448,11 @@ export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 export type QqQuery = (
   { __typename?: 'Query' }
   & { routes: Array<(
-    { __typename?: 'IPV4Route' }
-    & NetRoute_Ipv4Route_Fragment
+    { __typename: 'IPV4Route' }
+    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
   ) | (
-    { __typename?: 'IPV6Route' }
-    & NetRoute_Ipv6Route_Fragment
+    { __typename: 'IPV6Route' }
+    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
   )> }
 );
 "
@@ -432,12 +471,12 @@ export type JerryFragment = (
 
 type User_Tom_Fragment = (
   { __typename?: 'Tom' }
-  & TomFragment
+  & Pick<Tom, 'id' | 'foo'>
 );
 
 type User_Jerry_Fragment = (
   { __typename?: 'Jerry' }
-  & JerryFragment
+  & Pick<Jerry, 'id' | 'bar'>
 );
 
 export type UserFragment = User_Tom_Fragment | User_Jerry_Fragment;
@@ -449,10 +488,10 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'Tom' }
-    & User_Tom_Fragment
+    & Pick<Tom, 'id' | 'foo'>
   ) | (
     { __typename?: 'Jerry' }
-    & User_Jerry_Fragment
+    & Pick<Jerry, 'id' | 'bar'>
   )> }
 );
 "
@@ -521,22 +560,17 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'login'>
-    & UserResult_User_Fragment
-    & UserResult1_User_Fragment
+    & Pick<User, 'login' | 'id'>
   ) | (
     { __typename?: 'Error2' }
-    & UserResult_Error2_Fragment
-    & UserResult1_Error2_Fragment
+    & Pick<Error2, 'message'>
   ) | (
     { __typename?: 'Error3' }
     & Pick<Error3, 'message'>
     & { info?: Maybe<(
       { __typename?: 'AdditionalInfo' }
-      & AdditionalInfoFragment
+      & Pick<AdditionalInfo, 'message2' | 'message'>
     )> }
-    & UserResult_Error3_Fragment
-    & UserResult1_Error3_Fragment
   ) }
 );
 

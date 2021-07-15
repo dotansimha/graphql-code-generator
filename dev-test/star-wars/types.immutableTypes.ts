@@ -307,8 +307,8 @@ export type HeroDetailsWithFragmentQueryVariables = Exact<{
 
 export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & {
   readonly hero?: Maybe<
-    | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
-    | ({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
   >;
 };
 
@@ -392,7 +392,7 @@ export type HumanFieldsFragment = { readonly __typename?: 'Human' } & Pick<Human
 export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & {
-  readonly human?: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment>;
+  readonly human?: Maybe<{ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>>;
 };
 
 export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;

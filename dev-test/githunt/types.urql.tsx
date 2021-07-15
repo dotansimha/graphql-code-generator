@@ -198,7 +198,13 @@ export type CommentQuery = { __typename?: 'Query' } & {
   entry?: Maybe<
     { __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
         postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-        comments: Array<Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
+        comments: Array<
+          Maybe<
+            { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
+                postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+              }
+          >
+        >;
         repository: { __typename?: 'Repository' } & Pick<
           Repository,
           'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
@@ -217,12 +223,17 @@ export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
 };
 
-export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
-    repository: { __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
-        owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>>;
-      };
-  } & VoteButtonsFragment &
-  RepoInfoFragment;
+export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<
+  Entry,
+  'id' | 'commentCount' | 'score' | 'createdAt'
+> & {
+    repository: { __typename?: 'Repository' } & Pick<
+      Repository,
+      'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
+    > & { owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>> };
+    vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+    postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
+  };
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
@@ -232,7 +243,20 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
-  feed?: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
+  feed?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount' | 'score' | 'createdAt'> & {
+            repository: { __typename?: 'Repository' } & Pick<
+              Repository,
+              'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
+            > & { owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>> };
+            vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+            postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
+          }
+      >
+    >
+  >;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -257,7 +281,11 @@ export type SubmitCommentMutationVariables = Exact<{
 }>;
 
 export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
-  submitComment?: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+  submitComment?: Maybe<
+    { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
+        postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+      }
+  >;
 };
 
 export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'> & {

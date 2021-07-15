@@ -581,7 +581,13 @@ describe('TypeScript Operations Plugin', () => {
       expect(withUsage).toBeSimilarStringTo(`
       export type NotificationsQuery = (
         { __typename?: 'Query' }
-        & MyFragment
+        & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'id'>
+        )> }
       );
       `);
     });
@@ -716,7 +722,13 @@ describe('TypeScript Operations Plugin', () => {
     expect(withUsage).toBeSimilarStringTo(`
     export type Notifications = (
       { __typename?: 'Query' }
-      & My
+      & { notifications: Array<(
+        { __typename?: 'TextNotification' }
+        & Pick<TextNotification, 'id'>
+      ) | (
+        { __typename?: 'ImageNotification' }
+        & Pick<ImageNotification, 'id'>
+      )> }
     );
     `);
   });
@@ -951,11 +963,11 @@ describe('TypeScript Operations Plugin', () => {
       export type TestQuery = (
         { __typename?: 'Query' }
         & { some?: Maybe<(
-          { __typename?: 'A' }
-          & Node_A_Fragment
+          { __typename: 'A' }
+          & Pick<A, 'id'>
         ) | (
-          { __typename?: 'B' }
-          & Node_B_Fragment
+          { __typename: 'B' }
+          & Pick<B, 'id'>
         )> }
       );
       `);
@@ -1639,7 +1651,10 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { me?: Maybe<UserFieldsFragment> };
+        export type MeQuery = { me?: Maybe<(
+            Pick<User, 'id' | 'username' | 'role'>
+            & { profile?: Maybe<Pick<Profile, 'age'>> }
+          )> };
       `);
       await validate(content, config);
     });
@@ -1667,8 +1682,8 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
       export type MeQuery = { me?: Maybe<(
-        Pick<User, 'username'>
-        & UserFieldsFragment
+        Pick<User, 'username' | 'id'>
+        & { profile?: Maybe<Pick<Profile, 'age'>> }
       )> };
       `);
       await validate(content, config);
@@ -1704,9 +1719,11 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { me?: Maybe<(
           { __typename?: 'User' }
-          & Pick<User, 'username'>
-          & UserFieldsFragment
-          & UserProfileFragment
+          & Pick<User, 'username' | 'id'>
+          & { profile?: Maybe<(
+            { __typename?: 'Profile' }
+            & Pick<Profile, 'age'>
+          )> }
         )> }
       );
       `);
@@ -1777,22 +1794,22 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { b?: Maybe<(
           { __typename?: 'A' }
-          & AFragment
+          & Pick<A, 'id' | 'x'>
         ) | (
           { __typename?: 'B' }
-          & BFragment
+          & Pick<B, 'id' | 'y'>
         )> }
       );
 
-        export type AFragment = (
-          { __typename?: 'A' }
-          & Pick<A, 'id' | 'x'>
-        );
+      export type AFragment = (
+        { __typename?: 'A' }
+        & Pick<A, 'id' | 'x'>
+      );
 
-        export type BFragment = (
-          { __typename?: 'B' }
-          & Pick<B, 'id' | 'y'>
-        );
+      export type BFragment = (
+        { __typename?: 'B' }
+        & Pick<B, 'id' | 'y'>
+      );
       `);
       await validate(content, config, schema);
     });
@@ -1848,9 +1865,7 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { myType: (
           { __typename?: 'MyType' }
-          & AFragment
-          & BFragment
-          & CFragment
+          & Pick<MyType, 'foo' | 'bar' | 'test'>
         ) }
       );
       `);
@@ -1904,8 +1919,7 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { b?: Maybe<(
           { __typename?: 'A' }
-          & AFragment
-          & BFragment
+          & Pick<A, 'id' | 'x'>
         ) | { __typename?: 'B' }> }
       );
 
@@ -3306,8 +3320,7 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { user: (
           { __typename?: 'User' }
-          & Pick<User, 'id'>
-          & TestFragment
+          & Pick<User, 'id' | 'login'>
         ) }
       );`);
 
@@ -3429,22 +3442,17 @@ describe('TypeScript Operations Plugin', () => {
         { __typename?: 'Query' }
         & { user: (
           { __typename?: 'User' }
-          & Pick<User, 'login'>
-          & UserResult_User_Fragment
-          & UserResult1_User_Fragment
+          & Pick<User, 'login' | 'id'>
         ) | (
           { __typename?: 'Error2' }
-          & UserResult_Error2_Fragment
-          & UserResult1_Error2_Fragment
+          & Pick<Error2, 'message'>
         ) | (
           { __typename?: 'Error3' }
           & Pick<Error3, 'message'>
           & { info?: Maybe<(
             { __typename?: 'AdditionalInfo' }
-            & AdditionalInfoFragment
+            & Pick<AdditionalInfo, 'message2' | 'message'>
           )> }
-          & UserResult_Error3_Fragment
-          & UserResult1_Error3_Fragment
         ) }
       );`);
 
@@ -4421,7 +4429,13 @@ function test(q: GetEntityBrandDataQuery): void {
       expect(content).toBeSimilarStringTo(`
       export type TestQueryQuery = (
         { __typename?: 'Query' }
-        & { fooBar: Array<( { __typename?: 'Foo' } & FooBarFragment_Foo_Fragment ) | ( { __typename?: 'Bar' } & FooBarFragment_Bar_Fragment )> }
+        & { fooBar: Array<(
+          { __typename?: 'Foo' }
+          & Pick<Foo, 'id'>
+        ) | (
+          { __typename?: 'Bar' }
+          & Pick<Bar, 'id'>
+        )> }
       );
 
       type FooBarFragment_Foo_Fragment = (
@@ -4498,7 +4512,7 @@ function test(q: GetEntityBrandDataQuery): void {
           & Pick<Price, 'id'>
           & { item: Array<Maybe<(
             { __typename?: 'Product' }
-            & ProductFragmentFragment
+            & Pick<Product, 'id' | 'title'>
           )>> }
         );
       `);
@@ -4752,11 +4766,108 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toContain('type CatFragment_Duck_Fragment = {}');
-      expect(content).toContain('type CatFragment_Wolf_Fragment = {}');
-      expect(content).toContain(
-        'export type KittyQuery = { animals: Array<CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment> };'
+      expect(content).toMatchInlineSnapshot(`
+"type CatFragment_Duck_Fragment = {};
+
+type CatFragment_Lion_Fragment = Pick<Lion, 'id'>;
+
+type CatFragment_Puma_Fragment = Pick<Puma, 'id'>;
+
+type CatFragment_Wolf_Fragment = {};
+
+export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+
+export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | {}> };
+"
+`);
+    });
+
+    it('#3950 - Invalid output with fragments and skipTypename: false', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          animals: [Animal!]!
+        }
+
+        interface Animal {
+          id: ID!
+        }
+        type Duck implements Animal {
+          id: ID!
+        }
+        type Lion implements Animal {
+          id: ID!
+        }
+        type Puma implements Animal {
+          id: ID!
+        }
+        type Wolf implements Animal {
+          id: ID!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        fragment CatFragment on Animal {
+          ... on Lion {
+            id
+          }
+          ... on Puma {
+            id
+          }
+        }
+
+        query kitty {
+          animals {
+            ...CatFragment
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: query }],
+        {
+          skipTypename: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
       );
+
+      expect(content).toMatchInlineSnapshot(`
+"type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
+
+type CatFragment_Lion_Fragment = (
+  { __typename?: 'Lion' }
+  & Pick<Lion, 'id'>
+);
+
+type CatFragment_Puma_Fragment = (
+  { __typename?: 'Puma' }
+  & Pick<Puma, 'id'>
+);
+
+type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
+
+export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+
+export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type KittyQuery = (
+  { __typename?: 'Query' }
+  & { animals: Array<{ __typename?: 'Duck' } | (
+    { __typename?: 'Lion' }
+    & Pick<Lion, 'id'>
+  ) | (
+    { __typename?: 'Puma' }
+    & Pick<Puma, 'id'>
+  ) | { __typename?: 'Wolf' }> }
+);
+"
+`);
     });
 
     it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
@@ -4800,7 +4911,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: Pick<User, 'id' | 'login'> };
+        export type UserQuery = { user: Pick<User, 'id' | 'login'> | {} };
       `);
     });
 
@@ -4926,6 +5037,252 @@ function test(q: GetEntityBrandDataQuery): void {
         ) }
       );
       `);
+    });
+
+    describe('#6149 - operation fragment merging behavior', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          id: ID!
+          name: String!
+          friends: [User!]!
+        }
+      `);
+
+      it('InlineFragmentQuery', async () => {
+        const document = parse(/* GraphQL */ `
+          query InlineFragmentQuery {
+            user {
+              ... on User {
+                friends {
+                  id
+                }
+              }
+              ... on User {
+                friends {
+                  name
+                }
+              }
+            }
+          }
+        `);
+
+        const { content } = await plugin(
+          schema,
+          [{ location: '', document }],
+          {},
+          {
+            outputFile: 'graphql.ts',
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+          export type InlineFragmentQueryQuery = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'id' | 'name'>
+              )> }
+            ) }
+          );
+        `);
+      });
+      it('SpreadFragmentQuery', async () => {
+        const document = parse(/* GraphQL */ `
+          fragment UserFriendsIdFragment on Query {
+            user {
+              friends {
+                id
+              }
+            }
+          }
+
+          fragment UserFriendsNameFragment on Query {
+            user {
+              friends {
+                name
+              }
+            }
+          }
+
+          query SpreadFragmentQuery {
+            ...UserFriendsIdFragment
+            ...UserFriendsNameFragment
+          }
+        `);
+
+        const { content } = await plugin(
+          schema,
+          [{ location: '', document }],
+          {},
+          {
+            outputFile: 'graphql.ts',
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          export type UserFriendsIdFragmentFragment = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'id'>
+              )> }
+            ) }
+          );
+
+          export type UserFriendsNameFragmentFragment = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'name'>
+              )> }
+            ) }
+          );
+
+          export type SpreadFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+          export type SpreadFragmentQueryQuery = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'id' | 'name'>
+              )> }
+            ) }
+          );
+
+        `);
+      });
+      it('SpreadFragmentWithSelectionQuery', async () => {
+        const document = parse(/* GraphQL */ `
+          fragment UserFriendsNameFragment on Query {
+            user {
+              friends {
+                name
+              }
+            }
+          }
+
+          query SpreadFragmentWithSelectionQuery {
+            user {
+              id
+              friends {
+                id
+              }
+            }
+            ...UserFriendsNameFragment
+          }
+        `);
+
+        const { content } = await plugin(
+          schema,
+          [{ location: '', document }],
+          {},
+          {
+            outputFile: 'graphql.ts',
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          export type UserFriendsNameFragmentFragment = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'name'>
+              )> }
+            ) }
+          );
+
+          export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+          export type SpreadFragmentWithSelectionQueryQuery = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & Pick<User, 'id'>
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'id' | 'name'>
+              )> }
+            ) }
+          );
+        `);
+      });
+      it('SpreadFragmentWithSelectionQuery - flatten', async () => {
+        const document = parse(/* GraphQL */ `
+          fragment UserFriendsNameFragment on Query {
+            user {
+              friends {
+                name
+              }
+            }
+          }
+
+          query SpreadFragmentWithSelectionQuery {
+            user {
+              id
+              friends {
+                id
+              }
+            }
+            ...UserFriendsNameFragment
+          }
+        `);
+
+        const { content } = await plugin(
+          schema,
+          [{ location: '', document }],
+          {},
+          {
+            outputFile: 'graphql.ts',
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          export type UserFriendsNameFragmentFragment = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'name'>
+              )> }
+            ) }
+          );
+
+          export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+          export type SpreadFragmentWithSelectionQueryQuery = (
+            { __typename?: 'Query' }
+            & { user: (
+              { __typename?: 'User' }
+              & Pick<User, 'id'>
+              & { friends: Array<(
+                { __typename?: 'User' }
+                & Pick<User, 'id' | 'name'>
+              )> }
+            ) }
+          );
+        `);
+      });
     });
   });
 
