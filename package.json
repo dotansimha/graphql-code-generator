@@ -61,7 +61,7 @@
     "apollo-server": "3.0.0",
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.6",
-    "bob-the-bundler": "1.2.1",
+    "bob-the-bundler": "1.4.1",
     "eslint": "7.30.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
