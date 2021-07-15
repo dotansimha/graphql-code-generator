@@ -11,6 +11,7 @@ import {
   createProgram,
   ScriptKind,
   Diagnostic,
+  getPreEmitDiagnostics,
 } from 'typescript';
 import { resolve, join, dirname } from 'path';
 
@@ -175,7 +176,8 @@ export function compileTs(
     module: ModuleKind.ESNext,
   },
   isTsx = false,
-  openPlayground = false
+  openPlayground = false,
+  shouldWork = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
@@ -213,7 +215,9 @@ export function compileTs(
       },
     });
     const emitResult = program.emit();
-    const allDiagnostics = emitResult.diagnostics;
+    const allDiagnostics = shouldWork
+      ? getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+      : emitResult.diagnostics;
     const errors: string[] = [];
 
     allDiagnostics.forEach(diagnostic => {
