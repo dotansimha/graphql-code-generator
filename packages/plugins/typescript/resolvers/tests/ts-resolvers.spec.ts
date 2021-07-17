@@ -152,6 +152,45 @@ describe('TypeScript Resolvers Plugin', () => {
       const content = mergeOutputs([result]);
       expect(content).toMatchSnapshot();
     });
+
+    it('customDirectiveToResolverFnMapping - should generate correct types', async () => {
+      const config = {
+        noSchemaStitching: true,
+        customDirectiveToResolverFnMapping: {
+          authenticated: `
+(
+  parent: TParent,
+  args: TArgs,
+  context: AuthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;`,
+        },
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> = 
+(
+  parent: TParent,
+  args: TArgs,
+  context: AuthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
+};
+export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+`);
+      expect(result.content).toBeSimilarStringTo(`
+export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+  foo?: ResolverAuthenticated<ResolversTypes['String'], ParentType, ContextType>;
+  otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+  withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+  unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+      `);
+    });
   });
 
   describe('Enums', () => {

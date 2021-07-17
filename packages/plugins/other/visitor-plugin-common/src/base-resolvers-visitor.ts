@@ -72,6 +72,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
+  customDirectiveToResolverTypeNameMapping: Map<string, string>;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -330,6 +331,10 @@ export interface RawResolversConfig extends RawConfig {
    * @description Turning this flag to `true` will generate resolver siganture that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
    */
   onlyResolveTypeForInterfaces?: boolean;
+  /**
+   * @ignore
+   */
+  customDirectiveToResolverTypeNameMappings?: Map<string, string>;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -355,6 +360,7 @@ export class BaseResolversVisitor<
   protected _hasScalars = false;
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
+  private _customDirectiveToResolverTypeNameMappings: Map<string, string>;
 
   constructor(
     rawConfig: TRawConfig,
@@ -410,6 +416,8 @@ export class BaseResolversVisitor<
       namedType => !isEnumType(namedType)
     );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
+    this._customDirectiveToResolverTypeNameMappings =
+      rawConfig.customDirectiveToResolverTypeNameMappings ?? new Map<string, string>();
   }
 
   public getResolverTypeWrapperSignature(): string {
@@ -947,6 +955,13 @@ export class BaseResolversVisitor<
       });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
+      const directiveMappings =
+        node.directives
+          ?.map(directive => this._customDirectiveToResolverTypeNameMappings.get(directive.name as any))
+          .filter(Boolean) ?? [];
+
+      const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
+
       const signature: {
         name: string;
         modifier: string;
@@ -955,7 +970,7 @@ export class BaseResolversVisitor<
       } = {
         name: node.name as any,
         modifier: this.config.avoidOptionals ? '' : '?',
-        type: isSubscriptionType ? 'SubscriptionResolver' : 'Resolver',
+        type: resolverType,
         genericTypes: [
           mappedTypeKey,
           parentTypeSignature,

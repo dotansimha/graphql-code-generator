@@ -9,6 +9,8 @@ import { visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
+const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
+
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
@@ -27,18 +29,58 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
         'export type ResolversObject<TObject> = WithIndex<TObject>;',
       ].join('\n')
     : '';
+  const importType = config.useTypeImports ? 'import type' : 'import';
+  const prepend: string[] = [];
+  const defsToInclude: string[] = [];
+  const customDirectiveToResolverTypeNameMappings = new Map<string, string>();
+
+  if (config.customDirectiveToResolverFnMapping) {
+    for (const [directiveName, mapper] of Object.entries(config.customDirectiveToResolverFnMapping)) {
+      const parsedMapper = parseMapper(mapper);
+      const capitalizedDirectiveName = capitalize(directiveName);
+      const resolverFnName = `ResolverFn${capitalizedDirectiveName}`;
+      const resolverFnUsage = `${resolverFnName}<TResult, TParent, TContext, TArgs>`;
+      const resolverWithResolveUsage = `Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TContext, TArgs>`;
+      const resolverWithResolve = `
+export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ${resolverFnName}<TResult, TParent, TContext, TArgs>;
+};`;
+      const resolverTypeName = `Resolver${capitalizedDirectiveName}`;
+      const resolverType = `export type ${resolverTypeName}<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+
+      if (parsedMapper.isExternal) {
+        if (parsedMapper.default) {
+          prepend.push(`${importType} ${resolverFnName} from '${parsedMapper.source}';`);
+        } else {
+          prepend.push(
+            `${importType} { ${parsedMapper.import} ${
+              parsedMapper.import !== resolverFnName ? `as ${resolverFnName} ` : ''
+            }} from '${parsedMapper.source}';`
+          );
+        }
+        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
+      } else {
+        defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
+      }
+      defsToInclude.push(resolverWithResolve);
+      defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+      customDirectiveToResolverTypeNameMappings.set(directiveName, resolverTypeName);
+    }
+  }
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
+  const visitor = new TypeScriptResolversVisitor(
+    { ...config, customDirectiveToResolverTypeNameMappings },
+    transformedSchema
+  );
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
+
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
 
   const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
-  const prepend: string[] = [];
-  const defsToInclude: string[] = [];
   const legacyStitchingResolverType = `
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -103,8 +145,6 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
       ].join('\n')
     );
   }
-
-  const importType = config.useTypeImports ? 'import type' : 'import';
 
   if (config.customResolverFn) {
     const parsedMapper = parseMapper(config.customResolverFn);

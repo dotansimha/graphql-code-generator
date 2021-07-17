@@ -103,6 +103,10 @@ export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type AuthenticatedDirectiveArgs = {  };
+
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
@@ -168,6 +172,7 @@ export type Resolvers<ContextType = any> = {
 
 export type DirectiveResolvers<ContextType = any> = {
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>,
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>,
 };
 ",
   "prepend": Array [

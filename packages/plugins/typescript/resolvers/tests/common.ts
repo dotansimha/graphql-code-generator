@@ -5,7 +5,7 @@ import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 
 export const schema = buildSchema(/* GraphQL */ `
   type MyType {
-    foo: String!
+    foo: String! @authenticated
     otherType: MyOtherType
     withArgs(arg: String, arg2: String!): String
     unionChild: ChildUnion
@@ -43,6 +43,7 @@ export const schema = buildSchema(/* GraphQL */ `
   scalar MyScalar
 
   directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
+  directive @authenticated on FIELD_DEFINITION
 `);
 
 export const validate = async (
