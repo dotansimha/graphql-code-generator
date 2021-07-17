@@ -39,6 +39,11 @@ import {
   getListTypeField,
 } from '../../common/common';
 import { pascalCase } from 'change-case-all';
+import {
+  JsonAttributesSource,
+  JsonAttributesSourceConfiguration,
+  getJsonAttributeSourceConfiguration,
+} from './json-attributes';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -46,10 +51,13 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
   listType: string;
   enumValues: EnumValuesMap;
   emitRecords: boolean;
+  emitJsonAttributes: boolean;
+  jsonAttributesSource: JsonAttributesSource;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
   private readonly keywords = new Set(csharpKeywords);
+  private readonly jsonAttributesConfiguration: JsonAttributesSourceConfiguration;
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
     super(rawConfig, {
@@ -58,8 +66,14 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
       emitRecords: rawConfig.emitRecords || false,
+      emitJsonAttributes: rawConfig.emitJsonAttributes ?? true,
+      jsonAttributesSource: rawConfig.jsonAttributesSource || 'Newtonsoft.Json',
       scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
+
+    if (this._parsedConfig.emitJsonAttributes) {
+      this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
+    }
   }
 
   /**
@@ -78,7 +92,11 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   }
 
   public getImports(): string {
-    const allImports = ['System', 'System.Collections.Generic', 'Newtonsoft.Json', 'GraphQL'];
+    const allImports = ['System', 'System.Collections.Generic', 'System.ComponentModel.DataAnnotations'];
+    if (this._parsedConfig.emitJsonAttributes) {
+      const jsonAttributesNamespace = this.jsonAttributesConfiguration.namespace;
+      allImports.push(jsonAttributesNamespace);
+    }
     return allImports.map(i => `using ${i};`).join('\n') + '\n';
   }
 
@@ -143,12 +161,25 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       attributes.push(`[Obsolete("${deprecationReason}")]`);
     }
 
-    if (node.kind === Kind.FIELD_DEFINITION) {
-      attributes.push(`[JsonProperty("${node.name.value}")]`);
+    if (this._parsedConfig.emitJsonAttributes) {
+      if (node.kind === Kind.FIELD_DEFINITION) {
+        const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
+        if (jsonPropertyAttribute != null) {
+          attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
+        }
+      }
     }
 
     if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
-      attributes.push(`[JsonRequired]`);
+      // Should be always inserted for required fields to use in `GetInputObject()` when JSON attributes are not used
+      // or there are no JSON attributes in selected attribute source that provides `JsonRequired` alternative
+      attributes.push('[Required]');
+      if (this._parsedConfig.emitJsonAttributes) {
+        const jsonRequiredAttribute = this.jsonAttributesConfiguration.requiredAttribute;
+        if (jsonRequiredAttribute != null) {
+          attributes.push(`[${jsonRequiredAttribute}]`);
+        }
+      }
     }
 
     if (commentText || attributes.length > 0) {
@@ -377,8 +408,15 @@ ${classMembers}
     {
       var value = propertyInfo.GetValue(this);
       var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-
-      var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+${
+  this._parsedConfig.emitJsonAttributes && this.jsonAttributesConfiguration.requiredAttribute != null
+    ? `
+      var requiredProp = propertyInfo.GetCustomAttributes(typeof(${this.jsonAttributesConfiguration.requiredAttribute}Attribute), false).Length > 0;
+`
+    : `
+      var requiredProp = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), false).Length > 0;
+`
+}
       if (requiredProp || value != defaultValue)
       {
         d[propertyInfo.Name] = value;
