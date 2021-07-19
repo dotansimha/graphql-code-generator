@@ -3445,10 +3445,10 @@
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.0.tgz#545f2425b68d95892afa5961433a19aab1867268"
   integrity sha512-dw87YiSmCgEUFnWj7fYu+wnrFcSEhYyQ8DykTvL1UzCKPm9uLDeey1z0yiSxZeX2qP9oD+TSGIq+61AZHhQO0w==
 
-"@vue/apollo-composable@4.0.0-alpha.13":
-  version "4.0.0-alpha.13"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.13.tgz#2e1499d77b155567c6477ef9b94a96be553b9aed"
-  integrity sha512-CT/YC9H/48eVEqanzfjBhgJVeazs4XChwIpjoxBrFVCgPpbUkInRtxvYJo9z3X6e2YZ1F8n7Aq3RwyQakHs3uw==
+"@vue/apollo-composable@4.0.0-alpha.14":
+  version "4.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.14.tgz#6e3358fa9b815b38384d3da59b5c2b77b2b229d3"
+  integrity sha512-bIOWRGk1j+b2ebsLfwQkzqvJd1tCpHZiBF2Qe88RTLUxtypdkdSW6YpLxwJgNoRv5W55sM9WI+nP2ziv2nqBZg==
   dependencies:
     throttle-debounce "^2.3.0"
     vue-demi "^0.9.1"
