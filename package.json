@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@apollo/client": "3.3.21",
-    "@babel/core": "7.14.6",
-    "@babel/preset-env": "7.14.7",
+    "@babel/core": "7.14.8",
+    "@babel/preset-env": "7.14.8",
     "@babel/preset-typescript": "7.14.5",
     "@changesets/cli": "2.16.0",
     "@graphql-typed-document-node/core": "3.1.0",
