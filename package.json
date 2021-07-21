@@ -86,7 +86,7 @@
     "react-query": "3.19.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
-    "ts-jest": "27.0.3",
+    "ts-jest": "27.0.4",
     "tslib": "2.3.0",
     "typescript": "4.3.5",
     "urql": "2.0.4",
