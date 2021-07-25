@@ -5,7 +5,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { camelCase } from 'change-case-all';
-import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
+import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
 import { RawGraphQLApolloPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
@@ -72,22 +72,18 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
 
   public get sdkContent(): string {
     const sdkOperations = this._operationsToInclude.map(x => {
-      const optionalVariables =
-        !x.node.variableDefinitions ||
-        x.node.variableDefinitions.length === 0 ||
-        x.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-
       const documentVariableName = x.documentVariableName;
       const optionType = GraphQLApolloVisitor.getApolloOperationOptionType(x.operationType);
-      const generics = optionalVariables ? '' : `<${x.operationVariablesTypes}>`;
+      const generics = [x.operationResultType, x.operationVariablesTypes];
 
       const operationName = x.node.name.value;
-      return `${camelCase(operationName)}${x.operationType}(options: ${optionType}${
-        optionalVariables ? '' : generics
-      }) {
-          return client.${GraphQLApolloVisitor.getApolloOperation(x.operationType)}<${
-        x.operationResultType
-      }>({...options, query: ${documentVariableName}})
+      const genericParameter = x.operationType !== 'Mutation' ? [...generics].reverse() : [...generics];
+      return `${camelCase(operationName)}${x.operationType}(options: Partial<${optionType}<${genericParameter.join(
+        ', '
+      )}>>) {
+          return client.${GraphQLApolloVisitor.getApolloOperation(x.operationType)}<${generics.join(
+        ', '
+      )}>({...options, ${GraphQLApolloVisitor.getDocumentFieldName(x.operationType)}: ${documentVariableName}})
       }`;
     });
     return `export const getSdk = (client: ApolloClient<any>) => ({
@@ -95,6 +91,18 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
     });
     export type SdkType = ReturnType<typeof getSdk>
 `;
+  }
+  private static getDocumentFieldName(operationType: string): string {
+    switch (operationType) {
+      case 'Subscription':
+        return 'query';
+      case 'Mutation':
+        return 'mutation';
+      case 'Query':
+        return 'query';
+      default:
+        throw new Error('unknown operation type: ' + operationType);
+    }
   }
   private static getApolloOperation(operationType: string): string {
     switch (operationType) {

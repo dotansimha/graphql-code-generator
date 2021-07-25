@@ -308,23 +308,23 @@ export const Feed4Document = gql\`
 }
     \`;
 export const getSdk = (client: ApolloClient<any>) => ({
-      feedQuery(options: QueryOptions) {
-          return client.query<FeedQuery>({...options, query: FeedDocument})
+      feedQuery(options: Partial<QueryOptions<FeedQueryVariables, FeedQuery>>) {
+          return client.query<FeedQuery, FeedQueryVariables>({...options, query: FeedDocument})
       },
-listenToCommentsSubscription(options: SubscriptionOptions) {
-          return client.subscribe<ListenToCommentsSubscription>({...options, query: ListenToCommentsDocument})
+listenToCommentsSubscription(options: Partial<SubscriptionOptions<ListenToCommentsSubscriptionVariables, ListenToCommentsSubscription>>) {
+          return client.subscribe<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>({...options, query: ListenToCommentsDocument})
       },
-mutationOperationMutation(options: MutationOptions<MutationOperationMutationVariables>) {
-          return client.mutate<MutationOperationMutation>({...options, query: MutationOperationDocument})
+mutationOperationMutation(options: Partial<MutationOptions<MutationOperationMutation, MutationOperationMutationVariables>>) {
+          return client.mutate<MutationOperationMutation, MutationOperationMutationVariables>({...options, mutation: MutationOperationDocument})
       },
-feed2Query(options: QueryOptions<Feed2QueryVariables>) {
-          return client.query<Feed2Query>({...options, query: Feed2Document})
+feed2Query(options: Partial<QueryOptions<Feed2QueryVariables, Feed2Query>>) {
+          return client.query<Feed2Query, Feed2QueryVariables>({...options, query: Feed2Document})
       },
-feed3Query(options: QueryOptions) {
-          return client.query<Feed3Query>({...options, query: Feed3Document})
+feed3Query(options: Partial<QueryOptions<Feed3QueryVariables, Feed3Query>>) {
+          return client.query<Feed3Query, Feed3QueryVariables>({...options, query: Feed3Document})
       },
-feed4Query(options: QueryOptions) {
-          return client.query<Feed4Query>({...options, query: Feed4Document})
+feed4Query(options: Partial<QueryOptions<Feed4QueryVariables, Feed4Query>>) {
+          return client.query<Feed4Query, Feed4QueryVariables>({...options, query: Feed4Document})
       }
     });
     export type SdkType = ReturnType<typeof getSdk>
@@ -656,23 +656,23 @@ export const Feed4Document = gql\`
 }
     \`;
 export const getSdk = (client: ApolloClient<any>) => ({
-      feedQuery(options: QueryOptions) {
-          return client.query<FeedQuery>({...options, query: FeedDocument})
+      feedQuery(options: Partial<QueryOptions<FeedQueryVariables, FeedQuery>>) {
+          return client.query<FeedQuery, FeedQueryVariables>({...options, query: FeedDocument})
       },
-listenToCommentsSubscription(options: SubscriptionOptions) {
-          return client.subscribe<ListenToCommentsSubscription>({...options, query: ListenToCommentsDocument})
+listenToCommentsSubscription(options: Partial<SubscriptionOptions<ListenToCommentsSubscriptionVariables, ListenToCommentsSubscription>>) {
+          return client.subscribe<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>({...options, query: ListenToCommentsDocument})
       },
-mutationOperationMutation(options: MutationOptions<MutationOperationMutationVariables>) {
-          return client.mutate<MutationOperationMutation>({...options, query: MutationOperationDocument})
+mutationOperationMutation(options: Partial<MutationOptions<MutationOperationMutation, MutationOperationMutationVariables>>) {
+          return client.mutate<MutationOperationMutation, MutationOperationMutationVariables>({...options, mutation: MutationOperationDocument})
       },
-feed2Query(options: QueryOptions<Feed2QueryVariables>) {
-          return client.query<Feed2Query>({...options, query: Feed2Document})
+feed2Query(options: Partial<QueryOptions<Feed2QueryVariables, Feed2Query>>) {
+          return client.query<Feed2Query, Feed2QueryVariables>({...options, query: Feed2Document})
       },
-feed3Query(options: QueryOptions) {
-          return client.query<Feed3Query>({...options, query: Feed3Document})
+feed3Query(options: Partial<QueryOptions<Feed3QueryVariables, Feed3Query>>) {
+          return client.query<Feed3Query, Feed3QueryVariables>({...options, query: Feed3Document})
       },
-feed4Query(options: QueryOptions) {
-          return client.query<Feed4Query>({...options, query: Feed4Document})
+feed4Query(options: Partial<QueryOptions<Feed4QueryVariables, Feed4Query>>) {
+          return client.query<Feed4Query, Feed4QueryVariables>({...options, query: Feed4Document})
       }
     });
     export type SdkType = ReturnType<typeof getSdk>

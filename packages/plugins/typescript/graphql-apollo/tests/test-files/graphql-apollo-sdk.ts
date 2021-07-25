@@ -36,8 +36,8 @@ export const AddDocument = gql`
   }
 `;
 export const getSdk = (client: ApolloClient<any>) => ({
-  addQuery(options: QueryOptions<AddQueryVariables>) {
-    return client.query<AddQuery>({ ...options, query: AddDocument });
+  addQuery(options: Partial<QueryOptions<AddQueryVariables, AddQuery>>) {
+    return client.query<AddQuery, AddQueryVariables>({ ...options, query: AddDocument });
   },
 });
 export type SdkType = ReturnType<typeof getSdk>;
