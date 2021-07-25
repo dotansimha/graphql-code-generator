@@ -5,7 +5,7 @@ exports[`apollo-client sdk Should generate Sdk correctly 1`] = `
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-import { ApolloClient } from '@apollo/client';
+import { ApolloClient, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -308,23 +308,23 @@ export const Feed4Document = gql\`
 }
     \`;
 export const getSdk = (client: ApolloClient<any>) => ({
-      feedQuery(variables?: FeedQueryVariables) {
-          return client.query<FeedQuery>({variables, query: FeedDocument})
+      feedQuery(options: QueryOptions) {
+          return client.query<FeedQuery>({...options, query: FeedDocument})
       },
-listenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
-          return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
+listenToCommentsSubscription(options: SubscriptionOptions) {
+          return client.subscribe<ListenToCommentsSubscription>({...options, query: ListenToCommentsDocument})
       },
-mutationOperationMutation(variables: MutationOperationMutationVariables) {
-          return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
+mutationOperationMutation(options: MutationOptions<MutationOperationMutationVariables>) {
+          return client.mutate<MutationOperationMutation>({...options, query: MutationOperationDocument})
       },
-feed2Query(variables: Feed2QueryVariables) {
-          return client.query<Feed2Query>({variables, query: Feed2Document})
+feed2Query(options: QueryOptions<Feed2QueryVariables>) {
+          return client.query<Feed2Query>({...options, query: Feed2Document})
       },
-feed3Query(variables?: Feed3QueryVariables) {
-          return client.query<Feed3Query>({variables, query: Feed3Document})
+feed3Query(options: QueryOptions) {
+          return client.query<Feed3Query>({...options, query: Feed3Document})
       },
-feed4Query(variables?: Feed4QueryVariables) {
-          return client.query<Feed4Query>({variables, query: Feed4Document})
+feed4Query(options: QueryOptions) {
+          return client.query<Feed4Query>({...options, query: Feed4Document})
       }
     });
     export type SdkType = ReturnType<typeof getSdk>
@@ -353,7 +353,7 @@ exports[`apollo-client sdk Should support useTypeImports 1`] = `
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-import type { ApolloClient } from '@apollo/client';
+import type { ApolloClient, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -656,23 +656,23 @@ export const Feed4Document = gql\`
 }
     \`;
 export const getSdk = (client: ApolloClient<any>) => ({
-      feedQuery(variables?: FeedQueryVariables) {
-          return client.query<FeedQuery>({variables, query: FeedDocument})
+      feedQuery(options: QueryOptions) {
+          return client.query<FeedQuery>({...options, query: FeedDocument})
       },
-listenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables) {
-          return client.subscribe<ListenToCommentsSubscription>({variables, query: ListenToCommentsDocument})
+listenToCommentsSubscription(options: SubscriptionOptions) {
+          return client.subscribe<ListenToCommentsSubscription>({...options, query: ListenToCommentsDocument})
       },
-mutationOperationMutation(variables: MutationOperationMutationVariables) {
-          return client.mutate<MutationOperationMutation>({variables, query: MutationOperationDocument})
+mutationOperationMutation(options: MutationOptions<MutationOperationMutationVariables>) {
+          return client.mutate<MutationOperationMutation>({...options, query: MutationOperationDocument})
       },
-feed2Query(variables: Feed2QueryVariables) {
-          return client.query<Feed2Query>({variables, query: Feed2Document})
+feed2Query(options: QueryOptions<Feed2QueryVariables>) {
+          return client.query<Feed2Query>({...options, query: Feed2Document})
       },
-feed3Query(variables?: Feed3QueryVariables) {
-          return client.query<Feed3Query>({variables, query: Feed3Document})
+feed3Query(options: QueryOptions) {
+          return client.query<Feed3Query>({...options, query: Feed3Document})
       },
-feed4Query(variables?: Feed4QueryVariables) {
-          return client.query<Feed4Query>({variables, query: Feed4Document})
+feed4Query(options: QueryOptions) {
+          return client.query<Feed4Query>({...options, query: Feed4Document})
       }
     });
     export type SdkType = ReturnType<typeof getSdk>

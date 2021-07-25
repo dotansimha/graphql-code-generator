@@ -1,4 +1,4 @@
-import { ApolloClient } from '@apollo/client';
+import { ApolloClient, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -36,8 +36,8 @@ export const AddDocument = gql`
   }
 `;
 export const getSdk = (client: ApolloClient<any>) => ({
-  addQuery(variables: AddQueryVariables) {
-    return client.query<AddQuery>({ variables, query: AddDocument });
+  addQuery(options: QueryOptions<AddQueryVariables>) {
+    return client.query<AddQuery>({ ...options, query: AddDocument });
   },
 });
 export type SdkType = ReturnType<typeof getSdk>;

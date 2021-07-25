@@ -31,7 +31,9 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
 
     const typeImport = this.config.useTypeImports ? 'import type' : 'import';
 
-    this._additionalImports.push(`${typeImport} { ApolloClient } from '@apollo/client';`);
+    this._additionalImports.push(
+      `${typeImport} { ApolloClient, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client';`
+    );
   }
 
   public OperationDefinition(node: OperationDefinitionNode) {
@@ -76,14 +78,16 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
         x.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
 
       const documentVariableName = x.documentVariableName;
+      const optionType = GraphQLApolloVisitor.getApolloOperationOptionType(x.operationType);
+      const generics = optionalVariables ? '' : `<${x.operationVariablesTypes}>`;
 
       const operationName = x.node.name.value;
-      return `${camelCase(operationName)}${x.operationType}(variables${optionalVariables ? '?' : ''}: ${
-        x.operationVariablesTypes
+      return `${camelCase(operationName)}${x.operationType}(options: ${optionType}${
+        optionalVariables ? '' : generics
       }) {
           return client.${GraphQLApolloVisitor.getApolloOperation(x.operationType)}<${
         x.operationResultType
-      }>({variables, query: ${documentVariableName}})
+      }>({...options, query: ${documentVariableName}})
       }`;
     });
     return `export const getSdk = (client: ApolloClient<any>) => ({
@@ -100,6 +104,19 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
         return 'mutate';
       case 'Query':
         return 'query';
+      default:
+        throw new Error('unknown operation type: ' + operationType);
+    }
+  }
+
+  private static getApolloOperationOptionType(operationType: string): string {
+    switch (operationType) {
+      case 'Subscription':
+        return 'SubscriptionOptions';
+      case 'Mutation':
+        return 'MutationOptions';
+      case 'Query':
+        return 'QueryOptions';
       default:
         throw new Error('unknown operation type: ' + operationType);
     }
