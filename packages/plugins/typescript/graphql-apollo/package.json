@@ -1,6 +1,6 @@
 {
-  "name": "@cyberhck/typescript-graphql-apollo-temp",
-  "version": "0.0.9",
+  "name": "@graphql-codegen/typescript-graphql-apollo",
+  "version": "0.0.0",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK based on apollo client and GraphQL operations",
   "repository": {
     "type": "git",
