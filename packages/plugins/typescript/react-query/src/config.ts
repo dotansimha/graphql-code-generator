@@ -52,6 +52,17 @@ export interface ReactQueryRawPluginConfig
   exposeQueryKeys?: boolean;
 
   /**
+   * @default false
+   * @description For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.
+   * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.
+   * @exampleMarkdown
+   * ```ts
+   *  await queryClient.prefetchQuery(userQuery.getKey(), () => userQuery.fetcher())
+   * ```
+   */
+  exposeFetcher?: boolean;
+
+  /**
    * @default unknown
    * @description Changes the default "TError" generic type.
    */

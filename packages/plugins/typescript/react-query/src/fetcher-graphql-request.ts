@@ -75,4 +75,17 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       options
     );`;
   }
+
+  generateFetcherFetch(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+
+    return `\nuse${operationName}.fetcher = (client: GraphQLClient, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables);`;
+  }
 }

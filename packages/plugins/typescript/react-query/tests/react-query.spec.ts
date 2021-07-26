@@ -196,6 +196,33 @@ describe('React-Query', () => {
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
+
+    it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#customFetcher',
+        },
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.fetcher = (variables?: TestQueryVariables) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables);`
+      );
+    });
+
+    it('Should NOT generate fetcher field when exposeFetcher is true and the fetcher IS a react hook', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#useCustomFetcher',
+          isReactHook: true,
+        },
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).not.toBeSimilarStringTo(`useTestQuery.fetcher`);
+    });
   });
 
   describe('fetcher: graphql-request', () => {
@@ -252,6 +279,17 @@ describe('React-Query', () => {
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend).toContain(`import type { GraphQLClient } from 'graphql-request';`);
+    });
+    it('Should generate fetcher field when exposeFetcher is true', async () => {
+      const config = {
+        fetcher: 'graphql-request',
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.fetcher = (client: GraphQLClient, variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(client, TestDocument, variables);`
+      );
     });
   });
 
@@ -421,6 +459,20 @@ describe('React-Query', () => {
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
+
+    it('Should generate fetcher field when exposeFetcher is true', async () => {
+      const config = {
+        fetcher: {
+          endpoint: 'myEndpoint',
+        },
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.fetcher = (variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(TestDocument, variables);`
+      );
+    });
   });
 
   describe('fetcher: fetch', () => {
@@ -464,6 +516,17 @@ describe('React-Query', () => {
 
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+
+    it.only('Should generate fetcher field when exposeFetcher is true', async () => {
+      const config = {
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.fetcher = (variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables);`
+      );
     });
   });
 
