@@ -105,6 +105,19 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     return this.fetcher.generateFetcherImplementaion();
   }
 
+  private _getHookSuffix(name: string, operationType: string) {
+    if (this.config.omitOperationSuffix) {
+      return '';
+    }
+    if (!this.config.dedupeOperationSuffix) {
+      return pascalCase(operationType);
+    }
+    if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
+      return '';
+    }
+    return pascalCase(operationType);
+  }
+
   protected buildOperation(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -113,9 +126,12 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const operationName: string = this.convertName(node.name?.value ?? '', {
-      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+    const nodeName = node.name?.value ?? '';
+    const suffix = this._getHookSuffix(nodeName, operationType);
+    const operationName: string = this.convertName(nodeName, {
+      suffix,
       useTypesPrefix: false,
+      useTypesSuffix: false,
     });
 
     operationResultType = this._externalImportPrefix + operationResultType;
