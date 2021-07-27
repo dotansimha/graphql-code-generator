@@ -37,3 +37,11 @@ schema:
 ```
 
 This way, the GraphQL Code Generator will generate complete typings that matches both your client fields and server fields.
+
+If you only plan to perform a query with Apollo's local state, extend the `Query` class with the field you're trying to call in your local `schema`:
+
+```.graphql
+extend type Query {
+  todos: Todo
+}
+```
