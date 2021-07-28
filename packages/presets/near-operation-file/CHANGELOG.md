@@ -1,5 +1,12 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 1.18.6
+
+### Patch Changes
+
+- 53d212896: dedupeFragments deep fragment import fix
+- 841426e5d: Further fragments import on dedupeFragments edge cases fix
+
 ## 1.18.5
 
 ### Patch Changes
