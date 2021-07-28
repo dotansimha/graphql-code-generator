@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 1.21.8
+
+### Patch Changes
+
+- e1643e6d4: Fix exception `loader.loaderId is not a function` caused by conflict with an internal dependency of Codegen.
+
 ## 1.21.7
 
 ### Patch Changes
