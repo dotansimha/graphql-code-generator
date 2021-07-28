@@ -30,7 +30,7 @@
     "@graphql-codegen/plugin-helpers": "^1.18.8",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
-    "graphql-helix": "1.6.1",
+    "graphql-helix": "1.7.0",
     "nock": "13.1.1",
     "tslib": "~2.3.0"
   },
