@@ -17,11 +17,11 @@
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "3.0.0",
-    "@graphql-codegen/typed-document-node": "2.0.0",
-    "@graphql-codegen/typescript": "2.0.0",
-    "@graphql-codegen/typescript-operations": "2.0.1",
-    "@graphql-codegen/gql-tag-operations": "1.0.0",
+    "@graphql-codegen/add": "workspace:3.0.0",
+    "@graphql-codegen/gql-tag-operations": "workspace:1.0.0",
+    "@graphql-codegen/typed-document-node": "workspace:2.0.0",
+    "@graphql-codegen/typescript": "workspace:2.0.0",
+    "@graphql-codegen/typescript-operations": "workspace:2.0.1",
     "tslib": "2.3.0"
   },
   "peerDependencies": {

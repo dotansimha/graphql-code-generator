@@ -2,7 +2,6 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "preinstall": "npx yarn-deduplicate",
     "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
@@ -19,33 +18,17 @@
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "packages/utils/*",
-      "packages/plugins/flow/*",
-      "packages/plugins/java/*",
-      "packages/plugins/c-sharp/*",
-      "packages/plugins/typescript/*",
-      "packages/plugins/other/*",
-      "packages/presets/*",
-      "website",
-      "website/live-demo",
-      "examples/*"
-    ],
-    "nohoist": [
-      "@graphql-codegen/website/@docusaurus/*",
-      "**/@babel-*",
-      "**/@babel-*/**"
-    ]
-  },
   "devDependencies": {
     "@apollo/client": "3.4.7",
     "@babel/core": "7.15.0",
     "@babel/preset-env": "7.15.0",
     "@babel/preset-typescript": "7.15.0",
+    "@changesets/apply-release-plan": "5.0.0",
     "@changesets/cli": "2.16.0",
+    "@graphql-tools/merge": "^7.0.0",
+    "@graphql-tools/utils": "^7.10.0",
     "@graphql-typed-document-node/core": "3.1.0",
+    "@pablosz/bob-the-bundler": "1.5.2",
     "@reduxjs/toolkit": "1.6.1",
     "@types/common-tags": "1.8.1",
     "@types/jest": "26.0.24",
@@ -62,7 +45,6 @@
     "apollo-server": "3.1.2",
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.6",
-    "bob-the-bundler": "1.5.1",
     "chalk": "4.1.2",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
@@ -80,11 +62,14 @@
     "husky": "7.0.1",
     "java-ast": "0.3.0",
     "jest": "27.0.6",
+    "jest-diff": "^27.0.6",
     "jest-docblock": "27.0.6",
+    "jest-each": "^27.0.6",
     "jest-junit": "12.2.0",
     "lint-staged": "11.1.2",
     "lodash": "4.17.21",
     "prettier": "2.3.2",
+    "pretty-quick": "^3.1.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.19.4",
@@ -111,14 +96,16 @@
       "npx yarn-deduplicate"
     ]
   },
-  "resolutions": {
-    "prettier": "2.3.2",
-    "babel-jest": "27.0.6",
-    "jest-runner": "27.0.6",
-    "graphql": "15.5.1",
-    "graphql-language-service-interface": "2.8.4",
-    "**/apollo-language-server/graphql": "^15.0.0",
-    "**/@types/graphql-upload/graphql": "^15.0.0"
+  "pnpm": {
+    "overrides": {
+      "prettier": "2.3.2",
+      "babel-jest": "27.0.6",
+      "jest-runner": "27.0.6",
+      "graphql": "15.5.1",
+      "graphql-language-service-interface": "2.8.4",
+      "**/apollo-language-server/graphql": "^15.0.0",
+      "**/@types/graphql-upload/graphql": "^15.0.0"
+    }
   },
   "dependencies": {
     "dotenv": "10.0.0",

@@ -18,7 +18,7 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
     "change-case-all": "1.0.14",
     "tslib": "~2.3.0"
   },

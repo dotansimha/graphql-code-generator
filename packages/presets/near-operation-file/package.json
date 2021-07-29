@@ -17,9 +17,9 @@
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "^3.0.0",
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
-    "@graphql-codegen/visitor-plugin-common": "2.0.0",
+    "@graphql-codegen/add": "workspace:^3.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
+    "@graphql-codegen/visitor-plugin-common": "workspace:2.0.0",
     "parse-filepath": "^1.0.2",
     "tslib": "~2.3.0"
   },

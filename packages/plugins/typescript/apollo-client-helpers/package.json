@@ -20,10 +20,10 @@
     "@apollo/client": "3.4.7"
   },
   "dependencies": {
-    "change-case-all": "1.0.14",
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
-    "@graphql-codegen/visitor-plugin-common": "2.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
+    "@graphql-codegen/visitor-plugin-common": "workspace:2.0.0",
     "auto-bind": "~4.0.0",
+    "change-case-all": "1.0.14",
     "tslib": "~2.3.0"
   },
   "main": "dist/index.js",

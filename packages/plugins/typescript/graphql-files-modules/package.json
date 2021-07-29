@@ -14,7 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {

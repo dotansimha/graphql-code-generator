@@ -13,15 +13,15 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
     "@graphql-tools/optimize": "^1.0.1",
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
-    "@graphql-tools/relay-operation-optimizer": "^6.3.3",
+    "@graphql-tools/relay-operation-optimizer": "^6.3.4",
     "array.prototype.flatmap": "^1.2.4",
     "auto-bind": "~4.0.0",
-    "dependency-graph": "^0.11.0",
-    "graphql-tag": "^2.11.0",
-    "parse-filepath": "^1.0.2",
     "change-case-all": "1.0.14",
+    "dependency-graph": "^0.11.0",
+    "graphql-tag": "^2.12.5",
+    "parse-filepath": "^1.0.2",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {

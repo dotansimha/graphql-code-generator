@@ -14,8 +14,8 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
-    "@graphql-codegen/visitor-plugin-common": "2.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^2.0.0",
+    "@graphql-codegen/visitor-plugin-common": "workspace:2.0.0",
     "auto-bind": "~4.0.0",
     "change-case-all": "1.0.14",
     "tslib": "~2.2.0"
@@ -55,6 +55,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@rtk-query/graphql-request-base-query": "1.0.3"
+    "@rtk-query/graphql-request-base-query": "1.0.3",
+    "graphql-request": "^3.5.0"
   }
 }

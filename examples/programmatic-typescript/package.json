@@ -7,20 +7,20 @@
     "start:mjs": "tsup --onSuccess \"node dist/index.mjs\""
   },
   "dependencies": {
-    "@graphql-codegen/core": "*",
-    "@graphql-codegen/typed-document-node": "*",
-    "@graphql-codegen/typescript": "*",
-    "@graphql-codegen/typescript-operations": "*",
-    "@graphql-codegen/typescript-resolvers": "*",
-    "@graphql-tools/graphql-file-loader": "^7.0.1",
-    "@graphql-tools/load": "^7.1.0",
-    "@graphql-tools/schema": "^8.0.1",
-    "graphql": "^15.5.1",
+    "@graphql-codegen/core": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/typescript-resolvers": "workspace:*",
+    "@graphql-tools/graphql-file-loader": "*",
+    "@graphql-tools/load": "*",
+    "@graphql-tools/schema": "*",
+    "graphql": "15.5.1",
     "graphql-tag": "^2.12.5",
-    "prettier": "^2.3.2"
+    "prettier": "2.3.2"
   },
   "devDependencies": {
-    "@types/node": "^16.4.10",
-    "tsup": "^4.12.5"
+    "@types/node": "^16.4.13",
+    "tsup": "^4.13.1"
   }
 }
