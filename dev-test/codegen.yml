@@ -405,3 +405,11 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       augmentedModuleName: '@urql/core'
+  ./dev-test/test-schema/tsql.d.ts:
+    schema:
+      - ./dev-test/test-schema/tsgql-test.ts:
+          noRequire: true
+    plugins:
+      - typescript
+      - typescript-resolvers
+      - tsgql
