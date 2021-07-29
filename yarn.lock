@@ -3186,12 +3186,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^15.0.1":
-  version "15.6.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
-  integrity sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==
-
-"@types/node@14.17.6", "@types/node@^14.14.33":
+"@types/node@*", "@types/node@14.17.6", "@types/node@^14.14.33":
   version "14.17.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.6.tgz#cc61c8361c89e70c468cda464d1fa3dd7e5ebd62"
   integrity sha512-iBxsxU7eswQDGhlr3AiamBxOssaYxbM+NKXVil8jg9yFXvrfEFbDumLD/2dMTB+zYyg7w+Xjt8yuxfdbUHAtcQ==
@@ -3205,6 +3200,11 @@
   version "12.12.55"
   resolved "https://registry.npmjs.org/@types/node/-/node-12.12.55.tgz#0aa266441cb9e1fd3e415a8f619cb7d776667cdd"
   integrity sha512-Vd6xQUVvPCTm7Nx1N7XHcpX6t047ltm7TgcsOr4gFHjeYgwZevo+V7I1lfzHnj5BT5frztZ42+RTG4MwYw63dw==
+
+"@types/node@^15.0.1":
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
+  integrity sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3909,13 +3909,13 @@ apollo-client@2.6.10:
     tslib "^1.10.0"
     zen-observable "^0.8.0"
 
-apollo-datasource@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-3.0.2.tgz#5602ded79657d9ffd0e150c4f9ca472753830200"
-  integrity sha512-pZ7RDW2UVxxgSovshM27OHQ+rPlDjvGWdAQux6WswJrYEDx8sbJOr39GuyUBVL6yvNuIloOY6rsoG0NRqZ5mbQ==
+apollo-datasource@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-3.0.3.tgz#616ccf2cbfaa6d9bf04520bf7d80da0e372eee5c"
+  integrity sha512-oboGz50DbGW6LNaNvB/bpJRypXvYFE1SRO5VxYSUnkz1P7TDcemWfJLRjNnfxCIMVyd0hmmwrmSaGKPQZvmT9Q==
   dependencies:
     apollo-server-caching "^3.0.1"
-    apollo-server-env "^4.0.2"
+    apollo-server-env "^4.0.3"
 
 apollo-graphql@^0.9.0:
   version "0.9.2"
@@ -3950,10 +3950,10 @@ apollo-server-caching@^3.0.1:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-3.0.2.tgz#bc8316bf6ef2a4d5c0a9d7b6af347085230a6941"
-  integrity sha512-CDphrxAZdx1yt4CzVMKq5NOsaAKFzVnPBWzzL5Vi/BUTenCjqaVcRHxAVbjFEQJJv+Hv+RpEru51sLRjbJtRUQ==
+apollo-server-core@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-3.1.1.tgz#3d1f3ea35f8c2972c2455c60c7b2686ad750c761"
+  integrity sha512-MLN6AD8pumdf3c4qYDqXeLkgtJONfvtx0okhvhrbN1DC1YX9W2d1mcTGQa88jTBtgDAXZQS1N5DncS9ctUekDw==
   dependencies:
     "@apollographql/apollo-tools" "^0.5.1"
     "@apollographql/graphql-playground-html" "1.6.29"
@@ -3961,14 +3961,14 @@ apollo-server-core@^3.0.2:
     "@graphql-tools/schema" "^7.1.5"
     "@graphql-tools/utils" "^7.9.0"
     "@josephg/resolvable" "^1.0.0"
-    apollo-datasource "^3.0.2"
+    apollo-datasource "^3.0.3"
     apollo-graphql "^0.9.0"
     apollo-reporting-protobuf "^3.0.0"
     apollo-server-caching "^3.0.1"
-    apollo-server-env "^4.0.2"
+    apollo-server-env "^4.0.3"
     apollo-server-errors "^3.0.1"
-    apollo-server-plugin-base "^3.0.2"
-    apollo-server-types "^3.0.2"
+    apollo-server-plugin-base "^3.1.1"
+    apollo-server-types "^3.1.1"
     async-retry "^1.2.1"
     fast-json-stable-stringify "^2.1.0"
     graphql-tag "^2.11.0"
@@ -3977,10 +3977,10 @@ apollo-server-core@^3.0.2:
     sha.js "^2.4.11"
     uuid "^8.0.0"
 
-apollo-server-env@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-env/-/apollo-server-env-4.0.2.tgz#e21c283b0506584c96286cf1e59bb2952b4653d9"
-  integrity sha512-4SVYcW30o+/99M02yQl4zHiFWB11UE/We0lwgw/ylNvf7hsc7j6J0lQKITMqlt3ElFpIqPriEWqy4W5GmG9H2A==
+apollo-server-env@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/apollo-server-env/-/apollo-server-env-4.0.3.tgz#082a5c1dd4dfb3b34de5e1fa7dc170dd15a5062f"
+  integrity sha512-B32+RUOM4GUJAwnQqQE1mT1BG7+VfW3a0A87Bp3gv/q8iNnhY2BIWe74Qn03pX8n27g3EGVCt0kcBuHhjG5ltA==
   dependencies:
     node-fetch "^2.6.1"
 
@@ -3989,10 +3989,10 @@ apollo-server-errors@^3.0.1:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-3.0.1.tgz#0dfcc1fe8b10eab311fc7e4f6da93189ea6bcdae"
   integrity sha512-PSp64IFeN1YK5EYZ3V/8iDRESMMyE00h1vE5aCr83wHL3T0mN7VRiMKoOIZ+2rUtnn7CpK73o6QLmouhxPtXsQ==
 
-apollo-server-express@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-3.0.2.tgz#0d83f0ab47cc3cc9a8b83b71c6690ac16976b02d"
-  integrity sha512-JQ3NS5Fm0ul4VMEVbIMG3Z26U1Ab7jMZ92DrToVu8wvdJKGAOZdlypLIn7odz6zlU7afZtCXyYhgc5Tb0DkAUA==
+apollo-server-express@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-3.1.1.tgz#ca9790f2fe5dffaebad9a9cfb938b593658e1e1a"
+  integrity sha512-W6VDth39mv1SCaJjnTwc0OmXIWzpELAJ3+/Id4cw+99HXdeRMJXDN5lbMENYEu+1a+pUK8iOoctwlJbikwBPGA==
   dependencies:
     "@types/accepts" "^1.3.5"
     "@types/body-parser" "1.19.1"
@@ -4000,37 +4000,36 @@ apollo-server-express@^3.0.2:
     "@types/express" "4.17.13"
     "@types/express-serve-static-core" "4.17.24"
     accepts "^1.3.5"
-    apollo-server-core "^3.0.2"
-    apollo-server-types "^3.0.2"
+    apollo-server-core "^3.1.1"
+    apollo-server-types "^3.1.1"
     body-parser "^1.19.0"
     cors "^2.8.5"
     parseurl "^1.3.3"
 
-apollo-server-plugin-base@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-3.0.2.tgz#645f8d2d0c21facfec9946d1a939869b10421fcd"
-  integrity sha512-WJ5PmGVUl67b41Z88EZDJcOqXFitsMbfyGDAqPQxeU2+bAl7+o1Oa9Hvx+qTsJKVKa9V+yS/nXFzZYpodehXEQ==
+apollo-server-plugin-base@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-3.1.1.tgz#b2d8d50c52af7c004fd63e04c53f2d2bf800c4df"
+  integrity sha512-gkV/UtMji6SrX8CdZ5/3IlRBVE57CM+DL6x9MA3pjNEc357OOC3dnh1SXNmp0cvqn66CB1kODGrqKGRxyl/qpA==
   dependencies:
-    apollo-server-types "^3.0.2"
+    apollo-server-types "^3.1.1"
 
-apollo-server-types@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-3.0.2.tgz#f47cdd20bad4eb00d029743e1d42f29d3dc0aa45"
-  integrity sha512-eZRLL96w9Ty/mV2j4QdoApNGRplwSNNPsAP9Wdlsf0eQ5WNFqgOWa/SQznyBXInlSrjhmnUaVjGZCsS9VoPD0w==
+apollo-server-types@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-3.1.1.tgz#a45bf4d7c978340dc7c7dff317628629bdc53443"
+  integrity sha512-dTNlRxqdo+wnrcOFpFfzehdmcYHl6MQKuLnCCRzAHuVR5yOiuhQ5CIGhIjvMx2bP9ZoyON1SvXOIDTyTaU9gaQ==
   dependencies:
     apollo-reporting-protobuf "^3.0.0"
     apollo-server-caching "^3.0.1"
-    apollo-server-env "^4.0.2"
+    apollo-server-env "^4.0.3"
 
-apollo-server@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/apollo-server/-/apollo-server-3.0.2.tgz#dd892bb77c1428e18c3d48f4feea217774745709"
-  integrity sha512-n6DAuXRZB+knrpoJKCmCygeSGfrIRxJYWS0zeGaQQweMY5HY9BSFFu4GAHuPBuS4VXcqzlBw+6NmfL33cjnU9Q==
+apollo-server@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-server/-/apollo-server-3.1.1.tgz#6289905c80e2ed1d2e8af9e436c0f67a0ae00986"
+  integrity sha512-wuqLQk1GncAqq9HQqTgoH0mTD3oriTkT7Eli51fUPg4vmhR/rmO2RVQVBB8pGzC7CX+XToPzs21HeW2C4HJo4Q==
   dependencies:
-    apollo-server-core "^3.0.2"
-    apollo-server-express "^3.0.2"
+    apollo-server-core "^3.1.1"
+    apollo-server-express "^3.1.1"
     express "^4.17.1"
-    stoppable "^1.1.0"
 
 apollo-utilities@1.3.4, apollo-utilities@^1.3.0, apollo-utilities@^1.3.4:
   version "1.3.4"
@@ -13363,12 +13362,12 @@ rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.1, rxjs@^6.6.0, rxjs@^6.6.3, rxjs@^6.6.7:
   dependencies:
     tslib "^1.9.0"
 
-safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+safe-buffer@5.1.2, safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
-safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@~5.2.0:
+safe-buffer@^5.2.0, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
@@ -13987,11 +13986,6 @@ stencil-apollo@0.1.6:
   integrity sha512-jgTyBngLdKF/MrHC/mZOelAmWAhF7FIVQIb3PDEzw2mfiTvuUkVm99ogy633uWoKu4XRVvG56qWvxbX5dqEFLg==
   dependencies:
     "@stencil/state-tunnel" "1.0.1"
-
-stoppable@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/stoppable/-/stoppable-1.1.0.tgz#32da568e83ea488b08e4d7ea2c3bcc9d75015d5b"
-  integrity sha512-KXDYZ9dszj6bzvnEMRYvxgeTHU74QBFL54XKtP3nyMuJ81CFYtABZ3bAzL2EdFUaEwJOBOgENyFj3R7oTzDyyw==
 
 stream-browserify@^3.0.0:
   version "3.0.0"
