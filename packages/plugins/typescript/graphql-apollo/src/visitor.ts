@@ -78,6 +78,7 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
 
       const operationName = x.node.name.value;
       const genericParameter = x.operationType !== 'Mutation' ? [...generics].reverse() : [...generics];
+      // the reason we're reversing: https://github.com/apollographql/apollo-client/issues/8537
       return `${camelCase(operationName)}${x.operationType}(options: Partial<${optionType}<${genericParameter.join(
         ', '
       )}>>) {
