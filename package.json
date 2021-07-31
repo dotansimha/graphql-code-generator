@@ -62,7 +62,7 @@
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.6",
     "bob-the-bundler": "1.2.1",
-    "eslint": "7.31.0",
+    "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
     "eslint-plugin-import": "2.23.4",
