@@ -13,7 +13,7 @@ This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Clien
 
 ### How to use?
 
-Start by add this plugin to your configuration:
+Start by adding this plugin to your configuration:
 
 ```yaml
 schema: my-schema.graphql
@@ -26,10 +26,10 @@ generates:
 Then, use the generated TypeScript `type` as your signature for `typePolicies`:
 
 ```ts
-import { TypedTypePolicies } from './apollo-helpers';
+import { StrictTypedTypePolicies } from './apollo-helpers';
 
-const typePolicies: TypedTypePolicies = {
-  // Keys in this object will be validated against the typed on your schema
+const typePolicies: StrictTypedTypePolicies = {
+  // Keys in this object will be validated against the types on your schema
   Product: {
     keyFields: ['id'], // Values in this field will be validated against the available fields from the Product type
   },

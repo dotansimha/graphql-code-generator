@@ -63,13 +63,13 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
     schema.getSubscriptionType()?.name,
   ].filter(Boolean);
 
-  const rootContent = `export type TypedTypePolicies = TypePolicies & {${Object.keys(typedTypePolicies)
+  const rootContent = `export type StrictTypedTypePolicies = {${Object.keys(typedTypePolicies)
     .map(typeName => {
       const nonOptional = config.requirePoliciesForAllTypes && !rootTypes.includes(typeName);
 
       return `\n\t${typeName}${nonOptional ? '' : '?'}: ${typedTypePolicies[typeName]}`;
     })
-    .join(',')}\n};`;
+    .join(',')}\n};\nexport type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;`;
 
   return {
     prepend: [
