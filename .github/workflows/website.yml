@@ -17,19 +17,23 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 16
-      - name: Cache Yarn
+      - name: Cache pnpm modules
         uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-yarn-
+            ${{ runner.os }}
+      - name: install pnpm
+        run: npm i -g pnpm@latest
       - name: Install Dependencies
-        run: yarn install
+        run: pnpm install
       - name: Build Plugins
-        run: yarn build
+        run: pnpm build
       - name: Build Website
-        run: cd website && yarn build:website
+        run: cd website && pnpm build:website
       - name: Deploy Website 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

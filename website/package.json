@@ -5,9 +5,9 @@
   "scripts": {
     "start": "docusaurus start",
     "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
-    "prebuild:website": "yarn generate:config-docs",
-    "prestart": "yarn generate:config-docs",
-    "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
+    "prebuild:website": "pnpm generate:config-docs",
+    "prestart": "pnpm generate:config-docs",
+    "generate:config-docs": "cd ../packages/utils/config-schema && pnpm build ../../../website/ ./docs/generated-config ./static/"
   },
   "devDependencies": {
     "@docusaurus/core": "2.0.0-beta.4",

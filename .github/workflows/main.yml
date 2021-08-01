@@ -23,33 +23,37 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
-      - name: Cache Yarn
+      - name: Cache pnpm modules
         uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ matrix.node_version }}-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-yarn-
+            ${{ runner.os }}-${{ matrix.node_version }}-
+      - name: install pnpm
+        run: npm i -g pnpm@latest
       - name: Cache Jest
         uses: actions/cache@v2
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-${{matrix.node_version}}-jest-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-jest-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-${{matrix.node_version}}-jest-
-      - name: Install Dependencies using Yarn
-        run: yarn install
+      - name: Install Dependencies using pnpm
+        run: pnpm install
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Test
-        run: yarn test
+        run: pnpm test
         env:
           CI: true
       - name: Test dev-tests
         run: |
-          yarn run generate:examples
+          pnpm run generate:examples
           git diff --exit-code -- dev-test/
       - name: Test ESM
         run: node scripts/test-esm.mjs

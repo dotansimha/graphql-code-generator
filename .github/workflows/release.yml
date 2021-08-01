@@ -31,20 +31,25 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: Cache Yarn
+      - name: Cache pnpm modules
         uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-16-yarn-${{ hashFiles('yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-16-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install && git checkout yarn.lock
+            ${{ runner.os }}
+      - name: install pnpm
+        run: npm i -g pnpm@latest
+      - name: Install Dependencies using pnpm
+        run: pnpm install
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@master
         with:
-          publish: yarn release
+          version: pnpm ci:version
+          publish: pnpm release
           commit: 'chore(release): update monorepo packages versions'
           title: 'Upcoming Release Changes'
         env:

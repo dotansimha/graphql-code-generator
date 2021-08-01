@@ -12,10 +12,11 @@
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx,graphql,yml}\"",
     "types:check": "tsc --noEmit",
-    "test-and-build": "yarn build && yarn test",
-    "prerelease": "yarn build",
-    "release": "changeset publish",
-    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
+    "test-and-build": "pnpm build && pnpm test",
+    "prerelease": "pnpm build",
+    "ci:version": "changeset version && pnpm i --no-frozen-lockfile --lockfile-only --ignore-scripts && pnpm update -r \"@graphql-codegen/*\"",
+    "release": "pnpm -r publish --access public --no-git-checks",
+    "release:canary": "(node scripts/canary-release.js && pnpm build && pnpm changeset publish --tag alpha) || echo Skipping Canary...",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
   "devDependencies": {
@@ -91,9 +92,6 @@
     ],
     "**/*.json": [
       "prettier --write"
-    ],
-    "yarn.lock": [
-      "npx yarn-deduplicate"
     ]
   },
   "pnpm": {

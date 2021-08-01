@@ -28,21 +28,23 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: Cache Yarn
+      - name: Cache pnpm modules
         uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-16-yarn-${{ hashFiles('yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-16-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines && git checkout yarn.lock
+            ${{ runner.os }}
+      - name: Install Dependencies using pnpm
+        run: pnpm install
       - name: Release Canary
         id: canary
         uses: 'kamilkisiela/release-canary@master'
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
-          npm-script: 'yarn release:canary'
+          npm-script: 'pnpm release:canary'
           changesets: true
       - name: Publish a message
         if: steps.canary.outputs.released
