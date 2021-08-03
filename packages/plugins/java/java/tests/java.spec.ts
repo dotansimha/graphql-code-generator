@@ -237,7 +237,7 @@ describe('Java', () => {
       expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
         this.sort = (ResultSort) args.get("sort");
       } else {
-        this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
+        this.sort = ResultSort.valueOf((String) args.get("sort"));
       }`);
     });
 
@@ -274,7 +274,7 @@ describe('Java', () => {
             if (args.get("sort") instanceof ResultSort) {
               this.sort = (ResultSort) args.get("sort");
             } else {
-              this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
+              this.sort = ResultSort.valueOf((String) args.get("sort"));
             }
             this.metadata = new MetadataSearchInput((Map<String, Object>) args.get("metadata"));
           }
@@ -407,7 +407,7 @@ describe('Java', () => {
     //   expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
     //     this.sort = (ResultSort) args.get("sort");
     //   } else {
-    //     this.sort = ResultSort.valueOfLabel((String) args.get("sort"));
+    //     this.sort = ResultSort.valueOf((String) args.get("sort"));
     //   }`);
     // });
 
