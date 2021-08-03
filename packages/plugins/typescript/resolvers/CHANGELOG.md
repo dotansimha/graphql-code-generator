@@ -1,5 +1,36 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.0.0
+
+### Major Changes
+
+- d80efdec4: Set `noSchemaStitching: true` by default.
+
+  If you need the resolvers signature to support schema-stitching, please add to your config:
+
+  ```yml
+  noSchemaStitching: false
+  ```
+
+- d80efdec4: Remove deprecated `IDirectiveResolvers` and `IResolvers` signatures
+
+  Please use `DirectiveResolvers` and `Resolvers` types instead.
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- Updated dependencies [d80efdec4]
+- Updated dependencies [d80efdec4]
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/visitor-plugin-common@2.0.0
+  - @graphql-codegen/typescript@2.0.0
+  - @graphql-codegen/plugin-helpers@2.0.0
+
 ## 1.20.0
 
 ### Minor Changes

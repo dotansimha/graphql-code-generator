@@ -1,5 +1,21 @@
 # @graphql-codegen/core
 
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- d80efdec4: Removed `typescript-compatiblity` since it's no longer maintained. Please migrate your codebase to use the latest output of codegen.
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/plugin-helpers@2.0.0
+
 ## 1.17.10
 
 ### Patch Changes
