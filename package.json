@@ -53,9 +53,9 @@
     "@types/node": "14.17.9",
     "@types/react": "17.0.16",
     "@types/webpack-env": "1.16.2",
-    "@urql/exchange-graphcache": "4.2.1",
     "@typescript-eslint/eslint-plugin": "4.29.0",
     "@typescript-eslint/parser": "4.29.0",
+    "@urql/exchange-graphcache": "4.2.1",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/composition-api": "1.0.6",
     "apollo-client": "2.6.10",
@@ -84,6 +84,7 @@
     "jest-junit": "12.2.0",
     "lint-staged": "11.1.2",
     "lodash": "4.17.21",
+    "prettier": "2.3.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.19.2",
@@ -111,6 +112,7 @@
     ]
   },
   "resolutions": {
+    "prettier": "2.3.2",
     "babel-jest": "27.0.6",
     "jest-runner": "27.0.6",
     "graphql": "15.5.1",
