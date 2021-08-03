@@ -2011,7 +2011,7 @@
     cross-fetch "3.1.4"
     tslib "~2.3.0"
 
-"@graphql-tools/graphql-file-loader@^7.0.0", "@graphql-tools/graphql-file-loader@^7.0.1":
+"@graphql-tools/graphql-file-loader@^7.0.1":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-file-loader/-/graphql-file-loader-7.0.1.tgz#fc14da0c4c775c81b834cb7fcd50733fe1e10838"
   integrity sha512-gSYh+W86GcR/TP8bLCPuNdAUeV1/y3+0czM32r6VxqZNiJjiSF6k68rb4F7M6jJ/1dA/SAEZpXLd94Dokc2s/g==
@@ -2042,7 +2042,7 @@
     resolve-from "5.0.0"
     tslib "~2.2.0"
 
-"@graphql-tools/json-file-loader@^7.0.0", "@graphql-tools/json-file-loader@^7.0.1":
+"@graphql-tools/json-file-loader@^7.0.1":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/json-file-loader/-/json-file-loader-7.0.1.tgz#cdac2e967eb190154e55325535399ed651b0f1e6"
   integrity sha512-UfZ3vA37d0OG28p8GijyIo5zRMXozz9f1TBcb++k0cQKmElILrnBHD4ZiNkWTFz5VBSKSjk4gpJD89D8BKKDyg==
@@ -2065,10 +2065,10 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/load@7.1.0-alpha-2e4043d9.0":
-  version "7.1.0-alpha-2e4043d9.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.1.0-alpha-2e4043d9.0.tgz#653ef643ecff55b43794046e775b4d85ff59e711"
-  integrity sha512-yMyZcnyQrazo+XJqHkDI+xUT6DE9Z/3d12gyIJTv5qKvmpCellvcCAhnGBKIRjktIyF4K3ApVEo1IEaq4DfPRg==
+"@graphql-tools/load@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.1.0.tgz#dc561684faff70a7d4e98257f3886e6817a4589e"
+  integrity sha512-THh07BQ6Fmv9wCUIONWXFgkBe/3H9jB67aV7FJ+t+snACYvPhB7kDX8D6VC6RjCfcoaI1MNyHIgNR5JZ5GJ1ng==
   dependencies:
     "@graphql-tools/merge" "^6.2.16"
     "@graphql-tools/utils" "8.0.1"
@@ -2076,18 +2076,7 @@
     p-limit "3.1.0"
     tslib "~2.3.0"
 
-"@graphql-tools/load@^7.0.0":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.0.1.tgz#39b1a0ebfb762cb41448ec50db0349407fe82d27"
-  integrity sha512-TiHgGRWhHHRdhWyVlZrF9PT6NqGG0NRL0XLY6IYWzinNMuPAOyYcp6zwtPxgDbfeRQMO41/4QTIkR6mCLHrcRQ==
-  dependencies:
-    "@graphql-tools/merge" "^6.2.16"
-    "@graphql-tools/utils" "8.0.1"
-    import-from "4.0.0"
-    p-limit "3.1.0"
-    tslib "~2.3.0"
-
-"@graphql-tools/merge@6.2.16", "@graphql-tools/merge@^6.2.15", "@graphql-tools/merge@^6.2.16", "@graphql-tools/merge@^6.2.4":
+"@graphql-tools/merge@6.2.16", "@graphql-tools/merge@^6.2.16", "@graphql-tools/merge@^6.2.4":
   version "6.2.16"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.16.tgz#5dd5f582075c21ef4d74ef84dfcc4e8d0c2db186"
   integrity sha512-KjZ1pppzKcr2Uspgb53p8uw5yhWVuGIL+sEroar7vLsClSsuiGib8OKVICAGWjC9wrCxGaL9SjJGavfXpJMQIg==
@@ -2168,7 +2157,7 @@
     tslib "~2.2.0"
     value-or-promise "1.0.6"
 
-"@graphql-tools/url-loader@^7.0.2", "@graphql-tools/url-loader@^7.0.3":
+"@graphql-tools/url-loader@^7.0.3":
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.0.3.tgz#3f1ea7a0987af8cf84e6a2c0e4670380f5690fa9"
   integrity sha512-9QhYaA6nCAleFSw5WvNgwy/ixkcJTrMfFAP3Ofsgk9Cau0iUesrgRYEYNJldf0NevP7wHzaVuWqRP/xHLqW2iw==
@@ -7902,18 +7891,18 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphql-config@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.0.0.tgz#412c93f5565d8a57cd962998b0944ef60b12ee88"
-  integrity sha512-gU0R5rWf0OLDlK1cRhj42SSfXZbtnl6WIjhwhrxFV0MhhQW/s0XQvXjG77O5ntUaXq1JPJKhV6+oYaELGs0Mrg==
+graphql-config@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.0.1.tgz#4ce43cb54f3f39dde5f023d6f8f04064edc16e6e"
+  integrity sha512-JdXxFzBwjujJMGLHUZom9SrmP/M4gF57iTDa3fJVm3Q85+Xw2kj9jZIygaaSLpDKhaPnMQZqfJ5Hmc6afKxS9w==
   dependencies:
     "@endemolshinegroup/cosmiconfig-typescript-loader" "3.0.2"
-    "@graphql-tools/graphql-file-loader" "^7.0.0"
-    "@graphql-tools/json-file-loader" "^7.0.0"
-    "@graphql-tools/load" "^7.0.0"
-    "@graphql-tools/merge" "^6.2.15"
-    "@graphql-tools/url-loader" "^7.0.2"
-    "@graphql-tools/utils" "^8.0.0"
+    "@graphql-tools/graphql-file-loader" "^7.0.1"
+    "@graphql-tools/json-file-loader" "^7.0.1"
+    "@graphql-tools/load" "^7.1.0"
+    "@graphql-tools/merge" "^6.2.16"
+    "@graphql-tools/url-loader" "^7.0.3"
+    "@graphql-tools/utils" "^8.0.1"
     cosmiconfig "7.0.0"
     cosmiconfig-toml-loader "1.0.0"
     minimatch "3.0.4"
