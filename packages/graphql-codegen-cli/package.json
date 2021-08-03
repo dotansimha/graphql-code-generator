@@ -62,7 +62,7 @@
     "dependency-graph": "^0.11.0",
     "detect-indent": "^6.0.0",
     "glob": "^7.1.6",
-    "globby": "^11.0.4",
+    "globby": "^12.0.0",
     "graphql-config": "^4.0.0",
     "inquirer": "^7.3.3",
     "is-glob": "^4.0.1",
