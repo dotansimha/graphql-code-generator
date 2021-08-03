@@ -41,7 +41,6 @@
       "@graphql-codegen/time": ["packages/plugins/other/time/src/index.ts"],
       "@graphql-codegen/visitor-plugin-common": ["packages/plugins/other/visitor-plugin-common/src/index.ts"],
       "@graphql-codegen/typescript-apollo-angular": ["packages/plugins/typescript/apollo-angular/src/index.ts"],
-      "@graphql-codegen/typescript-compatibility": ["packages/plugins/typescript/compatibility/src/index.ts"],
       "@graphql-codegen/typescript-document-nodes": ["packages/plugins/typescript/document-nodes/src/index.ts"],
       "@graphql-codegen/typescript-enum-array": ["packages/plugins/typescript/enum-array/src/index.ts"],
       "@graphql-codegen/typescript-generic-sdk": ["packages/plugins/typescript/generic-sdk/src/index.ts"],
