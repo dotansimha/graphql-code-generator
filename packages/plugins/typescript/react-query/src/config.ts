@@ -34,7 +34,7 @@ export interface ReactQueryRawPluginConfig
   /**
    * @default false
    * @description For each generate query hook adds `document` field with a
-   * correspoding GraphQL query. Useful for `queryClient.fetchQuery`. Example:
+   * corresponding GraphQL query. Useful for `queryClient.fetchQuery`. Example:
    * queryClient.fetchQuery(
    *   useUserDetailsQuery.getKey(variables),
    *   () => gqlRequest(useUserDetailsQuery.document, variables),
@@ -50,6 +50,17 @@ export interface ReactQueryRawPluginConfig
    * // use key in a cache update after a mutation
    */
   exposeQueryKeys?: boolean;
+
+  /**
+   * @default false
+   * @description For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.
+   * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.
+   * @exampleMarkdown
+   * ```ts
+   *  await queryClient.prefetchQuery(userQuery.getKey(), () => userQuery.fetcher())
+   * ```
+   */
+  exposeFetcher?: boolean;
 
   /**
    * @default unknown

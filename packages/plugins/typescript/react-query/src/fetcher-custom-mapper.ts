@@ -98,4 +98,24 @@ export class CustomMapperFetcher implements FetcherRenderer {
       options
     );`;
   }
+
+  generateFetcherFetch(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    // We can't generate a fetcher field since we can't call react hooks outside of a React Fucntion Component
+    // Related: https://reactjs.org/docs/hooks-rules.html
+    if (this._isReactHook) return '';
+
+    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+
+    const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const impl = `${typedFetcher}(${documentVariableName}, variables)`;
+
+    return `\nuse${operationName}.fetcher = (${variables}) => ${impl};`;
+  }
 }

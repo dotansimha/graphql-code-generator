@@ -21,6 +21,7 @@ export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
   exposeDocument: boolean;
   exposeQueryKeys: boolean;
+  exposeFetcher: boolean;
 }
 
 export interface ReactQueryMethodMap {
@@ -61,6 +62,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       errorType: getConfigValue(rawConfig.errorType, 'unknown'),
       exposeDocument: getConfigValue(rawConfig.exposeDocument, false),
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
+      exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -133,6 +135,20 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       }
       if (this.config.exposeQueryKeys) {
         query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+      }
+
+      // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook
+      // is to prevent calling generateFetcherFetch for each query since all the queries won't be able to generate
+      // a fetcher field anyways.
+      if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
+        query += this.fetcher.generateFetcherFetch(
+          node,
+          documentVariableName,
+          operationName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        );
       }
       return query;
     } else if (operationType === 'Mutation') {
