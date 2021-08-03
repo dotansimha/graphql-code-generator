@@ -27,7 +27,10 @@ export class HardcodedFetchFetcher implements FetcherRenderer {
       .map(key => {
         return `      ${key}: ${JSON.stringify(fetchParams[key])},`;
       })
-      .join('\n');
+      .join('\n')
+      .replace(/["'](process\.env\.\w*)["']/g, (x, p1) => {
+        return ` ${p1} as string `;
+      });
   }
 
   generateFetcherImplementaion(): string {

@@ -565,4 +565,22 @@ describe('React-Query', () => {
     const outGraphqlRequest = (await plugin(schema, notOperationDocs, config)) as Types.ComplexPluginOutput;
     expect(outGraphqlRequest.prepend).not.toContain(`import { GraphQLClient } from 'graphql-request';`);
   });
+  it('Parses process.env variables correctly', async () => {
+    const outGraphqlRequest = (await plugin(schema, docs, {
+      fetcher: {
+        endpoint: 'process.env.ENDPOINT',
+
+        fetchParams: {
+          headers: {
+            apiKey: 'process.env.APIKEY',
+            somethingElse: 'process.env.SOMETHING',
+          },
+        },
+      },
+    })) as Types.ComplexPluginOutput;
+
+    expect(outGraphqlRequest.prepend).toBeSimilarStringTo(
+      '{"apiKey": process.env.APIKEY as string ,"somethingElse": process.env.SOMETHING as string'
+    );
+  });
 });
