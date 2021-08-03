@@ -518,7 +518,7 @@ describe('React-Query', () => {
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
-    it.only('Should generate fetcher field when exposeFetcher is true', async () => {
+    it('Should generate fetcher field when exposeFetcher is true', async () => {
       const config = {
         exposeFetcher: true,
       };
