@@ -5,8 +5,9 @@ import { Component, Prop, h } from '@stencil/core';
 declare global {
   export type CurrentUserForProfileQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-  export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
-    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>>;
+  export type CurrentUserForProfileQuery = {
+    __typename?: 'Query';
+    currentUser?: Types.Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
   };
 }
 

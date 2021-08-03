@@ -172,12 +172,15 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
 }>;
 
-export type OnCommentAddedSubscriptionMyOperation = { __typename?: 'Subscription' } & {
-  commentAdded?: Maybe<
-    { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
-        postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-      }
-  >;
+export type OnCommentAddedSubscriptionMyOperation = {
+  __typename?: 'Subscription';
+  commentAdded?: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
 };
 
 export type CommentQueryVariables = Exact<{
@@ -186,47 +189,68 @@ export type CommentQueryVariables = Exact<{
   offset?: Maybe<Scalars['Int']>;
 }>;
 
-export type CommentQueryMyOperation = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
-  entry?: Maybe<
-    { __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
-        postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-        comments: Array<
-          Maybe<
-            { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
-                postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-              }
-          >
-        >;
-        repository: { __typename?: 'Repository' } & Pick<
-          Repository,
-          'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
-        >;
-      }
-  >;
+export type CommentQueryMyOperation = {
+  __typename?: 'Query';
+  currentUser?: Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
+  entry?: Maybe<{
+    __typename?: 'Entry';
+    id: number;
+    createdAt: number;
+    commentCount: number;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+    comments: Array<
+      Maybe<{
+        __typename?: 'Comment';
+        id: number;
+        createdAt: number;
+        content: string;
+        postedBy: { __typename?: 'User'; login: string; html_url: string };
+      }>
+    >;
+    repository: {
+      __typename?: 'Repository';
+      description?: Maybe<string>;
+      open_issues_count?: Maybe<number>;
+      stargazers_count: number;
+      full_name: string;
+      html_url: string;
+    };
+  }>;
 };
 
-export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
-    postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-  };
+export type CommentsPageCommentFragment = {
+  __typename?: 'Comment';
+  id: number;
+  createdAt: number;
+  content: string;
+  postedBy: { __typename?: 'User'; login: string; html_url: string };
+};
 
 export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
-export type CurrentUserForProfileQueryMyOperation = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+export type CurrentUserForProfileQueryMyOperation = {
+  __typename?: 'Query';
+  currentUser?: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
 };
 
-export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<
-  Entry,
-  'id' | 'commentCount' | 'score' | 'createdAt'
-> & {
-    repository: { __typename?: 'Repository' } & Pick<
-      Repository,
-      'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
-    > & { owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>> };
-    vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
-    postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
+export type FeedEntryFragment = {
+  __typename?: 'Entry';
+  id: number;
+  commentCount: number;
+  score: number;
+  createdAt: number;
+  repository: {
+    __typename?: 'Repository';
+    full_name: string;
+    html_url: string;
+    description?: Maybe<string>;
+    stargazers_count: number;
+    open_issues_count?: Maybe<number>;
+    owner?: Maybe<{ __typename?: 'User'; avatar_url: string }>;
   };
+  vote: { __typename?: 'Vote'; vote_value: number };
+  postedBy: { __typename?: 'User'; html_url: string; login: string };
+};
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
@@ -234,20 +258,29 @@ export type FeedQueryVariables = Exact<{
   limit?: Maybe<Scalars['Int']>;
 }>;
 
-export type FeedQueryMyOperation = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
+export type FeedQueryMyOperation = {
+  __typename?: 'Query';
+  currentUser?: Maybe<{ __typename?: 'User'; login: string }>;
   feed?: Maybe<
     Array<
-      Maybe<
-        { __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount' | 'score' | 'createdAt'> & {
-            repository: { __typename?: 'Repository' } & Pick<
-              Repository,
-              'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
-            > & { owner?: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>> };
-            vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
-            postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
-          }
-      >
+      Maybe<{
+        __typename?: 'Entry';
+        id: number;
+        commentCount: number;
+        score: number;
+        createdAt: number;
+        repository: {
+          __typename?: 'Repository';
+          full_name: string;
+          html_url: string;
+          description?: Maybe<string>;
+          stargazers_count: number;
+          open_issues_count?: Maybe<number>;
+          owner?: Maybe<{ __typename?: 'User'; avatar_url: string }>;
+        };
+        vote: { __typename?: 'Vote'; vote_value: number };
+        postedBy: { __typename?: 'User'; html_url: string; login: string };
+      }>
     >
   >;
 };
@@ -256,46 +289,53 @@ export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
 }>;
 
-export type SubmitRepositoryMutationMyOperation = { __typename?: 'Mutation' } & {
-  submitRepository?: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+export type SubmitRepositoryMutationMyOperation = {
+  __typename?: 'Mutation';
+  submitRepository?: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
 };
 
-export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
-    repository: { __typename?: 'Repository' } & Pick<
-      Repository,
-      'description' | 'stargazers_count' | 'open_issues_count'
-    >;
-    postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
+export type RepoInfoFragment = {
+  __typename?: 'Entry';
+  createdAt: number;
+  repository: {
+    __typename?: 'Repository';
+    description?: Maybe<string>;
+    stargazers_count: number;
+    open_issues_count?: Maybe<number>;
   };
+  postedBy: { __typename?: 'User'; html_url: string; login: string };
+};
 
 export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
 }>;
 
-export type SubmitCommentMutationMyOperation = { __typename?: 'Mutation' } & {
-  submitComment?: Maybe<
-    { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
-        postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-      }
-  >;
+export type SubmitCommentMutationMyOperation = {
+  __typename?: 'Mutation';
+  submitComment?: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
 };
 
-export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'> & {
-    vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
-  };
+export type VoteButtonsFragment = {
+  __typename?: 'Entry';
+  score: number;
+  vote: { __typename?: 'Vote'; vote_value: number };
+};
 
 export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
 }>;
 
-export type VoteMutationMyOperation = { __typename?: 'Mutation' } & {
-  vote?: Maybe<
-    { __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
-        vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
-      }
-  >;
+export type VoteMutationMyOperation = {
+  __typename?: 'Mutation';
+  vote?: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
 };
 
 export const CommentsPageCommentFragmentDoc = gql`

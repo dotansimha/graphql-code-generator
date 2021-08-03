@@ -179,59 +179,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id' | 'commentCount'>
-    & { repository: (
-      { __typename?: 'Repository' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'avatar_url'>
-      )> }
-    ) }
-  )>>> }
-);
+export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export const FeedDocument = \`
     query feed {
@@ -495,59 +464,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id' | 'commentCount'>
-    & { repository: (
-      { __typename?: 'Repository' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'avatar_url'>
-      )> }
-    ) }
-  )>>> }
-);
+export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export const FeedDocument = gql\`
     query feed {
@@ -803,59 +741,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id' | 'commentCount'>
-    & { repository: (
-      { __typename?: 'Repository' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'avatar_url'>
-      )> }
-    ) }
-  )>>> }
-);
+export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export const FeedDocument = \`
     query feed {
@@ -1114,59 +1021,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id' | 'commentCount'>
-    & { repository: (
-      { __typename?: 'Repository' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'avatar_url'>
-      )> }
-    ) }
-  )>>> }
-);
+export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export const FeedDocument = gql\`
     query feed {
@@ -1427,59 +1303,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id' | 'commentCount'>
-    & { repository: (
-      { __typename?: 'Repository' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'avatar_url'>
-      )> }
-    ) }
-  )>>> }
-);
+export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = (
-  { __typename?: 'Query' }
-  & { feed?: Maybe<Array<Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'id'>
-  )>>> }
-);
+export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
 
 export const FeedDocument = gql\`
     query feed {

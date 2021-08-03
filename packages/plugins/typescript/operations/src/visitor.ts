@@ -38,6 +38,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         avoidOptionals: normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false)),
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
+        preResolveTypes: getConfigValue(config.preResolveTypes, true),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -73,7 +74,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       avoidOptionals: this.config.avoidOptionals,
     };
-    const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
+    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
+    const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
     );
     this.setSelectionSetHandler(

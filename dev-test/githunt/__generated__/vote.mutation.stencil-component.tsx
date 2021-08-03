@@ -8,12 +8,14 @@ declare global {
     type: Types.VoteType;
   }>;
 
-  export type VoteMutation = { __typename?: 'Mutation' } & {
-    vote?: Types.Maybe<
-      { __typename?: 'Entry' } & Pick<Types.Entry, 'score' | 'id'> & {
-          vote: { __typename?: 'Vote' } & Pick<Types.Vote, 'vote_value'>;
-        }
-    >;
+  export type VoteMutation = {
+    __typename?: 'Mutation';
+    vote?: Types.Maybe<{
+      __typename?: 'Entry';
+      score: number;
+      id: number;
+      vote: { __typename?: 'Vote'; vote_value: number };
+    }>;
   };
 }
 

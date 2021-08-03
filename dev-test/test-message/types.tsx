@@ -61,16 +61,18 @@ export type GetMessagesQueryVariables = Exact<{
   tab: Scalars['String'];
 }>;
 
-export type GetMessagesQuery = { __typename?: 'Query' } & {
-  messages?: Maybe<Array<Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>>>;
+export type GetMessagesQuery = {
+  __typename?: 'Query';
+  messages?: Maybe<Array<Maybe<{ __typename?: 'Message'; id: string }>>>;
 };
 
 export type CreateMessageMutationVariables = Exact<{
   args: CreateMessageInput;
 }>;
 
-export type CreateMessageMutation = { __typename?: 'Mutation' } & {
-  createMessage?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
+export type CreateMessageMutation = {
+  __typename?: 'Mutation';
+  createMessage?: Maybe<{ __typename?: 'Message'; id: string }>;
 };
 
 export type DeclineMutationVariables = Exact<{
@@ -78,25 +80,19 @@ export type DeclineMutationVariables = Exact<{
   reason: Scalars['String'];
 }>;
 
-export type DeclineMutation = { __typename?: 'Mutation' } & {
-  decline?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
-};
+export type DeclineMutation = { __typename?: 'Mutation'; decline?: Maybe<{ __typename?: 'Message'; id: string }> };
 
 export type ApproveMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type ApproveMutation = { __typename?: 'Mutation' } & {
-  approve?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
-};
+export type ApproveMutation = { __typename?: 'Mutation'; approve?: Maybe<{ __typename?: 'Message'; id: string }> };
 
 export type EscalateMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type EscalateMutation = { __typename?: 'Mutation' } & {
-  escalate?: Maybe<{ __typename?: 'Message' } & Pick<Message, 'id'>>;
-};
+export type EscalateMutation = { __typename?: 'Mutation'; escalate?: Maybe<{ __typename?: 'Message'; id: string }> };
 
 /**
  * __useGetMessagesQuery__

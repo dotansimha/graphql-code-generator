@@ -7,8 +7,9 @@ declare global {
     repoFullName: Types.Scalars['String'];
   }>;
 
-  export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
-    submitRepository?: Types.Maybe<{ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>>;
+  export type SubmitRepositoryMutation = {
+    __typename?: 'Mutation';
+    submitRepository?: Types.Maybe<{ __typename?: 'Entry'; createdAt: number }>;
   };
 }
 

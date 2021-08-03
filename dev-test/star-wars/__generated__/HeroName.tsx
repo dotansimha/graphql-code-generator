@@ -7,10 +7,9 @@ export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
 
-export type HeroNameQuery = { __typename?: 'Query' } & {
-  hero?: Types.Maybe<
-    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-  >;
+export type HeroNameQuery = {
+  __typename?: 'Query';
+  hero?: Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
 };
 
 export const HeroNameDocument = gql`

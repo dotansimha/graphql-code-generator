@@ -8,10 +8,11 @@ export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
 
-export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
+export type HeroDetailsWithFragmentQuery = {
+  __typename?: 'Query';
   hero?: Types.Maybe<
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'primaryFunction' | 'name'>)
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
+    | { __typename?: 'Droid'; primaryFunction?: Types.Maybe<string>; name: string }
+    | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
   >;
 };
 

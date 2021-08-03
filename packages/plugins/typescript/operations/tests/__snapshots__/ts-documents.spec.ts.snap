@@ -1,10 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TypeScript Operations Plugin Config should include fragment variable definitions when experimentalFragmentVariables is set 1`] = `
-"export type TextNotificationFragmentFragment = (
-  { __typename?: 'TextNotification' }
-  & MakeOptional<Pick<TextNotification, 'text'>, 'text'>
-);
+"export type TextNotificationFragmentFragment = { __typename?: 'TextNotification', text?: Maybe<string> };
 
 
 export type TextNotificationFragmentFragmentVariables = Exact<{
@@ -20,144 +17,25 @@ exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interf
 }>;
 
 
-export type GetEntityBrandDataQuery = (
-  { __typename?: 'Query' }
-  & { node: (
-    { __typename: 'Company' }
-    & Pick<Company, 'active' | 'id' | 'createdAt' | 'updatedAt'>
-    & { brandData?: Maybe<(
-      { __typename?: 'EntityBrandData' }
-      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-    )>, createdBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )>, updatedBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )> }
-  ) | (
-    { __typename: 'Theater' }
-    & Pick<Theater, 'active' | 'id' | 'createdAt' | 'updatedAt'>
-    & { brandData?: Maybe<(
-      { __typename?: 'EntityBrandData' }
-      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-    )>, createdBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )>, updatedBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )> }
-  ) | (
-    { __typename: 'Movie' }
-    & Pick<Movie, 'id' | 'createdAt' | 'updatedAt'>
-    & { brandData?: Maybe<(
-      { __typename?: 'EntityBrandData' }
-      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-    )>, createdBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )>, updatedBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )> }
-  ) | (
-    { __typename: 'User' }
-    & Pick<User, 'id' | 'createdAt' | 'updatedAt'>
-    & { brandData?: Maybe<(
-      { __typename?: 'EntityBrandData' }
-      & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-    )>, createdBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )>, updatedBy?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'name'>
-    )> }
-  ) }
-);
+export type GetEntityBrandDataQuery = { __typename?: 'Query', node: { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }>, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> } | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }>, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> } | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }>, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> } | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }>, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> } };
 
-type EntityBrandData_Company_Fragment = (
-  { __typename?: 'Company' }
-  & { brandData?: Maybe<(
-    { __typename?: 'EntityBrandData' }
-    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-  )> }
-);
+type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }> };
 
-type EntityBrandData_Theater_Fragment = (
-  { __typename?: 'Theater' }
-  & { brandData?: Maybe<(
-    { __typename?: 'EntityBrandData' }
-    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-  )> }
-);
+type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }> };
 
-type EntityBrandData_Movie_Fragment = (
-  { __typename?: 'Movie' }
-  & { brandData?: Maybe<(
-    { __typename?: 'EntityBrandData' }
-    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-  )> }
-);
+type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }> };
 
-type EntityBrandData_User_Fragment = (
-  { __typename?: 'User' }
-  & { brandData?: Maybe<(
-    { __typename?: 'EntityBrandData' }
-    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
-  )> }
-);
+type EntityBrandData_User_Fragment = { __typename?: 'User', brandData?: Maybe<{ __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: Maybe<string>, description: string }> };
 
 export type EntityBrandDataFragment = EntityBrandData_Company_Fragment | EntityBrandData_Theater_Fragment | EntityBrandData_Movie_Fragment | EntityBrandData_User_Fragment;
 
-type ElementMetadata_Company_Fragment = (
-  { __typename?: 'Company' }
-  & Pick<Company, 'createdAt' | 'updatedAt'>
-  & { createdBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )>, updatedBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> };
 
-type ElementMetadata_Theater_Fragment = (
-  { __typename?: 'Theater' }
-  & Pick<Theater, 'createdAt' | 'updatedAt'>
-  & { createdBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )>, updatedBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> };
 
-type ElementMetadata_Movie_Fragment = (
-  { __typename?: 'Movie' }
-  & Pick<Movie, 'createdAt' | 'updatedAt'>
-  & { createdBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )>, updatedBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> };
 
-type ElementMetadata_User_Fragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'createdAt' | 'updatedAt'>
-  & { createdBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )>, updatedBy?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', id: string, name: string }>, updatedBy?: Maybe<{ __typename?: 'User', id: string, name: string }> };
 
 export type ElementMetadataFragment = ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment | ElementMetadata_User_Fragment;
 "
@@ -172,39 +50,16 @@ export type UserQuery = { user: { id: string, username: string, email: string, d
 `;
 
 exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 1`] = `
-"type Venue_Hotel_Fragment = (
-  { __typename?: 'Hotel' }
-  & Pick<Hotel, 'id'>
-  & { gpsPosition: (
-    { __typename?: 'GPSPosition' }
-    & Pick<GpsPosition, 'lat' | 'lng'>
-  ) }
-);
+"type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
 
-type Venue_Transport_Fragment = (
-  { __typename?: 'Transport' }
-  & Pick<Transport, 'id'>
-);
+type Venue_Transport_Fragment = { __typename?: 'Transport', id: string };
 
 export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
 
 export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QQuery = (
-  { __typename?: 'Query' }
-  & { hotel: (
-    { __typename?: 'Hotel' }
-    & Pick<Hotel, 'id'>
-    & { gpsPosition: (
-      { __typename?: 'GPSPosition' }
-      & Pick<GpsPosition, 'lat' | 'lng'>
-    ) }
-  ), transport: (
-    { __typename?: 'Transport' }
-    & Pick<Transport, 'id'>
-  ) }
-);
+export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } }, transport: { __typename?: 'Transport', id: string } };
 "
 `;
 
@@ -256,39 +111,16 @@ export type Query = {
   hotel: Hotel;
   transport: Transport;
 };
-type Venue_Hotel_Fragment = (
-  { __typename?: 'Hotel' }
-  & Pick<Hotel, 'id'>
-  & { gpsPosition: (
-    { __typename?: 'GPSPosition' }
-    & Pick<GpsPosition, 'lat' | 'lng'>
-  ) }
-);
+type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
 
-type Venue_Transport_Fragment = (
-  { __typename?: 'Transport' }
-  & Pick<Transport, 'id'>
-);
+type Venue_Transport_Fragment = { __typename?: 'Transport', id: string };
 
 export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
 
 export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QQuery = (
-  { __typename?: 'Query' }
-  & { hotel: (
-    { __typename?: 'Hotel' }
-    & Pick<Hotel, 'id'>
-    & { gpsPosition: (
-      { __typename?: 'GPSPosition' }
-      & Pick<GpsPosition, 'lat' | 'lng'>
-    ) }
-  ), transport: (
-    { __typename?: 'Transport' }
-    & Pick<Transport, 'id'>
-  ) }
-);
+export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } }, transport: { __typename?: 'Transport', id: string } };
 function test(q: QQuery) {
         if (q.hotel) {
             const t1 = q.hotel.gpsPosition.lat

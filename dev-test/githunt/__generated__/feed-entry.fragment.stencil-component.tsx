@@ -3,17 +3,24 @@ import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.stencil-componen
 import { RepoInfoFragmentDoc } from './repo-info.fragment.stencil-component';
 
 declare global {
-  export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<
-    Types.Entry,
-    'id' | 'commentCount' | 'score' | 'createdAt'
-  > & {
-      repository: { __typename?: 'Repository' } & Pick<
-        Types.Repository,
-        'full_name' | 'html_url' | 'description' | 'stargazers_count' | 'open_issues_count'
-      > & { owner?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'avatar_url'>> };
-      vote: { __typename?: 'Vote' } & Pick<Types.Vote, 'vote_value'>;
-      postedBy: { __typename?: 'User' } & Pick<Types.User, 'html_url' | 'login'>;
+  export type FeedEntryFragment = {
+    __typename?: 'Entry';
+    id: number;
+    commentCount: number;
+    score: number;
+    createdAt: number;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description?: Types.Maybe<string>;
+      stargazers_count: number;
+      open_issues_count?: Types.Maybe<number>;
+      owner?: Types.Maybe<{ __typename?: 'User'; avatar_url: string }>;
     };
+    vote: { __typename?: 'Vote'; vote_value: number };
+    postedBy: { __typename?: 'User'; html_url: string; login: string };
+  };
 }
 
 export const FeedEntryFragmentDoc = gql`

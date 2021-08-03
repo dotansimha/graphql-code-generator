@@ -6,8 +6,9 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
-  human?: Types.Maybe<{ __typename?: 'Human' } & Pick<Types.Human, 'name' | 'mass'>>;
+export type HumanWithNullHeightQuery = {
+  __typename?: 'Query';
+  human?: Types.Maybe<{ __typename?: 'Human'; name: string; mass?: Types.Maybe<number> }>;
 };
 
 export const HumanWithNullHeightDocument = gql`

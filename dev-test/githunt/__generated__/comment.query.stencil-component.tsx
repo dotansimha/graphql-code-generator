@@ -10,24 +10,33 @@ declare global {
     offset?: Types.Maybe<Types.Scalars['Int']>;
   }>;
 
-  export type CommentQuery = { __typename?: 'Query' } & {
-    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
-    entry?: Types.Maybe<
-      { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'createdAt' | 'commentCount'> & {
-          postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
-          comments: Array<
-            Types.Maybe<
-              { __typename?: 'Comment' } & Pick<Types.Comment, 'id' | 'createdAt' | 'content'> & {
-                  postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
-                }
-            >
-          >;
-          repository: { __typename?: 'Repository' } & Pick<
-            Types.Repository,
-            'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
-          >;
-        }
-    >;
+  export type CommentQuery = {
+    __typename?: 'Query';
+    currentUser?: Types.Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
+    entry?: Types.Maybe<{
+      __typename?: 'Entry';
+      id: number;
+      createdAt: number;
+      commentCount: number;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+      comments: Array<
+        Types.Maybe<{
+          __typename?: 'Comment';
+          id: number;
+          createdAt: number;
+          content: string;
+          postedBy: { __typename?: 'User'; login: string; html_url: string };
+        }>
+      >;
+      repository: {
+        __typename?: 'Repository';
+        description?: Types.Maybe<string>;
+        open_issues_count?: Types.Maybe<number>;
+        stargazers_count: number;
+        full_name: string;
+        html_url: string;
+      };
+    }>;
   };
 }
 

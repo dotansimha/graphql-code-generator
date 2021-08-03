@@ -5,10 +5,11 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type HeroAppearsInQuery = { __typename?: 'Query' } & {
+export type HeroAppearsInQuery = {
+  __typename?: 'Query';
   hero?: Types.Maybe<
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name' | 'appearsIn'>)
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name' | 'appearsIn'>)
+    | { __typename?: 'Droid'; name: string; appearsIn: Array<Types.Maybe<Types.Episode>> }
+    | { __typename?: 'Human'; name: string; appearsIn: Array<Types.Maybe<Types.Episode>> }
   >;
 };
 

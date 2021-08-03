@@ -7,28 +7,33 @@ export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
 
-export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
+export type HeroParentTypeDependentFieldQuery = {
+  __typename?: 'Query';
   hero?: Types.Maybe<
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
-              >
+    | {
+        __typename?: 'Droid';
+        name: string;
+        friends?: Types.Maybe<
+          Array<
+            Types.Maybe<
+              | { __typename?: 'Droid'; name: string }
+              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
             >
-          >;
-        })
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
-              >
+          >
+        >;
+      }
+    | {
+        __typename?: 'Human';
+        name: string;
+        friends?: Types.Maybe<
+          Array<
+            Types.Maybe<
+              | { __typename?: 'Droid'; name: string }
+              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
             >
-          >;
-        })
+          >
+        >;
+      }
   >;
 };
 

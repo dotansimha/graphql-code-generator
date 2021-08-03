@@ -7,10 +7,10 @@ export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
 
-export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
+export type HeroTypeDependentAliasedFieldQuery = {
+  __typename?: 'Query';
   hero?: Types.Maybe<
-    | ({ __typename?: 'Droid' } & { property: Types.Droid['primaryFunction'] })
-    | ({ __typename?: 'Human' } & { property: Types.Human['homePlanet'] })
+    { __typename?: 'Droid'; property?: Types.Maybe<string> } | { __typename?: 'Human'; property?: Types.Maybe<string> }
   >;
 };
 

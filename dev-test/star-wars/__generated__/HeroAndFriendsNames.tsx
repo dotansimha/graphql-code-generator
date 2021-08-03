@@ -7,28 +7,23 @@ export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
   episode?: Types.Maybe<Types.Episode>;
 }>;
 
-export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
+export type HeroAndFriendsNamesQuery = {
+  __typename?: 'Query';
   hero?: Types.Maybe<
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-              >
-            >
-          >;
-        })
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-              >
-            >
-          >;
-        })
+    | {
+        __typename?: 'Droid';
+        name: string;
+        friends?: Types.Maybe<
+          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
+        >;
+      }
+    | {
+        __typename?: 'Human';
+        name: string;
+        friends?: Types.Maybe<
+          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
+        >;
+      }
   >;
 };
 

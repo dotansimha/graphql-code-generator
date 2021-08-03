@@ -122,7 +122,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { noExport: true };
+      const config = { noExport: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -155,7 +155,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namespacedImportName: 'Types' };
+      const config = { preResolveTypes: false, namespacedImportName: 'Types' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -241,7 +241,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'change-case-all#lowerCase', immutableTypes: true };
+      const config = { preResolveTypes: false, namingConvention: 'change-case-all#lowerCase', immutableTypes: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -303,7 +303,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: doc }], config, {
         outputFile: '',
       });
@@ -332,7 +332,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { operationResultSuffix: 'Result' };
+      const config = { operationResultSuffix: 'Result', preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -381,7 +381,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'change-case-all#lowerCase' };
+      const config = { preResolveTypes: false, namingConvention: 'change-case-all#lowerCase' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -425,7 +425,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
 
-      const config = { typesPrefix: 'i', namingConvention: 'change-case-all#lowerCase' };
+      const config = { preResolveTypes: false, typesPrefix: 'i', namingConvention: 'change-case-all#lowerCase' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -562,7 +562,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast3 }],
-          { dedupeOperationSuffix: true },
+          { dedupeOperationSuffix: true, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content;
@@ -633,17 +633,31 @@ describe('TypeScript Operations Plugin', () => {
     `);
 
     expect(
-      (await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).content
+      (
+        await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { preResolveTypes: false },
+          { outputFile: '' }
+        )
+      ).content
     ).toContain('export type NotificationsQueryQuery =');
     expect(
-      (await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).content
+      (
+        await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { preResolveTypes: false },
+          { outputFile: '' }
+        )
+      ).content
     ).toContain('export type MyFragmentFragment =');
     expect(
       (
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: true },
+          { omitOperationSuffix: true, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -653,7 +667,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: true },
+          { omitOperationSuffix: true, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -663,7 +677,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: true },
+          { omitOperationSuffix: true, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -673,7 +687,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: true },
+          { omitOperationSuffix: true, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -683,7 +697,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: false },
+          { omitOperationSuffix: false, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -693,7 +707,7 @@ describe('TypeScript Operations Plugin', () => {
         await plugin(
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: false },
+          { omitOperationSuffix: false, preResolveTypes: false },
           { outputFile: '' }
         )
       ).content
@@ -703,7 +717,7 @@ describe('TypeScript Operations Plugin', () => {
       await plugin(
         schema,
         [{ location: 'test-file.ts', document: ast3 }],
-        { omitOperationSuffix: true },
+        { omitOperationSuffix: true, preResolveTypes: false },
         { outputFile: '' }
       )
     ).content;
@@ -753,6 +767,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
       const config = {
         skipTypeNameForRoot: true,
+        preResolveTypes: false,
       };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
@@ -787,6 +802,7 @@ describe('TypeScript Operations Plugin', () => {
       const config = {
         nonOptionalTypename: true,
         skipTypeNameForRoot: true,
+        preResolveTypes: false,
       };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
@@ -822,6 +838,7 @@ describe('TypeScript Operations Plugin', () => {
       const config = {
         nonOptionalTypename: true,
         skipTypeNameForRoot: true,
+        preResolveTypes: false,
       };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
@@ -893,7 +910,6 @@ describe('TypeScript Operations Plugin', () => {
       const config = {
         nonOptionalTypename: false,
         skipTypename: true,
-        preResolveTypes: true,
       };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
@@ -914,7 +930,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -955,7 +971,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -981,7 +997,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1019,7 +1035,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1038,7 +1054,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { nonOptionalTypename: true };
+      const config = { nonOptionalTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1057,7 +1073,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1077,7 +1093,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1105,7 +1121,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1143,7 +1159,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1179,7 +1195,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1211,7 +1227,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1237,7 +1253,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1260,7 +1276,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1288,7 +1304,7 @@ describe('TypeScript Operations Plugin', () => {
           test
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
 
       try {
         await plugin(
@@ -1347,7 +1363,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1389,7 +1405,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1422,7 +1438,7 @@ describe('TypeScript Operations Plugin', () => {
           name
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1453,7 +1469,7 @@ describe('TypeScript Operations Plugin', () => {
           name
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1487,7 +1503,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1545,7 +1561,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1608,7 +1624,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1646,7 +1662,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1675,7 +1691,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1709,7 +1725,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: false };
+      const config = { skipTypename: false, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1784,7 +1800,7 @@ describe('TypeScript Operations Plugin', () => {
           y
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1856,7 +1872,7 @@ describe('TypeScript Operations Plugin', () => {
           bar
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1909,7 +1925,7 @@ describe('TypeScript Operations Plugin', () => {
           x
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1957,7 +1973,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
 
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -1994,7 +2010,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2032,7 +2048,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2074,7 +2090,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = {};
+      const config = { preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2111,7 +2127,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2142,7 +2158,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(gitHuntSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2291,7 +2307,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2311,7 +2327,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2338,7 +2354,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2364,7 +2380,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2392,7 +2408,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2412,7 +2428,7 @@ describe('TypeScript Operations Plugin', () => {
           dummy
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2431,7 +2447,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { skipTypename: true };
+      const config = { skipTypename: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2543,7 +2559,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2585,7 +2601,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2623,7 +2639,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2672,7 +2688,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2794,7 +2810,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        { typesPrefix: 'PREFIX_' },
+        { typesPrefix: 'PREFIX_', preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2901,7 +2917,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         schema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -2976,7 +2992,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         schema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3038,7 +3054,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3108,7 +3124,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3201,7 +3217,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3257,7 +3273,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3307,7 +3323,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3406,7 +3422,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -3569,6 +3585,7 @@ describe('TypeScript Operations Plugin', () => {
 
       const config = {
         flattenGeneratedTypes: true,
+        preResolveTypes: false,
       };
 
       const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
@@ -3673,6 +3690,7 @@ describe('TypeScript Operations Plugin', () => {
 
       const config = {
         flattenGeneratedTypes: true,
+        preResolveTypes: false,
       };
 
       const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
@@ -3763,6 +3781,7 @@ describe('TypeScript Operations Plugin', () => {
 
       const config = {
         addOperationExport: true,
+        preResolveTypes: false,
       };
 
       const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
@@ -3877,6 +3896,7 @@ describe('TypeScript Operations Plugin', () => {
 
       const config = {
         flattenGeneratedTypes: true,
+        preResolveTypes: false,
       };
 
       const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
@@ -4062,7 +4082,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4420,7 +4440,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4495,7 +4515,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { location: '', document: productFragmentDocument },
           { location: '', document: priceFragmentDocument },
         ],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4542,7 +4562,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4609,7 +4629,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4687,7 +4707,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -4769,9 +4789,9 @@ function test(q: GetEntityBrandDataQuery): void {
       expect(content).toMatchInlineSnapshot(`
 "type CatFragment_Duck_Fragment = {};
 
-type CatFragment_Lion_Fragment = Pick<Lion, 'id'>;
+type CatFragment_Lion_Fragment = { id: string };
 
-type CatFragment_Puma_Fragment = Pick<Puma, 'id'>;
+type CatFragment_Puma_Fragment = { id: string };
 
 type CatFragment_Wolf_Fragment = {};
 
@@ -4780,7 +4800,7 @@ export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_F
 export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | {}> };
+export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
 "
 `);
     });
@@ -4839,15 +4859,9 @@ export type KittyQuery = { animals: Array<Pick<Lion, 'id'> | Pick<Puma, 'id'> | 
       expect(content).toMatchInlineSnapshot(`
 "type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
 
-type CatFragment_Lion_Fragment = (
-  { __typename?: 'Lion' }
-  & Pick<Lion, 'id'>
-);
+type CatFragment_Lion_Fragment = { __typename?: 'Lion', id: string };
 
-type CatFragment_Puma_Fragment = (
-  { __typename?: 'Puma' }
-  & Pick<Puma, 'id'>
-);
+type CatFragment_Puma_Fragment = { __typename?: 'Puma', id: string };
 
 type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
 
@@ -4856,16 +4870,7 @@ export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_F
 export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type KittyQuery = (
-  { __typename?: 'Query' }
-  & { animals: Array<{ __typename?: 'Duck' } | (
-    { __typename?: 'Lion' }
-    & Pick<Lion, 'id'>
-  ) | (
-    { __typename?: 'Puma' }
-    & Pick<Puma, 'id'>
-  ) | { __typename?: 'Wolf' }> }
-);
+export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
 "
 `);
     });
@@ -4904,6 +4909,7 @@ export type KittyQuery = (
         [{ location: '', document: query }],
         {
           skipTypename: true,
+          preResolveTypes: false,
         },
         {
           outputFile: 'graphql.ts',
@@ -5019,7 +5025,7 @@ export type KittyQuery = (
       const { content } = await plugin(
         schema,
         [{ location: '', document }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -5073,7 +5079,7 @@ export type KittyQuery = (
         const { content } = await plugin(
           schema,
           [{ location: '', document }],
-          {},
+          { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
           }
@@ -5122,7 +5128,7 @@ export type KittyQuery = (
         const { content } = await plugin(
           schema,
           [{ location: '', document }],
-          {},
+          { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
           }
@@ -5191,7 +5197,7 @@ export type KittyQuery = (
         const { content } = await plugin(
           schema,
           [{ location: '', document }],
-          {},
+          { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
           }
@@ -5249,7 +5255,7 @@ export type KittyQuery = (
         const { content } = await plugin(
           schema,
           [{ location: '', document }],
-          {},
+          { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
           }
@@ -5419,7 +5425,7 @@ export type KittyQuery = (
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -5476,6 +5482,7 @@ export type KittyQuery = (
         [{ location: '', document: fragment }],
         {
           avoidOptionals: true,
+          preResolveTypes: false,
         },
         {
           outputFile: 'graphql.ts',
@@ -5505,7 +5512,12 @@ export type KittyQuery = (
       }
     `);
 
-    const result = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
+    const result = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: ast }],
+      { preResolveTypes: false },
+      { outputFile: '' }
+    );
     expect(result.content).toBeSimilarStringTo(`
       export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 

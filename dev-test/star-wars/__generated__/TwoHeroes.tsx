@@ -5,13 +5,10 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type TwoHeroesQuery = { __typename?: 'Query' } & {
-  r2?: Types.Maybe<
-    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-  >;
-  luke?: Types.Maybe<
-    ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>) | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-  >;
+export type TwoHeroesQuery = {
+  __typename?: 'Query';
+  r2?: Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
+  luke?: Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
 };
 
 export const TwoHeroesDocument = gql`

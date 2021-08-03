@@ -9,12 +9,15 @@ declare global {
     commentContent: Types.Scalars['String'];
   }>;
 
-  export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
-    submitComment?: Types.Maybe<
-      { __typename?: 'Comment' } & Pick<Types.Comment, 'id' | 'createdAt' | 'content'> & {
-          postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
-        }
-    >;
+  export type SubmitCommentMutation = {
+    __typename?: 'Mutation';
+    submitComment?: Types.Maybe<{
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    }>;
   };
 }
 
