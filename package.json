@@ -74,7 +74,7 @@
     "flow-bin": "0.157.0",
     "flow-parser": "0.157.0",
     "fs-extra": "10.0.0",
-    "globby": "^12.0.0",
+    "globby": "11.0.4",
     "graphql": "15.5.1",
     "graphql-tag": "2.12.5",
     "husky": "7.0.1",
