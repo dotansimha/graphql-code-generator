@@ -28,7 +28,7 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 `);
 ```
 
-{@import ../generated-config/gql-tag-operations-preset.md}
+{@import ../generated-config/gql-tag-preset.md}
 
 ## Getting Started
 

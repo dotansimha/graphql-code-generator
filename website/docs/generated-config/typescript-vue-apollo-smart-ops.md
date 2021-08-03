@@ -533,3 +533,13 @@ default: `false`
 Removes fragment duplicates for reducing data transfer.
 It is done by removing sub-fragments imports from fragment definition
 Instead - all of them are imported to the Operation node.
+
+
+### `inlineFragmentTypes`
+
+type: `InlineFragmentTypeOptions`
+default: `inline`
+
+Whether fragment types should be inlined into other operations.
+"inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
+"combine" is the previous behavior that uses fragment type references without inlining the types (and might cauuse issues with deeply nested fragment that uses list types).

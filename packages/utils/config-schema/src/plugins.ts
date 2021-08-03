@@ -18,7 +18,7 @@ export const presetsConfigurations: PresetConfig[] = [
     name: 'import-types-preset',
   },
   {
-    file: '../../presets/gql-tag/src/index.ts',
+    file: '../../presets/gql-tag-operations/src/index.ts',
     identifier: 'GqlTagConfig',
     name: 'gql-tag-preset',
   },

@@ -45,7 +45,7 @@ module.exports = {
     },
   },
   scripts: ['/js/fix-location.js', 'https://the-guild.dev/static/crisp.js'],
-  plugins: [resolve(__dirname, './monaco-plugin.js')],
+  plugins: [resolve(__dirname, './custom-plugin.js')],
   presets: [
     [
       '@docusaurus/preset-classic',
