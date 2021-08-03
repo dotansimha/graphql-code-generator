@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-graphql-files-modules",
-  "version": "1.18.1",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript module declarations based on GraphQL operations",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.2",
+    "@graphql-codegen/plugin-helpers": "^2.0.0",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {

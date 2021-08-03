@@ -1,5 +1,24 @@
 # @graphql-codegen/typescript-mongodb
 
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- Updated dependencies [d80efdec4]
+- Updated dependencies [d80efdec4]
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/visitor-plugin-common@2.0.0
+  - @graphql-codegen/typescript@2.0.0
+  - @graphql-codegen/plugin-helpers@2.0.0
+
 ## 1.19.5
 
 ### Patch Changes
