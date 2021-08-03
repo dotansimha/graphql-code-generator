@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { concatAST, isScalarType, parse } from 'graphql';
+import { concatAST, isScalarType } from 'graphql';
 import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
@@ -24,7 +24,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       throw new Error(`Preset "graphql-modules" requires to use GraphQL SDL`);
     }
 
-    const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.sources, baseOutputDir);
+    const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.extendedSources, baseOutputDir);
     const modules = Object.keys(sourcesByModuleMap);
 
     const baseVisitor = new BaseVisitor(options.config, {});
@@ -78,13 +78,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       const importPath = options.presetConfig.importBaseTypesFrom || normalize(join(relativePath, baseTypesFilename));
       const sources = sourcesByModuleMap[moduleName];
 
-      const moduleDocument = concatAST(
-        sources.map(source =>
-          parse(source.body, {
-            noLocation: true,
-          })
-        )
-      );
+      const moduleDocument = concatAST(sources.map(source => source.document));
 
       const shouldDeclare = filename.endsWith('.d.ts');
 

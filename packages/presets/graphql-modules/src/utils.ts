@@ -5,9 +5,9 @@ import {
   InputValueDefinitionNode,
   Kind,
   NamedTypeNode,
-  Source,
   TypeNode,
 } from 'graphql';
+import { Source } from '@graphql-tools/utils';
 import parse from 'parse-filepath';
 
 const sep = '/';
@@ -146,11 +146,11 @@ export function groupSourcesByModule(sources: Source[], basePath: string): Recor
   const grouped: Record<string, Source[]> = {};
 
   sources.forEach(source => {
-    const relativePath = getRelativePath(source.name, basePath);
+    const relativePath = getRelativePath(source.location, basePath);
 
     if (relativePath) {
       // PERF: we could guess the module by matching source.location with a list of already resolved paths
-      const mod = extractModuleDirectory(source.name, basePath);
+      const mod = extractModuleDirectory(source.location, basePath);
 
       if (!grouped[mod]) {
         grouped[mod] = [];
