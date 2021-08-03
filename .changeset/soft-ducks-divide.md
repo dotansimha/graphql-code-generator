@@ -17,7 +17,6 @@
 '@graphql-codegen/visitor-plugin-common': major
 '@graphql-codegen/typescript-apollo-angular': major
 '@graphql-codegen/typescript-apollo-client-helpers': major
-'@graphql-codegen/typescript-compatibility': major
 '@graphql-codegen/typescript-document-nodes': major
 '@graphql-codegen/typescript-enum-array': major
 '@graphql-codegen/typescript-generic-sdk': major
