@@ -63,7 +63,7 @@
     "detect-indent": "^6.0.0",
     "glob": "^7.1.6",
     "globby": "^11.0.4",
-    "graphql-config": "^3.4.0",
+    "graphql-config": "^4.0.0",
     "inquirer": "^7.3.3",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
