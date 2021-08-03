@@ -15,14 +15,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
     imports.push('GraphQLResolveInfo');
   }
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
-  const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
-
-  if (config.noSchemaStitching === false) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`
-    );
-  }
+  const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : true;
 
   const indexSignature = config.useIndexSignature
     ? [

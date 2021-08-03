@@ -25,11 +25,11 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   useIndexSignature?: boolean;
   /**
-   * @description Disables Schema Stitching support.
+   * @description Disables/Enables Schema Stitching support.
+   * By defualt, the resolver signature does not include the support for schema-stitching.
+   * Set to `false` to enable that.
    *
-   * Note: The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
-   * @default false
-   *
+   * @default true
    * @exampleMarkdown
    * ```yml
    * generates:
@@ -38,7 +38,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *    - typescript
    *    - typescript-resolvers
    *  config:
-   *    noSchemaStitching: true
+   *    noSchemaStitching: false
    * ```
    */
   noSchemaStitching?: boolean;

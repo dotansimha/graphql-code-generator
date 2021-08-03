@@ -8,57 +8,6 @@ import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
-    it('Should generate IDirectiveResolvers by default', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;`);
-      await validate(result);
-    });
-
-    it('Should not generate IDirectiveResolvers when prefix is overwritten', async () => {
-      const config = { typesPrefix: 'PREFIX_' };
-      const result = await plugin(schema, [], config, { outputFile: '' });
-      expect(result.content).not.toContain(`export type IDirectiveResolvers`);
-      expect(result.content).not.toContain(`export type DirectiveResolvers`);
-      expect(result.content).toContain(`export type PREFIX_DirectiveResolvers`);
-      await validate(result, config);
-    });
-
-    it('Should generate IResolvers by default', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
-      await validate(result);
-    });
-
-    it('Should not generate IResolvers when prefix is overwritten', async () => {
-      const config = { typesPrefix: 'PREFIX_' };
-      const result = await plugin(schema, [], config, { outputFile: '' });
-      expect(result.content).not.toContain(`export type IResolvers`);
-      expect(result.content).not.toContain(`export type Resolvers`);
-      expect(result.content).toContain(`export type PREFIX_Resolvers`);
-      await validate(result, config);
-    });
-
-    it('Should generate IResolvers by default with deprecated warning', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
-      await validate(result);
-    });
-
     it('should produce IResolvers compatible with graphql-tools', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
@@ -122,8 +71,8 @@ describe('TypeScript Resolvers Plugin', () => {
     });
   });
 
-  it('Should use StitchingResolver by default', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+  it('Should use StitchingResolver when its active on config', async () => {
+    const result = await plugin(schema, [], { noSchemaStitching: false }, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`export type StitchingResolver<TResult, TParent, TContext, TArgs>`);
     expect(result.content).toBeSimilarStringTo(`
@@ -438,25 +387,6 @@ describe('TypeScript Resolvers Plugin', () => {
         `export type MyEnumResolvers = EnumResolverSignature<{ A?: any, B?: any, C?: any }, ResolversTypes['MyEnum']>;`
       );
     });
-  });
-
-  it('Should warn when noSchemaStitching is set to false (deprecated)', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
-    const result = await plugin(
-      schema,
-      [],
-      {
-        noSchemaStitching: false,
-      },
-      { outputFile: '' }
-    );
-
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][0]).toContain('noSchemaStitching');
-
-    spy.mockRestore();
-
-    await validate(result);
   });
 
   it('Should allow to override ResolverTypeWrapper signature', async () => {
