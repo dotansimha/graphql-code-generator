@@ -45,7 +45,7 @@
     "@graphql-codegen/schema-ast": "1.18.3",
     "@graphql-codegen/time": "2.0.2",
     "js-yaml": "4.1.0",
-    "monaco-yaml": "2.5.1",
+    "monaco-yaml": "3.0.0",
     "react-markdown": "6.0.3",
     "@graphql-codegen/typescript": "1.23.0",
     "@graphql-codegen/typed-document-node": "1.18.10",
