@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-operations
 
+## 2.0.1
+
+### Patch Changes
+
+- e8c8e9c06: Set `preResolveTypes: true` by default (should be there since v2)
+
 ## 2.0.0
 
 ### Major Changes
