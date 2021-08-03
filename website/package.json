@@ -51,7 +51,7 @@
     "@graphql-codegen/typescript-graphql-files-modules": "2.0.0",
     "@graphql-codegen/typescript-graphql-request": "4.0.0",
     "@graphql-codegen/typescript-mongodb": "2.0.0",
-    "@graphql-codegen/typescript-operations": "2.0.0",
+    "@graphql-codegen/typescript-operations": "2.0.1",
     "@graphql-codegen/typescript-react-apollo": "3.0.0",
     "@graphql-codegen/typescript-react-query": "2.0.0",
     "@graphql-codegen/typescript-rtk-query": "2.0.0",
