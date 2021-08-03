@@ -19,6 +19,8 @@ export interface BaseVisitorConvertOptions {
   useTypesSuffix?: boolean;
 }
 
+export type InlineFragmentTypeOptions = 'inline' | 'combine';
+
 export interface ParsedConfig {
   scalars: ParsedScalarsMap;
   convert: ConvertFn;
@@ -32,6 +34,7 @@ export interface ParsedConfig {
   useTypeImports: boolean;
   dedupeFragments: boolean;
   allowEnumStringTypes: boolean;
+  inlineFragmentTypes: InlineFragmentTypeOptions;
 }
 
 export interface RawConfig {
@@ -200,6 +203,15 @@ export interface RawConfig {
    * @ignore
    */
   allowEnumStringTypes?: boolean;
+  /**
+   * @description Whether fragment types should be inlined into other operations.
+   * "inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
+   * "combine" is the previous behavior that uses fragment type references without inlining the types (and might cauuse issues with deeply nested fragment that uses list types).
+   *
+   * @type string
+   * @default inline
+   */
+  inlineFragmentTypes?: InlineFragmentTypeOptions;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -219,6 +231,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       useTypeImports: !!rawConfig.useTypeImports,
       dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
+      inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       ...((additionalConfig || {}) as any),
     };
 

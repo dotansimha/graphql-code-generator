@@ -125,14 +125,13 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
     {
-      name: 'Operations types (without Pick)',
+      name: 'Operations types (with Pick)',
       description: `This is a similar output to regular usage of \`typescript-operations\`, but instead of using \`Pick\`, it will use the primitive value when possible, and reduce the output to the minimal types possible.`,
       tags: ['typescript', 'frontend'],
       config: `generates:
   operations-types.ts:
     config:
-      onlyOperationTypes: true
-      preResolveTypes: true
+      preResolveTypes: false
     plugins:
       - typescript
       - typescript-operations`,

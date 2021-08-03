@@ -115,7 +115,7 @@ export type LelFragment = { __typename?: 'Tweet' } & Pick<Tweet, 'id' | 'body'>;
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = { __typename?: 'Query' } & {
-  Tweets?: Maybe<Array<Maybe<{ __typename?: 'Tweet' } & LelFragment>>>;
+  Tweets?: Maybe<Array<Maybe<{ __typename?: 'Tweet' } & Pick<Tweet, 'id' | 'body'>>>>;
 };
 
 export const LelFragmentDoc = {

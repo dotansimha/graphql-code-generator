@@ -239,22 +239,10 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;
         export const myTypeResolvers: MyTypeResolvers<{}, { parentOverride: boolean }> = {
           foo: (parentValue) => {
             const a: boolean = parentValue.parentOverride;
@@ -441,22 +429,10 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
 }>;
-
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+"
 `;
 
 exports[`TypeScript Resolvers Plugin Config optionalInfoArgument - should allow to have optional info argument 1`] = `
@@ -698,20 +674,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
 }>;
-
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+"
 `;

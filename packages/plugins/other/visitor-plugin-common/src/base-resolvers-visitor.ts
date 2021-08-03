@@ -790,17 +790,6 @@ export class BaseResolversVisitor<
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    // This is here because we don't want to break IResolvers, so there is a mapping by default,
-    // and if the developer is overriding typesPrefix, it won't get generated at all.
-    const deprecatedIResolvers = !this.config.typesPrefix
-      ? `
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers${contextType} = ${name}<ContextType>;`
-      : '';
-
     return [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -815,7 +804,6 @@ export type IResolvers${contextType} = ${name}<ContextType>;`
             })
             .join('\n')
         ).string,
-      deprecatedIResolvers,
     ].join('\n');
   }
 
@@ -831,17 +819,6 @@ export type IResolvers${contextType} = ${name}<ContextType>;`
       const name = this.convertName('DirectiveResolvers');
       const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-      // This is here because we don't want to break IResolvers, so there is a mapping by default,
-      // and if the developer is overriding typesPrefix, it won't get generated at all.
-      const deprecatedIResolvers = !this.config.typesPrefix
-        ? `
-/**
- * @deprecated
- * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
- */
-export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
-        : '';
-
       return [
         new DeclarationBlock(this._declarationBlockConfig)
           .export()
@@ -856,7 +833,6 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
               })
               .join('\n')
           ).string,
-        deprecatedIResolvers,
       ].join('\n');
     }
 

@@ -41,7 +41,6 @@ module.exports = {
           'plugins/typescript-apollo-angular',
           'plugins/typescript-stencil-apollo',
           'plugins/typescript-rtk-query',
-          'plugins/typescript-compatibility',
           'plugins/typescript-graphql-files-modules',
           'plugins/typescript-document-nodes',
           'plugins/typescript-mongodb',

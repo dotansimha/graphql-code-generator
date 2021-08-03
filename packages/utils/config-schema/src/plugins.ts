@@ -101,11 +101,6 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-graphql-request',
   },
   {
-    file: '../../plugins/typescript/compatibility/src/config.ts',
-    identifier: 'CompatibilityPluginRawConfig',
-    name: 'typescript-compatibility',
-  },
-  {
     file: '../../plugins/typescript/mongodb/src/config.ts',
     identifier: 'TypeScriptMongoPluginConfig',
     name: 'typescript-mongodb',

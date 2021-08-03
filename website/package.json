@@ -50,7 +50,6 @@
     "@graphql-codegen/typescript": "1.23.0",
     "@graphql-codegen/typed-document-node": "1.18.10",
     "@graphql-codegen/typescript-apollo-angular": "2.3.8",
-    "@graphql-codegen/typescript-compatibility": "2.1.5",
     "@graphql-codegen/typescript-generic-sdk": "1.17.15",
     "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
     "@graphql-codegen/typescript-graphql-request": "3.2.5",
