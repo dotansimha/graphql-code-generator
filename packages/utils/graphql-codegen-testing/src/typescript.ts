@@ -1,6 +1,11 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import {
-  CompilerOptions,
+import typescript from 'typescript';
+import { resolve, join, dirname } from 'path';
+import * as lzString from 'lz-string';
+
+import type { CompilerOptions, Diagnostic, ScriptTarget as ScriptTargetType } from 'typescript';
+
+const {
   ModuleResolutionKind,
   ScriptTarget,
   JsxEmit,
@@ -10,10 +15,7 @@ import {
   createCompilerHost,
   createProgram,
   ScriptKind,
-  Diagnostic,
-} from 'typescript';
-import { resolve, join, dirname } from 'path';
-import * as lzString from 'lz-string';
+} = typescript;
 
 const { compressToEncodedURIComponent } = lzString;
 
@@ -71,7 +73,7 @@ export function validateTs(
       ...host,
       getSourceFile: (
         fileName: string,
-        languageVersion: ScriptTarget,
+        languageVersion: ScriptTargetType,
         onError?: (message: string) => void,
         shouldCreateNewSourceFile?: boolean
       ) => {
@@ -189,7 +191,7 @@ export function compileTs(
       ...host,
       getSourceFile: (
         fileName: string,
-        languageVersion: ScriptTarget,
+        languageVersion: ScriptTargetType,
         onError?: (message: string) => void,
         shouldCreateNewSourceFile?: boolean
       ) => {

@@ -3,6 +3,9 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 
+global.expect = () => {};
+global.expect.extend = () => {};
+
 async function main() {
   const mjsFiles = await globby(['../packages/**/dist/*.mjs'], {
     cwd: dirname(fileURLToPath(import.meta.url)),
@@ -28,8 +31,8 @@ async function main() {
         });
     })
   );
-  ok.length && console.log(chalk.blue(`OK: ${ok.join(' | ')}`));
-  fail.length && console.error(chalk.red(`Fail: ${fail.join(' | ')}`));
+  ok.length && console.log(chalk.blue(`${ok.length} OK: ${ok.join(' | ')}`));
+  fail.length && console.error(chalk.red(`${fail.length} Fail: ${fail.join(' | ')}`));
 
   if (fail.length) {
     console.error('\nFAILED');
