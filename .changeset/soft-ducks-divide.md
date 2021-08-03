@@ -46,7 +46,7 @@
 '@graphql-codegen/plugin-helpers': major
 ---
 
-Update to latest graphql-tools version.
+Update to latest `graphql-tools` and `graphql-config` version.
 
 ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️: 
 
