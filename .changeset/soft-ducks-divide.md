@@ -43,10 +43,14 @@
 '@graphql-codegen/graphql-modules-preset': major
 '@graphql-codegen/import-types-preset': major
 '@graphql-codegen/near-operation-file-preset': major
-'@graphql-codegen/config-schema': major
-'@graphql-codegen/testing': major
 '@graphql-codegen/plugin-helpers': major
-'@graphql-codegen/website': major
 ---
 
-update to latest graphql-tools version
+Update to latest graphql-tools version.
+
+‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️: 
+
+This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+
+
