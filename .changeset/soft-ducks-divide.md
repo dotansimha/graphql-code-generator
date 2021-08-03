@@ -43,6 +43,15 @@
 '@graphql-codegen/import-types-preset': major
 '@graphql-codegen/near-operation-file-preset': major
 '@graphql-codegen/plugin-helpers': major
+'@graphql-codegen/gql-tag-operations-preset': major
+'@graphql-codegen/gql-tag-operations': major
+'@graphql-codegen/add': major
+'@graphql-codegen/fragment-matcher': major
+'@graphql-codegen/introspection': major
+'@graphql-codegen/urql-introspection': major
+'@graphql-codegen/time': major
+'@graphql-codegen/typescript-graphql-files-modules': major
+'@graphql-codegen/named-operations-object': major
 ---
 
 Update to latest `graphql-tools` and `graphql-config` version.
