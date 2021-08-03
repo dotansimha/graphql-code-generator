@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.0.1
+
+### Patch Changes
+
+- edd029e87: fix(graphql-modules-preset): do not parse SDL and use extendedSources that have parsed document already
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,12 @@
 # @graphql-cli/codegen
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [edd029e87]
+  - @graphql-codegen/cli@2.0.1
+
 ## 2.0.0
 
 ### Major Changes
