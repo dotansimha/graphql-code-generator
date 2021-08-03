@@ -398,7 +398,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      if (!this._config.inlineFragmentTypes) {
+      if (this._config.inlineFragmentTypes === 'combine') {
         fragmentsSpreadUsages.push(selectionNode.typeName);
         continue;
       }
