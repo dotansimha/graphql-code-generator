@@ -22,12 +22,12 @@ export async function getPluginByName(
     try {
       return await pluginLoader(moduleName);
     } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND' || !err.message.includes(moduleName)) {
+      if (err.code !== 'MODULE_NOT_FOUND') {
         throw new DetailedError(
           `Unable to load template plugin matching ${name}`,
           `
               Unable to load template plugin matching '${name}'.
-              Reason: 
+              Reason:
                 ${err.message}
             `
         );
@@ -48,7 +48,7 @@ export async function getPluginByName(
     `
         Unable to find template plugin matching '${name}'
         Install one of the following packages:
-        
+
         ${possibleNamesMsg}
       `
   );
