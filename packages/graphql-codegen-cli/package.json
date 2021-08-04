@@ -49,7 +49,7 @@
     "@graphql-tools/graphql-file-loader": "^7.0.1",
     "@graphql-tools/json-file-loader": "^7.0.1",
     "@graphql-tools/load": "^7.1.0",
-    "@graphql-tools/prisma-loader": "^7.0.1",
+    "@graphql-tools/prisma-loader": "^7.0.2",
     "@graphql-tools/url-loader": "^7.0.3",
     "@graphql-tools/utils": "^8.0.1",
     "ansi-escapes": "^4.3.1",

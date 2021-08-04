@@ -2432,10 +2432,10 @@
   dependencies:
     tslib "~2.0.1"
 
-"@graphql-tools/prisma-loader@^7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-7.0.1.tgz#62f0988fde5c57e1971aee2a58056bf670b39953"
-  integrity sha512-tft8+An89QXyLaz1ITqwMZMewACp8QfGHtgMNq2aAYnDNltoLzjYbIDepX0xtRD/NxQU7ivkpUDQRUwtk9RS3w==
+"@graphql-tools/prisma-loader@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/prisma-loader/-/prisma-loader-7.0.2.tgz#134f9e188fb6ce424f72b5e9475b6a94400c6dc8"
+  integrity sha512-2jLBRWlsgKqxO/4w6TdGAlnyOKAKQwyVyR9zkfHnibZmpskKVBBDfPK/JrixlVncBaSP4nBOA+1D1CuJnyR4yw==
   dependencies:
     "@graphql-tools/url-loader" "^7.0.3"
     "@graphql-tools/utils" "8.0.1"
@@ -3597,6 +3597,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@types/node@*", "@types/node@^15.0.1":
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
@@ -3608,6 +3609,8 @@
 >>>>>>> 8f3bf8759 (fix enum-array package ESM exports)
 =======
 >>>>>>> 977a01902 (fix gql-tag-operations-preset package)
+=======
+>>>>>>> 70f1ce3cc (update prisma-loader & fix mkdirp import)
 <<<<<<< HEAD
 "@types/node@*", "@types/node@14.17.9", "@types/node@^14.14.33":
 >>>>>>> 79e010886 (ESM support)
@@ -3619,6 +3622,8 @@
 >>>>>>> 805f69e06 (fix enum-array package ESM exports)
 =======
 >>>>>>> 311ae063b (fix gql-tag-operations-preset package)
+=======
+>>>>>>> abe91b6c6 (update prisma-loader & fix mkdirp import)
 <<<<<<< HEAD
 "@types/node@*", "@types/node@14.17.8", "@types/node@^14.14.33":
   version "14.17.8"
@@ -3651,6 +3656,8 @@
 =======
 =======
 >>>>>>> 2cafbcdde (fix gql-tag-operations-preset package)
+=======
+>>>>>>> 34d4c4643 (update prisma-loader & fix mkdirp import)
 "@types/node@*":
   version "16.4.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.10.tgz#e57e2a54fc6da58da94b3571b1cb456d39f88597"
@@ -3686,11 +3693,6 @@
 =======
 =======
 "@types/node@14.17.7", "@types/node@^14.14.33":
-<<<<<<< HEAD
->>>>>>> 449218115 (fix enum-array package ESM exports)
->>>>>>> 14d7c10a7 (fix enum-array package ESM exports)
-=======
->>>>>>> 2cafbcdde (fix gql-tag-operations-preset package)
   version "14.17.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.7.tgz#e106997493e617edeba52fdbd965930da494113b"
   integrity sha512-SYTdMaW47se8499q8m0fYKZZRlmq0RaRv6oYmlVm6DUm31l0fhOl1D03X8hGxohCKTI2Bg6w7W0TiYB51aJzag==
@@ -7179,9 +7181,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.564, electron-to-chromium@^1.3.793:
-  version "1.3.793"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.793.tgz#c10dff5f3126238004de344db458f1da3641d554"
-  integrity sha512-l9NrGV6Mr4ov5mayYPvIWcwklNw5ROmy6rllzz9dCACw9nKE5y+s5uQk+CBJMetxrWZ6QJFsvEfG6WDcH2IGUg==
+  version "1.3.795"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.795.tgz#91f09b4c77f8dab562dd592ce929b009201c24ff"
+  integrity sha512-4TPxrLf9Fzsi4rVgTlDm+ubxoXm3/TN67/LGHx/a4UkVubKILa6L26O6eTnHewixG/knzU9L3lLmfL39eElwlQ==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -15315,9 +15317,9 @@ ts-invariant@^0.4.0:
     tslib "^1.9.3"
 
 ts-invariant@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.9.0.tgz#4c60e9159a31742ab0103f13d7f63314fb5409c9"
-  integrity sha512-+JqhKqywk+ue5JjAC6eTWe57mOIxYXypMUkBDStkAzvnlfkDJ1KGyeMuNRMwOt6GXzHSC1UT9JecowpZDmgXqA==
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.9.1.tgz#87dfde9894a4ce3c7711b02b1b449e7fd7384b13"
+  integrity sha512-hSeYibh29ULlHkuEfukcoiyTct+s2RzczMLTv4x3NWC/YrBy7x7ps5eYq/b4Y3Sb9/uAlf54+/5CAEMVxPhuQw==
   dependencies:
     tslib "^2.1.0"
 

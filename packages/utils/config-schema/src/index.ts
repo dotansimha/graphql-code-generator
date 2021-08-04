@@ -2,7 +2,7 @@
 import * as TJS from 'typescript-json-schema';
 import { writeFile } from 'fs-extra';
 import { generateDocs } from './docs';
-import { sync as mkdirp } from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { pluginsConfigurations, presetsConfigurations } from './plugins';
 import { join } from 'path';
 import { apply } from 'jsonpath';
@@ -133,7 +133,7 @@ async function generate() {
 
   const docsMarkdown = generateDocs(schema, [...pluginsConfigurations, ...presetsConfigurations]);
 
-  mkdirp(docsOutDir);
+  mkdirp.sync(docsOutDir);
   await Promise.all(
     Object.keys(docsMarkdown).map(identifier =>
       writeFile(join(docsOutDir, `./${identifier}.md`), docsMarkdown[identifier])
@@ -156,7 +156,7 @@ async function generate() {
 
     return v;
   });
-  mkdirp(schemaOutDir);
+  mkdirp.sync(schemaOutDir);
   await writeFile(join(schemaOutDir, './config.schema.json'), JSON.stringify(schema, null, 2));
 }
 

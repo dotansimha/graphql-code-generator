@@ -3,7 +3,7 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
-import { sync as mkdirpSync } from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
@@ -81,7 +81,7 @@ export async function generate(
         const basedir = dirname(result.filename);
         await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-        mkdirpSync(basedir);
+        mkdirp.sync(basedir);
         const absolutePath = isAbsolute(result.filename)
           ? result.filename
           : join(input.cwd || process.cwd(), result.filename);
