@@ -1,55 +1,37 @@
 /* eslint-disable no-console */
 
-import Fastify from 'fastify';
 import { promises } from 'fs';
 import { parse, printSchema } from 'graphql';
+import gql from 'graphql-tag';
+import prettier from 'prettier';
 
 import { codegen } from '@graphql-codegen/core';
 import * as typedDocumentNode from '@graphql-codegen/typed-document-node';
 import * as typescript from '@graphql-codegen/typescript';
 import * as typescriptOperations from '@graphql-codegen/typescript-operations';
 import * as typescriptResolvers from '@graphql-codegen/typescript-resolvers';
-import { CreateApp, gql, EZContext } from '@graphql-ez/fastify';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { loadDocuments } from '@graphql-tools/load';
-import prettier from 'prettier';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
-import type { Resolvers } from './ez.generated';
+import type { Resolvers } from './gql.generated';
 
-declare module '@graphql-ez/fastify' {
-  interface EZResolvers extends Resolvers<EZContext> {}
-}
-
-const { writeFile } = promises;
-
-const server = Fastify({
-  logger: true,
-});
-
-const ezApp = CreateApp({
-  schema: {
-    typeDefs: gql`
-      type Query {
-        hello: String!
-      }
-    `,
-    resolvers: {
-      Query: {
-        hello(_root, _args, _ctx) {
-          return 'world';
-        },
+const schema = makeExecutableSchema({
+  typeDefs: gql`
+    type Query {
+      hello: String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello(_root, _args, _ctx) {
+        return 'world';
       },
     },
-  },
+  } as Resolvers<unknown>,
 });
 
-const { fastifyPlugin, getEnveloped } = ezApp.buildApp();
-
-server.register(fastifyPlugin);
-
 (async () => {
-  const { schema } = (await getEnveloped)();
-
   const loadedDocuments = await loadDocuments(['src/graphql/**/*.gql'], {
     loaders: [new GraphQLFileLoader()],
   });
@@ -65,7 +47,7 @@ server.register(fastifyPlugin);
     schema: parse(printSchema(schema)),
     config,
     documents: loadedDocuments,
-    filename: 'ez.generated.ts',
+    filename: 'gql.generated.ts',
     pluginMap: {
       typescript,
       typescriptResolvers,
@@ -88,8 +70,8 @@ server.register(fastifyPlugin);
     ],
   });
 
-  await writeFile(
-    'src/ez.generated.ts',
+  await promises.writeFile(
+    'src/gql.generated.ts',
     prettier.format(codegenCode, {
       ...(await prettier.resolveConfig(process.cwd())),
       parser: 'typescript',
@@ -102,5 +84,3 @@ server.register(fastifyPlugin);
   console.error(err);
   process.exit(1);
 });
-
-server.listen(8080);
