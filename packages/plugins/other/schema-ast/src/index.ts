@@ -85,7 +85,13 @@ export const validate: PluginValidateFn<any> = async (
 };
 
 export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
-  const printedSchema = printSchema(schema);
+  let printedSchema: string;
+  if (config.includeDirectives) {
+    printedSchema = printSchemaWithDirectives(schema);
+  } else {
+    printedSchema = printSchema(schema);
+  }
+
   const astNode = parseSchema(printedSchema);
 
   const transformedAST = config.disableDescriptions

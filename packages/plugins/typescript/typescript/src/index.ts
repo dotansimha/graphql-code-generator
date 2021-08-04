@@ -27,17 +27,24 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
 ) => {
-  const { schema: _schema, ast } = transformSchemaAST(schema, config);
+  const includeDirectives = !!config.directiveMappers;
+  const { schema: _schema, ast } = transformSchemaAST(schema, { ...config, includeDirectives });
 
   const visitor = new TsVisitor(_schema, config);
 
   const visitorResult = visit(ast, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
+  const directiveMappers = visitor.directiveMappersDefinition;
 
   return {
-    prepend: [...visitor.getEnumsImports(), ...visitor.getScalarsImports(), ...visitor.getWrapperDefinitions()],
-    content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
+    prepend: [
+      ...visitor.getEnumsImports(),
+      ...visitor.getDirectiveMappersImports(),
+      ...visitor.getScalarsImports(),
+      ...visitor.getWrapperDefinitions(),
+    ],
+    content: [scalars, directiveMappers, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
   };
 };
 

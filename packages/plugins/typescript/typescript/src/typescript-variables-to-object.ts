@@ -5,6 +5,7 @@ import {
   ConvertNameFn,
   AvoidOptionalsConfig,
   normalizeAvoidOptionals,
+  ParsedDirectivesMap,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
@@ -18,9 +19,19 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumNames: string[] = [],
     _enumPrefix = true,
     _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false
+    _applyCoercion: Boolean = false,
+    _directiveMappers: ParsedDirectivesMap = {}
   ) {
-    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues, _applyCoercion);
+    super(
+      _scalars,
+      _convertName,
+      _namespacedImportName,
+      _enumNames,
+      _enumPrefix,
+      _enumValues,
+      _applyCoercion,
+      _directiveMappers
+    );
   }
 
   private clearOptional(str: string): string {
