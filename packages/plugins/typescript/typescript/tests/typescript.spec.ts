@@ -289,6 +289,22 @@ describe('TypeScript', () => {
         /** this is b */
         | 'B';`);
     });
+
+    it('Should work with directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "My custom directive"
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+      `);
+      const result = await plugin(schema, [], { directiveMappers: { AsNumber: 'number' } }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      /** Type overrides using directives */
+      export type Directives = {
+        /** My custom directive */
+        AsNumber: number;
+      };
+      `);
+    });
   });
 
   describe('disable comment generation', () => {
@@ -2254,6 +2270,113 @@ describe('TypeScript', () => {
       expect(result.content).not.toContain('withArguments');
       expect(result.content).not.toContain('objSimple');
       expect(result.content).not.toContain('universal');
+      validateTs(result);
+    });
+
+    it('Should handle type override', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+
+        type Query {
+          myField(id: ID! @AsNumber): Boolean
+        }
+      `);
+      const result = await plugin(schema, [], { directiveMappers: { AsNumber: 'number' } }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Directives = {
+        AsNumber: number;
+      };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: Directives['AsNumber'];
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        myField?: Maybe<Scalars['Boolean']>;
+      };
+
+      export type QueryMyFieldArgs = {
+        id: Directives['AsNumber'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should allow imported types', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { directiveMappers: { AsNumber: './someModule#MyType' }, directiveMapperTypeSuffix: 'Model' },
+        { outputFile: '' }
+      );
+
+      expect(result.prepend).toContain("import { MyType as MyTypeModel } from './someModule';");
+      expect(result.content).toBeSimilarStringTo(`
+      export type Directives = {
+        AsNumber: MyTypeModel;
+      };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: Directives['AsNumber'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should use last directive override', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+        directive @AsString on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber @AsString
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { directiveMappers: { AsNumber: 'number', AsString: 'AsString' } },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: Directives['AsString'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should ignore unmapped directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+      `);
+      const result = await plugin(schema, [], { directiveMappers: {} }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: Scalars['ID'];
+      };
+      `);
       validateTs(result);
     });
   });
