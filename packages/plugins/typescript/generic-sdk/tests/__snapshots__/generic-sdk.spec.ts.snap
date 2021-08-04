@@ -16,6 +16,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Query = {
   __typename?: 'Query';
   /** A feed of repository submissions */
@@ -289,6 +292,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Query = {
   __typename?: 'Query';
   /** A feed of repository submissions */
@@ -500,6 +506,9 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
+
+/** Type overrides using directives */
+export type Directives = {};
 
 export type Query = {
   __typename?: 'Query';
