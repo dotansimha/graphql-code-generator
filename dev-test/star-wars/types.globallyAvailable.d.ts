@@ -11,6 +11,9 @@ type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+type Directives = {};
+
 /** A character from the Star Wars universe */
 type Character = {
   /** The ID of the character */

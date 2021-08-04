@@ -14,6 +14,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type CreateMessageInput = {
   description: Scalars['String'];
 };

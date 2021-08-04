@@ -11,6 +11,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export enum Foo {
   Bar = 'QUX',
 }

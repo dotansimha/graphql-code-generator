@@ -15,6 +15,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Article = {
   __typename?: 'Article';
   id: Scalars['ID'];

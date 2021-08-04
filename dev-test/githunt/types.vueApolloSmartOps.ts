@@ -18,6 +18,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 /** A comment about an entry, submitted by a user */
 export type Comment = {
   __typename?: 'Comment';
