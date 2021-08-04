@@ -15,6 +15,9 @@ export type Scalars = {
   Url: any;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Meta = {
   __typename?: 'Meta';
   count?: Maybe<Scalars['Int']>;

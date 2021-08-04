@@ -13,6 +13,9 @@ export type Scalars = {
   _FieldSet: any;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Address = {
   __typename?: 'Address';
   lines: Lines;

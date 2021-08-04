@@ -11,6 +11,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TestQuery = {

@@ -14,6 +14,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 /** A character from the Star Wars universe */
 export type Character = {
   /** The ID of the character */
