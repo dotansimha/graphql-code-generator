@@ -8,7 +8,7 @@ import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
-import { createRequire, createRequireFromPath } from 'module';
+import { createRequire } from 'module';
 
 export type YamlCliFlags = {
   config: string;
@@ -181,7 +181,7 @@ export function parseArgv(argv = process.argv): YamlCliFlags {
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
-    const relativeRequire = (createRequire || createRequireFromPath)(process.cwd());
+    const relativeRequire = createRequire(process.cwd());
     await Promise.all(
       cliFlags.require.map(
         mod =>
