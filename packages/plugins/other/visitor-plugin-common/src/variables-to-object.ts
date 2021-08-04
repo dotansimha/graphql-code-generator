@@ -1,6 +1,6 @@
-import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
+import { Kind, TypeNode, VariableNode, NameNode, ValueNode, DirectiveNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
-import { NormalizedScalarsMap, ConvertNameFn, ParsedEnumValuesMap } from './types';
+import { NormalizedScalarsMap, ConvertNameFn, ParsedEnumValuesMap, ParsedDirectivesMap } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
 
@@ -9,6 +9,7 @@ export interface InterfaceOrVariable {
   variable?: VariableNode;
   type: TypeNode;
   defaultValue?: ValueNode;
+  directives?: ReadonlyArray<DirectiveNode>;
 }
 
 export class OperationVariablesToObject {
@@ -19,7 +20,8 @@ export class OperationVariablesToObject {
     protected _enumNames: string[] = [],
     protected _enumPrefix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
-    protected _applyCoercion: Boolean = false
+    protected _applyCoercion: Boolean = false,
+    protected _directiveMappers: ParsedDirectivesMap = {}
   ) {
     autoBind(this);
   }
@@ -55,6 +57,27 @@ export class OperationVariablesToObject {
     return `${prefix}Scalars['${name}']`;
   }
 
+  protected getDirectiveMapping(name: string): string {
+    return `Directives['${name}']`;
+  }
+
+  protected getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
+    if (!this._directiveMappers) return null;
+
+    const type = directives
+      .map(directive => {
+        const directiveName = directive.name.value;
+        if (this._directiveMappers[directiveName]) {
+          return this.getDirectiveMapping(directiveName);
+        }
+        return null;
+      })
+      .reverse()
+      .find(a => !!a);
+
+    return type || null;
+  }
+
   protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
     let typeValue = null;
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
@@ -63,9 +86,12 @@ export class OperationVariablesToObject {
       typeValue = variable.type;
     } else {
       const baseType = getBaseTypeNode(variable.type);
+      const overrideType = variable.directives ? this.getDirectiveOverrideType(variable.directives) : null;
       const typeName = baseType.name.value;
 
-      if (this._scalars[typeName]) {
+      if (overrideType) {
+        typeValue = overrideType;
+      } else if (this._scalars[typeName]) {
         typeValue = this.getScalar(typeName);
       } else if (this._enumValues[typeName] && this._enumValues[typeName].sourceFile) {
         typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
