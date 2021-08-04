@@ -91,7 +91,7 @@
     "typescript": "4.3.5",
     "urql": "2.0.4",
     "vue": "2.6.14",
-    "vue-apollo-smart-ops": "0.0.3"
+    "vue-apollo-smart-ops": "0.0.4"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [

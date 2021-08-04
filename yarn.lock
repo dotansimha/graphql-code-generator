@@ -15192,10 +15192,10 @@ vscode-languageserver-types@3.16.0, vscode-languageserver-types@^3.15.1:
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.16.0.tgz#ecf393fc121ec6974b2da3efb3155644c514e247"
   integrity sha512-k8luDIWJWyenLc5ToFQQMaSrqCHiLwyKPHKPQZ5zz21vM+vIVUSvsRpcbiECH4WR88K2XZqc4ScRcZ7nk/jbeA==
 
-vue-apollo-smart-ops@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/vue-apollo-smart-ops/-/vue-apollo-smart-ops-0.0.3.tgz#44ae274b17fe749d9772faadff8e259f8a48b778"
-  integrity sha512-Rq9Wjhl+hQ7+78nVQKhcgpRslyr/uHd1kARyElPodf9xOOmJPWpfLtv8AmxaMvh0S2EuM7yVmNzmM/Bws67i6A==
+vue-apollo-smart-ops@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/vue-apollo-smart-ops/-/vue-apollo-smart-ops-0.0.4.tgz#856f0033852c5ac43fc84a9874bd14dd6eb7ddcc"
+  integrity sha512-EM/SZXiP4KCcDGg6Ns1rQHOg2Hdc++35yqtfr1vnkt1sXCRK/N2G4v36+8R447HZYO3TKAcAXXU+iaWEg4V2kg==
   dependencies:
     lodash.isplainobject "^4.0"
     lodash.mapvalues "^4.6"
