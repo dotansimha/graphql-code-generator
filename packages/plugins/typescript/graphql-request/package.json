@@ -25,7 +25,7 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@graphql-tools/schema": "8.0.1",
+    "@graphql-tools/schema": "8.0.2",
     "graphql-request": "3.5.0"
   },
   "main": "dist/index.cjs.js",
