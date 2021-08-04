@@ -18,6 +18,9 @@ export type Scalars = {
   MyScalar: any;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 
 export type MyType = {
   __typename?: 'MyType';
@@ -452,6 +455,9 @@ export type Scalars = {
   Float: number;
   MyScalar: any;
 };
+
+/** Type overrides using directives */
+export type Directives = {};
 
 
 export type MyType = {

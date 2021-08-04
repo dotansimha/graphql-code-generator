@@ -17,6 +17,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Query = {
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
@@ -210,6 +213,9 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
+
+/** Type overrides using directives */
+export type Directives = {};
 
 export type GQLQuery = {
   /** A feed of repository submissions */
@@ -405,6 +411,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Query = {
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
@@ -598,6 +607,9 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
+
+/** Type overrides using directives */
+export type Directives = {};
 
 export type Query = {
   /** A feed of repository submissions */

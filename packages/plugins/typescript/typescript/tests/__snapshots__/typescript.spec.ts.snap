@@ -10,6 +10,9 @@ export type Scalars = {
   Float: number;
 };
 
+/** Type overrides using directives */
+export type Directives = {};
+
 export type Matrix = {
   __typename?: 'Matrix';
   pills: Array<RedPill | GreenPill>;
