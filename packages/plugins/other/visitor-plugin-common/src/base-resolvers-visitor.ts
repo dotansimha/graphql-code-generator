@@ -345,7 +345,7 @@ export class BaseResolversVisitor<
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _collectedResolvers: { [key: string]: string } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
-  protected _variablesTransfomer: OperationVariablesToObject;
+  protected _variablesTransformer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
@@ -393,7 +393,7 @@ export class BaseResolversVisitor<
     autoBind(this);
     this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
-    this._variablesTransfomer = new OperationVariablesToObject(
+    this._variablesTransformer = new OperationVariablesToObject(
       this.scalars,
       this.convertName,
       this.config.namespacedImportName
@@ -774,7 +774,7 @@ export class BaseResolversVisitor<
   }
 
   setVariablesTransformer(variablesTransfomer: OperationVariablesToObject): void {
-    this._variablesTransfomer = variablesTransfomer;
+    this._variablesTransformer = variablesTransfomer;
   }
 
   public hasScalars(): boolean {
@@ -908,7 +908,7 @@ export class BaseResolversVisitor<
       }
 
       const typeToUse = this.getTypeToUse(realType);
-      const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
+      const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
@@ -1113,7 +1113,7 @@ export class BaseResolversVisitor<
         .withName(directiveArgsTypeName)
         .withContent(
           `{ ${
-            hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : ''
+            hasArguments ? this._variablesTransformer.transform<InputValueDefinitionNode>(sourceNode.arguments) : ''
           } }`
         ).string,
       new DeclarationBlock({
