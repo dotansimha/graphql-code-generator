@@ -30,6 +30,8 @@ import {
   DeclarationKindConfig,
   DeclarationKind,
   ParsedEnumValuesMap,
+  DirectivesMap,
+  ParsedDirectivesMap,
 } from './types';
 import {
   transformComment,
@@ -42,6 +44,7 @@ import {
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
+import { transformDirectiveMappers } from './mappers';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -54,6 +57,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   entireFieldWrapperValue: string;
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
+  directiveMappers: ParsedDirectivesMap;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -231,6 +235,34 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   entireFieldWrapperValue?: string;
+  /**
+   * @description Replaces a GraphQL scalar with a custom type, allowing you to modify the scalar typing in certain cases.
+   * You can use both `module#type` and `module#namespace#type` syntax.
+   * Will NOT work with introspected schemas since directives are not exported.
+   * Only works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.
+   *
+   * @exampleMarkdown
+   * ## Custom Context Type
+   * ```yml
+   * plugins
+   *   config:
+   *     directiveMappers:
+   *       AsNumber: number
+   *       AsComplex: ./my-models#Complex
+   * ```
+   */
+  directiveMappers?: DirectivesMap;
+  /**
+   * @description Adds a suffix to the imported names to prevent name clashes.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * plugins
+   *   config:
+   *     directiveMapperTypeSuffix: Model
+   * ```
+   */
+  directiveMapperTypeSuffix?: string;
 }
 
 export class BaseTypesVisitor<
@@ -261,9 +293,14 @@ export class BaseTypesVisitor<
       entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
+      directiveMappers: transformDirectiveMappers(
+        rawConfig.directiveMappers || {},
+        rawConfig.directiveMapperTypeSuffix
+      ),
       ...additionalConfig,
     });
 
+    // Note: Missing directive mappers but not a problem since always overriden by implementors
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 
@@ -301,6 +338,20 @@ export class BaseTypesVisitor<
       .filter(a => a);
   }
 
+  public getDirectiveMappersImports(): string[] {
+    return Object.keys(this.config.directiveMappers)
+      .map(directive => {
+        const mappedValue = this.config.directiveMappers[directive];
+
+        if (mappedValue.isExternal) {
+          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+        }
+
+        return null;
+      })
+      .filter(a => a);
+  }
+
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
@@ -320,6 +371,27 @@ export class BaseTypesVisitor<
       .withBlock(allScalars.join('\n')).string;
   }
 
+  public get directiveMappersDefinition(): string {
+    const allDirectives = Object.keys(this.config.directiveMappers).map(directiveName => {
+      const directiveValue = this.config.directiveMappers[directiveName].type;
+      const directiveType = this._schema.getDirective(directiveName);
+      const comment =
+        directiveType && directiveType.astNode && directiveType.description
+          ? transformComment(directiveType.description, 1)
+          : '';
+      const { directive } = this._parsedConfig.declarationKind;
+
+      return comment + indent(`${directiveName}: ${directiveValue}${this.getPunctuation(directive)}`);
+    });
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.directive)
+      .withName('Directives')
+      .withComment('Type overrides using directives')
+      .withBlock(allDirectives.join('\n')).string;
+  }
+
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
     this._declarationBlockConfig = config;
   }
@@ -329,7 +401,7 @@ export class BaseTypesVisitor<
   }
 
   NonNullType(node: NonNullTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return asString;
   }
@@ -339,7 +411,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withBlock(node.fields.join('\n'));
   }
 
@@ -348,10 +420,15 @@ export class BaseTypesVisitor<
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
-    const comment = transformComment((node.description as any) as string, 1);
+    const comment = transformComment(node.description as any as string, 1);
     const { input } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${node.type}${this.getPunctuation(input)}`);
+    let type: string = node.type as any as string;
+    if (node.directives && this.config.directiveMappers) {
+      type = this._getDirectiveOverrideType(node.directives) || type;
+    }
+
+    return comment + indent(`${node.name}: ${type}${this.getPunctuation(input)}`);
   }
 
   Name(node: NameNode): string {
@@ -359,7 +436,7 @@ export class BaseTypesVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
-    const typeString = (node.type as any) as string;
+    const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
     const comment = this.getFieldComment(node);
 
@@ -377,7 +454,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind('type')
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withContent(possibleTypes).string;
   }
 
@@ -414,7 +491,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(type)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string);
+      .withComment(node.description as any as string);
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
@@ -463,7 +540,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string);
+      .withComment(node.description as any as string);
 
     return declarationBlock.withBlock(node.fields.join('\n'));
   }
@@ -530,7 +607,7 @@ export class BaseTypesVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumName = (node.name as any) as string;
+    const enumName = node.name as any as string;
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
@@ -541,7 +618,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind('enum')
       .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
@@ -567,7 +644,7 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
         );
-        const comment = transformComment((enumOption.description as any) as string, 1);
+        const comment = transformComment(enumOption.description as any as string, 1);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name as any).value
@@ -643,8 +720,27 @@ export class BaseTypesVisitor<
     return `Scalars['${name}']`;
   }
 
+  protected _getDirectiveMapping(name: string): string {
+    return `Directives['${name}']`;
+  }
+
+  protected _getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
+    const type = directives
+      .map(directive => {
+        const directiveName = directive.name as any as string;
+        if (this.config.directiveMappers[directiveName]) {
+          return this._getDirectiveMapping(directiveName);
+        }
+        return null;
+      })
+      .reverse()
+      .find(a => !!a);
+
+    return type || null;
+  }
+
   protected _getTypeForNode(node: NamedTypeNode): string {
-    const typeAsString = (node.name as any) as string;
+    const typeAsString = node.name as any as string;
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
@@ -674,7 +770,7 @@ export class BaseTypesVisitor<
   }
 
   ListType(node: ListTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);
   }
