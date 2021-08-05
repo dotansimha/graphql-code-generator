@@ -12535,10 +12535,10 @@ react-player@^2.9.0:
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
 
-react-query@3.19.1:
-  version "3.19.1"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.19.1.tgz#f3fbd5af48b6c47901ab230f7c028c6f845254ac"
-  integrity sha512-tMBVKlmWevPHYWgI8ZBEgsTulJXSuXsxDbxqANODRnPI+3hd5GRVcc7nNIYSUx3aaULt08rN3EhTMHyTcFUNJw==
+react-query@3.19.2:
+  version "3.19.2"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.19.2.tgz#8ab70c9328835604d05919e3878fcce555603c0e"
+  integrity sha512-YYQ+jZ4DaabnDWEbKCIvkouLWif2iPFgBIeKLPkUmhXM4cz+Kscb5Q7mz+U57Ip17tarhFiNwX86gWXM69ouQQ==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
