@@ -20,7 +20,7 @@ export const presetsConfigurations: PresetConfig[] = [
   {
     file: '../../presets/gql-tag-operations/src/index.ts',
     identifier: 'GqlTagConfig',
-    name: 'gql-tag-preset',
+    name: 'gql-tag-operations-preset',
   },
 ];
 
