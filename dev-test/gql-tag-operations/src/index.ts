@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { gql } from '../gql';
+import { gql, DocumentType } from '../gql';
 
 const FooQuery = gql(/* GraphQL */ `
   query Foo {
@@ -24,3 +24,7 @@ const BarQuery = gql(/* GraphQL */ `
     }
   }
 `);
+
+const doSth = (params: { lel: DocumentType<typeof LelFragment> }) => {
+  params.lel.id;
+};
