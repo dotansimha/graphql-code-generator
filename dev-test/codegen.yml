@@ -405,3 +405,9 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       augmentedModuleName: '@urql/core'
+  ./dev-test/gql-tag-operations-masking/gql:
+    schema: ./dev-test/gql-tag-operations-masking/schema.graphql
+    documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      maskFragments: true
