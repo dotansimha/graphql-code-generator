@@ -1,5 +1,5 @@
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { Types, PluginFunction, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
+import { visit, GraphQLSchema } from 'graphql';
 import { FlowVisitor } from './visitor';
 import { FlowPluginConfig } from './config';
 
@@ -12,8 +12,7 @@ export const plugin: PluginFunction<FlowPluginConfig, Types.ComplexPluginOutput>
   config: FlowPluginConfig
 ) => {
   const header = `// @flow\n`;
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(schema);
   const visitor = new FlowVisitor(schema, config);
 
   const visitorResult = visit(astNode, {

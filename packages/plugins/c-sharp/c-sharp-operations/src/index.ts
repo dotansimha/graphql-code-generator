@@ -1,5 +1,10 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, printSchema, parse } from 'graphql';
+import {
+  Types,
+  PluginValidateFn,
+  PluginFunction,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { CSharpOperationsVisitor } from './visitor';
 import { extname } from 'path';
@@ -11,7 +16,7 @@ export const plugin: PluginFunction<CSharpOperationsRawPluginConfig> = (
   documents: Types.DocumentFile[],
   config
 ) => {
-  const schemaAST = parse(printSchema(schema));
+  const schemaAST = getCachedDocumentNodeFromSchema(schema);
   const allAst = concatAST(documents.map(v => v.document).concat(schemaAST));
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
