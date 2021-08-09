@@ -51,10 +51,7 @@
 '@graphql-codegen/graphql-modules-preset': minor
 '@graphql-codegen/import-types-preset': minor
 '@graphql-codegen/near-operation-file-preset': minor
-'@graphql-codegen/config-schema': minor
-'@graphql-codegen/testing': minor
 '@graphql-codegen/plugin-helpers': minor
-'@graphql-codegen/website': minor
 ---
 
 support ESM
