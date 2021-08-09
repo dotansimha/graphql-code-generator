@@ -14,7 +14,7 @@ import {
   DefinitionNode,
   OperationDefinitionNode,
 } from 'graphql';
-import { merge } from 'lodash';
+import merge from 'lodash/merge.js';
 import { getBaseType } from './utils';
 
 /**
@@ -234,7 +234,7 @@ export class ApolloFederation {
     return visit(parse(`{${value}}`), {
       leave: {
         SelectionSet(node) {
-          return ((node.selections as any) as SelectionSetField[]).reduce((accum, field) => {
+          return (node.selections as any as SelectionSetField[]).reduce((accum, field) => {
             accum[field.name] = field.selection;
             return accum;
           }, {});

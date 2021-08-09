@@ -51,3 +51,5 @@ jobs:
         run: |
           yarn run generate:examples
           git diff --exit-code -- dev-test/
+      - name: Test ESM
+        run: node scripts/test-esm.mjs

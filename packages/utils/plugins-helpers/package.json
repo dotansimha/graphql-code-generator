@@ -18,13 +18,24 @@
   },
   "dependencies": {
     "@graphql-tools/utils": "^8.0.1",
+    "change-case-all": "1.0.14",
     "common-tags": "1.8.0",
     "import-from": "4.0.0",
     "lodash": "~4.17.0",
     "tslib": "~2.3.0"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

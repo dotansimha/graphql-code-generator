@@ -18,7 +18,7 @@ import { CodegenContext, ensureContext } from './config';
 import fs from 'fs';
 import path from 'path';
 // eslint-disable-next-line
-import { createRequire, createRequireFromPath } from 'module';
+import { createRequire } from 'module';
 import Listr from 'listr';
 
 const makeDefaultLoader = (from: string) => {
@@ -26,7 +26,7 @@ const makeDefaultLoader = (from: string) => {
     from = path.join(from, '__fake.js');
   }
 
-  const relativeRequire = (createRequire || createRequireFromPath)(from);
+  const relativeRequire = createRequire(from);
 
   return (mod: string) => {
     return import(relativeRequire.resolve(mod));

@@ -49,7 +49,7 @@
     "@graphql-tools/graphql-file-loader": "^7.0.1",
     "@graphql-tools/json-file-loader": "^7.0.1",
     "@graphql-tools/load": "^7.1.0",
-    "@graphql-tools/prisma-loader": "^7.0.1",
+    "@graphql-tools/prisma-loader": "^7.0.2",
     "@graphql-tools/url-loader": "^7.0.3",
     "@graphql-tools/utils": "^8.0.1",
     "ansi-escapes": "^4.3.1",
@@ -100,8 +100,18 @@
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

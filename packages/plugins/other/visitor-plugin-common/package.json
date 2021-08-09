@@ -31,8 +31,18 @@
     "@types/array.prototype.flatmap": "1.2.2",
     "@types/parse-filepath": "1.0.0"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

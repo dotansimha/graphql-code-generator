@@ -30,7 +30,8 @@
       "packages/plugins/other/*",
       "packages/presets/*",
       "website",
-      "website/live-demo"
+      "website/live-demo",
+      "examples/*"
     ],
     "nohoist": [
       "@graphql-codegen/website/@docusaurus/*",
@@ -52,16 +53,17 @@
     "@types/node": "14.17.9",
     "@types/react": "17.0.16",
     "@types/webpack-env": "1.16.2",
-    "@urql/exchange-graphcache": "4.2.1",
     "@typescript-eslint/eslint-plugin": "4.29.0",
     "@typescript-eslint/parser": "4.29.0",
+    "@urql/exchange-graphcache": "4.2.1",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/composition-api": "1.0.6",
     "apollo-client": "2.6.10",
     "apollo-server": "3.1.2",
     "auto-bind": "4.0.0",
     "babel-jest": "27.0.6",
-    "bob-the-bundler": "1.2.1",
+    "bob-the-bundler": "1.5.1",
+    "chalk": "^4.1.2",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
@@ -72,6 +74,7 @@
     "flow-bin": "0.157.0",
     "flow-parser": "0.157.0",
     "fs-extra": "10.0.0",
+    "globby": "11.0.4",
     "graphql": "15.5.1",
     "graphql-tag": "2.12.5",
     "husky": "7.0.1",
@@ -81,6 +84,7 @@
     "jest-junit": "12.2.0",
     "lint-staged": "11.1.2",
     "lodash": "4.17.21",
+    "prettier": "2.3.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.19.2",
@@ -108,6 +112,7 @@
     ]
   },
   "resolutions": {
+    "prettier": "2.3.2",
     "babel-jest": "27.0.6",
     "jest-runner": "27.0.6",
     "graphql": "15.5.1",

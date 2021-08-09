@@ -19,7 +19,7 @@ import {
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
 } from 'graphql';
-import { UnionTypeDefinitionNode } from 'graphql/language/ast';
+import { UnionTypeDefinitionNode } from 'graphql/language/ast.js';
 
 export interface JavaResolverParsedConfig extends ParsedConfig {
   package: string;

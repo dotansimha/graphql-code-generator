@@ -8,8 +8,7 @@ import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '@graphql-codegen/plugin-helpers';
 import { Source } from 'graphql';
 import { debugLog, printLogs } from './debugging';
-
-const UpdateRenderer = require('listr-update-renderer');
+import UpdateRenderer from 'listr-update-renderer';
 
 export class Renderer {
   private updateRenderer: any;
