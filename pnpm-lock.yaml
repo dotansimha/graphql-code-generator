@@ -19,6 +19,7 @@ importers:
       '@babel/preset-typescript': 7.15.0
       '@changesets/apply-release-plan': 5.0.0
       '@changesets/cli': 2.16.0
+      '@graphql-codegen/schema-ast': workspace:^2.0.0
       '@graphql-tools/merge': ^7.0.0
       '@graphql-tools/utils': ^7.10.0
       '@graphql-typed-document-node/core': 3.1.0
@@ -87,6 +88,7 @@ importers:
       '@babel/preset-typescript': 7.15.0_@babel+core@7.15.0
       '@changesets/apply-release-plan': 5.0.0
       '@changesets/cli': 2.16.0
+      '@graphql-codegen/schema-ast': link:packages/plugins/other/schema-ast
       '@graphql-tools/merge': 7.0.0_graphql@15.5.1
       '@graphql-tools/utils': 7.10.0_graphql@15.5.1
       '@graphql-typed-document-node/core': 3.1.0_graphql@15.5.1
@@ -827,11 +829,13 @@ importers:
   packages/plugins/typescript/typescript:
     specifiers:
       '@graphql-codegen/plugin-helpers': workspace:^2.0.0
+      '@graphql-codegen/schema-ast': workspace:^2.0.0
       '@graphql-codegen/visitor-plugin-common': workspace:2.0.0
       auto-bind: ~4.0.0
       tslib: ~2.3.0
     dependencies:
       '@graphql-codegen/plugin-helpers': link:../../../utils/plugins-helpers
+      '@graphql-codegen/schema-ast': link:../../other/schema-ast
       '@graphql-codegen/visitor-plugin-common': link:../../other/visitor-plugin-common
       auto-bind: 4.0.0
       tslib: 2.3.0

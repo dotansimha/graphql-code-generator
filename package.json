@@ -26,6 +26,7 @@
     "@babel/preset-typescript": "7.15.0",
     "@changesets/apply-release-plan": "5.0.0",
     "@changesets/cli": "2.16.0",
+    "@graphql-codegen/schema-ast": "workspace:^2.0.0",
     "@graphql-tools/merge": "^7.0.0",
     "@graphql-tools/utils": "^7.10.0",
     "@graphql-typed-document-node/core": "3.1.0",
