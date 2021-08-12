@@ -91,7 +91,7 @@
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
     "ts-jest": "27.0.4",
-    "tslib": "2.3.0",
+    "tslib": "2.3.1",
     "typescript": "4.3.5",
     "urql": "2.0.4",
     "vue": "2.6.14",
