@@ -43,7 +43,7 @@
     "@graphql-codegen/near-operation-file-preset": "2.0.0",
     "@graphql-codegen/schema-ast": "2.0.0",
     "@graphql-codegen/time": "3.0.0",
-    "react-markdown": "6.0.3",
+    "react-markdown": "7.0.0",
     "@graphql-codegen/typescript": "2.0.0",
     "@graphql-codegen/typed-document-node": "2.0.0",
     "@graphql-codegen/typescript-apollo-angular": "3.0.0",
