@@ -51,6 +51,9 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return node.definitions;
       },
     },
+    SchemaDefinition: {
+      leave: () => '',
+    },
     ObjectTypeDefinition: {
       leave(node: unknown) {
         const typedNode = node as { name: string; fields: Array<string> };
