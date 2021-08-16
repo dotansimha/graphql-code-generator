@@ -8,7 +8,7 @@ import {
   Source,
 } from '@graphql-tools/utils';
 
-import { mergeSchemas } from '@graphql-tools/merge';
+import { mergeSchemas } from '@graphql-tools/schema';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -27,7 +27,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       assumeValid: true,
       assumeValidSDL: true,
       ...options.config,
-    });
+    } as any);
   }
 
   // merged schema with parts added by plugins
@@ -63,7 +63,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       convertExtensions: true,
       assumeValid: true,
       assumeValidSDL: true,
-    });
+    } as any);
   }
 
   if (schemaChanged) {
