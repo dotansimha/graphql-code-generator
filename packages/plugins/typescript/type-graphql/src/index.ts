@@ -1,5 +1,5 @@
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { Types, PluginFunction, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
+import { visit, GraphQLSchema } from 'graphql';
 import { TypeGraphQLVisitor } from './visitor';
 import { TsIntrospectionVisitor, includeIntrospectionDefinitions } from '@graphql-codegen/typescript';
 import { TypeGraphQLPluginConfig } from './config';
@@ -15,8 +15,7 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig, Types.ComplexPlugin
   config: TypeGraphQLPluginConfig
 ) => {
   const visitor = new TypeGraphQLVisitor(schema, config);
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(schema);
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;

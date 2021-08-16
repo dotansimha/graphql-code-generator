@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@graphql-codegen/core": "*",
+    "@graphql-codegen/plugin-helpers": "*",
     "@graphql-codegen/typed-document-node": "*",
     "@graphql-codegen/typescript": "*",
     "@graphql-codegen/typescript-operations": "*",

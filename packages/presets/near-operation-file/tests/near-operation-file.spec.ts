@@ -1,6 +1,6 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import { generateFragmentImportStatement } from '@graphql-codegen/visitor-plugin-common';
-import { buildASTSchema, buildSchema, parse, printSchema } from 'graphql';
+import { buildASTSchema, buildSchema, parse } from 'graphql';
 import { preset } from '../src/index';
 
 describe('near-operation-file preset', () => {
@@ -194,7 +194,7 @@ describe('near-operation-file preset', () => {
             baseTypesPath: 'types.ts',
           },
           schemaAst: testSchema,
-          schema: parse(printSchema(testSchema)),
+          schema: getCachedDocumentNodeFromSchema(testSchema),
           documents: [
             {
               location: '/some/deep/path/src/graphql/queries.graphql',

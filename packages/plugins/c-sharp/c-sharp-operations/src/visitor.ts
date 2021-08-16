@@ -18,8 +18,6 @@ import {
   VariableDefinitionNode,
   isScalarType,
   FieldNode,
-  printSchema,
-  parse,
   DocumentNode,
   isEnumType,
   isInputObjectType,
@@ -30,7 +28,7 @@ import {
   FragmentSpreadNode,
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import {
   getListInnerTypeNode,
   C_SHARP_SCALARS,
@@ -97,7 +95,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     this.overruleConfigSettings();
     autoBind(this);
 
-    this._schemaAST = parse(printSchema(schema));
+    this._schemaAST = getCachedDocumentNodeFromSchema(schema);
   }
 
   // Some settings aren't supported with C#, overruled here

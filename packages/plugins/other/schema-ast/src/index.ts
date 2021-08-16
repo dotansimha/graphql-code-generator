@@ -1,12 +1,11 @@
+import { GraphQLSchema, lexicographicSortSchema, printSchema, visit, buildASTSchema } from 'graphql';
 import {
-  GraphQLSchema,
-  lexicographicSortSchema,
-  printSchema,
-  visit,
-  buildASTSchema,
-  parse as parseSchema,
-} from 'graphql';
-import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
+  PluginFunction,
+  PluginValidateFn,
+  Types,
+  removeFederation,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
@@ -85,8 +84,7 @@ export const validate: PluginValidateFn<any> = async (
 };
 
 export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
-  const printedSchema = printSchema(schema);
-  const astNode = parseSchema(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(schema);
 
   const transformedAST = config.disableDescriptions
     ? visit(astNode, {

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import { promises } from 'fs';
-import { parse, printSchema } from 'graphql';
+import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import gql from 'graphql-tag';
 import prettier from 'prettier';
 
@@ -43,8 +43,11 @@ const schema = makeExecutableSchema({
     useTypeImports: true,
   };
 
+  const schemaAsDocumentNode = getCachedDocumentNodeFromSchema(schema);
+
   const codegenCode = await codegen({
-    schema: parse(printSchema(schema)),
+    schema: schemaAsDocumentNode,
+    schemaAst: schema,
     config,
     documents: loadedDocuments,
     filename: 'gql.generated.ts',

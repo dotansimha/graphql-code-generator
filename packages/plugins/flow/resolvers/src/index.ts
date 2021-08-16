@@ -1,7 +1,11 @@
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
-import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
-import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import {
+  Types,
+  PluginFunction,
+  addFederationReferencesToSchema,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
+import { visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 /**
@@ -25,10 +29,7 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
 
-  const printedSchema = config.federation
-    ? printSchemaWithDirectives(transformedSchema)
-    : printSchema(transformedSchema);
-  const astNode = parse(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
 

@@ -4,3 +4,4 @@ export * from './utils';
 export * from './helpers';
 export * from './federation';
 export * from './errors';
+export * from './getCachedDocumentNodeFromSchema';

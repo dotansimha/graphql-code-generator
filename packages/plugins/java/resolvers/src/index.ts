@@ -1,5 +1,5 @@
-import { parse, GraphQLSchema, printSchema, visit } from 'graphql';
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, visit } from 'graphql';
+import { getCachedDocumentNodeFromSchema, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { JavaResolversVisitor } from './visitor';
 import { buildPackageNameFromPath } from '@graphql-codegen/java-common';
 import { dirname, normalize } from 'path';
@@ -14,8 +14,7 @@ export const plugin: PluginFunction<JavaResolversPluginRawConfig> = async (
   const relevantPath = dirname(normalize(outputFile));
   const defaultPackageName = buildPackageNameFromPath(relevantPath);
   const visitor = new JavaResolversVisitor(config, schema, defaultPackageName);
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(schema);
   const visitorResult = visit(astNode, { leave: visitor as any });
   const mappersImports = visitor.getImports();
   const packageName = visitor.getPackageName();
