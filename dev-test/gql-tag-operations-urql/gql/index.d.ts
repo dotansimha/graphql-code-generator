@@ -1,7 +1,7 @@
 /* eslint-disable */
-declare module '@urql/core' {
-  import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+declare module '@urql/core' {
   export function gql(
     source: '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'
   ): typeof import('./graphql').FooDocument;

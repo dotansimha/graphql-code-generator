@@ -51,9 +51,9 @@ export const plugin: PluginFunction<{
   }
 
   return [
+    `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
     `declare module "${augmentedModuleName}" {`,
     [
-      `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
       `\n`,
       ...getGqlOverloadChunk(sourcesWithOperations, 'augmented'),
       `export function gql(source: string): unknown;\n`,
