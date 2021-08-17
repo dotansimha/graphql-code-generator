@@ -19,7 +19,7 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
 >
   ? TType
   : never;
-`;
+`.split(`\n`);
 
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
@@ -45,7 +45,8 @@ export const plugin: PluginFunction<{
       `export function gql(source: string) {\n`,
       `  return (documents as any)[source] ?? {};\n`,
       `}\n`,
-      documentTypePartial,
+      `\n`,
+      ...documentTypePartial,
     ].join(``);
   }
 
@@ -56,11 +57,11 @@ export const plugin: PluginFunction<{
       `\n`,
       ...getGqlOverloadChunk(sourcesWithOperations, 'augmented'),
       `export function gql(source: string): unknown;\n`,
-      documentTypePartial,
+      `\n`,
+      ...documentTypePartial,
     ]
       .map(line => (line === `\n` ? line : `  ${line}`))
-      .join(`\n`),
-
+      .join(``),
     `}`,
   ].join(`\n`);
 };
@@ -92,7 +93,7 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>,
     const originalString = rest.source.rawSDL!;
     const returnType =
       mode === 'lookup'
-        ? `(typeof documents)[${JSON.stringify(originalString)}]`
+        ? `(typeof documents)[${JSON.stringify(originalString)}];`
         : `typeof import('./graphql').${operations[0].initialName};`;
     lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
