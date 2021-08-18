@@ -9,7 +9,7 @@ export function generateQueryVariablesSignature(
 
 export function generateQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
   if (hasRequiredVariables) return `['${node.name.value}', variables]`;
-  return `variables === undefined ? ['${node.name.value}', variables] : ['${node.name.value}']`;
+  return `variables === undefined ? ['${node.name.value}'] : ['${node.name.value}', variables]`;
 }
 
 export function generateQueryKeyMaker(
