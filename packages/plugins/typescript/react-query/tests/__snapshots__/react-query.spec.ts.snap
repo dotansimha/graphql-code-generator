@@ -25,7 +25,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
       options
     );
@@ -71,7 +71,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
@@ -117,7 +117,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
@@ -164,7 +164,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
       options
     );
@@ -214,7 +214,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
       options
     );
@@ -263,7 +263,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
@@ -309,7 +309,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
@@ -355,7 +355,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
@@ -401,7 +401,7 @@ export const useTestQuery = <
       options?: UseQueryOptions<TTestQuery, TError, TData>
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test', variables] : ['test'],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
