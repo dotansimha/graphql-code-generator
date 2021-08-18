@@ -24,7 +24,6 @@ import {
   isEnumType,
   DirectiveNode,
   StringValueNode,
-  NameNode,
   NamedTypeNode,
 } from 'graphql';
 import {
@@ -34,7 +33,7 @@ import {
   isValueType,
   getListInnerTypeNode,
   CSharpFieldType,
-  csharpKeywords,
+  convertSafeName,
   wrapFieldType,
   getListTypeField,
 } from '../../common/common';
@@ -56,7 +55,6 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  private readonly keywords = new Set(csharpKeywords);
   private readonly jsonAttributesConfiguration: JsonAttributesSourceConfiguration;
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
@@ -74,21 +72,6 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     if (this._parsedConfig.emitJsonAttributes) {
       this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
     }
-  }
-
-  /**
-   * Checks name against list of keywords. If it is, will prefix value with @
-   *
-   * Note:
-   * This class should first invoke the convertName from base-visitor to convert the string or node
-   * value according the naming configuration, eg upper or lower case. Then resulting string checked
-   * against the list or keywords.
-   * However the generated C# code is not yet able to handle fields that are in a different case so
-   * the invocation of convertName is omitted purposely.
-   */
-  private convertSafeName(node: NameNode | string): string {
-    const name = typeof node === 'string' ? node : node.value;
-    return this.keywords.has(name) ? `@${name}` : name;
   }
 
   public getImports(): string {
@@ -111,7 +94,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.convertSafeName(this.config.className))
+      .withName(convertSafeName(this.config.className))
       .withBlock(indentMultiline(content)).string;
   }
 
@@ -130,7 +113,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
       const enumHeader = this.getFieldHeader(node);
-      const enumOption = this.convertSafeName(node.name);
+      const enumOption = convertSafeName(node.name);
       return enumHeader + indent(this.getEnumValue(enumName, enumOption));
     };
   }
@@ -287,7 +270,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; init; } = ${fieldName};`);
       })
@@ -295,14 +278,14 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const recordInitializer = inputValueArray
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
-        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return `${csharpFieldType} ${fieldName}`;
       })
       .join(', ');
     return `
 #region ${name}
-${classSummary}public record ${this.convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
+${classSummary}public record ${convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
   #region members
 ${recordMembers}
   #endregion
@@ -323,7 +306,7 @@ ${recordMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = convertSafeName(arg.name);
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
@@ -331,7 +314,7 @@ ${recordMembers}
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)}${interfaceImpl} {
+${classSummary}public class ${convertSafeName(name)}${interfaceImpl} {
   #region members
 ${classMembers}
   #endregion
@@ -355,11 +338,11 @@ ${classMembers}
 
         if (this.config.emitRecords) {
           // record
-          fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+          fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
           getterSetter = '{ get; }';
         } else {
           // class
-          fieldName = this.convertSafeName(arg.name);
+          fieldName = convertSafeName(arg.name);
           getterSetter = '{ get; set; }';
         }
 
@@ -370,7 +353,7 @@ ${classMembers}
       .join('\n\n');
 
     return `
-${classSummary}public interface ${this.convertSafeName(name)} {
+${classSummary}public interface ${convertSafeName(name)} {
 ${classMembers}
 }`;
   }
@@ -385,7 +368,7 @@ ${classMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type, !!arg.defaultValue);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = convertSafeName(arg.name);
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
@@ -393,7 +376,7 @@ ${classMembers}
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)} {
+${classSummary}public class ${convertSafeName(name)} {
   #region members
 ${classMembers}
   #endregion

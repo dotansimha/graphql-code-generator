@@ -35,6 +35,7 @@ import {
   getListTypeField,
   getListTypeDepth,
   CSharpFieldType,
+  convertSafeName,
   isValueType,
   wrapFieldType,
   CSharpDeclarationBlock,
@@ -303,7 +304,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           return indentMultiline(
             [
               `[JsonProperty("${node.name.value}")]`,
-              `public ${responseTypeName} ${node.name.value} { get; set; }`,
+              `public ${responseTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
             ].join('\n') + '\n'
           );
         } else {
@@ -323,7 +324,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           const innerClassDefinition = new CSharpDeclarationBlock()
             .access('public')
             .asKind('class')
-            .withName(selectionBaseTypeName)
+            .withName(convertSafeName(selectionBaseTypeName))
             .withBlock(
               '\n' +
                 node.selectionSet.selections
@@ -339,7 +340,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
             [
               innerClassDefinition,
               `[JsonProperty("${node.name.value}")]`,
-              `public ${selectionTypeName} ${node.name.value} { get; set; }`,
+              `public ${selectionTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
             ].join('\n') + '\n'
           );
         }
@@ -385,7 +386,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
               return indentMultiline(
                 [
                   `[JsonProperty("${v.variable.name.value}")]`,
-                  `public ${inputTypeName} ${v.variable.name.value} { get; set; }`,
+                  `public ${inputTypeName} ${convertSafeName(v.variable.name.value)} { get; set; }`,
                 ].join('\n') + '\n'
               );
             })
@@ -453,9 +454,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
       const gqlBlock = indentMultiline(this._gql(node), 4);
-      documentString = `${
-        this.config.noExport ? '' : 'public'
-      } static string ${documentVariableName} = @"\n${gqlBlock}";`;
+      documentString = `${this.config.noExport ? '' : 'public'} static string ${convertSafeName(
+        documentVariableName
+      )} = @"\n${gqlBlock}";`;
     }
 
     const operationType: string = node.operation;
@@ -546,7 +547,7 @@ ${this._getOperationMethod(node)}
     const inputClass = new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.convertName(node))
+      .withName(convertSafeName(this.convertName(node)))
       .withBlock(
         '\n' +
           node.fields
@@ -557,9 +558,10 @@ ${this._getOperationMethod(node)}
               const inputType = this.resolveFieldType(f.type);
               const inputTypeName = wrapFieldType(inputType, inputType.listType, 'System.Collections.Generic.List');
               return indentMultiline(
-                [`[JsonProperty("${f.name.value}")]`, `public ${inputTypeName} ${f.name.value} { get; set; }`].join(
-                  '\n'
-                ) + '\n'
+                [
+                  `[JsonProperty("${f.name.value}")]`,
+                  `public ${inputTypeName} ${convertSafeName(f.name.value)} { get; set; }`,
+                ].join('\n') + '\n'
               );
             })
             .filter(f => !!f)
@@ -577,7 +579,7 @@ ${this._getOperationMethod(node)}
     const enumDefinition = new CSharpDeclarationBlock()
       .access('public')
       .asKind('enum')
-      .withName(this.convertName(node.name))
+      .withName(convertSafeName(this.convertName(node.name)))
       .withBlock(indentMultiline(node.values?.map(v => v.name.value).join(',\n'))).string;
 
     return indentMultiline(enumDefinition, 2);

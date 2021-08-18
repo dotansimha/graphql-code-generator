@@ -330,6 +330,43 @@ describe('C# Operations', () => {
         }
       `);
     });
+    it('Should prefix with @ when name is a reserved keyword', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          case(record: ID!): CourtCase!
+        }
+        type CourtCase {
+          operator: String!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findOperator($record: ID!) {
+          case(record: $record) {
+            operator
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("record")]
+          public string @record { get; set; }
+        }
+        public class Response {
+          public class CourtCaseSelection {
+            [JsonProperty("operator")]
+            public string @operator { get; set; }
+          }
+          [JsonProperty("case")]
+          public CourtCaseSelection @case { get; set; }
+        }
+      `);
+    });
   });
 
   describe('Mutation', () => {
@@ -593,6 +630,43 @@ describe('C# Operations', () => {
       expect(result.content).toBeSimilarStringTo(`
         public static System.Threading.Tasks.Task<GraphQLResponse<Response>> SendMutationAsync(IGraphQLClient client, Variables variables, System.Threading.CancellationToken cancellationToken = default) {
           return client.SendMutationAsync<Response>(Request(variables), cancellationToken);
+        }
+      `);
+    });
+    it('Should prefix with @ when name is a reserved keyword', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Mutation {
+          case(record: ID!): CourtCase!
+        }
+        type CourtCase {
+          operator: String!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        mutation updateCase($record: ID!) {
+          case(record: $record) {
+            operator
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("record")]
+          public string @record { get; set; }
+        }
+        public class Response {
+          public class CourtCaseSelection {
+            [JsonProperty("operator")]
+            public string @operator { get; set; }
+          }
+          [JsonProperty("case")]
+          public CourtCaseSelection @case { get; set; }
         }
       `);
     });
@@ -868,6 +942,43 @@ describe('C# Operations', () => {
         }
       `);
     });
+    it('Should prefix with @ when name is a reserved keyword', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Subscription {
+          case(record: ID!): CourtCase!
+        }
+        type CourtCase {
+          operator: String!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        subscription onUpdate($record: ID!) {
+          case(record: $record) {
+            operator
+          }
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("record")]
+          public string @record { get; set; }
+        }
+        public class Response {
+          public class CourtCaseSelection {
+            [JsonProperty("operator")]
+            public string @operator { get; set; }
+          }
+          [JsonProperty("case")]
+          public CourtCaseSelection @case { get; set; }
+        }
+      `);
+    });
   });
 
   describe('Fragments', () => {
@@ -983,6 +1094,58 @@ describe('C# Operations', () => {
 
           [JsonProperty("me")]
           public PersonSelection me { get; set; }
+        }
+      `);
+    });
+
+    it('Should prefix with @ when name is a reserved keyword', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          case(record: ID!): CourtCase!
+        }
+        type CourtCase {
+          operator: String!
+          public: String!
+          private: String!
+        }
+      `);
+      const operation = parse(/* GraphQL */ `
+        query findCase($record: ID!) {
+          case(record: $record) {
+            private
+            ...Fragment1
+            ...Fragment2
+          }
+        }
+        fragment Fragment1 on CourtCase {
+          public
+        }
+        fragment Fragment2 on CourtCase {
+          operator
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [{ location: '', document: operation }],
+        { typesafeOperation: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+        public class Variables {
+          [JsonProperty("record")]
+          public string @record { get; set; }
+        }
+        public class Response {
+          public class CourtCaseSelection {
+            [JsonProperty("private")]
+            public string @private { get; set; }
+            [JsonProperty("public")]
+            public string @public { get; set; }
+            [JsonProperty("operator")]
+            public string @operator { get; set; }
+          }
+          [JsonProperty("case")]
+          public CourtCaseSelection @case { get; set; }
         }
       `);
     });
