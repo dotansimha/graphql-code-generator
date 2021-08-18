@@ -184,7 +184,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
   }
 
   public getCSharpImports(): string {
-    return ['Newtonsoft.Json', 'GraphQL', 'GraphQL.Client.Abstractions'].map(i => `using ${i};`).join('\n') + '\n';
+    return (
+      ['System', 'Newtonsoft.Json', 'GraphQL', 'GraphQL.Client.Abstractions'].map(i => `using ${i};`).join('\n') + '\n'
+    );
   }
 
   private _operationSuffix(operationType: string): string {
