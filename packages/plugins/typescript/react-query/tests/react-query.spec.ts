@@ -104,7 +104,7 @@ describe('React-Query', () => {
           options?: UseQueryOptions<TTestQuery, TError, TData>
         ) => 
         useQuery<TTestQuery, TError, TData>(
-          ['test', variables],
+          variables === undefined ? ['test', variables] : ['test'],
           myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
           options
         );`);
@@ -140,7 +140,7 @@ describe('React-Query', () => {
         options?: UseQueryOptions<TTestQuery, TError, TData>
       ) => 
       useQuery<TTestQuery, TError, TData>(
-        ['test', variables],
+        variables === undefined ? ['test', variables] : ['test'],
         myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
         options
       );`);
@@ -181,7 +181,7 @@ describe('React-Query', () => {
           options?: UseQueryOptions<TTestQuery, TError, TData>
         ) => 
         useQuery<TTestQuery, TError, TData>(
-          ['test', variables],
+          variables === undefined ? ['test', variables] : ['test'],
           useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
           options
         );`);
@@ -225,7 +225,7 @@ describe('React-Query', () => {
           options?: UseQueryOptions<TTestQuery, TError, TData>
         ) => 
         useQuery<TTestQuery, TError, TData>(
-          ['test', variables],
+          variables === undefined ? ['test', variables] : ['test'],
           fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
           options
         );`);
@@ -297,7 +297,7 @@ describe('React-Query', () => {
         options?: UseQueryOptions<TTestQuery, TError, TData>
       ) => 
       useQuery<TTestQuery, TError, TData>(
-        ['test', variables],
+        variables === undefined ? ['test', variables] : ['test'],
         fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
         options
       );`);
@@ -446,7 +446,7 @@ describe('React-Query', () => {
         options?: UseQueryOptions<TTestQuery, TError, TData>
       ) => 
       useQuery<TTestQuery, TError, TData>(
-        ['test', variables],
+        variables === undefined ? ['test', variables] : ['test'],
         fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
         options
       );`);
@@ -476,7 +476,7 @@ describe('React-Query', () => {
       };
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestQuery.getKey = (variables?: TestQueryVariables) => ['test', variables];`
+        `useTestQuery.getKey = (variables?: TestQueryVariables) => variables === undefined ? ['test', variables] : ['test'];`
       );
     });
   });
