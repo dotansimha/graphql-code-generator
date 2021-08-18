@@ -53,7 +53,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       ${options}
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node)},
+      ${generateQueryKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
       options
     );`;

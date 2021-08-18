@@ -41,7 +41,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       ${options}
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node)},
+      ${generateQueryKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
       options
     );`;
