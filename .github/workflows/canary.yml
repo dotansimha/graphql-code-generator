@@ -5,6 +5,20 @@ on:
     branches:
       - master
 
+  workflow_dispatch:
+    inputs:
+      onDemand:
+        description: 'Are you sure?'
+        required: true
+        default: 'yes'
+      npmTag:
+        description: 'NPM Tag'
+        required: true
+        default: 'alpha'
+      npmVersionSuffix:
+        description: 'Custom NPM Version Suffix'
+        required: false
+
 jobs:
   publish-canary:
     name: Publish Canary
