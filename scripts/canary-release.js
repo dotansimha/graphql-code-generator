@@ -27,8 +27,8 @@ async function updateVersions() {
   const packages = await getPackages(cwd);
   const config = await readConfig(cwd, packages);
   const modifiedChangesets = getRelevantChangesets(config.baseBranch);
-  const changesets = await readChangesets(cwd)
-  const allChangesets  =
+  const allChangesets = await readChangesets(cwd)
+  const changesets  =
     process.env.ON_DEMAND === 'yes'
       ? allChangesets
       : allChangesets.filter(change => modifiedChangesets.includes(change.id));
