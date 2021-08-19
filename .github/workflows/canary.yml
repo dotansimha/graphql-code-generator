@@ -58,6 +58,10 @@ jobs:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'yarn release:canary'
           changesets: true
+        env:
+          ON_DEMAND: ${{github.event.inputs.onDemand}}
+          NPM_TAG: ${{github.event.inputs.npmTag || 'alpha'}}
+          NPM_VERSION_SUFFIX: ${{github.event.inputs.npmVersionSuffix}}
       - name: Publish a message
         if: steps.canary.outputs.released
         uses: 'kamilkisiela/pr-comment@master'

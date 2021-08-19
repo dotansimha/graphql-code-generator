@@ -10,9 +10,12 @@ const applyReleasePlan = require("@changesets/apply-release-plan").default;
 const { getPackages } = require("@manypkg/get-packages");
 
 function getNewVersion(version, type) {
-  const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-
-  return semver.inc(version, `pre${type}`, true, 'alpha-' + gitHash);
+  let npmVersionSuffix = process.env.NPM_VERSION_SUFFIX;
+  if (!npmVersionSuffix) {
+    const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
+    npmVersionSuffix = `alpha-${gitHash}`;
+  }
+  return semver.inc(version, `pre${type}`, true, npmVersionSuffix);
 }
 
 function getRelevantChangesets(baseBranch) {
