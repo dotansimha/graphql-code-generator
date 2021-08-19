@@ -1,5 +1,18 @@
 # @graphql-codegen/fragment-matcher
 
+## 3.1.0
+
+### Minor Changes
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/plugin-helpers@2.1.0
+
 ## 3.0.0
 
 ### Major Changes
