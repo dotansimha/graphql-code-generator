@@ -7,7 +7,13 @@ import { PrismaLoader } from '@graphql-tools/prisma-loader';
 
 export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   // Schema
-  api.loaders.schema.register(new CodeFileLoader());
+  api.loaders.schema.register(
+    new CodeFileLoader({
+      pluckConfig: {
+        skipIndent: true,
+      },
+    })
+  );
   api.loaders.schema.register(new GitLoader());
   api.loaders.schema.register(new GithubLoader());
   api.loaders.schema.register(new ApolloEngineLoader());
