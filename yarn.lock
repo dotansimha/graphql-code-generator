@@ -1962,10 +1962,10 @@
     tslib "~2.3.0"
     value-or-promise "1.0.10"
 
-"@graphql-tools/code-file-loader@7.0.6-alpha-429992d0.0", "@graphql-tools/code-file-loader@^7.0.5":
-  version "7.0.6-alpha-429992d0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-7.0.6-alpha-429992d0.0.tgz#ebe959551b8841a9220662bc9b3df12141d30d4e"
-  integrity sha512-xlyQQ3B3VIBKs85xopnubPSxV/LaqsPb/hE3yC7myL0evh4GmTcV09IHIEMW082jliPyZPZqswp9/CRJd6Lehw==
+"@graphql-tools/code-file-loader@^7.0.6":
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-7.0.6.tgz#f6ca4554c11a9554fc305cf2d587148626d879e9"
+  integrity sha512-+xddAWyvrcW5Em3Yx+RJ7vwFMyOoS8pwqgeVr0CTZF9YbrQSPz7wQJRAVFZNJQaJOalKlPWxsmKkSyMQRG+t4A==
   dependencies:
     "@graphql-tools/graphql-tag-pluck" "^7.0.5"
     "@graphql-tools/utils" "^8.1.1"
