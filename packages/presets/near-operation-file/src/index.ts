@@ -1,4 +1,5 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
@@ -9,6 +10,7 @@ import {
   getConfigValue,
   ImportDeclaration,
   ImportSource,
+  LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
@@ -176,15 +178,51 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       getConfigValue(options.config.dedupeFragments, false)
     );
 
-    return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
-      let fragmentImportsArr = fragmentImports;
+    const filePathsMap = new Map<
+      string,
+      {
+        importStatements: Set<string>;
+        documents: Array<Source>;
+        externalFragments: Array<
+          LoadedFragment<{
+            level: number;
+          }>
+        >;
+        fragmentImports: Array<ImportDeclaration<FragmentImport>>;
+      }
+    >();
+
+    for (const source of sources) {
+      let record = filePathsMap.get(source.filename);
+      if (record === undefined) {
+        record = {
+          importStatements: new Set(),
+          documents: [],
+          externalFragments: [],
+          fragmentImports: [],
+        };
+        filePathsMap.set(source.filename, record);
+      }
+
+      for (const importStatement of source.importStatements) {
+        record.importStatements.add(importStatement);
+      }
+      record.documents.push(...source.documents);
+      record.externalFragments.push(...source.externalFragments);
+      record.fragmentImports.push(...source.fragmentImports);
+    }
+
+    const artifacts: Array<Types.GenerateOptions> = [];
+
+    for (const [filename, record] of filePathsMap.entries()) {
+      let fragmentImportsArr = record.fragmentImports;
 
       if (importAllFragmentsFrom) {
-        fragmentImportsArr = fragmentImports.map<ImportDeclaration<FragmentImport>>(t => {
+        fragmentImportsArr = record.fragmentImports.map<ImportDeclaration<FragmentImport>>(t => {
           const newImportSource: ImportSource<FragmentImport> =
             typeof importAllFragmentsFrom === 'string'
               ? { ...t.importSource, path: importAllFragmentsFrom }
-              : importAllFragmentsFrom(t.importSource, source.filename);
+              : importAllFragmentsFrom(t.importSource, filename);
 
           return {
             ...t,
@@ -197,7 +235,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
         ...(options.config.globalNamespace
           ? []
-          : importStatements.map(importStatement => ({ add: { content: importStatement } }))),
+          : Array.from(record.importStatements).map(importStatement => ({ add: { content: importStatement } }))),
         ...options.plugins,
       ];
       const config = {
@@ -206,20 +244,34 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         // are exported from operations file
         exportFragmentSpreadSubTypes: true,
         namespacedImportName: importTypesNamespace,
-        externalFragments,
+        externalFragments: record.externalFragments,
         fragmentImports: fragmentImportsArr,
       };
 
-      return {
-        ...source,
+      const combinedSource: Source = {
+        rawSDL: '',
+        document: { kind: 'Document', definitions: [] },
+        location: record.documents[0].location,
+      };
+
+      for (const source of record.documents) {
+        combinedSource.rawSDL += source.rawSDL;
+        (combinedSource.document.definitions as any).push(...source.document.definitions);
+      }
+
+      artifacts.push({
+        filename,
+        documents: [combinedSource],
         plugins,
         pluginMap,
         config,
         schema: options.schema,
         schemaAst: schemaObject,
         skipDocumentsValidation: true,
-      };
-    });
+      });
+    }
+
+    return artifacts;
   },
 };
 
