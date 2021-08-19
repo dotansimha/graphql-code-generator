@@ -1,5 +1,4 @@
 ---
-'example-programmatic-typescript': patch
 '@graphql-codegen/cli': patch
 '@graphql-codegen/core': patch
 '@graphql-codegen/flow-resolvers': patch
