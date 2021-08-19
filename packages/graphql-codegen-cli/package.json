@@ -48,7 +48,7 @@
     "@graphql-tools/github-loader": "^7.0.5",
     "@graphql-tools/graphql-file-loader": "^7.0.5",
     "@graphql-tools/json-file-loader": "^7.1.2",
-    "@graphql-tools/load": "^7.1.7",
+    "@graphql-tools/load": "^7.1.8",
     "@graphql-tools/prisma-loader": "^7.0.6",
     "@graphql-tools/url-loader": "^7.0.11",
     "@graphql-tools/utils": "^8.1.1",
