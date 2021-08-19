@@ -6,12 +6,19 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources';
+import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 export type GqlTagConfig = {};
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
   buildGeneratesSection: options => {
-    const sourcesWithOperations = processSources(options.documents);
+    const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
+    const sourcesWithOperations = processSources(options.documents, node => {
+      if (node.kind === 'FragmentDefinition') {
+        return visitor.getFragmentVariableName(node);
+      }
+      return visitor.getOperationVariableName(node);
+    });
     const sources = sourcesWithOperations.map(({ source }) => source);
 
     const pluginMap = {
