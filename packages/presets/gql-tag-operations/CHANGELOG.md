@@ -1,5 +1,41 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.1.0
+
+### Minor Changes
+
+- 0c0c8a92b: export new utility type `DocumentType`, for accessing the document node type.
+
+  ```tsx
+  import { gql, DocumentType } from '../gql';
+
+  const TweetFragment = gql(/* GraphQL */ `
+    fragment TweetFragment on Tweet {
+      id
+      body
+    }
+  `);
+
+  const Tweet = (props: { tweet: DocumentType<typeof TweetFragment> }) => {
+    return <div data-id={props.id}>{props.body}</div>;
+  };
+  ```
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 290170262: ensure the generated identifier for referencing a document from the documents map is correct
+- Updated dependencies [0c0c8a92b]
+- Updated dependencies [24185985a]
+- Updated dependencies [440172cfe]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/gql-tag-operations@1.1.0
+  - @graphql-codegen/typed-document-node@2.1.0
+  - @graphql-codegen/add@3.1.0
+  - @graphql-codegen/typescript-operations@2.1.0
+  - @graphql-codegen/typescript@2.1.0
+
 ## 1.0.1
 
 ### Patch Changes

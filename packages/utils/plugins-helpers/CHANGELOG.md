@@ -1,5 +1,16 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.1.0
+
+### Minor Changes
+
+- 39773f59b: enhance(plugins): use getDocumentNodeFromSchema and other utilities from @graphql-tools/utils
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 24185985a: bump graphql-tools package versions
+
 ## 2.0.0
 
 ### Major Changes

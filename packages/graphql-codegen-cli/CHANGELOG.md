@@ -1,5 +1,22 @@
 # @graphql-codegen/cli
 
+## 2.1.0
+
+### Minor Changes
+
+- 39773f59b: enhance(plugins): use getDocumentNodeFromSchema and other utilities from @graphql-tools/utils
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 24185985a: bump graphql-tools package versions
+- 72044c1bd: fix: do not alter the indentation of documents loaded via graphql-config
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/core@2.1.0
+  - @graphql-codegen/plugin-helpers@2.1.0
+
 ## 2.0.1
 
 ### Patch Changes
