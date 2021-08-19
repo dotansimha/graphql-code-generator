@@ -11,7 +11,7 @@ const { getPackages } = require("@manypkg/get-packages");
 
 function getNewVersion(version, type) {
   const gitHash = cp.spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim();
-  
+
   return semver.inc(version, `pre${type}`, true, 'alpha-' + gitHash);
 }
 
@@ -27,14 +27,18 @@ async function updateVersions() {
   const packages = await getPackages(cwd);
   const config = await readConfig(cwd, packages);
   const modifiedChangesets = getRelevantChangesets(config.baseBranch);
-  const changesets = (await readChangesets(cwd)).filter(change => modifiedChangesets.includes(change.id));
-  
+  const changesets = await readChangesets(cwd)
+  const allChangesets  =
+    process.env.ON_DEMAND === 'yes'
+      ? allChangesets
+      : allChangesets.filter(change => modifiedChangesets.includes(change.id));
+
   if (changesets.length === 0) {
     console.warn(`Unable to find any relevant package for canary publishing. Please make sure changesets exists!`);
     process.exit(1);
   } else {
     const releasePlan = assembleReleasePlan(changesets, packages, config, [], false);
-    
+
     if (releasePlan.releases.length === 0) {
       console.warn(`Unable to find any relevant package for canary releasing. Please make sure changesets exists!`);
       process.exit(1);
