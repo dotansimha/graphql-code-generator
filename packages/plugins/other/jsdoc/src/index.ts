@@ -130,6 +130,12 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return ` - DEPRECATED: ${reason.value.value}`;
       },
     },
+    DirectiveDefinition: {
+      enter() {
+          /** This plugin currently does not support unused Directives. */
+          return null;
+      }
+    },
     FieldDefinition: {
       enter(node) {
         if (node.type.kind === 'NonNullType') {
@@ -180,6 +186,12 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       leave(node) {
         return createDocBlock([createDescriptionBlock(node), `@typedef {*} ${node.name}`]);
       },
+    },
+    SchemaDefinition: {
+      enter() {
+          /** This plugin currently does not support Schema. */
+          return null;
+      }
     },
     EnumTypeDefinition: {
       leave(node) {
