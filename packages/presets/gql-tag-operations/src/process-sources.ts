@@ -1,6 +1,10 @@
 import { Source } from '@graphql-tools/utils';
 import { SourceWithOperations, OperationOrFragment } from '@graphql-codegen/gql-tag-operations';
-export function processSources(sources: Array<Source>) {
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+
+export type BuildNameFunction = (type: OperationDefinitionNode | FragmentDefinitionNode) => string;
+
+export function processSources(sources: Array<Source>, buildName: BuildNameFunction) {
   const sourcesWithOperations: Array<SourceWithOperations> = [];
 
   for (const source of sources) {
@@ -13,10 +17,7 @@ export function processSources(sources: Array<Source>) {
       if (definition.name?.kind !== `Name`) continue;
 
       operations.push({
-        initialName:
-          definition.kind === 'FragmentDefinition'
-            ? `${definition.name.value}FragmentDoc`
-            : `${definition.name.value}Document`,
+        initialName: buildName(definition),
         definition,
       });
     }

@@ -552,14 +552,18 @@ export class ClientSideBaseVisitor<
     return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
   }
 
-  public OperationDefinition(node: OperationDefinitionNode): string {
-    this._collectedOperations.push(node);
-
-    const documentVariableName = this.convertName(node, {
+  public getOperationVariableName(node: OperationDefinitionNode) {
+    return this.convertName(node, {
       suffix: this.config.documentVariableSuffix,
       prefix: this.config.documentVariablePrefix,
       useTypesPrefix: false,
     });
+  }
+
+  public OperationDefinition(node: OperationDefinitionNode): string {
+    this._collectedOperations.push(node);
+
+    const documentVariableName = this.getOperationVariableName(node);
 
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
