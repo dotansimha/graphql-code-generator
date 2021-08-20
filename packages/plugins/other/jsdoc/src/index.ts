@@ -52,7 +52,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       },
     },
     SchemaDefinition: {
-      leave: () => '',
+      leave: () => null,
     },
     ObjectTypeDefinition: {
       leave(node: unknown) {
@@ -132,9 +132,9 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
     },
     DirectiveDefinition: {
       enter() {
-          /** This plugin currently does not support unused Directives. */
-          return null;
-      }
+        /** This plugin currently does not support unused Directives. */
+        return null;
+      },
     },
     FieldDefinition: {
       enter(node) {
@@ -186,12 +186,6 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       leave(node) {
         return createDocBlock([createDescriptionBlock(node), `@typedef {*} ${node.name}`]);
       },
-    },
-    SchemaDefinition: {
-      enter() {
-          /** This plugin currently does not support Schema. */
-          return null;
-      }
     },
     EnumTypeDefinition: {
       leave(node) {
