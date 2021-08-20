@@ -19,7 +19,13 @@ export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   api.loaders.schema.register(new ApolloEngineLoader());
   api.loaders.schema.register(new PrismaLoader());
   // Documents
-  api.loaders.documents.register(new CodeFileLoader());
+  api.loaders.documents.register(
+    new CodeFileLoader({
+      pluckConfig: {
+        skipIndent: true,
+      },
+    })
+  );
   api.loaders.documents.register(new GitLoader());
   api.loaders.documents.register(new GithubLoader());
 
