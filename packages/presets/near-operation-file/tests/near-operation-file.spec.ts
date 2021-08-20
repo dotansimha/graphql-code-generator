@@ -417,6 +417,36 @@ export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
 "
 `);
     });
+
+    it('#6520 - self-importing fragment', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              user(id: String!): User!
+            }
+
+            type User {
+              id: String!
+              email: String
+              username: String
+            }
+          `,
+        ],
+        documents: [path.join(__dirname, 'fixtures/issue-6520.ts')],
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations', 'typescript-react-apollo'],
+          },
+        },
+      });
+
+      expect(result[0].content).not.toMatch(`import { UserFieldsFragmentDoc }`);
+    });
   });
 
   it('Should build the correct operation files paths', async () => {

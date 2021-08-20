@@ -503,7 +503,9 @@ export class ClientSideBaseVisitor<
         documentMode === DocumentMode.documentNodeImportFragments
       ) {
         fragmentImports.forEach(fragmentImport => {
-          this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+          if (fragmentImport.outputPath !== fragmentImport.importSource.path) {
+            this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+          }
         });
       }
     }
