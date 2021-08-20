@@ -1089,7 +1089,13 @@ describe('TypeScript', () => {
       enum MyEnum {
         A
         B
-      }`);
+      }
+      
+      type MyType {
+        required: MyEnum!
+        optional: MyEnum
+      }
+      `);
       const result = (await plugin(
         schema,
         [],
@@ -1103,6 +1109,13 @@ describe('TypeScript', () => {
         | 'B' 
         | '%future added value'
     `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          required: MyEnum;
+          optional?: Maybe<MyEnum>;
+        }
+      `);
       validateTs(result);
     });
 

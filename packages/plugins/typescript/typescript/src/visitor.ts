@@ -118,11 +118,15 @@ export class TsVisitor<
     const schemaType = this._schema.getType(node.name as any as string);
 
     if (isEnumType(schemaType)) {
-      if (this.config.futureProofEnums === true && this.config.allowEnumStringTypes === true) {
+      // futureProofEnums + enumsAsTypes combination adds the future value to the enum type itself
+      // so it's not necessary to repeat it in the usage
+      const futureProofEnumUsageEnabled = this.config.futureProofEnums === true && this.config.enumsAsTypes !== true;
+
+      if (futureProofEnumUsageEnabled && this.config.allowEnumStringTypes === true) {
         return `${typeString} | '%future added value' | ` + '`${' + typeString + '}`';
       }
 
-      if (this.config.futureProofEnums === true) {
+      if (futureProofEnumUsageEnabled) {
         return `${typeString} | '%future added value'`;
       }
 
