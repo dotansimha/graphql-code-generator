@@ -1106,28 +1106,6 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should not add `%future added value` to enum when futureProofEnums is set, but not enumAsTypes', async () => {
-      const schema = buildSchema(`
-      enum MyEnum {
-        A
-        B
-      }`);
-      const result = (await plugin(
-        schema,
-        [],
-        { futureProofEnums: true },
-        { outputFile: '' }
-      )) as Types.ComplexPluginOutput;
-
-      expect(result.content).toBeSimilarStringTo(`
-      export enum MyEnum {
-        A = 'A',
-        B = 'B'
-      }
-    `);
-      validateTs(result);
-    });
-
     it('Should add `%future added value` to enum usage when futureProofEnums is set, but not enumAsTypes', async () => {
       const schema = buildSchema(`
         enum MyEnum {
@@ -1158,7 +1136,7 @@ describe('TypeScript', () => {
         export type MyType = {
           __typename?: 'MyType';
           required: MyEnum | '%future added value';
-          optional?: Maybe<MyEnum | '%future added value'>
+          optional?: Maybe<MyEnum | '%future added value'>;
         }
       `);
       validateTs(result);

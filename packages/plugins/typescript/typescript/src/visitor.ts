@@ -116,6 +116,13 @@ export class TsVisitor<
 
     const typeString = super._getTypeForNode(node);
 
+    if (this.config.futureProofEnums === true) {
+      const schemaType = this._schema.getType(node.name as any as string);
+      if (isEnumType(schemaType)) {
+        return `${typeString} | '%future added value'`;
+      }
+    }
+
     if (this.config.allowEnumStringTypes === true) {
       const schemaType = this._schema.getType(node.name as any as string);
       if (isEnumType(schemaType)) {
