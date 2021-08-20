@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.1.1
+
+### Patch Changes
+
+- d3c556f8e: fix: do not alter the indentation of documents
+
 ## 2.1.0
 
 ### Minor Changes
