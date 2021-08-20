@@ -115,17 +115,18 @@ export class TsVisitor<
     }
 
     const typeString = super._getTypeForNode(node);
+    const schemaType = this._schema.getType(node.name as any as string);
 
-    if (this.config.futureProofEnums === true) {
-      const schemaType = this._schema.getType(node.name as any as string);
-      if (isEnumType(schemaType)) {
+    if (isEnumType(schemaType)) {
+      if (this.config.futureProofEnums === true && this.config.allowEnumStringTypes === true) {
+        return `${typeString} | '%future added value' | ` + '`${' + typeString + '}`';
+      }
+
+      if (this.config.futureProofEnums === true) {
         return `${typeString} | '%future added value'`;
       }
-    }
 
-    if (this.config.allowEnumStringTypes === true) {
-      const schemaType = this._schema.getType(node.name as any as string);
-      if (isEnumType(schemaType)) {
+      if (this.config.allowEnumStringTypes === true) {
         return `${typeString} | ` + '`${' + typeString + '}`';
       }
     }
