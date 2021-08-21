@@ -96,6 +96,6 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
-    return `\nuse${operationName}.fetcher = (${variables}, dataSource?: { endpoint: string, fetchParams?: RequestInit }) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables);`;
+    return `\nuse${operationName}.fetcher = (dataSource?: { endpoint: string, fetchParams?: RequestInit }, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables);`;
   }
 }
