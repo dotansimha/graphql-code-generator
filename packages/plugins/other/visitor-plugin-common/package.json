@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@graphql-tools/optimize": "^1.0.1",
-    "@graphql-codegen/plugin-helpers": "^2.0.0",
-    "@graphql-tools/relay-operation-optimizer": "^6.3.3",
+    "@graphql-codegen/plugin-helpers": "^2.1.0",
+    "@graphql-tools/relay-operation-optimizer": "^6.3.7",
     "array.prototype.flatmap": "^1.2.4",
     "auto-bind": "~4.0.0",
     "dependency-graph": "^0.11.0",
@@ -31,8 +31,18 @@
     "@types/array.prototype.flatmap": "1.2.2",
     "@types/parse-filepath": "1.0.0"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

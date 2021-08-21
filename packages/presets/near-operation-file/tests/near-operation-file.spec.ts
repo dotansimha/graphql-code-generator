@@ -1,6 +1,8 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { executeCodegen } from '@graphql-codegen/cli';
+import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import { generateFragmentImportStatement } from '@graphql-codegen/visitor-plugin-common';
-import { buildASTSchema, buildSchema, parse, printSchema } from 'graphql';
+import { buildASTSchema, buildSchema, parse } from 'graphql';
+import path from 'path';
 import { preset } from '../src/index';
 
 describe('near-operation-file preset', () => {
@@ -194,7 +196,7 @@ describe('near-operation-file preset', () => {
             baseTypesPath: 'types.ts',
           },
           schemaAst: testSchema,
-          schema: parse(printSchema(testSchema)),
+          schema: getCachedDocumentNodeFromSchema(testSchema),
           documents: [
             {
               location: '/some/deep/path/src/graphql/queries.graphql',
@@ -370,6 +372,80 @@ describe('near-operation-file preset', () => {
       expect(getFragmentImportsFromResult(result)).toContain(
         `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`
       );
+    });
+
+    it('#6439 - generating code only for the last query inside a file', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/issue-6439.ts'),
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations'],
+          },
+        },
+      });
+
+      expect(result[0].content).toMatchInlineSnapshot(`
+"import * as Types from '../../../../../out1.ts/types';
+
+export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type AQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+
+export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type BQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+
+export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+"
+`);
+    });
+
+    it('#6520 - self-importing fragment', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              user(id: String!): User!
+            }
+
+            type User {
+              id: String!
+              email: String
+              username: String
+            }
+          `,
+        ],
+        documents: [path.join(__dirname, 'fixtures/issue-6520.ts')],
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations', 'typescript-react-apollo'],
+          },
+        },
+      });
+
+      expect(result[0].content).not.toMatch(`import { UserFieldsFragmentDoc }`);
     });
   });
 

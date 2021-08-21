@@ -1,14 +1,15 @@
-import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, parse, DefinitionNode, Kind, print, NameNode } from 'graphql';
-import { executePlugin } from './execute-plugin';
 import {
-  checkValidationErrors,
-  validateGraphQlDocuments,
-  printSchemaWithDirectives,
-  Source,
-} from '@graphql-tools/utils';
+  DetailedError,
+  Types,
+  isComplexPluginOutput,
+  federationSpec,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
+import { visit, DefinitionNode, Kind, print, NameNode } from 'graphql';
+import { executePlugin } from './execute-plugin';
+import { checkValidationErrors, validateGraphQlDocuments, Source } from '@graphql-tools/utils';
 
-import { mergeSchemas } from '@graphql-tools/merge';
+import { mergeSchemas } from '@graphql-tools/schema';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -27,7 +28,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       assumeValid: true,
       assumeValidSDL: true,
       ...options.config,
-    });
+    } as any);
   }
 
   // merged schema with parts added by plugins
@@ -63,11 +64,11 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       convertExtensions: true,
       assumeValid: true,
       assumeValidSDL: true,
-    });
+    } as any);
   }
 
   if (schemaChanged) {
-    options.schema = parse(printSchemaWithDirectives(schemaAst));
+    options.schema = getCachedDocumentNodeFromSchema(schemaAst);
   }
 
   const skipDocumentValidation =

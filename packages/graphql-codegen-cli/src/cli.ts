@@ -4,8 +4,8 @@ import { createContext } from './config';
 import { lifecycleHooks } from './hooks';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 
-export function runCli(cmd: string): Promise<any> {
-  ensureGraphQlPackage();
+export async function runCli(cmd: string): Promise<any> {
+  await ensureGraphQlPackage();
 
   switch (cmd) {
     case 'init':
@@ -22,9 +22,9 @@ export function runCli(cmd: string): Promise<any> {
   }
 }
 
-export function ensureGraphQlPackage() {
+export async function ensureGraphQlPackage() {
   try {
-    require('graphql');
+    await import('graphql');
   } catch (e) {
     throw new DetailedError(
       `Unable to load "graphql" package. Please make sure to install "graphql" as a dependency!`,

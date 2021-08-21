@@ -37,27 +37,24 @@ MyOtherType.myOtherField
 To get started with a basic visitor, start by extracting the `astNode` of your `GraphQLSchema`:
 
 ```javascript
-const { printSchema, parse } = require('graphql');
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers');
 
 module.exports = {
   plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
+    const astNode = getCachedDocumentNodeFromSchema(schema); // Transforms the GraphQLSchema into ASTNode
   },
 };
 ```
 
-> Note: if you wish to have GraphQL directives when you print your schema, use `printSchemaWithDirectives` from `graphql-toolkit` package.
-
 Then, create your initial visitor, in our case, we would like to transform a `FieldDefinition` and `ObjectTypeDefinition`, so let's create an object with a stub definitions, an use `visit` to run it:
 
 ```javascript
-const { printSchema, parse, visit } = require('graphql');
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers');
+const { visit } = require('graphql');
 
 module.exports = {
   plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
+    const astNode = getCachedDocumentNodeFromSchema(schema); // Transforms the GraphQLSchema into ASTNode
     const visitor = {
       FieldDefinition: node => {
         // This function triggered per each field
@@ -77,12 +74,12 @@ module.exports = {
 Now, let's implement `ObjectTypeDefinition` and `FieldDefinition`:
 
 ```javascript
-const { printSchema, parse, visit } = require('graphql');
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers');
+const { visit } = require('graphql');
 
 module.exports = {
   plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
+    const astNode = getCachedDocumentNodeFromSchema(schema); // Transforms the GraphQLSchema into ASTNode
     const visitor = {
       FieldDefinition: node => {
         // Transform the field AST node into a string, containing only the name of the field

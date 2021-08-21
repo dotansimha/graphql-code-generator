@@ -1,7 +1,11 @@
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { parseMapper } from '@graphql-codegen/visitor-plugin-common';
-import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
-import { parse, visit, GraphQLSchema, printSchema } from 'graphql';
+import {
+  Types,
+  PluginFunction,
+  addFederationReferencesToSchema,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
+import { visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
@@ -28,10 +32,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
-  const printedSchema = config.federation
-    ? printSchemaWithDirectives(transformedSchema)
-    : printSchema(transformedSchema);
-  const astNode = parse(printedSchema);
+  const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
 
@@ -238,4 +239,4 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   };
 };
 
-export { TypeScriptResolversVisitor };
+export { TypeScriptResolversVisitor, TypeScriptResolversPluginConfig };

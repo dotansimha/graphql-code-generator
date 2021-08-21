@@ -1,7 +1,5 @@
-import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import {
-  printSchema,
-  parse,
   visit,
   ListTypeNode,
   DocumentNode,
@@ -43,7 +41,7 @@ const createDescriptionBlock = (nodeWithDesc: any | { description?: StringValueN
 };
 
 export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) => {
-  const parsedSchema = parse(printSchema(schema));
+  const parsedSchema = getCachedDocumentNodeFromSchema(schema);
   const mappedDocuments = documents.map(document => document.document).filter(document => document !== undefined);
   const ast = concatAST([parsedSchema, ...(mappedDocuments as Array<DocumentNode>)]);
 
@@ -52,6 +50,9 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       leave(node) {
         return node.definitions;
       },
+    },
+    SchemaDefinition: {
+      leave: () => '',
     },
     ObjectTypeDefinition: {
       leave(node: unknown) {

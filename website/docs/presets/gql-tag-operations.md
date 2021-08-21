@@ -28,7 +28,7 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 `);
 ```
 
-{@import ../generated-config/gql-tag-preset.md}
+{@import ../generated-config/gql-tag-operations-preset.md}
 
 ## Getting Started
 
@@ -57,7 +57,7 @@ Create a new file within your `src` directory, e.g. `./src/index.ts` and add a q
 ```ts
 import { gql } from '@app/gql';
 
-// TweetsQuery is a fully typed document node/
+// TweetsQuery is a fully typed document node!
 const TweetsQuery = gql(/* GraphQL */ `
   query TweetsQuery {
     Tweets {
@@ -84,7 +84,7 @@ const TweetsQuery = gql(/* GraphQL */ `
 `);
 
 const Tweets = () => {
-  const [result] = useQuery(TweetsQuery);
+  const [result] = useQuery({ query: TweetsQuery });
   const { data, fetching, error } = result;
 
   if (fetching) return <p>Loading...</p>;
@@ -95,6 +95,51 @@ const Tweets = () => {
       {/* data is fully typed 🎉 */}
       {data.Tweets.map(tweet => (
         <li key={tweet.id}>{tweet.body}</li>
+      ))}
+    </ul>
+  );
+};
+```
+
+If we want to use fragments, we can use some utilities for accessing the fragment types:
+
+```tsx
+import { gql, DocumentType } from '../gql';
+
+const TweetFragment = gql(/* GraphQL */ `
+  fragment TweetFragment on Tweet {
+    id
+    body
+  }
+`);
+
+const Tweet = (props: {
+  /** tweet property has the correct type 🎉 */
+  tweet: DocumentType<typeof TweetFragment>;
+}) => {
+  return <li data-id={props.id}>{props.body}</li>;
+};
+
+const TweetsQuery = gql(/* GraphQL */ `
+  query TweetsQuery {
+    Tweets {
+      id
+      ...TweetFragment
+    }
+  }
+`);
+
+const Tweets = () => {
+  const [result] = useQuery({ query: TweetsQuery });
+  const { data, fetching, error } = result;
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
+
+  return (
+    <ul>
+      {data.Tweets.map(tweet => (
+        <Tweet key={tweet.id} tweet={tweet} />
       ))}
     </ul>
   );

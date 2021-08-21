@@ -1,5 +1,21 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.0
+
+### Minor Changes
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- Updated dependencies [290170262]
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/visitor-plugin-common@2.1.0
+  - @graphql-codegen/plugin-helpers@2.1.0
+  - @graphql-codegen/typescript@2.1.0
+
 ## 2.0.1
 
 ### Patch Changes

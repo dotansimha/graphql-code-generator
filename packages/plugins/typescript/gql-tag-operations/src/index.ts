@@ -12,6 +12,15 @@ export type SourceWithOperations = {
   operations: Array<OperationOrFragment>;
 };
 
+const documentTypePartial = `
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<
+  infer TType,
+  any
+>
+  ? TType
+  : never;
+`;
+
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
 }> = (_, __, { sourcesWithOperations }) => {
@@ -20,6 +29,7 @@ export const plugin: PluginFunction<{
   }
   return [
     `import * as graphql from './graphql';\n`,
+    `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
     `\n`,
     ...getDocumentRegistryChunk(sourcesWithOperations),
     `\n`,
@@ -29,6 +39,7 @@ export const plugin: PluginFunction<{
     `export function gql(source: string) {\n`,
     `  return (documents as any)[source] ?? {};\n`,
     `}\n`,
+    documentTypePartial,
   ].join(``);
 };
 

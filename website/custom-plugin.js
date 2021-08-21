@@ -12,6 +12,11 @@ module.exports = function() {
 
       return {
         plugins,
+        resolve: {
+          fallback: {
+            module: false
+          }
+        }
       };
     },
   };

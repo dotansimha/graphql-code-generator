@@ -5,20 +5,20 @@ import {
   normalizeOutputParam,
   normalizeInstanceOrArray,
   normalizeConfig,
+  getCachedDocumentNodeFromSchema,
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
 
 import { Renderer, ErrorRenderer } from './utils/listr-renderer';
-import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { CodegenContext, ensureContext } from './config';
 import fs from 'fs';
 import path from 'path';
 // eslint-disable-next-line
-import { createRequire, createRequireFromPath } from 'module';
+import { createRequire } from 'module';
 import Listr from 'listr';
 
 const makeDefaultLoader = (from: string) => {
@@ -26,7 +26,7 @@ const makeDefaultLoader = (from: string) => {
     from = path.join(from, '__fake.js');
   }
 
-  const relativeRequire = (createRequire || createRequireFromPath)(from);
+  const relativeRequire = createRequire(from);
 
   return (mod: string) => {
     return import(relativeRequire.resolve(mod));
@@ -109,7 +109,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         'Invalid Codegen Configuration!',
         `
         Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
-        
+
         It should looks like that:
 
         schema:
@@ -131,9 +131,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           'Invalid Codegen Configuration!',
           `
           Please make sure that your codegen config file has defined plugins list for output "${filename}".
-          
+
           It should looks like that:
-  
+
           schema:
             - my-schema.graphql
           generates:
@@ -153,9 +153,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       throw new DetailedError(
         'Invalid Codegen Configuration!',
         `
-        Please make sure that your codegen config file contains either the "schema" field 
+        Please make sure that your codegen config file contains either the "schema" field
         or every generated file has its own "schema" field.
-        
+
         It should looks like that:
         schema:
           - my-schema.graphql
@@ -211,7 +211,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         }
                       }
                       outputSchemaAst = await context.loadSchema(schemaPointerMap);
-                      outputSchema = parse(printSchemaWithDirectives(outputSchemaAst));
+                      outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
                     }, filename),
                   },
                   {

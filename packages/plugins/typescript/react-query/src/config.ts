@@ -34,20 +34,26 @@ export interface ReactQueryRawPluginConfig
   /**
    * @default false
    * @description For each generate query hook adds `document` field with a
-   * corresponding GraphQL query. Useful for `queryClient.fetchQuery`. Example:
-   * queryClient.fetchQuery(
-   *   useUserDetailsQuery.getKey(variables),
-   *   () => gqlRequest(useUserDetailsQuery.document, variables),
-   * )
+   * corresponding GraphQL query. Useful for `queryClient.fetchQuery`.
+   * @exampleMarkdown
+   * ```ts
+   *  queryClient.fetchQuery(
+   *    useUserDetailsQuery.getKey(variables),
+   *    () => gqlRequest(useUserDetailsQuery.document, variables),
+   *  )
+   * ```
    */
   exposeDocument?: boolean;
 
   /**
    * @default false
-   * @description For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. Example:
-   * const query = useUserDetailsQuery(...);
-   * const key = useUserDetailsQuery.getKey({id: theUsersId});
-   * // use key in a cache update after a mutation
+   * @description For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates.
+   * @exampleMarkdown
+   * ```ts
+   *  const query = useUserDetailsQuery(...);
+   *  const key = useUserDetailsQuery.getKey({id: theUsersId});
+   *  // use key in a cache update after a mutation
+   * ```
    */
   exposeQueryKeys?: boolean;
 

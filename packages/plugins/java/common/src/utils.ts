@@ -1,8 +1,9 @@
 import { Kind, TypeNode } from 'graphql';
 import minIndent from 'min-indent';
 
+import unixify from 'unixify';
+
 export function buildPackageNameFromPath(path: string): string {
-  const unixify = require('unixify');
   return unixify(path || '')
     .replace(/src\/main\/.*?\//, '')
     .replace(/\//g, '.');
