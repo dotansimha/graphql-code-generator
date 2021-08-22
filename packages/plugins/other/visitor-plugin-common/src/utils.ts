@@ -360,7 +360,7 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
   const newSelections = [...selectionSet1.selections];
 
   for (let selection2 of selectionSet2.selections) {
-    if (selection2.kind === 'FragmentSpread') {
+    if (selection2.kind === 'FragmentSpread' || selection2.kind === 'InlineFragment') {
       newSelections.push(selection2);
       continue;
     }
