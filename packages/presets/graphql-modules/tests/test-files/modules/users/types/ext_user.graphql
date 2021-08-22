@@ -1,0 +1,3 @@
+extend type User {
+  age: Int
+}
