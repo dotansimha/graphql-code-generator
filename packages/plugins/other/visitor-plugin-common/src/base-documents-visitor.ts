@@ -37,6 +37,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   exportFragmentSpreadSubTypes: boolean;
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
+  mergeFragmentTypes: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -102,6 +103,11 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @description If set to true, it will enable support for parsing variables on fragments.
    */
   experimentalFragmentVariables?: boolean;
+  /**
+   * @default false
+   * @description If set to true, merge equal fragment interfaces.
+   */
+  mergeFragmentTypes?: boolean;
 
   // The following are internal, and used by presets
   /**

@@ -2171,6 +2171,131 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config);
     });
 
+    it('Should support merging identical fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type TestQuery = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification' | 'ImageNotification', id: string }> };
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for merged fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Notifiction {
+          id
+          ... on TextNotification {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        type N_TextNotification_Fragment = { __typename?: 'TextNotification', text: string, id: string };
+
+        type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string };
+
+        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for large merged fragment union types', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+        }
+
+        type A implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type B implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type C implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type D implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type E implements Node {
+          id: ID!
+          text: String!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        fragment N on Node {
+          id
+          ... on A {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+         type N_A_Fragment = { __typename?: 'A', text: string, id: string };
+
+         type N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment = { __typename?: 'B' | 'C' | 'D' | 'E', id: string };
+
+         export type NFragment = N_A_Fragment | N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment;
+      `);
+      await validate(content, config);
+    });
+
+    it('Should not create empty types when merging fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Query {
+          notifications {
+            ... on TextNotification {
+              text
+            }
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type NFragment = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification', text: string } | { __typename?: 'ImageNotification' }> };
+      `);
+      await validate(content, config);
+    });
+
     it('Should support inline fragments', async () => {
       const ast = parse(/* GraphQL */ `
         query currentUser {

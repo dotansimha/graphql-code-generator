@@ -39,6 +39,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
+        mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
