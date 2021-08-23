@@ -8,21 +8,21 @@ title: Installation
 First we need to make sure that the basic GraphQL package is within our dependencies, since GraphQL Code Generator depends on it:
 
 :::shell With `yarn`
-yarn add graphql
+`yarn add graphql`
 :::
 
 :::shell With `npm`
-npm install --save graphql  
+`npm install --save graphql  `
 :::
 
 Then we can install GraphQL Code Generator using `yarn` (or `npm`):
 
 :::shell With `yarn`
-yarn add -D @graphql-codegen/cli
+`yarn add -D @graphql-codegen/cli @graphql-codegen/visitor-plugin-common`
 :::
 
 :::shell With `npm`
-npm install --save-dev @graphql-codegen/cli
+`npm install --save-dev @graphql-codegen/cli @graphql-codegen/visitor-plugin-common`
 :::
 
 :::caution Global Installation
@@ -42,11 +42,11 @@ If you are having issues with loading GraphQL-Codegen plugins, make sure it's in
 After installing those dependencies, GraphQL Code Generator lets you set up everything by simply running the following command:
 
 :::shell With `yarn`
-yarn graphql-codegen init
+`yarn graphql-codegen init`
 :::
 
 :::shell With `npm`
-npx graphql-codegen init
+`npx graphql-codegen init`
 :::
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
@@ -58,11 +58,11 @@ If you don't want to use the wizard, we've got you covered, just continue readin
 GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them, for example:
 
 :::shell With `yarn`
-yarn add -D @graphql-codegen/typescript
+`yarn add -D @graphql-codegen/typescript`
 :::
 
 :::shell With `npm`
-npm install --save-dev @graphql-codegen/typescript
+`npm install --save-dev @graphql-codegen/typescript`
 :::
 
 Although this can be used directly, it's recommended to add the code generation script to your `package.json`:
