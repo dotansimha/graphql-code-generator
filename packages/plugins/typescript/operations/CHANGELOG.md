@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.1
+
+### Patch Changes
+
+- Updated dependencies [aabeff181]
+  - @graphql-codegen/visitor-plugin-common@2.1.1
+  - @graphql-codegen/typescript@2.1.1
+
 ## 2.1.0
 
 ### Minor Changes

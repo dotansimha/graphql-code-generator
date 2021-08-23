@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.1.1
+
+### Patch Changes
+
+- aabeff181: Don't generate import statements for fragments declared in the file we're outputting to
+
 ## 2.1.0
 
 ### Minor Changes
