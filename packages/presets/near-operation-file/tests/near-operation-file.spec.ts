@@ -447,6 +447,41 @@ export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
 
       expect(result[0].content).not.toMatch(`import { UserFieldsFragmentDoc }`);
     });
+
+    it('#6546 - duplicate fragment imports', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              user(id: String!): User!
+            }
+
+            type User {
+              id: String!
+              email: String
+              username: String
+            }
+          `,
+        ],
+        documents: [
+          path.join(__dirname, 'fixtures/issue-6546-queries.ts'),
+          path.join(__dirname, 'fixtures/issue-6546-fragments.ts'),
+        ],
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations', 'typescript-react-apollo'],
+          },
+        },
+      });
+
+      const queriesContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-6546-queries/)).content;
+      const imports = queriesContent.match(/import.*UsernameFragmentFragmentDoc/g);
+      expect(imports).toHaveLength(1);
+    });
   });
 
   it('Should build the correct operation files paths', async () => {

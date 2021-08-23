@@ -16,7 +16,7 @@ import { getConfigValue, buildScalarsFromConfig } from './utils';
 import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
 import { pascalCase } from 'change-case-all';
-import { generateFragmentImportStatement } from './imports';
+import { FragmentImport, generateFragmentImportStatement, ImportDeclaration } from './imports';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
 gqlTag.enableExperimentalFragmentVariables();
@@ -502,7 +502,26 @@ export class ClientSideBaseVisitor<
         documentMode === DocumentMode.string ||
         documentMode === DocumentMode.documentNodeImportFragments
       ) {
-        fragmentImports.forEach(fragmentImport => {
+        const alreadyImported = new Map<string, Set<string>>();
+        const deduplicatedImports = fragmentImports
+          .map(fragmentImport => {
+            const { path, identifiers } = fragmentImport.importSource;
+            if (!alreadyImported.has(path)) {
+              alreadyImported.set(path, new Set<string>());
+            }
+            const alreadyImportedForPath = alreadyImported.get(path);
+            const newIdentifiers = identifiers.filter(identifier => !alreadyImportedForPath.has(identifier.name));
+            newIdentifiers.forEach(newIdentifier => alreadyImportedForPath.add(newIdentifier.name));
+            return {
+              ...fragmentImport,
+              importSource: {
+                ...fragmentImport.importSource,
+                identifiers: newIdentifiers,
+              },
+            };
+          })
+          .filter(fragmentImport => fragmentImport.importSource.identifiers.length > 0);
+        deduplicatedImports.forEach(fragmentImport => {
           if (fragmentImport.outputPath !== fragmentImport.importSource.path) {
             this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
           }
