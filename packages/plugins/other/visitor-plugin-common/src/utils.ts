@@ -9,7 +9,6 @@ import {
   GraphQLSchema,
   GraphQLScalarType,
   StringValueNode,
-  isEqualType,
   SelectionSetNode,
   FieldNode,
   SelectionNode,
@@ -338,20 +337,6 @@ export function buildScalars(
 
 function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === Kind.STRING;
-}
-
-export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return (
-    isEqualType(type, schema.getQueryType()) ||
-    isEqualType(type, schema.getMutationType()) ||
-    isEqualType(type, schema.getSubscriptionType())
-  );
-}
-
-export function getRootTypeNames(schema: GraphQLSchema): string[] {
-  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
-    .filter(t => t)
-    .map(t => t.name);
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {

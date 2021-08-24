@@ -15,7 +15,6 @@ import {
   indent,
   getBaseTypeNode,
   getConfigValue,
-  getRootTypeNames,
   stripMapperTypeInterpolation,
   OMIT_TYPE,
   REQUIRE_FIELDS_TYPE,
@@ -50,6 +49,7 @@ import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers';
 import { parseEnumValues } from './enum-values';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getRootTypeNames } from '@graphql-tools/utils';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -349,8 +349,8 @@ export class BaseResolversVisitor<
   protected _usedMappers: { [key: string]: boolean } = {};
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
-  protected _rootTypeNames: string[] = [];
-  protected _globalDeclarations: Set<string> = new Set();
+  protected _rootTypeNames = new Set<string>();
+  protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
   protected _hasFederation = false;
@@ -501,7 +501,7 @@ export class BaseResolversVisitor<
       }
 
       let shouldApplyOmit = false;
-      const isRootType = this._rootTypeNames.includes(typeName);
+      const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);

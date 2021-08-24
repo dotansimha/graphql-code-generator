@@ -14,8 +14,7 @@ import {
 } from 'graphql';
 import merge from 'lodash/merge.js';
 import { getBaseType } from './utils';
-import { MapperKind, mapSchema, astFromObjectType } from '@graphql-tools/utils';
-import { getRootTypeNames } from '@graphql-codegen/visitor-plugin-common';
+import { MapperKind, mapSchema, astFromObjectType, getRootTypeNames } from '@graphql-tools/utils';
 
 /**
  * Federation Spec
@@ -296,7 +295,7 @@ function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectTy
   } = isObjectType(node) ? astFromObjectType(node, schema) : node;
 
   const rootTypeNames = getRootTypeNames(schema);
-  const isNotRoot = !rootTypeNames.includes(name);
+  const isNotRoot = !rootTypeNames.has(name);
   const isNotIntrospection = !name.startsWith('__');
   const hasKeyDirective = directives.some(d => d.name.value === 'key');
 
