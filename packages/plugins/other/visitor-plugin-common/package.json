@@ -16,7 +16,7 @@
     "@graphql-tools/optimize": "^1.0.1",
     "@graphql-codegen/plugin-helpers": "^2.1.0",
     "@graphql-tools/relay-operation-optimizer": "^6.3.7",
-    "array.prototype.flatmap": "^1.2.4",
+    "@graphql-tools/utils": "8.1.1",
     "auto-bind": "~4.0.0",
     "dependency-graph": "^0.11.0",
     "graphql-tag": "^2.11.0",
@@ -28,7 +28,6 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
-    "@types/array.prototype.flatmap": "1.2.2",
     "@types/parse-filepath": "1.0.0"
   },
   "main": "dist/index.js",

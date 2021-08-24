@@ -9,7 +9,6 @@ import {
   GraphQLSchema,
   GraphQLScalarType,
   StringValueNode,
-  isEqualType,
   SelectionSetNode,
   FieldNode,
   SelectionNode,
@@ -340,14 +339,7 @@ function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === Kind.STRING;
 }
 
-export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return (
-    isEqualType(type, schema.getQueryType()) ||
-    isEqualType(type, schema.getMutationType()) ||
-    isEqualType(type, schema.getSubscriptionType())
-  );
-}
-
+// will be removed on next release because tools already has it
 export function getRootTypeNames(schema: GraphQLSchema): string[] {
   return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
     .filter(t => t)

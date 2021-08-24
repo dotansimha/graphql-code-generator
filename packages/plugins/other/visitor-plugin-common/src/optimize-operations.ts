@@ -13,8 +13,8 @@ export function optimizeOperations(
     options
   );
 
-  return newDocuments.map(document => ({
-    location: 'optimized by relay',
+  return newDocuments.map((document, index) => ({
+    location: documents[index]?.location || 'optimized by relay',
     document,
   }));
 }

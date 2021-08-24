@@ -20,7 +20,6 @@ import {
   Kind,
   GraphQLEnumType,
 } from 'graphql';
-import flatMap from 'array.prototype.flatmap';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
@@ -329,7 +328,7 @@ export class BaseTypesVisitor<
   }
 
   NonNullType(node: NonNullTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return asString;
   }
@@ -339,7 +338,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withBlock(node.fields.join('\n'));
   }
 
@@ -348,7 +347,7 @@ export class BaseTypesVisitor<
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
-    const comment = transformComment((node.description as any) as string, 1);
+    const comment = transformComment(node.description as any as string, 1);
     const { input } = this._parsedConfig.declarationKind;
 
     return comment + indent(`${node.name}: ${node.type}${this.getPunctuation(input)}`);
@@ -359,7 +358,7 @@ export class BaseTypesVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
-    const typeString = (node.type as any) as string;
+    const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
     const comment = this.getFieldComment(node);
 
@@ -377,7 +376,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind('type')
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withContent(possibleTypes).string;
   }
 
@@ -414,7 +413,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(type)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string);
+      .withComment(node.description as any as string);
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
@@ -463,7 +462,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string);
+      .withComment(node.description as any as string);
 
     return declarationBlock.withBlock(node.fields.join('\n'));
   }
@@ -509,28 +508,30 @@ export class BaseTypesVisitor<
   }
 
   public getEnumsImports(): string[] {
-    return flatMap(Object.keys(this.config.enumValues), enumName => {
-      const mappedValue = this.config.enumValues[enumName];
+    return Object.keys(this.config.enumValues)
+      .flatMap(enumName => {
+        const mappedValue = this.config.enumValues[enumName];
 
-      if (mappedValue.sourceFile) {
-        if (mappedValue.isDefault) {
-          return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
+        if (mappedValue.sourceFile) {
+          if (mappedValue.isDefault) {
+            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
+          }
+
+          return this.handleEnumValueMapper(
+            mappedValue.typeIdentifier,
+            mappedValue.importIdentifier,
+            mappedValue.sourceIdentifier,
+            mappedValue.sourceFile
+          );
         }
 
-        return this.handleEnumValueMapper(
-          mappedValue.typeIdentifier,
-          mappedValue.importIdentifier,
-          mappedValue.sourceIdentifier,
-          mappedValue.sourceFile
-        );
-      }
-
-      return [];
-    }).filter(a => a);
+        return [];
+      })
+      .filter(Boolean);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumName = (node.name as any) as string;
+    const enumName = node.name as any as string;
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
@@ -541,7 +542,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind('enum')
       .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
@@ -567,7 +568,7 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
         );
-        const comment = transformComment((enumOption.description as any) as string, 1);
+        const comment = transformComment(enumOption.description as any as string, 1);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name as any).value
@@ -644,7 +645,7 @@ export class BaseTypesVisitor<
   }
 
   protected _getTypeForNode(node: NamedTypeNode): string {
-    const typeAsString = (node.name as any) as string;
+    const typeAsString = node.name as any as string;
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
@@ -674,7 +675,7 @@ export class BaseTypesVisitor<
   }
 
   ListType(node: ListTypeNode): string {
-    const asString = (node.type as any) as string;
+    const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);
   }

@@ -40,6 +40,7 @@ import {
   NameAndType,
 } from './selection-set-processor/base';
 import autoBind from 'auto-bind';
+import { getRootTypes } from '@graphql-tools/utils';
 
 type FragmentSpreadUsage = {
   fragmentName: string;
@@ -485,14 +486,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return this._processor.buildSelectionSetFromStrings(fields);
   }
 
-  protected isRootType(type: GraphQLObjectType): boolean {
-    const rootType = [this._schema.getQueryType(), this._schema.getMutationType(), this._schema.getSubscriptionType()]
-      .filter(Boolean)
-      .map(t => t.name);
-
-    return rootType.includes(type.name);
-  }
-
   protected buildTypeNameField(
     type: GraphQLObjectType,
     nonOptionalTypename: boolean = this._config.nonOptionalTypename,
@@ -500,7 +493,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     queriedForTypename: boolean = this._queriedForTypename,
     skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
   ): { name: string; type: string } {
-    if (this.isRootType(type) && skipTypeNameForRoot && !queriedForTypename) {
+    const rootTypes = getRootTypes(this._schema);
+    if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
       return null;
     }
 
