@@ -18,7 +18,9 @@ export function resolveExternalModuleAndFn(pointer: any): any {
   if (moduleName === 'change-case-all') {
     loadedModule = changeCaseAll;
   } else {
-    const cwdRequire = createRequire(cwd());
+    // we have to use a path to a filename here (it does not need to exist.)
+    // https://github.com/dotansimha/graphql-code-generator/issues/6553
+    const cwdRequire = createRequire(cwd() + '/index.js');
     loadedModule = cwdRequire(moduleName);
 
     if (!(functionName in loadedModule) && typeof loadedModule !== 'function') {
