@@ -198,7 +198,8 @@ export function pushUnique<T extends any>(list: T[], item: T): void {
 }
 
 export function concatByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
-  return left[key].concat(right[key]);
+  // Remove duplicate, if an element is in right & left, it will be only once in the returned array.
+  return [...new Set([...left[key], ...right[key]])];
 }
 
 export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
