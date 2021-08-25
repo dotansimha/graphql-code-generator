@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-vue-apollo-smart-ops
 
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [263570e50]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/visitor-plugin-common@2.1.2
+  - @graphql-codegen/plugin-helpers@2.1.1
+
 ## 2.1.1
 
 ### Patch Changes

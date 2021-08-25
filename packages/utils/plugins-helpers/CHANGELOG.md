@@ -1,5 +1,12 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.1.1
+
+### Patch Changes
+
+- 6470e6cc9: fix(plugin-helpers): remove unnecessary import
+- 35199dedf: Fix module not found bug in resolveExternalModuleAndFn
+
 ## 2.1.0
 
 ### Minor Changes
