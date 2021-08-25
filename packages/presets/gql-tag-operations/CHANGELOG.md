@@ -1,5 +1,14 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.1.2
+
+### Patch Changes
+
+- @graphql-codegen/gql-tag-operations@1.1.2
+- @graphql-codegen/typescript-operations@2.1.2
+- @graphql-codegen/typed-document-node@2.1.2
+- @graphql-codegen/typescript@2.1.2
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.1.2
+
+### Patch Changes
+
+- 6470e6cc9: fix(plugin-helpers): remove unnecessary import
+- 263570e50: Don't generate duplicate imports for the same identifier
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/plugin-helpers@2.1.1
+
 ## 2.1.1
 
 ### Patch Changes

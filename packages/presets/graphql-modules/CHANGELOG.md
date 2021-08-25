@@ -1,5 +1,16 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.1.2
+
+### Patch Changes
+
+- f32521da3: Duplication of TS interfaces when GraphQL type definition and type extension are in the same module
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [263570e50]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/visitor-plugin-common@2.1.2
+  - @graphql-codegen/plugin-helpers@2.1.1
+
 ## 2.1.1
 
 ### Patch Changes
