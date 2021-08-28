@@ -13,6 +13,9 @@ import {
   BaseResolversVisitor,
   getConfigValue,
   DeclarationKind,
+  buildScalarsFromConfig,
+  DEFAULT_RESOLVERS_INTERNAL_SCALARS,
+  DEFAULT_RESOLVERS_EXTERNAL_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
@@ -39,6 +42,8 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
         allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
         optionalInfoArgument: getConfigValue(pluginConfig.optionalInfoArgument, false),
+        scalars: buildScalarsFromConfig(schema, pluginConfig, DEFAULT_RESOLVERS_EXTERNAL_SCALARS),
+        inputScalars: buildScalarsFromConfig(schema, pluginConfig, DEFAULT_RESOLVERS_INTERNAL_SCALARS),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
@@ -52,7 +57,9 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.config.namespacedImportName,
         [],
         this.config.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        undefined,
+        'ResolverScalars'
       )
     );
 
@@ -118,7 +125,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{ ${(node.values || [])
-      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .map(v => `${v.name as any as string}${this.config.avoidOptionals ? '' : '?'}: any`)
       .join(', ')} }`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
@@ -132,7 +139,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   ): string {
     return `{ ${(node.values || [])
       .map(v => {
-        const valueName = (v.name as any) as string;
+        const valueName = v.name as any as string;
         const mappedValue = valuesMapping[valueName];
 
         return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;

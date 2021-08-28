@@ -29,6 +29,7 @@ import {
   DeclarationKindConfig,
   DeclarationKind,
   ParsedEnumValuesMap,
+  ParsedScalarsMap,
 } from './types';
 import {
   transformComment,
@@ -300,9 +301,17 @@ export class BaseTypesVisitor<
       .filter(a => a);
   }
 
-  public get scalarsDefinition(): string {
-    const allScalars = Object.keys(this.config.scalars).map(scalarName => {
-      const scalarValue = this.config.scalars[scalarName].type;
+  public createScalarsDefinition({
+    scalarsMap,
+    declarationName,
+    comment = 'All built-in and custom scalars, mapped to their actual values',
+  }: {
+    scalarsMap: ParsedScalarsMap;
+    declarationName: string;
+    comment?: string;
+  }) {
+    const allScalars = Object.keys(scalarsMap).map(scalarName => {
+      const scalarValue = scalarsMap[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment =
         scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
@@ -314,9 +323,16 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.scalar)
-      .withName('Scalars')
-      .withComment('All built-in and custom scalars, mapped to their actual values')
+      .withName(declarationName)
+      .withComment(comment)
       .withBlock(allScalars.join('\n')).string;
+  }
+
+  public get scalarsDefinition(): string {
+    return this.createScalarsDefinition({
+      scalarsMap: this.config.scalars,
+      declarationName: 'Scalars',
+    });
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {

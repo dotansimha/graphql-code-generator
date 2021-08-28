@@ -4,6 +4,8 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
+  { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -13,9 +15,23 @@ export type Scalars = {
   Float: number;
 };
 
+/** All built-in and custom scalars, mapped to their actual values */
+export type InputScalars = {
+  ID: string | number;
+  Int: number;
+  Float: number;
+  String: string;
+  Boolean: boolean;
+};
+
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
+  withArg: Scalars['ID'];
+};
+
+export type QueryWithArgArgs = {
+  id: InputScalars['ID'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -88,18 +104,38 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** All built-in and custom scalars, mapped to their actual values */
+export type ResolverScalars = {
+  ID: string | number;
+  Int: number;
+  Float: number;
+  String: string;
+  Boolean: boolean;
+};
+
+/** All built-in and custom scalars, mapped to their actual values */
+export type InputResolverScalars = {
+  ID: string;
+  Int: number;
+  Float: number;
+  String: string;
+  Boolean: boolean;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  String: ResolverTypeWrapper<ResolverScalars['String']>;
+  ID: ResolverTypeWrapper<ResolverScalars['ID']>;
+  Boolean: ResolverTypeWrapper<ResolverScalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  String: Scalars['String'];
-  Boolean: Scalars['Boolean'];
+  String: ResolverScalars['String'];
+  ID: ResolverScalars['ID'];
+  Boolean: ResolverScalars['Boolean'];
 };
 
 export type QueryResolvers<
@@ -107,6 +143,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  withArg?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<QueryWithArgArgs, 'id'>>;
 };
 
 export type Resolvers<ContextType = any> = {

@@ -23,6 +23,9 @@ export type InlineFragmentTypeOptions = 'inline' | 'combine';
 
 export interface ParsedConfig {
   scalars: ParsedScalarsMap;
+
+  inputScalars?: ParsedScalarsMap;
+
   convert: ConvertFn;
   typesPrefix: string;
   typesSuffix: string;
@@ -219,6 +222,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   public readonly scalars: NormalizedScalarsMap;
 
+  public readonly inputScalars: NormalizedScalarsMap | null;
+
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
@@ -238,6 +243,11 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     this.scalars = {};
     Object.keys(this.config.scalars || {}).forEach(key => {
       this.scalars[key] = this.config.scalars[key].type;
+    });
+
+    this.inputScalars = this.config.inputScalars ? {} : null;
+    Object.keys(this.config.inputScalars || {}).forEach(key => {
+      this.inputScalars[key] = this.config.inputScalars[key].type;
     });
 
     autoBind(this);

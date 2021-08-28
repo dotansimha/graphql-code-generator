@@ -34,10 +34,18 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const visitorResult = visit(ast, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
+  const inputScalars = visitor.config.inputScalars
+    ? visitor.createScalarsDefinition({
+        scalarsMap: visitor.config.inputScalars,
+        declarationName: 'InputScalars',
+      })
+    : '';
 
   return {
     prepend: [...visitor.getEnumsImports(), ...visitor.getScalarsImports(), ...visitor.getWrapperDefinitions()],
-    content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
+    content: [scalars, inputScalars, ...visitorResult.definitions, ...introspectionDefinitions]
+      .filter(v => !!v)
+      .join('\n'),
   };
 };
 

@@ -1,6 +1,6 @@
 import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
+import { DEFAULT_RESOLVERS_EXTERNAL_SCALARS, DEFAULT_RESOLVERS_INTERNAL_SCALARS, DEFAULT_SCALARS } from './scalars';
 import {
   NormalizedScalarsMap,
   EnumValuesMap,
@@ -385,7 +385,8 @@ export class BaseResolversVisitor<
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
-      scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, DEFAULT_RESOLVERS_EXTERNAL_SCALARS),
+      inputScalars: buildScalarsFromConfig(_schema, rawConfig, DEFAULT_RESOLVERS_INTERNAL_SCALARS),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
       ...(additionalConfig || {}),
     } as TPluginConfig);
@@ -396,7 +397,12 @@ export class BaseResolversVisitor<
     this._variablesTransfomer = new OperationVariablesToObject(
       this.scalars,
       this.convertName,
-      this.config.namespacedImportName
+      this.config.namespacedImportName,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'InputResolverScalars'
     );
     this._resolversTypes = this.createResolversFields(
       type => this.applyResolverTypeWrapper(type),
@@ -850,7 +856,9 @@ export class BaseResolversVisitor<
   }
 
   protected _getScalar(name: string): string {
-    return `${this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''}Scalars['${name}']`;
+    return `${
+      this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
+    }ResolverScalars['${name}']`;
   }
 
   NamedType(node: NamedTypeNode): string {

@@ -18,9 +18,19 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumNames: string[] = [],
     _enumPrefix = true,
     _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false
+    _applyCoercion: Boolean = false,
+    _scalarsTypeName?: string
   ) {
-    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues, _applyCoercion);
+    super(
+      _scalars,
+      _convertName,
+      _namespacedImportName,
+      _enumNames,
+      _enumPrefix,
+      _enumValues,
+      _applyCoercion,
+      _scalarsTypeName
+    );
   }
 
   private clearOptional(str: string): string {

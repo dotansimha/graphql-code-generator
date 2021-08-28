@@ -100,7 +100,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         enumsNames,
         this.config.enumPrefix,
         this.config.enumValues,
-        this.config.arrayInputCoercion
+        this.config.arrayInputCoercion,
+        'InputScalars'
       )
     );
     this._declarationBlockConfig = {

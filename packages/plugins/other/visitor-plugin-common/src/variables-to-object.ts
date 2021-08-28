@@ -19,7 +19,8 @@ export class OperationVariablesToObject {
     protected _enumNames: string[] = [],
     protected _enumPrefix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
-    protected _applyCoercion: Boolean = false
+    protected _applyCoercion: Boolean = false,
+    public _scalarsTypeName: string = 'Scalars'
   ) {
     autoBind(this);
   }
@@ -52,7 +53,7 @@ export class OperationVariablesToObject {
   protected getScalar(name: string): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
-    return `${prefix}Scalars['${name}']`;
+    return `${prefix}${this._scalarsTypeName}['${name}']`;
   }
 
   protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {

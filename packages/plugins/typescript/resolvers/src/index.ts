@@ -8,6 +8,7 @@ import {
 import { visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
+import { TsVisitor } from '@graphql-codegen/typescript';
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -30,6 +31,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
+  const tsVisitor = new TsVisitor(transformedSchema, config);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
@@ -226,16 +228,31 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
   prepend.push(...mappersImports, ...visitor.globalDeclarations);
 
+  const scalars = tsVisitor.createScalarsDefinition({
+    scalarsMap: visitor.config.scalars,
+    declarationName: 'ResolverScalars',
+  });
+  const internalScalars = visitor.config.inputScalars
+    ? tsVisitor.createScalarsDefinition({
+        scalarsMap: visitor.config.inputScalars,
+        declarationName: 'InputResolverScalars',
+      })
+    : undefined;
+
   return {
     prepend,
     content: [
       header,
+      scalars,
+      internalScalars,
       resolversTypeMapping,
       resolversParentTypeMapping,
       ...visitorResult.definitions.filter(d => typeof d === 'string'),
       getRootResolver(),
       getAllDirectiveResolvers(),
-    ].join('\n'),
+    ]
+      .filter(v => v != null)
+      .join('\n'),
   };
 };
 

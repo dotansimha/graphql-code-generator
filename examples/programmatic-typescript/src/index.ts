@@ -20,6 +20,7 @@ const schema = makeExecutableSchema({
   typeDefs: gql`
     type Query {
       hello: String!
+      withArg(id: ID!): ID!
     }
   `,
   resolvers: {

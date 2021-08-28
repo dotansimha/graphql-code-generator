@@ -1,6 +1,6 @@
 import { NormalizedScalarsMap } from './types';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
+import { DEFAULT_OPERATIONS_INPUT_SCALARS, DEFAULT_OPERATIONS_OUTPUT_SCALARS } from './scalars';
 import { DeclarationBlock, DeclarationBlockConfig, getConfigValue, buildScalarsFromConfig } from './utils';
 import {
   GraphQLSchema,
@@ -123,7 +123,7 @@ export class BaseDocumentsVisitor<
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     protected _schema: GraphQLSchema,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+    defaultScalars: NormalizedScalarsMap = DEFAULT_OPERATIONS_OUTPUT_SCALARS
   ) {
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
@@ -138,6 +138,7 @@ export class BaseDocumentsVisitor<
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
+      inputScalars: buildScalarsFromConfig(_schema, rawConfig, DEFAULT_OPERATIONS_INPUT_SCALARS),
       ...((additionalConfig || {}) as any),
     });
 
@@ -145,7 +146,12 @@ export class BaseDocumentsVisitor<
     this._variablesTransfomer = new OperationVariablesToObject(
       this.scalars,
       this.convertName,
-      this.config.namespacedImportName
+      this.config.namespacedImportName,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'InputScalars'
     );
   }
 

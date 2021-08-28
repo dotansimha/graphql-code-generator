@@ -9,6 +9,8 @@ import {
   DeclarationKind,
   normalizeAvoidOptionals,
   AvoidOptionalsConfig,
+  buildScalarsFromConfig,
+  DEFAULT_OPERATIONS_INPUT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './config';
 import autoBind from 'auto-bind';
@@ -66,6 +68,7 @@ export class TsVisitor<
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
       entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
+      inputScalars: buildScalarsFromConfig(schema, pluginConfig, DEFAULT_OPERATIONS_INPUT_SCALARS),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -82,7 +85,9 @@ export class TsVisitor<
         null,
         enumNames,
         pluginConfig.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        undefined,
+        'InputScalars'
       )
     );
     this.setDeclarationBlockConfig({
