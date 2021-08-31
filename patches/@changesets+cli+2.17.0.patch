@@ -1,5 +1,5 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index f771824..a2fb0ce 100644
+index 8e6118a..b659a53 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 @@ -576,7 +576,7 @@ async function version(cwd, options, config) {
@@ -12,7 +12,7 @@ index f771824..a2fb0ce 100644
  
  function jsonParse(input) {
 diff --git a/node_modules/@changesets/cli/dist/cli.esm.js b/node_modules/@changesets/cli/dist/cli.esm.js
-index 40bcc31..4b376a3 100644
+index b4b2a6f..4f31848 100644
 --- a/node_modules/@changesets/cli/dist/cli.esm.js
 +++ b/node_modules/@changesets/cli/dist/cli.esm.js
 @@ -553,7 +553,7 @@ async function version(cwd, options, config) {
