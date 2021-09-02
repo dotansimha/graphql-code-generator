@@ -52,7 +52,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
       },
     },
     SchemaDefinition: {
-      leave: () => '',
+      leave: () => null,
     },
     ObjectTypeDefinition: {
       leave(node: unknown) {
@@ -128,6 +128,12 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         }
 
         return ` - DEPRECATED: ${reason.value.value}`;
+      },
+    },
+    DirectiveDefinition: {
+      enter() {
+        /** This plugin currently does not support unused Directives. */
+        return null;
       },
     },
     FieldDefinition: {
