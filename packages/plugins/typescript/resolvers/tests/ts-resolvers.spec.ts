@@ -153,10 +153,10 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(content).toMatchSnapshot();
     });
 
-    it('customDirectiveToResolverFnMapping - should generate correct types', async () => {
+    it('directiveResolverMappings - should generate correct types', async () => {
       const config = {
         noSchemaStitching: true,
-        customDirectiveToResolverFnMapping: {
+        directiveResolverMappings: {
           authenticated: `
 (
   parent: TParent,
@@ -168,7 +168,7 @@ describe('TypeScript Resolvers Plugin', () => {
       };
       const result = await plugin(schema, [], config, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
-export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> = 
+export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> =
 (
   parent: TParent,
   args: TArgs,

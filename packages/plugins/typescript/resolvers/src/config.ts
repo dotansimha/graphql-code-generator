@@ -102,16 +102,16 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   customResolverFn?: string;
   /**
-   * @description Map the usage of a directive into using a specific resolver
+   * @description Map the usage of a directive into using a specific resolver.
    * @exampleMarkdown
    * ```yml
    *   config:
    *     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
-   *     customDirectiveToResolverFnMapping:
+   *     directiveResolverMappings:
    *       authenticated: ../resolvers-types.ts#AuthenticatedResolver
    * ```
    */
-  customDirectiveToResolverFnMapping?: Record<string, string>;
+  directiveResolverMappings?: Record<string, string>;
   /**
    * @description Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.
    *

@@ -72,7 +72,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
-  customDirectiveToResolverTypeNameMapping: Map<string, string>;
+  directiveResolverMappings: Map<string, string>;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -334,7 +334,7 @@ export interface RawResolversConfig extends RawConfig {
   /**
    * @ignore
    */
-  customDirectiveToResolverTypeNameMappings?: Map<string, string>;
+  directiveResolverMappings?: Map<string, string>;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -360,7 +360,7 @@ export class BaseResolversVisitor<
   protected _hasScalars = false;
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
-  private _customDirectiveToResolverTypeNameMappings: Map<string, string>;
+  private _directiveResolverMappings: Map<string, string>;
 
   constructor(
     rawConfig: TRawConfig,
@@ -416,8 +416,7 @@ export class BaseResolversVisitor<
       namedType => !isEnumType(namedType)
     );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
-    this._customDirectiveToResolverTypeNameMappings =
-      rawConfig.customDirectiveToResolverTypeNameMappings ?? new Map<string, string>();
+    this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? new Map<string, string>();
   }
 
   public getResolverTypeWrapperSignature(): string {
@@ -957,8 +956,9 @@ export class BaseResolversVisitor<
 
       const directiveMappings =
         node.directives
-          ?.map(directive => this._customDirectiveToResolverTypeNameMappings.get(directive.name as any))
-          .filter(Boolean) ?? [];
+          ?.map(directive => this._directiveResolverMappings.get(directive.name as any))
+          .filter(Boolean)
+          .reverse() ?? [];
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 

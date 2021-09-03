@@ -32,10 +32,10 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
   const importType = config.useTypeImports ? 'import type' : 'import';
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
-  const customDirectiveToResolverTypeNameMappings = new Map<string, string>();
+  const directiveResolverMappings = new Map<string, string>();
 
-  if (config.customDirectiveToResolverFnMapping) {
-    for (const [directiveName, mapper] of Object.entries(config.customDirectiveToResolverFnMapping)) {
+  if (config.directiveResolverMappings) {
+    for (const [directiveName, mapper] of Object.entries(config.directiveResolverMappings)) {
       const parsedMapper = parseMapper(mapper);
       const capitalizedDirectiveName = capitalize(directiveName);
       const resolverFnName = `ResolverFn${capitalizedDirectiveName}`;
@@ -64,13 +64,13 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
       }
       defsToInclude.push(resolverWithResolve);
       defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
-      customDirectiveToResolverTypeNameMappings.set(directiveName, resolverTypeName);
+      directiveResolverMappings.set(directiveName, resolverTypeName);
     }
   }
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(
-    { ...config, customDirectiveToResolverTypeNameMappings },
+    { ...config, directiveResolverMappings: directiveResolverMappings },
     transformedSchema
   );
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
