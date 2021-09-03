@@ -251,7 +251,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Context Type
    * ```yml
-   * plugins
+   * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappings:
    *       AsNumber: number
@@ -264,7 +264,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ```yml
-   * plugins
+   * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappingTypeSuffix: Model
    * ```
