@@ -2,6 +2,17 @@ import { ASTNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedMapper } from './mappers';
 
 /**
+ * A map between the GraphQL directive name and the identifier that should be used
+ */
+export type DirectiveArgumentAndInputFieldMappings = { [name: string]: string };
+
+/**
+ * Parsed directives map - a mapping between GraphQL directive name and the parsed mapper object,
+ * including all required information for generating code for that mapping.
+ */
+export type ParsedDirectiveArgumentAndInputFieldMappings = { [name: string]: ParsedMapper };
+
+/**
  * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used
  */
 export type ScalarsMap = string | { [name: string]: string };
@@ -71,6 +82,7 @@ export type LoadedFragment<AdditionalFields = {}> = {
 export type DeclarationKind = 'type' | 'interface' | 'class' | 'abstract class';
 
 export interface DeclarationKindConfig {
+  directive?: DeclarationKind;
   scalar?: DeclarationKind;
   input?: DeclarationKind;
   type?: DeclarationKind;

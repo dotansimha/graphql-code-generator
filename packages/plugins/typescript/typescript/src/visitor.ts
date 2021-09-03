@@ -82,7 +82,9 @@ export class TsVisitor<
         null,
         enumNames,
         pluginConfig.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        false,
+        this.config.directiveArgumentAndInputFieldMappings
       )
     );
     this.setDeclarationBlockConfig({
@@ -243,13 +245,19 @@ export class TsVisitor<
       (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
         (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
     const comment = transformComment(node.description as any as string, 1);
-    const { type } = this.config.declarationKind;
+    const declarationKind = this.config.declarationKind.type;
+
+    let type: string = node.type as any as string;
+    if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
+      type = this._getDirectiveOverrideType(node.directives) || type;
+    }
+
     return (
       comment +
       indent(
-        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${
-          node.type
-        }${this.getPunctuation(type)}`
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
+          addOptionalSign ? '?' : ''
+        }: ${type}${this.getPunctuation(declarationKind)}`
       )
     );
   }

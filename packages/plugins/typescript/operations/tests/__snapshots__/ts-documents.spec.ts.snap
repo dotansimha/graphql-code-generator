@@ -550,8 +550,6 @@ export type Scalars = {
   Float: number;
 };
 
-
-
 export type Error = {
   message: Scalars['String'];
 };

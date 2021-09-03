@@ -3714,6 +3714,7 @@ describe('TypeScript Operations Plugin', () => {
           Float: number;
         };
 
+
         export type Query = {
           __typename?: 'Query';
           search?: Maybe<Array<Searchable>>;

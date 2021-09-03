@@ -29,6 +29,8 @@ import {
   DeclarationKindConfig,
   DeclarationKind,
   ParsedEnumValuesMap,
+  DirectiveArgumentAndInputFieldMappings,
+  ParsedDirectiveArgumentAndInputFieldMappings,
 } from './types';
 import {
   transformComment,
@@ -41,6 +43,7 @@ import {
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
+import { transformDirectiveArgumentAndInputFieldMappings } from './mappers';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -53,6 +56,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   entireFieldWrapperValue: string;
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
+  directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -230,6 +234,42 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   entireFieldWrapperValue?: string;
+  /**
+   * @description Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.
+   *
+   * You can use both `module#type` and `module#namespace#type` syntax.
+   * Will NOT work with introspected schemas since directives are not exported.
+   * Only works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.
+   *
+   * **WARNING:** Using this option does only change the type definitions.
+   *
+   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!
+   * Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+   *
+   * Please use this configuration option with care!
+   *
+   * @exampleMarkdown
+   * ## Custom Context Type
+   * ```yml
+   * plugins
+   *   config:
+   *     directiveArgumentAndInputFieldMappings:
+   *       AsNumber: number
+   *       AsComplex: ./my-models#Complex
+   * ```
+   */
+  directiveArgumentAndInputFieldMappings?: DirectiveArgumentAndInputFieldMappings;
+  /**
+   * @description Adds a suffix to the imported names to prevent name clashes.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * plugins
+   *   config:
+   *     directiveArgumentAndInputFieldMappingTypeSuffix: Model
+   * ```
+   */
+  directiveArgumentAndInputFieldMappingTypeSuffix?: string;
 }
 
 export class BaseTypesVisitor<
@@ -260,9 +300,14 @@ export class BaseTypesVisitor<
       entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
+      directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
+        rawConfig.directiveArgumentAndInputFieldMappings ?? {},
+        rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix
+      ),
       ...additionalConfig,
     });
 
+    // Note: Missing directive mappers but not a problem since always overriden by implementors
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 
@@ -300,6 +345,20 @@ export class BaseTypesVisitor<
       .filter(a => a);
   }
 
+  public getDirectiveArgumentAndInputFieldMappingsImports(): string[] {
+    return Object.keys(this.config.directiveArgumentAndInputFieldMappings)
+      .map(directive => {
+        const mappedValue = this.config.directiveArgumentAndInputFieldMappings[directive];
+
+        if (mappedValue.isExternal) {
+          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+        }
+
+        return null;
+      })
+      .filter(a => a);
+  }
+
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
@@ -317,6 +376,30 @@ export class BaseTypesVisitor<
       .withName('Scalars')
       .withComment('All built-in and custom scalars, mapped to their actual values')
       .withBlock(allScalars.join('\n')).string;
+  }
+
+  public get directiveArgumentAndInputFieldMappingsDefinition(): string {
+    const directiveEntries = Object.entries(this.config.directiveArgumentAndInputFieldMappings);
+    if (directiveEntries.length === 0) {
+      return '';
+    }
+
+    const allDirectives: Array<string> = [];
+
+    for (const [directiveName, parsedMapper] of directiveEntries) {
+      const directiveType = this._schema.getDirective(directiveName);
+      const comment =
+        directiveType?.astNode && directiveType.description ? transformComment(directiveType.description, 1) : '';
+      const { directive } = this._parsedConfig.declarationKind;
+      allDirectives.push(comment + indent(`${directiveName}: ${parsedMapper.type}${this.getPunctuation(directive)}`));
+    }
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.directive)
+      .withName('DirectiveArgumentAndInputFieldMappings')
+      .withComment('Type overrides using directives')
+      .withBlock(allDirectives.join('\n')).string;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -350,7 +433,12 @@ export class BaseTypesVisitor<
     const comment = transformComment(node.description as any as string, 1);
     const { input } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${node.type}${this.getPunctuation(input)}`);
+    let type: string = node.type as any as string;
+    if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
+      type = this._getDirectiveOverrideType(node.directives) || type;
+    }
+
+    return comment + indent(`${node.name}: ${type}${this.getPunctuation(input)}`);
   }
 
   Name(node: NameNode): string {
@@ -642,6 +730,25 @@ export class BaseTypesVisitor<
 
   protected _getScalar(name: string): string {
     return `Scalars['${name}']`;
+  }
+
+  protected _getDirectiveArgumentNadInputFieldMapping(name: string): string {
+    return `DirectiveArgumentAndInputFieldMappings['${name}']`;
+  }
+
+  protected _getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
+    const type = directives
+      .map(directive => {
+        const directiveName = directive.name as any as string;
+        if (this.config.directiveArgumentAndInputFieldMappings[directiveName]) {
+          return this._getDirectiveArgumentNadInputFieldMapping(directiveName);
+        }
+        return null;
+      })
+      .reverse()
+      .find(a => !!a);
+
+    return type || null;
   }
 
   protected _getTypeForNode(node: NamedTypeNode): string {

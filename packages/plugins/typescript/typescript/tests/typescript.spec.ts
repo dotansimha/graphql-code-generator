@@ -79,7 +79,7 @@ describe('TypeScript', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-        /** 
+        /**
          * MyInput
          * multiline
          */
@@ -285,9 +285,30 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        | 'A' 
+        | 'A'
         /** this is b */
         | 'B';`);
+    });
+
+    it('Should work with directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "My custom directive"
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number' } },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      /** Type overrides using directives */
+      export type DirectiveArgumentAndInputFieldMappings = {
+        /** My custom directive */
+        AsNumber: number;
+      };
+      `);
     });
   });
 
@@ -463,7 +484,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyEnum =
-        | 'A' 
+        | 'A'
         | 'B';`);
     });
 
@@ -488,7 +509,7 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        | 'A' 
+        | 'A'
         /** this is b */
         | 'B';`);
     });
@@ -689,7 +710,7 @@ describe('TypeScript', () => {
       export type IUpdateFilterOptionInput = {
         newOption: FilterOption;
       };`);
-      expect(output).toBeSimilarStringTo(`   
+      expect(output).toBeSimilarStringTo(`
       export type IQueryExampleQueryArgs = {
         i?: Maybe<IUpdateFilterOptionInput>;
         t?: Maybe<FilterOption>;
@@ -881,7 +902,7 @@ describe('TypeScript', () => {
       type PullRequest {
         reviewThreads(first: Int!): Int
       }
-      
+
       type PullRequestReview {
           threads(first: Int!, last: Int!): Int
       }`);
@@ -1056,8 +1077,8 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum = 
-          | 'A' 
+        export type MyEnum =
+          | 'A'
           | 'B';
       `);
       validateTs(result);
@@ -1077,8 +1098,8 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum = 
-          | 'BOOP' 
+        export type MyEnum =
+          | 'BOOP'
           | 'B';
       `);
       validateTs(result);
@@ -1098,9 +1119,9 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 
-        | 'A' 
-        | 'B' 
+      export type MyEnum =
+        | 'A'
+        | 'B'
         | '%future added value'
     `);
       validateTs(result);
@@ -2254,6 +2275,121 @@ describe('TypeScript', () => {
       expect(result.content).not.toContain('withArguments');
       expect(result.content).not.toContain('objSimple');
       expect(result.content).not.toContain('universal');
+      validateTs(result);
+    });
+
+    it('Should handle type override', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+
+        type Query {
+          myField(id: ID! @AsNumber): Boolean
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number' } },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type DirectiveArgumentAndInputFieldMappings = {
+        AsNumber: number;
+      };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        myField?: Maybe<Scalars['Boolean']>;
+      };
+
+      export type QueryMyFieldArgs = {
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should allow imported types', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        {
+          directiveArgumentAndInputFieldMappings: { AsNumber: './someModule#MyType' },
+          directiveArgumentAndInputFieldMappingTypeSuffix: 'Model',
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.prepend).toContain("import { MyType as MyTypeModel } from './someModule';");
+      expect(result.content).toBeSimilarStringTo(`
+      export type DirectiveArgumentAndInputFieldMappings = {
+        AsNumber: MyTypeModel;
+      };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should use last directive override', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+        directive @AsString on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber @AsString
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number', AsString: 'AsString' } },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: DirectiveArgumentAndInputFieldMappings['AsString'];
+      };
+      `);
+      validateTs(result);
+    });
+
+    it('Should ignore unmapped directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+        input MyInput {
+          id: ID! @AsNumber
+        }
+      `);
+      const result = await plugin(schema, [], { directiveArgumentAndInputFieldMappings: {} }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        id: Scalars['ID'];
+      };
+      `);
       validateTs(result);
     });
   });
