@@ -180,6 +180,64 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
     });
 
+    it('Can merge an inline fragment with a spread', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Comment {
+          id: ID!
+          title: String!
+        }
+
+        type TextComment implements Comment {
+          id: ID!
+          title: String!
+          text: String!
+        }
+
+        type ImageComment implements Comment {
+          id: ID!
+          title: String!
+          image: String!
+        }
+
+        type Post {
+          id: ID!
+          comments: [Comment!]!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        fragment Post on Post {
+          id
+          comments {
+            ... on TextComment {
+              text
+            }
+          }
+        }
+
+        fragment PostPlus on Post {
+          ...Post
+          comments {
+            id
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        {},
+        {
+          outputFile: '',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+        export type PostFragment = { __typename?: 'Post', id: string, comments: Array<{ __typename?: 'TextComment', text: string } | { __typename?: 'ImageComment' }> };
+
+        export type PostPlusFragment = { __typename?: 'Post', id: string, comments: Array<{ __typename?: 'TextComment', text: string, id: string } | { __typename?: 'ImageComment', id: string }> };
+      `);
+    });
+
     it('Should handle "namespacedImportName" and "preResolveTypes" together', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
