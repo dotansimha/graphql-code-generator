@@ -25,7 +25,7 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@apollo/client": "^3.3.20",
+    "@apollo/client": "3.4.10",
     "@graphql-tools/schema": "7.1.5",
     "cross-fetch": "^3.1.4"
   },
