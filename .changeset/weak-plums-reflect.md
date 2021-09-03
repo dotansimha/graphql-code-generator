@@ -9,6 +9,8 @@ Allow overwriting the resolver type signature based on directive usages.
 
 For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
 
+Example configuration:
+
 ```yml
 config:
   # This was possible before
@@ -16,6 +18,32 @@ config:
   # This is new
   directiveResolverMappings:
     authenticated: ../resolvers-types.ts#AuthenticatedResolver
+```
+
+Example mapping file (`resolver-types.ts`):
+
+```ts
+export type UnauthenticatedContext = {
+  user: null;
+};
+
+export type AuthenticatedContext = {
+  user: { id: string };
+};
+
+export type UnauthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: UnauthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type AUthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: AuthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
 ```
 
 Example Schema:

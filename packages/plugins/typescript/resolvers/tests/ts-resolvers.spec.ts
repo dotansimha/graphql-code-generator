@@ -153,7 +153,7 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(content).toMatchSnapshot();
     });
 
-    it('directiveResolverMappings - should generate correct types', async () => {
+    it('directiveResolverMappings - should generate correct types (inline definition)', async () => {
       const config = {
         noSchemaStitching: true,
         directiveResolverMappings: {
@@ -191,6 +191,34 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 };
       `);
     });
+  });
+
+  it('directiveResolverMappings - should generate correct types (import definition)', async () => {
+    const config = {
+      noSchemaStitching: true,
+      directiveResolverMappings: {
+        authenticated: `../resolver-types.ts#AuthenticatedResolver`,
+      },
+    };
+    const result = await plugin(schema, [], config, { outputFile: '' });
+    expect(result.prepend).toContain(
+      "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts';"
+    );
+    expect(result.content).toBeSimilarStringTo(`
+export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
+};
+export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+`);
+    expect(result.content).toBeSimilarStringTo(`
+export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+foo?: ResolverAuthenticated<ResolversTypes['String'], ParentType, ContextType>;
+otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+    `);
   });
 
   describe('Enums', () => {
