@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 2.1.3
+
+### Patch Changes
+
+- 0a6a923cf: generate a helpful error message when encountering a unnamed operation definition
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes

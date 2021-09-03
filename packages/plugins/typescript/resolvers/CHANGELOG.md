@@ -1,5 +1,72 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.2.0
+
+### Minor Changes
+
+- 5086791ac: Allow overwriting the resolver type signature based on directive usages.
+
+  **WARNING:** Using this option does only change the generated type definitions.
+
+  For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+
+  Example configuration:
+
+  ```yml
+  config:
+    # This was possible before
+    customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
+    # This is new
+    directiveResolverMappings:
+      authenticated: ../resolvers-types.ts#AuthenticatedResolver
+  ```
+
+  Example mapping file (`resolver-types.ts`):
+
+  ```ts
+  export type UnauthenticatedContext = {
+    user: null;
+  };
+
+  export type AuthenticatedContext = {
+    user: { id: string };
+  };
+
+  export type UnauthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+    parent: TParent,
+    args: TArgs,
+    context: UnauthenticatedContext,
+    info: GraphQLResolveInfo
+  ) => Promise<TResult> | TResult;
+
+  export type AuthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+    parent: TParent,
+    args: TArgs,
+    context: AuthenticatedContext,
+    info: GraphQLResolveInfo
+  ) => Promise<TResult> | TResult;
+  ```
+
+  Example Schema:
+
+  ```graphql
+  directive @authenticated on FIELD_DEFINITION
+
+  type Query {
+    yee: String
+    foo: String @authenticated
+  }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [8261e4161]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+  - @graphql-codegen/typescript@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes

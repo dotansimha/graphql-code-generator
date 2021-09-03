@@ -1,5 +1,15 @@
 # @graphql-codegen/c-sharp-operations
 
+## 2.1.3
+
+### Patch Changes
+
+- 238d734d8: Use at-sign (`@`) prefix for C# keyword name collisions
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes
