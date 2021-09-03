@@ -11,9 +11,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
-
 /** The input object sent when passing a color */
 export type ColorInput = {
   red: Scalars['Int'];

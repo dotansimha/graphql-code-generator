@@ -11,9 +11,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
-
 /** A list of options for the sort order of the feed */
 export enum FeedType {
   /** Sort by a combination of freshness and score, using Reddit's algorithm */
