@@ -258,10 +258,10 @@ export interface RawTypesConfig extends RawConfig {
    * ```yml
    * plugins
    *   config:
-   *     directiveMapperTypeSuffix: Model
+   *     directiveArgumentAndInputFieldMappingTypeSuffix: Model
    * ```
    */
-  directiveMapperTypeSuffix?: string;
+  directiveArgumentAndInputFieldMappingTypeSuffix?: string;
 }
 
 export class BaseTypesVisitor<
@@ -294,7 +294,7 @@ export class BaseTypesVisitor<
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
         rawConfig.directiveArgumentAndInputFieldMappings ?? {},
-        rawConfig.directiveMapperTypeSuffix
+        rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix
       ),
       ...additionalConfig,
     });

@@ -2332,7 +2332,7 @@ describe('TypeScript', () => {
         [],
         {
           directiveArgumentAndInputFieldMappings: { AsNumber: './someModule#MyType' },
-          directiveMapperTypeSuffix: 'Model',
+          directiveArgumentAndInputFieldMappingTypeSuffix: 'Model',
         },
         { outputFile: '' }
       );

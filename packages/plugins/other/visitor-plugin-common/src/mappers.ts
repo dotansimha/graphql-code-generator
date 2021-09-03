@@ -188,13 +188,13 @@ export function transformMappers(
 
 export function transformDirectiveArgumentAndInputFieldMappings(
   rawDirectiveArgumentAndInputFieldMappings: DirectiveArgumentAndInputFieldMappings,
-  directiveMapperTypeSuffix?: string
+  directiveArgumentAndInputFieldMappingTypeSuffix?: string
 ): ParsedDirectiveArgumentAndInputFieldMappings {
   const result: ParsedDirectiveArgumentAndInputFieldMappings = {};
 
   Object.keys(rawDirectiveArgumentAndInputFieldMappings).forEach(directive => {
     const mapperDef = rawDirectiveArgumentAndInputFieldMappings[directive];
-    const parsedMapper = parseMapper(mapperDef, directive, directiveMapperTypeSuffix);
+    const parsedMapper = parseMapper(mapperDef, directive, directiveArgumentAndInputFieldMappingTypeSuffix);
     result[directive] = parsedMapper;
   });
 
