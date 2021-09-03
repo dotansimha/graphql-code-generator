@@ -72,7 +72,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
-  directiveResolverMappings: Map<string, string>;
+  directiveResolverMappings: Record<string, string>;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -334,7 +334,7 @@ export interface RawResolversConfig extends RawConfig {
   /**
    * @ignore
    */
-  directiveResolverMappings?: Map<string, string>;
+  directiveResolverMappings?: Record<string, string>;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -360,7 +360,7 @@ export class BaseResolversVisitor<
   protected _hasScalars = false;
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
-  private _directiveResolverMappings: Map<string, string>;
+  private _directiveResolverMappings: Record<string, string>;
 
   constructor(
     rawConfig: TRawConfig,
@@ -416,7 +416,7 @@ export class BaseResolversVisitor<
       namedType => !isEnumType(namedType)
     );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
-    this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? new Map<string, string>();
+    this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? {};
   }
 
   public getResolverTypeWrapperSignature(): string {
@@ -956,7 +956,7 @@ export class BaseResolversVisitor<
 
       const directiveMappings =
         node.directives
-          ?.map(directive => this._directiveResolverMappings.get(directive.name as any))
+          ?.map(directive => this._directiveResolverMappings[directive.name as any])
           .filter(Boolean)
           .reverse() ?? [];
 

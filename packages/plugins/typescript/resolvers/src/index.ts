@@ -32,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig, Types.Compl
   const importType = config.useTypeImports ? 'import type' : 'import';
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
-  const directiveResolverMappings = new Map<string, string>();
+  const directiveResolverMappings = {} as Record<string, string>;
 
   if (config.directiveResolverMappings) {
     for (const [directiveName, mapper] of Object.entries(config.directiveResolverMappings)) {
@@ -64,7 +64,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
       }
       defsToInclude.push(resolverWithResolve);
       defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
-      directiveResolverMappings.set(directiveName, resolverTypeName);
+      directiveResolverMappings[directiveName] = resolverTypeName;
     }
   }
 
