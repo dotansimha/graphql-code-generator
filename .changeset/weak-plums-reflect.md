@@ -38,7 +38,7 @@ export type UnauthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
-export type AUthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+export type AuthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: AuthenticatedContext,
