@@ -84,7 +84,7 @@ export class TsVisitor<
         pluginConfig.enumPrefix,
         this.config.enumValues,
         false,
-        this.config.directiveMappers
+        this.config.directiveArgumentAndInputFieldMapping
       )
     );
     this.setDeclarationBlockConfig({
@@ -248,7 +248,7 @@ export class TsVisitor<
     const declarationKind = this.config.declarationKind.type;
 
     let type: string = node.type as any as string;
-    if (node.directives && this.config.directiveMappers) {
+    if (node.directives && this.config.directiveArgumentAndInputFieldMapping) {
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 

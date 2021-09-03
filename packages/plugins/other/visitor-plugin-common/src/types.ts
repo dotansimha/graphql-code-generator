@@ -7,10 +7,10 @@ import { ParsedMapper } from './mappers';
 export type DirectivesMap = { [name: string]: string };
 
 /**
- * Parsed directives map - a mapping between GraphQL directice name and the parsed mapper object,
- * including all required information for generting code for that mapping.
+ * Parsed directives map - a mapping between GraphQL directive name and the parsed mapper object,
+ * including all required information for generating code for that mapping.
  */
-export type ParsedDirectivesMap = { [name: string]: ParsedMapper };
+export type ParsedDirectiveArgumentAndInputFieldMap = { [name: string]: ParsedMapper };
 
 /**
  * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used

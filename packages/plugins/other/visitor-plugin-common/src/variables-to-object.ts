@@ -1,6 +1,11 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode, DirectiveNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
-import { NormalizedScalarsMap, ConvertNameFn, ParsedEnumValuesMap, ParsedDirectivesMap } from './types';
+import {
+  NormalizedScalarsMap,
+  ConvertNameFn,
+  ParsedEnumValuesMap,
+  ParsedDirectiveArgumentAndInputFieldMap,
+} from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
 
@@ -21,7 +26,7 @@ export class OperationVariablesToObject {
     protected _enumPrefix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
     protected _applyCoercion: Boolean = false,
-    protected _directiveMappers: ParsedDirectivesMap = {}
+    protected _directiveArgumentAndInputFieldMapping: ParsedDirectiveArgumentAndInputFieldMap = {}
   ) {
     autoBind(this);
   }
@@ -62,12 +67,12 @@ export class OperationVariablesToObject {
   }
 
   protected getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
-    if (!this._directiveMappers) return null;
+    if (!this._directiveArgumentAndInputFieldMapping) return null;
 
     const type = directives
       .map(directive => {
         const directiveName = directive.name.value;
-        if (this._directiveMappers[directiveName]) {
+        if (this._directiveArgumentAndInputFieldMapping[directiveName]) {
           return this.getDirectiveMapping(directiveName);
         }
         return null;

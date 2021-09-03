@@ -79,7 +79,7 @@ describe('TypeScript', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-        /** 
+        /**
          * MyInput
          * multiline
          */
@@ -285,7 +285,7 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        | 'A' 
+        | 'A'
         /** this is b */
         | 'B';`);
     });
@@ -295,7 +295,12 @@ describe('TypeScript', () => {
         "My custom directive"
         directive @AsNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
       `);
-      const result = await plugin(schema, [], { directiveMappers: { AsNumber: 'number' } }, { outputFile: '' });
+      const result = await plugin(
+        schema,
+        [],
+        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number' } },
+        { outputFile: '' }
+      );
 
       expect(result.content).toBeSimilarStringTo(`
       /** Type overrides using directives */
@@ -479,7 +484,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyEnum =
-        | 'A' 
+        | 'A'
         | 'B';`);
     });
 
@@ -504,7 +509,7 @@ describe('TypeScript', () => {
       /** custom enum */
       export type MyEnum =
         /** this is a */
-        | 'A' 
+        | 'A'
         /** this is b */
         | 'B';`);
     });
@@ -705,7 +710,7 @@ describe('TypeScript', () => {
       export type IUpdateFilterOptionInput = {
         newOption: FilterOption;
       };`);
-      expect(output).toBeSimilarStringTo(`   
+      expect(output).toBeSimilarStringTo(`
       export type IQueryExampleQueryArgs = {
         i?: Maybe<IUpdateFilterOptionInput>;
         t?: Maybe<FilterOption>;
@@ -897,7 +902,7 @@ describe('TypeScript', () => {
       type PullRequest {
         reviewThreads(first: Int!): Int
       }
-      
+
       type PullRequestReview {
           threads(first: Int!, last: Int!): Int
       }`);
@@ -1072,8 +1077,8 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum = 
-          | 'A' 
+        export type MyEnum =
+          | 'A'
           | 'B';
       `);
       validateTs(result);
@@ -1093,8 +1098,8 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum = 
-          | 'BOOP' 
+        export type MyEnum =
+          | 'BOOP'
           | 'B';
       `);
       validateTs(result);
@@ -1114,9 +1119,9 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum = 
-        | 'A' 
-        | 'B' 
+      export type MyEnum =
+        | 'A'
+        | 'B'
         | '%future added value'
     `);
       validateTs(result);
@@ -2285,7 +2290,12 @@ describe('TypeScript', () => {
           myField(id: ID! @AsNumber): Boolean
         }
       `);
-      const result = await plugin(schema, [], { directiveMappers: { AsNumber: 'number' } }, { outputFile: '' });
+      const result = await plugin(
+        schema,
+        [],
+        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number' } },
+        { outputFile: '' }
+      );
 
       expect(result.content).toBeSimilarStringTo(`
       export type Directives = {
@@ -2320,7 +2330,10 @@ describe('TypeScript', () => {
       const result = await plugin(
         schema,
         [],
-        { directiveMappers: { AsNumber: './someModule#MyType' }, directiveMapperTypeSuffix: 'Model' },
+        {
+          directiveArgumentAndInputFieldMapping: { AsNumber: './someModule#MyType' },
+          directiveMapperTypeSuffix: 'Model',
+        },
         { outputFile: '' }
       );
 
@@ -2350,7 +2363,7 @@ describe('TypeScript', () => {
       const result = await plugin(
         schema,
         [],
-        { directiveMappers: { AsNumber: 'number', AsString: 'AsString' } },
+        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number', AsString: 'AsString' } },
         { outputFile: '' }
       );
 
@@ -2370,7 +2383,7 @@ describe('TypeScript', () => {
           id: ID! @AsNumber
         }
       `);
-      const result = await plugin(schema, [], { directiveMappers: {} }, { outputFile: '' });
+      const result = await plugin(schema, [], { directiveArgumentAndInputFieldMapping: {} }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyInput = {
