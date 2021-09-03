@@ -235,10 +235,18 @@ export interface RawTypesConfig extends RawConfig {
    */
   entireFieldWrapperValue?: string;
   /**
-   * @description Replaces a GraphQL scalar with a custom type, allowing you to modify the scalar typing in certain cases.
+   * @description Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.
+   *
    * You can use both `module#type` and `module#namespace#type` syntax.
    * Will NOT work with introspected schemas since directives are not exported.
    * Only works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.
+   *
+   * **WARNING:** Using this option does only change the type definitions.
+   *
+   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!
+   * Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+   *
+   * Please use this configuration option with care!
    *
    * @exampleMarkdown
    * ## Custom Context Type
