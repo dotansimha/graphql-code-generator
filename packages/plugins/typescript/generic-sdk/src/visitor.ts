@@ -6,7 +6,7 @@ import {
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
 import { RawGenericSdkPluginConfig } from './config';
 
 export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
@@ -45,13 +45,17 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
-    this._operationsToInclude.push({
-      node,
-      documentVariableName,
-      operationType,
-      operationResultType,
-      operationVariablesTypes,
-    });
+    if (node.name == null) {
+      throw new Error("Plugin 'generic-sdk' cannot generate SDK for unnamed operation.\n\n" + print(node));
+    } else {
+      this._operationsToInclude.push({
+        node,
+        documentVariableName,
+        operationType,
+        operationResultType,
+        operationVariablesTypes,
+      });
+    }
 
     return null;
   }
