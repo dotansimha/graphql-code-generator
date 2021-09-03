@@ -1,6 +1,6 @@
 /* eslint-disable no-inner-declarations */
 import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor';
-import { DirectivesMap as DirectiveMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types';
+import { DirectiveArgumentAndInputFieldMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types';
 
 export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
 export interface InternalParsedMapper {
@@ -187,7 +187,7 @@ export function transformMappers(
 }
 
 export function transformDirectiveArgumentAndInputFieldMappings(
-  rawDirectiveArgumentAndInputFieldMappings: DirectiveMappings,
+  rawDirectiveArgumentAndInputFieldMappings: DirectiveArgumentAndInputFieldMappings,
   directiveMapperTypeSuffix?: string
 ): ParsedDirectiveArgumentAndInputFieldMappings {
   const result: ParsedDirectiveArgumentAndInputFieldMappings = {};

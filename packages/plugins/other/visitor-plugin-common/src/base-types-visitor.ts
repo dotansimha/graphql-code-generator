@@ -29,7 +29,7 @@ import {
   DeclarationKindConfig,
   DeclarationKind,
   ParsedEnumValuesMap,
-  DirectivesMap,
+  DirectiveArgumentAndInputFieldMappings,
   ParsedDirectiveArgumentAndInputFieldMappings,
 } from './types';
 import {
@@ -250,7 +250,7 @@ export interface RawTypesConfig extends RawConfig {
    *       AsComplex: ./my-models#Complex
    * ```
    */
-  directiveArgumentAndInputFieldMappings?: DirectivesMap;
+  directiveArgumentAndInputFieldMappings?: DirectiveArgumentAndInputFieldMappings;
   /**
    * @description Adds a suffix to the imported names to prevent name clashes.
    *

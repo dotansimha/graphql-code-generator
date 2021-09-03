@@ -4,7 +4,7 @@ import { ParsedMapper } from './mappers';
 /**
  * A map between the GraphQL directive name and the identifier that should be used
  */
-export type DirectivesMap = { [name: string]: string };
+export type DirectiveArgumentAndInputFieldMappings = { [name: string]: string };
 
 /**
  * Parsed directives map - a mapping between GraphQL directive name and the parsed mapper object,
