@@ -66,7 +66,9 @@ describe('GraphQL Request Integration', () => {
       host: 'http://localhost:4000',
       path: '/graphql',
     });
-    const { getSdk } = require('./test-files/graphql-apollo-sdk');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { getSdk } = await import('./test-files/graphql-apollo-sdk');
     const apolloClient = new ApolloClient({
       cache: new InMemoryCache(),
       link: new HttpLink({ uri: 'http://localhost:4000/graphql', fetch }),
