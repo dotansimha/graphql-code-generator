@@ -42,13 +42,15 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
       ...visitor.getDirectiveArgumentAndInputFieldMappingsImports(),
       ...visitor.getScalarsImports(),
       ...visitor.getWrapperDefinitions(),
-    ],
+    ].filter(Boolean),
     content: [
       scalars,
       directiveArgumentAndInputFieldMappings,
       ...visitorResult.definitions,
       ...introspectionDefinitions,
-    ].join('\n'),
+    ]
+      .filter(Boolean)
+      .join('\n'),
   };
 };
 

@@ -10,7 +10,6 @@ export type Scalars = {
   Float: number;
 };
 
-
 export type Matrix = {
   __typename?: 'Matrix';
   pills: Array<RedPill | GreenPill>;

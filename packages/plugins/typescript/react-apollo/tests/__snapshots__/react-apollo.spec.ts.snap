@@ -17,7 +17,6 @@ export type Scalars = {
   Float: number;
 };
 
-
 export type Query = {
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
@@ -211,7 +210,6 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
-
 
 export type GQLQuery = {
   /** A feed of repository submissions */
@@ -407,7 +405,6 @@ export type Scalars = {
   Float: number;
 };
 
-
 export type Query = {
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>;
@@ -601,7 +598,6 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
-
 
 export type Query = {
   /** A feed of repository submissions */
