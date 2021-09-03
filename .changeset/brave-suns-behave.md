@@ -12,7 +12,7 @@ For actually ensuring that a type is correct at runtime you will have to use sch
 Please use this configuration option with care!
 
 ```yml
-plugins
+plugins:
   config:
     directiveArgumentAndInputFieldMappings:
       asNumber: number
