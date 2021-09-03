@@ -30,7 +30,7 @@ import {
   DeclarationKind,
   ParsedEnumValuesMap,
   DirectivesMap,
-  ParsedDirectiveArgumentAndInputFieldMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
 } from './types';
 import {
   transformComment,
@@ -43,7 +43,7 @@ import {
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
-import { transformDirectiveArgumentAndInputFieldMapping } from './mappers';
+import { transformDirectiveArgumentAndInputFieldMappings } from './mappers';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -56,7 +56,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   entireFieldWrapperValue: string;
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
-  directiveArgumentAndInputFieldMapping: ParsedDirectiveArgumentAndInputFieldMap;
+  directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -245,12 +245,12 @@ export interface RawTypesConfig extends RawConfig {
    * ```yml
    * plugins
    *   config:
-   *     directiveArgumentAndInputFieldMapping:
+   *     directiveArgumentAndInputFieldMappings:
    *       AsNumber: number
    *       AsComplex: ./my-models#Complex
    * ```
    */
-  directiveArgumentAndInputFieldMapping?: DirectivesMap;
+  directiveArgumentAndInputFieldMappings?: DirectivesMap;
   /**
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
@@ -292,8 +292,8 @@ export class BaseTypesVisitor<
       entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
-      directiveArgumentAndInputFieldMapping: transformDirectiveArgumentAndInputFieldMapping(
-        rawConfig.directiveArgumentAndInputFieldMapping ?? {},
+      directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
+        rawConfig.directiveArgumentAndInputFieldMappings ?? {},
         rawConfig.directiveMapperTypeSuffix
       ),
       ...additionalConfig,
@@ -338,9 +338,9 @@ export class BaseTypesVisitor<
   }
 
   public getDirectiveArgumentAndInputFieldMappingsImports(): string[] {
-    return Object.keys(this.config.directiveArgumentAndInputFieldMapping)
+    return Object.keys(this.config.directiveArgumentAndInputFieldMappings)
       .map(directive => {
-        const mappedValue = this.config.directiveArgumentAndInputFieldMapping[directive];
+        const mappedValue = this.config.directiveArgumentAndInputFieldMappings[directive];
 
         if (mappedValue.isExternal) {
           return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
@@ -370,23 +370,26 @@ export class BaseTypesVisitor<
       .withBlock(allScalars.join('\n')).string;
   }
 
-  public get directiveArgumentAndInputFieldMappingDefinition(): string {
-    const allDirectives = Object.keys(this.config.directiveArgumentAndInputFieldMapping).map(directiveName => {
-      const directiveValue = this.config.directiveArgumentAndInputFieldMapping[directiveName].type;
+  public get directiveArgumentAndInputFieldMappingsDefinition(): string {
+    const directiveEntries = Object.entries(this.config.directiveArgumentAndInputFieldMappings);
+    if (directiveEntries.length === 0) {
+      return '';
+    }
+
+    const allDirectives: Array<string> = [];
+
+    for (const [directiveName, parsedMapper] of directiveEntries) {
       const directiveType = this._schema.getDirective(directiveName);
       const comment =
-        directiveType && directiveType.astNode && directiveType.description
-          ? transformComment(directiveType.description, 1)
-          : '';
+        directiveType?.astNode && directiveType.description ? transformComment(directiveType.description, 1) : '';
       const { directive } = this._parsedConfig.declarationKind;
-
-      return comment + indent(`${directiveName}: ${directiveValue}${this.getPunctuation(directive)}`);
-    });
+      allDirectives.push(comment + indent(`${directiveName}: ${parsedMapper.type}${this.getPunctuation(directive)}`));
+    }
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.directive)
-      .withName('Directives')
+      .withName('DirectiveArgumentAndInputFieldMappings')
       .withComment('Type overrides using directives')
       .withBlock(allDirectives.join('\n')).string;
   }
@@ -423,7 +426,7 @@ export class BaseTypesVisitor<
     const { input } = this._parsedConfig.declarationKind;
 
     let type: string = node.type as any as string;
-    if (node.directives && this.config.directiveArgumentAndInputFieldMapping) {
+    if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
@@ -722,14 +725,14 @@ export class BaseTypesVisitor<
   }
 
   protected _getDirectiveArgumentNadInputFieldMapping(name: string): string {
-    return `Directives['${name}']`;
+    return `DirectiveArgumentAndInputFieldMappings['${name}']`;
   }
 
   protected _getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
     const type = directives
       .map(directive => {
         const directiveName = directive.name as any as string;
-        if (this.config.directiveArgumentAndInputFieldMapping[directiveName]) {
+        if (this.config.directiveArgumentAndInputFieldMappings[directiveName]) {
           return this._getDirectiveArgumentNadInputFieldMapping(directiveName);
         }
         return null;

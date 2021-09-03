@@ -34,7 +34,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const visitorResult = visit(ast, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
-  const directiveArgumentAndInputFieldMapping = visitor.directiveArgumentAndInputFieldMappingDefinition;
+  const directiveArgumentAndInputFieldMappings = visitor.directiveArgumentAndInputFieldMappingsDefinition;
 
   return {
     prepend: [
@@ -45,7 +45,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
     ],
     content: [
       scalars,
-      directiveArgumentAndInputFieldMapping,
+      directiveArgumentAndInputFieldMappings,
       ...visitorResult.definitions,
       ...introspectionDefinitions,
     ].join('\n'),

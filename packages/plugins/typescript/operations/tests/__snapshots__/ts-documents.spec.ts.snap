@@ -77,8 +77,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
 
 export type Venue = {
   id: Scalars['String'];
@@ -346,8 +344,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
 
 export type Query = {
   __typename?: 'Query';
@@ -464,8 +460,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
 
 export type Error = {
   message: Scalars['String'];
@@ -559,8 +553,6 @@ export type Scalars = {
   Float: number;
 };
 
-/** Type overrides using directives */
-export type Directives = {};
 
 
 

@@ -4,7 +4,7 @@ import {
   NormalizedScalarsMap,
   ConvertNameFn,
   ParsedEnumValuesMap,
-  ParsedDirectiveArgumentAndInputFieldMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
 } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import autoBind from 'auto-bind';
@@ -26,7 +26,7 @@ export class OperationVariablesToObject {
     protected _enumPrefix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
     protected _applyCoercion: Boolean = false,
-    protected _directiveArgumentAndInputFieldMapping: ParsedDirectiveArgumentAndInputFieldMap = {}
+    protected _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
   ) {
     autoBind(this);
   }
@@ -63,16 +63,16 @@ export class OperationVariablesToObject {
   }
 
   protected getDirectiveMapping(name: string): string {
-    return `Directives['${name}']`;
+    return `DirectiveArgumentAndInputFieldMappings['${name}']`;
   }
 
   protected getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
-    if (!this._directiveArgumentAndInputFieldMapping) return null;
+    if (!this._directiveArgumentAndInputFieldMappings) return null;
 
     const type = directives
       .map(directive => {
         const directiveName = directive.name.value;
-        if (this._directiveArgumentAndInputFieldMapping[directiveName]) {
+        if (this._directiveArgumentAndInputFieldMappings[directiveName]) {
           return this.getDirectiveMapping(directiveName);
         }
         return null;

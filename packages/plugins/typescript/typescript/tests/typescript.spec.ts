@@ -298,13 +298,13 @@ describe('TypeScript', () => {
       const result = await plugin(
         schema,
         [],
-        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number' } },
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number' } },
         { outputFile: '' }
       );
 
       expect(result.content).toBeSimilarStringTo(`
       /** Type overrides using directives */
-      export type Directives = {
+      export type DirectiveArgumentAndInputFieldMappings = {
         /** My custom directive */
         AsNumber: number;
       };
@@ -2293,18 +2293,18 @@ describe('TypeScript', () => {
       const result = await plugin(
         schema,
         [],
-        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number' } },
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number' } },
         { outputFile: '' }
       );
 
       expect(result.content).toBeSimilarStringTo(`
-      export type Directives = {
+      export type DirectiveArgumentAndInputFieldMappings = {
         AsNumber: number;
       };
       `);
       expect(result.content).toBeSimilarStringTo(`
       export type MyInput = {
-        id: Directives['AsNumber'];
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
       };
 
       export type Query = {
@@ -2313,7 +2313,7 @@ describe('TypeScript', () => {
       };
 
       export type QueryMyFieldArgs = {
-        id: Directives['AsNumber'];
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
       };
       `);
       validateTs(result);
@@ -2331,7 +2331,7 @@ describe('TypeScript', () => {
         schema,
         [],
         {
-          directiveArgumentAndInputFieldMapping: { AsNumber: './someModule#MyType' },
+          directiveArgumentAndInputFieldMappings: { AsNumber: './someModule#MyType' },
           directiveMapperTypeSuffix: 'Model',
         },
         { outputFile: '' }
@@ -2339,13 +2339,13 @@ describe('TypeScript', () => {
 
       expect(result.prepend).toContain("import { MyType as MyTypeModel } from './someModule';");
       expect(result.content).toBeSimilarStringTo(`
-      export type Directives = {
+      export type DirectiveArgumentAndInputFieldMappings = {
         AsNumber: MyTypeModel;
       };
       `);
       expect(result.content).toBeSimilarStringTo(`
       export type MyInput = {
-        id: Directives['AsNumber'];
+        id: DirectiveArgumentAndInputFieldMappings['AsNumber'];
       };
       `);
       validateTs(result);
@@ -2363,13 +2363,13 @@ describe('TypeScript', () => {
       const result = await plugin(
         schema,
         [],
-        { directiveArgumentAndInputFieldMapping: { AsNumber: 'number', AsString: 'AsString' } },
+        { directiveArgumentAndInputFieldMappings: { AsNumber: 'number', AsString: 'AsString' } },
         { outputFile: '' }
       );
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyInput = {
-        id: Directives['AsString'];
+        id: DirectiveArgumentAndInputFieldMappings['AsString'];
       };
       `);
       validateTs(result);
@@ -2383,7 +2383,7 @@ describe('TypeScript', () => {
           id: ID! @AsNumber
         }
       `);
-      const result = await plugin(schema, [], { directiveArgumentAndInputFieldMapping: {} }, { outputFile: '' });
+      const result = await plugin(schema, [], { directiveArgumentAndInputFieldMappings: {} }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyInput = {

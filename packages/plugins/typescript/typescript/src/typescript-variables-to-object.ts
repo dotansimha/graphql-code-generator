@@ -5,7 +5,7 @@ import {
   ConvertNameFn,
   AvoidOptionalsConfig,
   normalizeAvoidOptionals,
-  ParsedDirectiveArgumentAndInputFieldMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
@@ -20,7 +20,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumPrefix = true,
     _enumValues: ParsedEnumValuesMap = {},
     _applyCoercion: Boolean = false,
-    _directiveArgumentAndInputFieldMapping: ParsedDirectiveArgumentAndInputFieldMap = {}
+    _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
   ) {
     super(
       _scalars,
@@ -30,7 +30,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _enumPrefix,
       _enumValues,
       _applyCoercion,
-      _directiveArgumentAndInputFieldMapping
+      _directiveArgumentAndInputFieldMappings
     );
   }
 

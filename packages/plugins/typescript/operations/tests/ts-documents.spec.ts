@@ -3714,8 +3714,6 @@ describe('TypeScript Operations Plugin', () => {
           Float: number;
         };
 
-        /** Type overrides using directives */
-        export type Directives = {};
 
         export type Query = {
           __typename?: 'Query';
