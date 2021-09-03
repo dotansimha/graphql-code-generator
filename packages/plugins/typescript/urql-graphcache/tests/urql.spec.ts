@@ -99,4 +99,36 @@ describe('urql graphcache', () => {
     const result = mergeOutputs([await plugin(schema, [], {})]);
     expect(result).toMatchSnapshot();
   });
+
+  it('Should output the cache-generic correctly (with typesPrefix and typesSuffix)', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        todos: [Todo]
+      }
+
+      type Mutation {
+        toggleTodo(id: ID!): Todo!
+        toggleTodos(id: [ID!]!): [Todo!]!
+        toggleTodosOptionalArray(id: [ID!]!): [Todo!]
+        toggleTodosOptionalEntity(id: [ID!]!): [Todo]!
+        toggleTodosOptional(id: [ID!]!): [Todo]
+      }
+
+      type Author {
+        id: ID
+        name: String
+        friends: [Author]
+        friendsPaginated(from: Int!, limit: Int!): [Author]
+      }
+
+      type Todo {
+        id: ID
+        text: String
+        complete: Boolean
+        author: Author
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [], { typesPrefix: 'Prefix', typesSuffix: 'Suffix' })]);
+    expect(result).toMatchSnapshot();
+  });
 });

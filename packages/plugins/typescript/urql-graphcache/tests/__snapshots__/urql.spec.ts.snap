@@ -54,6 +54,63 @@ export type GraphCacheConfig = {
 };"
 `;
 
+exports[`urql graphcache Should output the cache-generic correctly (with typesPrefix and typesSuffix) 1`] = `
+"import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
+import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
+export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };
+
+export type GraphCacheKeysConfig = {
+  Author?: (data: WithTypename<PrefixAuthorSuffix>) => null | string,
+  Todo?: (data: WithTypename<PrefixTodoSuffix>) => null | string
+}
+
+export type GraphCacheResolvers = {
+  Query?: {
+    todos?: GraphCacheResolver<WithTypename<PrefixQuerySuffix>, Record<string, never>, Array<WithTypename<PrefixTodoSuffix> | string>>
+  },
+  Author?: {
+    id?: GraphCacheResolver<WithTypename<PrefixAuthorSuffix>, Record<string, never>, Scalars['ID'] | string>,
+    name?: GraphCacheResolver<WithTypename<PrefixAuthorSuffix>, Record<string, never>, Scalars['String'] | string>,
+    friends?: GraphCacheResolver<WithTypename<PrefixAuthorSuffix>, Record<string, never>, Array<WithTypename<PrefixAuthorSuffix> | string>>,
+    friendsPaginated?: GraphCacheResolver<WithTypename<PrefixAuthorSuffix>, PrefixAuthorFriendsPaginatedArgsSuffix, Array<WithTypename<PrefixAuthorSuffix> | string>>
+  },
+  Todo?: {
+    id?: GraphCacheResolver<WithTypename<PrefixTodoSuffix>, Record<string, never>, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<PrefixTodoSuffix>, Record<string, never>, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<PrefixTodoSuffix>, Record<string, never>, Scalars['Boolean'] | string>,
+    author?: GraphCacheResolver<WithTypename<PrefixTodoSuffix>, Record<string, never>, WithTypename<PrefixAuthorSuffix> | string>
+  }
+};
+
+export type GraphCacheOptimisticUpdaters = {
+  toggleTodo?: GraphCacheOptimisticMutationResolver<PrefixMutationToggleTodoArgsSuffix, WithTypename<PrefixTodoSuffix>>,
+  toggleTodos?: GraphCacheOptimisticMutationResolver<PrefixMutationToggleTodosArgsSuffix, Array<WithTypename<PrefixTodoSuffix>>>,
+  toggleTodosOptionalArray?: GraphCacheOptimisticMutationResolver<PrefixMutationToggleTodosOptionalArrayArgsSuffix, Maybe<Array<WithTypename<PrefixTodoSuffix>>>>,
+  toggleTodosOptionalEntity?: GraphCacheOptimisticMutationResolver<PrefixMutationToggleTodosOptionalEntityArgsSuffix, Array<WithTypename<PrefixTodoSuffix>>>,
+  toggleTodosOptional?: GraphCacheOptimisticMutationResolver<PrefixMutationToggleTodosOptionalArgsSuffix, Maybe<Array<WithTypename<PrefixTodoSuffix>>>>
+};
+
+export type GraphCacheUpdaters = {
+  Mutation?: {
+    toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: WithTypename<PrefixTodoSuffix> }, PrefixMutationToggleTodoArgsSuffix>,
+    toggleTodos?: GraphCacheUpdateResolver<{ toggleTodos: Array<WithTypename<PrefixTodoSuffix>> }, PrefixMutationToggleTodosArgsSuffix>,
+    toggleTodosOptionalArray?: GraphCacheUpdateResolver<{ toggleTodosOptionalArray: Maybe<Array<WithTypename<PrefixTodoSuffix>>> }, PrefixMutationToggleTodosOptionalArrayArgsSuffix>,
+    toggleTodosOptionalEntity?: GraphCacheUpdateResolver<{ toggleTodosOptionalEntity: Array<WithTypename<PrefixTodoSuffix>> }, PrefixMutationToggleTodosOptionalEntityArgsSuffix>,
+    toggleTodosOptional?: GraphCacheUpdateResolver<{ toggleTodosOptional: Maybe<Array<WithTypename<PrefixTodoSuffix>>> }, PrefixMutationToggleTodosOptionalArgsSuffix>
+  },
+  Subscription?: {},
+};
+
+export type GraphCacheConfig = {
+  schema?: IntrospectionData,
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers,
+  storage?: GraphCacheStorageAdapter
+};"
+`;
+
 exports[`urql graphcache Should output the cache-generic correctly (with unions) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
