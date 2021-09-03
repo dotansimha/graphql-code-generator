@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 2.1.3
+
+### Patch Changes
+
+- 76bfa50c5: Make typescript-urql-graphcache respect the typesPrefix and typesSuffix options
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes

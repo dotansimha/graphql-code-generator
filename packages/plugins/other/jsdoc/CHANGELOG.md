@@ -1,5 +1,15 @@
 # @graphql-codegen/jsdoc
 
+## 2.1.3
+
+### Patch Changes
+
+- c8d917eb4: JSDoc plugin ignores unused Directive definitions, instead of outputting `[object Object]`
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes
