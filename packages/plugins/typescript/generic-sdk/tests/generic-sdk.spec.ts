@@ -54,6 +54,14 @@ const docWithSubscription = parse(/* GraphQL */ `
   }
 `);
 
+const unnamedDoc = parse(/* GraphQL */ `
+  {
+    feed {
+      id
+    }
+  }
+`);
+
 const validate = async (
   content: Types.PluginOutput,
   config: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig & RawGenericSdkPluginConfig,
@@ -142,6 +150,25 @@ async function test() {
 
       const output = await validate(result, config, docs, schema, '');
       expect(output).toMatchSnapshot();
+    });
+
+    it('Should throw if it encounters unnamed operations', async () => {
+      const config = { usingObservableFrom: "import Observable from 'zen-observable';" };
+      const docs = [{ filePath: '', document: unnamedDoc }];
+      try {
+        await plugin(schema, docs, config, { outputFile: 'graphql.ts' });
+        fail('Should throw');
+      } catch (err: unknown) {
+        expect(err).toMatchInlineSnapshot(`
+[Error: Plugin 'generic-sdk' cannot generate SDK for unnamed operation.
+
+{
+  feed {
+    id
+  }
+}]
+`);
+      }
     });
   });
 });
