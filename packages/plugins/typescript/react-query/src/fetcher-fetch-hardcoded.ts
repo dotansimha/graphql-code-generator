@@ -18,16 +18,13 @@ export class HardcodedFetchFetcher implements FetcherRenderer {
   }
 
   private getFetchParams(): string {
-    const fetchParams = {
-      method: 'POST',
-      ...(this.config.fetchParams || {}),
-    };
+    let fetchParamsPartial = '';
 
-    return Object.keys(fetchParams)
-      .map(key => {
-        return `      ${key}: ${JSON.stringify(fetchParams[key])},`;
-      })
-      .join('\n');
+    if (this.config.fetchParams) {
+      fetchParamsPartial = `\n    ...(${this.config.fetchParams}),`;
+    }
+
+    return `    method: "POST",${fetchParamsPartial}`;
   }
 
   generateFetcherImplementaion(): string {
@@ -38,7 +35,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 ${this.getFetchParams()}
       body: JSON.stringify({ query, variables }),
     });
-    
+
     const json = await res.json();
 
     if (json.errors) {
@@ -71,9 +68,9 @@ ${this.getFetchParams()}
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      ${variables}, 
+      ${variables},
       ${options}
-    ) => 
+    ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ${generateQueryKey(node)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
@@ -98,7 +95,7 @@ ${this.getFetchParams()}
     return `export const use${operationName} = <
       TError = ${this.visitor.config.errorType},
       TContext = unknown
-    >(${options}) => 
+    >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
       options
