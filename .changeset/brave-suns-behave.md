@@ -1,7 +1,6 @@
 ---
 '@graphql-codegen/visitor-plugin-common': minor
 '@graphql-codegen/typescript': minor
-'@graphql-codegen/typescript-resolvers': minor
 ---
 
 Allow declaring Argument and InputType field mappings based on directive annotations.
