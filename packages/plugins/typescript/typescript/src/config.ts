@@ -84,7 +84,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   numericEnums?: boolean;
   /**
-   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.
+   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.
    * This is useful if you are using `relay`.
    * @default false
    *

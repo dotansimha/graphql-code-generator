@@ -1110,7 +1110,13 @@ describe('TypeScript', () => {
       enum MyEnum {
         A
         B
-      }`);
+      }
+      
+      type MyType {
+        required: MyEnum!
+        optional: MyEnum
+      }
+      `);
       const result = (await plugin(
         schema,
         [],
@@ -1124,15 +1130,28 @@ describe('TypeScript', () => {
         | 'B'
         | '%future added value'
     `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          required: MyEnum;
+          optional?: Maybe<MyEnum>;
+        }
+      `);
       validateTs(result);
     });
 
-    it('Should not add `%future added value` to enum when futureProofEnums is set, but not enumAsTypes', async () => {
+    it('Should add `%future added value` to enum usage when futureProofEnums is set, but not enumAsTypes', async () => {
       const schema = buildSchema(`
-      enum MyEnum {
-        A
-        B
-      }`);
+        enum MyEnum {
+          A
+          B
+        }
+        
+        type MyType {
+          required: MyEnum!
+          optional: MyEnum
+        }
+      `);
       const result = (await plugin(
         schema,
         [],
@@ -1141,11 +1160,55 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export enum MyEnum {
-        A = 'A',
-        B = 'B'
-      }
-    `);
+        export enum MyEnum {
+          A = 'A',
+          B = 'B'
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          required: MyEnum | '%future added value';
+          optional?: Maybe<MyEnum | '%future added value'>;
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should add `%future added value` to enum usage when futureProofEnums is set and allowEnumStringTypes is set', async () => {
+      const schema = buildSchema(`
+        enum MyEnum {
+          A
+          B
+        }
+        
+        type MyType {
+          required: MyEnum!
+          optional: MyEnum
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { futureProofEnums: true, allowEnumStringTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export enum MyEnum {
+          A = 'A',
+          B = 'B'
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          required: MyEnum | '%future added value' | \`\${MyEnum}\`;
+          optional?: Maybe<MyEnum | '%future added value' | \`\${MyEnum}\`>;
+        }
+      `);
       validateTs(result);
     });
 
