@@ -11,7 +11,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { fetch } from 'cross-fetch';
 
 describe('GraphQL Request Integration', () => {
-  it('should send requests correctly', async () => {
+  it.skip('should send requests correctly', async () => {
     const sdkFileName = 'graphql-apollo-sdk.ts';
     const sdkFilePath = join(__dirname, './test-files', sdkFileName);
     const typeDefs = parse(/* GraphQL */ `
