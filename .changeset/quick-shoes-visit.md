@@ -2,4 +2,4 @@
 '@graphql-codegen/c-sharp-operations': patch
 ---
 
-Use ampersand prefix for C# keyword name collisions
+Use at-sign (`@`) prefix for C# keyword name collisions
