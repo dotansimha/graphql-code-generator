@@ -33,7 +33,7 @@ Now, run the `@graphql-codegen/cli` using `graphql-codegen` command, and it will
 
 The first argument of your `plugin` function is the `GraphQLSchema`. The code-generator will make sure to merge all `GraphQLSchema`s into a single, easy-to-use object, that you can use to create your output.
 
-You can find the full, typed, [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/master/src/type/schema.d.ts#L44)
+You can find the full, typed, [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/2df59f18dd3f3c415eaba57d744131a674079ddf/src/type/schema.ts#L129)
 
 So let's use a very basic method from `GraphQLSchema`, and return a list of all GraphQL types declared in the schema:
 
@@ -53,7 +53,7 @@ The second argument of your `plugin` method is an array of GraphQL documents. Th
 
 The `location` field is the path of the file, and `DocumentNode` is an object containing all GraphQL documents that has been found in that file.
 
-You can find the full, typed, [API of `DocumentNode` here](https://github.com/graphql/graphql-js/blob/master/src/language/ast.d.ts#L198-L202)
+You can find the full, typed, [API of `DocumentNode` here](https://github.com/graphql/graphql-js/blob/main/src/language/ast.ts#L249-L253)
 
 Let's print a list of all documents files, and the name of operations in this file:
 
