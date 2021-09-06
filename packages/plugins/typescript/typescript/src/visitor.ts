@@ -332,8 +332,10 @@ export class TsVisitor<
               const valueFromConfig = getValueFromConfig(enumOption.name as unknown as string);
               const enumValue: string | number = valueFromConfig ?? i;
               const comment = transformComment(enumOption.description as any as string, 1);
-
-              return comment + indent(enumOption.name as unknown as string) + ` = ${enumValue}`;
+              const optionName = this.makeValidEnumIdentifier(
+                this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+              );
+              return comment + indent(optionName) + ` = ${enumValue}`;
             })
             .concat(...withFutureAddedValue)
             .join(',\n')
