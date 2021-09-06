@@ -83,7 +83,9 @@ export const validate: PluginValidateFn<any> = async (
   }
 };
 
-export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
+export function transformSchemaAST(schemaRaw: GraphQLSchema, config: { [key: string]: any }) {
+  const schema = config.sort ? lexicographicSortSchema(schemaRaw) : schemaRaw;
+
   const astNode = getCachedDocumentNodeFromSchema(schema);
 
   const transformedAST = config.disableDescriptions
