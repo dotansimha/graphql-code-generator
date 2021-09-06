@@ -604,6 +604,37 @@ describe('TypeScript', () => {
       expect(output).toContain(`SomethingElse = '99'`);
     });
 
+    it('#6532 - numeric enum values with namingConvention', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test: Test!
+        }
+
+        enum Test {
+          Boop
+          BIP
+          BaP
+          TEST_VALUE
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          numericEnums: true,
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).toBeSimilarStringTo(`export enum Test {
+        Boop = 0,
+        Bip = 1,
+        BaP = 2,
+        TestValue = 3
+      }`);
+    });
+
     it('#3137 - numeric enum value', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
@@ -1111,7 +1142,7 @@ describe('TypeScript', () => {
         A
         B
       }
-      
+
       type MyType {
         required: MyEnum!
         optional: MyEnum
@@ -1146,7 +1177,7 @@ describe('TypeScript', () => {
           A
           B
         }
-        
+
         type MyType {
           required: MyEnum!
           optional: MyEnum
@@ -1182,7 +1213,7 @@ describe('TypeScript', () => {
           A
           B
         }
-        
+
         type MyType {
           required: MyEnum!
           optional: MyEnum
