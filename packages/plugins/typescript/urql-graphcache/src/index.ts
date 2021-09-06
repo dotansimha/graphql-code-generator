@@ -209,7 +209,7 @@ function getOptimisticUpdatersConfig(
 
     fields.forEach(fieldNode => {
       const argsName = fieldNode.arguments?.length
-        ? convertName(`Mutation${capitalize(fieldNode.name.value)}Args`, {
+        ? convertName(`${capitalize(mutationType.name)}${capitalize(fieldNode.name.value)}Args`, {
             prefix: config.typesPrefix,
             suffix: config.typesSuffix,
           })
