@@ -359,7 +359,7 @@ describe('React-Query', () => {
       headers?: RequestInit['headers']
     ) => 
     useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test'] :['test', variables],
+      variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables, headers),
       options
     );`);
