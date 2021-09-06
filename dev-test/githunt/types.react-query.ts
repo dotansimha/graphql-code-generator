@@ -476,7 +476,7 @@ export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery
   options?: UseQueryOptions<CurrentUserForProfileQuery, TError, TData>
 ) =>
   useQuery<CurrentUserForProfileQuery, TError, TData>(
-    ['CurrentUserForProfile', variables],
+    variables === undefined ? ['CurrentUserForProfile'] : ['CurrentUserForProfile', variables],
     fetcher<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
       dataSource.endpoint,
       dataSource.fetchParams || {},

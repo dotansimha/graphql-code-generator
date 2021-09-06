@@ -72,7 +72,7 @@ ${this.getFetchParams()}
       ${options}
     ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node)},
+      ${generateQueryKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
       options
     );`;
