@@ -344,34 +344,37 @@ describe('React-Query', () => {
         `import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';`
       );
       expect(out.prepend).toContain(`import { GraphQLClient } from 'graphql-request';`);
-      expect(out.prepend[2])
-        .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables) {
-          return async (): Promise<TData> => client.request<TData, TVariables>(query, variables);
+      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
+      expect(out.prepend[3])
+        .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+          return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
         }`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
-          TData = TTestQuery,
-          TError = unknown
-        >(
-          client: GraphQLClient,
-          variables?: TTestQueryVariables,
-          options?: UseQueryOptions<TTestQuery, TError, TData>
-        ) =>
-        useQuery<TTestQuery, TError, TData>(
-          variables === undefined ? ['test'] : ['test', variables],
-          fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
-          options
-        );`);
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient, 
+      variables?: TTestQueryVariables, 
+      options?: UseQueryOptions<TTestQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => 
+    useQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test'] :['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables, headers),
+      options
+    );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
-        TError = unknown,
-        TContext = unknown
-      >(
-        client: GraphQLClient,
-        options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
-      ) =>
-      useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
-        options
-      );`);
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables, headers)(),
+      options
+    );`);
 
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
@@ -394,7 +397,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestQuery.fetcher = (client: GraphQLClient, variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(client, TestDocument, variables);`
+        `useTestQuery.fetcher = (client: GraphQLClient, variables?: TestQueryVariables, headers?: RequestInit['headers']) => fetcher<TestQuery, TestQueryVariables>(client, TestDocument, variables, headers);`
       );
     });
     it(`tests for dedupeOperationSuffix`, async () => {
