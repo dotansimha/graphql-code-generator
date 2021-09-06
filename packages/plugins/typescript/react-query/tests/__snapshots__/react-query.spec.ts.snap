@@ -211,11 +211,12 @@ export const useTestQuery = <
     >(
       client: GraphQLClient, 
       variables?: TTestQueryVariables, 
-      options?: UseQueryOptions<TTestQuery, TError, TData>
+      options?: UseQueryOptions<TTestQuery, TError, TData>,
+      headers?: RequestInit['headers']
     ) => 
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
-      fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables),
+      fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables, headers),
       options
     );
 export const TestDocument = \`
@@ -230,10 +231,11 @@ export const useTestMutation = <
       TContext = unknown
     >(
       client: GraphQLClient, 
-      options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
+      options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>,
+      headers?: RequestInit['headers']
     ) => 
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables)(),
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables, headers)(),
       options
     );"
 `;

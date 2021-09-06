@@ -8,8 +8,8 @@ export class GraphQLRequestClientFetcher implements FetcherRenderer {
 
   generateFetcherImplementaion(): string {
     return `
-function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables) {
-  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables);
+function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
 }`;
   }
 
@@ -25,6 +25,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
 
     const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
     this.visitor.imports.add(`${typeImport} { GraphQLClient } from 'graphql-request';`);
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
 
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
@@ -38,11 +39,12 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     >(
       client: GraphQLClient, 
       ${variables}, 
-      ${options}
+      ${options},
+      headers?: RequestInit['headers']
     ) => 
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ${generateQueryKey(node, hasRequiredVariables)},
-      fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables),
+      fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers),
       options
     );`;
   }
@@ -68,10 +70,11 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       TContext = unknown
     >(
       client: GraphQLClient, 
-      ${options}
+      ${options},
+      headers?: RequestInit['headers']
     ) => 
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
-      (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables)(),
+      (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers)(),
       options
     );`;
   }
@@ -86,6 +89,6 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
-    return `\nuse${operationName}.fetcher = (client: GraphQLClient, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables);`;
+    return `\nuse${operationName}.fetcher = (client: GraphQLClient, ${variables}, headers?: RequestInit['headers']) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers);`;
   }
 }
