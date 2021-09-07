@@ -1,5 +1,66 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.0.0
+
+### Major Changes
+
+- 545c47039: Change `fetchParams` configuration option from object to string.The string will be inserted 1:1 into the generated code. This is a breaking change!
+
+  This allows more flexibility for customization. Here are some examples:
+
+  **Use an imported object for configuration**
+
+  ```yaml
+  schema: MY_SCHEMA_PATH
+  documents: './src/**/*.graphql'
+  generates:
+    ./generates.ts:
+      plugins:
+        - add:
+            content: "import { endpointUrl, fetchParams } from './my-config';"
+        - typescript
+        - typescript-operations
+        - typescript-react-query
+      config:
+        fetcher:
+          endpoint: 'endpointUrl'
+          fetchParams: 'fetchParams'
+  ```
+
+  **Use environment variables for configuration**
+
+  ```yaml
+  schema: MY_SCHEMA_PATH
+  documents: './src/**/*.graphql'
+  generates:
+    ./generates.ts:
+      plugins:
+        - typescript
+        - typescript-operations
+        - typescript-react-query
+      config:
+        fetcher:
+          endpoint: 'endpointUrl'
+          # Multiline string
+          fetchParams: >
+            {
+              headers: {
+                apiKey: process.env.APIKEY,
+                somethingElse: process.env.SOMETHING,
+              },
+            }
+  ```
+
+- 5dc59c86f: Queries without variables will no longer have an undefined entry in their query key
+
+### Minor Changes
+
+- 99af5063e: Allow passing `headers` to `graphql-request`.
+
+### Patch Changes
+
+- ec2cba5e0: [typescript-react-query] Pass dataSource as argument to fetcher
+
 ## 2.1.3
 
 ### Patch Changes

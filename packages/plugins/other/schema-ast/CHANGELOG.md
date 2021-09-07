@@ -1,5 +1,11 @@
 # @graphql-codegen/schema-ast
 
+## 2.2.0
+
+### Minor Changes
+
+- 3e38de399: feat: sort the schema if "sort" option is provided
+
 ## 2.1.0
 
 ### Minor Changes

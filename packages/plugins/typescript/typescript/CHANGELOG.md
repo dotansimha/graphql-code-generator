@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript
 
+## 2.2.1
+
+### Patch Changes
+
+- cfa0a8f80: Apply missing namingConvention when numericEnums is used
+
 ## 2.2.0
 
 ### Minor Changes
