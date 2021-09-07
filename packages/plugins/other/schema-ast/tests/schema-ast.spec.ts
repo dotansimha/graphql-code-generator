@@ -8,44 +8,6 @@ import { codegen } from '@graphql-codegen/core';
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
 describe('Schema AST', () => {
-  describe('Issues', () => {
-    it('#4919 - should support sorting the schema', async () => {
-      const schema = buildSchema(/* GraphQL */ `
-        type Query {
-          d: String
-          z: String
-          a: String
-        }
-
-        type User {
-          aa: String
-          a: String
-        }
-
-        type A {
-          s: String
-          b: String
-        }
-      `);
-      const content = await plugin(schema, [], { sort: true });
-      expect(content).toBeSimilarStringTo(`
-      type A {
-        b: String
-        s: String
-      }
-      
-      type Query {
-        a: String
-        d: String
-        z: String
-      }
-      
-      type User {
-        a: String
-        aa: String
-      }`);
-    });
-  });
   describe('Validation', () => {
     it('Should enforce graphql extension when its the only plugin', async () => {
       const fileName = 'output.ts';
@@ -164,7 +126,7 @@ describe('Schema AST', () => {
       const content = await plugin(schema, [], { includeDirectives: true });
 
       expect(content).toBeSimilarStringTo(`
-        directive @modify(limit: Int) on FIELD_DEFINITION 
+        directive @modify(limit: Int) on FIELD_DEFINITION
       `);
       expect(content).toBeSimilarStringTo(`
         type Query {
@@ -231,14 +193,14 @@ describe('Schema AST', () => {
           id: ID
           side: String
         }
-        
+
         type Droid {
           id: ID
           model: String
         }
-        
+
         union People = Character | Jedi | Droid
-        
+
         type Query {
           allPeople: [People]
         }

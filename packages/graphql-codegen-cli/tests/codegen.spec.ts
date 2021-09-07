@@ -1011,4 +1011,54 @@ describe('Codegen Executor', () => {
     expect(output.length).toBe(1);
     expect(output[0].content).toContain('Hello world!');
   });
+
+  it('Should sort the input schema', async () => {
+    const nonSortedSchema = /* GraphQL */ `
+      type Query {
+        d: String
+        z: String
+        a: String
+      }
+
+      type User {
+        aa: String
+        a: String
+      }
+
+      type A {
+        s: String
+        b: String
+      }
+    `;
+    const output = await executeCodegen({
+      schema: [nonSortedSchema],
+      generates: {
+        'out1.graphql': {
+          plugins: ['schema-ast'],
+        },
+      },
+      config: {
+        sort: true,
+      },
+    });
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toBeSimilarStringTo(/* GraphQL */ `
+      type A {
+        b: String
+        s: String
+      }
+
+      type Query {
+        a: String
+        d: String
+        z: String
+      }
+
+      type User {
+        a: String
+        aa: String
+      }
+    `);
+  });
 });
