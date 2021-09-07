@@ -1212,6 +1212,66 @@ export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
       `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author';`
     );
   });
+
+  test('Should import base types when file contains only fragments', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      schemaAst: schemaNode,
+      documents: testDocuments.filter(doc => doc.location.endsWith('user-fragment.graphql')),
+      plugins: [{ 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    const onlyFragmentsOutput = result.find(r => r.filename.endsWith('user-fragment.generated.ts'));
+
+    expect(onlyFragmentsOutput.plugins[0]).toEqual(
+      expect.objectContaining({
+        add: {
+          content: `import * as Types from '../types';\n`,
+        },
+      })
+    );
+  });
+
+  test('Should import base types when file contains only fragments when add plugin is used', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      schemaAst: schemaNode,
+      documents: testDocuments.filter(doc => doc.location.endsWith('user-fragment.graphql')),
+      plugins: [
+        { 'typescript-operations': {} },
+        { 'typed-document-node': {} },
+        {
+          add: {
+            content: '// @ts-nocheck',
+          },
+        },
+      ],
+      pluginMap: { 'typescript-operations': {} as any, 'typed-document-node': {} as any, add: {} as any },
+    });
+
+    const onlyFragmentsOutput = result.find(r => r.filename.endsWith('user-fragment.generated.ts'));
+
+    expect(onlyFragmentsOutput.plugins[0]).toEqual(
+      expect.objectContaining({
+        add: {
+          content: `import * as Types from '../types';\n`,
+        },
+      })
+    );
+  });
 });
 
 const getFragmentImportsFromResult = (result: Types.GenerateOptions[], index = 0) =>
