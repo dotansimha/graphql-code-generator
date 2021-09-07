@@ -146,6 +146,21 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
       },
     },
+    FragmentSpread: {
+      enter(node) {
+        /**
+         * In case of a file with only fragments that do not define any fields,
+         * they just spread other, external fragments
+         * `near-file-preset` won't produce `import * as Types from 'base'`.
+         * That's why we need to count fragment spreads as well
+         *
+         * I believe we didn't need that when `preResolveTypes` was `false` by default.
+         */
+        if (externalFragments.includes(node.name.value)) {
+          foundFields++;
+        }
+      },
+    },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
         if (node.name.value.startsWith('__')) {

@@ -1239,6 +1239,55 @@ export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
     );
   });
 
+  test('Should import base types when file contains only fragments spreads', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      schemaAst: schemaNode,
+      documents: [
+        {
+          location: '/some/deep/path/src/graphql/fragment-proxy.graphql',
+          document: parse(/* GraphQL */ `
+            fragment UserProxy on User {
+              ...UserFields
+            }
+          `),
+        },
+        {
+          location: '/some/deep/path/src/graphql/fragment-fields.graphql',
+          document: parse(/* GraphQL */ `
+            fragment UserFields on User {
+              id
+              email
+            }
+          `),
+        },
+      ],
+      plugins: [{ 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    expect(result[1].plugins[0]).toEqual(
+      expect.objectContaining({
+        add: {
+          content: `import * as Types from '../types';\n`,
+        },
+      })
+    );
+    expect(result[0].plugins[0]).toEqual(
+      expect.objectContaining({
+        add: {
+          content: `import * as Types from '../types';\n`,
+        },
+      })
+    );
+  });
+
   test('Should import base types when file contains only fragments when add plugin is used', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
