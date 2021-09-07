@@ -168,4 +168,41 @@ describe('urql graphcache', () => {
 import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`
     );
   });
+
+  it('Should correctly name GraphCacheResolvers & GraphCacheOptimisticUpdaters with nonstandard mutationType names', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      schema {
+        query: Query_Root
+        mutation: Mutation_Root
+      }
+
+      type Query_Root {
+        todos: [Todo]
+      }
+
+      type Mutation_Root {
+        toggleTodo(id: ID!): Todo!
+        toggleTodos(id: [ID!]!): [Todo!]!
+        toggleTodosOptionalArray(id: [ID!]!): [Todo!]
+        toggleTodosOptionalEntity(id: [ID!]!): [Todo]!
+        toggleTodosOptional(id: [ID!]!): [Todo]
+      }
+
+      type Author {
+        id: ID
+        name: String
+        friends: [Author]
+        friendsPaginated(from: Int!, limit: Int!): [Author]
+      }
+
+      type Todo {
+        id: ID
+        text: String
+        complete: Boolean
+        author: Author
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [], {})]);
+    expect(result).toMatchSnapshot();
+  });
 });
