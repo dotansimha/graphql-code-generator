@@ -1,4 +1,4 @@
-import { GraphQLSchema, lexicographicSortSchema, printSchema, visit, buildASTSchema } from 'graphql';
+import { GraphQLSchema, printSchema, visit, buildASTSchema, print } from 'graphql';
 import {
   PluginFunction,
   PluginValidateFn,
@@ -7,7 +7,6 @@ import {
   getCachedDocumentNodeFromSchema,
 } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
 /**
  * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
@@ -59,14 +58,13 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
   _documents,
   { commentDescriptions = false, includeDirectives = false, sort = false, federation }
 ): Promise<string> => {
-  let outputSchema = federation ? removeFederation(schema) : schema;
-  outputSchema = sort ? lexicographicSortSchema(outputSchema) : outputSchema;
+  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation });
 
   if (includeDirectives) {
-    return printSchemaWithDirectives(outputSchema);
+    return print(transformedSchemaAndAst.ast);
   }
 
-  return printSchema(outputSchema, { commentDescriptions: commentDescriptions });
+  return printSchema(transformedSchemaAndAst.schema, { commentDescriptions: commentDescriptions });
 };
 
 export const validate: PluginValidateFn<any> = async (
@@ -83,24 +81,21 @@ export const validate: PluginValidateFn<any> = async (
   }
 };
 
-export function transformSchemaAST(schemaRaw: GraphQLSchema, config: { [key: string]: any }) {
-  const schema = config.sort ? lexicographicSortSchema(schemaRaw) : schemaRaw;
-
-  const astNode = getCachedDocumentNodeFromSchema(schema);
-
-  const transformedAST = config.disableDescriptions
-    ? visit(astNode, {
+export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
+  schema = config.federation ? removeFederation(schema) : schema;
+  let ast = getCachedDocumentNodeFromSchema(schema);
+  ast = config.disableDescriptions
+    ? visit(ast, {
         leave: node => ({
           ...node,
           description: undefined,
         }),
       })
-    : astNode;
-
-  const transformedSchema = config.disableDescriptions ? buildASTSchema(transformedAST) : schema;
+    : ast;
+  schema = config.disableDescriptions ? buildASTSchema(ast) : schema;
 
   return {
-    schema: transformedSchema,
-    ast: transformedAST,
+    schema,
+    ast,
   };
 }
