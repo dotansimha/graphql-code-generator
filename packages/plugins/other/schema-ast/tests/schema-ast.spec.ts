@@ -1,4 +1,4 @@
-import { validate, plugin } from '../src/index';
+import { validate, plugin, transformSchemaAST } from '../src/index';
 import { buildSchema, parse } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -9,24 +9,25 @@ const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
 describe('Schema AST', () => {
   describe('Issues', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        d: String
+        z: String
+        a: String
+      }
+
+      type User {
+        aa: String
+        a: String
+      }
+
+      type A {
+        s: String
+        b: String
+      }
+    `);
+
     it('#4919 - should support sorting the schema', async () => {
-      const schema = buildSchema(/* GraphQL */ `
-        type Query {
-          d: String
-          z: String
-          a: String
-        }
-
-        type User {
-          aa: String
-          a: String
-        }
-
-        type A {
-          s: String
-          b: String
-        }
-      `);
       const content = await plugin(schema, [], { sort: true });
       expect(content).toBeSimilarStringTo(`
       type A {
@@ -44,6 +45,15 @@ describe('Schema AST', () => {
         a: String
         aa: String
       }`);
+    });
+
+    it('#6624 - transformSchemaAST should support sorting the schema', () => {
+      expect(JSON.stringify(transformSchemaAST(schema, { sort: true }))).toBeSimilarStringTo(
+        `{"schema":{"extensionASTNodes":[],"_queryType":"Query","_directives":["@deprecated","@include","@skip","@specifiedBy"],"_typeMap":{"A":"A","Boolean":"Boolean","Query":"Query","String":"String","User":"User","__Directive":"__Directive","__DirectiveLocation":"__DirectiveLocation","__EnumValue":"__EnumValue","__Field":"__Field","__InputValue":"__InputValue","__Schema":"__Schema","__Type":"__Type","__TypeKind":"__TypeKind"},"_subTypeMap":{},"_implementationsMap":{}},"ast":{"kind":"Document","definitions":[{"kind":"SchemaDefinition","operationTypes":[{"kind":"OperationTypeDefinition","operation":"query","type":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}}}],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"A"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"b"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"s"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Query"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"a"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"d"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"z"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"User"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"a"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"aa"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]}]}}`
+      );
+      expect(JSON.stringify(transformSchemaAST(schema, { sort: false }))).toBeSimilarStringTo(
+        `{"schema":{"extensionASTNodes":[],"_queryType":"Query","_directives":["@include","@skip","@deprecated","@specifiedBy"],"_typeMap":{"Query":"Query","String":"String","User":"User","A":"A","Boolean":"Boolean","__Schema":"__Schema","__Type":"__Type","__TypeKind":"__TypeKind","__Field":"__Field","__InputValue":"__InputValue","__EnumValue":"__EnumValue","__Directive":"__Directive","__DirectiveLocation":"__DirectiveLocation"},"_subTypeMap":{},"_implementationsMap":{}},"ast":{"kind":"Document","definitions":[{"kind":"SchemaDefinition","operationTypes":[{"kind":"OperationTypeDefinition","operation":"query","type":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}}}],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Query"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"d"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"z"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"a"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"User"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"aa"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"a"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"A"},"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"s"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"b"},"arguments":[],"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"directives":[]}],"interfaces":[],"directives":[]}]}}`
+      );
     });
   });
   describe('Validation', () => {
