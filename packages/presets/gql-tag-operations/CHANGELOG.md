@@ -1,5 +1,12 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [cfa0a8f80]
+  - @graphql-codegen/typescript@2.2.1
+
 ## 1.1.3
 
 ### Patch Changes

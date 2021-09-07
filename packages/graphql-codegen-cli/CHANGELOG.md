@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.2.0
+
+### Minor Changes
+
+- 3e38de399: feat: sort the schema if "sort" option is provided
+
+### Patch Changes
+
+- 3e38de399: fix: handle convertExtensions properly with schema definitions
+
 ## 2.1.1
 
 ### Patch Changes
