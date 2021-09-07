@@ -15,8 +15,8 @@ export type Scalars = {
 
 export type Address = {
   __typename?: 'Address';
-  lines: Lines;
   city?: Maybe<Scalars['String']>;
+  lines: Lines;
   state?: Maybe<Scalars['String']>;
 };
 
@@ -38,10 +38,10 @@ export type Query = {
 
 export type User = {
   __typename?: 'User';
+  address?: Maybe<Address>;
+  email: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
-  email: Scalars['String'];
-  address?: Maybe<Address>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -155,8 +155,8 @@ export type AddressResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']
 > = {
-  lines?: Resolver<ResolversTypes['Lines'], ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lines?: Resolver<ResolversTypes['Lines'], ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

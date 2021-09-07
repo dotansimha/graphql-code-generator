@@ -17,31 +17,31 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  text: Scalars['String'];
   author: User;
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type CreditCard = {
   __typename?: 'CreditCard';
-  id: Scalars['ID'];
   cardNumber: Scalars['Int'];
   cardOwner: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type Donation = {
   __typename?: 'Donation';
-  id: Scalars['ID'];
-  sender: User;
-  recipient: User;
   amount: Scalars['Float'];
+  id: Scalars['ID'];
+  recipient: User;
+  sender: User;
 };
 
 export type DonationInput = {
-  user: Scalars['ID'];
   amount: Scalars['Float'];
   paymentOption: Scalars['ID'];
+  user: Scalars['ID'];
 };
 
 export type Mutation = {
@@ -54,7 +54,7 @@ export type MutationDonateArgs = {
   donation?: Maybe<DonationInput>;
 };
 
-export type PaymentOption = Paypal | CreditCard;
+export type PaymentOption = CreditCard | Paypal;
 
 export type Paypal = {
   __typename?: 'Paypal';
@@ -165,49 +165,49 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Article: ResolverTypeWrapper<Article>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreditCard: ResolverTypeWrapper<CreditCard>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Donation: ResolverTypeWrapper<Donation>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
   DonationInput: DonationInput;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
-  PaymentOption: ResolversTypes['Paypal'] | ResolversTypes['CreditCard'];
+  PaymentOption: ResolversTypes['CreditCard'] | ResolversTypes['Paypal'];
   Paypal: ResolverTypeWrapper<Paypal>;
   Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<
     Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversTypes['PaymentOption']>> }
   >;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Article: Article;
-  ID: Scalars['ID'];
-  String: Scalars['String'];
+  Boolean: Scalars['Boolean'];
   CreditCard: CreditCard;
-  Int: Scalars['Int'];
   Donation: Donation;
-  Float: Scalars['Float'];
   DonationInput: DonationInput;
+  Float: Scalars['Float'];
+  ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Mutation: {};
-  PaymentOption: ResolversParentTypes['Paypal'] | ResolversParentTypes['CreditCard'];
+  PaymentOption: ResolversParentTypes['CreditCard'] | ResolversParentTypes['Paypal'];
   Paypal: Paypal;
   Query: {};
+  String: Scalars['String'];
   User: Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversParentTypes['PaymentOption']>> };
-  Boolean: Scalars['Boolean'];
 };
 
 export type ArticleResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']
 > = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -215,9 +215,9 @@ export type CreditCardResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['CreditCard'] = ResolversParentTypes['CreditCard']
 > = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   cardNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   cardOwner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -225,10 +225,10 @@ export type DonationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Donation'] = ResolversParentTypes['Donation']
 > = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  recipient?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  recipient?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -249,7 +249,7 @@ export type PaymentOptionResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['PaymentOption'] = ResolversParentTypes['PaymentOption']
 > = {
-  __resolveType: TypeResolveFn<'Paypal' | 'CreditCard', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CreditCard' | 'Paypal', ParentType, ContextType>;
 };
 
 export type PaypalResolvers<

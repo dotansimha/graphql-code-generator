@@ -24,9 +24,9 @@ export type QueryUserByIdArgs = {|
 
 export type User = {|
   __typename?: 'User',
+  email: $ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'Int'>,
   name: $ElementType<Scalars, 'String'>,
-  email: $ElementType<Scalars, 'String'>,
 |};
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
@@ -94,20 +94,20 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>,
-  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
-  User: ResolverTypeWrapper<User>,
-  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
   Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
+  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  Query: ResolverTypeWrapper<{}>,
+  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+  User: ResolverTypeWrapper<User>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {},
-  Int: $ElementType<Scalars, 'Int'>,
-  User: User,
-  String: $ElementType<Scalars, 'String'>,
   Boolean: $ElementType<Scalars, 'Boolean'>,
+  Int: $ElementType<Scalars, 'Int'>,
+  Query: {},
+  String: $ElementType<Scalars, 'String'>,
+  User: User,
 };
 
 export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
@@ -121,9 +121,9 @@ export type QueryResolvers<ContextType = any, ParentType = $ElementType<Resolver
 };
 
 export type UserResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'User'>> = {
+  email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   id?: Resolver<$ElementType<ResolversTypes, 'Int'>, ParentType, ContextType>,
   name?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
-  email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>,
 };
 

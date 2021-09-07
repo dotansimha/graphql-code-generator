@@ -12,14 +12,14 @@ export type Scalars = {|
 /** A comment about an entry, submitted by a user */
 export type Comment = {|
   __typename?: 'Comment',
+  /** The text of the comment */
+  content: $ElementType<Scalars, 'String'>,
+  /** A timestamp of when the comment was posted */
+  createdAt: $ElementType<Scalars, 'Float'>,
   /** The SQL ID of this entry */
   id: $ElementType<Scalars, 'Int'>,
   /** The GitHub user who posted the comment */
   postedBy: User,
-  /** A timestamp of when the comment was posted */
-  createdAt: $ElementType<Scalars, 'Float'>,
-  /** The text of the comment */
-  content: $ElementType<Scalars, 'String'>,
   /** The repository which this comment is about */
   repoName: $ElementType<Scalars, 'String'>,
 |};
@@ -27,22 +27,22 @@ export type Comment = {|
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {|
   __typename?: 'Entry',
-  /** Information about the repository from GitHub */
-  repository: Repository,
-  /** The GitHub user who submitted this entry */
-  postedBy: User,
-  /** A timestamp of when the entry was submitted */
-  createdAt: $ElementType<Scalars, 'Float'>,
-  /** The score of this repository, upvotes - downvotes */
-  score: $ElementType<Scalars, 'Int'>,
-  /** The hot score of this repository */
-  hotScore: $ElementType<Scalars, 'Float'>,
-  /** Comments posted about this repository */
-  comments: Array<?Comment>,
   /** The number of comments posted about this repository */
   commentCount: $ElementType<Scalars, 'Int'>,
+  /** Comments posted about this repository */
+  comments: Array<?Comment>,
+  /** A timestamp of when the entry was submitted */
+  createdAt: $ElementType<Scalars, 'Float'>,
+  /** The hot score of this repository */
+  hotScore: $ElementType<Scalars, 'Float'>,
   /** The SQL ID of this entry */
   id: $ElementType<Scalars, 'Int'>,
+  /** The GitHub user who submitted this entry */
+  postedBy: User,
+  /** Information about the repository from GitHub */
+  repository: Repository,
+  /** The score of this repository, upvotes - downvotes */
+  score: $ElementType<Scalars, 'Int'>,
   /** XXX to be changed */
   vote: Vote,
 |};
@@ -67,12 +67,17 @@ export type FeedType = $Values<typeof FeedTypeValues>;
 
 export type Mutation = {|
   __typename?: 'Mutation',
+  /** Comment on a repository, returns the new comment */
+  submitComment?: ?Comment,
   /** Submit a new repository, returns the new submission */
   submitRepository?: ?Entry,
   /** Vote on a repository submission, returns the submission that was voted on */
   vote?: ?Entry,
-  /** Comment on a repository, returns the new comment */
-  submitComment?: ?Comment,
+|};
+
+export type MutationSubmitCommentArgs = {|
+  commentContent: $ElementType<Scalars, 'String'>,
+  repoFullName: $ElementType<Scalars, 'String'>,
 |};
 
 export type MutationSubmitRepositoryArgs = {|
@@ -84,29 +89,24 @@ export type MutationVoteArgs = {|
   type: VoteType,
 |};
 
-export type MutationSubmitCommentArgs = {|
-  repoFullName: $ElementType<Scalars, 'String'>,
-  commentContent: $ElementType<Scalars, 'String'>,
-|};
-
 export type Query = {|
   __typename?: 'Query',
-  /** A feed of repository submissions */
-  feed?: ?Array<?Entry>,
-  /** A single entry */
-  entry?: ?Entry,
   /** Return the currently logged in user, or null if nobody is logged in */
   currentUser?: ?User,
-|};
-
-export type QueryFeedArgs = {|
-  type: FeedType,
-  offset?: ?$ElementType<Scalars, 'Int'>,
-  limit?: ?$ElementType<Scalars, 'Int'>,
+  /** A single entry */
+  entry?: ?Entry,
+  /** A feed of repository submissions */
+  feed?: ?Array<?Entry>,
 |};
 
 export type QueryEntryArgs = {|
   repoFullName: $ElementType<Scalars, 'String'>,
+|};
+
+export type QueryFeedArgs = {|
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  type: FeedType,
 |};
 
 /**
@@ -115,20 +115,20 @@ export type QueryEntryArgs = {|
  */
 export type Repository = {|
   __typename?: 'Repository',
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: $ElementType<Scalars, 'String'>,
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: $ElementType<Scalars, 'String'>,
   /** The description of the repository */
   description?: ?$ElementType<Scalars, 'String'>,
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  full_name: $ElementType<Scalars, 'String'>,
   /** The link to the repository on GitHub */
   html_url: $ElementType<Scalars, 'String'>,
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: $ElementType<Scalars, 'Int'>,
+  /** Just the name of the repository, e.g. GitHunt-API */
+  name: $ElementType<Scalars, 'String'>,
   /** The number of open issues on this repository on GitHub */
   open_issues_count?: ?$ElementType<Scalars, 'Int'>,
   /** The owner of this repository on GitHub, e.g. apollostack */
   owner?: ?User,
+  /** The number of people who have starred this repository on GitHub */
+  stargazers_count: $ElementType<Scalars, 'Int'>,
 |};
 
 export type Subscription = {|
@@ -144,12 +144,12 @@ export type SubscriptionCommentAddedArgs = {|
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {|
   __typename?: 'User',
-  /** The name of the user, e.g. apollostack */
-  login: $ElementType<Scalars, 'String'>,
   /** The URL to a directly embeddable image for this user's avatar */
   avatar_url: $ElementType<Scalars, 'String'>,
   /** The URL of this user's GitHub page */
   html_url: $ElementType<Scalars, 'String'>,
+  /** The name of the user, e.g. apollostack */
+  login: $ElementType<Scalars, 'String'>,
 |};
 
 /** XXX to be removed */
@@ -159,9 +159,9 @@ export type Vote = {|
 |};
 
 export const VoteTypeValues = Object.freeze({
-  Up: 'UP',
-  Down: 'DOWN',
   Cancel: 'CANCEL',
+  Down: 'DOWN',
+  Up: 'UP',
 });
 
 /** The type of vote to record, when submitting a vote */

@@ -41,19 +41,23 @@ export type MutationMarkTweetReadArgs = {
 
 export type Notification = {
   __typename?: 'Notification';
-  id?: Maybe<Scalars['ID']>;
   date?: Maybe<Scalars['Date']>;
+  id?: Maybe<Scalars['ID']>;
   type?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  Notifications?: Maybe<Array<Maybe<Notification>>>;
+  NotificationsMeta?: Maybe<Meta>;
   Tweet?: Maybe<Tweet>;
   Tweets?: Maybe<Array<Maybe<Tweet>>>;
   TweetsMeta?: Maybe<Meta>;
   User?: Maybe<User>;
-  Notifications?: Maybe<Array<Maybe<Notification>>>;
-  NotificationsMeta?: Maybe<Meta>;
+};
+
+export type QueryNotificationsArgs = {
+  limit?: Maybe<Scalars['Int']>;
 };
 
 export type QueryTweetArgs = {
@@ -71,37 +75,33 @@ export type QueryUserArgs = {
   id: Scalars['ID'];
 };
 
-export type QueryNotificationsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-};
-
 export type Stat = {
   __typename?: 'Stat';
-  views?: Maybe<Scalars['Int']>;
   likes?: Maybe<Scalars['Int']>;
-  retweets?: Maybe<Scalars['Int']>;
   responses?: Maybe<Scalars['Int']>;
+  retweets?: Maybe<Scalars['Int']>;
+  views?: Maybe<Scalars['Int']>;
 };
 
 export type Tweet = {
   __typename?: 'Tweet';
-  id: Scalars['ID'];
-  body?: Maybe<Scalars['String']>;
-  date?: Maybe<Scalars['Date']>;
   Author?: Maybe<User>;
   Stats?: Maybe<Stat>;
+  body?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['Date']>;
+  id: Scalars['ID'];
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  username?: Maybe<Scalars['String']>;
+  avatar_url?: Maybe<Scalars['Url']>;
   first_name?: Maybe<Scalars['String']>;
-  last_name?: Maybe<Scalars['String']>;
   full_name?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  last_name?: Maybe<Scalars['String']>;
   /** @deprecated Field no longer supported */
   name?: Maybe<Scalars['String']>;
-  avatar_url?: Maybe<Scalars['Url']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 export type FooQueryVariables = Exact<{ [key: string]: never }>;

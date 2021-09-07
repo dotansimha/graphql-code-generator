@@ -13,74 +13,74 @@ type Scalars = {
 
 /** A character from the Star Wars universe */
 type Character = {
-  /** The ID of the character */
-  id: Scalars['ID'];
-  /** The name of the character */
-  name: Scalars['String'];
+  /** The movies this character appears in */
+  appearsIn: Array<Maybe<Episode>>;
   /** The friends of the character, or an empty list if they have none */
   friends?: Maybe<Array<Maybe<Character>>>;
   /** The friends of the character exposed as a connection with edges */
   friendsConnection: FriendsConnection;
-  /** The movies this character appears in */
-  appearsIn: Array<Maybe<Episode>>;
+  /** The ID of the character */
+  id: Scalars['ID'];
+  /** The name of the character */
+  name: Scalars['String'];
 };
 
 /** A character from the Star Wars universe */
 type CharacterFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
 };
 
 /** The input object sent when passing a color */
 type ColorInput = {
-  red: Scalars['Int'];
-  green: Scalars['Int'];
   blue: Scalars['Int'];
+  green: Scalars['Int'];
+  red: Scalars['Int'];
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
 type Droid = Character & {
   __typename?: 'Droid';
-  /** The ID of the droid */
-  id: Scalars['ID'];
-  /** What others call this droid */
-  name: Scalars['String'];
+  /** The movies this droid appears in */
+  appearsIn: Array<Maybe<Episode>>;
   /** This droid's friends, or an empty list if they have none */
   friends?: Maybe<Array<Maybe<Character>>>;
   /** The friends of the droid exposed as a connection with edges */
   friendsConnection: FriendsConnection;
-  /** The movies this droid appears in */
-  appearsIn: Array<Maybe<Episode>>;
+  /** The ID of the droid */
+  id: Scalars['ID'];
+  /** What others call this droid */
+  name: Scalars['String'];
   /** This droid's primary function */
   primaryFunction?: Maybe<Scalars['String']>;
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
 type DroidFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
 };
 
 /** The episodes in the Star Wars trilogy */
 type Episode =
-  /** Star Wars Episode IV: A New Hope, released in 1977. */
-  | 'NEWHOPE'
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
   | 'EMPIRE'
   /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  | 'JEDI';
+  | 'JEDI'
+  /** Star Wars Episode IV: A New Hope, released in 1977. */
+  | 'NEWHOPE';
 
 /** A connection object for a character's friends */
 type FriendsConnection = {
   __typename?: 'FriendsConnection';
-  /** The total number of friends */
-  totalCount?: Maybe<Scalars['Int']>;
   /** The edges for each of the character's friends. */
   edges?: Maybe<Array<Maybe<FriendsEdge>>>;
   /** A list of the friends, as a convenience when edges are not needed. */
   friends?: Maybe<Array<Maybe<Character>>>;
   /** Information for paginating this connection */
   pageInfo: PageInfo;
+  /** The total number of friends */
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
 /** An edge object for a character's friends */
@@ -95,24 +95,30 @@ type FriendsEdge = {
 /** A humanoid creature from the Star Wars universe */
 type Human = Character & {
   __typename?: 'Human';
-  /** The ID of the human */
-  id: Scalars['ID'];
-  /** What this human calls themselves */
-  name: Scalars['String'];
-  /** The home planet of the human, or null if unknown */
-  homePlanet?: Maybe<Scalars['String']>;
-  /** Height in the preferred unit, default is meters */
-  height?: Maybe<Scalars['Float']>;
-  /** Mass in kilograms, or null if unknown */
-  mass?: Maybe<Scalars['Float']>;
+  /** The movies this human appears in */
+  appearsIn: Array<Maybe<Episode>>;
   /** This human's friends, or an empty list if they have none */
   friends?: Maybe<Array<Maybe<Character>>>;
   /** The friends of the human exposed as a connection with edges */
   friendsConnection: FriendsConnection;
-  /** The movies this human appears in */
-  appearsIn: Array<Maybe<Episode>>;
+  /** Height in the preferred unit, default is meters */
+  height?: Maybe<Scalars['Float']>;
+  /** The home planet of the human, or null if unknown */
+  homePlanet?: Maybe<Scalars['String']>;
+  /** The ID of the human */
+  id: Scalars['ID'];
+  /** Mass in kilograms, or null if unknown */
+  mass?: Maybe<Scalars['Float']>;
+  /** What this human calls themselves */
+  name: Scalars['String'];
   /** A list of starships this person has piloted, or an empty list if none */
   starships?: Maybe<Array<Maybe<Starship>>>;
+};
+
+/** A humanoid creature from the Star Wars universe */
+type HumanFriendsConnectionArgs = {
+  after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
 };
 
 /** A humanoid creature from the Star Wars universe */
@@ -120,18 +126,12 @@ type HumanHeightArgs = {
   unit?: Maybe<LengthUnit>;
 };
 
-/** A humanoid creature from the Star Wars universe */
-type HumanFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['ID']>;
-};
-
 /** Units of height */
 type LengthUnit =
-  /** The standard unit around the world */
-  | 'METER'
   /** Primarily used in the United States */
-  | 'FOOT';
+  | 'FOOT'
+  /** The standard unit around the world */
+  | 'METER';
 
 /** The mutation type, represents all updates we can make to our data */
 type Mutation = {
@@ -148,36 +148,21 @@ type MutationCreateReviewArgs = {
 /** Information for paginating this connection */
 type PageInfo = {
   __typename?: 'PageInfo';
-  startCursor?: Maybe<Scalars['ID']>;
   endCursor?: Maybe<Scalars['ID']>;
   hasNextPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['ID']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
 type Query = {
   __typename?: 'Query';
-  hero?: Maybe<Character>;
-  reviews?: Maybe<Array<Maybe<Review>>>;
-  search?: Maybe<Array<Maybe<SearchResult>>>;
   character?: Maybe<Character>;
   droid?: Maybe<Droid>;
+  hero?: Maybe<Character>;
   human?: Maybe<Human>;
+  reviews?: Maybe<Array<Maybe<Review>>>;
+  search?: Maybe<Array<Maybe<SearchResult>>>;
   starship?: Maybe<Starship>;
-};
-
-/** The query type, represents all of the entry points into our object graph */
-type QueryHeroArgs = {
-  episode?: Maybe<Episode>;
-};
-
-/** The query type, represents all of the entry points into our object graph */
-type QueryReviewsArgs = {
-  episode: Episode;
-};
-
-/** The query type, represents all of the entry points into our object graph */
-type QuerySearchArgs = {
-  text?: Maybe<Scalars['String']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -191,8 +176,23 @@ type QueryDroidArgs = {
 };
 
 /** The query type, represents all of the entry points into our object graph */
+type QueryHeroArgs = {
+  episode?: Maybe<Episode>;
+};
+
+/** The query type, represents all of the entry points into our object graph */
 type QueryHumanArgs = {
   id: Scalars['ID'];
+};
+
+/** The query type, represents all of the entry points into our object graph */
+type QueryReviewsArgs = {
+  episode: Episode;
+};
+
+/** The query type, represents all of the entry points into our object graph */
+type QuerySearchArgs = {
+  text?: Maybe<Scalars['String']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -203,32 +203,32 @@ type QueryStarshipArgs = {
 /** Represents a review for a movie */
 type Review = {
   __typename?: 'Review';
-  /** The number of stars this review gave, 1-5 */
-  stars: Scalars['Int'];
   /** Comment about the movie */
   commentary?: Maybe<Scalars['String']>;
+  /** The number of stars this review gave, 1-5 */
+  stars: Scalars['Int'];
 };
 
 /** The input object sent when someone is creating a new review */
 type ReviewInput = {
-  /** 0-5 stars */
-  stars: Scalars['Int'];
   /** Comment about the movie, optional */
   commentary?: Maybe<Scalars['String']>;
   /** Favorite color, optional */
   favoriteColor?: Maybe<ColorInput>;
+  /** 0-5 stars */
+  stars: Scalars['Int'];
 };
 
-type SearchResult = Human | Droid | Starship;
+type SearchResult = Droid | Human | Starship;
 
 type Starship = {
   __typename?: 'Starship';
   /** The ID of the starship */
   id: Scalars['ID'];
-  /** The name of the starship */
-  name: Scalars['String'];
   /** Length of the starship, along the longest axis */
   length?: Maybe<Scalars['Float']>;
+  /** The name of the starship */
+  name: Scalars['String'];
 };
 
 type StarshipLengthArgs = {

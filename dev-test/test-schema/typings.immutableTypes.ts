@@ -23,7 +23,7 @@ export type QueryUserByIdArgs = {
 
 export type User = {
   __typename?: 'User';
+  email: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
-  email: Scalars['String'];
 };

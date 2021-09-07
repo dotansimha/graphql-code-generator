@@ -23,9 +23,9 @@ export enum FeedType {
 
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
   Cancel = 'CANCEL',
+  Down = 'DOWN',
+  Up = 'UP',
 }
 
 export type OnCommentAddedSubscriptionVariables = Exact<{

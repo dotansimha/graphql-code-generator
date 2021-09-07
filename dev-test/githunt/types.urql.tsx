@@ -24,14 +24,14 @@ export type Scalars = {
 /** A comment about an entry, submitted by a user */
 export type Comment = {
   __typename?: 'Comment';
+  /** The text of the comment */
+  content: Scalars['String'];
+  /** A timestamp of when the comment was posted */
+  createdAt: Scalars['Float'];
   /** The SQL ID of this entry */
   id: Scalars['Int'];
   /** The GitHub user who posted the comment */
   postedBy: User;
-  /** A timestamp of when the comment was posted */
-  createdAt: Scalars['Float'];
-  /** The text of the comment */
-  content: Scalars['String'];
   /** The repository which this comment is about */
   repoName: Scalars['String'];
 };
@@ -39,22 +39,22 @@ export type Comment = {
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
   __typename?: 'Entry';
-  /** Information about the repository from GitHub */
-  repository: Repository;
-  /** The GitHub user who submitted this entry */
-  postedBy: User;
-  /** A timestamp of when the entry was submitted */
-  createdAt: Scalars['Float'];
-  /** The score of this repository, upvotes - downvotes */
-  score: Scalars['Int'];
-  /** The hot score of this repository */
-  hotScore: Scalars['Float'];
-  /** Comments posted about this repository */
-  comments: Array<Maybe<Comment>>;
   /** The number of comments posted about this repository */
   commentCount: Scalars['Int'];
+  /** Comments posted about this repository */
+  comments: Array<Maybe<Comment>>;
+  /** A timestamp of when the entry was submitted */
+  createdAt: Scalars['Float'];
+  /** The hot score of this repository */
+  hotScore: Scalars['Float'];
   /** The SQL ID of this entry */
   id: Scalars['Int'];
+  /** The GitHub user who submitted this entry */
+  postedBy: User;
+  /** Information about the repository from GitHub */
+  repository: Repository;
+  /** The score of this repository, upvotes - downvotes */
+  score: Scalars['Int'];
   /** XXX to be changed */
   vote: Vote;
 };
@@ -77,12 +77,17 @@ export enum FeedType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Comment on a repository, returns the new comment */
+  submitComment?: Maybe<Comment>;
   /** Submit a new repository, returns the new submission */
   submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
   vote?: Maybe<Entry>;
-  /** Comment on a repository, returns the new comment */
-  submitComment?: Maybe<Comment>;
+};
+
+export type MutationSubmitCommentArgs = {
+  commentContent: Scalars['String'];
+  repoFullName: Scalars['String'];
 };
 
 export type MutationSubmitRepositoryArgs = {
@@ -94,29 +99,24 @@ export type MutationVoteArgs = {
   type: VoteType;
 };
 
-export type MutationSubmitCommentArgs = {
-  repoFullName: Scalars['String'];
-  commentContent: Scalars['String'];
-};
-
 export type Query = {
   __typename?: 'Query';
-  /** A feed of repository submissions */
-  feed?: Maybe<Array<Maybe<Entry>>>;
-  /** A single entry */
-  entry?: Maybe<Entry>;
   /** Return the currently logged in user, or null if nobody is logged in */
   currentUser?: Maybe<User>;
-};
-
-export type QueryFeedArgs = {
-  type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  /** A single entry */
+  entry?: Maybe<Entry>;
+  /** A feed of repository submissions */
+  feed?: Maybe<Array<Maybe<Entry>>>;
 };
 
 export type QueryEntryArgs = {
   repoFullName: Scalars['String'];
+};
+
+export type QueryFeedArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  type: FeedType;
 };
 
 /**
@@ -125,20 +125,20 @@ export type QueryEntryArgs = {
  */
 export type Repository = {
   __typename?: 'Repository';
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: Scalars['String'];
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: Scalars['String'];
   /** The description of the repository */
   description?: Maybe<Scalars['String']>;
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  full_name: Scalars['String'];
   /** The link to the repository on GitHub */
   html_url: Scalars['String'];
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: Scalars['Int'];
+  /** Just the name of the repository, e.g. GitHunt-API */
+  name: Scalars['String'];
   /** The number of open issues on this repository on GitHub */
   open_issues_count?: Maybe<Scalars['Int']>;
   /** The owner of this repository on GitHub, e.g. apollostack */
   owner?: Maybe<User>;
+  /** The number of people who have starred this repository on GitHub */
+  stargazers_count: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -154,12 +154,12 @@ export type SubscriptionCommentAddedArgs = {
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
   __typename?: 'User';
-  /** The name of the user, e.g. apollostack */
-  login: Scalars['String'];
   /** The URL to a directly embeddable image for this user's avatar */
   avatar_url: Scalars['String'];
   /** The URL of this user's GitHub page */
   html_url: Scalars['String'];
+  /** The name of the user, e.g. apollostack */
+  login: Scalars['String'];
 };
 
 /** XXX to be removed */
@@ -170,9 +170,9 @@ export type Vote = {
 
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
   Cancel = 'CANCEL',
+  Down = 'DOWN',
+  Up = 'UP',
 }
 
 export type OnCommentAddedSubscriptionVariables = Exact<{
@@ -537,6 +537,28 @@ export default {
         name: 'Comment',
         fields: [
           {
+            name: 'content',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'createdAt',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
+            },
+            args: [],
+          },
+          {
             name: 'id',
             type: {
               kind: 'NON_NULL',
@@ -560,28 +582,6 @@ export default {
             args: [],
           },
           {
-            name: 'createdAt',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
-            },
-            args: [],
-          },
-          {
-            name: 'content',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
-            },
-            args: [],
-          },
-          {
             name: 'repoName',
             type: {
               kind: 'NON_NULL',
@@ -600,53 +600,7 @@ export default {
         name: 'Entry',
         fields: [
           {
-            name: 'repository',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'OBJECT',
-                name: 'Repository',
-                ofType: null,
-              },
-            },
-            args: [],
-          },
-          {
-            name: 'postedBy',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'OBJECT',
-                name: 'User',
-                ofType: null,
-              },
-            },
-            args: [],
-          },
-          {
-            name: 'createdAt',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
-            },
-            args: [],
-          },
-          {
-            name: 'score',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
-            },
-            args: [],
-          },
-          {
-            name: 'hotScore',
+            name: 'commentCount',
             type: {
               kind: 'NON_NULL',
               ofType: {
@@ -687,7 +641,18 @@ export default {
             ],
           },
           {
-            name: 'commentCount',
+            name: 'createdAt',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'hotScore',
             type: {
               kind: 'NON_NULL',
               ofType: {
@@ -699,6 +664,41 @@ export default {
           },
           {
             name: 'id',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'postedBy',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'OBJECT',
+                name: 'User',
+                ofType: null,
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'repository',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'OBJECT',
+                name: 'Repository',
+                ofType: null,
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'score',
             type: {
               kind: 'NON_NULL',
               ofType: {
@@ -727,6 +727,36 @@ export default {
         kind: 'OBJECT',
         name: 'Mutation',
         fields: [
+          {
+            name: 'submitComment',
+            type: {
+              kind: 'OBJECT',
+              name: 'Comment',
+              ofType: null,
+            },
+            args: [
+              {
+                name: 'commentContent',
+                type: {
+                  kind: 'NON_NULL',
+                  ofType: {
+                    kind: 'SCALAR',
+                    name: 'Any',
+                  },
+                },
+              },
+              {
+                name: 'repoFullName',
+                type: {
+                  kind: 'NON_NULL',
+                  ofType: {
+                    kind: 'SCALAR',
+                    name: 'Any',
+                  },
+                },
+              },
+            ],
+          },
           {
             name: 'submitRepository',
             type: {
@@ -777,36 +807,6 @@ export default {
               },
             ],
           },
-          {
-            name: 'submitComment',
-            type: {
-              kind: 'OBJECT',
-              name: 'Comment',
-              ofType: null,
-            },
-            args: [
-              {
-                name: 'repoFullName',
-                type: {
-                  kind: 'NON_NULL',
-                  ofType: {
-                    kind: 'SCALAR',
-                    name: 'Any',
-                  },
-                },
-              },
-              {
-                name: 'commentContent',
-                type: {
-                  kind: 'NON_NULL',
-                  ofType: {
-                    kind: 'SCALAR',
-                    name: 'Any',
-                  },
-                },
-              },
-            ],
-          },
         ],
         interfaces: [],
       },
@@ -815,41 +815,13 @@ export default {
         name: 'Query',
         fields: [
           {
-            name: 'feed',
+            name: 'currentUser',
             type: {
-              kind: 'LIST',
-              ofType: {
-                kind: 'OBJECT',
-                name: 'Entry',
-                ofType: null,
-              },
+              kind: 'OBJECT',
+              name: 'User',
+              ofType: null,
             },
-            args: [
-              {
-                name: 'type',
-                type: {
-                  kind: 'NON_NULL',
-                  ofType: {
-                    kind: 'SCALAR',
-                    name: 'Any',
-                  },
-                },
-              },
-              {
-                name: 'offset',
-                type: {
-                  kind: 'SCALAR',
-                  name: 'Any',
-                },
-              },
-              {
-                name: 'limit',
-                type: {
-                  kind: 'SCALAR',
-                  name: 'Any',
-                },
-              },
-            ],
+            args: [],
           },
           {
             name: 'entry',
@@ -872,13 +844,41 @@ export default {
             ],
           },
           {
-            name: 'currentUser',
+            name: 'feed',
             type: {
-              kind: 'OBJECT',
-              name: 'User',
-              ofType: null,
+              kind: 'LIST',
+              ofType: {
+                kind: 'OBJECT',
+                name: 'Entry',
+                ofType: null,
+              },
             },
-            args: [],
+            args: [
+              {
+                name: 'limit',
+                type: {
+                  kind: 'SCALAR',
+                  name: 'Any',
+                },
+              },
+              {
+                name: 'offset',
+                type: {
+                  kind: 'SCALAR',
+                  name: 'Any',
+                },
+              },
+              {
+                name: 'type',
+                type: {
+                  kind: 'NON_NULL',
+                  ofType: {
+                    kind: 'SCALAR',
+                    name: 'Any',
+                  },
+                },
+              },
+            ],
           },
         ],
         interfaces: [],
@@ -888,13 +888,10 @@ export default {
         name: 'Repository',
         fields: [
           {
-            name: 'name',
+            name: 'description',
             type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
+              kind: 'SCALAR',
+              name: 'Any',
             },
             args: [],
           },
@@ -910,14 +907,6 @@ export default {
             args: [],
           },
           {
-            name: 'description',
-            type: {
-              kind: 'SCALAR',
-              name: 'Any',
-            },
-            args: [],
-          },
-          {
             name: 'html_url',
             type: {
               kind: 'NON_NULL',
@@ -929,7 +918,7 @@ export default {
             args: [],
           },
           {
-            name: 'stargazers_count',
+            name: 'name',
             type: {
               kind: 'NON_NULL',
               ofType: {
@@ -953,6 +942,17 @@ export default {
               kind: 'OBJECT',
               name: 'User',
               ofType: null,
+            },
+            args: [],
+          },
+          {
+            name: 'stargazers_count',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
             },
             args: [],
           },
@@ -991,17 +991,6 @@ export default {
         name: 'User',
         fields: [
           {
-            name: 'login',
-            type: {
-              kind: 'NON_NULL',
-              ofType: {
-                kind: 'SCALAR',
-                name: 'Any',
-              },
-            },
-            args: [],
-          },
-          {
             name: 'avatar_url',
             type: {
               kind: 'NON_NULL',
@@ -1014,6 +1003,17 @@ export default {
           },
           {
             name: 'html_url',
+            type: {
+              kind: 'NON_NULL',
+              ofType: {
+                kind: 'SCALAR',
+                name: 'Any',
+              },
+            },
+            args: [],
+          },
+          {
+            name: 'login',
             type: {
               kind: 'NON_NULL',
               ofType: {

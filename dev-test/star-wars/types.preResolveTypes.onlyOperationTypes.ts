@@ -13,37 +13,37 @@ export type Scalars = {
 
 /** The input object sent when passing a color */
 export type ColorInput = {
-  red: Scalars['Int'];
-  green: Scalars['Int'];
   blue: Scalars['Int'];
+  green: Scalars['Int'];
+  red: Scalars['Int'];
 };
 
 /** The episodes in the Star Wars trilogy */
 export enum Episode {
-  /** Star Wars Episode IV: A New Hope, released in 1977. */
-  Newhope = 'NEWHOPE',
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
   Empire = 'EMPIRE',
   /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
   Jedi = 'JEDI',
+  /** Star Wars Episode IV: A New Hope, released in 1977. */
+  Newhope = 'NEWHOPE',
 }
 
 /** Units of height */
 export enum LengthUnit {
-  /** The standard unit around the world */
-  Meter = 'METER',
   /** Primarily used in the United States */
   Foot = 'FOOT',
+  /** The standard unit around the world */
+  Meter = 'METER',
 }
 
 /** The input object sent when someone is creating a new review */
 export type ReviewInput = {
-  /** 0-5 stars */
-  stars: Scalars['Int'];
   /** Comment about the movie, optional */
   commentary?: Maybe<Scalars['String']>;
   /** Favorite color, optional */
   favoriteColor?: Maybe<ColorInput>;
+  /** 0-5 stars */
+  stars: Scalars['Int'];
 };
 
 export type CreateReviewForEpisodeMutationVariables = Exact<{

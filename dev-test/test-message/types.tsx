@@ -25,18 +25,18 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createMessage?: Maybe<Message>;
   approve?: Maybe<Message>;
+  createMessage?: Maybe<Message>;
   decline?: Maybe<Message>;
   escalate?: Maybe<Message>;
 };
 
-export type MutationCreateMessageArgs = {
-  args: CreateMessageInput;
-};
-
 export type MutationApproveArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationCreateMessageArgs = {
+  args: CreateMessageInput;
 };
 
 export type MutationDeclineArgs = {
