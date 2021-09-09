@@ -46,6 +46,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     autoBind(this);
 
     const wrapOptional = (type: string) => {
+      if (config.preResolveTypes === true) {
+        return `${type} | null | undefined`;
+      }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
     };
