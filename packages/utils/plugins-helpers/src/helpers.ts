@@ -28,7 +28,9 @@ export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
   return (typeof type === 'object' && type.plugins) || type.preset;
 }
 
-export function normalizeOutputParam(config: Types.OutputConfig | Types.ConfiguredOutput): Types.ConfiguredOutput {
+export function normalizeOutputParam(
+  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput
+): Types.ConfiguredOutput {
   // In case of direct array with a list of plugins
   if (isOutputConfigArray(config)) {
     return {

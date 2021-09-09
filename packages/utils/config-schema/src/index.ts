@@ -5,7 +5,7 @@ import { generateDocs } from './docs';
 import mkdirp from 'mkdirp';
 import { pluginsConfigurations, presetsConfigurations } from './plugins';
 import { join } from 'path';
-import { apply } from 'jsonpath';
+import jsonpath from 'jsonpath';
 
 const tsConfig = require('../../../../tsconfig.json');
 
@@ -102,13 +102,21 @@ async function generate() {
     ],
   };
 
-  const outputRecord = schema.definitions['Types.ConfiguredOutput'] as TJS.Definition;
+  const configuredOutput = schema.definitions['Types.ConfiguredOutput'] as TJS.Definition;
+  const configuredPlugin = schema.definitions['Types.ConfiguredPlugin'] as TJS.Definition;
 
-  outputRecord.properties.config = {
+  configuredPlugin.properties = pluginsConfigurations.reduce((result, pluginConfig) => {
+    result[pluginConfig.name] = {
+      $ref: `#/definitions/${pluginConfig.identifier}`,
+    };
+    return result;
+  }, {});
+
+  configuredOutput.properties.config = {
     additionalProperties: true,
   };
 
-  outputRecord.allOf = pluginsConfigurations.map(p => {
+  configuredOutput.allOf = pluginsConfigurations.map(p => {
     return {
       if: {
         properties: {
@@ -141,10 +149,10 @@ async function generate() {
   );
 
   // Remove non-standard keys
-  apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
+  jsonpath.apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
 
-  // Remvoe default to avoid annoying auto-complete
-  apply(schema, `$..*`, v => {
+  // Remove default to avoid annoying auto-complete
+  jsonpath.apply(schema, `$..*`, v => {
     if (v && typeof v === 'object' && typeof v[DEFAULT_JSDOC_KEY] !== 'undefined') {
       if (!v.description) {
         v.description = '';

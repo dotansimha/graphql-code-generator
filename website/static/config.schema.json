@@ -30,7 +30,17 @@
           "description": "A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Types.ConfiguredOutput"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Types.ConfiguredOutput"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Types.ConfiguredPlugin"
+                }
+              }
+            ]
           }
         },
         "overwrite": {
@@ -118,7 +128,7 @@
                   "type": "string"
                 },
                 "fetchParams": {
-                  "$ref": "#/definitions/Record"
+                  "type": "string"
                 }
               }
             },
@@ -457,7 +467,7 @@
           "type": "boolean"
         },
         "futureProofEnums": {
-          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
+          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "futureProofUnions": {
@@ -539,6 +549,14 @@
         "ignoreEnumValuesFromSchema": {
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "directiveArgumentAndInputFieldMappings": {
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
+        },
+        "directiveArgumentAndInputFieldMappingTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -699,6 +717,14 @@
         "entireFieldWrapperValue": {
           "type": "string",
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "directiveArgumentAndInputFieldMappings": {
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
+        },
+        "directiveArgumentAndInputFieldMappingTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -1022,7 +1048,7 @@
           "type": "boolean"
         },
         "futureProofEnums": {
-          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future. You also have to set `enumsAsTypes` to true if you wish to use this option.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
+          "description": "This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.\nThis is useful if you are using `relay`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "futureProofUnions": {
@@ -1104,6 +1130,14 @@
         "ignoreEnumValuesFromSchema": {
           "description": "This will cause the generator to ignore enum values defined in GraphQLSchema\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "directiveArgumentAndInputFieldMappings": {
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
+        },
+        "directiveArgumentAndInputFieldMappingTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -1333,7 +1367,7 @@
           "type": "boolean"
         },
         "avoidOptionals": {
-          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\r\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\r\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
+          "description": "This will cause the generator to avoid using TypeScript optionals (`?`),\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "strictScalars": {
@@ -1405,6 +1439,10 @@
         "customResolverFn": {
           "description": "You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>\nDefault value: \"(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult\"",
           "type": "string"
+        },
+        "directiveResolverMappings": {
+          "$ref": "#/definitions/Record",
+          "description": "Map the usage of a directive into using a specific resolver."
         },
         "allowParentTypeOverride": {
           "description": "Allow you to override the `ParentType` generic in each resolver, by avoid enforcing the base type of the generated generic type.\n\nThis will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.",
@@ -2448,7 +2486,7 @@
       }
     },
     "StencilApolloRawPluginConfig": {
-      "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
       "type": "object",
       "properties": {
         "componentType": {
@@ -2776,14 +2814,14 @@
           "type": "string"
         },
         "mappers": {
-          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\r\nThe default value is the values set by `defaultMapper` configuration.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
+          "description": "Allow you to replace specific GraphQL types with your custom model classes. This is useful when you want to make sure your resolvers returns the correct class.\nThe default value is the values set by `defaultMapper` configuration.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "defaultMapper": {
-          "description": "Sets the default mapper value in case it's not specified by `mappers`.\r\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\r\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
+          "description": "Sets the default mapper value in case it's not specified by `mappers`.\nYou can use a direct path to the package, or use `package#class` syntax to have it imported.\nThe default mapper is Java's `Object`.\nDefault value: \"Object\"",
           "type": "string"
         },
         "className": {
@@ -2906,7 +2944,7 @@
       }
     },
     "FlowPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -2964,6 +3002,14 @@
         "entireFieldWrapperValue": {
           "type": "string",
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "directiveArgumentAndInputFieldMappings": {
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
+        },
+        "directiveArgumentAndInputFieldMappingTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -3152,7 +3198,7 @@
       }
     },
     "FlowDocumentsPluginConfig": {
-      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
+      "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "useFlowExactObjects": {
@@ -3246,6 +3292,14 @@
         "entireFieldWrapperValue": {
           "type": "string",
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
+        },
+        "directiveArgumentAndInputFieldMappings": {
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
+        },
+        "directiveArgumentAndInputFieldMappingTypeSuffix": {
+          "description": "Adds a suffix to the imported names to prevent name clashes.",
+          "type": "string"
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -4442,6 +4496,119 @@
     "Partial": {
       "$ref": "#/definitions/__type_1"
     },
+    "Types.ConfiguredPlugin": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Types.PluginConfig"
+      },
+      "properties": {
+        "typescript-react-query": {
+          "$ref": "#/definitions/ReactQueryRawPluginConfig"
+        },
+        "typescript-rtk-query": {
+          "$ref": "#/definitions/RTKConfig"
+        },
+        "typescript-generic-sdk": {
+          "$ref": "#/definitions/RawGenericSdkPluginConfig"
+        },
+        "typescript-apollo-client-helpers": {
+          "$ref": "#/definitions/ApolloClientHelpersConfig"
+        },
+        "add": {
+          "$ref": "#/definitions/AddPluginConfig"
+        },
+        "time": {
+          "$ref": "#/definitions/TimePluginConfig"
+        },
+        "typescript": {
+          "$ref": "#/definitions/TypeScriptPluginConfig"
+        },
+        "typescript-operations": {
+          "$ref": "#/definitions/TypeScriptDocumentsPluginConfig"
+        },
+        "c-sharp": {
+          "$ref": "#/definitions/CSharpResolversPluginRawConfig"
+        },
+        "c-sharp-operations": {
+          "$ref": "#/definitions/CSharpOperationsRawPluginConfig"
+        },
+        "schema-ast": {
+          "$ref": "#/definitions/SchemaASTConfig"
+        },
+        "typescript-type-graphql": {
+          "$ref": "#/definitions/TypeGraphQLPluginConfig"
+        },
+        "typescript-graphql-files-modules": {
+          "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig"
+        },
+        "named-operations-object": {
+          "$ref": "#/definitions/NamedOperationsObjectPluginConfig"
+        },
+        "typescript-graphql-request": {
+          "$ref": "#/definitions/RawGraphQLRequestPluginConfig"
+        },
+        "typescript-mongodb": {
+          "$ref": "#/definitions/TypeScriptMongoPluginConfig"
+        },
+        "typescript-resolvers": {
+          "$ref": "#/definitions/TypeScriptResolversPluginConfig"
+        },
+        "typescript-apollo-angular": {
+          "$ref": "#/definitions/ApolloAngularRawPluginConfig"
+        },
+        "typescript-urql": {
+          "$ref": "#/definitions/UrqlRawPluginConfig"
+        },
+        "typescript-react-apollo": {
+          "$ref": "#/definitions/ReactApolloRawPluginConfig"
+        },
+        "typescript-vue-apollo": {
+          "$ref": "#/definitions/VueApolloRawPluginConfig"
+        },
+        "typescript-vue-apollo-smart-ops": {
+          "$ref": "#/definitions/VueApolloSmartOpsRawPluginConfig"
+        },
+        "typescript-vue-urql": {
+          "$ref": "#/definitions/VueUrqlRawPluginConfig"
+        },
+        "typescript-stencil-apollo": {
+          "$ref": "#/definitions/StencilApolloRawPluginConfig"
+        },
+        "typescript-document-nodes": {
+          "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
+        },
+        "java-apollo-android": {
+          "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
+        },
+        "java-resolvers": {
+          "$ref": "#/definitions/JavaResolversPluginRawConfig"
+        },
+        "java": {
+          "$ref": "#/definitions/JavaResolversPluginRawConfig"
+        },
+        "kotlin": {
+          "$ref": "#/definitions/KotlinResolversPluginRawConfig"
+        },
+        "flow": {
+          "$ref": "#/definitions/FlowPluginConfig"
+        },
+        "flow-resolvers": {
+          "$ref": "#/definitions/RawFlowResolversConfig"
+        },
+        "flow-operations": {
+          "$ref": "#/definitions/FlowDocumentsPluginConfig"
+        },
+        "introspection": {
+          "$ref": "#/definitions/IntrospectionPluginConfig"
+        },
+        "fragment-matcher": {
+          "$ref": "#/definitions/FragmentMatcherConfig"
+        },
+        "urql-introspection": {
+          "$ref": "#/definitions/UrqlIntrospectionConfig"
+        }
+      }
+    },
     "__type_2": {
       "type": "object"
     },
@@ -4463,12 +4630,6 @@
           }
         }
       }
-    },
-    "__type_3": {
-      "type": "object"
-    },
-    "Record": {
-      "$ref": "#/definitions/__type_3"
     },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
@@ -4571,6 +4732,9 @@
     "DeclarationKindConfig": {
       "type": "object",
       "properties": {
+        "directive": {
+          "$ref": "#/definitions/DeclarationKind"
+        },
         "scalar": {
           "$ref": "#/definitions/DeclarationKind"
         },
@@ -4591,6 +4755,16 @@
     "DeclarationKind": {
       "enum": ["abstract class", "class", "interface", "type"],
       "type": "string"
+    },
+    "__type_3": {
+      "description": "A map between the GraphQL directive name and the identifier that should be used",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "DirectiveArgumentAndInputFieldMappings": {
+      "$ref": "#/definitions/__type_3"
     },
     "JsonAttributesSource": {
       "enum": ["Newtonsoft.Json", "System.Text.Json"],
@@ -4618,6 +4792,12 @@
     },
     "Partial_1": {
       "$ref": "#/definitions/__type_4"
+    },
+    "__type_5": {
+      "type": "object"
+    },
+    "Record": {
+      "$ref": "#/definitions/__type_5"
     },
     "Array_1": {
       "type": "array",
@@ -5110,11 +5290,11 @@
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\r\n\r\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
@@ -5158,11 +5338,11 @@
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\r\n\r\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
@@ -5174,11 +5354,11 @@
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\r\n\r\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\r\n\r\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",
