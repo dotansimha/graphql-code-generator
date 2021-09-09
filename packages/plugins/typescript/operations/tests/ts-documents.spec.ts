@@ -4096,7 +4096,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {},
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }

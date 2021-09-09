@@ -172,7 +172,7 @@ export type SubscriptionCommentAddedArgs = {
 export type Get_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Get_SomethingQuery = { feed?: Maybe<Array<Maybe<{ id: number }>>> };
+export type Get_SomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
 
 export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
@@ -366,7 +366,7 @@ export type GQLSubscriptionCommentAddedArgs = {
 export type GQLGet_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQLGet_SomethingQuery = { feed?: Maybe<Array<Maybe<{ id: number }>>> };
+export type GQLGet_SomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
 
 export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
@@ -560,7 +560,7 @@ export type SubscriptionCommentAddedArgs = {
 export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<{ id: number }>>> };
+export type GetSomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
 
 export const GetSomethingDocument = gql\`
     query GET_SOMETHING {
@@ -754,7 +754,7 @@ export type SubscriptionCommentAddedArgs = {
 export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSomethingQuery = { feed?: Maybe<Array<Maybe<{ id: number }>>> };
+export type GetSomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
 
 export const GetSomethingDocument = gql\`
     query GET_SOMETHING {
