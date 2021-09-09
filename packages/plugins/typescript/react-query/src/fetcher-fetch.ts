@@ -48,10 +48,10 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
-      ${variables}, 
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      ${variables},
       ${options}
-    ) => 
+    ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ${generateQueryKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
@@ -77,9 +77,9 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       TError = ${this.visitor.config.errorType},
       TContext = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
       ${options}
-    ) => 
+    ) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
       options
@@ -96,6 +96,6 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
-    return `\nuse${operationName}.fetcher = (dataSource?: { endpoint: string, fetchParams?: RequestInit }, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables);`;
+    return `\nuse${operationName}.fetcher = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables);`;
   }
 }

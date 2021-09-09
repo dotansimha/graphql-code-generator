@@ -159,10 +159,10 @@ export const useTestQuery = <
       TData = TTestQuery,
       TError = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
-      variables?: TTestQueryVariables, 
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: TTestQueryVariables,
       options?: UseQueryOptions<TTestQuery, TError, TData>
-    ) => 
+    ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
@@ -179,9 +179,9 @@ export const useTestMutation = <
       TError = unknown,
       TContext = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
       options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
-    ) => 
+    ) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
       options
