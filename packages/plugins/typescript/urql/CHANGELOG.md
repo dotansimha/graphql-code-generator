@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-urql
 
+## 3.2.0
+
+### Minor Changes
+
+- f53aef95f: Modify urql visitor to allow external operation definitions
+
+### Patch Changes
+
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
 ## 3.1.3
 
 ### Patch Changes
