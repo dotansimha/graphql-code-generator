@@ -7,6 +7,7 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import babelPlugin from './babel';
 
 export type GqlTagConfig = {
   /**
@@ -85,3 +86,5 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
     ];
   },
 };
+
+export { babelPlugin };
