@@ -353,11 +353,11 @@ describe('React-Query', () => {
       TData = TTestQuery,
       TError = unknown
     >(
-      client: GraphQLClient, 
-      variables?: TTestQueryVariables, 
+      client: GraphQLClient,
+      variables?: TTestQueryVariables,
       options?: UseQueryOptions<TTestQuery, TError, TData>,
       headers?: RequestInit['headers']
-    ) => 
+    ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
       fetcher<TTestQuery, TTestQueryVariables>(client, TestDocument, variables, headers),
@@ -847,7 +847,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestQuery.fetcher = (dataSource?: { endpoint: string, fetchParams?: RequestInit }, variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables);`
+        `useTestQuery.fetcher = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables);`
       );
     });
 
