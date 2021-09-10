@@ -1,24 +1,29 @@
-import type { PluginObj } from '@babel/core';
+import type { PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
 import type { NodePath } from '@babel/traverse';
 import type { Program } from '@babel/types';
-import { parse } from 'graphql';
+import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { buildSchema, parse } from 'graphql';
+import * as path from 'path';
 
 const gqlMagicComment = 'graphql';
 
-export default declare((api): PluginObj => {
+const noopSchema = buildSchema(`type Query { _: Int }`);
+
+export default declare((api, opts): PluginObj => {
+  const visitor = new ClientSideBaseVisitor(noopSchema, [], {}, {});
+
+  const artifactDirectory = opts['artifactDirectory'] ?? '';
+
   let program: NodePath<Program>;
   return {
     name: 'gql-tag-operations',
     visitor: {
       Program(path) {
-        // TODO: load codegen config
-        // TODO: initialize ClientSideBaseVisitor
-
         program = path;
       },
-      CallExpression(path) {
+      CallExpression(path, state) {
         if (path.node.callee.type !== 'Identifier' || path.node.callee.name !== 'gql') {
           return;
         }
@@ -55,17 +60,21 @@ export default declare((api): PluginObj => {
           return;
         }
 
-        // TODO: use ClientSideBaseVisitor.getFragmentVariableName or ClientSideBaseVisitor.getOperationVariableName for generating the import name
-        const operationOrFragmentName = firstDefinition.name.value;
+        const operationOrFragmentName =
+          firstDefinition.kind === 'OperationDefinition'
+            ? visitor.getOperationVariableName(firstDefinition)
+            : visitor.getFragmentVariableName(firstDefinition);
 
-        // TODO: figure out how to get the correct "./gql/graphql" when operating within nested stuff
+        const importPath = getRelativeImportPath(state, artifactDirectory);
+
         const importDeclaration = template(`
-          import { %%importName%% } from "./gql/graphql"
+          import { %%importName%% } from %%importPath%%
         `);
         program.unshiftContainer(
           'body',
           importDeclaration({
             importName: api.types.identifier(operationOrFragmentName),
+            importPath: api.types.stringLiteral(importPath),
           })
         );
         path.replaceWith(api.types.identifier(operationOrFragmentName));
@@ -73,3 +82,19 @@ export default declare((api): PluginObj => {
     },
   };
 });
+
+function getRelativeImportPath(state: PluginPass, artifactDirectory: string, fileToRequire = 'graphql'): string {
+  if (state.file == null) {
+    throw new Error('Babel state is missing expected file name');
+  }
+
+  const filename = state.file.opts.filename;
+
+  const relative = path.relative(path.dirname(filename), path.resolve(artifactDirectory));
+
+  const relativeReference = relative.length === 0 || !relative.startsWith('.') ? './' : '';
+
+  const platformSpecificPath = relativeReference + path.join(relative, fileToRequire);
+  // ensure windows paths are written as unix paths
+  return platformSpecificPath.split(path.sep).join(path.posix.sep);
+}

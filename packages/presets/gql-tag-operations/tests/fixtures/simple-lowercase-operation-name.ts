@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars-experimental, @typescript-eslint/ban-ts-comment */
 //@ts-ignore
-import gql from 'gql';
+import gql from 'gql-tag';
 
 //@ts-ignore
 const A = gql(/* GraphQL */ `
@@ -18,7 +18,7 @@ const B = gql(/* GraphQL */ `
 
 //@ts-ignore
 const C = gql(/* GraphQL */ `
-  query c {
+  fragment C on Query {
     c
   }
 `);
