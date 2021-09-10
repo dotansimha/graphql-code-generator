@@ -14,15 +14,18 @@
     "prepack": "bob prepack"
   },
   "devDependencies": {
-    "@types/parse-filepath": "1.0.0"
+    "@types/babel__helper-plugin-utils": "7.10.0",
+    "@types/babel__template": "7.4.1"
   },
   "dependencies": {
-    "@graphql-codegen/add": "3.1.0",
-    "@graphql-codegen/typed-document-node": "2.1.4",
-    "@graphql-codegen/typescript": "2.2.2",
-    "@graphql-codegen/typescript-operations": "2.1.6",
-    "@graphql-codegen/gql-tag-operations": "1.1.5",
-    "tslib": "2.3.1"
+    "@babel/helper-plugin-utils": "^7.14.5",
+    "@babel/template": "^7.15.4",
+    "@graphql-codegen/add": "^3.1.0",
+    "@graphql-codegen/typed-document-node": "^2.1.4",
+    "@graphql-codegen/typescript": "^2.2.2",
+    "@graphql-codegen/typescript-operations": "^2.1.6",
+    "@graphql-codegen/gql-tag-operations": "^1.1.5",
+    "tslib": "~2.3.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"

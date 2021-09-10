@@ -3,22 +3,22 @@
 import gql from 'gql';
 
 //@ts-ignore
-const A = gql`
+const A = gql(/* GraphQL */ `
   query A {
     a
   }
-`;
+`);
 
 //@ts-ignore
-const B = gql`
+const B = gql(/* GraphQL */ `
   query B {
     b
   }
-`;
+`);
 
 //@ts-ignore
-const C = gql`
+const C = gql(/* GraphQL */ `
   query C {
     c
   }
-`;
+`);
