@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.0.1
+
+### Patch Changes
+
+- 4695472ee: make sourceData param required when user does not provide endpoint in config
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
 ## 3.0.0
 
 ### Major Changes

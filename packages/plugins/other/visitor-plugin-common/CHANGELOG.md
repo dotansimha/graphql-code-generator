@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.2.1
+
+### Patch Changes
+
+- 0b090e31a: Apply proper indentation to DirectiveArgs types
+
 ## 2.2.0
 
 ### Minor Changes
