@@ -1127,9 +1127,9 @@ export class BaseResolversVisitor<
         .asKind('type')
         .withName(directiveArgsTypeName)
         .withContent(
-          `{ ${
-            hasArguments ? this._variablesTransformer.transform<InputValueDefinitionNode>(sourceNode.arguments) : ''
-          } }`
+          hasArguments
+            ? `{\n${this._variablesTransformer.transform<InputValueDefinitionNode>(sourceNode.arguments)}\n}`
+            : '{ }'
         ).string,
       new DeclarationBlock({
         ...this._declarationBlockConfig,

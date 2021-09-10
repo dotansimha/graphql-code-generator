@@ -619,9 +619,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -693,9 +695,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };`);
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
@@ -768,9 +772,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -857,9 +863,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -930,9 +938,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.prepend).toContain(`import ContextType from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1003,9 +1013,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.prepend).toContain(`import type { default as ContextType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -2209,7 +2221,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         { outputFile: 'graphql.ts' }
       )) as Types.ComplexPluginOutput;
 
-      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`);
+      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {\n  role?: Maybe<UserRole>;\n};`);
       expect(output.content).toContain(
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`
       );
