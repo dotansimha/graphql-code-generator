@@ -105,7 +105,7 @@ export type MyDirectiveDirectiveArgs = {
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = { };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
