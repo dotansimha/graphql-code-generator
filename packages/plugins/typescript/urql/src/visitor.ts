@@ -4,6 +4,7 @@ import {
   LoadedFragment,
   getConfigValue,
   OMIT_TYPE,
+  DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
@@ -17,12 +18,30 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
+  private _externalImportPrefix = '';
+
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, false),
       withHooks: getConfigValue(rawConfig.withHooks, true),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
     });
+
+    if (this.config.importOperationTypesFrom) {
+      this._externalImportPrefix = `${this.config.importOperationTypesFrom}.`;
+
+      if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+        );
+      }
+
+      if (this.config.importOperationTypesFrom !== 'Operations') {
+        // eslint-disable-next-line no-console
+        console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
+      }
+    }
 
     autoBind(this);
   }
@@ -118,11 +137,28 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    const documentVariablePrefixed = this._externalImportPrefix + documentVariableName;
+    const operationTypePrefixed = this._externalImportPrefix + operationType;
+    const operationResultTypePrefixed = this._externalImportPrefix + operationResultType;
+    const operationVariablesTypesPrefixed = this._externalImportPrefix + operationVariablesTypes;
+
     const component = this.config.withComponent
-      ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
+      ? this._buildComponent(
+          node,
+          documentVariablePrefixed,
+          operationTypePrefixed,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
+        )
       : null;
     const hooks = this.config.withHooks
-      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      ? this._buildHooks(
+          node,
+          operationTypePrefixed,
+          documentVariablePrefixed,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
+        )
       : null;
 
     return [component, hooks].filter(a => a).join('\n');

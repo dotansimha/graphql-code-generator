@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('urql', () => {
   let spyConsoleError: jest.SpyInstance;
@@ -634,6 +635,112 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export function useTest(`);
+    });
+
+    it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
+      jest.spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importDocumentNodeExternallyFrom must be provided if documentMode=external'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set to something other than "Operations"', async () => {
+      jest.spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Whatever',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        'importOperationTypesFrom only works correctly when left empty or set to "Operations"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and documentMode is not "external"', async () => {
+      jest.spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('output warning if importOperationTypesFrom is set and importDocumentNodeExternallyFrom is not', async () => {
+      jest.spyOn(console, 'warn');
+      const docs = [{ location: '', document: basicDoc }];
+      await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      // eslint-disable-next-line no-console
+      expect(console.warn).toHaveBeenCalledWith(
+        '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+      );
+    });
+
+    it('should allow importing operations and documents from another file', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importOperationTypesFrom: 'Operations',
+          importDocumentNodeExternallyFrom: '@myproject/generated',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from '@myproject/generated';`);
+
+      expect(content.content).toContain('Operations.TestDocument');
+      expect(content.content).toContain('Operations.TestQuery');
+      expect(content.content).toContain('Operations.TestQueryVariables');
+
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 });
