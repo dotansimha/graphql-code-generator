@@ -23,13 +23,16 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
 
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
-}> = (_, __, { sourcesWithOperations }) => {
+  useTypeImports?: boolean;
+}> = (_, __, { sourcesWithOperations, useTypeImports }, _info) => {
   if (!sourcesWithOperations) {
     return '';
   }
   return [
     `import * as graphql from './graphql';\n`,
-    `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
+    `${
+      useTypeImports ? 'import type' : 'import'
+    } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
     `\n`,
     ...getDocumentRegistryChunk(sourcesWithOperations),
     `\n`,
