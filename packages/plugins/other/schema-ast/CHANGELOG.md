@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 3e38de399: feat: sort the schema if "sort" option is provided
+- 3e38de399: enhance: sort the schema before processing to have more consistent results. You can disable it with `sort: false`.
 
 ## 2.1.0
 
