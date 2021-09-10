@@ -169,13 +169,15 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Scalars['Int'];
   arg2: Scalars['String'];
-  arg3: Scalars['Boolean']; };
+  arg3: Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = { };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
@@ -364,13 +366,15 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Types.Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Types.Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Types.Scalars['Int'];
   arg2: Types.Scalars['String'];
-  arg3: Types.Scalars['Boolean']; };
+  arg3: Types.Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = { };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
@@ -612,13 +616,15 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Scalars['Int'];
   arg2: Scalars['String'];
-  arg3: Scalars['Boolean']; };
+  arg3: Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = { };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
