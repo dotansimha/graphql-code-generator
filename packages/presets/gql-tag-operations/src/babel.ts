@@ -7,7 +7,7 @@ import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { buildSchema, parse } from 'graphql';
 import * as path from 'path';
 
-const gqlMagicComment = 'graphql';
+// const gqlMagicComment = 'graphql';
 
 const noopSchema = buildSchema(`type Query { _: Int }`);
 
@@ -35,17 +35,17 @@ export default declare((api, opts): PluginObj => {
           return;
         }
 
-        const [leadingComment] = argument.leadingComments;
+        // const [leadingComment] = argument.leadingComments;
 
-        if (leadingComment == null) {
-          return;
-        }
+        // if (leadingComment == null) {
+        //   return;
+        // }
 
-        const leadingCommentValue = leadingComment.value.trim().toLowerCase();
+        // const leadingCommentValue = leadingComment.value.trim().toLowerCase();
 
-        if (leadingCommentValue !== gqlMagicComment) {
-          return;
-        }
+        // if (leadingCommentValue !== gqlMagicComment) {
+        //   return;
+        // }
 
         const [content] = argument.quasis;
         const ast = parse(content.value.raw);
