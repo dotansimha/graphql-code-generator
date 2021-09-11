@@ -47,29 +47,29 @@ export const plugin: PluginFunction<{
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
-  const lines: Array<string> = [];
-  lines.push(`const documents = {\n`);
+  const lines = new Set<string>();
+  lines.add(`const documents = {\n`);
 
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     const operation = operations[0];
 
-    lines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+    lines.add(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
   }
 
-  lines.push(`};\n`);
+  lines.add(`};\n`);
 
   return lines;
 }
 
 function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>) {
-  const lines: Array<string> = [];
+  const lines = new Set<string>();
 
   // We intentionally don't use a <T extends keyof typeof documents> generic, because TS
   // would print very long `gql` function signatures (duplicating the source).
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    lines.push(
+    lines.add(
       `export function gql(source: ${JSON.stringify(originalString)}): (typeof documents)[${JSON.stringify(
         originalString
       )}];\n`
