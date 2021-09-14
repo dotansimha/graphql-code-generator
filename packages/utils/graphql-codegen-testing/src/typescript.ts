@@ -1,6 +1,6 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { resolve, join, dirname } from 'path';
-import * as lzString from 'lz-string';
+// import * as lzString from 'lz-string';
 
 import type { CompilerOptions, ScriptTarget as ScriptTargetType } from 'typescript';
 
@@ -18,9 +18,9 @@ import {
   getPreEmitDiagnostics,
 } from 'typescript';
 
-import open from 'open';
+// import open from 'open';
 
-const { compressToEncodedURIComponent } = lzString;
+// const { compressToEncodedURIComponent } = lzString;
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
@@ -243,8 +243,8 @@ export function compileTs(
     }
   } catch (e) {
     if (openPlayground) {
-      const compressedCode = compressToEncodedURIComponent(contents);
-      open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+      // const compressedCode = compressToEncodedURIComponent(contents);
+      // open('http://www.typescriptlang.org/play/#code/' + compressedCode);
     }
 
     throw e;
