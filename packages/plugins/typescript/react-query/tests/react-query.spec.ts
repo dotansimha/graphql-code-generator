@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
+import { parse, buildClientSchema, GraphQLSchema, buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -20,6 +20,57 @@ const validateTypeScript = async (
 };
 
 describe('React-Query', () => {
+  it('Duplicated nested fragments are removed', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      schema {
+        query: Query
+      }
+
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const ast = parse(/* GraphQL */ `
+      query foo {
+        user1: user(id: 1) {
+          ...userWithEmail
+        }
+        user2: user(id: 2) {
+          ...userWithName
+        }
+      }
+
+      fragment userBase on User {
+        id
+      }
+
+      fragment userWithEmail on User {
+        ...userBase
+        email
+      }
+
+      fragment userWithName on User {
+        ...userBase
+        name
+      }
+    `);
+
+    const res = (await plugin(
+      schema,
+      [{ location: '', document: ast }],
+      { dedupeFragments: true },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect((res.content.match(/\{UserBaseFragmentDoc\}/g) || []).length).toBe(1);
+  });
+
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
   const basicDoc = parse(/* GraphQL */ `
     query test {

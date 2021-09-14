@@ -271,7 +271,7 @@ export class ClientSideBaseVisitor<
     );
   }
 
-  protected _includeFragments(fragments: string[]): string {
+  protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
         return this._fragments
@@ -281,6 +281,9 @@ export class ClientSideBaseVisitor<
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
         return '';
       } else {
+        if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
+          return '';
+        }
         return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
     }
@@ -297,7 +300,7 @@ export class ClientSideBaseVisitor<
 
     const doc = this._prepareDocument(`
     ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
-    ${this._includeFragments(fragments)}`);
+    ${this._includeFragments(fragments, node.kind)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       let gqlObj = gqlTag([doc]);
