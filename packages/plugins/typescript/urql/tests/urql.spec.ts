@@ -740,7 +740,13 @@ export function useSubmitRepositoryMutation() {
       expect(content.content).toContain('Operations.TestQuery');
       expect(content.content).toContain('Operations.TestQueryVariables');
 
+      expect(content.content).not.toContain('Urql.UseOperations');
+      expect(content.content).toContain('Urql.UseQueryArgs');
+      expect(content.content).toContain('Urql.useQuery');
+
       await validateTypeScript(content, schema, docs, {});
+
+      expect(mergeOutputs([content])).toMatchSnapshot();
     });
   });
 });

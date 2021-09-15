@@ -138,7 +138,6 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     operationVariablesTypes: string
   ): string {
     const documentVariablePrefixed = this._externalImportPrefix + documentVariableName;
-    const operationTypePrefixed = this._externalImportPrefix + operationType;
     const operationResultTypePrefixed = this._externalImportPrefix + operationResultType;
     const operationVariablesTypesPrefixed = this._externalImportPrefix + operationVariablesTypes;
 
@@ -146,7 +145,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
       ? this._buildComponent(
           node,
           documentVariablePrefixed,
-          operationTypePrefixed,
+          operationType,
           operationResultTypePrefixed,
           operationVariablesTypesPrefixed
         )
@@ -154,7 +153,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     const hooks = this.config.withHooks
       ? this._buildHooks(
           node,
-          operationTypePrefixed,
+          operationType,
           documentVariablePrefixed,
           operationResultTypePrefixed,
           operationVariablesTypesPrefixed
