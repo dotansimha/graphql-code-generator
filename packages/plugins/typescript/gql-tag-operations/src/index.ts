@@ -47,17 +47,32 @@ export const plugin: PluginFunction<{
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
-  const lines = new Set<string>();
-  lines.add(`const documents = {\n`);
+  const addedOperations = new Set<string>();
+  const lines = new Array<string>();
+  lines.push(`const documents = {\n`);
 
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    const operation = operations[0];
 
-    lines.add(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+    if (operations.length === 1) {
+      const operation = operations[0];
+      if (!addedOperations.has(operation.initialName)) {
+        lines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+        addedOperations.add(operation.initialName);
+      }
+    } else {
+      lines.push(`    ${JSON.stringify(originalString)}: {\n`);
+      for (const operation of operations) {
+        if (!addedOperations.has(operation.initialName)) {
+          lines.push(`        ${operation.definition.name.value}: graphql.${operation.initialName},\n`);
+          addedOperations.add(operation.initialName);
+        }
+      }
+      lines.push(`    },\n`);
+    }
   }
 
-  lines.add(`};\n`);
+  lines.push(`};\n`);
 
   return lines;
 }
