@@ -16,6 +16,6 @@
     "mkdirp": "1.0.4",
     "ts-node": "10.2.1",
     "typescript": "4.4.3",
-    "typescript-json-schema": "0.50.1"
+    "typescript-json-schema": "0.51.0"
   }
 }
