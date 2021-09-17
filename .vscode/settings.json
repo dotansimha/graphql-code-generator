@@ -14,7 +14,6 @@
   "files.exclude": {
     "**/.git": true,
     "**/.DS_Store": true,
-    "node_modules": true,
     "test-lib": true,
     "lib": true,
     "coverage": true,

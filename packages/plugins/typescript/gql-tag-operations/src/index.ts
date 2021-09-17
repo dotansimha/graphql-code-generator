@@ -1,6 +1,7 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+// import { operationName } from '@apollo/client';
 
 export type OperationOrFragment = {
   initialName: string;
@@ -28,28 +29,32 @@ export const plugin: PluginFunction<{
   if (!sourcesWithOperations) {
     return '';
   }
+  const [rawSDLTypeMap, registryLines] = getDocumentRegistryChunk(sourcesWithOperations);
+  const overloadChunkLines = getGqlOverloadChunk(rawSDLTypeMap, sourcesWithOperations);
   return [
     `import * as graphql from './graphql';\n`,
     `${
       useTypeImports ? 'import type' : 'import'
     } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
     `\n`,
-    ...getDocumentRegistryChunk(sourcesWithOperations),
+    ...registryLines,
     `\n`,
-    ...getGqlOverloadChunk(sourcesWithOperations),
+    ...overloadChunkLines,
     `\n`,
-    `export function gql(source: string): unknown;\n`,
+    // `export function gql(source: string): unknown;\n`,
     `export function gql(source: string) {\n`,
-    `  return (documents as any)[source] ?? {};\n`,
+    `  return documents[source] ?? {};\n`,
     `}\n`,
     documentTypePartial,
   ].join(``);
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
+  const rawSDLTypeMap = new Map<string, string>();
   const addedOperations = new Set<string>();
-  const lines = new Array<string>();
-  lines.push(`const documents = {\n`);
+  const typesLines = new Array<string>();
+  const documentsLines = new Array<string>();
+  documentsLines.push(`const documents = {\n`);
 
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
@@ -57,27 +62,37 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
     if (operations.length === 1) {
       const operation = operations[0];
       if (!addedOperations.has(operation.initialName)) {
-        lines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+        documentsLines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
         addedOperations.add(operation.initialName);
       }
+      rawSDLTypeMap.set(originalString, `graphql.${operation.initialName}`);
     } else {
-      lines.push(`    ${JSON.stringify(originalString)}: {\n`);
+      const operationNames = operations.map(operation => operation.definition.name.value);
+      const typeName = `${operationNames.join('')}Documents`;
+
+      typesLines.push(
+        `type ${typeName} = {\n${operations
+          .map(operation => `  "${operation.definition.name.value}": typeof graphql.${operation.initialName}`)
+          .join(',\n')}\n};\n\n`
+      );
+      documentsLines.push(`    ${JSON.stringify(originalString)}: <${typeName}>{\n`);
+      rawSDLTypeMap.set(originalString, typeName);
       for (const operation of operations) {
         if (!addedOperations.has(operation.initialName)) {
-          lines.push(`        ${operation.definition.name.value}: graphql.${operation.initialName},\n`);
+          documentsLines.push(`        ${operation.definition.name.value}: graphql.${operation.initialName},\n`);
           addedOperations.add(operation.initialName);
         }
       }
-      lines.push(`    },\n`);
+      documentsLines.push(`    },\n`);
     }
   }
 
-  lines.push(`};\n`);
+  documentsLines.push(`};\n`);
 
-  return lines;
+  return [rawSDLTypeMap, [...typesLines, ...documentsLines]];
 }
 
-function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>) {
+function getGqlOverloadChunk(rawSDLTypeMap, sourcesWithOperations: Array<SourceWithOperations>) {
   const lines = new Set<string>();
 
   // We intentionally don't use a <T extends keyof typeof documents> generic, because TS
@@ -85,11 +100,10 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>)
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     lines.add(
-      `export function gql(source: ${JSON.stringify(originalString)}): (typeof documents)[${JSON.stringify(
-        originalString
-      )}];\n`
+      `export function gql(source: ${JSON.stringify(originalString)}): ${rawSDLTypeMap.get(originalString)};\n`
     );
   }
 
+  lines.add(`export function gql(source: string): ${[...rawSDLTypeMap.values()].join(' | ')};\n`);
   return lines;
 }
