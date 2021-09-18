@@ -43,7 +43,7 @@ export const plugin: PluginFunction<{
     `\n`,
     // `export function gql(source: string): unknown;\n`,
     `export function gql(source: string) {\n`,
-    `  return documents[source] ?? {};\n`,
+    `  return (documents as any)[source.replace(/\\n|\\s/g, '')] ?? {};\n`,
     `}\n`,
     documentTypePartial,
   ].join(``);
@@ -62,10 +62,12 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
     if (operations.length === 1) {
       const operation = operations[0];
       if (!addedOperations.has(operation.initialName)) {
-        documentsLines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+        documentsLines.push(
+          `    ${JSON.stringify(originalString.replace(/\n|\s/g, ''))}: graphql.${operation.initialName},\n`
+        );
         addedOperations.add(operation.initialName);
       }
-      rawSDLTypeMap.set(originalString, `graphql.${operation.initialName}`);
+      rawSDLTypeMap.set(originalString, `typeof graphql.${operation.initialName}`);
     } else {
       const operationNames = operations.map(operation => operation.definition.name.value);
       const typeName = `${operationNames.join('')}Documents`;
@@ -75,11 +77,11 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
           .map(operation => `  "${operation.definition.name.value}": typeof graphql.${operation.initialName}`)
           .join(',\n')}\n};\n\n`
       );
-      documentsLines.push(`    ${JSON.stringify(originalString)}: <${typeName}>{\n`);
+      documentsLines.push(`    ${JSON.stringify(originalString.replace(/\n|\s/g, ''))}: <${typeName}>{\n`);
       rawSDLTypeMap.set(originalString, typeName);
       for (const operation of operations) {
         if (!addedOperations.has(operation.initialName)) {
-          documentsLines.push(`        ${operation.definition.name.value}: graphql.${operation.initialName},\n`);
+          documentsLines.push(`        "${operation.definition.name.value}": graphql.${operation.initialName},\n`);
           addedOperations.add(operation.initialName);
         }
       }
