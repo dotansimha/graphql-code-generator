@@ -102,10 +102,10 @@ function getGqlOverloadChunk(rawSDLTypeMap, sourcesWithOperations: Array<SourceW
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     lines.add(
-      `export function gql(source: ${JSON.stringify(originalString)}): ${rawSDLTypeMap.get(originalString)};\n`
+      `export function gql(source: ${JSON.stringify(`\n${originalString}\n`)}): ${rawSDLTypeMap.get(originalString)};\n`
     );
   }
 
-  lines.add(`export function gql(source: string): ${[...rawSDLTypeMap.values()].join(' | ')};\n`);
+  lines.add(`export function gql(source: string): ${[...rawSDLTypeMap.values()].join(' | ')} | unknown;\n`);
   return lines;
 }

@@ -7,24 +7,26 @@ This preset generates typings for your inline `gql` function usages, without hav
 
 Huge thanks to [Maël Nison](https://github.com/arcanis), who conceptualized the foundation for this preset [over here](https://github.com/arcanis/graphql-typescript-integration).
 
+Some caveats: to get typing right, do not indent the roots of documents and always end the string literal on a new line.
+
 ```ts
 import { gql } from '@app/gql';
 
 // TweetFragment is a fully typed document node
 const TweetFragment = gql(/* GraphQL */ `
-  fragment TweetFragment on Tweet {
-    id
-    body
-  }
+fragment TweetFragment on Tweet {
+  id
+  body
+}
 `);
 
 const TweetsQueryWithFragment = gql(/* GraphQL */ `
-  query TweetsWithFragmentQuery {
-    Tweets {
-      id
-      ...TweetFragment
-    }
+query TweetsWithFragmentQuery {
+  Tweets {
+    id
+    ...TweetFragment
   }
+}
 `);
 ```
 
@@ -59,11 +61,11 @@ import { gql } from '@app/gql';
 
 // TweetsQuery is a fully typed document node!
 const TweetsQuery = gql(/* GraphQL */ `
-  query TweetsQuery {
-    Tweets {
-      id
-    }
+query TweetsQuery {
+  Tweets {
+    id
   }
+}
 `);
 ```
 
@@ -75,12 +77,12 @@ import { useQuery } from 'urql';
 
 // TweetsQuery is a fully typed document node/
 const TweetsQuery = gql(/* GraphQL */ `
-  query TweetsQuery {
-    Tweets {
-      id
-      body
-    }
+query TweetsQuery {
+  Tweets {
+    id
+    body
   }
+}
 `);
 
 const Tweets = () => {
@@ -107,10 +109,10 @@ If we want to use fragments, we can use some utilities for accessing the fragmen
 import { gql, DocumentType } from '../gql';
 
 const TweetFragment = gql(/* GraphQL */ `
-  fragment TweetFragment on Tweet {
-    id
-    body
-  }
+fragment TweetFragment on Tweet {
+  id
+  body
+}
 `);
 
 const Tweet = (props: {
@@ -121,12 +123,12 @@ const Tweet = (props: {
 };
 
 const TweetsQuery = gql(/* GraphQL */ `
-  query TweetsQuery {
-    Tweets {
-      id
-      ...TweetFragment
-    }
+query TweetsQuery {
+  Tweets {
+    id
+    ...TweetFragment
   }
+}
 `);
 
 const Tweets = () => {
