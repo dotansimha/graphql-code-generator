@@ -13,6 +13,10 @@ export type SourceWithOperations = {
   operations: Array<OperationOrFragment>;
 };
 
+const addWhitespace = (sdl: string): string => {
+  return '\n' + sdl.replace(/^(?!$)/gm, '  ') + '\n';
+};
+
 const documentTypePartial = `
 export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<
   infer TType,
@@ -43,7 +47,7 @@ export const plugin: PluginFunction<{
     `\n`,
     // `export function gql(source: string): unknown;\n`,
     `export function gql(source: string) {\n`,
-    `  return (documents as any)[source.replace(/\\n|\\s/g, '')] ?? {};\n`,
+    `  return (documents as any)[source] ?? {};\n`,
     `}\n`,
     documentTypePartial,
   ].join(``);
@@ -63,7 +67,7 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
       const operation = operations[0];
       if (!addedOperations.has(operation.initialName)) {
         documentsLines.push(
-          `    ${JSON.stringify(originalString.replace(/\n|\s/g, ''))}: graphql.${operation.initialName},\n`
+          `    ${JSON.stringify(`${addWhitespace(originalString)}`)}: graphql.${operation.initialName},\n`
         );
         addedOperations.add(operation.initialName);
       }
@@ -77,7 +81,7 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
           .map(operation => `  "${operation.definition.name.value}": typeof graphql.${operation.initialName}`)
           .join(',\n')}\n};\n\n`
       );
-      documentsLines.push(`    ${JSON.stringify(originalString.replace(/\n|\s/g, ''))}: <${typeName}>{\n`);
+      documentsLines.push(`    ${JSON.stringify(`${addWhitespace(originalString)}`)}: <${typeName}>{\n`);
       rawSDLTypeMap.set(originalString, typeName);
       for (const operation of operations) {
         if (!addedOperations.has(operation.initialName)) {
@@ -102,7 +106,9 @@ function getGqlOverloadChunk(rawSDLTypeMap, sourcesWithOperations: Array<SourceW
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     lines.add(
-      `export function gql(source: ${JSON.stringify(`\n${originalString}\n`)}): ${rawSDLTypeMap.get(originalString)};\n`
+      `export function gql(source: ${JSON.stringify(addWhitespace(originalString))}): ${rawSDLTypeMap.get(
+        originalString
+      )};\n`
     );
   }
 
