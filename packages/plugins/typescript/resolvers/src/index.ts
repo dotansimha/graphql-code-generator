@@ -62,8 +62,14 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
       } else {
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
-      defsToInclude.push(resolverWithResolve);
-      defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+
+      if (!config.makeResolverTypeCallable) {
+        defsToInclude.push(resolverWithResolve);
+        defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+      } else {
+        defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
+      }
+
       directiveResolverMappings[directiveName] = resolverTypeName;
     }
   }
@@ -123,15 +129,21 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
     `);
   }
 
-  defsToInclude.push(resolverWithResolve);
+  if (!config.makeResolverTypeCallable) {
+    defsToInclude.push(resolverWithResolve);
+  }
+
   if (noSchemaStitching) {
-    // Resolver = ResolverFn | ResolverWithResolve;
-    defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+    // Resolver = ResolverFn | ResolverWithResolve (Optional);
+    const defs = config.makeResolverTypeCallable
+      ? `${resolverType} ${resolverFnUsage};`
+      : `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`;
+    defsToInclude.push(defs);
   } else {
     // StitchingResolver
     // Resolver =
     // | ResolverFn
-    // | ResolverWithResolve
+    // | ResolverWithResolve (Optional)
     // | StitchingResolver;
     defsToInclude.push(
       [
@@ -140,7 +152,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         stitchingResolverType,
         resolverType,
         `  | ${resolverFnUsage}`,
-        `  | ${resolverWithResolveUsage}`,
+        config.makeResolverTypeCallable ? `` : `  | ${resolverWithResolveUsage}`,
         `  | ${stitchingResolverUsage};`,
       ].join('\n')
     );
