@@ -208,6 +208,23 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       await validate(result);
     });
+
+    it('makeResolverTypeCallable - adds ResolverWithResolve type to resolver union when set to false', async () => {
+      const result = await plugin(schema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
+
+      expect(result.content).not.toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>;
+    `);
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>
+      | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+    `);
+
+      await validate(result);
+    });
   });
 
   it('directiveResolverMappings - should generate correct types (import definition)', async () => {

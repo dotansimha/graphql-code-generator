@@ -63,11 +63,11 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
 
-      if (!config.makeResolverTypeCallable) {
+      if (config.makeResolverTypeCallable) {
+        defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
+      } else {
         defsToInclude.push(resolverWithResolve);
         defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
-      } else {
-        defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
       }
 
       directiveResolverMappings[directiveName] = resolverTypeName;
