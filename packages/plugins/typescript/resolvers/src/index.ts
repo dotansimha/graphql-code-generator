@@ -134,16 +134,17 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   }
 
   if (noSchemaStitching) {
-    // Resolver = ResolverFn | ResolverWithResolve (Optional);
     const defs = config.makeResolverTypeCallable
-      ? `${resolverType} ${resolverFnUsage};`
-      : `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`;
+      ? // Resolver = ResolverFn
+        `${resolverType} ${resolverFnUsage};`
+      : // Resolver = ResolverFn | ResolverWithResolve
+        `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`;
     defsToInclude.push(defs);
   } else {
     // StitchingResolver
     // Resolver =
     // | ResolverFn
-    // | ResolverWithResolve (Optional)
+    // | ResolverWithResolve
     // | StitchingResolver;
     defsToInclude.push(
       [
