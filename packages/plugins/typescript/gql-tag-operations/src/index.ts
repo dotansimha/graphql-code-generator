@@ -1,6 +1,7 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+// import { operationName } from '@apollo/client';
 
 export type OperationOrFragment = {
   initialName: string;
@@ -28,17 +29,19 @@ export const plugin: PluginFunction<{
   if (!sourcesWithOperations) {
     return '';
   }
+  const registryLines = getDocumentRegistryChunk(sourcesWithOperations);
+  const overloadChunkLines = getGqlOverloadChunk(sourcesWithOperations);
   return [
     `import * as graphql from './graphql';\n`,
     `${
       useTypeImports ? 'import type' : 'import'
     } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
     `\n`,
-    ...getDocumentRegistryChunk(sourcesWithOperations),
+    ...registryLines,
     `\n`,
-    ...getGqlOverloadChunk(sourcesWithOperations),
+    ...overloadChunkLines,
     `\n`,
-    `export function gql(source: string): unknown;\n`,
+    // `export function gql(source: string): unknown;\n`,
     `export function gql(source: string) {\n`,
     `  return (documents as any)[source] ?? {};\n`,
     `}\n`,
@@ -47,19 +50,43 @@ export const plugin: PluginFunction<{
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
-  const lines = new Set<string>();
-  lines.add(`const documents = {\n`);
+  const addedOperations = new Set<string>();
+  const typesLines = new Array<string>();
+  const documentsLines = new Array<string>();
+  documentsLines.push(`const documents = {\n`);
 
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    const operation = operations[0];
 
-    lines.add(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+    if (operations.length === 1) {
+      const operation = operations[0];
+      if (!addedOperations.has(operation.initialName)) {
+        documentsLines.push(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+        addedOperations.add(operation.initialName);
+      }
+    } else {
+      const operationNames = operations.map(operation => operation.definition.name.value);
+      const typeName = `${operationNames.join('')}Documents`;
+
+      typesLines.push(
+        `type ${typeName} = {\n${operations
+          .map(operation => `  "${operation.definition.name.value}": typeof graphql.${operation.initialName}`)
+          .join(',\n')}\n};\n\n`
+      );
+      documentsLines.push(`    ${JSON.stringify(originalString)}: <${typeName}>{\n`);
+      for (const operation of operations) {
+        if (!addedOperations.has(operation.initialName)) {
+          documentsLines.push(`        "${operation.definition.name.value}": graphql.${operation.initialName},\n`);
+          addedOperations.add(operation.initialName);
+        }
+      }
+      documentsLines.push(`    },\n`);
+    }
   }
 
-  lines.add(`};\n`);
+  documentsLines.push(`};\n`);
 
-  return lines;
+  return [...typesLines, ...documentsLines];
 }
 
 function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>) {
@@ -76,5 +103,6 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>)
     );
   }
 
+  lines.add(`export function gql(source: string): unknown;\n`);
   return lines;
 }
