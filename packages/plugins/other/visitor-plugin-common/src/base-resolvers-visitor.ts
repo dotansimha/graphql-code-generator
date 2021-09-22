@@ -564,6 +564,16 @@ export class BaseResolversVisitor<
           replaceWithType: string;
         }[] = this._federation
           .filterFieldNames(Object.keys(fields))
+          .filter(fieldName => {
+            const field = fields[fieldName];
+            const baseType = getBaseType(field.type);
+
+            // Filter out fields of types that are not included
+            if (shouldInclude && !shouldInclude(baseType)) {
+              return false;
+            }
+            return true;
+          })
           .map(fieldName => {
             const field = fields[fieldName];
             const baseType = getBaseType(field.type);
