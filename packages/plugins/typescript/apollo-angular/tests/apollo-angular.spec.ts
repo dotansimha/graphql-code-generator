@@ -647,7 +647,6 @@ describe('Apollo Angular', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      // eslint-disable-next-line no-console
       expect(content.content).toBeSimilarStringTo(`@Injectable({
         providedIn: 'root'
       })
