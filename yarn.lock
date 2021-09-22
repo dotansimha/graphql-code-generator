@@ -3523,10 +3523,10 @@
     ts-essentials "^8.1.0"
     vue-demi "^0.11.4"
 
-"@vue/composition-api@1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.1.5.tgz#dec72423d2a41a49ddae87d107a6694b68003c33"
-  integrity sha512-OBi35vuM2ZJHENCbYshvikSHZ2qoIl63TBUpszZkmdlmgWLi7yi0tKmesXfP2TsSuNVaKqvxNhHQ9BsEh5IwAg==
+"@vue/composition-api@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.2.1.tgz#88ffd9eb7c9ca8989d4ee65f55f2fd2303b20d6c"
+  integrity sha512-Gea21Vyl2PVDLc6Fq1rr5poI2qU+1WjGze6oykWDSiGEII72n11XdZOSqF6BA53CXZZVs27cz3S3mfJM0a59Vw==
   dependencies:
     tslib "^2.3.0"
 
