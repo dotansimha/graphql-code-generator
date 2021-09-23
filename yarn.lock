@@ -3488,20 +3488,20 @@
     "@typescript-eslint/types" "4.31.2"
     eslint-visitor-keys "^2.0.0"
 
-"@urql/core@>=2.3.2", "@urql/core@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.3.2.tgz#27557cbac602225ff2ee509e3c40f763781f0272"
-  integrity sha512-Ei9VxtW0zgT4xT00aAXCbDYzyX9Oy6wUceosnCqu/3DD283GxXxGrflunfdIJEnLMgA/INGN1TdtpON7TA3yDQ==
+"@urql/core@>=2.3.3", "@urql/core@^2.3.2":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.3.3.tgz#e4777b95c31d8ad0ba21ea1f5c851cbbe1d0ac17"
+  integrity sha512-Bi9mafTFu0O1XZmI7/HrEk12LHZW+Fs/V1FqSJoUDgYIhARIJW6cCh3Havy1dJJ0FETxYmmQQXPf6kst+IP2qQ==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.0"
     wonka "^4.0.14"
 
-"@urql/exchange-graphcache@4.3.4":
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-4.3.4.tgz#e08e66311b1b9df7fca69357f848e996b0407a44"
-  integrity sha512-/PfSTFQnS3HHpFwv76ePSzBX0XpBVotVnubvXElhOQnJFOg/eTZo2TZQ3t31TCG1rtnByeqXmkB6cXHG4aePXg==
+"@urql/exchange-graphcache@4.3.5":
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-4.3.5.tgz#27727cd1c5ba5d23c98aa43eea86c609e81afc2a"
+  integrity sha512-q5/CzNtSxd5fW/YZ94KABmtQ34XliyS+KKKhyJ+/y66D7mYrN/ZEiuKTlnB7FTt9GLZ0yRtgIfXjwoGicB/Tlw==
   dependencies:
-    "@urql/core" ">=2.3.2"
+    "@urql/core" ">=2.3.3"
     wonka "^4.0.14"
 
 "@urql/introspection@0.3.0":
