@@ -1,10 +1,11 @@
-import { validateTs } from '@graphql-codegen/testing';
+import { validateTs, compileTs } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { schema, validate } from './common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
+import { hasExpectedRequestMetadata } from '@reduxjs/toolkit/dist/matchers';
 
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
@@ -550,6 +551,51 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(mergedOutputs).toContain(
       `something?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QuerySomethingArgs, 'arg'>>;`
     );
+  });
+
+  it('should not allow any args by default', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const tsContent = (await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const resolversContent = (await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts',
+      }
+    )) as Types.ComplexPluginOutput;
+    const content = mergeOutputs([
+      tsContent,
+      resolversContent,
+      `
+        const resolvers: Resolvers = {
+          Query: {
+            users(parent, { nono }, ctx, info) {
+              return [{id:'1', name: 'me'}];
+            }
+          }
+        }
+
+      `,
+    ]);
+    let compilefailed = false;
+    try {
+      compileTs(content);
+    } catch (e) {
+      compilefailed = true;
+      expect(e.message).toContain('nono');
+    }
+    expect(compilefailed).toEqual(true);
   });
 
   it('Test for enum usage in resolvers (to verify compatibility with enumValues)', async () => {
