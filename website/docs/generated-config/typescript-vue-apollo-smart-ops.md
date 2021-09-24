@@ -542,4 +542,4 @@ default: `inline`
 
 Whether fragment types should be inlined into other operations.
 "inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
-"combine" is the previous behavior that uses fragment type references without inlining the types (and might cauuse issues with deeply nested fragment that uses list types).
+"combine" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).
