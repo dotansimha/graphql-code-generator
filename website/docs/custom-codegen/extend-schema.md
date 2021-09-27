@@ -20,7 +20,7 @@ module.exports = {
 };
 ```
 
-It's useful when you wish to add things like declerative `@directive` to your `GraphQLSchema`, that effects only the output of the codegen.
+It's useful when you wish to add things like declarative `@directive` to your `GraphQLSchema`, that effects only the output of the codegen.
 
 For example, let's add a custom `@directive` that tells the codegen to ignore a specific `type`:
 
