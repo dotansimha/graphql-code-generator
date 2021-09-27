@@ -2913,16 +2913,16 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@1.4.8":
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.4.8.tgz#7492db919af4e94e72b06364a632031e40d58409"
-  integrity sha512-X0bY//fBpxtsAxL0u5/OQsdTOpvv5J6WldX/+npgkgAh6vIm/cGMD0433/0LVB9BhqjY4+6NbfqufutsawI47A==
+"@theguild/components@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.5.0.tgz#334f1ffa99574b8af7a98c51cff16fe89579c60e"
+  integrity sha512-/0iJwNMDsBk4C/ZWOUcbWcuZHFT4R11Cb/mzOR64D1vJjxZgyvT/lu9n76BAnoB6O2pHgw1R2RBpAEGn38Ltaw==
   dependencies:
     "@emotion/react" "^11.4.0"
     "@emotion/styled" "^11.3.0"
     algoliasearch "^4.9.1"
     core-js "^3.14.0"
-    focus-trap-react "^8.5.0"
+    focus-trap-react "8.7.1"
     polished "^4.1.3"
     react-instantsearch-dom "^6.11.0"
     react-paginate "^7.1.3"
@@ -7604,19 +7604,19 @@ flux@^4.0.1:
     fbemitter "^3.0.0"
     fbjs "^3.0.0"
 
-focus-trap-react@^8.5.0:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.7.0.tgz#5cf7fceb14561ccbb54208958e63422e1116266d"
-  integrity sha512-zqQKgyYFvd9F1We6WeUZkLo/qGWrZKMGMtOXBz+18gyjg5XIzjz+cX8qdtpUZ2eJdyp/1AdHhcklCN8edyF0Ew==
+focus-trap-react@8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.7.1.tgz#a9e4dc866db5e6794bdb751cad9ddc8989598ec5"
+  integrity sha512-1bCCtdZXSzYVrMEcvHfHq+706OSM5r3iZsBFXy9zbnf3+5dyCFiEVWix7Sf6jUaOgshjpyDvZHiBhSlcsO9k3A==
   dependencies:
-    focus-trap "^6.6.0"
+    focus-trap "^6.6.1"
 
-focus-trap@^6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.6.0.tgz#7fb37679926ec1bd762d0748b056c68a64a9e8cf"
-  integrity sha512-2hWVR3XbBejn5v8wDW9DFzLWXcxMNaSJ/CtE3E+FJjjBCLwIYbZJwjUi2RDBfQPM58gHEt5hck0jrJgHR9/s+A==
+focus-trap@^6.6.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.7.1.tgz#d474f86dbaf3c7fbf0d53cf0b12295f4f4068d10"
+  integrity sha512-a6czHbT9twVpy2RpkWQA9vIgwQgB9Nx1PIxNNUxQT4nugG/3QibwxO+tWTh9i+zSY2SFiX4pnYhTaFaQF/6ZAg==
   dependencies:
-    tabbable "^5.2.0"
+    tabbable "^5.2.1"
 
 follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.14.1"
@@ -14555,10 +14555,10 @@ sync-fetch@0.3.0:
     buffer "^5.7.0"
     node-fetch "^2.6.1"
 
-tabbable@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.2.0.tgz#4fba60991d8bb89d06e5d9455c92b453acf88fb2"
-  integrity sha512-0uyt8wbP0P3T4rrsfYg/5Rg3cIJ8Shl1RJ54QMqYxm1TLdWqJD1u6+RQjr2Lor3wmfT7JRHkirIwy99ydBsyPg==
+tabbable@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.2.1.tgz#e3fda7367ddbb172dcda9f871c0fdb36d1c4cd9c"
+  integrity sha512-40pEZ2mhjaZzK0BnI+QGNjJO8UYx9pP5v7BGe17SORTO0OEuuaAwQTkAp8whcZvqon44wKFOikD+Al11K3JICQ==
 
 table@^6.0.9:
   version "6.7.1"
