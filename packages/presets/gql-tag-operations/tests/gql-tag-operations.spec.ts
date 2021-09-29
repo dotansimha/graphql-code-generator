@@ -181,17 +181,17 @@ export type Query = {
 export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AQuery = { __typename?: 'Query', a?: Maybe<string> };
+export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
 
 export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BQuery = { __typename?: 'Query', b?: Maybe<string> };
+export type BQuery = { __typename?: 'Query', b?: string | null | undefined };
 
 export type CQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CQuery = { __typename?: 'Query', c?: Maybe<string> };
+export type CQuery = { __typename?: 'Query', c?: string | null | undefined };
 
 
 export const ADocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -279,7 +279,7 @@ export type Query = {
 export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AQuery = { __typename?: 'Query', a?: Maybe<string> };
+export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
 
 
 export const ADocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
