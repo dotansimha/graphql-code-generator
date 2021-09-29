@@ -3326,10 +3326,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react@17.0.24":
-  version "17.0.24"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.24.tgz#7e1b3f78d0fc53782543f9bce6d949959a5880bd"
-  integrity sha512-eIpyco99gTH+FTI3J7Oi/OH8MZoFMJuztNRimDOJwH4iGIsKV2qkGnk4M9VzlaVWeEEWLWSQRy0FEA0Kz218cg==
+"@types/react@17.0.25":
+  version "17.0.25"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.25.tgz#8b88c226e54910762decc9de2aa36b4dc9240503"
+  integrity sha512-IXrzSOr3CVbEQgmjEdCWF57J7CVaJ7lL/n4penxHm8h0XIcr0AxqGucogh2zj3qRxgk4M4JImOP/MfomkPOhvQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
