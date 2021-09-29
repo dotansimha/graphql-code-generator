@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 3.2.0
+
+### Minor Changes
+
+- 57050cf11: support near-operation-file preset in apollo-angular
+
 ## 3.1.4
 
 ### Patch Changes

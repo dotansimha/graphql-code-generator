@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.5
+
+### Patch Changes
+
+- 25cd11d01: correctly inline Maybe types if the `preresolveTypes` config option is set to `true`
+
 ## 2.1.4
 
 ### Patch Changes

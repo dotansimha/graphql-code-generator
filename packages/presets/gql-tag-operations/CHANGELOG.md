@@ -1,5 +1,17 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.1.6
+
+### Patch Changes
+
+- 06dfd3958: fix: follow "useTypeImports" configuration
+- 5394f19bb: prevent duplicate operations
+- Updated dependencies [06dfd3958]
+- Updated dependencies [25cd11d01]
+- Updated dependencies [5394f19bb]
+  - @graphql-codegen/gql-tag-operations@1.1.5
+  - @graphql-codegen/typescript-operations@2.1.5
+
 ## 1.1.5
 
 ### Patch Changes

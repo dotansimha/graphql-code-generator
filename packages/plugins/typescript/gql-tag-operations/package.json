@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/gql-tag-operations",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "GraphQL Code Generator plugin for generating a typed gql tag function",
   "repository": {
     "type": "git",
