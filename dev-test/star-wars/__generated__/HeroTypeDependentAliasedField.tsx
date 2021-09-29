@@ -9,9 +9,11 @@ export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
 
 export type HeroTypeDependentAliasedFieldQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    { __typename?: 'Droid'; property?: Types.Maybe<string> } | { __typename?: 'Human'; property?: Types.Maybe<string> }
-  >;
+  hero?:
+    | { __typename?: 'Droid'; property?: string | null | undefined }
+    | { __typename?: 'Human'; property?: string | null | undefined }
+    | null
+    | undefined;
 };
 
 export const HeroTypeDependentAliasedFieldDocument = gql`

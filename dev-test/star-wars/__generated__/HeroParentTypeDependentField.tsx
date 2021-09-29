@@ -9,32 +9,35 @@ export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
 
 export type HeroParentTypeDependentFieldQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
+  hero?:
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Types.Maybe<
-          Array<
-            Types.Maybe<
+        friends?:
+          | Array<
               | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
+              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
+              | null
+              | undefined
             >
-          >
-        >;
+          | null
+          | undefined;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Types.Maybe<
-          Array<
-            Types.Maybe<
+        friends?:
+          | Array<
               | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
+              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
+              | null
+              | undefined
             >
-          >
-        >;
+          | null
+          | undefined;
       }
-  >;
+    | null
+    | undefined;
 };
 
 export const HeroParentTypeDependentFieldDocument = gql`

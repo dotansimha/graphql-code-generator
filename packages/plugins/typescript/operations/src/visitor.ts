@@ -45,7 +45,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     autoBind(this);
 
+    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
+
     const wrapOptional = (type: string) => {
+      if (preResolveTypes === true) {
+        return `${type} | null | undefined`;
+      }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
     };
@@ -74,7 +79,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       avoidOptionals: this.config.avoidOptionals,
     };
-    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
     );

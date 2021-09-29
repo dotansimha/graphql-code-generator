@@ -403,17 +403,17 @@ describe('near-operation-file preset', () => {
 export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type AQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
 
 export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type BQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+export type BQuery = { __typename?: 'Query', a?: string | null | undefined };
 
 export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CQuery = { __typename?: 'Query', a?: Types.Maybe<string> };
+export type CQuery = { __typename?: 'Query', a?: string | null | undefined };
 "
 `);
     });
