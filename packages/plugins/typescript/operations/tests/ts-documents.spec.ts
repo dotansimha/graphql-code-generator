@@ -5496,7 +5496,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showName: Scalars['Boolean'];
       }>;
 
-
       export type UserQuery = (
         { __typename?: 'Query' }
         & { user: (
@@ -5590,6 +5589,58 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       expect(content).toBeSimilarStringTo(
         `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
       );
+    });
+
+    it('On avoidOptionals:true, optionals (?) on types should be avoided', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: User!
+        }
+
+        type User {
+          messages: [Message!]!
+        }
+
+        type Message {
+          content: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query MyQuery($include: Boolean!) {
+          me {
+            messages @include(if: $include) {
+              content
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          nonOptionalTypename: true,
+          preResolveTypes: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type MyQueryQuery = (
+          { __typename: 'Query' }
+          & { me: (
+            { __typename: 'User' }
+            & { messages: Maybe<Array<(
+              { __typename: 'Message' }
+              & Pick<Message, 'content'>
+            )>> }
+          ) }
+        );
+      `);
     });
   });
 
