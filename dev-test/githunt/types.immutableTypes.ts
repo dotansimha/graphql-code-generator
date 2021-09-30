@@ -171,16 +171,13 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   readonly __typename?: 'Subscription';
-  readonly commentAdded?:
-    | {
-        readonly __typename?: 'Comment';
-        readonly id: number;
-        readonly createdAt: number;
-        readonly content: string;
-        readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
-      }
-    | null
-    | undefined;
+  readonly commentAdded?: Maybe<{
+    readonly __typename?: 'Comment';
+    readonly id: number;
+    readonly createdAt: number;
+    readonly content: string;
+    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+  }>;
 };
 
 export type CommentQueryVariables = Exact<{
@@ -191,39 +188,31 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?:
-    | { readonly __typename?: 'User'; readonly login: string; readonly html_url: string }
-    | null
-    | undefined;
-  readonly entry?:
-    | {
-        readonly __typename?: 'Entry';
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User'; readonly login: string; readonly html_url: string }>;
+  readonly entry?: Maybe<{
+    readonly __typename?: 'Entry';
+    readonly id: number;
+    readonly createdAt: number;
+    readonly commentCount: number;
+    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+    readonly comments: ReadonlyArray<
+      Maybe<{
+        readonly __typename?: 'Comment';
         readonly id: number;
         readonly createdAt: number;
-        readonly commentCount: number;
+        readonly content: string;
         readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
-        readonly comments: ReadonlyArray<
-          | {
-              readonly __typename?: 'Comment';
-              readonly id: number;
-              readonly createdAt: number;
-              readonly content: string;
-              readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
-            }
-          | null
-          | undefined
-        >;
-        readonly repository: {
-          readonly __typename?: 'Repository';
-          readonly description?: string | null | undefined;
-          readonly open_issues_count?: number | null | undefined;
-          readonly stargazers_count: number;
-          readonly full_name: string;
-          readonly html_url: string;
-        };
-      }
-    | null
-    | undefined;
+      }>
+    >;
+    readonly repository: {
+      readonly __typename?: 'Repository';
+      readonly description?: Maybe<string>;
+      readonly open_issues_count?: Maybe<number>;
+      readonly stargazers_count: number;
+      readonly full_name: string;
+      readonly html_url: string;
+    };
+  }>;
 };
 
 export type CommentsPageCommentFragment = {
@@ -238,10 +227,7 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?:
-    | { readonly __typename?: 'User'; readonly login: string; readonly avatar_url: string }
-    | null
-    | undefined;
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User'; readonly login: string; readonly avatar_url: string }>;
 };
 
 export type FeedEntryFragment = {
@@ -254,10 +240,10 @@ export type FeedEntryFragment = {
     readonly __typename?: 'Repository';
     readonly full_name: string;
     readonly html_url: string;
-    readonly description?: string | null | undefined;
+    readonly description?: Maybe<string>;
     readonly stargazers_count: number;
-    readonly open_issues_count?: number | null | undefined;
-    readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null | undefined;
+    readonly open_issues_count?: Maybe<number>;
+    readonly owner?: Maybe<{ readonly __typename?: 'User'; readonly avatar_url: string }>;
   };
   readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
   readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
@@ -271,32 +257,29 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string } | null | undefined;
-  readonly feed?:
-    | ReadonlyArray<
-        | {
-            readonly __typename?: 'Entry';
-            readonly id: number;
-            readonly commentCount: number;
-            readonly score: number;
-            readonly createdAt: number;
-            readonly repository: {
-              readonly __typename?: 'Repository';
-              readonly full_name: string;
-              readonly html_url: string;
-              readonly description?: string | null | undefined;
-              readonly stargazers_count: number;
-              readonly open_issues_count?: number | null | undefined;
-              readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null | undefined;
-            };
-            readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
-            readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  readonly currentUser?: Maybe<{ readonly __typename?: 'User'; readonly login: string }>;
+  readonly feed?: Maybe<
+    ReadonlyArray<
+      Maybe<{
+        readonly __typename?: 'Entry';
+        readonly id: number;
+        readonly commentCount: number;
+        readonly score: number;
+        readonly createdAt: number;
+        readonly repository: {
+          readonly __typename?: 'Repository';
+          readonly full_name: string;
+          readonly html_url: string;
+          readonly description?: Maybe<string>;
+          readonly stargazers_count: number;
+          readonly open_issues_count?: Maybe<number>;
+          readonly owner?: Maybe<{ readonly __typename?: 'User'; readonly avatar_url: string }>;
+        };
+        readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
+        readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+      }>
+    >
+  >;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -305,7 +288,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   readonly __typename?: 'Mutation';
-  readonly submitRepository?: { readonly __typename?: 'Entry'; readonly createdAt: number } | null | undefined;
+  readonly submitRepository?: Maybe<{ readonly __typename?: 'Entry'; readonly createdAt: number }>;
 };
 
 export type RepoInfoFragment = {
@@ -313,9 +296,9 @@ export type RepoInfoFragment = {
   readonly createdAt: number;
   readonly repository: {
     readonly __typename?: 'Repository';
-    readonly description?: string | null | undefined;
+    readonly description?: Maybe<string>;
     readonly stargazers_count: number;
-    readonly open_issues_count?: number | null | undefined;
+    readonly open_issues_count?: Maybe<number>;
   };
   readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
 };
@@ -327,16 +310,13 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   readonly __typename?: 'Mutation';
-  readonly submitComment?:
-    | {
-        readonly __typename?: 'Comment';
-        readonly id: number;
-        readonly createdAt: number;
-        readonly content: string;
-        readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
-      }
-    | null
-    | undefined;
+  readonly submitComment?: Maybe<{
+    readonly __typename?: 'Comment';
+    readonly id: number;
+    readonly createdAt: number;
+    readonly content: string;
+    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+  }>;
 };
 
 export type VoteButtonsFragment = {
@@ -352,13 +332,10 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   readonly __typename?: 'Mutation';
-  readonly vote?:
-    | {
-        readonly __typename?: 'Entry';
-        readonly score: number;
-        readonly id: number;
-        readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
-      }
-    | null
-    | undefined;
+  readonly vote?: Maybe<{
+    readonly __typename?: 'Entry';
+    readonly score: number;
+    readonly id: number;
+    readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
+  }>;
 };

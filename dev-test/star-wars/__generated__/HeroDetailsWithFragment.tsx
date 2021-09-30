@@ -10,11 +10,10 @@ export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
 
 export type HeroDetailsWithFragmentQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
-    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-    | null
-    | undefined;
+  hero?: Types.Maybe<
+    | { __typename?: 'Droid'; primaryFunction?: Types.Maybe<string>; name: string }
+    | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
+  >;
 };
 
 export const HeroDetailsWithFragmentDocument = gql`

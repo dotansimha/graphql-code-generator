@@ -106,21 +106,15 @@ export type User = {
 
 export type FooQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FooQuery = {
-  __typename?: 'Query';
-  Tweets?: Array<{ __typename?: 'Tweet'; id: string } | null | undefined> | null | undefined;
-};
+export type FooQuery = { __typename?: 'Query'; Tweets?: Maybe<Array<Maybe<{ __typename?: 'Tweet'; id: string }>>> };
 
-export type LelFragment = { __typename?: 'Tweet'; id: string; body?: string | null | undefined };
+export type LelFragment = { __typename?: 'Tweet'; id: string; body?: Maybe<string> };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = {
   __typename?: 'Query';
-  Tweets?:
-    | Array<{ __typename?: 'Tweet'; id: string; body?: string | null | undefined } | null | undefined>
-    | null
-    | undefined;
+  Tweets?: Maybe<Array<Maybe<{ __typename?: 'Tweet'; id: string; body?: Maybe<string> }>>>;
 };
 
 export const LelFragmentDoc = {

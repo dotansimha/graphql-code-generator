@@ -171,16 +171,13 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  commentAdded: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
 };
 
 export type CommentQueryVariables = Exact<{
@@ -191,36 +188,31 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
-  entry:
-    | {
-        __typename?: 'Entry';
+  currentUser: Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
+  entry: Maybe<{
+    __typename?: 'Entry';
+    id: number;
+    createdAt: number;
+    commentCount: number;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+    comments: Array<
+      Maybe<{
+        __typename?: 'Comment';
         id: number;
         createdAt: number;
-        commentCount: number;
+        content: string;
         postedBy: { __typename?: 'User'; login: string; html_url: string };
-        comments: Array<
-          | {
-              __typename?: 'Comment';
-              id: number;
-              createdAt: number;
-              content: string;
-              postedBy: { __typename?: 'User'; login: string; html_url: string };
-            }
-          | null
-          | undefined
-        >;
-        repository: {
-          __typename?: 'Repository';
-          description: string | null | undefined;
-          open_issues_count: number | null | undefined;
-          stargazers_count: number;
-          full_name: string;
-          html_url: string;
-        };
-      }
-    | null
-    | undefined;
+      }>
+    >;
+    repository: {
+      __typename?: 'Repository';
+      description: Maybe<string>;
+      open_issues_count: Maybe<number>;
+      stargazers_count: number;
+      full_name: string;
+      html_url: string;
+    };
+  }>;
 };
 
 export type CommentsPageCommentFragment = {
@@ -235,7 +227,7 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
+  currentUser: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
 };
 
 export type FeedEntryFragment = {
@@ -248,10 +240,10 @@ export type FeedEntryFragment = {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    description: string | null | undefined;
+    description: Maybe<string>;
     stargazers_count: number;
-    open_issues_count: number | null | undefined;
-    owner: { __typename?: 'User'; avatar_url: string } | null | undefined;
+    open_issues_count: Maybe<number>;
+    owner: Maybe<{ __typename?: 'User'; avatar_url: string }>;
   };
   vote: { __typename?: 'Vote'; vote_value: number };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
@@ -265,32 +257,29 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser: { __typename?: 'User'; login: string } | null | undefined;
-  feed:
-    | Array<
-        | {
-            __typename?: 'Entry';
-            id: number;
-            commentCount: number;
-            score: number;
-            createdAt: number;
-            repository: {
-              __typename?: 'Repository';
-              full_name: string;
-              html_url: string;
-              description: string | null | undefined;
-              stargazers_count: number;
-              open_issues_count: number | null | undefined;
-              owner: { __typename?: 'User'; avatar_url: string } | null | undefined;
-            };
-            vote: { __typename?: 'Vote'; vote_value: number };
-            postedBy: { __typename?: 'User'; html_url: string; login: string };
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  currentUser: Maybe<{ __typename?: 'User'; login: string }>;
+  feed: Maybe<
+    Array<
+      Maybe<{
+        __typename?: 'Entry';
+        id: number;
+        commentCount: number;
+        score: number;
+        createdAt: number;
+        repository: {
+          __typename?: 'Repository';
+          full_name: string;
+          html_url: string;
+          description: Maybe<string>;
+          stargazers_count: number;
+          open_issues_count: Maybe<number>;
+          owner: Maybe<{ __typename?: 'User'; avatar_url: string }>;
+        };
+        vote: { __typename?: 'Vote'; vote_value: number };
+        postedBy: { __typename?: 'User'; html_url: string; login: string };
+      }>
+    >
+  >;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -299,7 +288,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository: { __typename?: 'Entry'; createdAt: number } | null | undefined;
+  submitRepository: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
 };
 
 export type RepoInfoFragment = {
@@ -307,9 +296,9 @@ export type RepoInfoFragment = {
   createdAt: number;
   repository: {
     __typename?: 'Repository';
-    description: string | null | undefined;
+    description: Maybe<string>;
     stargazers_count: number;
-    open_issues_count: number | null | undefined;
+    open_issues_count: Maybe<number>;
   };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
 };
@@ -321,16 +310,13 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  submitComment: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
 };
 
 export type VoteButtonsFragment = {
@@ -346,8 +332,5 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote:
-    | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
-    | null
-    | undefined;
+  vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
 };

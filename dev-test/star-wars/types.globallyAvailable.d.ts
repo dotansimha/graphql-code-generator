@@ -242,7 +242,7 @@ type CreateReviewForEpisodeMutationVariables = Exact<{
 
 type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
-  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null | undefined } | null | undefined;
+  createReview?: Maybe<{ __typename?: 'Review'; stars: number; commentary?: Maybe<string> }>;
 };
 
 type HeroAndFriendsNamesQueryVariables = Exact<{
@@ -251,36 +251,28 @@ type HeroAndFriendsNamesQueryVariables = Exact<{
 
 type HeroAndFriendsNamesQuery = {
   __typename?: 'Query';
-  hero?:
+  hero?: Maybe<
     | {
         __typename?: 'Droid';
         name: string;
-        friends?:
-          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
-          | null
-          | undefined;
+        friends?: Maybe<Array<Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>>;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?:
-          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
-          | null
-          | undefined;
+        friends?: Maybe<Array<Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>>;
       }
-    | null
-    | undefined;
+  >;
 };
 
 type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
 type HeroAppearsInQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name: string; appearsIn: Array<Episode | null | undefined> }
-    | { __typename?: 'Human'; name: string; appearsIn: Array<Episode | null | undefined> }
-    | null
-    | undefined;
+  hero?: Maybe<
+    | { __typename?: 'Droid'; name: string; appearsIn: Array<Maybe<Episode>> }
+    | { __typename?: 'Human'; name: string; appearsIn: Array<Maybe<Episode>> }
+  >;
 };
 
 type HeroDetailsQueryVariables = Exact<{
@@ -289,16 +281,15 @@ type HeroDetailsQueryVariables = Exact<{
 
 type HeroDetailsQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
-    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-    | null
-    | undefined;
+  hero?: Maybe<
+    | { __typename?: 'Droid'; primaryFunction?: Maybe<string>; name: string }
+    | { __typename?: 'Human'; height?: Maybe<number>; name: string }
+  >;
 };
 
-type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string };
+type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction?: Maybe<string>; name: string };
 
-type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null | undefined; name: string };
+type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: Maybe<number>; name: string };
 
 type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
@@ -308,11 +299,10 @@ type HeroDetailsWithFragmentQueryVariables = Exact<{
 
 type HeroDetailsWithFragmentQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
-    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-    | null
-    | undefined;
+  hero?: Maybe<
+    | { __typename?: 'Droid'; primaryFunction?: Maybe<string>; name: string }
+    | { __typename?: 'Human'; height?: Maybe<number>; name: string }
+  >;
 };
 
 type HeroNameQueryVariables = Exact<{
@@ -321,7 +311,7 @@ type HeroNameQueryVariables = Exact<{
 
 type HeroNameQuery = {
   __typename?: 'Query';
-  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined;
+  hero?: Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
 };
 
 type HeroNameConditionalInclusionQueryVariables = Exact<{
@@ -331,11 +321,7 @@ type HeroNameConditionalInclusionQueryVariables = Exact<{
 
 type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: Maybe<{ __typename?: 'Droid'; name?: Maybe<string> } | { __typename?: 'Human'; name?: Maybe<string> }>;
 };
 
 type HeroNameConditionalExclusionQueryVariables = Exact<{
@@ -345,11 +331,7 @@ type HeroNameConditionalExclusionQueryVariables = Exact<{
 
 type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: Maybe<{ __typename?: 'Droid'; name?: Maybe<string> } | { __typename?: 'Human'; name?: Maybe<string> }>;
 };
 
 type HeroParentTypeDependentFieldQueryVariables = Exact<{
@@ -358,35 +340,30 @@ type HeroParentTypeDependentFieldQueryVariables = Exact<{
 
 type HeroParentTypeDependentFieldQuery = {
   __typename?: 'Query';
-  hero?:
+  hero?: Maybe<
     | {
         __typename?: 'Droid';
         name: string;
-        friends?:
-          | Array<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-              | null
-              | undefined
+        friends?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: Maybe<number>; name: string }
             >
-          | null
-          | undefined;
+          >
+        >;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?:
-          | Array<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-              | null
-              | undefined
+        friends?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: Maybe<number>; name: string }
             >
-          | null
-          | undefined;
+          >
+        >;
       }
-    | null
-    | undefined;
+  >;
 };
 
 type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
@@ -395,26 +372,22 @@ type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
 
 type HeroTypeDependentAliasedFieldQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; property?: string | null | undefined }
-    | { __typename?: 'Human'; property?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: Maybe<{ __typename?: 'Droid'; property?: Maybe<string> } | { __typename?: 'Human'; property?: Maybe<string> }>;
 };
 
-type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null | undefined };
+type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: Maybe<number> };
 
 type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 type HumanWithNullHeightQuery = {
   __typename?: 'Query';
-  human?: { __typename?: 'Human'; name: string; mass?: number | null | undefined } | null | undefined;
+  human?: Maybe<{ __typename?: 'Human'; name: string; mass?: Maybe<number> }>;
 };
 
 type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
 type TwoHeroesQuery = {
   __typename?: 'Query';
-  r2?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined;
-  luke?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined;
+  r2?: Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
+  luke?: Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
 };

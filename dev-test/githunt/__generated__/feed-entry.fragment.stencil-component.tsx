@@ -13,10 +13,10 @@ declare global {
       __typename?: 'Repository';
       full_name: string;
       html_url: string;
-      description?: string | null | undefined;
+      description?: Types.Maybe<string>;
       stargazers_count: number;
-      open_issues_count?: number | null | undefined;
-      owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+      open_issues_count?: Types.Maybe<number>;
+      owner?: Types.Maybe<{ __typename?: 'User'; avatar_url: string }>;
     };
     vote: { __typename?: 'Vote'; vote_value: number };
     postedBy: { __typename?: 'User'; html_url: string; login: string };
