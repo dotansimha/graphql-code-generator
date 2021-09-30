@@ -43,7 +43,7 @@ So now that you have a local copy of the project, start by installing the depend
 
 ## 4. Make sure everything works
 
-To test the initial scripts and verify that you have a valid development environment, start by running thw following scripts from the root directory:
+To test the initial scripts and verify that you have a valid development environment, start by running the following scripts from the root directory:
 
     yarn build
     yarn test
@@ -160,13 +160,13 @@ describe('My Plugin', () => {
 
 Now, to make sure it works, run the following in your plugin directory:
 
-    yarn test 
+    yarn test
 
 ## 8. Integration
 
 You can also test the integration of your plugin with the codegen core and cli, the integration with other plugins and the output for some complex schemas and operations.
 
-To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.yml`, and run `yarn generate:examples` in the project root directory, to run it. 
+To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.yml`, and run `yarn generate:examples` in the project root directory, to run it.
 
 ## 9. Documentation
 
@@ -176,8 +176,7 @@ In order to add it to the website, do the following:
 
 1. Add JSDoc annotations to your config object, it can also include default value, examples and type:
 
-```ts
-
+````ts
 export type MyPluginConfig = {
   /**
    * @name name
@@ -196,19 +195,19 @@ export type MyPluginConfig = {
    */
   name: string;
 };
-```
+````
 
 Now, open `./website/generate-config.js` and add a record to the mapping in that file, point the file with the configuration annotation, and the output file:
 
 ```js
 const mapping = {
   '../packages/plugins/my-plugin/src/index.ts': BASE_DIR + '/my-plugin.md',
-}
+};
 ```
 
 Now, navigate to the `website` directory and run `yarn generate:config-docs` -this will take a minute, and it will generate the `.md` for all plugins. You should find your `my-plugin.md` file under `website/docs/generated-config` directory.
 
-Now, run `yarn start` to run the website. You markdown file is loaded, but it's not displayed yet, so let's create a new page for it first. 
+Now, run `yarn start` to run the website. You markdown file is loaded, but it's not displayed yet, so let's create a new page for it first.
 
 Create `my-plugin.md` under `website/docs/plugins/` and add the following content to it, and include the generated configuration API reference:
 
@@ -218,12 +217,11 @@ id: my-plugin
 title: My Plugin
 ---
 
-This is my new plugin. 
+This is my new plugin.
 
 Add here some custom instructions, explainations, installation guide and more.
 
 {@import ../generated-config/my-plugin.md}
-
 ```
 
 Your plugin page should be available in: `http://localhost:3000/docs/plugins/my-plugin`

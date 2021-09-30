@@ -148,7 +148,7 @@ const Tweets = () => {
 
 ## Improving bundle-size with the gql-tag-operations babel plugin
 
-Because the generated code output is a single `gql` function that looks similar to thw following code, code-splitting and tree-shaking is not easily possible.
+Because the generated code output is a single `gql` function that looks similar to the following code, code-splitting and tree-shaking is not easily possible.
 
 ```ts
 import * as graphql from './graphql';
