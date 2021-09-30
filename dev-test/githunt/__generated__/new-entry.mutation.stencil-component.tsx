@@ -9,7 +9,7 @@ declare global {
 
   export type SubmitRepositoryMutation = {
     __typename?: 'Mutation';
-    submitRepository?: Types.Maybe<{ __typename?: 'Entry'; createdAt: number }>;
+    submitRepository?: { __typename?: 'Entry'; createdAt: number } | null | undefined;
   };
 }
 

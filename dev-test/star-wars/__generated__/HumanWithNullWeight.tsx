@@ -8,7 +8,7 @@ export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: nev
 
 export type HumanWithNullHeightQuery = {
   __typename?: 'Query';
-  human?: Types.Maybe<{ __typename?: 'Human'; name: string; mass?: Types.Maybe<number> }>;
+  human?: { __typename?: 'Human'; name: string; mass?: number | null | undefined } | null | undefined;
 };
 
 export const HumanWithNullHeightDocument = gql`

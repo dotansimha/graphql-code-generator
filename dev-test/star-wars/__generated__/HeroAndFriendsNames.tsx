@@ -9,22 +9,25 @@ export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
 
 export type HeroAndFriendsNamesQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
+  hero?:
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Types.Maybe<
-          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
-        >;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Types.Maybe<
-          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
-        >;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
       }
-  >;
+    | null
+    | undefined;
 };
 
 export const HeroAndFriendsNamesDocument = gql`

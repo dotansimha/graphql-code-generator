@@ -9,10 +9,11 @@ export type HeroDetailsQueryVariables = Types.Exact<{
 
 export type HeroDetailsQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    | { __typename?: 'Droid'; primaryFunction?: Types.Maybe<string>; name: string }
-    | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
-  >;
+  hero?:
+    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
+    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
+    | null
+    | undefined;
 };
 
 export const HeroDetailsDocument = gql`

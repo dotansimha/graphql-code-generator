@@ -12,31 +12,36 @@ declare global {
 
   export type CommentQuery = {
     __typename?: 'Query';
-    currentUser?: Types.Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
-    entry?: Types.Maybe<{
-      __typename?: 'Entry';
-      id: number;
-      createdAt: number;
-      commentCount: number;
-      postedBy: { __typename?: 'User'; login: string; html_url: string };
-      comments: Array<
-        Types.Maybe<{
-          __typename?: 'Comment';
+    currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
+    entry?:
+      | {
+          __typename?: 'Entry';
           id: number;
           createdAt: number;
-          content: string;
+          commentCount: number;
           postedBy: { __typename?: 'User'; login: string; html_url: string };
-        }>
-      >;
-      repository: {
-        __typename?: 'Repository';
-        description?: Types.Maybe<string>;
-        open_issues_count?: Types.Maybe<number>;
-        stargazers_count: number;
-        full_name: string;
-        html_url: string;
-      };
-    }>;
+          comments: Array<
+            | {
+                __typename?: 'Comment';
+                id: number;
+                createdAt: number;
+                content: string;
+                postedBy: { __typename?: 'User'; login: string; html_url: string };
+              }
+            | null
+            | undefined
+          >;
+          repository: {
+            __typename?: 'Repository';
+            description?: string | null | undefined;
+            open_issues_count?: number | null | undefined;
+            stargazers_count: number;
+            full_name: string;
+            html_url: string;
+          };
+        }
+      | null
+      | undefined;
   };
 }
 

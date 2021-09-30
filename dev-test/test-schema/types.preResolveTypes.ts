@@ -40,7 +40,7 @@ export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TestQuery = {
   __typename?: 'Query';
-  testArr1?: Maybe<Array<Maybe<string>>>;
-  testArr2: Array<Maybe<string>>;
+  testArr1?: Array<string | null | undefined> | null | undefined;
+  testArr2: Array<string | null | undefined>;
   testArr3: Array<string>;
 };

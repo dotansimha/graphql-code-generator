@@ -7,7 +7,7 @@ declare global {
 
   export type CurrentUserForProfileQuery = {
     __typename?: 'Query';
-    currentUser?: Types.Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
+    currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
   };
 }
 
