@@ -49,8 +49,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const avoidOptionals = getConfigValue(config.avoidOptionals, false);
 
     const wrapOptional = (type: string) => {
-      if (preResolveTypes === true && avoidOptionals === false) {
-        return `${type} | null | undefined`;
+      if (preResolveTypes === true) {
+        const optionalUndefined = avoidOptionals === true ? '' : ' | undefined';
+        return `${type} | null` + optionalUndefined;
       }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;

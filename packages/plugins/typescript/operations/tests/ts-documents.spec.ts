@@ -5561,7 +5561,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       `);
     });
 
-    it('Should handle "preResolveTypes" and "avoiudOptionals" together', async () => {
+    it('Should handle "preResolveTypes" and "avoidOptionals" together', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user(id: ID!): User!
@@ -5588,7 +5588,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: Maybe<string> } }`
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
       );
     });
   });
