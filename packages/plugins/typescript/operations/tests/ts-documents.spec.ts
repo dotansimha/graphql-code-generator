@@ -5560,6 +5560,37 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         );
       `);
     });
+
+    it('Should handle "preResolveTypes" and "avoiudOptionals" together', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!): User!
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String
+        }
+      `);
+      const operations = parse(/* GraphQL */ `
+        query user {
+          user(id: 1) {
+            id
+            username
+            email
+          }
+        }
+      `);
+      const config = { avoidOptionals: true, preResolveTypes: true };
+      const { content } = await plugin(schema, [{ location: '', document: operations }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toBeSimilarStringTo(
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: Maybe<string> } }`
+      );
+    });
   });
 
   it('handles unnamed queries', async () => {
