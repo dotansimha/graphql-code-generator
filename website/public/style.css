@@ -1,0 +1,22 @@
+code[class*='language-'],
+pre[class*='language-'] {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+code,
+code * {
+  font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;
+
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+article {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#__next {
+  font-family: TGCFont, sans-serif;
+}

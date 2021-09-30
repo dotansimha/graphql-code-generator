@@ -3,29 +3,42 @@
   "version": "1.17.7",
   "private": true,
   "scripts": {
-    "start": "docusaurus start",
+    "start": "next start",
+    "build": "next build",
+    "dev": "concurrently -r \"next-remote-watch ./docs ./src/pages/_app.tsx\" \"wait-on -s 1 http://localhost:3000\"",
+    "next": "next",
     "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
     "prebuild:website": "yarn generate:config-docs",
     "prestart": "yarn generate:config-docs",
-    "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/"
+    "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "devDependencies": {
-    "worker-loader": "3.0.8",
-    "file-loader": "6.2.0",
-    "style-loader": "2.0.0",
-    "@docusaurus/core": "2.0.0-beta.6",
-    "@docusaurus/preset-classic": "2.0.0-beta.6",
-    "@graphql-codegen/config-schema": "1.17.10",
-    "babel-preset-minify": "0.5.1",
-    "classnames": "2.3.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "remark-code-import": "0.3.0",
-    "remark-import-partial": "0.0.2",
-    "ts-node": "10.2.1",
-    "vscode-languageserver-types": "3.16.0"
+    "@next/bundle-analyzer": "^11.1.2",
+    "@types/concurrently": "6.2.1",
+    "@types/fs-extra": "9.0.13",
+    "@types/mdx-js__react": "1.5.4",
+    "@types/node": "15.12.2",
+    "@types/react": "17.0.24",
+    "@types/react-dom": "17.0.9",
+    "@types/wait-on": "5.3.1",
+    "concurrently": "6.2.2",
+    "cross-env": "^7.0.3",
+    "esbuild-register": "3.0.0",
+    "open-cli": "6.0.1",
+    "strict-npm-engines": "0.0.1",
+    "tsup": "5.2.1",
+    "typescript": "4.4.3",
+    "wait-on": "6.0.0"
   },
   "dependencies": {
+    "@chakra-ui/icons": "1.0.15",
+    "@chakra-ui/react": "1.6.8",
+    "@chakra-ui/system": "1.7.3",
+    "@chakra-ui/theme-tools": "1.2.1",
+    "@chakra-ui/utils": "1.8.2",
+    "@emotion/react": "11.4.1",
+    "@emotion/styled": "11.3.0",
     "@graphql-codegen/add": "3.1.0",
     "@graphql-codegen/c-sharp": "4.1.4",
     "@graphql-codegen/c-sharp-operations": "2.1.4",
@@ -43,10 +56,10 @@
     "@graphql-codegen/near-operation-file-preset": "2.1.4",
     "@graphql-codegen/schema-ast": "2.2.0",
     "@graphql-codegen/time": "3.1.0",
-    "react-markdown": "7.0.1",
-    "@graphql-codegen/typescript": "2.2.2",
     "@graphql-codegen/typed-document-node": "2.1.4",
     "@graphql-codegen/typescript-apollo-angular": "3.2.0",
+    "@graphql-codegen/typescript": "2.2.2",
+    "@graphql-codegen/typescript-apollo-client-helpers": "2.1.4",
     "@graphql-codegen/typescript-generic-sdk": "2.1.4",
     "@graphql-codegen/typescript-graphql-files-modules": "2.1.0",
     "@graphql-codegen/typescript-graphql-request": "4.1.4",
@@ -54,19 +67,48 @@
     "@graphql-codegen/typescript-operations": "2.1.5",
     "@graphql-codegen/typescript-react-apollo": "3.1.4",
     "@graphql-codegen/typescript-react-query": "3.0.1",
-    "@graphql-codegen/typescript-rtk-query": "2.1.4",
     "@graphql-codegen/typescript-resolvers": "2.2.1",
+    "@graphql-codegen/typescript-rtk-query": "2.1.4",
     "@graphql-codegen/typescript-stencil-apollo": "2.1.4",
     "@graphql-codegen/typescript-type-graphql": "2.1.4",
     "@graphql-codegen/typescript-urql": "3.2.0",
     "@graphql-codegen/typescript-vue-apollo": "3.1.4",
-    "@graphql-codegen/typescript-vue-urql": "2.1.4",
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.1.4",
-    "@graphql-codegen/typescript-apollo-client-helpers": "2.1.4",
-    "node-polyfill-webpack-plugin": "1.1.4",
+    "@graphql-codegen/typescript-vue-urql": "2.1.4",
+    "@guild-docs/client": "1.0.6",
+    "@guild-docs/server": "1.0.4",
+    "@mdx-js/react": "1.6.22",
     "@monaco-editor/react": "4.2.2",
+    "@theguild/components": "1.5.0",
+    "date-fns": "2.24.0",
+    "esbuild": "0.12.29",
+    "framer-motion": "4.1.17",
+    "fs-extra": "10.0.0",
+    "globby": "11.0.4",
+    "next": "11.1.2",
+    "next-i18next": "8.8.0",
+    "next-remote-watch": "1.0.0",
+    "next-seo": "^4.28.1",
+    "node-polyfill-webpack-plugin": "1.1.4",
+    "npms.io": "2.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "4.2.0",
+    "react-markdown": "7.0.1",
     "react-select": "4.3.1",
-    "@theguild/components": "1.5.0"
+    "react-use": "17.3.1",
+    "remark-admonitions": "1.2.1",
+    "shiki": "0.9.11",
+    "tiny-lru": "7.0.6",
+    "undici": "4.7.0",
+    "use-http": "1.0.24",
+    "valtio": "1.2.3",
+    "zustand": "3.5.11"
+  },
+  "babelMacros": {
+    "twin": {
+      "preset": "emotion"
+    }
   },
   "browserslist": {
     "production": [
@@ -79,5 +121,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "^0.12.9"
+    }
+  },
+  "resolutions": {
+    "esbuild": "^0.12.9"
   }
 }
