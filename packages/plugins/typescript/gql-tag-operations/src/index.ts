@@ -93,8 +93,8 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>,
     const originalString = rest.source.rawSDL!;
     const returnType =
       mode === 'lookup'
-        ? `(typeof documents)[${JSON.stringify(originalString)}];`
-        : `typeof import('./graphql').${operations[0].initialName};`;
+        ? `(typeof documents)[${JSON.stringify(originalString)}]`
+        : `typeof import('./graphql').${operations[0].initialName}`;
     lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
 
