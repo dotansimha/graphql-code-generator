@@ -9,7 +9,7 @@ index f74b673..283655b 100644
 -  return addIstanbulInstrumentation(options, jestTransformOptions);
 +  return addIstanbulInstrumentation(options, transformOptions);
  }
- 
+
  async function loadBabelOptionsAsync(
 @@ -218,7 +218,7 @@ async function loadBabelOptionsAsync(
    jestTransformOptions
@@ -18,12 +18,12 @@ index f74b673..283655b 100644
 -  return addIstanbulInstrumentation(options, jestTransformOptions);
 +  return addIstanbulInstrumentation(options, transformOptions);
  }
- 
+
  const createTransformer = userOptions => {
 @@ -320,11 +320,14 @@ const createTransformer = userOptions => {
        );
      },
- 
+
 -    process(sourceText, sourcePath, transformOptions) {
 +    process(sourceText, sourcePath, config, transformOptions) {
        const babelOptions = loadBabelOptions(
