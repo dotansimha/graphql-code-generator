@@ -111,6 +111,7 @@
     ]
   },
   "resolutions": {
+    "esbuild": "0.12.29",
     "prettier": "2.3.2",
     "babel-jest": "27.2.4",
     "jest-runner": "27.2.4",
