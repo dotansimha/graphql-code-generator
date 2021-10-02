@@ -14,6 +14,7 @@ import { pascalCase } from 'change-case-all';
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
   withHooks: boolean;
+  withCore: boolean;
   urqlImportFrom: string;
 }
 
@@ -24,6 +25,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, false),
       withHooks: getConfigValue(rawConfig.withHooks, true),
+      withCore: getConfigValue(rawConfig.withCore, false),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
     });
 
@@ -130,6 +132,22 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
 };`;
   }
 
+  private _buildCore(
+    node: OperationDefinitionNode,
+    operationType: string,
+    documentVariableName: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    const operationName: string = this.convertName(node.name?.value ?? '', {
+      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+      useTypesPrefix: false,
+    });
+
+    return `
+export function urqlCore${operationName}(client: Urql.Client, variables: ${operationVariablesTypes}) {return client.${operationType.toLowerCase()}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)}`;
+  }
+
   protected buildOperation(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -160,7 +178,16 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
           operationVariablesTypesPrefixed
         )
       : null;
+    const core = this.config.withCore
+      ? this._buildCore(
+          node,
+          operationTypePrefixed,
+          documentVariablePrefixed,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
+        )
+      : null;
 
-    return [component, hooks].filter(a => a).join('\n');
+    return [component, hooks, core].filter(a => a).join('\n');
   }
 }

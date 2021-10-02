@@ -16,6 +16,12 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
    */
   withHooks?: boolean;
   /**
+   * @description You can specify that the output should include typed wrappers around
+   * urql/core for imperative querying or usage in Node.js
+   * @default false
+   */
+  withCore?: boolean;
+  /**
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
    * This is useful for further abstraction of some common tasks (eg. error handling).
    * Filepath relative to generated file can be also specified.

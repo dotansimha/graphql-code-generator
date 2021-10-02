@@ -508,12 +508,64 @@ query MyFeed {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
-
       expect(content.content).toBeSimilarStringTo(`
       export const ListenToCommentsComponent = (props: Omit<Urql.SubscriptionProps<ListenToCommentsSubscription, ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>, 'query'> & { variables?: ListenToCommentsSubscriptionVariables }) => (
         <Urql.Subscription {...props} query={ListenToCommentsDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('Core', () => {
+    it('should generate urql core wrapper for query, mutation, subscription', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+
+        subscription ListenToComments($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: false, withComponent: false, withCore: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+      expect(content.content).toBeSimilarStringTo(
+        `export function urqlCoreFeedQuery(client: Urql.Client, variables: FeedQueryVariables) {return client.query<FeedQuery, FeedQueryVariables>(FeedDocument, variables)}`
+      );
+
+      expect(content.content).toBeSimilarStringTo(
+        `export function urqlCoreSubmitRepositoryMutation(client: Urql.Client, variables: SubmitRepositoryMutationVariables) {return client.mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, variables)}`
+      );
+
+      expect(content.content).toBeSimilarStringTo(
+        `export function urqlCoreListenToCommentsSubscription(client: Urql.Client, variables: ListenToCommentsSubscriptionVariables) {return client.subscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, variables)}`
+      );
     });
   });
 
