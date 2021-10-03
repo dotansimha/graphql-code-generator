@@ -3,4 +3,4 @@ id: time
 title: Time
 ---
 
-{@import ../../generated-config/time.md}
+{@import ../generated-config/time.md}
