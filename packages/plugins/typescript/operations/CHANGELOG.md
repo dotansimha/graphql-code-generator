@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.6
+
+### Patch Changes
+
+- 5c37b9d11: Fix avoidOptional handle of Maybe types
+
 ## 2.1.5
 
 ### Patch Changes
