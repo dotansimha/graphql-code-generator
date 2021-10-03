@@ -5,7 +5,7 @@ title: TypeScript Apollo Angular
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/typescript-apollo-angular.md}
+{@import ../../generated-config/typescript-apollo-angular.md}
 
 ## How to use?
 

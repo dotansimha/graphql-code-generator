@@ -33,7 +33,7 @@ This interface can be used for db read/write purposes, thus making communication
 
 > Don't install this plugin as devDependency, because you need to import the directives from it.
 
-{@import ../generated-config/typescript-mongodb.md}
+{@import ../../generated-config/typescript-mongodb.md}
 
 ## Usage Example
 

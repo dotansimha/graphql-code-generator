@@ -15,7 +15,7 @@ This preset generates code for `graphql-modules` @ `v1`. Previous versions are n
 
 ## Configuration
 
-{@import ../generated-config/graphql-modules-preset.md}
+{@import ../generated_config/graphql-modules-preset.md}
 
 ## Usage Example
 

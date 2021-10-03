@@ -3,7 +3,7 @@ id: schema-ast
 title: Schema AST
 ---
 
-{@import ../generated-config/schema-ast.md}
+{@import ../../generated-config/schema-ast.md}
 
 ## Examples
 

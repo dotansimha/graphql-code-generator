@@ -7,7 +7,7 @@ title: TypeScript Generic SDK
 
 > Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
 
-{@import ../generated-config/typescript-generic-sdk.md}
+{@import ../../generated-config/typescript-generic-sdk.md}
 
 ## Usage
 

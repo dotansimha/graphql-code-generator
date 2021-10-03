@@ -7,7 +7,7 @@ title: Add
 
 You can use this plugin to add custom code, imports, comments and more to your output file.
 
-{@import ../generated-config/add.md}
+{@import ../../generated-config/add.md}
 
 ## Examples
  

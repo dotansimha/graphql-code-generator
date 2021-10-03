@@ -3,7 +3,7 @@ id: fragment-matcher
 title: Fragment Matcher
 ---
 
-{@import ../generated-config/fragment-matcher.md}
+{@import ../../generated-config/fragment-matcher.md}
 
 ## How to use?
 

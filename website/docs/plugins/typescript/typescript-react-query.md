@@ -5,7 +5,7 @@ title: TypeScript React-Query
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/typescript-react-query.md}
+{@import ../../generated-config/typescript-react-query.md}
 
 ## Usage Examples
 

@@ -206,7 +206,7 @@ const mapping = {
 }
 ```
 
-Now, navigate to the `website` directory and run `yarn generate:config-docs` -this will take a minute, and it will generate the `.md` for all plugins. You should find your `my-plugin.md` file under `website/docs/generated-config` directory.
+Now, navigate to the `website` directory and run `yarn generate:config-docs` -this will take a minute, and it will generate the `.md` for all plugins. You should find your `my-plugin.md` file under `website/docs/generated_config` directory.
 
 Now, run `yarn start` to run the website. You markdown file is loaded, but it's not displayed yet, so let's create a new page for it first. 
 
@@ -222,7 +222,7 @@ This is my new plugin.
 
 Add here some custom instructions, explainations, installation guide and more.
 
-{@import ../generated-config/my-plugin.md}
+{@import ../../generated-config/my-plugin.md}
 
 ```
 

@@ -5,7 +5,7 @@ title: TypeScript Urql
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/typescript-urql.md}
+{@import ../../generated-config/typescript-urql.md}
 
 ## Usage Example
 
