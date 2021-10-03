@@ -15,7 +15,7 @@ require:
   - extension2
 ```
 
-Adding `require` extension is useful if you are loading your `GraphQLSchema` or GraphQL documents from a [code file](schema-field.md#javascript-export), if you wish to use [custom plugins](../custom-codegen/write-your-plugin.md), or use a [custom schema loader](schema-field.md#custom-schema-loader) or a [custom document loader](documents-field.md#custom-document-loader).
+Adding `require` extension is useful if you are loading your `GraphQLSchema` or GraphQL documents from a [code file](schema-field.md#javascript-export), if you wish to use [custom plugins](../../custom-codegen/write-your-plugin.md), or use a [custom schema loader](schema-field.md#custom-schema-loader) or a [custom document loader](documents-field.md#custom-document-loader).
 
 ## TypeScript Support
 

@@ -83,18 +83,12 @@ function AppContent(appProps: AppProps) {
         {
           children: 'Docs & API',
           href: '/docs',
-          title: 'Read more about Envelop',
-          onClick: e => handlePushRoute('/docs', e),
+          title: 'Read more about GraphQL Code Generator',
+          onClick: e => handlePushRoute('/docs/getting_started', e),
         },
-/*        {
-          children: 'Plugin Hub',
-          href: '/plugins',
-          title: 'Browse the plugin hub',
-          onClick: e => handlePushRoute('/plugins', e),
-        },*/
         {
           children: 'GitHub',
-          href: 'https://github.com/dotansimha/envelop',
+          href: 'https://github.com/dotansimha/graphql-code-generator',
           target: '_blank',
           rel: 'noopener norefereer',
           title: "Head to the project's GitHub",
