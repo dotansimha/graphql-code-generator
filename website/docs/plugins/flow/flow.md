@@ -3,4 +3,4 @@ id: flow
 title: Flow Types
 ---
 
-{@import ../generated-config/flow.md}
+{@import ../../generated_config/flow.md}

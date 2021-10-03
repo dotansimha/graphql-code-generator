@@ -3,4 +3,4 @@ id: introspection
 title: Introspection
 ---
 
-{@import ../generated-config/introspection.md}
+{@import ../../generated-config/introspection.md}
