@@ -5,7 +5,7 @@ title: TypeScript React Apollo
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/typescript-react-apollo.md}
+{@import ../../generated-config/typescript-react-apollo.md}
 
 ## Usage Example
 

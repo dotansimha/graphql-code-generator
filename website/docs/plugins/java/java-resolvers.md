@@ -25,5 +25,5 @@ export class QueryResolvers implements Resolvers.Query {
 
 {@import ../plugins/java-installation.md}
 
-{@import ../generated-config/java-resolvers.md}
+{@import ../../generated-config/java-resolvers.md}
 

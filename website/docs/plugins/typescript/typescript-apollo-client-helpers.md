@@ -51,4 +51,4 @@ const cache = new InMemoryCache({
 });
 ```
 
-{@import ../generated-config/typescript-apollo-client-helpers.md}
+{@import ../../generated-config/typescript-apollo-client-helpers.md}

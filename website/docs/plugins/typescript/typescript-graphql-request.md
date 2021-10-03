@@ -7,7 +7,7 @@ title: TypeScript GraphQL-Request
 
 > Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
 
-{@import ../generated-config/typescript-graphql-request.md}
+{@import ../../generated-config/typescript-graphql-request.md}
 
 ## Usage Example
 

@@ -19,4 +19,4 @@ using GraphQL.Client.Serializer.Newtonsoft;
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/c-sharp-operations.md}
+{@import ../../generated-config/c-sharp-operations.md}

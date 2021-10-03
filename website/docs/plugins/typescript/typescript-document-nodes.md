@@ -3,7 +3,7 @@ id: typescript-document-nodes
 title: TypeScript document nodes
 ---
 
-{@import ../generated-config/typescript-document-nodes.md}
+{@import ../../generated-config/typescript-document-nodes.md}
 
 ## Usage
 

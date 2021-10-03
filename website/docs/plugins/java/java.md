@@ -3,7 +3,7 @@ id: java
 title: Java
 ---
 
-{@import ../generated-config/java.md}
+{@import ../../generated-config/java.md}
 
 ## How to use
 

@@ -3,4 +3,4 @@ id: typescript
 title: TypeScript
 ---
 
-{@import ../generated-config/typescript.md}
+{@import ../../generated-config/typescript.md}

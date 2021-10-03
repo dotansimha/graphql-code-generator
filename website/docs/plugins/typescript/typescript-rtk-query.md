@@ -5,7 +5,7 @@ title: TypeScript RTK-Query
 
 {@import ../plugins/client-note.md}
 
-{@import ../generated-config/typescript-rtk-query.md}
+{@import ../../generated-config/typescript-rtk-query.md}
 
 ## Usage Examples
 

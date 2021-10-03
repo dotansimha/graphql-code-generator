@@ -5,7 +5,7 @@ title: near-operation-file
 
 This preset generates a file per each operation file.
 
-{@import ../generated-config/near-operation-file-preset.md}
+{@import ../generated_config/near-operation-file-preset.md}
 
 ## Example
 

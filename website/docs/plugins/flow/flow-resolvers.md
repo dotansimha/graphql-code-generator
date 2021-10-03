@@ -3,7 +3,7 @@ id: flow-resolvers
 title: Flow Resolvers
 ---
 
-{@import ../generated-config/flow-resolvers.md}
+{@import ../../generated_config/flow-resolvers.md}
 
 
 ## Usage Example

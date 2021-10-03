@@ -13,7 +13,7 @@ If you wish to have a simpler integration in a Webpack project, use [`graphql-le
 
 To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack.
 
-{@import ../generated-config/typescript-graphql-files-modules.md}
+{@import ../../generated-config/typescript-graphql-files-modules.md}
 
 ## Example
 
