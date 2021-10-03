@@ -5,7 +5,7 @@ import { generateDocs } from './docs';
 import mkdirp from 'mkdirp';
 import { pluginsConfigurations, presetsConfigurations } from './plugins';
 import { join } from 'path';
-import { apply } from 'jsonpath';
+const jsonPath = require('jsonpath');
 
 const tsConfig = require('../../../../tsconfig.json');
 
@@ -141,10 +141,10 @@ async function generate() {
   );
 
   // Remove non-standard keys
-  apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
+  jsonPath.apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
 
   // Remvoe default to avoid annoying auto-complete
-  apply(schema, `$..*`, v => {
+  jsonPath.apply(schema, `$..*`, v => {
     if (v && typeof v === 'object' && typeof v[DEFAULT_JSDOC_KEY] !== 'undefined') {
       if (!v.description) {
         v.description = '';
