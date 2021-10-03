@@ -47,9 +47,9 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins and they can be specified in this section. A full list of supported plugins can be found [here](../plugins/index.md). You can also point to a custom plugin in a local file (see [Custom Plugins](../custom-codegen/index.md)).
+  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins and they can be specified in this section. A full list of supported plugins can be found [here](../../plugins/index.md). You can also point to a custom plugin in a local file (see [Custom Plugins](../../custom-codegen/index.md)).
   
-  - [**`generates.preset`**](../presets/index.md) - A list of available presets for generated files. Such as [`near-operation-file`](../presets/near-operation-file.md#example), which generates files alongside your documents.
+  - [**`generates.preset`**](../../presets/index.md) - A list of available presets for generated files. Such as [`near-operation-file`](../../presets/near-operation-file.md#example), which generates files alongside your documents.
 
   - [**`generates.schema`**](schema-field.md#output-file-level) - Same as root `schema`, but applies only for the specific output file.
 
