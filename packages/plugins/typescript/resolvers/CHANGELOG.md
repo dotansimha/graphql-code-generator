@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.3.0
+
+### Minor Changes
+
+- 46b38d9c1: Add makeResolverTypeCallable property to config which allows a resolver function to be called
+
 ## 2.2.1
 
 ### Patch Changes
