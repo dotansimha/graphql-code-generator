@@ -1414,6 +1414,10 @@
           "description": "Sets `info` argument of resolver function to be optional field. Useful for testing.",
           "type": "boolean"
         },
+        "makeResolverTypeCallable": {
+          "description": "Set to `true` if want to make resolveFn type callable directly. Useful for testing resolvers",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"

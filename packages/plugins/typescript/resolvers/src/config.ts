@@ -136,4 +136,14 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    */
   optionalInfoArgument?: boolean;
+  /**
+   * @description Set to `true` in order to allow the Resolver type to be callable
+   *
+   * @exampleMarkdown
+   * ```yml
+   *  config:
+   *    makeResolverTypeCallable: true
+   * ```
+   */
+  makeResolverTypeCallable?: boolean;
 }
