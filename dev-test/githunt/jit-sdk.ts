@@ -1,6 +1,6 @@
 import { GraphQLSchema, ExecutionResult } from 'graphql';
 import { compileQuery, isCompiledQuery } from 'graphql-jit';
-import { isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
+import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -175,13 +175,16 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded?: Maybe<{
-    __typename?: 'Comment';
-    id: number;
-    createdAt: number;
-    content: string;
-    postedBy: { __typename?: 'User'; login: string; html_url: string };
-  }>;
+  commentAdded?:
+    | {
+        __typename?: 'Comment';
+        id: number;
+        createdAt: number;
+        content: string;
+        postedBy: { __typename?: 'User'; login: string; html_url: string };
+      }
+    | null
+    | undefined;
 };
 
 export type CommentQueryVariables = Exact<{
@@ -192,31 +195,36 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser?: Maybe<{ __typename?: 'User'; login: string; html_url: string }>;
-  entry?: Maybe<{
-    __typename?: 'Entry';
-    id: number;
-    createdAt: number;
-    commentCount: number;
-    postedBy: { __typename?: 'User'; login: string; html_url: string };
-    comments: Array<
-      Maybe<{
-        __typename?: 'Comment';
+  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
+  entry?:
+    | {
+        __typename?: 'Entry';
         id: number;
         createdAt: number;
-        content: string;
+        commentCount: number;
         postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }>
-    >;
-    repository: {
-      __typename?: 'Repository';
-      description?: Maybe<string>;
-      open_issues_count?: Maybe<number>;
-      stargazers_count: number;
-      full_name: string;
-      html_url: string;
-    };
-  }>;
+        comments: Array<
+          | {
+              __typename?: 'Comment';
+              id: number;
+              createdAt: number;
+              content: string;
+              postedBy: { __typename?: 'User'; login: string; html_url: string };
+            }
+          | null
+          | undefined
+        >;
+        repository: {
+          __typename?: 'Repository';
+          description?: string | null | undefined;
+          open_issues_count?: number | null | undefined;
+          stargazers_count: number;
+          full_name: string;
+          html_url: string;
+        };
+      }
+    | null
+    | undefined;
 };
 
 export type CommentsPageCommentFragment = {
@@ -231,7 +239,7 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser?: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
+  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
 };
 
 export type FeedEntryFragment = {
@@ -244,10 +252,10 @@ export type FeedEntryFragment = {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    description?: Maybe<string>;
+    description?: string | null | undefined;
     stargazers_count: number;
-    open_issues_count?: Maybe<number>;
-    owner?: Maybe<{ __typename?: 'User'; avatar_url: string }>;
+    open_issues_count?: number | null | undefined;
+    owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
   };
   vote: { __typename?: 'Vote'; vote_value: number };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
@@ -261,29 +269,32 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser?: Maybe<{ __typename?: 'User'; login: string }>;
-  feed?: Maybe<
-    Array<
-      Maybe<{
-        __typename?: 'Entry';
-        id: number;
-        commentCount: number;
-        score: number;
-        createdAt: number;
-        repository: {
-          __typename?: 'Repository';
-          full_name: string;
-          html_url: string;
-          description?: Maybe<string>;
-          stargazers_count: number;
-          open_issues_count?: Maybe<number>;
-          owner?: Maybe<{ __typename?: 'User'; avatar_url: string }>;
-        };
-        vote: { __typename?: 'Vote'; vote_value: number };
-        postedBy: { __typename?: 'User'; html_url: string; login: string };
-      }>
-    >
-  >;
+  currentUser?: { __typename?: 'User'; login: string } | null | undefined;
+  feed?:
+    | Array<
+        | {
+            __typename?: 'Entry';
+            id: number;
+            commentCount: number;
+            score: number;
+            createdAt: number;
+            repository: {
+              __typename?: 'Repository';
+              full_name: string;
+              html_url: string;
+              description?: string | null | undefined;
+              stargazers_count: number;
+              open_issues_count?: number | null | undefined;
+              owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+            };
+            vote: { __typename?: 'Vote'; vote_value: number };
+            postedBy: { __typename?: 'User'; html_url: string; login: string };
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -292,7 +303,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository?: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
+  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null | undefined;
 };
 
 export type RepoInfoFragment = {
@@ -300,9 +311,9 @@ export type RepoInfoFragment = {
   createdAt: number;
   repository: {
     __typename?: 'Repository';
-    description?: Maybe<string>;
+    description?: string | null | undefined;
     stargazers_count: number;
-    open_issues_count?: Maybe<number>;
+    open_issues_count?: number | null | undefined;
   };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
 };
@@ -314,13 +325,16 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment?: Maybe<{
-    __typename?: 'Comment';
-    id: number;
-    createdAt: number;
-    content: string;
-    postedBy: { __typename?: 'User'; login: string; html_url: string };
-  }>;
+  submitComment?:
+    | {
+        __typename?: 'Comment';
+        id: number;
+        createdAt: number;
+        content: string;
+        postedBy: { __typename?: 'User'; login: string; html_url: string };
+      }
+    | null
+    | undefined;
 };
 
 export type VoteButtonsFragment = {
@@ -336,7 +350,10 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote?: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
+  vote?:
+    | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
+    | null
+    | undefined;
 };
 
 export const CommentsPageCommentFragmentDoc = gql`
@@ -489,46 +506,59 @@ async function handleSubscriptionResult<T>(
 }
 function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
   if (result.errors) {
-    throw new Error(`Failed to execute ${operationName}: ${result.errors.join('\n')}`);
+    throw new AggregateError(result.errors, `Failed to execute ${operationName}: ${result.errors.join('\n')}`);
   }
   return result.data as T;
 }
 export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
   const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded');
   if (!isCompiledQuery(onCommentAddedCompiled)) {
-    throw new Error('Failed to compile query onCommentAdded: ' + onCommentAddedCompiled?.errors?.join('\n'));
+    throw new AggregateError(
+      onCommentAddedCompiled?.errors || [],
+      'Failed to compile onCommentAdded: ' + onCommentAddedCompiled?.errors?.join('\n')
+    );
   }
 
   const CommentCompiled = compileQuery(schema, CommentDocument, 'Comment');
   if (!isCompiledQuery(CommentCompiled)) {
-    throw new Error('Failed to compile query Comment: ' + CommentCompiled?.errors?.join('\n'));
+    throw new AggregateError(
+      CommentCompiled?.errors || [],
+      'Failed to compile Comment: ' + CommentCompiled?.errors?.join('\n')
+    );
   }
 
   const CurrentUserForProfileCompiled = compileQuery(schema, CurrentUserForProfileDocument, 'CurrentUserForProfile');
   if (!isCompiledQuery(CurrentUserForProfileCompiled)) {
-    throw new Error(
-      'Failed to compile query CurrentUserForProfile: ' + CurrentUserForProfileCompiled?.errors?.join('\n')
+    throw new AggregateError(
+      CurrentUserForProfileCompiled?.errors || [],
+      'Failed to compile CurrentUserForProfile: ' + CurrentUserForProfileCompiled?.errors?.join('\n')
     );
   }
 
   const FeedCompiled = compileQuery(schema, FeedDocument, 'Feed');
   if (!isCompiledQuery(FeedCompiled)) {
-    throw new Error('Failed to compile query Feed: ' + FeedCompiled?.errors?.join('\n'));
+    throw new AggregateError(FeedCompiled?.errors || [], 'Failed to compile Feed: ' + FeedCompiled?.errors?.join('\n'));
   }
 
   const submitRepositoryCompiled = compileQuery(schema, SubmitRepositoryDocument, 'submitRepository');
   if (!isCompiledQuery(submitRepositoryCompiled)) {
-    throw new Error('Failed to compile query submitRepository: ' + submitRepositoryCompiled?.errors?.join('\n'));
+    throw new AggregateError(
+      submitRepositoryCompiled?.errors || [],
+      'Failed to compile submitRepository: ' + submitRepositoryCompiled?.errors?.join('\n')
+    );
   }
 
   const submitCommentCompiled = compileQuery(schema, SubmitCommentDocument, 'submitComment');
   if (!isCompiledQuery(submitCommentCompiled)) {
-    throw new Error('Failed to compile query submitComment: ' + submitCommentCompiled?.errors?.join('\n'));
+    throw new AggregateError(
+      submitCommentCompiled?.errors || [],
+      'Failed to compile submitComment: ' + submitCommentCompiled?.errors?.join('\n')
+    );
   }
 
   const voteCompiled = compileQuery(schema, VoteDocument, 'vote');
   if (!isCompiledQuery(voteCompiled)) {
-    throw new Error('Failed to compile query vote: ' + voteCompiled?.errors?.join('\n'));
+    throw new AggregateError(voteCompiled?.errors || [], 'Failed to compile vote: ' + voteCompiled?.errors?.join('\n'));
   }
 
   return {

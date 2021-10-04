@@ -34,7 +34,9 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
       this._additionalImports.push(`import { parse } from 'graphql';`);
     }
     this._additionalImports.push(`import { compileQuery, isCompiledQuery } from 'graphql-jit';`);
-    this._additionalImports.push(`import { isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';`);
+    this._additionalImports.push(
+      `import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';`
+    );
   }
 
   protected buildOperation(
@@ -73,7 +75,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
               : o.documentVariableName
           }, '${operationName}');
       if(!(isCompiledQuery(${compiledQueryVariableName}))) {
-        throw new AggregateError('Failed to compile ${operationName}: ' + ${compiledQueryVariableName}?.errors?.join('\\n'), ${compiledQueryVariableName}?.errors);
+        throw new AggregateError(${compiledQueryVariableName}?.errors || [], 'Failed to compile ${operationName}: ' + ${compiledQueryVariableName}?.errors?.join('\\n'));
       }
       `,
           2
@@ -112,7 +114,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new AggregateError(\`Failed to execute \${operationName}: \${result.errors.join('\\n')}\`, result.errors);
+        throw new AggregateError(result.errors, \`Failed to execute \${operationName}: \${result.errors.join('\\n')}\`);
       }
       return result.data as T;
     }

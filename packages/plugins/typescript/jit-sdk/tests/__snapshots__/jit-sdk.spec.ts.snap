@@ -7,7 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLSchema, ExecutionResult } from 'graphql';
 import { compileQuery, isCompiledQuery } from 'graphql-jit';
-import { isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
+import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -181,28 +181,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null | undefined } } | null | undefined> | null | undefined };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export const FeedDocument = gql\`
     query feed {
@@ -247,29 +247,29 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new Error(\`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
+        throw new AggregateError(result.errors, \`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
       }
       return result.data as T;
     }
     export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
-            throw new Error('Failed to compile query feed: ' + feedCompiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
           }
           
     const feed2Compiled = compileQuery(schema, Feed2Document, 'feed2');
           if(!(isCompiledQuery(feed2Compiled))) {
-            throw new Error('Failed to compile query feed2: ' + feed2Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed2Compiled?.errors || [], 'Failed to compile feed2: ' + feed2Compiled?.errors?.join('\\\\n'));
           }
           
     const feed3Compiled = compileQuery(schema, Feed3Document, 'feed3');
           if(!(isCompiledQuery(feed3Compiled))) {
-            throw new Error('Failed to compile query feed3: ' + feed3Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed3Compiled?.errors || [], 'Failed to compile feed3: ' + feed3Compiled?.errors?.join('\\\\n'));
           }
           
     const feed4Compiled = compileQuery(schema, Feed4Document, 'feed4');
           if(!(isCompiledQuery(feed4Compiled))) {
-            throw new Error('Failed to compile query feed4: ' + feed4Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed4Compiled?.errors || [], 'Failed to compile feed4: ' + feed4Compiled?.errors?.join('\\\\n'));
           }
           
   return {
@@ -504,7 +504,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLSchema, ExecutionResult } from 'graphql';
 import { compileQuery, isCompiledQuery } from 'graphql-jit';
-import { isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
+import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -678,12 +678,12 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type CommentAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CommentAddedSubscription = { __typename?: 'Subscription', commentAdded?: Maybe<{ __typename?: 'Comment', id: number }> };
+export type CommentAddedSubscription = { __typename?: 'Subscription', commentAdded?: { __typename?: 'Comment', id: number } | null | undefined };
 
 export const FeedDocument = gql\`
     query feed {
@@ -708,19 +708,19 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new Error(\`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
+        throw new AggregateError(result.errors, \`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
       }
       return result.data as T;
     }
     export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
-            throw new Error('Failed to compile query feed: ' + feedCompiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
           }
           
     const commentAddedCompiled = compileQuery(schema, CommentAddedDocument, 'commentAdded');
           if(!(isCompiledQuery(commentAddedCompiled))) {
-            throw new Error('Failed to compile query commentAdded: ' + commentAddedCompiled?.errors?.join('\\\\n'));
+            throw new AggregateError(commentAddedCompiled?.errors || [], 'Failed to compile commentAdded: ' + commentAddedCompiled?.errors?.join('\\\\n'));
           }
           
   return {
@@ -745,7 +745,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 import { GraphQLSchema, ExecutionResult } from 'graphql';
 import { parse } from 'graphql';
 import { compileQuery, isCompiledQuery } from 'graphql-jit';
-import { isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
+import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -918,28 +918,28 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: Maybe<{ __typename?: 'User', avatar_url: string }> } }>>> };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null | undefined } } | null | undefined> | null | undefined };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
   v?: Maybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = { __typename?: 'Query', feed?: Maybe<Array<Maybe<{ __typename?: 'Entry', id: number }>>> };
+export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export const FeedDocument = \`
     query feed {
@@ -984,29 +984,29 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new Error(\`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
+        throw new AggregateError(result.errors, \`Failed to execute \${operationName}: \${result.errors.join('\\\\n')}\`);
       }
       return result.data as T;
     }
     export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
     const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
-            throw new Error('Failed to compile query feed: ' + feedCompiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
           }
           
     const feed2Compiled = compileQuery(schema, parse(Feed2Document), 'feed2');
           if(!(isCompiledQuery(feed2Compiled))) {
-            throw new Error('Failed to compile query feed2: ' + feed2Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed2Compiled?.errors || [], 'Failed to compile feed2: ' + feed2Compiled?.errors?.join('\\\\n'));
           }
           
     const feed3Compiled = compileQuery(schema, parse(Feed3Document), 'feed3');
           if(!(isCompiledQuery(feed3Compiled))) {
-            throw new Error('Failed to compile query feed3: ' + feed3Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed3Compiled?.errors || [], 'Failed to compile feed3: ' + feed3Compiled?.errors?.join('\\\\n'));
           }
           
     const feed4Compiled = compileQuery(schema, parse(Feed4Document), 'feed4');
           if(!(isCompiledQuery(feed4Compiled))) {
-            throw new Error('Failed to compile query feed4: ' + feed4Compiled?.errors?.join('\\\\n'));
+            throw new AggregateError(feed4Compiled?.errors || [], 'Failed to compile feed4: ' + feed4Compiled?.errors?.join('\\\\n'));
           }
           
   return {
