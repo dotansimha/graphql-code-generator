@@ -6,12 +6,7 @@
     "start": "next start",
     "build": "next build",
     "dev": "concurrently -r \"next-remote-watch ./docs ./src/pages/_app.tsx\" \"wait-on -s 1 http://localhost:3000\"",
-    "next": "next",
-    "build:website": "USE_SIMPLE_CSS_MINIFIER=true docusaurus build",
-    "prebuild:website": "yarn generate:config-docs",
-    "prestart": "yarn generate:config-docs",
-    "generate:config-docs": "cd ../packages/utils/config-schema && yarn build ../../../website/ ./docs/generated-config ./static/",
-    "analyze": "cross-env ANALYZE=true next build"
+    "next": "next"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^11.1.2",
