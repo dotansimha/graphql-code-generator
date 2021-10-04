@@ -67,7 +67,7 @@ function AppContent(appProps: AppProps) {
         activeLink={router.asPath}
         product={{
           title: 'Code Generator',
-          description: 'Modern GraphQL Framefwork',
+          description: 'Modern GraphQL Framework',
           image: {
             src: '/assets/gql-codegen-icon.svg',
             alt: 'Docs',
