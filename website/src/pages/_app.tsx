@@ -119,7 +119,7 @@ const defaultSeo: AppSeoProps = {
   title: 'GraphQL Code Generator',
   description: 'GraphQL Code Generator',
   logo: {
-    url: 'https://www.graphql-code-generator.com/img/favicon.png',
+    url: 'https://graphql-code-generator.vercel.app/assets/subheader-logo.svg',
     width: 50,
     height: 54,
   },
