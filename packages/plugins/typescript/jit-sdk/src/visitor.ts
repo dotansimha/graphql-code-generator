@@ -73,7 +73,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
               : o.documentVariableName
           }, '${operationName}');
       if(!(isCompiledQuery(${compiledQueryVariableName}))) {
-        throw new Error('Failed to compile query ${operationName}: ' + ${compiledQueryVariableName}?.errors?.join('\\n'));
+        throw new AggregateError('Failed to compile ${operationName}: ' + ${compiledQueryVariableName}?.errors?.join('\\n'), ${compiledQueryVariableName}?.errors);
       }
       `,
           2
@@ -112,7 +112,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new Error(\`Failed to execute \${operationName}: \${result.errors.join('\\n')}\`);
+        throw new AggregateError(\`Failed to execute \${operationName}: \${result.errors.join('\\n')}\`, result.errors);
       }
       return result.data as T;
     }
