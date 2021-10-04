@@ -5,7 +5,7 @@ export function getRoutes(): IRoutes {
         _: {
             docs: {
                 $name: 'Docs',
-                $routes: ['getting_started', 'plugins', 'presets', 'integrations', 'custom-codegen', 'migration'],
+                $routes: ['getting_started', 'plugins', 'presets', 'integrations', 'custom_codegen', 'migration'],
                 _: {
                     getting_started: {
                         $name: 'Getting Started',
