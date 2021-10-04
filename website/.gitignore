@@ -19,3 +19,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 docs/generated-config
+
+/.next/
+/package-lock.json
