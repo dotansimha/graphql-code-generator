@@ -6,7 +6,7 @@
     "start": "next start",
     "build": "next build",
     "dev": "concurrently -r \"next-remote-watch ./docs ./src/pages/_app.tsx\" \"wait-on -s 1 http://localhost:3000\"",
-    "next": "next",
+    "next": "next"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^11.1.2",

@@ -16,7 +16,7 @@ export default function Index() {
                 version={<NPMBadge name="@graphql-codegen/cli"/>}
                 colors={['#1DBBFF', '#EE1CD9']}
                 image={{
-                    src: '/static/img/illustrations/gql-codegen-cover.svg',
+                    src: '/assets/illustrations/gql-codegen-cover.svg',
                     alt: 'Illustration'
                 }}
             />
@@ -25,7 +25,7 @@ export default function Index() {
                 title="Generate Code Instantly"
                 description={`Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your environment or code format.`}
                 image={{
-                    src: '/static/img/illustrations/gql-generate-code-illustration.svg',
+                    src: '/assets/illustrations/gql-generate-code-illustration.svg',
                     alt: 'Illustration'
                 }}
                 flipped
@@ -35,7 +35,7 @@ export default function Index() {
                 title="Watch For Changes"
                 description={`Watch for changes in your GraphQL schema and operations, and automatically generate code as you go. Codegen easily integrates into your development workflow.`}
                 image={{
-                    src: '/static/img/illustrations/gql-watch-for-changes-illustration.svg',
+                    src: '/assets/illustrations/gql-watch-for-changes-illustration.svg',
                     alt: 'Illustration'
                 }}
             />
@@ -49,7 +49,7 @@ export default function Index() {
                         description:
                             'Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your environment or code format.',
                         image: {
-                            src: '/static/img/gear.svg',
+                            src: '/assets/gear.svg',
                             alt: 'Illustration'
                         }
                     },
@@ -58,7 +58,7 @@ export default function Index() {
                         description:
                             'Watch for changes in your GraphQL schema and operations, and automatically generate code as you go. Codegen easily integrates into your development workflow.',
                         image: {
-                            src: '/static/img/eye.svg',
+                            src: '/assets/eye.svg',
                             alt: 'Illustration'
                         }
                     },
@@ -67,7 +67,7 @@ export default function Index() {
                         description:
                             'You can generate your resolvers\' signatures, dump schemas, model types, query builders, React Hooks, Angular Services, and much more!',
                         image: {
-                            src: '/static/img/more-options.svg',
+                            src: '/assets/more-options.svg',
                             alt: 'more'
                         }
                     }
