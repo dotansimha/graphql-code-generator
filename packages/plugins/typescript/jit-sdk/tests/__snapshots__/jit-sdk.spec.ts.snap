@@ -251,7 +251,7 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
       }
       return result.data as T;
     }
-    export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
+    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
             throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
@@ -273,25 +273,25 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
           }
           
   return {
-    async feed(variables?: FeedQueryVariables, context?: C, root?: R): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
             const result = await feedCompiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed');
         },
-    async feed2(variables: Feed2QueryVariables, context?: C, root?: R): Promise<Feed2Query> {
+    async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
             const result = await feed2Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed2');
         },
-    async feed3(variables?: Feed3QueryVariables, context?: C, root?: R): Promise<Feed3Query> {
+    async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
             const result = await feed3Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed3');
         },
-    async feed4(variables?: Feed4QueryVariables, context?: C, root?: R): Promise<Feed4Query> {
+    async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
             const result = await feed4Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed4');
         }
   };
 }
-export type JitSdk = ReturnType<typeof getJitSdk>;
+export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
   const schema = buildSchema(\`\\"\\"\\"\\"\\"\\"
 type Query {
@@ -712,7 +712,7 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
       }
       return result.data as T;
     }
-    export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
+    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
             throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
@@ -724,17 +724,17 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
           }
           
   return {
-    async feed(variables?: FeedQueryVariables, context?: C, root?: R): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
             const result = await feedCompiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed');
         },
-    async commentAdded(variables?: CommentAddedSubscriptionVariables, context?: C, root?: R): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
+    async commentAdded(variables?: CommentAddedSubscriptionVariables, context = globalContext, root = globalRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
             const result = await commentAddedCompiled.subscribe!(root, context, variables);
             return handleSubscriptionResult(result, 'commentAdded');
         }
   };
 }
-export type JitSdk = ReturnType<typeof getJitSdk>;"
+export type Sdk = ReturnType<typeof getSdk>;"
 `;
 
 exports[`jit-sdk sdk Should generate a correct wrap method with documentMode=string 1`] = `
@@ -988,7 +988,7 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
       }
       return result.data as T;
     }
-    export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
+    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed');
           if(!(isCompiledQuery(feedCompiled))) {
             throw new AggregateError(feedCompiled?.errors || [], 'Failed to compile feed: ' + feedCompiled?.errors?.join('\\\\n'));
@@ -1010,25 +1010,25 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
           }
           
   return {
-    async feed(variables?: FeedQueryVariables, context?: C, root?: R): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
             const result = await feedCompiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed');
         },
-    async feed2(variables: Feed2QueryVariables, context?: C, root?: R): Promise<Feed2Query> {
+    async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
             const result = await feed2Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed2');
         },
-    async feed3(variables?: Feed3QueryVariables, context?: C, root?: R): Promise<Feed3Query> {
+    async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
             const result = await feed3Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed3');
         },
-    async feed4(variables?: Feed4QueryVariables, context?: C, root?: R): Promise<Feed4Query> {
+    async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
             const result = await feed4Compiled.query(root, context, variables);
             return handleExecutionResult(result, 'feed4');
         }
   };
 }
-export type JitSdk = ReturnType<typeof getJitSdk>;
+export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
   const schema = buildSchema(\`\\"\\"\\"\\"\\"\\"
 type Query {
