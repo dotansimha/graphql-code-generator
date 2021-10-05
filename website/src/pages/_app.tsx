@@ -69,7 +69,7 @@ function AppContent(appProps: AppProps) {
           title: 'Code Generator',
           description: 'Modern GraphQL Framework',
           image: {
-            src: '/assets/gql-codegen-icon.svg',
+            src: '/assets/subheader-logo.svg',
             alt: 'Docs',
           },
           onClick: e => handlePushRoute('/', e),
