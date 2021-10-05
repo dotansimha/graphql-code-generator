@@ -96,7 +96,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
         indentMultiline(
           `async ${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, context?: C, root?: R): Promise<${returnType}> {
+          }, context = globalContext, root = globalRoot): Promise<${returnType}> {
         const result = await ${compiledQueryVariableName}.${methodName}(root, context, variables);
         return ${handlerName}(result, '${operationName}');
     }`,
@@ -118,12 +118,12 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
       }
       return result.data as T;
     }
-    export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
+    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
 ${compiledQueries.join('\n')}
   return {
 ${sdkMethods.join(',\n')}
   };
 }
-export type JitSdk = ReturnType<typeof getJitSdk>;`;
+export type Sdk = ReturnType<typeof getSdk>;`;
   }
 }

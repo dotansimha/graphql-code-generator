@@ -81,7 +81,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
 
     return `export type Requester<C= {}> = <R, V>(doc: ${
       this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode'
-    }, vars?: V, options?: C) => ${usingObservable ? 'Promise<R> & Observable<R>' : 'Promise<R>'}
+    }, vars?: V, options?: C) => ${usingObservable ? 'Promise<R> | Observable<R>' : 'Promise<R>'}
 export function getSdk<C>(requester: Requester<C>) {
   return {
 ${allPossibleActions.join(',\n')}

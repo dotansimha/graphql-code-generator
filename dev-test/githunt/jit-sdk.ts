@@ -510,7 +510,7 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
   }
   return result.data as T;
 }
-export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
+export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
   const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded');
   if (!isCompiledQuery(onCommentAddedCompiled)) {
     throw new AggregateError(
@@ -564,48 +564,48 @@ export function getJitSdk<C = any, R = any>(schema: GraphQLSchema) {
   return {
     async onCommentAdded(
       variables: OnCommentAddedSubscriptionVariables,
-      context?: C,
-      root?: R
+      context = globalContext,
+      root = globalRoot
     ): Promise<AsyncIterableIterator<OnCommentAddedSubscription> | OnCommentAddedSubscription> {
       const result = await onCommentAddedCompiled.subscribe!(root, context, variables);
       return handleSubscriptionResult(result, 'onCommentAdded');
     },
-    async Comment(variables: CommentQueryVariables, context?: C, root?: R): Promise<CommentQuery> {
+    async Comment(variables: CommentQueryVariables, context = globalContext, root = globalRoot): Promise<CommentQuery> {
       const result = await CommentCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'Comment');
     },
     async CurrentUserForProfile(
       variables?: CurrentUserForProfileQueryVariables,
-      context?: C,
-      root?: R
+      context = globalContext,
+      root = globalRoot
     ): Promise<CurrentUserForProfileQuery> {
       const result = await CurrentUserForProfileCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'CurrentUserForProfile');
     },
-    async Feed(variables: FeedQueryVariables, context?: C, root?: R): Promise<FeedQuery> {
+    async Feed(variables: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
       const result = await FeedCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'Feed');
     },
     async submitRepository(
       variables: SubmitRepositoryMutationVariables,
-      context?: C,
-      root?: R
+      context = globalContext,
+      root = globalRoot
     ): Promise<SubmitRepositoryMutation> {
       const result = await submitRepositoryCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'submitRepository');
     },
     async submitComment(
       variables: SubmitCommentMutationVariables,
-      context?: C,
-      root?: R
+      context = globalContext,
+      root = globalRoot
     ): Promise<SubmitCommentMutation> {
       const result = await submitCommentCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'submitComment');
     },
-    async vote(variables: VoteMutationVariables, context?: C, root?: R): Promise<VoteMutation> {
+    async vote(variables: VoteMutationVariables, context = globalContext, root = globalRoot): Promise<VoteMutation> {
       const result = await voteCompiled.query(root, context, variables);
       return handleExecutionResult(result, 'vote');
     },
   };
 }
-export type JitSdk = ReturnType<typeof getJitSdk>;
+export type Sdk = ReturnType<typeof getSdk>;
