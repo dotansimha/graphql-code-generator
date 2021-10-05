@@ -305,6 +305,11 @@ export function buildScalars(
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),
           };
+        } else if (scalarType.extensions?.codegenScalarType) {
+          result[name] = {
+            isExternal: false,
+            type: scalarType.extensions.codegenScalarType,
+          };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
             throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
