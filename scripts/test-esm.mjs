@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import globby from 'globby';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -9,6 +10,7 @@ global.expect.extend = () => {};
 async function main() {
   const mjsFiles = await globby(['../packages/**/dist/*.mjs'], {
     cwd: dirname(fileURLToPath(import.meta.url)),
+    ignore: ['../packages/utils/graphql-codegen-testing/dist/index.mjs'],
   });
 
   const ok = [];
