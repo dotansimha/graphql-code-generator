@@ -1,10 +1,10 @@
 import React from 'react';
 import { useThemeContext } from '@theguild/components';
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import {canUseDOM} from './utils';
 
 let MonacoEditor = () => <div />;
 
-if (ExecutionEnvironment.canUseDOM) {
+if (canUseDOM) {
   MonacoEditor = require('@monaco-editor/react').default;
 }
 

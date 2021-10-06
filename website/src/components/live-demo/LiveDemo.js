@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ErrorInfo} from 'react';
 import { load } from 'js-yaml';
 import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
@@ -6,10 +6,12 @@ import { generate } from './generate';
 import { Loading } from '../ui/Loading';
 import classes from './styles.module.css';
 import Select from 'react-select';
-import BrowserOnly from '@docusaurus/BrowserOnly';
 import ReactMarkdown from 'react-markdown';
 import LiveDemoEditors from './LiveDemoEditors';
 import { useThemeContext } from '@theguild/components';
+import dynamic from 'next/dynamic';
+
+const ErrorBoundary = dynamic(import('./error-boundry'), {ssr: false})
 
 const groupedExamples = Object.keys(EXAMPLES).map(catName => {
   return {
@@ -49,15 +51,15 @@ const DEFAULT_EXAMPLE = {
   index: 0,
 };
 
-class ErrorBoundary extends React.Component {
+/*class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {hasError: false};
   }
 
   static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return {hasError: true};
   }
 
   componentDidCatch(error, errorInfo) {
@@ -65,6 +67,7 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
+    // @ts-ignore
     if (this.state.hasError) {
       // Fallback
       return <span>Something went wrong.</span>;
@@ -72,7 +75,8 @@ class ErrorBoundary extends React.Component {
 
     return this.props.children;
   }
-}
+}*/
+
 
 export const LiveDemo = () => {
   const { isDarkTheme } = useThemeContext();
@@ -156,8 +160,6 @@ export const LiveDemo = () => {
         </div>
       </div>
       <div className={classes.container}>
-        <BrowserOnly>
-          {() => (
             <ErrorBoundary>
               <React.Suspense fallback={<Loading color={isDarkTheme ? '#fff' : '#000'} height="450px" />}>
                 <LiveDemoEditors
@@ -173,9 +175,9 @@ export const LiveDemo = () => {
                 />
               </React.Suspense>
             </ErrorBoundary>
-          )}
-        </BrowserOnly>
       </div>
     </div>
   );
 };
+
+export default LiveDemo;
