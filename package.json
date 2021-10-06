@@ -80,7 +80,7 @@
     "java-ast": "0.3.0",
     "jest": "27.2.4",
     "jest-docblock": "27.0.6",
-    "jest-junit": "12.3.0",
+    "jest-junit": "13.0.0",
     "lint-staged": "11.1.2",
     "lodash": "4.17.21",
     "prettier": "2.3.2",
