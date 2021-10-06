@@ -9,7 +9,7 @@ import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
     const { baseOutputDir } = options;
-    const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
+    const { baseTypesPath, encapsulateModuleTypes, requireRootResolvers = false } = options.presetConfig;
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -100,6 +100,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importNamespace: importTypesNamespace,
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'namespace',
+                requireRootResolvers,
                 shouldDeclare,
                 schema,
                 baseVisitor,

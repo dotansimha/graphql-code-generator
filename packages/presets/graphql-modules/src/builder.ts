@@ -42,6 +42,7 @@ export function buildModule(
     importNamespace,
     importPath,
     encapsulate,
+    requireRootResolvers,
     shouldDeclare,
     rootTypes,
     schema,
@@ -50,6 +51,7 @@ export function buildModule(
     importNamespace: string;
     importPath: string;
     encapsulate: ModulesConfig['encapsulateModuleTypes'];
+    requireRootResolvers: ModulesConfig['requireRootResolvers'];
     shouldDeclare: boolean;
     rootTypes: string[];
     baseVisitor: BaseVisitor;
@@ -204,6 +206,8 @@ export function buildModule(
           printResolverType(
             name,
             'DefinedFields',
+            // In case of enabled `requireRootResolvers` flag, the preset has to produce a non-optional properties.
+            requireRootResolvers && rootTypes.includes(name),
             !rootTypes.includes(name) && defined.objects.includes(name) ? ` | '__isTypeOf'` : ''
           )
         )
@@ -246,7 +250,10 @@ export function buildModule(
           } else if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
-            lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);
+            // In case of enabled `requireRootResolvers` flag, the preset has to produce a non-optional property.
+            const fieldModifier = requireRootResolvers && rootTypes.includes(typeName) ? '' : '?';
+
+            lines.push(`${typeName}${fieldModifier}: ${encapsulateTypeName(typeName)}Resolvers;`);
           }
         });
       }
@@ -290,12 +297,14 @@ export function buildModule(
     return `${path}?: gm.Middleware[];`;
   }
 
-  function printResolverType(typeName: string, picksTypeName: string, extraKeys = '') {
-    return `export type ${encapsulateTypeName(
-      `${typeName}Resolvers`
-    )} = Pick<${importNamespace}.${baseVisitor.convertName(typeName, {
+  function printResolverType(typeName: string, picksTypeName: string, requireFieldsResolvers = false, extraKeys = '') {
+    const typeSignature = `Pick<${importNamespace}.${baseVisitor.convertName(typeName, {
       suffix: 'Resolvers',
-    })}, ${picksTypeName}['${typeName}']${extraKeys}>;`;
+    })}, ${picksTypeName}['${typeName}']${extraKeys}>`;
+
+    return `export type ${encapsulateTypeName(`${typeName}Resolvers`)} = ${
+      requireFieldsResolvers ? `Required<${typeSignature}>` : typeSignature
+    };`;
   }
 
   function printPicks(typeName: string, records: Record<string, string[]>): string {

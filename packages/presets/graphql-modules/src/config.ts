@@ -106,4 +106,24 @@ export type ModulesConfig = {
    * ```
    */
   encapsulateModuleTypes: 'prefix' | 'namespace' | 'none';
+  /**
+   * @name requireRootResolvers
+   * @type boolean
+   * @default false
+   * @description Generate resolvers of root types (Query, Mutation and Subscription) as non-optional.
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: modules
+   *  presetConfig:
+   *    baseTypesPath: types.ts
+   *    filename: types.ts
+   *    requireRootResolvers: true
+   *  plugins:
+   *    - typescript-resolvers
+   * ```
+   */
+  requireRootResolvers?: boolean;
 };
