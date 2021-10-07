@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.2.0
+
+### Minor Changes
+
+- 1e9a7e162: feat: support module augumentation for extending the types of gql functions from existing packages via the `augmentedModuleName` config option.
+
 ## 1.1.5
 
 ### Patch Changes
