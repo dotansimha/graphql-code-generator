@@ -68,7 +68,7 @@ export type MyUnion = MyType | MyOtherType;
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
@@ -265,7 +265,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
@@ -515,7 +515,7 @@ export type MyUnion = MyType | MyOtherType;
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {

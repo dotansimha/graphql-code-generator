@@ -93,7 +93,7 @@ export type User = {
   paymentOptions?: Maybe<Array<PaymentOption>>;
 };
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;

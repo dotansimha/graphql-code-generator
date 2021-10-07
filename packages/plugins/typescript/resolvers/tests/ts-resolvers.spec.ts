@@ -514,7 +514,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.content).toContain(`export type ResolverTypeWrapper<T> = Promise<T> | T;`);
+    expect(result.content).toContain(`export type ResolverTypeWrapper<T> = Promise<T> | T | null;`);
   });
 
   it('Should not warn when noSchemaStitching is not defined', async () => {
@@ -1801,7 +1801,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     )) as Types.ComplexPluginOutput;
 
     expect(content.content).toBeSimilarStringTo(`
-      export type ResolverTypeWrapper<T> = Promise<T> | T;
+      export type ResolverTypeWrapper<T> = Promise<T> | T | null;
     `);
   });
 

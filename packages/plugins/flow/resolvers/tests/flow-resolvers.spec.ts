@@ -262,7 +262,7 @@ describe('Flow Resolvers Plugin', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(content.content).toBeSimilarStringTo(`
-      export type ResolverTypeWrapper<T> = Promise<T> | T;
+      export type ResolverTypeWrapper<T> = Promise<T> | T | null;
     `);
   });
 });

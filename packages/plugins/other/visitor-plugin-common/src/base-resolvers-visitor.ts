@@ -270,7 +270,7 @@ export interface RawResolversConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
-   * @default Promise<T> | T
+   * @default Promise<T> | T | null
    * @description Allow you to override `resolverTypeWrapper` definition.
    */
   resolverTypeWrapperSignature?: string;
@@ -373,7 +373,7 @@ export class BaseResolversVisitor<
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
-      resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
+      resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T | null | null'),
       enumValues: parseEnumValues({
         schema: _schema,
         mapOrStr: rawConfig.enumValues,

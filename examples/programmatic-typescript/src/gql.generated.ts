@@ -18,7 +18,7 @@ export type Query = {
   hello: Scalars['String'];
 };
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;

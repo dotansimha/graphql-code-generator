@@ -44,7 +44,7 @@ export type User = {
   name: Scalars['String'];
 };
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Promise<T> | T | null;
 
 export type ReferenceResolver<TResult, TReference, TContext> = (
   reference: TReference,

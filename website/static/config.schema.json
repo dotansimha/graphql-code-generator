@@ -1497,7 +1497,7 @@
           "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
         },
         "resolverTypeWrapperSignature": {
-          "description": "Allow you to override `resolverTypeWrapper` definition.\nDefault value: \"Promise<T> | T\"",
+          "description": "Allow you to override `resolverTypeWrapper` definition.\nDefault value: \"Promise<T> | T | null\"",
           "type": "string"
         },
         "federation": {
@@ -3106,7 +3106,7 @@
           "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
         },
         "resolverTypeWrapperSignature": {
-          "description": "Allow you to override `resolverTypeWrapper` definition.\nDefault value: \"Promise<T> | T\"",
+          "description": "Allow you to override `resolverTypeWrapper` definition.\nDefault value: \"Promise<T> | T | null\"",
           "type": "string"
         },
         "federation": {
