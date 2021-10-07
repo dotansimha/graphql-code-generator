@@ -18,14 +18,14 @@ export default function LiveDemoEditors({
     <>
       <div className={classes.column}>
         <div className={classes.title}>
-          <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
+          <img className={classes.logo} alt={'GraphQL'} src="/assets/img/GraphQL_Logo.svg" />
           <span className={classes.iconText}>schema.graphql</span>
         </div>
         <Editor lang={'graphql'} onEdit={setSchema} value={schema} />
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <img className={classes.logo} alt={'GraphQL'} src="/img/GraphQL_Logo.svg" />
+          <img className={classes.logo} alt={'GraphQL'} src="/assets/img/GraphQL_Logo.svg" />
           <span className={classes.iconText}>operation.graphql</span>
         </div>
         <Editor
@@ -36,7 +36,7 @@ export default function LiveDemoEditors({
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <img className={classes.logo} alt={'Codegen'} src="/img/logo.svg" />
+          <img className={classes.logo} alt={'Codegen'} src="/assets/img/gql-codegen-icon.svg" />
           <span className={classes.iconText}>codegen.yml</span>
         </div>
         <Editor lang={'yaml'} onEdit={setConfig} value={config} />

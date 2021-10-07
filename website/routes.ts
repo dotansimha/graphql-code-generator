@@ -70,6 +70,7 @@ export function getRoutes(): IRoutes {
         folderPattern: 'docs',
         basePath: 'docs',
         basePathLabel: 'Documentation',
+        ignorePaths: ['generated-config/add'],
         labels: {}
     });
 
