@@ -10,17 +10,11 @@ const LiveDemo = dynamic(() => import('../components/live-demo/LiveDemo'), { ssr
 export default function Index() {
     return (
         <>
-            <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
-                <a id="live-demo" />
-                <LiveDemo />
-            </div>
-
-
             <HeroGradient
                 title="Generate code from your GraphQL schema"
                 description="Generate code from your GraphQL schema and operations with a simple CLI"
                 link={{
-                    href: '/docs',
+                    href: '/docs/getting_started',
                     children: 'Try It Now',
                     title: 'Get started with GraphQL Code Generator',
                     onClick: e => handlePushRoute('/docs', e)
@@ -28,10 +22,16 @@ export default function Index() {
                 version={<NPMBadge name="@graphql-codegen/cli"/>}
                 colors={['#1DBBFF', '#EE1CD9']}
                 image={{
+                    className: 'no-right',
                     src: '/assets/illustrations/gql-codegen-cover.svg',
                     alt: 'Illustration'
                 }}
             />
+
+            <div className={classnames(styles.liveDemo, styles.desktopOnly)}>
+                <a id="live-demo" />
+                <LiveDemo />
+            </div>
 
             <HeroIllustration
                 title="Generate Code Instantly"

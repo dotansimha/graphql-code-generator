@@ -3,23 +3,23 @@ import classes from './styles.module.css';
 
 export const EXAMPLES_ICONS = {
   'react-query': k => (
-    <img alt={'React-Query'} className={classes.exampleIcon} key={k} src={'/img/icons/react-query.svg'} />
+    <img alt={'React-Query'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/react-query.svg'} />
   ),
-  typescript: k => <img alt={'TypeScript'} className={classes.exampleIcon} key={k} src={'/img/icons/typescript.svg'} />,
-  react: k => <img alt={'React'} className={classes.exampleIcon} key={k} src={'/img/icons/react.svg'} />,
-  apollo: k => <img alt={'Apollo GraphQL'} className={classes.exampleIcon} key={k} src={'/img/icons/apollo.svg'} />,
-  csharp: k => <img alt={'C#'} className={classes.exampleIcon} key={k} src={'/img/icons/csharp.svg'} />,
-  graphql: k => <img alt={'GraphQL'} className={classes.exampleIcon} key={k} src={'/img/icons/graphql.svg'} />,
-  vue: k => <img alt={'VueJS'} className={classes.exampleIcon} key={k} src={'/img/icons/vue.svg'} />,
-  java: k => <img alt={'Java'} className={classes.exampleIcon} key={k} src={'/img/icons/java.svg'} />,
-  flow: k => <img alt={'FlowJS'} className={classes.exampleIcon} key={k} src={'/img/icons/flow.svg'} />,
-  angular: k => <img alt={'Angular'} className={classes.exampleIcon} key={k} src={'/img/icons/angular.svg'} />,
-  urql: k => <img alt={'urql'} className={classes.exampleIcon} key={k} src={'/img/icons/urql.svg'} />,
-  nodejs: k => <img alt={'NodeJS'} className={classes.exampleIcon} key={k} src={'/img/icons/nodejs.svg'} />,
+  typescript: k => <img alt={'TypeScript'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/typescript.svg'} />,
+  react: k => <img alt={'React'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/react.svg'} />,
+  apollo: k => <img alt={'Apollo GraphQL'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/apollo.svg'} />,
+  csharp: k => <img alt={'C#'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/csharp.svg'} />,
+  graphql: k => <img alt={'GraphQL'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/graphql.svg'} />,
+  vue: k => <img alt={'VueJS'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/vue.svg'} />,
+  java: k => <img alt={'Java'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/java.svg'} />,
+  flow: k => <img alt={'FlowJS'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/flow.svg'} />,
+  angular: k => <img alt={'Angular'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/angular.svg'} />,
+  urql: k => <img alt={'urql'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/urql.svg'} />,
+  nodejs: k => <img alt={'NodeJS'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/nodejs.svg'} />,
   'type-graphql': k => (
-    <img alt={'type-graphql'} className={classes.exampleIcon} key={k} src={'/img/icons/type-graphql.png'} />
+    <img alt={'type-graphql'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/type-graphql.png'} />
   ),
-  mongodb: k => <img alt={'MongoDB'} className={classes.exampleIcon} key={k} src={'/img/icons/mongodb.png'} />,
+  mongodb: k => <img alt={'MongoDB'} className={classes.exampleIcon} key={k} src={'/assets/img/icons/mongodb.png'} />,
 };
 
 const TS_SCHEMA = `scalar Date

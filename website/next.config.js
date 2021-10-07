@@ -14,4 +14,12 @@ module.exports = withGuildDocs({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    // Todo: remove it before merge to master
+    ignoreBuildErrors: true,
+  },
+  webpack(config) {
+    config.resolve.fallback = { ...config.resolve.fallback, module: false };
+    return config;
+  },
 });
