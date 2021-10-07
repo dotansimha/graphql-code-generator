@@ -117,8 +117,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Query: ResolverTypeWrapper<{}>;
-  QueryRoot: ResolverTypeWrapper<QueryRoot>;
+  Query: ResolverTypeWrapper<Query>;
+  QueryRoot: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   SubscriptionRoot: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
@@ -128,8 +128,8 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Int: Scalars['Int'];
-  Query: {};
-  QueryRoot: QueryRoot;
+  Query: Query;
+  QueryRoot: {};
   String: Scalars['String'];
   SubscriptionRoot: {};
   User: User;
@@ -140,6 +140,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   someDummyField?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryRootResolvers<
@@ -154,7 +155,6 @@ export type QueryRootResolvers<
     ContextType,
     RequireFields<QueryRootUserByIdArgs, 'id'>
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SubscriptionRootResolvers<
