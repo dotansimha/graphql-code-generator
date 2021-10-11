@@ -173,7 +173,7 @@ export function compileTs(
       join(dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
       join(dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
       join(dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      join(dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es2018.asynciterable.d.ts'),
     ],
     module: ModuleKind.ESNext,
   },

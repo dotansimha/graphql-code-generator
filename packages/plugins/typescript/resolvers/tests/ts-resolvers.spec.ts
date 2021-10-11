@@ -1,4 +1,4 @@
-import { validateTs } from '@graphql-codegen/testing';
+import { validateTs, compileTs } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -2289,5 +2289,100 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     await validate(result);
+  });
+
+  test('should accept an array of Promises resolving null in case of nullable list of nullable items', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = (await plugin(
+      testSchema,
+      [],
+      {
+        noSchemaStitching: true,
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    )) as Types.ComplexPluginOutput;
+
+    compileTs(
+      mergeOutputs([
+        tsContent,
+        resolversContent,
+        `
+          const resolvers1: Resolvers = {
+            Query: {
+              users() {
+                return [
+                  Promise.resolve(
+                    null
+                  ),
+                  null
+                ];
+              }
+            }
+          }
+
+          const resolvers2: Resolvers = {
+            Query: {
+              users() {
+                return Promise.all(
+                  [
+                    Promise.resolve(
+                      null
+                    )
+                  ]
+                );
+              }
+            }
+          }
+
+          const resolvers3: Resolvers = {
+            Query: {
+              async users() {
+                return Promise.all(
+                  [
+                    Promise.resolve(
+                      null
+                    )
+                  ]
+                );
+              }
+            }
+          }
+      `,
+      ])
+    );
+
+    // Control check
+    expect(() =>
+      compileTs(
+        mergeOutputs([
+          tsContent,
+          resolversContent,
+          `
+          const resolvers: Resolvers = {
+            Query: {
+              users() {
+                return [
+                  1
+                ];
+              }
+            }
+          }
+      `,
+        ])
+      )
+    ).toThrow();
   });
 });
