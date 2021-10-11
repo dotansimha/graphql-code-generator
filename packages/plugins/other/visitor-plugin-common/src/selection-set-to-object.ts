@@ -29,7 +29,7 @@ import {
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import {
   LinkField,
