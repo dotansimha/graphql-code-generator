@@ -1339,7 +1339,7 @@ export type MeQuery = {| me?: ?({
         showAddress: $ElementType<Scalars, 'Boolean'>,
         showName: $ElementType<Scalars, 'Boolean'>,
       };
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: ?string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };
       `);
 
       validateFlow(result);
