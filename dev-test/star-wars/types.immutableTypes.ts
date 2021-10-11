@@ -367,8 +367,8 @@ export type HeroNameConditionalInclusionQueryVariables = Exact<{
 export type HeroNameConditionalInclusionQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | { readonly __typename?: 'Droid'; readonly name?: string | null | undefined }
-    | { readonly __typename?: 'Human'; readonly name?: string | null | undefined }
+    | { readonly __typename?: 'Droid'; readonly name?: string }
+    | { readonly __typename?: 'Human'; readonly name?: string }
     | null
     | undefined;
 };
@@ -381,8 +381,8 @@ export type HeroNameConditionalExclusionQueryVariables = Exact<{
 export type HeroNameConditionalExclusionQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | { readonly __typename?: 'Droid'; readonly name?: string | null | undefined }
-    | { readonly __typename?: 'Human'; readonly name?: string | null | undefined }
+    | { readonly __typename?: 'Droid'; readonly name?: string }
+    | { readonly __typename?: 'Human'; readonly name?: string }
     | null
     | undefined;
 };
