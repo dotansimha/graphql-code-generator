@@ -38,6 +38,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  inputMaybeValue: string;
   noExport: boolean;
   useImplementingTypes: boolean;
 }
@@ -55,6 +56,10 @@ export class TsVisitor<
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
+      inputMaybeValue: getConfigValue(
+        pluginConfig.inputMaybeValue,
+        getConfigValue(pluginConfig.maybeValue, 'Maybe<T>')
+      ),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
@@ -143,6 +148,7 @@ export class TsVisitor<
   public getWrapperDefinitions(): string[] {
     const definitions: string[] = [
       this.getMaybeValue(),
+      this.getInputMaybeValue(),
       this.getExactDefinition(),
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
@@ -172,6 +178,9 @@ export class TsVisitor<
 
   public getMaybeValue(): string {
     return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
+  }
+  public getInputMaybeValue(): string {
+    return `${this.getExportPrefix()}type InputMaybe<T> = ${this.config.inputMaybeValue};`;
   }
 
   protected clearOptional(str: string): string {
@@ -263,7 +272,7 @@ export class TsVisitor<
     if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
-
+    type = type.replace('Maybe', 'InputMaybe');
     return (
       comment +
       indent(
