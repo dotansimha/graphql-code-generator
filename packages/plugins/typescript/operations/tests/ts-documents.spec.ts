@@ -5447,7 +5447,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showAddress: Scalars['Boolean'];
         showName: Scalars['Boolean'];
       }>;
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string | null | undefined, address?: { __typename?: 'Address', city: string } | null | undefined, friends?: Array<{ __typename?: 'User', id: string }> | null | undefined } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string | null | undefined, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
 
     it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
@@ -5501,13 +5501,13 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         & { user: (
           { __typename?: 'User' }
           & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
-          & { address?: Maybe<(
+          & { address?: (
             { __typename?: 'Address' }
             & Pick<Address, 'city'>
-          )>, friends?: Maybe<Array<(
+          ), friends?: Array<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
-          )>> }
+          )> }
         ) }
       );`);
     });
@@ -5634,10 +5634,10 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
           { __typename: 'Query' }
           & { me: (
             { __typename: 'User' }
-            & { messages: Maybe<Array<(
+            & { messages?: Array<(
               { __typename: 'Message' }
               & Pick<Message, 'content'>
-            )>> }
+            )> }
           ) }
         );
       `);

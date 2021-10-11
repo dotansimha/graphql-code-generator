@@ -440,7 +440,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          isConditional ? removeNonNullWrapper(selectedFieldType) : selectedFieldType
+          selectedFieldType
         ),
       });
     }
