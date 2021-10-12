@@ -7,7 +7,8 @@ import {
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
+import { addTypenameToDocument } from '@apollo/client/utilities'
+import { GraphQLSchema, Kind, OperationDefinitionNode, print, parse } from 'graphql';
 import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
@@ -41,11 +42,12 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
+    this._additionalImports.push(`${typeImport} { addTypenameToDocument } from '@apollo/client/utilities';`);
 
     if (this.config.rawRequest) {
       this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
       if (this.config.documentMode !== DocumentMode.string) {
-        this._additionalImports.push(`${typeImport} { print } from 'graphql'`);
+        this._additionalImports.push(`${typeImport} { print, parse } from 'graphql'`);
       }
     }
   }
@@ -99,7 +101,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        const docVarName = this.getDocumentNodeVariable(o.documentVariableName);
+
+        const docVarName = this.getDocumentNodeVariable(addTypenameToDocument(typeof o.documentVariableName === 'string' ? parse(o.documentVariableName) : o.documentVariableName));
 
         if (this.config.rawRequest) {
           let docArg = docVarName;
