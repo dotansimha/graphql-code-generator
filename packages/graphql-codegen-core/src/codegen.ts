@@ -74,7 +74,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const skipDocumentValidation =
     typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
-  if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
+  if (options.schemaAst && documents.length > 0 && skipDocumentValidation !== true) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
     if (typeof skipDocumentValidation === 'string') {
       ignored.push(skipDocumentValidation);
