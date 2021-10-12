@@ -5,7 +5,7 @@ import {
   federationSpec,
   getCachedDocumentNodeFromSchema,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, DefinitionNode, Kind, print, NameNode } from 'graphql';
+import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { checkValidationErrors, validateGraphQlDocuments, Source } from '@graphql-tools/utils';
 
@@ -75,15 +75,26 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
+    const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
+    if (typeof skipDocumentValidation === 'string') {
+      ignored.push(skipDocumentValidation);
+    }
+    if (Array.isArray(skipDocumentValidation)) {
+      ignored.push(...skipDocumentValidation);
+    }
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
       options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
-    const errors = await validateGraphQlDocuments(options.schemaAst, [
-      ...documents,
-      ...extraFragments.map(f => ({
-        location: f.importFrom,
-        document: { kind: Kind.DOCUMENT, definitions: [f.node] },
-      })),
-    ]);
+    const errors = await validateGraphQlDocuments(
+      options.schemaAst,
+      [
+        ...documents,
+        ...extraFragments.map(f => ({
+          location: f.importFrom,
+          document: { kind: Kind.DOCUMENT, definitions: [f.node] },
+        })),
+      ],
+      specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)))
+    );
     checkValidationErrors(errors);
   }
 
