@@ -10,7 +10,7 @@ export interface ExecutePluginOptions {
   documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
-  skipDocumentsValidation?: boolean;
+  skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
   pluginContext?: { [key: string]: any };
 }
 
@@ -20,9 +20,9 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
       `Invalid Custom Plugin "${options.name}"`,
       `
         Plugin ${options.name} does not export a valid JS object with "plugin" function.
-  
+
         Make sure your custom plugin is written in the following form:
-  
+
         module.exports = {
           plugin: (schema, documents, config) => {
             return 'my-custom-plugin-content';

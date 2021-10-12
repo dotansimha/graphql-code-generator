@@ -12,7 +12,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    skipDocumentsValidation?: boolean;
+    skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
   }
 
@@ -535,6 +535,14 @@ export namespace Types {
      */
     beforeAllFileWrite: T;
   };
+
+  export type SkipDocumentsValidationOptions =
+    | {
+        ignoreRules?: string[];
+        skipDuplicateValidation?: boolean;
+        skipDocumentValidation?: boolean;
+      }
+    | boolean;
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {

@@ -7,14 +7,42 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { checkValidationErrors, validateGraphQlDocuments, Source } from '@graphql-tools/utils';
+import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/schema';
+
+function shouldValidateDuplicateDocuments(
+  skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
+) {
+  if (skipDocumentsValidationOption === true) {
+    return false;
+  }
+  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipDuplicateValidation) {
+    return false;
+  }
+  return true;
+}
+
+function shouldValidateDocumentsByRules(
+  skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
+) {
+  if (skipDocumentsValidationOption === true) {
+    return false;
+  }
+  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipDocumentValidation) {
+    return false;
+  }
+  return true;
+}
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
 
-  if (documents.length > 0 && !options.skipDocumentsValidation) {
+  const skipDocumentsValidation: Types.GenerateOptions['skipDocumentsValidation'] =
+    options.skipDocumentsValidation ||
+    (typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentValidation);
+
+  if (documents.length > 0 && shouldValidateDuplicateDocuments(options.skipDocumentsValidation)) {
     validateDuplicateDocuments(documents);
   }
 
@@ -71,16 +99,10 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     options.schema = getCachedDocumentNodeFromSchema(schemaAst);
   }
 
-  const skipDocumentValidation =
-    typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
-
-  if (options.schemaAst && documents.length > 0 && skipDocumentValidation !== true) {
+  if (options.schemaAst && documents.length > 0 && shouldValidateDocumentsByRules(options.skipDocumentsValidation)) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
-    if (typeof skipDocumentValidation === 'string') {
-      ignored.push(skipDocumentValidation);
-    }
-    if (Array.isArray(skipDocumentValidation)) {
-      ignored.push(...skipDocumentValidation);
+    if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
+      ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
     }
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
       options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
