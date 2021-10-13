@@ -4,102 +4,69 @@ import {
   isComplexPluginOutput,
   federationSpec,
   getCachedDocumentNodeFromSchema,
+  AddToSchemaResult,
 } from '@graphql-codegen/plugin-helpers';
 import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/schema';
-
-function shouldValidateDuplicateDocuments(
-  skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
-) {
-  if (skipDocumentsValidationOption === true) {
-    return false;
-  }
-  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipDuplicateValidation) {
-    return false;
-  }
-  return true;
-}
-
-function shouldValidateDocumentsByRules(
-  skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
-) {
-  if (skipDocumentsValidationOption === true) {
-    return false;
-  }
-  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipDocumentValidation) {
-    return false;
-  }
-  return true;
-}
+import {
+  getSkipDocumentsValidationOption,
+  hasFederationSpec,
+  shouldValidateDocumentsByRules,
+  shouldValidateDuplicateDocuments,
+} from './utils';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
 
-  const skipDocumentsValidation: Types.GenerateOptions['skipDocumentsValidation'] =
-    options.skipDocumentsValidation ||
-    (typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentValidation);
+  const skipDocumentsValidation = getSkipDocumentsValidationOption(options);
 
-  if (documents.length > 0 && shouldValidateDuplicateDocuments(options.skipDocumentsValidation)) {
+  if (documents.length > 0 && shouldValidateDuplicateDocuments(skipDocumentsValidation)) {
     validateDuplicateDocuments(documents);
   }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
-  if (!options.schemaAst) {
-    options.schemaAst = mergeSchemas({
-      schemas: [],
-      typeDefs: [options.schema],
-      convertExtensions: true,
-      assumeValid: true,
-      assumeValidSDL: true,
-      ...options.config,
-    } as any);
-  }
-
   // merged schema with parts added by plugins
-  let schemaChanged = false;
-  let schemaAst = pluginPackages.reduce((schemaAst, plugin) => {
+  const additionalTypeDefs: AddToSchemaResult[] = [];
+  for (const plugin of pluginPackages) {
     const addToSchema =
       typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
 
-    if (!addToSchema) {
-      return schemaAst;
+    if (addToSchema) {
+      additionalTypeDefs.push(addToSchema);
     }
-
-    return mergeSchemas({
-      schemas: [schemaAst],
-      typeDefs: [addToSchema],
-    });
-  }, options.schemaAst);
+  }
 
   const federationInConfig = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
-  if (
-    isFederation &&
-    !schemaAst.getDirective('external') &&
-    !schemaAst.getDirective('requires') &&
-    !schemaAst.getDirective('provides') &&
-    !schemaAst.getDirective('key')
-  ) {
-    schemaChanged = true;
-    schemaAst = mergeSchemas({
-      schemas: [schemaAst],
-      typeDefs: [federationSpec],
-      convertExtensions: true,
-      assumeValid: true,
-      assumeValidSDL: true,
-    } as any);
+  if (isFederation && !hasFederationSpec(options.schemaAst || options.schema)) {
+    additionalTypeDefs.push(federationSpec);
   }
 
-  if (schemaChanged) {
-    options.schema = getCachedDocumentNodeFromSchema(schemaAst);
-  }
+  // Use mergeSchemas, only if there is no GraphQLSchema provided or the schema should be extended
+  const mergeNeeded = !options.schemaAst || additionalTypeDefs.length > 0;
 
-  if (options.schemaAst && documents.length > 0 && shouldValidateDocumentsByRules(options.skipDocumentsValidation)) {
+  const schemaInstance = mergeNeeded
+    ? mergeSchemas({
+        // If GraphQLSchema provided, use it
+        schemas: options.schemaAst ? [options.schemaAst] : [],
+        // If GraphQLSchema isn't provided but DocumentNode is, use it to get the final GraphQLSchema
+        typeDefs: options.schemaAst ? additionalTypeDefs : [options.schema, ...additionalTypeDefs],
+        convertExtensions: true,
+        assumeValid: true,
+        assumeValidSDL: true,
+        ...options.config,
+      } as any)
+    : options.schemaAst;
+
+  const schemaDocumentNode =
+    mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
+
+  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsByRules(skipDocumentsValidation)) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
     if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
       ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
@@ -107,7 +74,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
       options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
     const errors = await validateGraphQlDocuments(
-      options.schemaAst,
+      schemaInstance,
       [
         ...documents,
         ...extraFragments.map(f => ({
@@ -142,8 +109,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           name,
           config: execConfig,
           parentConfig: options.config,
-          schema: options.schema,
-          schemaAst,
+          schema: schemaDocumentNode,
+          schemaAst: schemaInstance,
           documents: options.documents,
           outputFilename: options.filename,
           allPlugins: options.plugins,
