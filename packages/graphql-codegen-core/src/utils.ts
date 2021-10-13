@@ -17,7 +17,7 @@ export function prioritize<T>(...values: T[]): T {
 }
 
 export function pickFlag<TConfig, TKey extends keyof TConfig>(flag: TKey, config: TConfig): TConfig[TKey] | undefined {
-  return isObjectMap(config) ? (config as any)[flag] : undefined;
+  return isObjectMap(config) ? config[flag] : undefined;
 }
 
 export function shouldValidateDuplicateDocuments(
