@@ -64,6 +64,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
   public get sdkContent(): string {
     const compiledQueries: string[] = [];
     const sdkMethods: string[] = [];
+    let hasSubscription = false;
     for (const o of this._operationsToInclude) {
       const operationName = o.node.name.value;
       const compiledQueryVariableName = `${operationName}Compiled`;
@@ -74,11 +75,10 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
               ? `parse(${o.documentVariableName})`
               : o.documentVariableName
           }, '${operationName}');
-      if(!(isCompiledQuery(${compiledQueryVariableName}))) {
-        const originalErrors = ${compiledQueryVariableName}?.errors?.map(error => error.originalError || error) || [];
-        throw new AggregateError(originalErrors, \`Failed to compile ${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
-      }
-      `,
+if(!(isCompiledQuery(${compiledQueryVariableName}))) {
+  const originalErrors = ${compiledQueryVariableName}?.errors?.map(error => error.originalError || error) || [];
+  throw new AggregateError(originalErrors, \`Failed to compile ${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
+}`,
           2
         )
       );
@@ -93,35 +93,43 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
         o.operationType === 'Subscription'
           ? `AsyncIterableIterator<${o.operationResultType}> | ${o.operationResultType}`
           : o.operationResultType;
+      if (o.operationType === 'Subscription') {
+        hasSubscription = true;
+      }
       sdkMethods.push(
         indentMultiline(
           `async ${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
           }, context = globalContext, root = globalRoot): Promise<${returnType}> {
-        const result = await ${compiledQueryVariableName}.${methodName}(root, context, variables);
-        return ${handlerName}(result, '${operationName}');
-    }`,
+  const result = await ${compiledQueryVariableName}.${methodName}(root, context, variables);
+  return ${handlerName}(result, '${operationName}');
+}`,
           2
         )
       );
     }
 
-    return `async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator<ExecutionResult> | ExecutionResult, operationName: string) {
-      if (isAsyncIterable(resultIterator)) {
-        return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
-      } else {
-        return handleExecutionResult<T>(resultIterator, operationName);
-      }
-    }
-    function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
-      if (result.errors) {
-        const originalErrors = result.errors.map(error => error.originalError|| error);
-        throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
-      }
-      return result.data as T;
-    }
-    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
-${compiledQueries.join('\n')}
+    return `${
+      hasSubscription
+        ? `async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator<ExecutionResult> | ExecutionResult, operationName: string) {
+  if (isAsyncIterable(resultIterator)) {
+    return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
+  } else {
+    return handleExecutionResult<T>(resultIterator, operationName);
+  }
+}
+`
+        : ``
+    }function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
+  if (result.errors) {
+    const originalErrors = result.errors.map(error => error.originalError|| error);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
+  }
+  return result.data as T;
+}
+export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+${compiledQueries.join('\n\n')}
+
   return {
 ${sdkMethods.join(',\n')}
   };

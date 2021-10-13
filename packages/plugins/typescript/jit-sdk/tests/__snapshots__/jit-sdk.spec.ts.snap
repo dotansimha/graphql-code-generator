@@ -238,62 +238,55 @@ export const Feed4Document = gql\`
   }
 }
     \`;
-async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator<ExecutionResult> | ExecutionResult, operationName: string) {
-      if (isAsyncIterable(resultIterator)) {
-        return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
-      } else {
-        return handleExecutionResult<T>(resultIterator, operationName);
-      }
-    }
-    function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
-      if (result.errors) {
-        const originalErrors = result.errors.map(error => error.originalError|| error);
-        throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-      }
-      return result.data as T;
-    }
-    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
+  if (result.errors) {
+    const originalErrors = result.errors.map(error => error.originalError|| error);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+  }
+  return result.data as T;
+}
+export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
-          if(!(isCompiledQuery(feedCompiled))) {
-            const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feedCompiled))) {
+      const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed2Compiled = compileQuery(schema, Feed2Document, 'feed2');
-          if(!(isCompiledQuery(feed2Compiled))) {
-            const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed2Compiled))) {
+      const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed3Compiled = compileQuery(schema, Feed3Document, 'feed3');
-          if(!(isCompiledQuery(feed3Compiled))) {
-            const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed3Compiled))) {
+      const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed4Compiled = compileQuery(schema, Feed4Document, 'feed4');
-          if(!(isCompiledQuery(feed4Compiled))) {
-            const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed4Compiled))) {
+      const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
   return {
     async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-            const result = await feedCompiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed');
-        },
+      const result = await feedCompiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed');
+    },
     async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
-            const result = await feed2Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed2');
-        },
+      const result = await feed2Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed2');
+    },
     async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
-            const result = await feed3Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed3');
-        },
+      const result = await feed3Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed3');
+    },
     async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
-            const result = await feed4Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed4');
-        }
+      const result = await feed4Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed4');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
@@ -705,41 +698,41 @@ export const CommentAddedDocument = gql\`
 }
     \`;
 async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator<ExecutionResult> | ExecutionResult, operationName: string) {
-      if (isAsyncIterable(resultIterator)) {
-        return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
-      } else {
-        return handleExecutionResult<T>(resultIterator, operationName);
-      }
-    }
-    function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
-      if (result.errors) {
-        const originalErrors = result.errors.map(error => error.originalError|| error);
-        throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-      }
-      return result.data as T;
-    }
-    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+  if (isAsyncIterable(resultIterator)) {
+    return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
+  } else {
+    return handleExecutionResult<T>(resultIterator, operationName);
+  }
+}
+function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
+  if (result.errors) {
+    const originalErrors = result.errors.map(error => error.originalError|| error);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+  }
+  return result.data as T;
+}
+export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
-          if(!(isCompiledQuery(feedCompiled))) {
-            const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feedCompiled))) {
+      const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const commentAddedCompiled = compileQuery(schema, CommentAddedDocument, 'commentAdded');
-          if(!(isCompiledQuery(commentAddedCompiled))) {
-            const originalErrors = commentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile commentAdded: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(commentAddedCompiled))) {
+      const originalErrors = commentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile commentAdded: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
   return {
     async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-            const result = await feedCompiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed');
-        },
+      const result = await feedCompiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed');
+    },
     async commentAdded(variables?: CommentAddedSubscriptionVariables, context = globalContext, root = globalRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
-            const result = await commentAddedCompiled.subscribe!(root, context, variables);
-            return handleSubscriptionResult(result, 'commentAdded');
-        }
+      const result = await commentAddedCompiled.subscribe!(root, context, variables);
+      return handleSubscriptionResult(result, 'commentAdded');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;"
@@ -983,62 +976,55 @@ export const Feed4Document = \`
   }
 }
     \`;
-async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator<ExecutionResult> | ExecutionResult, operationName: string) {
-      if (isAsyncIterable(resultIterator)) {
-        return mapAsyncIterator<any, T>(resultIterator, result => handleExecutionResult(result, operationName));
-      } else {
-        return handleExecutionResult<T>(resultIterator, operationName);
-      }
-    }
-    function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
-      if (result.errors) {
-        const originalErrors = result.errors.map(error => error.originalError|| error);
-        throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-      }
-      return result.data as T;
-    }
-    export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
+  if (result.errors) {
+    const originalErrors = result.errors.map(error => error.originalError|| error);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+  }
+  return result.data as T;
+}
+export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
     const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed');
-          if(!(isCompiledQuery(feedCompiled))) {
-            const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feedCompiled))) {
+      const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed2Compiled = compileQuery(schema, parse(Feed2Document), 'feed2');
-          if(!(isCompiledQuery(feed2Compiled))) {
-            const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed2Compiled))) {
+      const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed3Compiled = compileQuery(schema, parse(Feed3Document), 'feed3');
-          if(!(isCompiledQuery(feed3Compiled))) {
-            const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed3Compiled))) {
+      const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
     const feed4Compiled = compileQuery(schema, parse(Feed4Document), 'feed4');
-          if(!(isCompiledQuery(feed4Compiled))) {
-            const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
-            throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
-          }
-          
+    if(!(isCompiledQuery(feed4Compiled))) {
+      const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
+      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    }
+
   return {
     async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-            const result = await feedCompiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed');
-        },
+      const result = await feedCompiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed');
+    },
     async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
-            const result = await feed2Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed2');
-        },
+      const result = await feed2Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed2');
+    },
     async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
-            const result = await feed3Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed3');
-        },
+      const result = await feed3Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed3');
+    },
     async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
-            const result = await feed4Compiled.query(root, context, variables);
-            return handleExecutionResult(result, 'feed4');
-        }
+      const result = await feed4Compiled.query(root, context, variables);
+      return handleExecutionResult(result, 'feed4');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
