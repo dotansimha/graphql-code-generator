@@ -16,7 +16,7 @@ import {
   hasFederationSpec,
   pickFlag,
   prioritize,
-  shouldValidateDocumentsByRules,
+  shouldValidateDocumentsAgainstSchema,
   shouldValidateDuplicateDocuments,
 } from './utils';
 
@@ -68,7 +68,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const schemaDocumentNode =
     mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
 
-  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsByRules(skipDocumentsValidation)) {
+  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
     if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
       ignored.push(...asArray(skipDocumentsValidation.ignoreRules));

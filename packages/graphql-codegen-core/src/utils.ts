@@ -35,7 +35,7 @@ export function shouldValidateDuplicateDocuments(
   return true;
 }
 
-export function shouldValidateDocumentsByRules(
+export function shouldValidateDocumentsAgainstSchema(
   skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
 ) {
   // If the value is true, skip all
@@ -43,7 +43,7 @@ export function shouldValidateDocumentsByRules(
     return false;
   }
   // If the value is object with the specific flag, only skip this one
-  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipDocumentValidation) {
+  if (typeof skipDocumentsValidationOption === 'object' && skipDocumentsValidationOption.skipValidationAgainstSchema) {
     return false;
   }
   // If the value is falsy or the specific flag is not set, validate
