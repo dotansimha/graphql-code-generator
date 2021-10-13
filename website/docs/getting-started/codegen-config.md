@@ -48,7 +48,7 @@ Here are the supported options that you can define in the config file (see [sour
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
   - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins and they can be specified in this section. A full list of supported plugins can be found [here](../plugins/index.md). You can also point to a custom plugin in a local file (see [Custom Plugins](../custom-codegen/index.md)).
-  
+
   - [**`generates.preset`**](../presets/index.md) - A list of available presets for generated files. Such as [`near-operation-file`](../presets/near-operation-file.md#example), which generates files alongside your documents.
 
   - [**`generates.schema`**](schema-field.md#output-file-level) - Same as root `schema`, but applies only for the specific output file.
@@ -82,6 +82,14 @@ Here are the supported options that you can define in the config file (see [sour
   - **`pluckConfig.gqlMagicComment`** - Configures the magic GraphQL comments to look for. The default is `/* GraphQL */`).
 
   - **`pluckConfig.globalGqlIdentifierName`** - Overrides the name of the default GraphQL name identifier.
+
+- **`skipDocumentsValidation`** - Allows to configure how to validate documents
+
+  - **`skipDocumentsValidation.skipValidationAgainstSchema`** - A flag to disable the validation against the schema
+
+  - **`skipDocumentsValidation.ignoreRules`** - An array of rule names to ignore during the validation. You can find a list of the available rules [here](https://github.com/graphql/graphql-js/tree/main/src/validation/rules.
+
+  - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
 
 ## Environment Variables
 

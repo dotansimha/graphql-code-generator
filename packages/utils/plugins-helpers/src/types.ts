@@ -5,6 +5,7 @@ export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
+    // TODO: Remove schemaAst and change schema to GraphQLSchema in the next major version
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
@@ -12,7 +13,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    skipDocumentsValidation?: boolean;
+    skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
   }
 
@@ -535,6 +536,24 @@ export namespace Types {
      */
     beforeAllFileWrite: T;
   };
+
+  export type SkipDocumentsValidationOptions =
+    | {
+        /**
+         * @description Allows you to skip specific rules while validating the documents.
+         * See all the rules; https://github.com/graphql/graphql-js/tree/main/src/validation/rules
+         */
+        ignoreRules?: string[];
+        /**
+         * @description Ignore duplicate documents validation
+         */
+        skipDuplicateValidation?: boolean;
+        /**
+         * @description Skip document validation entirely against the schema
+         */
+        skipValidationAgainstSchema?: boolean;
+      }
+    | boolean;
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
