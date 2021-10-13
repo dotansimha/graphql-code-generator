@@ -26,8 +26,8 @@
     "tslib": "~2.3.0"
   },
   "devDependencies": {
-    "graphql-jit": "^0.6.0",
-    "@graphql-tools/utils": "^8.2.4"
+    "graphql-jit": "0.6.0",
+    "@graphql-tools/utils": "8.3.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
