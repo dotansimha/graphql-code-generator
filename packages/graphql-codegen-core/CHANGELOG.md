@@ -1,5 +1,16 @@
 # @graphql-codegen/core
 
+## 2.2.0
+
+### Minor Changes
+
+- 7c60e5acc: feat(core): ability to skip some specific validation rules with skipDocumentsValidation option
+
+### Patch Changes
+
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.1.0
 
 ### Minor Changes

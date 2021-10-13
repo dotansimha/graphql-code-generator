@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.3.0
+
+### Minor Changes
+
+- b9e85adae: feat(visitor-plugin-common): support custom scalar type from extensions
+
+### Patch Changes
+
+- 3c2c847be: Fix dedupleFragments option for typescript-react-query (and possibly others)
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.2.1
 
 ### Patch Changes

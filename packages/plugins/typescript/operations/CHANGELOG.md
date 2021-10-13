@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.7
+
+### Patch Changes
+
+- 1d570b456: avoidOptionals sub-config fix
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+  - @graphql-codegen/typescript@2.2.3
+
 ## 2.1.6
 
 ### Patch Changes
