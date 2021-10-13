@@ -191,7 +191,7 @@ function ensureStartsWithSeparator(path: string) {
 /**
  * Pushes an item to a list only if the list doesn't include the item
  */
-export function pushUnique<T extends any>(list: T[], item: T): void {
+export function pushUnique<T>(list: T[], item: T): void {
   if (!list.includes(item)) {
     list.push(item);
   }
