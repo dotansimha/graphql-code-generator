@@ -5,6 +5,7 @@ export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
+    // TODO: Remove schemaAst and change schema to GraphQLSchema in the next major version
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
