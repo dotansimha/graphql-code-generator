@@ -506,59 +506,55 @@ async function handleSubscriptionResult<T>(
 }
 function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
   if (result.errors) {
-    throw new AggregateError(result.errors, `Failed to execute ${operationName}: ${result.errors.join('\n')}`);
+    const originalErrors = result.errors.map(error => error.originalError || error);
+    throw new AggregateError(originalErrors, `Failed to execute ${operationName}: \n\t${originalErrors.join('\n\t')}`);
   }
   return result.data as T;
 }
 export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
   const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded');
   if (!isCompiledQuery(onCommentAddedCompiled)) {
-    throw new AggregateError(
-      onCommentAddedCompiled?.errors || [],
-      'Failed to compile onCommentAdded: ' + onCommentAddedCompiled?.errors?.join('\n')
-    );
+    const originalErrors = onCommentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile onCommentAdded: \n\t${originalErrors.join('\n\t')}`);
   }
 
   const CommentCompiled = compileQuery(schema, CommentDocument, 'Comment');
   if (!isCompiledQuery(CommentCompiled)) {
-    throw new AggregateError(
-      CommentCompiled?.errors || [],
-      'Failed to compile Comment: ' + CommentCompiled?.errors?.join('\n')
-    );
+    const originalErrors = CommentCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile Comment: \n\t${originalErrors.join('\n\t')}`);
   }
 
   const CurrentUserForProfileCompiled = compileQuery(schema, CurrentUserForProfileDocument, 'CurrentUserForProfile');
   if (!isCompiledQuery(CurrentUserForProfileCompiled)) {
+    const originalErrors = CurrentUserForProfileCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(
-      CurrentUserForProfileCompiled?.errors || [],
-      'Failed to compile CurrentUserForProfile: ' + CurrentUserForProfileCompiled?.errors?.join('\n')
+      originalErrors,
+      `Failed to compile CurrentUserForProfile: \n\t${originalErrors.join('\n\t')}`
     );
   }
 
   const FeedCompiled = compileQuery(schema, FeedDocument, 'Feed');
   if (!isCompiledQuery(FeedCompiled)) {
-    throw new AggregateError(FeedCompiled?.errors || [], 'Failed to compile Feed: ' + FeedCompiled?.errors?.join('\n'));
+    const originalErrors = FeedCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile Feed: \n\t${originalErrors.join('\n\t')}`);
   }
 
   const submitRepositoryCompiled = compileQuery(schema, SubmitRepositoryDocument, 'submitRepository');
   if (!isCompiledQuery(submitRepositoryCompiled)) {
-    throw new AggregateError(
-      submitRepositoryCompiled?.errors || [],
-      'Failed to compile submitRepository: ' + submitRepositoryCompiled?.errors?.join('\n')
-    );
+    const originalErrors = submitRepositoryCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile submitRepository: \n\t${originalErrors.join('\n\t')}`);
   }
 
   const submitCommentCompiled = compileQuery(schema, SubmitCommentDocument, 'submitComment');
   if (!isCompiledQuery(submitCommentCompiled)) {
-    throw new AggregateError(
-      submitCommentCompiled?.errors || [],
-      'Failed to compile submitComment: ' + submitCommentCompiled?.errors?.join('\n')
-    );
+    const originalErrors = submitCommentCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile submitComment: \n\t${originalErrors.join('\n\t')}`);
   }
 
   const voteCompiled = compileQuery(schema, VoteDocument, 'vote');
   if (!isCompiledQuery(voteCompiled)) {
-    throw new AggregateError(voteCompiled?.errors || [], 'Failed to compile vote: ' + voteCompiled?.errors?.join('\n'));
+    const originalErrors = voteCompiled?.errors?.map(error => error.originalError || error) || [];
+    throw new AggregateError(originalErrors, `Failed to compile vote: \n\t${originalErrors.join('\n\t')}`);
   }
 
   return {
