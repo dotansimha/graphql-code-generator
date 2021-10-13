@@ -14,6 +14,8 @@ import { mergeSchemas } from '@graphql-tools/schema';
 import {
   getSkipDocumentsValidationOption,
   hasFederationSpec,
+  pickFlag,
+  prioritize,
   shouldValidateDocumentsByRules,
   shouldValidateDuplicateDocuments,
 } from './utils';
@@ -40,7 +42,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
   }
 
-  const federationInConfig = pickFlag('federation', options.config);
+  const federationInConfig: boolean = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
   if (isFederation && !hasFederationSpec(options.schemaAst || options.schema)) {
@@ -72,7 +74,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
     }
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
-      options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
+      pickFlag('externalFragments', options.config) || [];
     const errors = await validateGraphQlDocuments(
       schemaInstance,
       [
@@ -267,22 +269,4 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       );
     }
   });
-}
-
-function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
-  return obj && typeof obj === 'object' && !Array.isArray(obj);
-}
-
-function prioritize<T>(...values: T[]): T {
-  const picked = values.find(val => typeof val === 'boolean');
-
-  if (typeof picked !== 'boolean') {
-    return values[values.length - 1];
-  }
-
-  return picked;
-}
-
-function pickFlag(flag: string, config: Types.PluginConfig): boolean | undefined {
-  return isObjectMap(config) ? (config as any)[flag] : undefined;
 }

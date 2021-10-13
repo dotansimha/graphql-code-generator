@@ -2,6 +2,24 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { isDocumentNode } from '@graphql-tools/utils';
 import { DocumentNode, GraphQLSchema, isSchema, Kind } from 'graphql';
 
+export function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+export function prioritize<T>(...values: T[]): T {
+  const picked = values.find(val => typeof val === 'boolean');
+
+  if (typeof picked !== 'boolean') {
+    return values[values.length - 1];
+  }
+
+  return picked;
+}
+
+export function pickFlag<TConfig, TKey extends keyof TConfig>(flag: TKey, config: TConfig): TConfig[TKey] | undefined {
+  return isObjectMap(config) ? (config as any)[flag] : undefined;
+}
+
 export function shouldValidateDuplicateDocuments(
   skipDocumentsValidationOption: Types.GenerateOptions['skipDocumentsValidation']
 ) {
@@ -38,28 +56,21 @@ export function getSkipDocumentsValidationOption(options: Types.GenerateOptions)
     return options.skipDocumentsValidation;
   }
   // If the value is set under `config` property
-  if (typeof options.config === 'object' && options.config?.skipDocumentsValidation) {
+  const flagFromConfig = pickFlag('skipDocumentsValidation', options.config);
+  if (flagFromConfig) {
     return options.config.skipDocumentsValidation;
   }
   return false;
 }
 
+const federationDirectives = ['key', 'requires', 'provides', 'external'];
+
 export function hasFederationSpec(schemaOrAST: GraphQLSchema | DocumentNode) {
   if (isSchema(schemaOrAST)) {
-    return (
-      schemaOrAST.getDirective('external') ||
-      schemaOrAST.getDirective('requires') ||
-      schemaOrAST.getDirective('provides') ||
-      schemaOrAST.getDirective('key')
-    );
+    return federationDirectives.some(directive => schemaOrAST.getDirective(directive));
   } else if (isDocumentNode(schemaOrAST)) {
     return schemaOrAST.definitions.some(
-      def =>
-        def.kind === Kind.DIRECTIVE_DEFINITION &&
-        (def.name.value === 'external' ||
-          def.name.value === 'requires' ||
-          def.name.value === 'provides' ||
-          def.name.value === 'key')
+      def => def.kind === Kind.DIRECTIVE_DEFINITION && federationDirectives.includes(def.name.value)
     );
   }
   return false;
