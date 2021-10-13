@@ -84,8 +84,11 @@ Here are the supported options that you can define in the config file (see [sour
   - **`pluckConfig.globalGqlIdentifierName`** - Overrides the name of the default GraphQL name identifier.
 
 - **`skipDocumentsValidation`** - Allows to configure how to validate documents
+
   - **`skipDocumentsValidation.skipValidationAgainstSchema`** - A flag to disable the validation against the schema
+
   - **`skipDocumentsValidation.ignoreRules`** - An array of rule names to ignore during the validation. You can find a list of the available rules [here](https://github.com/graphql/graphql-js/tree/main/src/validation/rules.
+
   - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
 
 ## Environment Variables
