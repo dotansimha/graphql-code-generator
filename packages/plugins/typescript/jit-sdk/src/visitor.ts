@@ -75,7 +75,8 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
               : o.documentVariableName
           }, '${operationName}');
       if(!(isCompiledQuery(${compiledQueryVariableName}))) {
-        throw new AggregateError(${compiledQueryVariableName}?.errors || [], 'Failed to compile ${operationName}: ' + ${compiledQueryVariableName}?.errors?.join('\\n'));
+        const originalErrors = ${compiledQueryVariableName}?.errors?.map(error => error.originalError) || [];
+        throw new AggregateError(originalErrors, 'Failed to compile ${operationName}: ' + originalErrors.join('\\n'));
       }
       `,
           2
@@ -114,7 +115,8 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
     }
     function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
       if (result.errors) {
-        throw new AggregateError(result.errors, \`Failed to execute \${operationName}: \${result.errors.join('\\n')}\`);
+        const originalErrors = result.errors.map(error => error.originalError);
+        throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \${originalErrors.join('\\n')}\`);
       }
       return result.data as T;
     }
