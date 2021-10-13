@@ -56,9 +56,9 @@ export function getSkipDocumentsValidationOption(options: Types.GenerateOptions)
     return options.skipDocumentsValidation;
   }
   // If the value is set under `config` property
-  const flagFromConfig = pickFlag('skipDocumentsValidation', options.config);
+  const flagFromConfig: Types.SkipDocumentsValidationOptions = pickFlag('skipDocumentsValidation', options.config);
   if (flagFromConfig) {
-    return options.config.skipDocumentsValidation;
+    return flagFromConfig;
   }
   return false;
 }
