@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 2.1.8
+
+### Patch Changes
+
+- 8a576b49a: avoidOptionals with skip/include directives fix
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+  - @graphql-codegen/typescript@2.2.4
+
 ## 2.1.7
 
 ### Patch Changes
