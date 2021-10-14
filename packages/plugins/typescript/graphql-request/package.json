@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@graphql-tools/schema": "8.2.0",
-    "graphql-request": "3.5.0"
+    "graphql-request": "3.6.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
