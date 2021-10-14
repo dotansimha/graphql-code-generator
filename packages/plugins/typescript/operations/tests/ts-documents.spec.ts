@@ -5394,7 +5394,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string | null | undefined, nicknames?: Array<string> | null | undefined, parents?: Array<User> | null | undefined } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -5447,7 +5447,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showAddress: Scalars['Boolean'];
         showName: Scalars['Boolean'];
       }>;
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string | null | undefined, address?: { __typename?: 'Address', city: string } | null | undefined, friends?: Array<{ __typename?: 'User', id: string }> | null | undefined } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
 
     it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
@@ -5496,19 +5496,18 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showName: Scalars['Boolean'];
       }>;
 
-
       export type UserQuery = (
         { __typename?: 'Query' }
         & { user: (
           { __typename?: 'User' }
           & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
-          & { address?: Maybe<(
+          & { address?: (
             { __typename?: 'Address' }
             & Pick<Address, 'city'>
-          )>, friends?: Maybe<Array<(
+          ), friends?: Array<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
-          )>> }
+          )> }
         ) }
       );`);
     });
@@ -5591,6 +5590,161 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
       );
     });
+
+    it('On avoidOptionals:true, optionals (?) on types should be avoided', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: User!
+        }
+
+        type User {
+          messages: [Message!]!
+        }
+
+        type Message {
+          content: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query MyQuery($include: Boolean!) {
+          me {
+            messages @include(if: $include) {
+              content
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          nonOptionalTypename: true,
+          preResolveTypes: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type MyQueryQuery = (
+          { __typename: 'Query' }
+          & { me: (
+            { __typename: 'User' }
+            & { messages?: Array<(
+              { __typename: 'Message' }
+              & Pick<Message, 'content'>
+            )> }
+          ) }
+        );
+      `);
+    });
+
+    it('inline fragment with conditional directives and avoidOptionals', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+          group: Group!
+        }
+
+        type User {
+          name: String
+        }
+
+        type Group {
+          id: Int!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($withUser: Boolean! = false) {
+          ... @include(if: $withUser) {
+            user {
+              name
+            }
+            group {
+              id
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true, avoidOptionals: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = {
+        __typename?: 'Query',
+        user: {
+          __typename?: 'User',
+          name: string | null
+        } | null,
+        group: {
+          __typename?: 'Group',
+          id: number
+        }
+      };`);
+    });
+  });
+
+  it('inline fragment with conditional directives and avoidOptionals, without preResolveTypes', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        group: Group!
+      }
+
+      type User {
+        name: String
+      }
+
+      type Group {
+        id: Int!
+      }
+    `);
+
+    const fragment = parse(/* GraphQL */ `
+      query user($withUser: Boolean! = false) {
+        ... @include(if: $withUser) {
+          user {
+            name
+          }
+          group {
+            id
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: fragment }],
+      { preResolveTypes: false, avoidOptionals: true },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+    export type UserQuery = (
+      { __typename?: 'Query' }
+      & { user: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'name'>
+      )>, group: (
+        { __typename?: 'Group' }
+        & Pick<Group, 'id'>
+      ) }
+    );`);
   });
 
   it('handles unnamed queries', async () => {

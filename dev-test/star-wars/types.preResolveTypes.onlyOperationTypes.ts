@@ -142,11 +142,7 @@ export type HeroNameConditionalInclusionQueryVariables = Exact<{
 
 export type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null | undefined;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
@@ -156,11 +152,7 @@ export type HeroNameConditionalExclusionQueryVariables = Exact<{
 
 export type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null | undefined;
 };
 
 export type HeroParentTypeDependentFieldQueryVariables = Exact<{
