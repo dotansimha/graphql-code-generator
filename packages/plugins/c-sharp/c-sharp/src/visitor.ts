@@ -25,6 +25,8 @@ import {
   DirectiveNode,
   StringValueNode,
   NamedTypeNode,
+  UnionTypeDefinitionNode,
+  NameNode,
 } from 'graphql';
 import {
   C_SHARP_SCALARS,
@@ -36,6 +38,7 @@ import {
   convertSafeName,
   wrapFieldType,
   getListTypeField,
+  isOfTypeList,
 } from '../../common/common';
 import { pascalCase } from 'change-case-all';
 import {
@@ -43,6 +46,7 @@ import {
   JsonAttributesSourceConfiguration,
   getJsonAttributeSourceConfiguration,
 } from './json-attributes';
+import { UnionTypeMap, UnionTypesAndInterfacesData } from './unionTypeAndInterfacesVisitor';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -57,7 +61,140 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
   private readonly jsonAttributesConfiguration: JsonAttributesSourceConfiguration;
 
-  constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
+  /// A map from types implementing unions, and the unions that they implement
+  private readonly unionTypeToImplementationsMap: UnionTypeMap;
+
+  /// A set of all types that are union types
+  private readonly unionTypesAndInterfaces: Set<string>;
+
+  private unionTypeConverterTag = '[JsonConverter(typeof(UnionTypeConverter))]';
+
+  private unionTypeListConverterTag = '[JsonConverter(typeof(UnionTypeListConverter))]';
+
+  private unionTypeCacheDefinition = `
+/// <summary>
+/// A cache of generated JToken::ToObject[TargetType] for each __typeName
+/// </summary>
+private static ConcurrentDictionary<string, Func<JToken, object>> ToObjectForTypenameCache = new ConcurrentDictionary<string, Func<JToken, object>>();
+  `;
+
+  private unionTypeConvertersBlock = `
+/// <summary>
+/// Given __typeName returns JToken::ToObject[__typeName]. (via cache to improve performance)
+/// </summary>
+/// <param name="typeName">The __typeName</param>
+/// <returns>JToken::ToObject[__typeName]</returns>
+public static Func<JToken, object> GetToObjectMethodForTargetType(string typeName)
+{
+    if (!ToObjectForTypenameCache.ContainsKey(typeName))
+    {
+        // Get the type corresponding to the typename
+        Type targetType = typeof(YammerGQLTypes).Assembly
+            .GetTypes()
+            .ToList()
+            .Where(t => t.Name == typeName)
+            .FirstOrDefault();
+
+        // Create a parametrised ToObject method using targetType as <TypeArgument>
+        var method = typeof(JToken).GetMethods()
+            .Where(m => m.Name == "ToObject" && m.IsGenericMethod && m.GetParameters().Length == 0).FirstOrDefault();
+        var genericMethod = method.MakeGenericMethod(targetType);
+        var toObject = (Func<JToken, object>)genericMethod.CreateDelegate(Expression.GetFuncType(typeof(JToken), typeof(object)));
+        ToObjectForTypenameCache[typeName] = toObject;
+    }
+
+    return ToObjectForTypenameCache[typeName];
+}
+
+
+/// <summary>
+/// Converts an instance of a union type to the appropriate implementation of the union interface
+/// </summary>
+public class UnionTypeConverter : JsonConverter
+{
+    /// <inheritdoc />
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        if (reader.TokenType == JsonToken.Null)
+        {
+            return null;
+        }
+
+        var loadedObject = JObject.Load(reader);
+
+        var typeName = loadedObject["__typename"].Value<string>();
+
+        var toObject = YammerGQLTypes.GetToObjectMethodForTargetType(typeName);
+
+        // Invoke and parse it
+        object objectParsed = toObject(loadedObject);
+
+        return objectParsed;
+    }
+
+    /// <inheritdoc />
+    public override bool CanConvert(Type objectType)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        throw new NotImplementedException("Tried to write a GQL UnionType to JSON");
+    }
+}
+
+/// <summary>
+/// Converts a list of instances of a union type to the appropriate implementation of the union interface
+/// </summary>
+public class UnionTypeListConverter : JsonConverter
+{
+    /// <inheritdoc />
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        if (reader.TokenType == JsonToken.Null)
+        {
+            return null;
+        }
+
+        var items = JArray.Load(reader).Children();
+        IList list = Activator.CreateInstance(objectType) as IList;
+
+        foreach (var item in items)
+        {
+            var typeName = item["__typename"].Value<string>();
+
+            var toObject = YammerGQLTypes.GetToObjectMethodForTargetType(typeName);
+
+            // Invoke and parse it
+            object objectParsed = toObject(item);
+
+            list.Add(objectParsed);
+        }
+
+        return list;
+    }
+
+    /// <inheritdoc />
+    public override bool CanConvert(Type objectType)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        throw new NotImplementedException("Tried to write a GQL UnionTypeList to JSON");
+    }
+}
+  `;
+
+  constructor(
+    rawConfig: CSharpResolversPluginRawConfig,
+    private _schema: GraphQLSchema,
+    unionTypeAndInterfacesData: UnionTypesAndInterfacesData
+  ) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
       listType: rawConfig.listType || 'List',
@@ -72,6 +209,9 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     if (this._parsedConfig.emitJsonAttributes) {
       this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
     }
+
+    this.unionTypeToImplementationsMap = unionTypeAndInterfacesData.unionTypeToImplementationsMap;
+    this.unionTypesAndInterfaces = unionTypeAndInterfacesData.unionTypesAndInterfaces;
   }
 
   public getImports(): string {
@@ -96,6 +236,10 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .asKind('class')
       .withName(convertSafeName(this.config.className))
       .withBlock(indentMultiline(content)).string;
+  }
+
+  public addUnionTypeConverterDefinitions(blocks: string[]): string[] {
+    return [this.unionTypeCacheDefinition, ...blocks, this.unionTypeConvertersBlock];
   }
 
   protected getEnumValue(enumName: string, enumOption: string): string {
@@ -162,6 +306,17 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
         if (jsonRequiredAttribute != null) {
           attributes.push(`[${jsonRequiredAttribute}]`);
         }
+      }
+    }
+
+    if (
+      node.kind === Kind.FIELD_DEFINITION &&
+      (node.type.kind === Kind.NON_NULL_TYPE || node.type.kind === Kind.NAMED_TYPE)
+    ) {
+      const baseNode = getBaseTypeNode(node.type);
+
+      if (this.unionTypesAndInterfaces.has(baseNode.name.value)) {
+        attributes.push(isOfTypeList(node.type) ? this.unionTypeListConverterTag : this.unionTypeConverterTag);
       }
     }
 
@@ -300,26 +455,65 @@ ${recordMembers}
     interfaces?: ReadonlyArray<NamedTypeNode>
   ): string {
     const classSummary = transformComment(description?.value);
+    const allInterfaces = [...(interfaces || [])];
+
+    // Check if this class is part of a unionType, which is modelled as an interface
+    const unionInterfaces = this.unionTypeToImplementationsMap.get(name);
+    if (unionInterfaces) {
+      unionInterfaces.forEach(i => {
+        allInterfaces.push({
+          kind: 'NamedType',
+          name: { kind: 'Name', value: i },
+        });
+      });
+    }
+
     const interfaceImpl =
       interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
-    const classMembers = inputValueArray
-      .map(arg => {
-        const fieldType = this.resolveInputFieldType(arg.type);
-        const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = convertSafeName(arg.name);
-        const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
-        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
-      })
-      .join('\n\n');
+    let classMembers = inputValueArray.map(arg => {
+      const fieldType = this.resolveInputFieldType(arg.type);
+      const fieldHeader = this.getFieldHeader(arg, fieldType);
+      const fieldName = convertSafeName(arg.name);
+      const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
+      return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
+    });
+
+    if (unionInterfaces) {
+      unionInterfaces.forEach(unionInterface => {
+        const fieldHeader = indentMultiline(transformComment('The kind used to discriminate the union type')) + '\n';
+
+        const unionKind = `${unionInterface}Kind`;
+        const fieldTypeName = `${unionKind} ${unionInterface}.Kind { get { return ${unionKind}.${name}; } }`;
+
+        const kindField = fieldHeader + indent(fieldTypeName);
+        classMembers = [kindField, ...classMembers];
+      });
+    }
+
+    const joinedMembers = classMembers.join('\n\n');
 
     return `
 #region ${name}
 ${classSummary}public class ${convertSafeName(name)}${interfaceImpl} {
   #region members
-${classMembers}
+${joinedMembers}
   #endregion
 }
 #endregion`;
+  }
+
+  protected buildUnionTypeInterface(name: string, description: StringValueNode): string {
+    const interfaceSummary = transformComment(description?.value);
+
+    const kindCommentText = transformComment('Kind is used to discriminate by type instances of this interface', 1);
+
+    const field = indent(`${name}Kind Kind { get; }`);
+
+    const kindMember = kindCommentText + field;
+    return `
+${interfaceSummary}public interface ${convertSafeName(name)} {
+${kindMember}
+}`;
   }
 
   protected buildInterface(
@@ -356,6 +550,41 @@ ${classMembers}
 ${classSummary}public interface ${convertSafeName(name)} {
 ${classMembers}
 }`;
+  }
+
+  protected buildUnionType(
+    nameNode: NameNode,
+    description: StringValueNode,
+    unionValues: ReadonlyArray<NamedTypeNode>
+  ): string {
+    const valuesAsEnumNodes: EnumValueDefinitionNode[] = unionValues.map(typeNode => ({
+      kind: 'EnumValueDefinition',
+      name: typeNode.name,
+      description: {
+        kind: 'StringValue',
+        value: typeNode.name.value,
+        block: true,
+      },
+    }));
+
+    const enumTypeNode: EnumTypeDefinitionNode = {
+      kind: 'EnumTypeDefinition',
+      name: { ...nameNode, value: nameNode.value + 'Kind' },
+      description: {
+        kind: 'StringValue',
+        value: `An enum representing the possible values of ${nameNode.value}`,
+      },
+      values: valuesAsEnumNodes,
+    };
+
+    const enumTypeDefinition = this.EnumTypeDefinition(enumTypeNode);
+
+    const interfaceDefinition = this.buildUnionTypeInterface(nameNode.value, description);
+
+    return `
+    ${enumTypeDefinition}
+    ${interfaceDefinition}
+    `;
   }
 
   protected buildInputTransformer(
@@ -427,5 +656,9 @@ ${
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     return this.buildInterface(node.name.value, node.description, node.fields);
+  }
+
+  UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
+    return this.buildUnionType(node.name, node.description, node.types);
   }
 }
