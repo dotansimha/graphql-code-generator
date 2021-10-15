@@ -2,6 +2,7 @@ import {
   ClientSideBasePluginConfig,
   ClientSideBaseVisitor,
   DocumentMode,
+  getConfigValue,
   indentMultiline,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
@@ -11,6 +12,7 @@ import { RawGenericSdkPluginConfig } from './config';
 
 export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
   usingObservableFrom: string;
+  rawRequest: boolean;
 }
 
 export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPluginConfig, GenericSdkPluginConfig> {
@@ -25,6 +27,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGenericSdkPluginConfig) {
     super(schema, fragments, rawConfig, {
       usingObservableFrom: rawConfig.usingObservableFrom,
+      rawRequest: getConfigValue(rawConfig.rawRequest, false),
     });
 
     autoBind(this);
@@ -69,9 +72,12 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
         const returnType = usingObservable && o.operationType === 'Subscription' ? 'Observable' : 'Promise';
+        const resultData = this.config.rawRequest
+          ? `{ data: ${o.operationResultType}, errors: any }`
+          : o.operationResultType;
         return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
           o.operationVariablesTypes
-        }, options?: C): ${returnType}<${o.operationResultType}> {
+        }, options?: C): ${returnType}<${resultData}> {
   return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${
           o.documentVariableName
         }, variables, options);
