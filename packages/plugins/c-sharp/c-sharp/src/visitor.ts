@@ -215,7 +215,15 @@ public class UnionTypeListConverter : JsonConverter
   }
 
   public getImports(): string {
-    const allImports = ['System', 'System.Collections.Generic', 'System.ComponentModel.DataAnnotations'];
+    const allImports = [
+      'System',
+      'System.Collections.Generic',
+      'System.ComponentModel.DataAnnotations',
+      'System.Collections.Concurrent',
+      'System.Linq',
+      'System.Linq.Expressions',
+      'Newtonsoft.Json.Linq',
+    ];
     if (this._parsedConfig.emitJsonAttributes) {
       const jsonAttributesNamespace = this.jsonAttributesConfiguration.namespace;
       allImports.push(jsonAttributesNamespace);
@@ -275,6 +283,24 @@ public class UnionTypeListConverter : JsonConverter
       .withBlock(enumBlock).string;
   }
 
+  InternalEnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const enumName = this.convertName(node.name);
+    const enumValues = node.values
+      ?.map(enumValue => {
+        const enumValueDefinition = this.EnumValueDefinition(enumValue);
+        return enumValueDefinition(node.name.value);
+      })
+      .join(',\n');
+    const enumBlock = [enumValues].join('\n');
+
+    return new CSharpDeclarationBlock()
+      .access('public')
+      .asKind('enum')
+      .withComment(node.description)
+      .withName(enumName)
+      .withBlock(enumBlock).string;
+  }
+
   getFieldHeader(
     node: InputValueDefinitionNode | FieldDefinitionNode | EnumValueDefinitionNode,
     fieldType?: CSharpFieldType
@@ -311,7 +337,7 @@ public class UnionTypeListConverter : JsonConverter
 
     if (
       node.kind === Kind.FIELD_DEFINITION &&
-      (node.type.kind === Kind.NON_NULL_TYPE || node.type.kind === Kind.NAMED_TYPE)
+      (node.type.kind === Kind.NON_NULL_TYPE || node.type.kind === Kind.NAMED_TYPE || node.type.kind === Kind.LIST_TYPE)
     ) {
       const baseNode = getBaseTypeNode(node.type);
 
@@ -565,6 +591,7 @@ ${classMembers}
         value: typeNode.name.value,
         block: true,
       },
+      directives: [],
     }));
 
     const enumTypeNode: EnumTypeDefinitionNode = {
@@ -575,9 +602,10 @@ ${classMembers}
         value: `An enum representing the possible values of ${nameNode.value}`,
       },
       values: valuesAsEnumNodes,
+      directives: [],
     };
 
-    const enumTypeDefinition = this.EnumTypeDefinition(enumTypeNode);
+    const enumTypeDefinition = this.InternalEnumTypeDefinition(enumTypeNode);
 
     const interfaceDefinition = this.buildUnionTypeInterface(nameNode.value, description);
 

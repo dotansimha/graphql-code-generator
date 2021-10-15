@@ -5,8 +5,8 @@ import { CSharpResolversPluginRawConfig } from '../src/config';
 import { getJsonAttributeSourceConfiguration } from '../src/json-attributes';
 import each from 'jest-each';
 
-describe('C#', () => {
-  describe('Using directives', () => {
+fdescribe('C#', () => {
+  fdescribe('Using directives', () => {
     it('Should include dotnet using directives', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum ns {
@@ -725,6 +725,95 @@ describe('C#', () => {
         public HashSet<string> arr3 { get; set; }
         public HashSet<string> arr4 { get; set; }
       `);
+    });
+  });
+
+  describe('Composition types', () => {
+    it('Correctly generate interface + concrete types for UnionType', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        union Vehicle = Airplane | Car
+
+        type Airplane {
+          wingspan: Int
+        }
+
+        type Car {
+          licensePlate: String
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface Vehicle {');
+      expect(result).toContain('public enum VehicleKind {');
+      expect(result).toContain('Airplane');
+      expect(result).toContain('Car');
+      expect(result).toContain('public class Airplane');
+      expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Airplane; } }');
+      expect(result).toContain('public class Car');
+      expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Car; } }');
+    });
+
+    it('Correctly generate interface + concrete types for UnionType, but with definitions inverted', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Car {
+          licensePlate: String
+        }
+
+        union Vehicle = Car
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface Vehicle {');
+      expect(result).toContain('public enum VehicleKind {');
+      expect(result).toContain('Car');
+      expect(result).toContain('public class Car');
+      expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Car; } }');
+    });
+
+    it('Correctly generates fields marked with the appropriate converter', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Car {
+          licensePlate: String
+        }
+
+        union Vehicle = Car
+
+        type Traffic {
+          firstVeichle: Vehicle
+          tail: [Vehicle]
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface Vehicle {');
+      expect(result).toContain('[JsonConverter(typeof(UnionTypeConverter))]');
+      expect(result).toContain('public Vehicle firstVeichle { get; set; }');
+      expect(result).toContain('[JsonConverter(typeof(UnionTypeListConverter))]');
+      expect(result).toContain('public List<Vehicle> tail { get; set; }');
+    });
+
+    it('Correctly marks a field with the appropriate converter for an interface', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Traffic {
+          firstVeichle: Vehicle
+          tail: [Vehicle]
+        }
+
+        interface Vehicle {
+          licencePlate: String!
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('public interface Vehicle {');
+      expect(result).toContain('[JsonConverter(typeof(UnionTypeConverter))]');
+      expect(result).toContain('public Vehicle firstVeichle { get; set; }');
+      expect(result).toContain('[JsonConverter(typeof(UnionTypeListConverter))]');
+      expect(result).toContain('public List<Vehicle> tail { get; set; }');
     });
   });
 });
