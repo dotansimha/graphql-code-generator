@@ -98,13 +98,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   _collectInlineFragments(
     parentType: GraphQLNamedType,
     nodes: InlineFragmentNode[],
-    types: Map<string, Array<SelectionNode | FragmentSpreadUsage>>
+    types: Map<string, { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
+        if (hasConditionalDirectives(node)) {
+          this._appendToTypeMap(types, typeOnSchema.name, [], true);
+        }
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
@@ -244,8 +247,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected flattenSelectionSet(
     selections: ReadonlyArray<SelectionNode>
-  ): Map<string, Array<SelectionNode | FragmentSpreadUsage>> {
-    const selectionNodesByTypeName = new Map<string, Array<SelectionNode | FragmentSpreadUsage>>();
+  ): Map<string, { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }> {
+    const selectionNodesByTypeName = new Map<
+      string,
+      { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }
+    >();
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
     const fragmentSpreads: FragmentSpreadNode[] = [];
@@ -278,13 +284,22 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return selectionNodesByTypeName;
   }
 
-  private _appendToTypeMap<T = SelectionNode>(types: Map<string, Array<T>>, typeName: string, nodes: Array<T>): void {
+  private _appendToTypeMap<T = SelectionNode>(
+    types: Map<string, { selectionNodes: Array<T>; isConditional: boolean }>,
+    typeName: string,
+    nodes: Array<T>,
+    isConditional?: boolean
+  ): void {
     if (!types.has(typeName)) {
-      types.set(typeName, []);
+      types.set(typeName, { selectionNodes: [], isConditional: false });
     }
 
     if (nodes && nodes.length > 0) {
-      types.get(typeName).push(...nodes);
+      types.get(typeName).selectionNodes.push(...nodes);
+    }
+
+    if (isConditional) {
+      types.get(typeName).isConditional = isConditional;
     }
   }
 
@@ -309,7 +324,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
       }
 
-      const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+      const selectionNodes = selectionNodesByTypeName.get(typeName) || { selectionNodes: [], isConditional: false };
 
       if (!prev[typeName]) {
         prev[typeName] = [];
@@ -331,7 +346,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected buildSelectionSetString(
     parentSchemaType: GraphQLObjectType,
-    selectionNodes: Array<SelectionNode | FragmentSpreadUsage>
+    selectionSetProps: { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }
   ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
@@ -348,9 +363,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const fragmentsSpreadUsages: string[] = [];
 
     // ensure we mutate no function params
-    selectionNodes = [...selectionNodes];
+    selectionSetProps.selectionNodes = [...selectionSetProps.selectionNodes];
 
-    for (const selectionNode of selectionNodes) {
+    for (const selectionNode of selectionSetProps.selectionNodes) {
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
           if (!selectionNode.selectionSet) {
@@ -420,11 +435,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ) {
         // also process fields from fragment that apply for this parentType
         const flatten = this.flattenSelectionSet(selectionNode.selectionNodes);
-        const typeNodes = flatten.get(parentSchemaType.name) ?? [];
-        selectionNodes.push(...typeNodes);
+        const typeNodes = flatten.get(parentSchemaType.name)?.selectionNodes ?? [];
+        selectionSetProps.selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
-          const typeNodes = flatten.get(iinterface.name) ?? [];
-          selectionNodes.push(...typeNodes);
+          const typeNodes = flatten.get(iinterface.name)?.selectionNodes ?? [];
+          selectionSetProps.selectionNodes.push(...typeNodes);
         }
       }
     }
@@ -483,7 +498,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const fields = [...allStrings, mergedObjectsAsString, ...fragmentsSpreadUsages].filter(Boolean);
 
-    return this._processor.buildSelectionSetFromStrings(fields);
+    return this._processor.buildSelectionSetFromStrings(fields, selectionSetProps.isConditional);
   }
 
   protected buildTypeNameField(

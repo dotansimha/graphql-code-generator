@@ -427,7 +427,7 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(field: FieldNode): boolean {
+export function hasConditionalDirectives(field: FieldNode | InlineFragmentNode): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }

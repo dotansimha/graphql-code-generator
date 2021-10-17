@@ -24,13 +24,14 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
     return `{ ${allObjectsMerged.join(', ')} }`;
   }
 
-  buildSelectionSetFromStrings(pieces: string[]): string {
+  buildSelectionSetFromStrings(pieces: string[], isConditional = false): string {
+    const conditionalSuffix = isConditional ? ' | {}' : '';
     if (pieces.length === 0) {
       return null;
     } else if (pieces.length === 1) {
-      return pieces[0];
+      return `${pieces[0]}${conditionalSuffix}`;
     } else {
-      return `(\n  ${pieces.join(`\n  & `)}\n)`;
+      return `(\n  ${pieces.join(`\n  & `)}\n)${conditionalSuffix}`;
     }
   }
 
