@@ -2,7 +2,7 @@ import { GraphQLSchema, visit } from 'graphql';
 import { PluginFunction, Types, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import { CSharpResolversVisitor } from './visitor';
 import { CSharpResolversPluginRawConfig } from './config';
-import { UnionTypeVisitor } from './unionTypeAndInterfacesVisitor';
+import { CompositionTypeVisitor } from './compositionTypesVisitor';
 
 export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
   schema: GraphQLSchema,
@@ -11,19 +11,18 @@ export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
 ): Promise<string> => {
   const astNode = getCachedDocumentNodeFromSchema(schema);
 
-  const unionTypeAndInterfacesVisitor = new UnionTypeVisitor();
-  const unionTypesAndInterfacesResult = visit(astNode, { leave: unionTypeAndInterfacesVisitor as any });
-  const relevantDefinitions = unionTypesAndInterfacesResult.definitions.filter(d => d.constructor === Array);
+  const compositionTypesVisitor = new CompositionTypeVisitor();
+  const compositionTypesResult = visit(astNode, { leave: compositionTypesVisitor as any });
+  const relevantDefinitions = compositionTypesResult.definitions.filter(d => d.constructor === Array);
 
-  const unionTypesAndInterfacesData =
-    unionTypeAndInterfacesVisitor.getUnionTypeDataFromDefinitions(relevantDefinitions);
+  const compositionTypesData = compositionTypesVisitor.getCompositionTypeDataFromDefinitions(relevantDefinitions);
 
-  const visitor = new CSharpResolversVisitor(config, schema, unionTypesAndInterfacesData);
+  const visitor = new CSharpResolversVisitor(config, schema, compositionTypesData);
   const visitorResult = visit(astNode, { leave: visitor as any });
   const imports = visitor.getImports();
   const blocks = visitorResult.definitions.filter(d => typeof d === 'string');
 
-  const blocksWithUnionData = visitor.addUnionTypeConverterDefinitions(blocks);
+  const blocksWithUnionData = visitor.addCompositionTypeConverterDefinitions(blocks);
 
   const blockContent = blocksWithUnionData.join('\n');
 

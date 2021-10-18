@@ -46,7 +46,7 @@ import {
   JsonAttributesSourceConfiguration,
   getJsonAttributeSourceConfiguration,
 } from './json-attributes';
-import { UnionTypeMap, UnionTypesAndInterfacesData } from './unionTypeAndInterfacesVisitor';
+import { CompositionTypesMap, CompositionTypesData } from './compositionTypesVisitor';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -62,23 +62,23 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   private readonly jsonAttributesConfiguration: JsonAttributesSourceConfiguration;
 
   /// A map from types implementing unions, and the unions that they implement
-  private readonly unionTypeToImplementationsMap: UnionTypeMap;
+  private readonly compositionTypeToImplementationsMap: CompositionTypesMap;
 
   /// A set of all types that are union types
-  private readonly unionTypesAndInterfaces: Set<string>;
+  private readonly compositionTypeNames: Set<string>;
 
   private unionTypeConverterTag = '[JsonConverter(typeof(UnionTypeConverter))]';
 
   private unionTypeListConverterTag = '[JsonConverter(typeof(UnionTypeListConverter))]';
 
-  private unionTypeCacheDefinition = `
+  private compositionTypeCacheDefinition = `
 /// <summary>
 /// A cache of generated JToken::ToObject[TargetType] for each __typeName
 /// </summary>
 private static ConcurrentDictionary<string, Func<JToken, object>> ToObjectForTypenameCache = new ConcurrentDictionary<string, Func<JToken, object>>();
   `;
 
-  private unionTypeConvertersBlock = `
+  private compositionTypeConvertersBlock = `
 /// <summary>
 /// Given __typeName returns JToken::ToObject[__typeName]. (via cache to improve performance)
 /// </summary>
@@ -108,9 +108,9 @@ public static Func<JToken, object> GetToObjectMethodForTargetType(string typeNam
 
 
 /// <summary>
-/// Converts an instance of a union type to the appropriate implementation of the union interface
+/// Converts an instance of a composition type to the appropriate implementation of the interface
 /// </summary>
-public class UnionTypeConverter : JsonConverter
+public class CompositionTypeConverter : JsonConverter
 {
     /// <inheritdoc />
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -121,6 +121,13 @@ public class UnionTypeConverter : JsonConverter
         }
 
         var loadedObject = JObject.Load(reader);
+
+        var typeNameObject = loadedObject["__typename"];
+
+        if (typeNameObject == null)
+        {
+            throw new JsonWriterException($"CompositionTypeConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
+        }
 
         var typeName = loadedObject["__typename"].Value<string>();
 
@@ -141,14 +148,14 @@ public class UnionTypeConverter : JsonConverter
     /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        throw new NotImplementedException("Tried to write a GQL UnionType to JSON");
+        throw new NotImplementedException("Tried to write a GQL Composition type to JSON");
     }
 }
 
 /// <summary>
-/// Converts a list of instances of a union type to the appropriate implementation of the union interface
+/// Converts a list of instances of a composition type to the appropriate implementation of the interface
 /// </summary>
-public class UnionTypeListConverter : JsonConverter
+public class CompositionTypeListConverter : JsonConverter
 {
     /// <inheritdoc />
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -163,6 +170,13 @@ public class UnionTypeListConverter : JsonConverter
 
         foreach (var item in items)
         {
+            var typeNameObject = item["__typename"];
+
+            if (typeNameObject == null)
+            {
+                throw new JsonWriterException($"CompositionTypeListConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
+            }
+
             var typeName = item["__typename"].Value<string>();
 
             var toObject = YammerGQLTypes.GetToObjectMethodForTargetType(typeName);
@@ -185,7 +199,7 @@ public class UnionTypeListConverter : JsonConverter
     /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        throw new NotImplementedException("Tried to write a GQL UnionTypeList to JSON");
+        throw new NotImplementedException("Tried to write a GQL Composition type list to JSON");
     }
 }
   `;
@@ -193,7 +207,7 @@ public class UnionTypeListConverter : JsonConverter
   constructor(
     rawConfig: CSharpResolversPluginRawConfig,
     private _schema: GraphQLSchema,
-    unionTypeAndInterfacesData: UnionTypesAndInterfacesData
+    compositionTypesData: CompositionTypesData
   ) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
@@ -210,8 +224,8 @@ public class UnionTypeListConverter : JsonConverter
       this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
     }
 
-    this.unionTypeToImplementationsMap = unionTypeAndInterfacesData.unionTypeToImplementationsMap;
-    this.unionTypesAndInterfaces = unionTypeAndInterfacesData.unionTypesAndInterfaces;
+    this.compositionTypeToImplementationsMap = compositionTypesData.compositionTypeToImplementationsMap;
+    this.compositionTypeNames = compositionTypesData.compositionTypeNames;
   }
 
   public getImports(): string {
@@ -246,8 +260,8 @@ public class UnionTypeListConverter : JsonConverter
       .withBlock(indentMultiline(content)).string;
   }
 
-  public addUnionTypeConverterDefinitions(blocks: string[]): string[] {
-    return [this.unionTypeCacheDefinition, ...blocks, this.unionTypeConvertersBlock];
+  public addCompositionTypeConverterDefinitions(blocks: string[]): string[] {
+    return [this.compositionTypeCacheDefinition, ...blocks, this.compositionTypeConvertersBlock];
   }
 
   protected getEnumValue(enumName: string, enumOption: string): string {
@@ -341,7 +355,7 @@ public class UnionTypeListConverter : JsonConverter
     ) {
       const baseNode = getBaseTypeNode(node.type);
 
-      if (this.unionTypesAndInterfaces.has(baseNode.name.value)) {
+      if (this.compositionTypeNames.has(baseNode.name.value)) {
         attributes.push(isOfTypeList(node.type) ? this.unionTypeListConverterTag : this.unionTypeConverterTag);
       }
     }
@@ -483,10 +497,10 @@ ${recordMembers}
     const classSummary = transformComment(description?.value);
     const allInterfaces = [...(interfaces || [])];
 
-    // Check if this class is part of a unionType, which is modelled as an interface
-    const unionInterfaces = this.unionTypeToImplementationsMap.get(name);
-    if (unionInterfaces) {
-      unionInterfaces.forEach(i => {
+    // Check if this class is part of a composition type, which is modelled as an interface
+    const compositionInterfaces = this.compositionTypeToImplementationsMap.get(name);
+    if (compositionInterfaces) {
+      compositionInterfaces.forEach(i => {
         allInterfaces.push({
           kind: 'NamedType',
           name: { kind: 'Name', value: i },
@@ -504,12 +518,12 @@ ${recordMembers}
       return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
     });
 
-    if (unionInterfaces) {
-      unionInterfaces.forEach(unionInterface => {
+    if (compositionInterfaces) {
+      compositionInterfaces.forEach(cInterface => {
         const fieldHeader = indentMultiline(transformComment('The kind used to discriminate the union type')) + '\n';
 
-        const unionKind = `${unionInterface}Kind`;
-        const fieldTypeName = `${unionKind} ${unionInterface}.Kind { get { return ${unionKind}.${name}; } }`;
+        const kind = `${cInterface}Kind`;
+        const fieldTypeName = `${kind} ${cInterface}.Kind { get { return ${kind}.${name}; } }`;
 
         const kindField = fieldHeader + indent(fieldTypeName);
         classMembers = [kindField, ...classMembers];
