@@ -131,7 +131,7 @@ public class CompositionTypeConverter : JsonConverter
 
         var typeName = loadedObject["__typename"].Value<string>();
 
-        var toObject = YammerGQLTypes.GetToObjectMethodForTargetType(typeName);
+        var toObject = GetToObjectMethodForTargetType(typeName);
 
         // Invoke and parse it
         object objectParsed = toObject(loadedObject);
@@ -179,7 +179,7 @@ public class CompositionTypeListConverter : JsonConverter
 
             var typeName = item["__typename"].Value<string>();
 
-            var toObject = YammerGQLTypes.GetToObjectMethodForTargetType(typeName);
+            var toObject = GetToObjectMethodForTargetType(typeName);
 
             // Invoke and parse it
             object objectParsed = toObject(item);
