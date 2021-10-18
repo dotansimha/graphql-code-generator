@@ -1,9 +1,10 @@
+import { ParsedMapper, buildMapperImport, parseMapper } from '@graphql-codegen/visitor-plugin-common';
+import { generateInfiniteQueryKey, generateQueryKey } from './variables-generator';
+
+import { CustomFetch } from './config';
+import { FetcherRenderer } from './fetcher';
 import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
-import { FetcherRenderer } from './fetcher';
-import { parseMapper, ParsedMapper, buildMapperImport } from '@graphql-codegen/visitor-plugin-common';
-import { CustomFetch } from './config';
-import { generateQueryKey } from './variables-generator';
 
 export class CustomMapperFetcher implements FetcherRenderer {
   private _mapper: ParsedMapper;
@@ -38,6 +39,40 @@ export class CustomMapperFetcher implements FetcherRenderer {
     return null;
   }
 
+  generateInfiniteQueryHook(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const hookConfig = this.visitor.queryMethodMap;
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+
+    const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
+
+    const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const impl = this._isReactHook
+      ? `${typedFetcher}(${documentVariableName}, options).bind(null, variables)`
+      : `${typedFetcher}(${documentVariableName}, options, variables)`;
+
+    return `export const useInfinite${operationName} = <
+      TData = ${operationResultType},
+      TError = ${this.visitor.config.errorType}
+    >(
+      ${variables},
+      ${options}
+    ) =>
+    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+      ${generateInfiniteQueryKey(node, hasRequiredVariables)},
+      ${impl},
+      options
+    );`;
+  }
+
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -55,16 +90,16 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName}).bind(null, variables)`
-      : `${typedFetcher}(${documentVariableName}, variables)`;
+      ? `${typedFetcher}(${documentVariableName}, options).bind(null, variables)`
+      : `${typedFetcher}(${documentVariableName}, options, variables)`;
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      ${variables}, 
+      ${variables},
       ${options}
-    ) => 
+    ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
       ${generateQueryKey(node, hasRequiredVariables)},
       ${impl},
@@ -87,13 +122,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName})`
-      : `(${variables}) => ${typedFetcher}(${documentVariableName}, variables)()`;
+      ? `${typedFetcher}(${documentVariableName}, options)`
+      : `(${variables}) => ${typedFetcher}(${documentVariableName}, options, variables)()`;
 
     return `export const use${operationName} = <
       TError = ${this.visitor.config.errorType},
       TContext = unknown
-    >(${options}) => 
+    >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
       ${impl},
       options

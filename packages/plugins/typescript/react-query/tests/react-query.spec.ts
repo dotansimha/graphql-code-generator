@@ -1,9 +1,10 @@
-import { validateTs } from '@graphql-codegen/testing';
-import { parse, buildClientSchema, GraphQLSchema, buildSchema } from 'graphql';
-import { plugin } from '../src';
+import { GraphQLSchema, buildClientSchema, buildSchema, parse } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '../../typescript/src/index';
+
+import { plugin } from '../src';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
+import { plugin as tsPlugin } from '../../typescript/src/index';
+import { validateTs } from '@graphql-codegen/testing';
 
 const validateTypeScript = async (
   output: Types.PluginOutput,
@@ -155,7 +156,7 @@ describe('React-Query', () => {
         ) =>
         useQuery<TTestQuery, TError, TData>(
           variables === undefined ? ['test'] : ['test', variables],
-          myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+          myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options, variables),
           options
         );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
@@ -163,7 +164,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+        (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options, variables)(),
         options
       );`);
 
@@ -191,7 +192,7 @@ describe('React-Query', () => {
       ) =>
       useQuery<TTestQuery, TError, TData>(
         variables === undefined ? ['test'] : ['test', variables],
-        myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+        myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options, variables),
         options
       );`);
 
@@ -200,7 +201,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+        (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options, variables)(),
         options
       );`);
 
@@ -232,7 +233,7 @@ describe('React-Query', () => {
         ) =>
         useQuery<TTestQuery, TError, TData>(
           variables === undefined ? ['test'] : ['test', variables],
-          useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
+          useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options).bind(null, variables),
           options
         );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
@@ -240,7 +241,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
+        useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options),
         options
       );`);
 

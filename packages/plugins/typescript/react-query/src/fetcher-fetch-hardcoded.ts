@@ -1,8 +1,9 @@
-import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { generateInfiniteQueryKey, generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+
 import { FetcherRenderer } from './fetcher';
 import { HardcodedFetch } from './config';
-import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import { OperationDefinitionNode } from 'graphql';
+import { ReactQueryVisitor } from './visitor';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor, private config: HardcodedFetch) {}
@@ -47,6 +48,35 @@ ${this.getFetchParams()}
     return json.data;
   }
 }`;
+  }
+
+  generateInfiniteQueryHook(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const hookConfig = this.visitor.queryMethodMap;
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+
+    const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
+
+    return `export const useInfinite${operationName} = <
+      TData = ${operationResultType},
+      TError = ${this.visitor.config.errorType}
+    >(
+      ${variables},
+      ${options}
+    ) =>
+    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+      ${generateInfiniteQueryKey(node, hasRequiredVariables)},
+      fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
+      options
+    );`;
   }
 
   generateQueryHook(

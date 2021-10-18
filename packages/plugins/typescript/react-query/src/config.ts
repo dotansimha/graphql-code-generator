@@ -73,4 +73,10 @@ export interface ReactQueryRawPluginConfig
    * @description Changes the default "TError" generic type.
    */
   errorType?: string;
+
+  /**
+   * @default false
+   * @description Adds an Infinite Query along side the standard one
+   */
+  addInfiniteQuery?: boolean;
 }
