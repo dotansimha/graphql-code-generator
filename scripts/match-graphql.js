@@ -13,7 +13,7 @@ if (pkg.resolutions.graphql.startsWith(version)) {
   console.info(`GraphQL v${version} already installed! Skipping.`);
 }
 
-pkg.dependencies.graphql = `^${version}`;
+pkg.devDependencies.graphql = `^${version}`;
 pkg.resolutions.graphql = `^${version}`;
 
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
