@@ -39,21 +39,21 @@ export function mockGraphQLServer({
       variables,
       request,
       schema,
-      execute: (schema, document, rootValue, context, variableValues, operationName) =>
+      execute: (schema, document, rootValue, contextValue, variableValues, operationName) =>
         execute({
           schema,
           document,
           rootValue,
-          context,
+          contextValue,
           variableValues,
           operationName,
         }),
-      subscribe: (schema, document, rootValue, context, variableValues, operationName) =>
+      subscribe: (schema, document, rootValue, contextValue, variableValues, operationName) =>
         subscribe({
           schema,
           document,
           rootValue,
-          context,
+          contextValue,
           variableValues,
           operationName,
         }),

@@ -1,5 +1,5 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, concatAST, visit, Kind, FragmentDefinitionNode } from 'graphql';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { InputTypeVisitor } from './input-type-visitor';
 import { BaseJavaVisitor } from './base-java-visitor';

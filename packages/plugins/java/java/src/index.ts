@@ -1,4 +1,4 @@
-import { GraphQLSchema, visit } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { JavaResolversVisitor } from './visitor';
 import { buildPackageNameFromPath } from '@graphql-codegen/java-common';

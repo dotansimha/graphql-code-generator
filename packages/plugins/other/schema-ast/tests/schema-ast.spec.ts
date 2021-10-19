@@ -4,7 +4,6 @@ import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 import { codegen } from '@graphql-codegen/core';
-import { version } from 'os';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
