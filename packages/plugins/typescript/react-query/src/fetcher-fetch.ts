@@ -1,7 +1,7 @@
 import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
-import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import { generateKey, generateVariablesSignature } from './variables-generator';
 
 export class FetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}
@@ -37,7 +37,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const variables = generateVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
@@ -53,7 +53,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       ${options}
     ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node, hasRequiredVariables)},
+      ${generateKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables),
       options
     );`;
@@ -64,7 +64,8 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
@@ -81,6 +82,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       ${options}
     ) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateKey(node, hasRequiredVariables)},
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
       options
     );`;
@@ -94,7 +96,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const variables = generateVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
     return `\nuse${operationName}.fetcher = (dataSource: { endpoint: string, fetchParams?: RequestInit }, ${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables);`;
   }

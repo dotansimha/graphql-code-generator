@@ -3,7 +3,7 @@ import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
 import { parseMapper, ParsedMapper, buildMapperImport } from '@graphql-codegen/visitor-plugin-common';
 import { CustomFetch } from './config';
-import { generateQueryKey } from './variables-generator';
+import { generateKey } from './variables-generator';
 
 export class CustomMapperFetcher implements FetcherRenderer {
   private _mapper: ParsedMapper;
@@ -62,11 +62,11 @@ export class CustomMapperFetcher implements FetcherRenderer {
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      ${variables}, 
+      ${variables},
       ${options}
-    ) => 
+    ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node, hasRequiredVariables)},
+      ${generateKey(node, hasRequiredVariables)},
       ${impl},
       options
     );`;
@@ -77,7 +77,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
@@ -93,8 +94,9 @@ export class CustomMapperFetcher implements FetcherRenderer {
     return `export const use${operationName} = <
       TError = ${this.visitor.config.errorType},
       TContext = unknown
-    >(${options}) => 
+    >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateKey(node, hasRequiredVariables)},
       ${impl},
       options
     );`;

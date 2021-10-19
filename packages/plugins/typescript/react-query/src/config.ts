@@ -57,7 +57,18 @@ export interface ReactQueryRawPluginConfig
    */
   exposeQueryKeys?: boolean;
 
-  /**
+   /**
+   * @default false
+   * @description For each generate mutation hook adds getKey(variables: QueryVariables) function. Useful for call outside of functional component.
+   * @exampleMarkdown
+   * ```ts
+   *  const mutation = useUserDetailsMutation(...);
+   *  const key = useUserDetailsMutation.getKey({id: theUsersId});
+   * ```
+   */
+     exposeMutationKeys?: boolean;
+
+ /**
    * @default false
    * @description For each generate query hook adds `fetcher` field with a corresponding GraphQL query using the fetcher.
    * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.

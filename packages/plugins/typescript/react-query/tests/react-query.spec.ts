@@ -159,10 +159,11 @@ describe('React-Query', () => {
           options
         );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
-        TError = unknown,
-        TContext = unknown
-      >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        variables === undefined ? ['test'] : ['test', variables],
         (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -200,6 +201,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        variables === undefined ? ['test'] : ['test', variables],
         (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -240,6 +242,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        variables === undefined ? ['test'] : ['test', variables],
         useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
         options
       );`);
@@ -273,6 +276,46 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).not.toBeSimilarStringTo(`useTestQuery.fetcher`);
+    });
+
+    it("Should generate mutation fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#customFetcher',
+        },
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestMutation.fetcher = (variables?: TestMutationVariables) => customFetcher<TestMutation, TestMutationVariables>(TestDocument, variables);`
+      );
+    });
+
+    it('Should NOT generate mutation fetcher field when exposeFetcher is true and the fetcher IS a react hook', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#useCustomFetcher',
+          isReactHook: true,
+        },
+        exposeFetcher: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).not.toBeSimilarStringTo(`useTestMutation.fetcher`);
+    });
+
+    describe('exposeMutationKeys: true', () => {
+      it('Should generate getKey for each mutation', async () => {
+        const config = {
+          fetcher: 'fetch',
+          exposeMutationKeys: true,
+        };
+        const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+        expect(out.content).toBeSimilarStringTo(
+          `useTestMutation.getKey = (variables?: TestMutationVariables) => variables === undefined ? ['test'] : ['test', variables];`
+        );
+      });
     });
 
     it(`tests for dedupeOperationSuffix`, async () => {
@@ -423,6 +466,7 @@ describe('React-Query', () => {
       headers?: RequestInit['headers']
     ) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      variables === undefined ? ['test'] : ['test', variables],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables, headers)(),
       options
     );`);
@@ -608,6 +652,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+        variables === undefined ? ['test'] : ['test', variables],
         (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -883,6 +928,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
           options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
         ) =>
         useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+          variables === undefined ? ['test'] : ['test', variables],
           (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
           options
         );`);

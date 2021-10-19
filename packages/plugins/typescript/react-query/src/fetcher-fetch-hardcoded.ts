@@ -2,7 +2,7 @@ import { OperationDefinitionNode } from 'graphql';
 import { ReactQueryVisitor } from './visitor';
 import { FetcherRenderer } from './fetcher';
 import { HardcodedFetch } from './config';
-import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import { generateKey, generateVariablesSignature } from './variables-generator';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor, private config: HardcodedFetch) {}
@@ -57,7 +57,7 @@ ${this.getFetchParams()}
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const variables = generateVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
@@ -72,7 +72,7 @@ ${this.getFetchParams()}
       ${options}
     ) =>
     ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node, hasRequiredVariables)},
+      ${generateKey(node, hasRequiredVariables)},
       fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables),
       options
     );`;
@@ -83,7 +83,8 @@ ${this.getFetchParams()}
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
@@ -97,6 +98,7 @@ ${this.getFetchParams()}
       TContext = unknown
     >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateKey(node, hasRequiredVariables)},
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
       options
     );`;
@@ -110,7 +112,7 @@ ${this.getFetchParams()}
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const variables = generateVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
     return `\nuse${operationName}.fetcher = (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables);`;
   }
