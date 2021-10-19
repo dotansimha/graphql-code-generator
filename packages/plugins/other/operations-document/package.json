@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/operation-documents",
+  "name": "@graphql-codegen/operations-document",
   "version": "0.0.0",
   "description": "GraphQL Code Generator plugin for generating GraphQL operation documents",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/other/operation-documents"
+    "directory": "packages/plugins/other/operations-document"
   },
   "license": "MIT",
   "scripts": {

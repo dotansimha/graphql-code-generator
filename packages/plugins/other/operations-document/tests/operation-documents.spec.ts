@@ -1,7 +1,7 @@
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
-describe('operation-documents', () => {
+describe('operations-document', () => {
   it('should generate operations for each root field', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {

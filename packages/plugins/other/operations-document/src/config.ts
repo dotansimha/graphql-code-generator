@@ -1,4 +1,4 @@
-export interface OperationDocumentsConfig {
+export interface OperationsDocumentConfig {
   /**
    * @default Infinity
    * @description Allows you choose how many levels of depth selection sets will be generated

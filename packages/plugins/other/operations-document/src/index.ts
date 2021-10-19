@@ -1,12 +1,12 @@
 import { DocumentNode, GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
-import { OperationDocumentsConfig } from './config';
+import { OperationsDocumentConfig } from './config';
 import { getRootTypeMap, buildOperationNodeForField } from '@graphql-tools/utils';
 
-export const plugin: PluginFunction<OperationDocumentsConfig> = async (
+export const plugin: PluginFunction<OperationsDocumentConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: OperationDocumentsConfig
+  config: OperationsDocumentConfig
 ): Promise<Types.PluginOutput> => {
   const rootTypeMap = getRootTypeMap(schema);
   const definitions: OperationDefinitionNode[] = [];
@@ -32,14 +32,14 @@ export const plugin: PluginFunction<OperationDocumentsConfig> = async (
   };
 };
 
-export const validate: PluginValidateFn<OperationDocumentsConfig> = async (
+export const validate: PluginValidateFn<OperationsDocumentConfig> = async (
   _schema: GraphQLSchema,
   _documents: Types.DocumentFile[],
-  config: OperationDocumentsConfig,
+  config: OperationsDocumentConfig,
   outputFile: string
 ) => {
   if (!outputFile.endsWith('.graphql')) {
-    throw new Error(`Plugin "operation-documents" requires extension to be '.graphql' !`);
+    throw new Error(`Plugin "operations-document" requires extension to be '.graphql' !`);
   }
 };
 

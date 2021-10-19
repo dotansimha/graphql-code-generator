@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/operation-documents': major
+'@graphql-codegen/operations-document': major
 ---
 
-feat: new operation-documents plugin to generate operation documents from schema
+feat: new operations-document plugin to generate operation documents from schema
