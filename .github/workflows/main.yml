@@ -93,10 +93,6 @@ jobs:
           - 14
           - 15
           - 16.0.0-rc.5
-        include:
-          - node_version: 14
-            os: windows-latest
-            graphql_version: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v2
