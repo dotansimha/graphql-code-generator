@@ -90,7 +90,6 @@ jobs:
         os: [ubuntu-latest] # remove windows to speed up the tests
         node_version: [12, '16.8.0']
         graphql_version:
-          - 14
           - 15
           - 16.0.0-rc.5
     steps:
