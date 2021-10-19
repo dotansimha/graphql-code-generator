@@ -15,7 +15,7 @@ import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
 import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { pascalCase } from 'change-case-all';
-import { generateKeyMaker } from './variables-generator';
+import { generateQueryKeyMaker, generateMutationKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
@@ -152,7 +152,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         query += `\nuse${operationName}.document = ${documentVariableName};\n`;
       }
       if (this.config.exposeQueryKeys) {
-        query += generateKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+        query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
       }
 
       // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook
@@ -179,7 +179,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         hasRequiredVariables
       );
       if (this.config.exposeMutationKeys) {
-        query += generateKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+        query += generateMutationKeyMaker(node, operationName);
       }
       if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
         query += this.fetcher.generateFetcherFetch(
