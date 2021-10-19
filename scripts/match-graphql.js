@@ -15,5 +15,7 @@ if (pkg.resolutions.graphql.startsWith(version)) {
 
 pkg.devDependencies.graphql = `^${version}`;
 pkg.resolutions.graphql = `^${version}`;
+pkg.resolutions['**/apollo-language-server/graphql'] = `^${version}`;
+pkg.resolutions['**/@types/graphql-upload/graphql'] = `^${version}`;
 
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');

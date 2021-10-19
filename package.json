@@ -116,8 +116,8 @@
     "jest-runner": "27.3.1",
     "graphql": "15.6.1",
     "graphql-language-service-interface": "2.8.4",
-    "**/apollo-language-server/graphql": "16.0.0-rc.5",
-    "**/@types/graphql-upload/graphql": "16.0.0-rc.5"
+    "**/apollo-language-server/graphql": "^15.0.0",
+    "**/@types/graphql-upload/graphql": "^15.0.0"
   },
   "dependencies": {
     "dotenv": "10.0.0",
