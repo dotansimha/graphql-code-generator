@@ -146,6 +146,10 @@
           "description": "For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "exposeMutationKeys": {
+          "description": "For each generate mutation hook adds getKey() function. Useful for call outside of functional component.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "exposeFetcher": {
           "description": "For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.\nIt is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.\nDefault value: \"false\"",
           "type": "boolean"
