@@ -5,7 +5,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/other/add"
+    "directory": "packages/plugins/other/operation-documents"
   },
   "license": "MIT",
   "scripts": {
