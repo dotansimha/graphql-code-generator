@@ -94,7 +94,7 @@ describe('jit-sdk', () => {
 
       const usage = `
 async function test() {
-  const schema = buildSchema(\`${printSchema(schema)}\`);
+  const schema = buildSchema(\`${printSchema(schema).trim()}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();
@@ -111,7 +111,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(output.trim()).toMatchSnapshot();
+      expect(output).toMatchSnapshot();
     });
 
     it('Should generate a correct wrap method with documentMode=string', async () => {
@@ -123,7 +123,7 @@ async function test() {
 
       const usage = `
 async function test() {
-  const schema = buildSchema(\`${printSchema(schema)}\`);
+  const schema = buildSchema(\`${printSchema(schema).trim()}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();
@@ -140,7 +140,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(output.trim()).toMatchSnapshot();
+      expect(output).toMatchSnapshot();
     });
 
     it('Should generate a correct wrap method in case of Subscription', async () => {
