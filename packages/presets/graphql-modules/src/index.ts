@@ -4,10 +4,11 @@ import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const { baseOutputDir } = options;
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
 
@@ -103,6 +104,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 shouldDeclare,
                 schema,
                 baseVisitor,
+                useGraphQLModules,
                 rootTypes: [
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,
