@@ -1,10 +1,10 @@
-import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
   NamingConvention,
   LoadedFragment,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema, visit, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
+import { GraphQLSchema, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor';
 
 /**
@@ -118,7 +118,7 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
   ];
 
   const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),

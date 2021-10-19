@@ -308,7 +308,7 @@ export function buildScalars(
         } else if (scalarType.extensions?.codegenScalarType) {
           result[name] = {
             isExternal: false,
-            type: scalarType.extensions.codegenScalarType,
+            type: scalarType.extensions.codegenScalarType as string,
           };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
@@ -394,7 +394,7 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
   }
 
   return {
-    kind: 'SelectionSet',
+    kind: Kind.SELECTION_SET,
     selections: newSelections,
   };
 }
@@ -417,7 +417,7 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 
 export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
-    return getPossibleTypes(schema, type.ofType);
+    return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
   } else if (isObjectType(type)) {
     return [type];
   } else if (isAbstractType(type)) {

@@ -111,7 +111,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(output).toMatchSnapshot();
+      expect(output.trim()).toMatchSnapshot();
     });
 
     it('Should generate a correct wrap method with documentMode=string', async () => {
@@ -140,7 +140,7 @@ async function test() {
 }`;
       const output = await validate(result, config, docs, schema, usage);
 
-      expect(output).toMatchSnapshot();
+      expect(output.trim()).toMatchSnapshot();
     });
 
     it('Should generate a correct wrap method in case of Subscription', async () => {

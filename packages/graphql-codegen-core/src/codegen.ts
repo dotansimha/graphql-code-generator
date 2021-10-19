@@ -6,7 +6,7 @@ import {
   getCachedDocumentNodeFromSchema,
   AddToSchemaResult,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules } from 'graphql';
+import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
@@ -81,7 +81,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         ...documents,
         ...extraFragments.map(f => ({
           location: f.importFrom,
-          document: { kind: Kind.DOCUMENT, definitions: [f.node] },
+          document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
         })),
       ],
       specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)))

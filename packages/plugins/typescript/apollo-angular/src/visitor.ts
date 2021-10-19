@@ -251,9 +251,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    if(this.config.importDocumentNodeExternallyFrom === 'near-operation-file') {
+    if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file') {
       return `Operations.${documentVariableName}`;
-    } else if( this.config.importOperationTypesFrom) {
+    } else if (this.config.importOperationTypesFrom) {
       return `${this.config.importOperationTypesFrom}.${documentVariableName}`;
     } else {
       return documentVariableName;

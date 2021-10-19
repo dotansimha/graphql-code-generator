@@ -1,5 +1,5 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
@@ -36,7 +36,7 @@ export const plugin: PluginFunction = (
     ...(config.externalFragments || []),
   ];
   const visitor = new GraphQLRequestVisitor(schema, allFragments, config, info);
-  visit(allAst, { leave: visitor });
+  oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),

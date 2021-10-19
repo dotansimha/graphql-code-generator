@@ -330,7 +330,8 @@ describe('TypeScript Operations Plugin', () => {
             text @skip(if: $skip)
           }
         `,
-        { experimentalFragmentVariables: true }
+        // < v15 compatibility
+        { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any
       );
       const config = { experimentalFragmentVariables: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {

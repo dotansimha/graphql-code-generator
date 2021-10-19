@@ -1,9 +1,10 @@
 import { validate, plugin } from '../src/index';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 import { codegen } from '@graphql-codegen/core';
+import { version } from 'os';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
@@ -103,24 +104,26 @@ describe('Schema AST', () => {
       `);
     });
 
-    it('Should print schema with as # when commentDescriptions=true', async () => {
-      const testSchema = buildSchema(/* GraphQL */ `
-        type Query {
-          """
-          test
-          """
-          fieldTest: String
-        }
-      `);
-      const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
+    if (versionInfo.major < 16) {
+      it('Should print schema with as # when commentDescriptions=true', async () => {
+        const testSchema = buildSchema(/* GraphQL */ `
+          type Query {
+            """
+            test
+            """
+            fieldTest: String
+          }
+        `);
+        const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
 
-      expect(content).toBeSimilarStringTo(`
+        expect(content).toBeSimilarStringTo(`
         type Query {
           #  test
           fieldTest: String
         }
       `);
-    });
+      });
+    }
 
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });

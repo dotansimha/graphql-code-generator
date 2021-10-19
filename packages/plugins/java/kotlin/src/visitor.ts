@@ -105,9 +105,13 @@ ${enumValues}
 }`;
   }
 
-  protected resolveInputFieldType(
-    typeNode: TypeNode
-  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } {
+  protected resolveInputFieldType(typeNode: TypeNode): {
+    baseType: string;
+    typeName: string;
+    isScalar: boolean;
+    isArray: boolean;
+    nullable: boolean;
+  } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray =
@@ -281,7 +285,7 @@ ${classMembers}
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
     const name = this.convertName(node);
-    const fields = (node.fields as unknown) as FieldDefinitionReturnType[];
+    const fields = node.fields as unknown as FieldDefinitionReturnType[];
 
     const fieldNodes = [];
     const argsTypes = [];

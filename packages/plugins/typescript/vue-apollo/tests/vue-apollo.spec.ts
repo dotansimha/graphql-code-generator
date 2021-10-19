@@ -174,36 +174,44 @@ describe('Vue Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
     });
 
@@ -471,44 +479,54 @@ query MyFeed {
       `);
 
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          {},
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            {},
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
@@ -564,12 +582,14 @@ query MyFeed {
         }
       `);
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
-          { omitOperationSuffix: true, dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
+            { omitOperationSuffix: true, dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 

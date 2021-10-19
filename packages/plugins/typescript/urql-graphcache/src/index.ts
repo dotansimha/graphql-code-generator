@@ -5,6 +5,7 @@ import {
   TypeNode,
   GraphQLAbstractType,
   GraphQLObjectType,
+  Kind,
 } from 'graphql';
 
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
@@ -15,7 +16,7 @@ import { convertFactory, ConvertFn } from '@graphql-codegen/visitor-plugin-commo
 type GraphQLFlatType = Exclude<TypeNode, GraphQLWrappingType>;
 
 const unwrapType = (type: null | undefined | TypeNode): GraphQLFlatType | null =>
-  isWrappingType(type) ? unwrapType(type.ofType) : type || null;
+  isWrappingType(type) ? unwrapType(type.ofType as any) : type || null;
 
 const getObjectTypes = (schema: GraphQLSchema): GraphQLObjectType[] => {
   const typeMap = schema.getTypeMap();
@@ -60,13 +61,13 @@ function constructType(
   allowString = false
 ): string {
   switch (typeNode.kind) {
-    case 'ListType': {
+    case Kind.LIST_TYPE: {
       return nullable
         ? `Maybe<Array<${constructType(typeNode.type, schema, convertName, config, false, allowString)}>>`
         : `Array<${constructType(typeNode.type, schema, convertName, config, false, allowString)}>`;
     }
 
-    case 'NamedType': {
+    case Kind.NAMED_TYPE: {
       const type = schema.getType(typeNode.name.value);
       if (!type.astNode || type?.astNode?.kind === 'ScalarTypeDefinition') {
         return nullable
@@ -76,19 +77,19 @@ function constructType(
 
       const tsTypeName = convertName(typeNode, { prefix: config.typesPrefix, suffix: config.typesSuffix });
       switch (type.astNode.kind) {
-        case 'UnionTypeDefinition':
-        case 'InputObjectTypeDefinition':
-        case 'ObjectTypeDefinition': {
+        case Kind.UNION_TYPE_DEFINITION:
+        case Kind.INPUT_OBJECT_TYPE_DEFINITION:
+        case Kind.OBJECT_TYPE_DEFINITION: {
           const finalType = `WithTypename<${tsTypeName}>${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
-        case 'EnumTypeDefinition': {
+        case Kind.ENUM_TYPE_DEFINITION: {
           const finalType = `${tsTypeName}${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
-        case 'InterfaceTypeDefinition': {
+        case Kind.INTERFACE_TYPE_DEFINITION: {
           const possibleTypes = schema.getPossibleTypes(type as GraphQLAbstractType).map(possibleType => {
             const tsPossibleTypeName = convertName(possibleType.astNode, {
               prefix: config.typesPrefix,
@@ -104,7 +105,7 @@ function constructType(
       break;
     }
 
-    case 'NonNullType': {
+    case Kind.NON_NULL_TYPE: {
       return constructType(typeNode.type, schema, convertName, config, false, allowString);
     }
   }

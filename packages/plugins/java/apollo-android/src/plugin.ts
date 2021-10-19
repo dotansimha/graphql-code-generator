@@ -1,4 +1,4 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, visit, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { InputTypeVisitor } from './input-type-visitor';
@@ -100,7 +100,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig, Types.Complex
     return { content: '' };
   }
 
-  const visitResult = visit(allAst, visitor as any);
+  const visitResult = oldVisit(allAst, visitor as any);
   const additionalContent = visitor.additionalContent();
   const imports = visitor.getImports();
 

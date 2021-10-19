@@ -438,6 +438,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         ].join('\n');
       }
     }
+    throw new Error(`Unexpected operation type: ${node.operation}`);
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
