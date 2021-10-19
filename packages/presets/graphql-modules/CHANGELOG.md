@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.2.0
+
+### Minor Changes
+
+- efae660d1: Added an option to allow to skip generating code related to graphql-modules library
+
 ## 2.1.6
 
 ### Patch Changes
