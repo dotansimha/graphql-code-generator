@@ -1,4 +1,4 @@
-name: CI
+name: Testing
 
 on:
   push:
@@ -117,6 +117,8 @@ jobs:
           key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
+      - name: Build
+        run: yarn build
       - name: Test
         run: yarn test
         env:
