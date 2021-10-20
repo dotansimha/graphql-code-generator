@@ -67,9 +67,9 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   /// A set of all types that are union types
   private readonly compositionTypeNames: Set<string>;
 
-  private unionTypeConverterTag = '[JsonConverter(typeof(UnionTypeConverter))]';
+  private compositionTypeConverterTag = '[JsonConverter(typeof(CompositionTypeConverter))]';
 
-  private unionTypeListConverterTag = '[JsonConverter(typeof(UnionTypeListConverter))]';
+  private compositionTypeListConverterTag = '[JsonConverter(typeof(CompositionTypeListConverter))]';
 
   private compositionTypeCacheDefinition = `
 /// <summary>
@@ -234,6 +234,7 @@ public class CompositionTypeListConverter : JsonConverter
       'System.Collections.Generic',
       'System.ComponentModel.DataAnnotations',
       'System.Collections.Concurrent',
+      'System.Collections',
       'System.Linq',
       'System.Linq.Expressions',
       'Newtonsoft.Json.Linq',
@@ -359,7 +360,9 @@ public class CompositionTypeListConverter : JsonConverter
       const baseNode = getBaseTypeNode(node.type);
 
       if (this.compositionTypeNames.has(baseNode.name.value)) {
-        attributes.push(isOfTypeList(node.type) ? this.unionTypeListConverterTag : this.unionTypeConverterTag);
+        attributes.push(
+          isOfTypeList(node.type) ? this.compositionTypeListConverterTag : this.compositionTypeConverterTag
+        );
       }
     }
 
