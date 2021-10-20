@@ -6,7 +6,7 @@ import { getJsonAttributeSourceConfiguration } from '../src/json-attributes';
 import each from 'jest-each';
 
 fdescribe('C#', () => {
-  fdescribe('Using directives', () => {
+  describe('Using directives', () => {
     it('Should include dotnet using directives', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum ns {
@@ -261,7 +261,6 @@ fdescribe('C#', () => {
         /// <summary>
         /// User id
         /// </summary>
-        [Required]
         [JsonRequired]
         public int id { get; set; }
       `);
@@ -476,13 +475,13 @@ fdescribe('C#', () => {
           `);
 
           const config: CSharpResolversPluginRawConfig = {
+            emitJsonAttributes: true,
             jsonAttributesSource: source,
           };
           const result = await plugin(schema, [], config, { outputFile: '' });
           const jsonConfig = getJsonAttributeSourceConfiguration(source);
           const attributes =
             `
-            [Required]
           ` +
             (jsonConfig.requiredAttribute == null
               ? ``
@@ -616,10 +615,8 @@ fdescribe('C#', () => {
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<int> arr1 { get; set; }
           public IEnumerable<double?> arr2 { get; set; }
-          [Required]
           [JsonRequired]
           public IEnumerable<int?> arr3 { get; set; }
-          [Required]
           [JsonRequired]
           public IEnumerable<bool> arr4 { get; set; }
         `);
@@ -643,10 +640,8 @@ fdescribe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<IEnumerable<int>> arr1 { get; set; }
-          [Required]
           [JsonRequired]
           public IEnumerable<IEnumerable<IEnumerable<double?>>> arr2 { get; set; }
-          [Required]
           [JsonRequired]
           public IEnumerable<IEnumerable<Complex>> arr3 { get; set; }
         `);
@@ -728,8 +723,8 @@ fdescribe('C#', () => {
     });
   });
 
-  describe('Composition types', () => {
-    it('Correctly generate interface + concrete types for UnionType', async () => {
+  fdescribe('Composition types', () => {
+    fit('Correctly generate interface + concrete types for UnionType', async () => {
       const schema = buildSchema(/* GraphQL */ `
         union Vehicle = Airplane | Car
 
@@ -748,9 +743,9 @@ fdescribe('C#', () => {
       expect(result).toContain('public enum VehicleKind {');
       expect(result).toContain('Airplane');
       expect(result).toContain('Car');
-      expect(result).toContain('public class Airplane');
+      expect(result).toContain('public class Airplane : Vehicle');
       expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Airplane; } }');
-      expect(result).toContain('public class Car');
+      expect(result).toContain('public class Car : Vehicle');
       expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Car; } }');
     });
 

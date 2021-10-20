@@ -30,6 +30,4 @@ export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
   const wrappedContent = visitor.wrapWithNamespace(wrappedBlockContent);
 
   return [imports, wrappedContent].join('\n');
-
-  return [imports, wrappedContent].join('\n');
 };

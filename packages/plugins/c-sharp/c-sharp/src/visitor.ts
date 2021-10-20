@@ -512,7 +512,7 @@ ${recordMembers}
     }
 
     const interfaceImpl =
-      interfaces && interfaces.length > 0 ? ` : ${interfaces.map(ntn => ntn.name.value).join(', ')}` : '';
+      allInterfaces && allInterfaces.length > 0 ? ` : ${allInterfaces.map(ntn => ntn.name.value).join(', ')}` : '';
     let classMembers = inputValueArray.map(arg => {
       const fieldType = this.resolveInputFieldType(arg.type);
       const fieldHeader = this.getFieldHeader(arg, fieldType);
