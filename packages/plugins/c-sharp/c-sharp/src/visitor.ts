@@ -338,14 +338,17 @@ public class CompositionTypeListConverter : JsonConverter
     }
 
     if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
-      // Should be always inserted for required fields to use in `GetInputObject()` when JSON attributes are not used
+      // [Required] Should be always inserted for required fields to use in `GetInputObject()` when JSON attributes are not used
       // or there are no JSON attributes in selected attribute source that provides `JsonRequired` alternative
-      attributes.push('[Required]');
       if (this._parsedConfig.emitJsonAttributes) {
         const jsonRequiredAttribute = this.jsonAttributesConfiguration.requiredAttribute;
         if (jsonRequiredAttribute != null) {
           attributes.push(`[${jsonRequiredAttribute}]`);
+        } else {
+          attributes.push('[Required]');
         }
+      } else {
+        attributes.push('[Required]');
       }
     }
 
