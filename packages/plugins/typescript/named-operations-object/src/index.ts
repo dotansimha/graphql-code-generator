@@ -1,5 +1,5 @@
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, concatAST, visit } from 'graphql';
+import { Types, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST } from 'graphql';
 import { capitalCase } from 'change-case-all';
 
 export interface NamedOperationsObjectPluginConfig {
@@ -40,7 +40,7 @@ export const plugin: PluginFunction<NamedOperationsObjectPluginConfig, string> =
     fragment: new Set(),
   };
 
-  visit(allAst, {
+  oldVisit(allAst, {
     enter: {
       OperationDefinition: node => {
         if (node.name?.value) {

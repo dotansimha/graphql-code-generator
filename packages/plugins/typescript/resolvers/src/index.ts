@@ -4,8 +4,9 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
@@ -84,7 +85,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
 
   // runs visitor
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
   const legacyStitchingResolverType = `

@@ -64,7 +64,7 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
     return print(transformedSchemaAndAst.ast);
   }
 
-  return printSchema(transformedSchemaAndAst.schema, { commentDescriptions: commentDescriptions });
+  return (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions });
 };
 
 export const validate: PluginValidateFn<any> = async (

@@ -110,13 +110,13 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     typeName: string,
     relevantFields: { fieldName: string; replaceWithType: string }[]
   ): string {
-    return `$Diff<${typeName}, { ${relevantFields
-      .map(f => `${f.fieldName}: * `)
-      .join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+    return `$Diff<${typeName}, { ${relevantFields.map(f => `${f.fieldName}: * `).join(', ')} }> & { ${relevantFields
+      .map(f => `${f.fieldName}: ${f.replaceWithType}`)
+      .join(', ')} }`;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    const nameAsString = (node.name as any) as string;
+    const nameAsString = node.name as any as string;
     const baseName = this.getTypeToUse(nameAsString);
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
@@ -143,7 +143,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{| ${(node.values || [])
-      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: *`)
+      .map(v => `${v.name as any as string}${this.config.avoidOptionals ? '' : '?'}: *`)
       .join(', ')} |}`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
@@ -157,7 +157,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   ): string {
     return `{| ${(node.values || [])
       .map(v => {
-        const valueName = (v.name as any) as string;
+        const valueName = v.name as any as string;
         const mappedValue = valuesMapping[valueName];
 
         return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;

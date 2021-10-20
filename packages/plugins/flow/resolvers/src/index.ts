@@ -4,8 +4,9 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 /**
@@ -31,7 +32,7 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const defsToInclude: string[] = [visitor.getResolverTypeWrapperSignature()];
 

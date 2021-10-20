@@ -2,7 +2,7 @@ import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
-import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
+import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema, DocumentNode, Kind } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
 import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
 import {
@@ -248,9 +248,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         fragmentImports: fragmentImportsArr,
       };
 
+      const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [] };
       const combinedSource: Source = {
         rawSDL: '',
-        document: { kind: 'Document', definitions: [] },
+        document: document,
         location: record.documents[0].location,
       };
 

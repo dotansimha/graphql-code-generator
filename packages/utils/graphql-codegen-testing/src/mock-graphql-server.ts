@@ -1,4 +1,4 @@
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, execute, subscribe } from 'graphql';
 import nock from 'nock';
 import { getGraphQLParameters, processRequest as processGraphQLHelixRequest } from 'graphql-helix';
 
@@ -39,6 +39,24 @@ export function mockGraphQLServer({
       variables,
       request,
       schema,
+      execute: (schema, document, rootValue, contextValue, variableValues, operationName) =>
+        execute({
+          schema,
+          document,
+          rootValue,
+          contextValue,
+          variableValues,
+          operationName,
+        }),
+      subscribe: (schema, document, rootValue, contextValue, variableValues, operationName) =>
+        subscribe({
+          schema,
+          document,
+          rootValue,
+          contextValue,
+          variableValues,
+          operationName,
+        }),
     });
     // processRequest returns one of three types of results depending on how the server should respond
     // 1) RESPONSE: a regular JSON payload

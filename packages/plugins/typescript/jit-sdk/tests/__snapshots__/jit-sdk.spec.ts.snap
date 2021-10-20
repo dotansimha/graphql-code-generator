@@ -477,8 +477,7 @@ enum VoteType {
 type Subscription {
   \\"\\"\\"Subscription fires on every comment added\\"\\"\\"
   commentAdded(repoFullName: String!): Comment
-}
-\`);
+}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();
@@ -1215,8 +1214,7 @@ enum VoteType {
 type Subscription {
   \\"\\"\\"Subscription fires on every comment added\\"\\"\\"
   commentAdded(repoFullName: String!): Comment
-}
-\`);
+}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();

@@ -8,13 +8,13 @@ import {
   GraphQLObjectType,
   isObjectType,
   GraphQLNamedType,
-  visit,
   DefinitionNode,
   OperationDefinitionNode,
 } from 'graphql';
 import merge from 'lodash/merge.js';
 import { getBaseType } from './utils';
 import { MapperKind, mapSchema, astFromObjectType, getRootTypeNames } from '@graphql-tools/utils';
+import { oldVisit } from '.';
 
 /**
  * Federation Spec
@@ -223,7 +223,7 @@ export class ApolloFederation {
       selection: boolean | SelectionSetField[];
     };
 
-    return visit(parse(`{${value}}`), {
+    return oldVisit(parse(`{${value}}`), {
       leave: {
         SelectionSet(node) {
           return (node.selections as any as SelectionSetField[]).reduce((accum, field) => {
