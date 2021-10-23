@@ -39,7 +39,6 @@
 '@graphql-codegen/typescript-vue-urql': minor
 '@graphql-codegen/graphql-modules-preset': minor
 '@graphql-codegen/near-operation-file-preset': minor
-'@graphql-codegen/testing': minor
 '@graphql-codegen/plugin-helpers': minor
 ---
 
