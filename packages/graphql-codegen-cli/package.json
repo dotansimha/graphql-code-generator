@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "@types/debounce": "1.2.1",
-    "@types/glob": "7.1.4",
+    "@types/glob": "7.2.0",
     "@types/inquirer": "7.3.3",
     "@types/is-glob": "4.0.2",
     "@types/js-yaml": "4.0.4",
