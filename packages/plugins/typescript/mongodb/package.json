@@ -27,7 +27,7 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.175"
+    "@types/lodash": "4.14.176"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
