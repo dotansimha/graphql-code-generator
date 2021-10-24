@@ -8088,10 +8088,10 @@ graphql-config@^4.0.1:
     minimatch "3.0.4"
     string-env-interpolation "1.0.1"
 
-graphql-helix@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.8.3.tgz#2161c4550ff971e0065d0931e2ca9d5950522796"
-  integrity sha512-xZ1y3KlinPAnBmi9GpFvTBXdY64HH98QbjRmStLp/FMvIxryv3hYqeoJO72uBKdh2BCgubxHa91LoD1J57lmSg==
+graphql-helix@1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.8.4.tgz#76d8df7f8580d8b679adb6274213aa954f17eba1"
+  integrity sha512-a+R5B8WfgEtWzgY1YL9/CkoSNqpa574cNPPo213rhXr8xYypFehwvqQIyIvZscRvK/mWz2g3LQLG1w7oFk15GQ==
 
 graphql-jit@0.6.0:
   version "0.6.0"
