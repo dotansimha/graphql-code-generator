@@ -87,7 +87,7 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
   const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospection });
 
   return [
-    includeIntrospection ? printIntrospectionSchema(transformedSchemaAndAst.schema, { commentDescriptions }) : null,
+    includeIntrospection ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
     includeDirectives
       ? print(transformedSchemaAndAst.ast)
       : (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions }),
