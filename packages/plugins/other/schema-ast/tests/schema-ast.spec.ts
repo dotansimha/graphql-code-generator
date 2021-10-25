@@ -137,6 +137,22 @@ describe('Schema AST', () => {
       `);
     });
 
+    it('Should print schema with introspection when "includeIntrospection" is set', async () => {
+      const content = await plugin(schema, [], { includeIntrospection: true });
+
+      expect(content).toBeSimilarStringTo(`
+        type __Schema
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
+          __schema: __Schema!
+          __type(name: String!): __Type
+        }
+      `);
+    });
+
     it('should support Apollo Federation', async () => {
       const federatedSchema = parse(/* GraphQL */ `
         type Character @key(fields: "id") {

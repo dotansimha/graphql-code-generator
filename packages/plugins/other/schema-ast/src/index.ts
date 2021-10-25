@@ -1,4 +1,13 @@
-import { GraphQLSchema, printSchema, visit, buildASTSchema, print } from 'graphql';
+import {
+  GraphQLSchema,
+  parse,
+  extendSchema,
+  printIntrospectionSchema,
+  printSchema,
+  visit,
+  buildASTSchema,
+  print,
+} from 'graphql';
 import {
   PluginFunction,
   PluginValidateFn,
@@ -30,6 +39,23 @@ export interface SchemaASTConfig {
    */
   includeDirectives?: boolean;
   /**
+   * @description Include introspection types to Schema output.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * schema:
+   *   - './src/schema.graphql'
+   * generates:
+   *   path/to/file.graphql:
+   *     plugins:
+   *       - schema-ast
+   *     config:
+   *       includeIntrospection: true
+   * ```
+   */
+  includeIntrospection?: boolean;
+  /**
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
    *
@@ -56,15 +82,18 @@ export interface SchemaASTConfig {
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  { commentDescriptions = false, includeDirectives = false, sort = false, federation }
+  { commentDescriptions = false, includeDirectives = false, includeIntrospection = false, sort = false, federation }
 ): Promise<string> => {
-  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation });
+  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospection });
 
-  if (includeDirectives) {
-    return print(transformedSchemaAndAst.ast);
-  }
-
-  return (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions });
+  return [
+    includeIntrospection ? printIntrospectionSchema(transformedSchemaAndAst.schema, { commentDescriptions }) : null,
+    includeDirectives
+      ? print(transformedSchemaAndAst.ast)
+      : (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions }),
+  ]
+    .filter(Boolean)
+    .join('\n');
 };
 
 export const validate: PluginValidateFn<any> = async (
@@ -83,6 +112,18 @@ export const validate: PluginValidateFn<any> = async (
 
 export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
   schema = config.federation ? removeFederation(schema) : schema;
+
+  if (config.includeIntrospection) {
+    // See: https://spec.graphql.org/June2018/#sec-Schema-Introspection
+    const introspectionAST = parse(`
+      extend type Query {
+        __schema: __Schema!
+        __type(name: String!): __Type
+      }
+    `);
+
+    schema = extendSchema(schema, introspectionAST);
+  }
   let ast = getCachedDocumentNodeFromSchema(schema);
   ast = config.disableDescriptions
     ? visit(ast, {
