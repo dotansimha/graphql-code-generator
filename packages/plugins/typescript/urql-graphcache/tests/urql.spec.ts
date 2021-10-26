@@ -131,4 +131,39 @@ describe('urql graphcache', () => {
     const result = mergeOutputs([await plugin(schema, [], { typesPrefix: 'Prefix', typesSuffix: 'Suffix' })]);
     expect(result).toMatchSnapshot();
   });
+
+  it('should emit type imports if useTypeImports config value is used', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        todos: [Todo]
+      }
+
+      type Mutation {
+        toggleTodo(id: ID!): Todo!
+        toggleTodos(id: [ID!]!): [Todo!]!
+        toggleTodosOptionalArray(id: [ID!]!): [Todo!]
+        toggleTodosOptionalEntity(id: [ID!]!): [Todo]!
+        toggleTodosOptional(id: [ID!]!): [Todo]
+      }
+
+      type Author {
+        id: ID
+        name: String
+        friends: [Author]
+        friendsPaginated(from: Int!, limit: Int!): [Author]
+      }
+
+      type Todo {
+        id: ID
+        text: String
+        complete: Boolean
+        author: Author
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [], { useTypeImports: true })]);
+    const output = `import type { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
+import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`;
+
+    expect(result.startsWith(output));
+  });
 });
