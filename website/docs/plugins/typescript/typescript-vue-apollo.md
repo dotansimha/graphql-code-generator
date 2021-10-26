@@ -3,11 +3,11 @@ id: typescript-vue-apollo
 title: TypeScript Vue Apollo Composition API
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 Instead of using this plugin, it is recommended that you use the [TypedDocumentNode plugin](typed-document-node.md) together with the [Vue Apollo library](https://apollo.vuejs.org/).
 
-{@import ../../generated-config/typescript-vue-apollo.md}
+{@import ./docs/generated-config/typescript-vue-apollo.md}
 
 
 ## Installation

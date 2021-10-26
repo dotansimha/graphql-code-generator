@@ -34,4 +34,4 @@ generates:
 
 > Also, make sure to add `node_modules` to your `.gitignore` file.
 
-{@import ../../generated-config/kotlin.md}
+{@import ./docs/generated-config/kotlin.md}

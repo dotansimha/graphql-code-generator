@@ -3,6 +3,6 @@ id: typescript-operations
 title: TypeScript Operations
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/typescript-operations.md}
+{@import ./docs/generated-config/typescript-operations.md}

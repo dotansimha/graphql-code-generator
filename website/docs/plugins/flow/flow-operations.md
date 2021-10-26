@@ -3,6 +3,6 @@ id: flow-operations
 title: Flow Operations
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/flow-operations.md}
+{@import ./docs/generated-config/flow-operations.md}

@@ -3,7 +3,7 @@ id: typescript-resolvers
 title: TypeScript Resolvers
 ---
 
-{@import ../../generated-config/typescript-resolvers.md}
+{@import ./docs/generated-config/typescript-resolvers.md}
 
 ## Usage Example
 

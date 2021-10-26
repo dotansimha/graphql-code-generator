@@ -17,6 +17,6 @@ using GraphQL.Client.Serializer.Newtonsoft;
   var response = await client.SendQueryAsync<Types.Query>(UsersGQL.Request());
 ```
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/c-sharp-operations.md}
+{@import ./docs/generated-config/c-sharp-operations.md}

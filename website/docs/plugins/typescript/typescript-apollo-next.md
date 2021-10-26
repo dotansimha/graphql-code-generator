@@ -3,7 +3,7 @@ id: typescript-apollo-next
 title: Typescript Apollo Nextjs
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 
 This plugin generates:

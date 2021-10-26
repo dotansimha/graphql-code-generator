@@ -3,9 +3,9 @@ id: typescript-vue-urql
 title: TypeScript Vue Urql
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/typescript-vue-urql.md}
+{@import ./docs/generated-config/typescript-vue-urql.md}
 
 ## Usage Example
 

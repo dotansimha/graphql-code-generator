@@ -27,7 +27,7 @@ export function getRoutes(): IRoutes {
                             },
                             flow: {
                                 $name: 'Flow',
-                                $routes: ['flow', 'flow-resolvers', 'flow-operations']
+                                $routes: ['flow-resolvers', 'flow-operations']
                             },
                             reason: {
                                 $name: 'Reason',
@@ -35,12 +35,12 @@ export function getRoutes(): IRoutes {
                             },
                             java: {
                                 $name: 'Java',
-                                $routes: ['kotlin','java','java-resolvers','java-apollo-android']
+                                $routes: ['kotlin', 'java', 'java-resolvers', 'java-apollo-android']
                             },
                             utilities: {
                                 $name: 'Utilities',
-                                $routes: ['fragment-matcher','urql-introspection','introspection','schema-ast','jsdoc','add','time','relay-operation-optimizer','urql-introspection','urql-introspection']
-                            },
+                                $routes: ['fragment-matcher', 'urql-introspection', 'introspection', 'schema-ast', 'jsdoc', 'add', 'time', 'relay-operation-optimizer', 'urql-introspection', 'urql-introspection']
+                            }
 
                         }
                     },
@@ -65,14 +65,6 @@ export function getRoutes(): IRoutes {
         }
     };
 
-    GenerateRoutes({
-        Routes,
-        folderPattern: 'docs',
-        basePath: 'docs',
-        basePathLabel: 'Documentation',
-        ignorePaths: ['generated-config/add'],
-        labels: {}
-    });
 
     return Routes;
 }

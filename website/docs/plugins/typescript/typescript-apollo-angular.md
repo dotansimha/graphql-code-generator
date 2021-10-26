@@ -3,9 +3,9 @@ id: typescript-apollo-angular
 title: TypeScript Apollo Angular
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/typescript-apollo-angular.md}
+{@import ./docs/generated-config/typescript-apollo-angular.md}
 
 ## How to use?
 

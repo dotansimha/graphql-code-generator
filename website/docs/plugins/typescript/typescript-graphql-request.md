@@ -3,11 +3,11 @@ id: typescript-graphql-request
 title: TypeScript GraphQL-Request
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 > Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
 
-{@import ../../generated-config/typescript-graphql-request.md}
+{@import ./docs/generated-config/typescript-graphql-request.md}
 
 ## Usage Example
 

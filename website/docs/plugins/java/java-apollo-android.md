@@ -3,7 +3,7 @@ id: java-apollo-android
 title: Java Apollo Android
 ---
 
-{@import ../../generated_config/java-apollo-android.md}
+{@import ./docs/generated_config/java-apollo-android.md}
 
 ## Prepare your env
 

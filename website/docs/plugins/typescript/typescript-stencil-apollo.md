@@ -3,9 +3,9 @@ id: typescript-stencil-apollo
 title: TypeScript Stencil Apollo
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/typescript-stencil-apollo.md}
+{@import ./docs/generated-config/typescript-stencil-apollo.md}
 
 ## Usage Example
 

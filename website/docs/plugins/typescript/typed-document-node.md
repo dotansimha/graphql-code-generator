@@ -3,7 +3,7 @@ id: typed-document-node
 title: TypedDocumentNode
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 This plugins generates a ready-to-use `TypedDocumentNode` (a combination of pre-compiled `DocumentNode` and the TypeScript signature it represents).
 

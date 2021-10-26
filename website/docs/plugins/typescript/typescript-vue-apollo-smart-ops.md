@@ -3,7 +3,7 @@ id: typescript-vue-apollo-smart-ops
 title: TypeScript Vue Apollo Smart Operations
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 ## Installation
 
@@ -11,7 +11,7 @@ title: TypeScript Vue Apollo Smart Operations
   yarn add @graphql-codegen/typescript-vue-apollo-smart-ops vue-apollo-smart-ops
 ```
 
-{@import ../../generated-config/typescript-vue-apollo-smart-ops.md}
+{@import ./docs/generated-config/typescript-vue-apollo-smart-ops.md}
 
 ## Examples
 

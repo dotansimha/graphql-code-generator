@@ -5,7 +5,7 @@ title: TypeScript oclif
 
 This plugin generates [`oclif`](https://www.npmjs.com/package/oclif) CLI commands.
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 ## Installation
 

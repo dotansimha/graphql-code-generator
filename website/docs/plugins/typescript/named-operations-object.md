@@ -16,7 +16,7 @@ export const namedOperations = {
 }
 ```
 
-{@import ../../generated-config/named-operations-object.md}
+{@import ./docs/generated-config/named-operations-object.md}
 
 ## How to use?
 

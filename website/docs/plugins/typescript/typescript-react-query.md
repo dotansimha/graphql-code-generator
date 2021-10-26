@@ -3,9 +3,9 @@ id: typescript-react-query
 title: TypeScript React-Query
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
-{@import ../../generated-config/typescript-react-query.md}
+{@import ./docs/generated-config/typescript-react-query.md}
 
 ## Usage Examples
 

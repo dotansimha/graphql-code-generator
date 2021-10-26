@@ -3,11 +3,11 @@ id: typescript-generic-sdk
 title: TypeScript Generic SDK
 ---
 
-{@import ../plugins/client-note.md}
+{@import ./docs/plugins/client-note.md}
 
 > Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
 
-{@import ../../generated-config/typescript-generic-sdk.md}
+{@import ./docs/generated-config/typescript-generic-sdk.md}
 
 ## Usage
 

@@ -222,7 +222,7 @@ This is my new plugin.
 
 Add here some custom instructions, explainations, installation guide and more.
 
-{@import ../../generated-config/my-plugin.md}
+{@import ./docs/generated-config/my-plugin.md}
 
 ```
 

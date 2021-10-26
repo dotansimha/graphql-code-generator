@@ -3,7 +3,7 @@ id: urql-introspection
 title: Urql Introspection for Schema Awareness
 ---
 
-{@import ../../generated-config/urql-introspection.md}
+{@import ./docs/generated-config/urql-introspection.md}
 
 ## How to use?
 
