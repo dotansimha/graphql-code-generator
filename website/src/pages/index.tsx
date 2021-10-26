@@ -2,12 +2,13 @@ import {FeatureList, HeroGradient, HeroIllustration} from '@theguild/components'
 import {handlePushRoute, NPMBadge} from '@guild-docs/client';
 import styles from './styles.module.css';
 import dynamic from 'next/dynamic';
-// @ts-ignore
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 
 const LiveDemo = dynamic(() => import('../components/live-demo/LiveDemo'), { ssr: false})
 
 export default function Index() {
+    // @ts-ignore
+    // @ts-ignore
     return (
         <>
             <HeroGradient
