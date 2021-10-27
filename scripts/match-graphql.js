@@ -13,9 +13,10 @@ if (pkg.resolutions.graphql.startsWith(version)) {
   console.info(`GraphQL v${version} already installed! Skipping.`);
 }
 
-pkg.devDependencies.graphql = `^${version}`;
-pkg.resolutions.graphql = `^${version}`;
-pkg.resolutions['**/apollo-language-server/graphql'] = `^${version}`;
-pkg.resolutions['**/@types/graphql-upload/graphql'] = `^${version}`;
+const npmVersion = version.includes('-') ? version : `^${version}`;
+pkg.devDependencies.graphql = npmVersion;
+pkg.resolutions.graphql = npmVersion;
+pkg.resolutions['**/apollo-language-server/graphql'] = npmVersion;
+pkg.resolutions['**/@types/graphql-upload/graphql'] = npmVersion;
 
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
