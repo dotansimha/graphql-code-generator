@@ -58,7 +58,13 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
   return loader;
 }
 
-export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
+export interface LoadedCodegenConfig {
+  filepath: string;
+  config: Types.Config;
+  isEmpty?: boolean;
+}
+
+export function loadCodegenConfig(configFilePath?: string): Promise<LoadedCodegenConfig> {
   const moduleName = 'codegen';
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName),
@@ -71,7 +77,10 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
       noExt: customLoader('yaml'),
     },
   });
+  return configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd());
+}
 
+export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
@@ -80,7 +89,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     });
   }
 
-  const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
+  const result = await loadCodegenConfig(configFilePath);
 
   if (!result) {
     if (configFilePath) {
@@ -88,9 +97,9 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
         `Config ${configFilePath} does not exist`,
         `
         Config ${configFilePath} does not exist.
-  
+
           $ graphql-codegen --config ${configFilePath}
-  
+
         Please make sure the --config points to a correct file.
       `
       );
@@ -99,7 +108,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     throw new DetailedError(
       `Unable to find Codegen config file!`,
       `
-        Please make sure that you have a configuration file under the current directory! 
+        Please make sure that you have a configuration file under the current directory!
       `
     );
   }
