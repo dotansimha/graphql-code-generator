@@ -32,7 +32,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v2
         with:
-          node-version: '16.8.0'
+          node-version: 17
       - name: Configure Git Credentials
         run: |
           git config --global user.email "theguild-bot@users.noreply.github.com"
@@ -46,9 +46,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-16.8.0-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-16.8.0-yarn-
+            ${{ runner.os }}-17-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install --ignore-engines && git checkout yarn.lock
       - name: Release Canary
