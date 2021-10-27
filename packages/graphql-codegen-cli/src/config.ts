@@ -9,6 +9,9 @@ import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLo
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
 import { createRequire } from 'module';
+import { promises } from 'fs';
+
+const { lstat } = promises;
 
 export type YamlCliFlags = {
   config: string;
@@ -58,26 +61,58 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
   return loader;
 }
 
-export interface LoadedCodegenConfig {
+export interface LoadCodegenConfigOptions {
+  /**
+   * The path to the config file or directory contains the config file.
+   * @default process.cwd()
+   */
+  configFilePath?: string;
+  /**
+   * The name of the config file
+   * @default codegen
+   */
+  moduleName?: string;
+  /**
+   * Additional search paths for the config file you want to check
+   */
+  searchPlaces?: string[];
+  /**
+   * @default codegen
+   */
+  packageProp?: string;
+  /**
+   * Overrides or extends the loaders for specific file extensions
+   */
+  loaders?: Record<string, (filepath: string, content: string) => Promise<Types.Config> | Types.Config>;
+}
+
+export interface LoadCodegenConfigResult {
   filepath: string;
   config: Types.Config;
   isEmpty?: boolean;
 }
 
-export function loadCodegenConfig(configFilePath?: string): Promise<LoadedCodegenConfig> {
-  const moduleName = 'codegen';
+export async function loadCodegenConfig({
+  configFilePath = process.cwd(),
+  moduleName = 'codegen',
+  searchPlaces: additionalSearchPlaces = [],
+  packageProp = moduleName,
+  loaders: customLoaders = {},
+}: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
   const cosmi = cosmiconfig(moduleName, {
-    searchPlaces: generateSearchPlaces(moduleName),
-    packageProp: moduleName,
+    searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces),
+    packageProp,
     loaders: {
       '.json': customLoader('json'),
       '.yaml': customLoader('yaml'),
       '.yml': customLoader('yaml'),
       '.js': customLoader('js'),
       noExt: customLoader('yaml'),
+      ...customLoaders,
     },
   });
-  return configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd());
+  const pathStats = await lstat(configFilePath);
+  return pathStats.isDirectory ? cosmi.search(configFilePath) : cosmi.load(configFilePath);
 }
 
 export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
@@ -89,7 +124,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     });
   }
 
-  const result = await loadCodegenConfig(configFilePath);
+  const result = await loadCodegenConfig({ configFilePath });
 
   if (!result) {
     if (configFilePath) {
