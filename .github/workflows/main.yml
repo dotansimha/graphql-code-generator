@@ -105,7 +105,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarnn
+            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies using Yarn
