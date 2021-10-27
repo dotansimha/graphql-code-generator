@@ -93,14 +93,17 @@ export interface LoadCodegenConfigResult {
 }
 
 export async function loadCodegenConfig({
-  configFilePath = process.cwd(),
-  moduleName = 'codegen',
-  searchPlaces: additionalSearchPlaces = [],
-  packageProp = moduleName,
-  loaders: customLoaders = {},
+  configFilePath,
+  moduleName,
+  searchPlaces: additionalSearchPlaces,
+  packageProp,
+  loaders: customLoaders,
 }: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
+  configFilePath = configFilePath || process.cwd();
+  moduleName = moduleName || 'codegen';
+  packageProp = packageProp || moduleName;
   const cosmi = cosmiconfig(moduleName, {
-    searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces),
+    searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
     packageProp,
     loaders: {
       '.json': customLoader('json'),
@@ -112,7 +115,7 @@ export async function loadCodegenConfig({
     },
   });
   const pathStats = await lstat(configFilePath);
-  return pathStats.isDirectory ? cosmi.search(configFilePath) : cosmi.load(configFilePath);
+  return pathStats.isDirectory() ? cosmi.search(configFilePath) : cosmi.load(configFilePath);
 }
 
 export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
