@@ -23,9 +23,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-17-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Lint
@@ -44,9 +44,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-17-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
@@ -71,9 +71,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-17-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
@@ -91,7 +91,7 @@ jobs:
         node_version: [12, 17]
         graphql_version:
           - 15
-          - 16.0.0-rc.7
+          - 16
     steps:
       - name: Checkout
         uses: actions/checkout@v2
