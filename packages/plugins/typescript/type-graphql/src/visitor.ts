@@ -142,7 +142,10 @@ export class TypeGraphQLVisitor<
         null,
         enumNames,
         this.config.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        undefined,
+        undefined,
+        'Maybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -175,6 +178,10 @@ export class TypeGraphQLVisitor<
 
   public getFixDecoratorDefinition(): string {
     return `${this.getExportPrefix()}${FIX_DECORATOR_SIGNATURE}`;
+  }
+
+  getMaybeWrapper() {
+    return 'Maybe';
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode): string {

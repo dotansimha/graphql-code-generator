@@ -89,7 +89,8 @@ export class TsVisitor<
         pluginConfig.enumPrefix,
         this.config.enumValues,
         false,
-        this.config.directiveArgumentAndInputFieldMappings
+        this.config.directiveArgumentAndInputFieldMappings,
+        'InputMaybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -179,6 +180,7 @@ export class TsVisitor<
   public getMaybeValue(): string {
     return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
   }
+
   public getInputMaybeValue(): string {
     return `${this.getExportPrefix()}type InputMaybe<T> = ${this.config.inputMaybeValue};`;
   }
@@ -186,6 +188,9 @@ export class TsVisitor<
   protected clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+    if (str.startsWith('InputMaybe')) {
+      return str.replace(/InputMaybe<(.*?)>$/, '$1');
     }
 
     return str;
@@ -199,12 +204,19 @@ export class TsVisitor<
     return super.getExportPrefix();
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
-    return `Maybe<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  getMaybeWrapper(ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+    return isInputContext ? 'InputMaybe' : 'Maybe';
   }
 
-  ListType(node: ListTypeNode): string {
-    return `Maybe<${super.ListType(node)}>`;
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  }
+
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.ListType(node, key, parent, path, ancestors)}>`;
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
@@ -272,7 +284,7 @@ export class TsVisitor<
     if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
-    type = type.replace('Maybe', 'InputMaybe');
+
     return (
       comment +
       indent(

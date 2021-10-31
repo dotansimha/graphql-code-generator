@@ -190,8 +190,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   maybeValue?: string;
   /**
-   * @description Allow to override the type value of `Maybe` for input types.
-   * @default T | null
+   * @description Allow to override the type value of `Maybe` for input types and arguments.
+   * This is useful in case you want to differentiate between the wrapper of input and output types.
+   * By default, this type just refers to `Maybe` type, but you can override it's definition.
+   *
+   * @default Maybe<T>
    *
    * @exampleMarkdown
    * ## Allow undefined

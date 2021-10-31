@@ -480,6 +480,10 @@
           "description": "Allow to override the type value of `Maybe`.\nDefault value: \"T | null\"",
           "type": "string"
         },
+        "inputMaybeValue": {
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
+          "type": "string"
+        },
         "noExport": {
           "description": "Set to `true` in order to generate output without `export` modifier.\nThis is useful if you are generating `.d.ts` file and want it to be globally available.\nDefault value: \"false\"",
           "type": "boolean"
@@ -1059,6 +1063,10 @@
         },
         "maybeValue": {
           "description": "Allow to override the type value of `Maybe`.\nDefault value: \"T | null\"",
+          "type": "string"
+        },
+        "inputMaybeValue": {
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
           "type": "string"
         },
         "noExport": {

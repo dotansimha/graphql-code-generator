@@ -1,4 +1,5 @@
 type Maybe<T> = T | null;
+type InputMaybe<T> = Maybe<T>;
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -27,8 +28,8 @@ type Character = {
 
 /** A character from the Star Wars universe */
 type CharacterFriendsConnectionArgs = {
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 /** The input object sent when passing a color */
@@ -57,8 +58,8 @@ type Droid = Character & {
 
 /** An autonomous mechanical character in the Star Wars universe */
 type DroidFriendsConnectionArgs = {
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 /** The episodes in the Star Wars trilogy */
@@ -117,13 +118,13 @@ type Human = Character & {
 
 /** A humanoid creature from the Star Wars universe */
 type HumanFriendsConnectionArgs = {
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 /** A humanoid creature from the Star Wars universe */
 type HumanHeightArgs = {
-  unit?: Maybe<LengthUnit>;
+  unit?: InputMaybe<LengthUnit>;
 };
 
 /** Units of height */
@@ -141,7 +142,7 @@ type Mutation = {
 
 /** The mutation type, represents all updates we can make to our data */
 type MutationCreateReviewArgs = {
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
   review: ReviewInput;
 };
 
@@ -177,7 +178,7 @@ type QueryDroidArgs = {
 
 /** The query type, represents all of the entry points into our object graph */
 type QueryHeroArgs = {
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -192,7 +193,7 @@ type QueryReviewsArgs = {
 
 /** The query type, represents all of the entry points into our object graph */
 type QuerySearchArgs = {
-  text?: Maybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -212,9 +213,9 @@ type Review = {
 /** The input object sent when someone is creating a new review */
 type ReviewInput = {
   /** Comment about the movie, optional */
-  commentary?: Maybe<Scalars['String']>;
+  commentary?: InputMaybe<Scalars['String']>;
   /** Favorite color, optional */
-  favoriteColor?: Maybe<ColorInput>;
+  favoriteColor?: InputMaybe<ColorInput>;
   /** 0-5 stars */
   stars: Scalars['Int'];
 };
@@ -232,7 +233,7 @@ type Starship = {
 };
 
 type StarshipLengthArgs = {
-  unit?: Maybe<LengthUnit>;
+  unit?: InputMaybe<LengthUnit>;
 };
 
 type CreateReviewForEpisodeMutationVariables = Exact<{
@@ -246,7 +247,7 @@ type CreateReviewForEpisodeMutation = {
 };
 
 type HeroAndFriendsNamesQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroAndFriendsNamesQuery = {
@@ -284,7 +285,7 @@ type HeroAppearsInQuery = {
 };
 
 type HeroDetailsQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroDetailsQuery = {
@@ -303,7 +304,7 @@ type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null
 type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
 type HeroDetailsWithFragmentQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroDetailsWithFragmentQuery = {
@@ -316,7 +317,7 @@ type HeroDetailsWithFragmentQuery = {
 };
 
 type HeroNameQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroNameQuery = {
@@ -325,7 +326,7 @@ type HeroNameQuery = {
 };
 
 type HeroNameConditionalInclusionQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
   includeName: Scalars['Boolean'];
 }>;
 
@@ -335,7 +336,7 @@ type HeroNameConditionalInclusionQuery = {
 };
 
 type HeroNameConditionalExclusionQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
   skipName: Scalars['Boolean'];
 }>;
 
@@ -345,7 +346,7 @@ type HeroNameConditionalExclusionQuery = {
 };
 
 type HeroParentTypeDependentFieldQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroParentTypeDependentFieldQuery = {
@@ -382,7 +383,7 @@ type HeroParentTypeDependentFieldQuery = {
 };
 
 type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
-  episode?: Maybe<Episode>;
+  episode?: InputMaybe<Episode>;
 }>;
 
 type HeroTypeDependentAliasedFieldQuery = {
