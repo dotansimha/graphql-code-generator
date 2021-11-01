@@ -398,24 +398,24 @@ describe('near-operation-file preset', () => {
       });
 
       expect(result[0].content).toMatchInlineSnapshot(`
-"import * as Types from '../../../../../out1.ts/types';
+        "import * as Types from '../../../../../out1.ts/types';
 
-export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
-
-export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
+        export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type BQuery = { __typename?: 'Query', a?: string | null | undefined };
+        export type AQuery = { __typename?: 'Query', a?: string | null };
 
-export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
+        export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CQuery = { __typename?: 'Query', a?: string | null | undefined };
-"
-`);
+        export type BQuery = { __typename?: 'Query', a?: string | null };
+
+        export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+        export type CQuery = { __typename?: 'Query', a?: string | null };
+        "
+      `);
     });
 
     it('#6520 - self-importing fragment', async () => {

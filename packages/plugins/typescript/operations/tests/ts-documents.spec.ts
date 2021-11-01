@@ -274,7 +274,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null | undefined, user: { __typename?: 'User', id: string, f?: Types.E | null | undefined, j?: any | null | undefined } };`
+        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
       );
 
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
@@ -338,6 +338,49 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toMatchSnapshot();
+    });
+
+    it('should resolve optionals according to maybeValue', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          age: Int
+          address: String!
+          nicknames: [String!]
+          parents: [User!]!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showProperty: Boolean!) {
+          user {
+            name
+            age
+            address @include(if: $showProperty)
+            nicknames @include(if: $showProperty)
+            parents @include(if: $showProperty)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: 'T | null | undefined',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | null | undefined, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };
+      `);
     });
   });
 
@@ -1082,7 +1125,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null | undefined, type: 'Query' };
+        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
       `);
       await validate(content, config);
     });
@@ -2259,7 +2302,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null | undefined, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null | undefined };
+        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
       `);
       await validate(content, config, gitHuntSchema);
     });
@@ -5396,7 +5439,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -5695,6 +5738,50 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
           id: number
         }
       };`);
+    });
+
+    it('resolve optionals according to maybeValue together with avoidOptionals and conditional directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          age: Int
+          address: String!
+          nicknames: [String!]
+          parents: [User!]!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showProperty: Boolean!) {
+          user {
+            name
+            age
+            address @include(if: $showProperty)
+            nicknames @include(if: $showProperty)
+            parents @include(if: $showProperty)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: 'T | null | undefined',
+          avoidOptionals: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | null, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };
+      `);
     });
   });
 
