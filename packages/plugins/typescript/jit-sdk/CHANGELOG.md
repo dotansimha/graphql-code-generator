@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-jit-sdk
 
+## 1.1.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 1.0.1
 
 ### Patch Changes

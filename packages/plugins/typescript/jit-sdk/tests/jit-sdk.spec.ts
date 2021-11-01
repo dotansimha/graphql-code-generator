@@ -94,7 +94,7 @@ describe('jit-sdk', () => {
 
       const usage = `
 async function test() {
-  const schema = buildSchema(\`${printSchema(schema)}\`);
+  const schema = buildSchema(\`${printSchema(schema).trim()}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();
@@ -123,7 +123,7 @@ async function test() {
 
       const usage = `
 async function test() {
-  const schema = buildSchema(\`${printSchema(schema)}\`);
+  const schema = buildSchema(\`${printSchema(schema).trim()}\`);
   const sdk = getJitSdk(schema);
 
   await sdk.feed();

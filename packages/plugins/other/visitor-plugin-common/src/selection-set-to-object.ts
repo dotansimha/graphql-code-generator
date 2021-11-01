@@ -101,7 +101,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     types: Map<string, Array<SelectionNode | FragmentSpreadUsage>>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
-      return this._collectInlineFragments(parentType.ofType, nodes, types);
+      return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;

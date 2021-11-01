@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.4.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/typescript@2.3.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 2.3.2
 
 ### Patch Changes

@@ -3450,6 +3450,10 @@
         "encapsulateModuleTypes": {
           "type": "string",
           "description": "Configure how to encapsulate the module types, to avoid confusion.\n\n`namespace` (default): will wrap all types in a TypeScript namespace, using the module name.\n`prefix`: will prefix all types from a specific module with the module name.\n`none`: will skip encapsulation, and generate type as-is.\nDefault value: \"namespace\""
+        },
+        "useGraphQLModules": {
+          "type": "boolean",
+          "description": "By default, the generated types will be generate some code specific to `graphql-modules` library.\n\nIf you are not using GraphQL-Modules, you can disable this feature by setting this to `false`.\nDefault value: \"true\""
         }
       }
     },
@@ -3497,7 +3501,12 @@
     },
     "GqlTagConfig": {
       "type": "object",
-      "properties": {}
+      "properties": {
+        "augmentedModuleName": {
+          "description": "Instead of generating a `gql` function, this preset can also generate a d.ts that will enhance the `gql` function of your framework.\n\nE.g. `graphql-tag` or `@urql/core`.",
+          "type": "string"
+        }
+      }
     },
     "Types.InstanceOrArray": {
       "anyOf": [

@@ -68,18 +68,6 @@ export type ModulesConfig = {
    * @type string
    * @description Required, sets the file name for the generated files.
    *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    filename: types.ts
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
    */
   filename: string;
   /**
@@ -92,18 +80,15 @@ export type ModulesConfig = {
    * `prefix`: will prefix all types from a specific module with the module name.
    * `none`: will skip encapsulation, and generate type as-is.
    *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    filename: types.ts
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
    */
   encapsulateModuleTypes: 'prefix' | 'namespace' | 'none';
+  /**
+   * @name useGraphQLModules
+   * @type boolean
+   * @default true
+   * @description By default, the generated types will be generate some code specific to `graphql-modules` library.
+   *
+   * If you are not using GraphQL-Modules, you can disable this feature by setting this to `false`.
+   */
+  useGraphQLModules?: boolean;
 };

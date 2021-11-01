@@ -3,13 +3,15 @@ id: graphql-modules
 title: graphql-modules
 ---
 
-The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each [GraphQL-Modules](http://graphql-modules.com/) module definition.
+The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each directory that contains GraphQL SDL definitions.
 
 The generates files will be generated based on each module definition, and based on the GraphQL schema defined in that specific module, allowing you to write type-safe resolvers, while keeping modules types boundaries.
 
 :::caution Usage Requirements
 
-This preset generates code for `graphql-modules` @ `v1`. Previous versions are not supported.
+This preset generates code for `graphql-modules` @ `v1` (previous versions are not supported) by default.
+
+If you are not using `graphql-modules`, you can set `useGraphQLModules: false` to disable this behaviour.
 
 :::
 
@@ -18,6 +20,21 @@ This preset generates code for `graphql-modules` @ `v1`. Previous versions are n
 {@import ../generated-config/graphql-modules-preset.md}
 
 ## Usage Example
+
+Given a folder structure with the following files:
+
+```
+- src/
+  - modules/
+    - user/
+      - resolvers.ts
+      - typedefs/
+        - user.graphql
+    - product/
+      - resolvers.ts
+      - typedefs/
+        - product.graphql
+```
 
 Here's a short example for generating types and resolvers for 2 modules:
 
@@ -50,3 +67,7 @@ export const resolvers: MyModule.Resolvers = {
 ```
 
 > You can find [an example project here](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/modules).
+
+## Using without GraphQL-Modules
+
+By defualt, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false` in your preset configuration to generate fully agnostic types that are based on folder strucutre only.

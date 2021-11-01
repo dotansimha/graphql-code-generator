@@ -1,5 +1,5 @@
-import { GraphQLSchema, visit } from 'graphql';
-import { PluginFunction, Types, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema } from 'graphql';
+import { PluginFunction, Types, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { KotlinResolversVisitor } from './visitor';
 import { buildPackageNameFromPath } from '@graphql-codegen/java-common';
 import { dirname, normalize } from 'path';
@@ -15,7 +15,7 @@ export const plugin: PluginFunction<KotlinResolversPluginRawConfig> = async (
   const defaultPackageName = buildPackageNameFromPath(relevantPath);
   const visitor = new KotlinResolversVisitor(config, schema, defaultPackageName);
   const astNode = getCachedDocumentNodeFromSchema(schema);
-  const visitorResult = visit(astNode, { leave: visitor as any });
+  const visitorResult = oldVisit(astNode, { leave: visitor as any });
   const packageName = visitor.getPackageName();
   const blockContent = visitorResult.definitions.filter(d => typeof d === 'string').join('\n\n');
 

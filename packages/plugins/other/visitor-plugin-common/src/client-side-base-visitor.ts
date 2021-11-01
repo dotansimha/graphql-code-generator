@@ -4,14 +4,13 @@ import {
   FragmentDefinitionNode,
   print,
   OperationDefinitionNode,
-  visit,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
 } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue, buildScalarsFromConfig } from './utils';
 import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
@@ -236,7 +235,7 @@ export class ClientSideBaseVisitor<
 
     const names: Set<string> = new Set();
 
-    visit(document, {
+    oldVisit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
           names.add(node.name.value);
