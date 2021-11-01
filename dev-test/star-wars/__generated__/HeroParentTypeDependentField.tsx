@@ -13,31 +13,18 @@ export type HeroParentTypeDependentFieldQuery = {
     | {
         __typename?: 'Droid';
         name: string;
-        friends?:
-          | Array<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-              | null
-              | undefined
-            >
-          | null
-          | undefined;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+        > | null;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?:
-          | Array<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: number | null | undefined; name: string }
-              | null
-              | undefined
-            >
-          | null
-          | undefined;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+        > | null;
       }
-    | null
-    | undefined;
+    | null;
 };
 
 export const HeroParentTypeDependentFieldDocument = gql`
