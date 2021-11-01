@@ -49,6 +49,12 @@ type FragmentSpreadUsage = {
   selectionNodes: Array<SelectionNode>;
 };
 
+type SelectionSetProps = {
+  selectionNodes: Array<SelectionNode | FragmentSpreadUsage>;
+  isConditional: boolean;
+  isInlineFragment: boolean;
+};
+
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
 }
@@ -98,7 +104,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   _collectInlineFragments(
     parentType: GraphQLNamedType,
     nodes: InlineFragmentNode[],
-    types: Map<string, { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }>
+    types: Map<string, SelectionSetProps>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
@@ -107,6 +113,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
         if (hasConditionalDirectives(node)) {
           this._appendToTypeMap(types, typeOnSchema.name, [], true);
+        }
+        if (node.kind === 'InlineFragment') {
+          this._appendToTypeMap(types, typeOnSchema.name, [], undefined, true);
         }
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
@@ -245,13 +254,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return selectionNodesByTypeName;
   }
 
-  protected flattenSelectionSet(
-    selections: ReadonlyArray<SelectionNode>
-  ): Map<string, { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }> {
-    const selectionNodesByTypeName = new Map<
-      string,
-      { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }
-    >();
+  protected flattenSelectionSet(selections: ReadonlyArray<SelectionNode>): Map<string, SelectionSetProps> {
+    const selectionNodesByTypeName = new Map<string, SelectionSetProps>();
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
     const fragmentSpreads: FragmentSpreadNode[] = [];
@@ -285,13 +289,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   private _appendToTypeMap<T = SelectionNode>(
-    types: Map<string, { selectionNodes: Array<T>; isConditional: boolean }>,
+    types: Map<string, { selectionNodes: Array<T>; isConditional: boolean; isInlineFragment: boolean }>,
     typeName: string,
     nodes: Array<T>,
-    isConditional?: boolean
+    isConditional?: boolean,
+    isInlineFragment?: boolean
   ): void {
     if (!types.has(typeName)) {
-      types.set(typeName, { selectionNodes: [], isConditional: false });
+      types.set(typeName, { selectionNodes: [], isConditional: false, isInlineFragment: false });
     }
 
     if (nodes && nodes.length > 0) {
@@ -300,6 +305,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     if (isConditional) {
       types.get(typeName).isConditional = isConditional;
+    }
+
+    if (isInlineFragment) {
+      types.get(typeName).isInlineFragment = isInlineFragment;
     }
   }
 
@@ -324,13 +333,17 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
       }
 
-      const selectionNodes = selectionNodesByTypeName.get(typeName) || { selectionNodes: [], isConditional: false };
+      const selectionSetProps = selectionNodesByTypeName.get(typeName) || {
+        selectionNodes: [],
+        isConditional: false,
+        isInlineFragment: false,
+      };
 
       if (!prev[typeName]) {
         prev[typeName] = [];
       }
 
-      const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes);
+      const transformedSet = this.buildSelectionSetString(schemaType, selectionSetProps);
 
       if (transformedSet) {
         prev[typeName].push(transformedSet);
@@ -344,10 +357,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return { grouped, mustAddEmptyObject };
   }
 
-  protected buildSelectionSetString(
-    parentSchemaType: GraphQLObjectType,
-    selectionSetProps: { selectionNodes: Array<SelectionNode | FragmentSpreadUsage>; isConditional: boolean }
-  ) {
+  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionSetProps: SelectionSetProps) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -490,15 +500,39 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const allObjectsMerged: string[] = transformed
       .filter(t => typeof t !== 'string')
       .map((t: NameAndType) => `${t.name}: ${t.type}`);
-    let mergedObjectsAsString: string = null;
+    const mergedObjectsAsStrings: string[] = [];
 
     if (allObjectsMerged.length > 0) {
-      mergedObjectsAsString = this._processor.buildFieldsIntoObject(allObjectsMerged);
+      if (!selectionSetProps.isConditional || !selectionSetProps.isInlineFragment) {
+        mergedObjectsAsStrings.push(this._processor.buildFieldsIntoObject(allObjectsMerged));
+      } else {
+        // seperate "__typename" property from others for handling conditional type
+        let typeObject = '';
+        const otherObjects = [];
+        allObjectsMerged.forEach(s => {
+          if (s.startsWith('__typename')) {
+            typeObject = s;
+          } else {
+            otherObjects.push(s);
+          }
+        });
+
+        if (typeObject) {
+          mergedObjectsAsStrings.push(this._processor.buildFieldsIntoObject([typeObject]));
+        }
+        if (otherObjects.length) {
+          mergedObjectsAsStrings.push(this._processor.buildFieldsIntoObject(otherObjects));
+        }
+      }
     }
 
-    const fields = [...allStrings, mergedObjectsAsString, ...fragmentsSpreadUsages].filter(Boolean);
+    const fields = [...allStrings, ...mergedObjectsAsStrings, ...fragmentsSpreadUsages].filter(Boolean);
 
-    return this._processor.buildSelectionSetFromStrings(fields, selectionSetProps.isConditional);
+    return this._processor.buildSelectionSetFromStrings(
+      fields,
+      selectionSetProps.isConditional,
+      selectionSetProps.isInlineFragment
+    );
   }
 
   protected buildTypeNameField(

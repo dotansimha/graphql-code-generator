@@ -27,7 +27,7 @@ expect.extend({
     if (compareStrings(strippedReceived, strippedExpected)) {
       return {
         message: () =>
-          `expected 
+          `expected
    ${received}
    not to be a string containing (ignoring indents)
    ${expected}`,
@@ -41,7 +41,7 @@ expect.extend({
 
       const message = hasExpect
         ? `Difference:\n\n${diffString}`
-        : `expected 
+        : `expected
       ${received}
       to be a string containing (ignoring indents)
       ${expected}`;

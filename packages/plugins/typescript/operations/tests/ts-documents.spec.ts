@@ -4631,11 +4631,12 @@ function test(q: GetEntityBrandDataQuery): void {
       expect(content).toBeSimilarStringTo(`
       export type UserQuery = (
         { __typename?: 'Query' }
-        & { user?: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'name'>
-        )> }
-      ) | {};`);
+        & ( {} |
+          { user?: Maybe<(
+            { __typename?: 'User' }
+            & Pick<User, 'name'>
+            )> } )
+      );`);
     });
 
     it('#2436 - interface with field of same name but different type is correctly handled', async () => {
@@ -5683,8 +5684,11 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       );
 
       expect(content).toBeSimilarStringTo(`
-      export type UserQuery = {
-        __typename?: 'Query',
+      export type UserQuery = ( {
+        __typename?: 'Query'
+      } & (
+        {}
+        | {
         user: {
           __typename?: 'User',
           name: string | null
@@ -5693,59 +5697,59 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
           __typename?: 'Group',
           id: number
         }
-      } | {};`);
+      } ) );`);
     });
-  });
 
-  it('inline fragment with conditional directives and avoidOptionals, without preResolveTypes', async () => {
-    const schema = buildSchema(/* GraphQL */ `
-      type Query {
-        user: User
-        group: Group!
-      }
+    it('inline fragment with conditional directives and avoidOptionals, without preResolveTypes', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+          group: Group!
+        }
 
-      type User {
-        name: String
-      }
+        type User {
+          name: String
+        }
 
-      type Group {
-        id: Int!
-      }
-    `);
+        type Group {
+          id: Int!
+        }
+      `);
 
-    const fragment = parse(/* GraphQL */ `
-      query user($withUser: Boolean! = false) {
-        ... @include(if: $withUser) {
-          user {
-            name
-          }
-          group {
-            id
+      const fragment = parse(/* GraphQL */ `
+        query user($withUser: Boolean! = false) {
+          ... @include(if: $withUser) {
+            user {
+              name
+            }
+            group {
+              id
+            }
           }
         }
-      }
-    `);
+      `);
 
-    const { content } = await plugin(
-      schema,
-      [{ location: '', document: fragment }],
-      { preResolveTypes: false, avoidOptionals: true },
-      {
-        outputFile: 'graphql.ts',
-      }
-    );
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: false, avoidOptionals: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
 
-    expect(content).toBeSimilarStringTo(`
-    export type UserQuery = (
-      { __typename?: 'Query' }
-      & { user: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'name'>
-      )>, group: (
-        { __typename?: 'Group' }
-        & Pick<Group, 'id'>
-      ) }
-    ) | {};`);
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = (
+        { __typename?: 'Query' }
+        & ( {} | { user: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'name'>
+        )>, group: (
+          { __typename?: 'Group' }
+          & Pick<Group, 'id'>
+        ) }
+      ) );`);
+    });
   });
 
   it('handles unnamed queries', async () => {

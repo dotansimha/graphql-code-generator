@@ -24,14 +24,43 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
     return `{ ${allObjectsMerged.join(', ')} }`;
   }
 
-  buildSelectionSetFromStrings(pieces: string[], isConditional = false): string {
-    const conditionalSuffix = isConditional ? ' | {}' : '';
+  buildSelectionSetFromStrings(pieces: string[], isConditional = false, isInlineFragment = false): string {
     if (pieces.length === 0) {
       return null;
     } else if (pieces.length === 1) {
-      return `${pieces[0]}${conditionalSuffix}`;
+      return isConditional ? `( {} | ${pieces[0]} )` : pieces[0];
     } else {
-      return `(\n  ${pieces.join(`\n  & `)}\n)${conditionalSuffix}`;
+      if (!isConditional) {
+        return `(\n  ${pieces.join(`\n  & `)} )`;
+      }
+
+      if (!isInlineFragment) {
+        const stringifiedPieces = `(\n  ${pieces.join(`\n  & `)}\n)`;
+        return `(\n  {} | ${stringifiedPieces} )`;
+      }
+
+      let typeObject = '';
+      const otherPieces = [];
+      pieces.forEach(s => {
+        if (s.startsWith('{ __typename')) {
+          typeObject = s;
+        } else {
+          otherPieces.push(s);
+        }
+      });
+
+      const adjustedPieces: string[] = [];
+
+      if (typeObject) {
+        adjustedPieces.push(`${typeObject}`);
+      }
+      if (otherPieces.length) {
+        const stringOtherPieces =
+          otherPieces.length === 1 ? otherPieces[0] : `(\n    ${otherPieces.join(`    & `)}\n  )`;
+        adjustedPieces.push(`(\n    {} | ${stringOtherPieces} )`);
+      }
+
+      return `(\n  ${adjustedPieces.join(`\n  & `)} )`;
     }
   }
 

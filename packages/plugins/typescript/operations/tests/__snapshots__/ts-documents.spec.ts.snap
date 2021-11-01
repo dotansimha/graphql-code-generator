@@ -140,14 +140,11 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+    & Pick<User, 'id' | 'name'> )> } );
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name'>
-);
+  & Pick<User, 'id' | 'name'> );
 "
 `;
 
@@ -159,9 +156,7 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+    & Pick<User, 'id' | 'name'> )> } );
 "
 `;
 
@@ -173,22 +168,18 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+    & Pick<User, 'id' | 'name'> )> } );
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name'>
-);
+  & Pick<User, 'id' | 'name'> );
 "
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using fragment spread over union 1`] = `
 "export type UserFragmentFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+  & Pick<User, 'id'> );
 
 export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -197,9 +188,7 @@ export type AaaQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'id'>
-  ) | { __typename?: 'Error' } }
-);
+    & Pick<User, 'id'> ) | { __typename?: 'Error' } } );
 "
 `;
 
@@ -211,32 +200,26 @@ export type Unnamed_1_Query = (
   { __typename?: 'Query' }
   & { b?: Maybe<(
     { __typename?: 'A' }
-    & Pick<A, 'id' | 'x'>
-  ) | { __typename?: 'B' }> }
-);
+    & Pick<A, 'id' | 'x'> ) | { __typename?: 'B' }> } );
 
 export type AFragment = (
   { __typename?: 'A' }
-  & Pick<A, 'id'>
-);
+  & Pick<A, 'id'> );
 
 export type BFragment = (
   { __typename?: 'A' }
-  & Pick<A, 'x'>
-);
+  & Pick<A, 'x'> );
 "
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should have valid __typename usage and split types according to that (with usage) 1`] = `
 "type NetRoute_Ipv4Route_Fragment = (
   { __typename: 'IPV4Route' }
-  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
-);
+  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] } );
 
 type NetRoute_Ipv6Route_Fragment = (
   { __typename: 'IPV6Route' }
-  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
-);
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] } );
 
 export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
 
@@ -247,32 +230,26 @@ export type QqQuery = (
   { __typename?: 'Query' }
   & { routes: Array<(
     { __typename: 'IPV4Route' }
-    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
-  ) | (
+    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] } ) | (
     { __typename: 'IPV6Route' }
-    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
-  )> }
-);
+    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] } )> } );
 "
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should have valid __typename usage and split types according to that (with usage) 2`] = `
 "type NetRoute_Ipv4Route_Fragment = (
   { __typename: 'IPV4Route' }
-  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
-);
+  & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] } );
 
 type NetRoute_Ipv6Route_Fragment = (
   { __typename: 'IPV6Route' }
-  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
-);
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] } );
 
 export type NetRouteFragment = NetRoute_Ipv4Route_Fragment | NetRoute_Ipv6Route_Fragment;
 
 export type TestFragment = (
   { __typename?: 'IPV6Route' }
-  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
-);
+  & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] } );
 
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -281,35 +258,28 @@ export type QqQuery = (
   { __typename?: 'Query' }
   & { routes: Array<(
     { __typename: 'IPV4Route' }
-    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] }
-  ) | (
+    & { ipv4Address: Ipv4Route['address'], ipv4Gateway: Ipv4Route['gateway'] } ) | (
     { __typename: 'IPV6Route' }
-    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] }
-  )> }
-);
+    & { ipv6Address: Ipv6Route['address'], ipv6Gateway: Ipv6Route['gateway'] } )> } );
 "
 `;
 
 exports[`TypeScript Operations Plugin Selection Set Should have valid fragments intersection on different types (with usage) #2498 1`] = `
 "export type TomFragment = (
   { __typename?: 'Tom' }
-  & Pick<Tom, 'id' | 'foo'>
-);
+  & Pick<Tom, 'id' | 'foo'> );
 
 export type JerryFragment = (
   { __typename?: 'Jerry' }
-  & Pick<Jerry, 'id' | 'bar'>
-);
+  & Pick<Jerry, 'id' | 'bar'> );
 
 type User_Tom_Fragment = (
   { __typename?: 'Tom' }
-  & Pick<Tom, 'id' | 'foo'>
-);
+  & Pick<Tom, 'id' | 'foo'> );
 
 type User_Jerry_Fragment = (
   { __typename?: 'Jerry' }
-  & Pick<Jerry, 'id' | 'bar'>
-);
+  & Pick<Jerry, 'id' | 'bar'> );
 
 export type UserFragment = User_Tom_Fragment | User_Jerry_Fragment;
 
@@ -320,12 +290,9 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'Tom' }
-    & Pick<Tom, 'id' | 'foo'>
-  ) | (
+    & Pick<Tom, 'id' | 'foo'> ) | (
     { __typename?: 'Jerry' }
-    & Pick<Jerry, 'id' | 'bar'>
-  )> }
-);
+    & Pick<Jerry, 'id' | 'bar'> )> } );
 "
 `;
 
@@ -371,16 +338,12 @@ export type SearchPopularQuery = (
   { __typename?: 'Query' }
   & { search?: Maybe<Array<(
     { __typename?: 'Dimension' }
-    & Pick<Dimension, 'id'>
-  ) | (
+    & Pick<Dimension, 'id'> ) | (
     { __typename?: 'DimValue' }
     & Pick<DimValue, 'value'>
     & { dimension?: Maybe<(
       { __typename?: 'Dimension' }
-      & Pick<Dimension, 'id'>
-    )> }
-  )>> }
-);
+      & Pick<Dimension, 'id'> )> } )>> } );
 "
 `;
 
@@ -392,29 +355,22 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'login' | 'id'>
-  ) | (
+    & Pick<User, 'login' | 'id'> ) | (
     { __typename?: 'Error2' }
-    & Pick<Error2, 'message'>
-  ) | (
+    & Pick<Error2, 'message'> ) | (
     { __typename?: 'Error3' }
     & Pick<Error3, 'message'>
     & { info?: Maybe<(
       { __typename?: 'AdditionalInfo' }
-      & Pick<AdditionalInfo, 'message2' | 'message'>
-    )> }
-  ) }
-);
+      & Pick<AdditionalInfo, 'message2' | 'message'> )> } ) } );
 
 export type AdditionalInfoFragment = (
   { __typename?: 'AdditionalInfo' }
-  & Pick<AdditionalInfo, 'message'>
-);
+  & Pick<AdditionalInfo, 'message'> );
 
 type UserResult1_User_Fragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+  & Pick<User, 'id'> );
 
 type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
 
@@ -422,21 +378,17 @@ type UserResult1_Error3_Fragment = (
   { __typename?: 'Error3' }
   & { info?: Maybe<(
     { __typename?: 'AdditionalInfo' }
-    & Pick<AdditionalInfo, 'message2'>
-  )> }
-);
+    & Pick<AdditionalInfo, 'message2'> )> } );
 
 export type UserResult1Fragment = UserResult1_User_Fragment | UserResult1_Error2_Fragment | UserResult1_Error3_Fragment;
 
 type UserResult_User_Fragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+  & Pick<User, 'id'> );
 
 type UserResult_Error2_Fragment = (
   { __typename?: 'Error2' }
-  & Pick<Error2, 'message'>
-);
+  & Pick<Error2, 'message'> );
 
 type UserResult_Error3_Fragment = { __typename?: 'Error3' };
 
@@ -503,19 +455,14 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'login'>
-  ) | (
+    & Pick<User, 'id' | 'login'> ) | (
     { __typename?: 'Error2' }
-    & Pick<Error2, 'message'>
-  ) | (
+    & Pick<Error2, 'message'> ) | (
     { __typename?: 'Error3' }
     & Pick<Error3, 'message'>
     & { info?: Maybe<(
       { __typename?: 'AdditionalInfo' }
-      & Pick<AdditionalInfo, 'message2' | 'message'>
-    )> }
-  ) }
-);
+      & Pick<AdditionalInfo, 'message2' | 'message'> )> } ) } );
 
         function t(q: UserQueryQuery) {
             if (q.user) {
@@ -597,19 +544,14 @@ export type UserQueryQuery = (
   { __typename?: 'Query' }
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'test2' | 'login' | 'test'>
-  ) | (
+    & Pick<User, 'id' | 'test2' | 'login' | 'test'> ) | (
     { __typename?: 'Error2' }
-    & Pick<Error2, 'message'>
-  ) | (
+    & Pick<Error2, 'message'> ) | (
     { __typename?: 'Error3' }
     & Pick<Error3, 'message'>
     & { info?: Maybe<(
       { __typename?: 'AdditionalInfo' }
-      & Pick<AdditionalInfo, 'message2' | 'message'>
-    )> }
-  ) }
-);
+      & Pick<AdditionalInfo, 'message2' | 'message'> )> } ) } );
 
         function t(q: UserQueryQuery) {
             if (q.user) {
