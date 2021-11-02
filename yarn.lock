@@ -7759,11 +7759,12 @@ graphql-helix@1.8.4:
   resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.8.4.tgz#76d8df7f8580d8b679adb6274213aa954f17eba1"
   integrity sha512-a+R5B8WfgEtWzgY1YL9/CkoSNqpa574cNPPo213rhXr8xYypFehwvqQIyIvZscRvK/mWz2g3LQLG1w7oFk15GQ==
 
-graphql-jit@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.6.0.tgz#33e7ed3959eca5754b3fbcc44e31a68538b0b028"
-  integrity sha512-jyn9M0Hib9tIy+hvwvRAI5DlO6c7ZpzZcJdFsTPZJaleE+SV+OEB/81ez0S7DZsJ0MdVVkRVBgiCrZQD/oFO6Q==
+graphql-jit@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.0.tgz#c406b65b193218db512e4fdc5a9605a53ca3b436"
+  integrity sha512-NN0e8tl6S46zcDGbTp5B9pWSARDx8cmrGds5V0t5X8RqsLqckJG1cr4HvpVBsSjbuphj2PXBlnk49L3ddFGJhw==
   dependencies:
+    "@graphql-typed-document-node/core" "3.1.0"
     fast-json-stringify "^1.13.0"
     generate-function "^2.3.1"
     json-schema "^0.2.3"
