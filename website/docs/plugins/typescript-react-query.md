@@ -159,10 +159,11 @@ generates:
 ```
 
 As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
+
 ```yml
-    #...
-    config:
-      fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
+#...
+config:
+  fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
 ```
 
 Codegen will use `myFetcher`, and you can just use the hook directly:
@@ -176,16 +177,18 @@ export const MyComponent = () => {
 ```
 
 Depending on the `isReactHook` property, your `myFetcher` should be in the following signature:
-* `isReactHook: false`
+
+- `isReactHook: false`
   ```ts
   type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables): (() => Promise<TData>)
   ```
-* `isReactHook: true`
+- `isReactHook: true`
   ```ts
   type MyFetcher<TData, TVariables> = (operation: string): ((variables?: TVariables) => Promise<TData>)
   ```
 
 #### Usage example (`isReactHook: false`)
+
 ```tsx
 export const fetchData = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
   return async () => {
@@ -213,16 +216,17 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
 ```
 
 #### Usage example (`isReactHook: true`)
+
 ```tsx
 export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
   // it is safe to call React Hooks here.
-  const {url, headers} = React.useContext(FetchParamsContext);
+  const { url, headers } = React.useContext(FetchParamsContext);
   return async (variables?: TVariables) => {
     const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...headers
+        ...headers,
       },
       body: JSON.stringify({
         query,
@@ -243,3 +247,35 @@ export const useFetchData = <TData, TVariables>(query: string): (() => Promise<T
 ```
 
 > Note: The return value is an async function, with no params, that returns a `Promise` with the actual data.
+
+### Using Infinite Query
+
+If you wish to use infinite query for pagination or infinite scroll you can with the `addInfiniteQuery` config setting. This will however setup an infinite query for every request whether in reality it can do it or not.
+
+The first option in a useInfiniteQuery query is the pageParam as you don't have access to the fetcher, this allows you to set a pageParam that matches the field you need.
+
+#### Usage example (`addInfiniteQuery: true`)
+
+```tsx
+import { useInfiniteMyQuery } from './generated';
+
+export const MyComponent = () => {
+  const { status, data, error, isFetching } = useInfiniteMyQuery(
+    'from',
+    {
+      sortOrder: Order.Asc,
+      limit: 5,
+      from: 0,
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1);
+        const totalServer = lastPage.myItems.items?.length ?? 0;
+        if (totalLocal < totalServer) {
+          return (allPages.length ?? 0) * (queryParams.limit ?? 1);
+        }
+      },
+    }
+  );
+};
+```
