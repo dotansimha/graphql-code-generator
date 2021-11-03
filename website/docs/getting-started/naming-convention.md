@@ -3,7 +3,7 @@ id: naming-convention
 title: Naming Convention
 ---
 
-Codegen support many forms on outputs, and you can contorl the general naming-convention of the types/variables/code generated, using the `namingConvention` config flag.
+Codegen support many forms on outputs, and you can control the general naming-convention of the types/variables/code generated, using the `namingConvention` config flag.
 
 ### `namingConvention`
 
