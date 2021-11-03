@@ -59,7 +59,7 @@ export interface ReactQueryRawPluginConfig
 
   /**
    * @default false
-   * @description For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.
+   * @description For each generate query hook adds `fetcher` field with a corresponding GraphQL query using the fetcher.
    * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.
    * @exampleMarkdown
    * ```ts
