@@ -26,9 +26,23 @@ export const useTestQuery = <
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
-      useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options).bind(null, variables),
+      useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
       options
     );
+export const useInfiniteTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof TTestQueryVariables,
+      variables?: TTestQueryVariables,
+      options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, updateInfiniteQueryVariables<TTestQueryVariables>(metaData, pageParamKey, variables))(),
+      options
+    );
+
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -41,7 +55,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options),
+      useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
       options
     );"
 `;
@@ -72,9 +86,23 @@ export const useTestQuery = <
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
-      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options, variables),
+      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
+export const useInfiniteTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof TTestQueryVariables,
+      variables?: TTestQueryVariables,
+      options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, updateInfiniteQueryVariables<TTestQueryVariables>(metaData, pageParamKey, variables))(),
+      options
+    );
+
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -87,7 +115,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options, variables)(),
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
 `;
@@ -118,7 +146,7 @@ export const useTestQuery = <
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
-      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, options, variables),
+      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
 export const TestDocument = \`
@@ -133,7 +161,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, options, variables)(),
+      (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
 `;

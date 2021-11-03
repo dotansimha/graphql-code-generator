@@ -56,13 +56,14 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName}, options).bind(null, variables)`
-      : `${typedFetcher}(${documentVariableName}, options, variables)`;
+      ? `(metaData) => ${typedFetcher}(${documentVariableName}).bind(null, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))()`
+      : `(metaData) => ${typedFetcher}(${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))()`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
+      pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>
@@ -90,8 +91,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName}, options).bind(null, variables)`
-      : `${typedFetcher}(${documentVariableName}, options, variables)`;
+      ? `${typedFetcher}(${documentVariableName}).bind(null, variables)`
+      : `${typedFetcher}(${documentVariableName}, variables)`;
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
@@ -122,8 +123,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName}, options)`
-      : `(${variables}) => ${typedFetcher}(${documentVariableName}, options, variables)()`;
+      ? `${typedFetcher}(${documentVariableName})`
+      : `(${variables}) => ${typedFetcher}(${documentVariableName}, variables)()`;
 
     return `export const use${operationName} = <
       TError = ${this.visitor.config.errorType},

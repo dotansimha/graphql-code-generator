@@ -109,7 +109,28 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       return baseImports;
     }
 
+    if (this.config.addInfiniteQuery) {
+      this.reactQueryIdentifiersInUse.add('QueryFunctionContext');
+    }
+
     return [...baseImports, `import { ${Array.from(this.reactQueryIdentifiersInUse).join(', ')} } from 'react-query';`];
+  }
+
+  public addInfiniteQueryVariableInjection(): string {
+    if (this.config.addInfiniteQuery) {
+      return `
+const updateInfiniteQueryVariables = <TVariables>( metaData: QueryFunctionContext<any, any>, pageParamKey?: keyof TVariables, variables?: TVariables & {pageParam?: string | number}) => {
+  if (
+    variables != null &&
+    metaData.pageParam != null
+  ) {
+    variables[pageParamKey ?? 'pageParam'] = metaData.pageParam ?? 0
+  }
+  return variables
+}
+      `;
+    }
+    return '';
   }
 
   public getFetcherImplementation(): string {

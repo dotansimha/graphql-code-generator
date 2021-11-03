@@ -38,6 +38,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
+      pageParamKey: keyof ${operationVariablesTypes},
       client: GraphQLClient,
       ${variables},
       ${options},
@@ -45,7 +46,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables), headers)(),
       options
     );`;
   }
