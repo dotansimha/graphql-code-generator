@@ -7761,10 +7761,10 @@ graphql-config@^4.1.0:
     minimatch "3.0.4"
     string-env-interpolation "1.0.1"
 
-graphql-helix@1.8.4:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.8.4.tgz#76d8df7f8580d8b679adb6274213aa954f17eba1"
-  integrity sha512-a+R5B8WfgEtWzgY1YL9/CkoSNqpa574cNPPo213rhXr8xYypFehwvqQIyIvZscRvK/mWz2g3LQLG1w7oFk15GQ==
+graphql-helix@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.9.0.tgz#58542ba1df185b960698a3711527d5fd22810a73"
+  integrity sha512-xRZiCWcDF6v68H7ALmE2vxRsTGKNd397kjNdxHhzC/KzHYRzITCR9NB9joSS5A0PiaYAxxcx0hPYMgf7RslzCA==
 
 graphql-jit@0.7.0:
   version "0.7.0"
