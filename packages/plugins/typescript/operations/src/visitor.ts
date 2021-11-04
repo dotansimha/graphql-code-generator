@@ -48,7 +48,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const avoidOptionals = normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false));
-    const maybeValue = getConfigValue(config.maybeValue, 'T | null');
+    const defaultMaybeValue = 'T | null' + avoidOptionals ? ' | undefined' : '';
+    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
 
     const wrapOptional = (type: string) => {
       if (preResolveTypes === true) {
