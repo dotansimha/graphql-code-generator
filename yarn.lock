@@ -2218,7 +2218,7 @@
   dependencies:
     tslib "~2.3.0"
 
-"@graphql-tools/utils@8.5.2", "@graphql-tools/utils@^8.0.0", "@graphql-tools/utils@^8.1.1", "@graphql-tools/utils@^8.2.0", "@graphql-tools/utils@^8.3.0", "@graphql-tools/utils@^8.5.1":
+"@graphql-tools/utils@8.5.2", "@graphql-tools/utils@^8.0.0", "@graphql-tools/utils@^8.1.1", "@graphql-tools/utils@^8.2.0", "@graphql-tools/utils@^8.3.0", "@graphql-tools/utils@^8.5.1", "@graphql-tools/utils@^8.5.2":
   version "8.5.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.5.2.tgz#fa775d92c19237f648105f7d4aeeeb63ba3d257f"
   integrity sha512-wxA51td/759nQziPYh+HxE0WbURRufrp1lwfOYMgfK4e8Aa6gCa1P1p6ERogUIm423NrIfOVau19Q/BBpHdolw==
@@ -7761,10 +7761,10 @@ graphql-config@^4.1.0:
     minimatch "3.0.4"
     string-env-interpolation "1.0.1"
 
-graphql-helix@1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.9.0.tgz#58542ba1df185b960698a3711527d5fd22810a73"
-  integrity sha512-xRZiCWcDF6v68H7ALmE2vxRsTGKNd397kjNdxHhzC/KzHYRzITCR9NB9joSS5A0PiaYAxxcx0hPYMgf7RslzCA==
+graphql-helix@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.9.1.tgz#7bbb0c78642604ef531649f14800154b83b1fb45"
+  integrity sha512-Of4iMFy+lesAF52RsgTlSUtgAlogWNQt8xp817fcgdJtGNO1bo4RPR4yXD5vZYHbw01Vm2fmaPOCUps5BJJSXw==
 
 graphql-jit@0.7.0:
   version "0.7.0"
