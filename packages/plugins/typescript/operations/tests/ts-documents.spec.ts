@@ -372,14 +372,14 @@ describe('TypeScript Operations Plugin', () => {
         [{ location: '', document: fragment }],
         {
           preResolveTypes: true,
-          maybeValue: 'T | null | undefined',
+          maybeValue: "T | 'specialType'",
         },
         {
           outputFile: 'graphql.ts',
         }
       );
       expect(content).toBeSimilarStringTo(`
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | null | undefined, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
       `);
     });
   });
@@ -2582,13 +2582,13 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          username?: InputMaybe<Scalars['String']>;
-          email?: InputMaybe<Scalars['String']>;
+          username?: Maybe<Scalars['String']>;
+          email?: Maybe<Scalars['String']>;
           password: Scalars['String'];
-          input?: InputMaybe<InputType>;
+          input?: Maybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-          requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+          testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+          requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
           innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
@@ -2608,7 +2608,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: InputMaybe<Scalars['DateTime']>;
+          test?: Maybe<Scalars['DateTime']>;
         }>;`
       );
       await validate(content, config);
@@ -2962,7 +2962,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: InputMaybe<Scalars['Boolean']>;
+          reverse?: Maybe<Scalars['Boolean']>;
         }>;
       `);
     });
@@ -3804,7 +3804,6 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(output).toBeSimilarStringTo(`
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -3816,7 +3815,6 @@ describe('TypeScript Operations Plugin', () => {
           Int: number;
           Float: number;
         };
-
 
         export type Query = {
           __typename?: 'Query';
@@ -3840,7 +3838,6 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Searchable = Dimension | DimValue;
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
-
 
         export type SearchPopularQuery = (
           { __typename?: 'Query' }
@@ -4903,7 +4900,6 @@ export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_F
 
 export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
-
 export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
 "
 `);
@@ -4972,7 +4968,6 @@ type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
 export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
 
 export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
-
 
 export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
 "
@@ -5050,8 +5045,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-        requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+        testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+        requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
         innerRequired: Array<Scalars['String']> | Scalars['String'];
       }>;`);
       await validate(content, config);
@@ -5082,8 +5077,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-        requireString: Array<InputMaybe<Scalars['String']>>;
+        testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
+        requireString: Array<Maybe<Scalars['String']>>;
         innerRequired: Array<Scalars['String']>;
       }>;`);
       await validate(content, config);
@@ -5192,7 +5187,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         expect(content).toBeSimilarStringTo(`
           export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type InlineFragmentQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5263,7 +5257,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
           export type SpreadFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type SpreadFragmentQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5320,7 +5313,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
           );
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
 
           export type SpreadFragmentWithSelectionQueryQuery = (
             { __typename?: 'Query' }
@@ -5379,7 +5371,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type SpreadFragmentWithSelectionQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5437,7 +5428,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       export type UserQueryVariables = Exact<{
         showAddress: Scalars['Boolean'];
       }>;
-
 
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
     });
@@ -5772,7 +5762,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         [{ location: '', document: fragment }],
         {
           preResolveTypes: true,
-          maybeValue: 'T | null | undefined',
+          maybeValue: "T | 'specialType'",
           avoidOptionals: true,
         },
         {
@@ -5780,7 +5770,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         }
       );
       expect(content).toBeSimilarStringTo(`
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | null, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
       `);
     });
   });

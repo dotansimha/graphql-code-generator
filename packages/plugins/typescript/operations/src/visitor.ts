@@ -53,9 +53,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const wrapOptional = (type: string) => {
       if (preResolveTypes === true) {
-        if (avoidOptionals.field) {
-          return `${type} | null`;
-        }
         return maybeValue.replace('T', type);
       }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
