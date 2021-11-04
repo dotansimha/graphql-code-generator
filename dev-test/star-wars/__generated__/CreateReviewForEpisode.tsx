@@ -10,7 +10,7 @@ export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
 
 export type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
-  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
+  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null | undefined } | null | undefined;
 };
 
 export const CreateReviewForEpisodeDocument = gql`

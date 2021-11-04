@@ -12,25 +12,32 @@ declare global {
 
   export type FeedQuery = {
     __typename?: 'Query';
-    currentUser?: { __typename?: 'User'; login: string } | null;
-    feed?: Array<{
-      __typename?: 'Entry';
-      id: number;
-      commentCount: number;
-      score: number;
-      createdAt: number;
-      repository: {
-        __typename?: 'Repository';
-        full_name: string;
-        html_url: string;
-        description?: string | null;
-        stargazers_count: number;
-        open_issues_count?: number | null;
-        owner?: { __typename?: 'User'; avatar_url: string } | null;
-      };
-      vote: { __typename?: 'Vote'; vote_value: number };
-      postedBy: { __typename?: 'User'; html_url: string; login: string };
-    } | null> | null;
+    currentUser?: { __typename?: 'User'; login: string } | null | undefined;
+    feed?:
+      | Array<
+          | {
+              __typename?: 'Entry';
+              id: number;
+              commentCount: number;
+              score: number;
+              createdAt: number;
+              repository: {
+                __typename?: 'Repository';
+                full_name: string;
+                html_url: string;
+                description?: string | null | undefined;
+                stargazers_count: number;
+                open_issues_count?: number | null | undefined;
+                owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+              };
+              vote: { __typename?: 'Vote'; vote_value: number };
+              postedBy: { __typename?: 'User'; html_url: string; login: string };
+            }
+          | null
+          | undefined
+        >
+      | null
+      | undefined;
   };
 }
 

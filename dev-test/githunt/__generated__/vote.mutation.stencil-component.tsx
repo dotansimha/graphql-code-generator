@@ -10,12 +10,10 @@ declare global {
 
   export type VoteMutation = {
     __typename?: 'Mutation';
-    vote?: {
-      __typename?: 'Entry';
-      score: number;
-      id: number;
-      vote: { __typename?: 'Vote'; vote_value: number };
-    } | null;
+    vote?:
+      | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
+      | null
+      | undefined;
   };
 }
 

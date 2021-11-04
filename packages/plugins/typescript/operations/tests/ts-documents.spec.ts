@@ -274,7 +274,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
+        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null | undefined, user: { __typename?: 'User', id: string, f?: Types.E | null | undefined, j?: any | null | undefined } };`
       );
 
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
@@ -1125,7 +1125,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
+        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null | undefined, type: 'Query' };
       `);
       await validate(content, config);
     });
@@ -2302,7 +2302,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
+        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null | undefined, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null | undefined };
       `);
       await validate(content, config, gitHuntSchema);
     });
@@ -5439,7 +5439,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {

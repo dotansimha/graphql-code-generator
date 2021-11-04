@@ -11,13 +11,16 @@ declare global {
 
   export type SubmitCommentMutation = {
     __typename?: 'Mutation';
-    submitComment?: {
-      __typename?: 'Comment';
-      id: number;
-      createdAt: number;
-      content: string;
-      postedBy: { __typename?: 'User'; login: string; html_url: string };
-    } | null;
+    submitComment?:
+      | {
+          __typename?: 'Comment';
+          id: number;
+          createdAt: number;
+          content: string;
+          postedBy: { __typename?: 'User'; login: string; html_url: string };
+        }
+      | null
+      | undefined;
   };
 }
 

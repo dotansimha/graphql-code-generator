@@ -13,14 +13,21 @@ export type HeroAndFriendsNamesQuery = {
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
       }
-    | null;
+    | null
+    | undefined;
 };
 
 export const HeroAndFriendsNamesDocument = gql`

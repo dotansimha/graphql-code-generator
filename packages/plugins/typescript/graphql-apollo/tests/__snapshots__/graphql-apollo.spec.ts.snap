@@ -180,42 +180,42 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null } } | null> | null };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null | undefined } } | null | undefined> | null | undefined };
 
 export type ListenToCommentsSubscriptionVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ListenToCommentsSubscription = { __typename?: 'Subscription', commentAdded?: { __typename?: 'Comment', id: number } | null };
+export type ListenToCommentsSubscription = { __typename?: 'Subscription', commentAdded?: { __typename?: 'Comment', id: number } | null | undefined };
 
 export type MutationOperationMutationVariables = Exact<{
   comment: Comment;
 }>;
 
 
-export type MutationOperationMutation = { __typename?: 'Mutation', submitComment?: { __typename?: 'Comment', id: number } | null };
+export type MutationOperationMutation = { __typename?: 'Mutation', submitComment?: { __typename?: 'Comment', id: number } | null | undefined };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
   v?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export const FeedDocument = gql\`
     query feed {
@@ -486,42 +486,42 @@ export type SubscriptionCommentAddedArgs = {
 export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null } } | null> | null };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', owner?: { __typename?: 'User', avatar_url: string } | null | undefined } } | null | undefined> | null | undefined };
 
 export type ListenToCommentsSubscriptionVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ListenToCommentsSubscription = { __typename?: 'Subscription', commentAdded?: { __typename?: 'Comment', id: number } | null };
+export type ListenToCommentsSubscription = { __typename?: 'Subscription', commentAdded?: { __typename?: 'Comment', id: number } | null | undefined };
 
 export type MutationOperationMutationVariables = Exact<{
   comment: Comment;
 }>;
 
 
-export type MutationOperationMutation = { __typename?: 'Mutation', submitComment?: { __typename?: 'Comment', id: number } | null };
+export type MutationOperationMutation = { __typename?: 'Mutation', submitComment?: { __typename?: 'Comment', id: number } | null | undefined };
 
 export type Feed2QueryVariables = Exact<{
   v: Scalars['String'];
 }>;
 
 
-export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
   v?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed3Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed4QueryVariables = Exact<{
   v?: Scalars['String'];
 }>;
 
 
-export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null> | null };
+export type Feed4Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export const FeedDocument = gql\`
     query feed {

@@ -12,29 +12,36 @@ declare global {
 
   export type CommentQuery = {
     __typename?: 'Query';
-    currentUser?: { __typename?: 'User'; login: string; html_url: string } | null;
-    entry?: {
-      __typename?: 'Entry';
-      id: number;
-      createdAt: number;
-      commentCount: number;
-      postedBy: { __typename?: 'User'; login: string; html_url: string };
-      comments: Array<{
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      } | null>;
-      repository: {
-        __typename?: 'Repository';
-        description?: string | null;
-        open_issues_count?: number | null;
-        stargazers_count: number;
-        full_name: string;
-        html_url: string;
-      };
-    } | null;
+    currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
+    entry?:
+      | {
+          __typename?: 'Entry';
+          id: number;
+          createdAt: number;
+          commentCount: number;
+          postedBy: { __typename?: 'User'; login: string; html_url: string };
+          comments: Array<
+            | {
+                __typename?: 'Comment';
+                id: number;
+                createdAt: number;
+                content: string;
+                postedBy: { __typename?: 'User'; login: string; html_url: string };
+              }
+            | null
+            | undefined
+          >;
+          repository: {
+            __typename?: 'Repository';
+            description?: string | null | undefined;
+            open_issues_count?: number | null | undefined;
+            stargazers_count: number;
+            full_name: string;
+            html_url: string;
+          };
+        }
+      | null
+      | undefined;
   };
 }
 
