@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.1.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
 ## 3.1.0
 
 ### Minor Changes

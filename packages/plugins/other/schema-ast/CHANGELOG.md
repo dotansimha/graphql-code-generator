@@ -1,5 +1,15 @@
 # @graphql-codegen/schema-ast
 
+## 2.4.0
+
+### Minor Changes
+
+- f3833243d: added includeIntrospectionTypes option
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
 ## 2.3.0
 
 ### Minor Changes
