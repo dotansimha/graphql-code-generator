@@ -1,5 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`urql graphcache Should correctly name GraphCacheResolvers & GraphCacheOptimisticUpdaters with nonstandard mutationType names 1`] = `
+"import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
+import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
+export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };
+
+export type GraphCacheKeysConfig = {
+  Todo?: (data: WithTypename<Todo>) => null | string
+}
+
+export type GraphCacheResolvers = {
+  Query_Root?: {
+    todos?: GraphCacheResolver<WithTypename<Query_Root>, Record<string, never>, Array<WithTypename<Todo> | string>>
+  },
+  Todo?: {
+    id?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['Boolean'] | string>
+  }
+};
+
+export type GraphCacheOptimisticUpdaters = {
+  toggleTodo?: GraphCacheOptimisticMutationResolver<Mutation_RootToggleTodoArgs, WithTypename<Todo>>
+};
+
+export type GraphCacheUpdaters = {
+  Mutation?: {
+    toggleTodo?: GraphCacheUpdateResolver<{ toggleTodo: WithTypename<Todo> }, Mutation_RootToggleTodoArgs>
+  },
+  Subscription?: {},
+};
+
+export type GraphCacheConfig = {
+  schema?: IntrospectionData,
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers,
+  storage?: GraphCacheStorageAdapter
+};"
+`;
+
 exports[`urql graphcache Should output the cache-generic correctly (with interfaces) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';

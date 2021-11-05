@@ -168,4 +168,29 @@ describe('urql graphcache', () => {
 import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`
     );
   });
+
+  it('Should correctly name GraphCacheResolvers & GraphCacheOptimisticUpdaters with nonstandard mutationType names', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      schema {
+        query: Query_Root
+        mutation: Mutation_Root
+      }
+
+      type Query_Root {
+        todos: [Todo]
+      }
+
+      type Mutation_Root {
+        toggleTodo(id: ID!): Todo!
+      }
+
+      type Todo {
+        id: ID
+        text: String
+        complete: Boolean
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [], {})]);
+    expect(result).toMatchSnapshot();
+  });
 });
