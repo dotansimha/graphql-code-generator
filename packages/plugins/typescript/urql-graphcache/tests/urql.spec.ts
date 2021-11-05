@@ -1,3 +1,4 @@
+import '@graphql-codegen/testing';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
@@ -161,9 +162,10 @@ describe('urql graphcache', () => {
       }
     `);
     const result = mergeOutputs([await plugin(schema, [], { useTypeImports: true })]);
-    const output = `import type { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
-import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`;
 
-    expect(result.startsWith(output));
+    expect(result).toBeSimilarStringTo(
+      `import type { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
+import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`
+    );
   });
 });
