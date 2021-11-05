@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.3.0
+
+### Minor Changes
+
+- 3b87f049a: Add the extensionsType config in order to change the default type for extensions when rawRequest is true.
+
 ## 4.2.0
 
 ### Minor Changes

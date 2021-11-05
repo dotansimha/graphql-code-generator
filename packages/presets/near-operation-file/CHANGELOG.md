@@ -1,5 +1,11 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 2.2.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
 ## 2.2.0
 
 ### Minor Changes

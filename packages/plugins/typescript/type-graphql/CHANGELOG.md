@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-type-graphql
 
+## 2.2.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+- Updated dependencies [6c898efe5]
+  - @graphql-codegen/typescript@2.3.1
+
 ## 2.2.0
 
 ### Minor Changes
