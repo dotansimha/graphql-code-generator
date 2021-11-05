@@ -994,6 +994,10 @@
           "description": "Include directives to Schema output.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "includeIntrospectionTypes": {
+          "description": "Include introspection types to Schema output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "commentDescriptions": {
           "description": "Set to true in order to print description as comments (using # instead of \"\"\")\nDefault value: \"false\"",
           "type": "boolean"
