@@ -7,7 +7,7 @@
   "scripts": {
     "build": "ts-node src/index.ts"
   },
-  "devDependencies": {
+  "dependencies": {
     "@types/fs-extra": "9.0.13",
     "@types/jsonpath": "0.2.0",
     "@types/mkdirp": "1.0.2",

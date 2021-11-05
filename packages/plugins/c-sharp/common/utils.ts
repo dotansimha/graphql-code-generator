@@ -1,4 +1,8 @@
+// This file is bundled and inlined.
+// We should probably make this a shared package though.
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Kind, TypeNode, StringValueNode } from 'graphql';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { indent } from '@graphql-codegen/visitor-plugin-common';
 import { csharpValueTypes } from './scalars';
 import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
