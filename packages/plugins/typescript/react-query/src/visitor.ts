@@ -15,12 +15,13 @@ import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
 import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { pascalCase } from 'change-case-all';
-import { generateQueryKeyMaker } from './variables-generator';
+import { generateQueryKeyMaker, generateMutationKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
   exposeDocument: boolean;
   exposeQueryKeys: boolean;
+  exposeMutationKeys: boolean;
   exposeFetcher: boolean;
 }
 
@@ -62,6 +63,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       errorType: getConfigValue(rawConfig.errorType, 'unknown'),
       exposeDocument: getConfigValue(rawConfig.exposeDocument, false),
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
+      exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -168,13 +170,28 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       }
       return query;
     } else if (operationType === 'Mutation') {
-      return this.fetcher.generateMutationHook(
+      let query = this.fetcher.generateMutationHook(
         node,
         documentVariableName,
         operationName,
         operationResultType,
-        operationVariablesTypes
+        operationVariablesTypes,
+        hasRequiredVariables
       );
+      if (this.config.exposeMutationKeys) {
+        query += generateMutationKeyMaker(node, operationName);
+      }
+      if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
+        query += this.fetcher.generateFetcherFetch(
+          node,
+          documentVariableName,
+          operationName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        );
+      }
+      return query;
     } else if (operationType === 'Subscription') {
       // eslint-disable-next-line no-console
       console.warn(

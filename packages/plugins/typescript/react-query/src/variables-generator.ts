@@ -21,3 +21,11 @@ export function generateQueryKeyMaker(
   const signature = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
   return `\nuse${operationName}.getKey = (${signature}) => ${generateQueryKey(node, hasRequiredVariables)};\n`;
 }
+
+export function generateMutationKey(node: OperationDefinitionNode): string {
+  return `'${node.name.value}'`;
+}
+
+export function generateMutationKeyMaker(node: OperationDefinitionNode, operationName: string) {
+  return `\nuse${operationName}.getKey = () => ${generateMutationKey(node)}};\n`;
+}
