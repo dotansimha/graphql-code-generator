@@ -990,7 +990,7 @@
           "description": "Include directives to Schema output.\nDefault value: \"false\"",
           "type": "boolean"
         },
-        "includeIntrospection": {
+        "includeIntrospectionTypes": {
           "description": "Include introspection types to Schema output.\nDefault value: \"false\"",
           "type": "boolean"
         },

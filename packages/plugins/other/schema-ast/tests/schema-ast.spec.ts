@@ -137,8 +137,8 @@ describe('Schema AST', () => {
       `);
     });
 
-    it('Should print schema with introspection when "includeIntrospection" is set', async () => {
-      const content = await plugin(schema, [], { includeIntrospection: true });
+    it('Should print schema with introspection when "includeIntrospectionTypes" is set', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: true });
 
       expect(content).toBeSimilarStringTo(`
         type __Schema
@@ -153,8 +153,8 @@ describe('Schema AST', () => {
       `);
     });
 
-    it('Should print schema without introspection when "includeIntrospection" is unset', async () => {
-      const content = await plugin(schema, [], { includeIntrospection: false });
+    it('Should print schema without introspection when "includeIntrospectionTypes" is unset', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: false });
 
       expect(content).not.toBeSimilarStringTo(`
         type __Schema

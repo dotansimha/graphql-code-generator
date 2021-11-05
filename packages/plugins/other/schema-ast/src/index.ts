@@ -51,10 +51,10 @@ export interface SchemaASTConfig {
    *     plugins:
    *       - schema-ast
    *     config:
-   *       includeIntrospection: true
+   *       includeIntrospectionTypes: true
    * ```
    */
-  includeIntrospection?: boolean;
+  includeIntrospectionTypes?: boolean;
   /**
    * @description Set to true in order to print description as comments (using # instead of """)
    * @default false
@@ -82,12 +82,12 @@ export interface SchemaASTConfig {
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  { commentDescriptions = false, includeDirectives = false, includeIntrospection = false, sort = false, federation }
+  { commentDescriptions = false, includeDirectives = false, includeIntrospectionTypes = false, sort = false, federation }
 ): Promise<string> => {
-  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospection });
+  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospectionTypes });
 
   return [
-    includeIntrospection ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
+    includeIntrospectionTypes ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
     includeDirectives
       ? print(transformedSchemaAndAst.ast)
       : (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions }),
@@ -113,7 +113,7 @@ export const validate: PluginValidateFn<any> = async (
 export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
   schema = config.federation ? removeFederation(schema) : schema;
 
-  if (config.includeIntrospection) {
+  if (config.includeIntrospectionTypes) {
     // See: https://spec.graphql.org/June2018/#sec-Schema-Introspection
     const introspectionAST = parse(`
       extend type Query {
