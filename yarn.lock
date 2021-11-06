@@ -12298,10 +12298,10 @@ react-player@^2.9.0:
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
 
-react-query@3.32.0:
-  version "3.32.0"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.32.0.tgz#01816e08fe118c59bba53cecb0471e020936c2e0"
-  integrity sha512-LAPAc3n7rBA26dZJ6OQiELtjOh5bp7kGEu+d6sOBr9lHtrpXJKPaRzHzPEF4lpmeGBT9D8iWRaJLbu1LNH5iRQ==
+react-query@3.32.1:
+  version "3.32.1"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.32.1.tgz#829a87d039ece85660d8911ac59b1c92d1879064"
+  integrity sha512-7UN8BYBaZb911iJUyJ/T+CjlBGBf5W8rcm3jRQ5wW4f+mt/onvRxJlB0U2r2fsT204poJt6VO0jPlm5dwu3PrQ==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
