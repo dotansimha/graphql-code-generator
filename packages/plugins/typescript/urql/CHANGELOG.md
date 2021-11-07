@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-urql
 
+## 3.4.0
+
+### Minor Changes
+
+- ada1fc7ac: Fix Urql import operations being prefixed into the Urql type import
+
 ## 3.3.0
 
 ### Minor Changes

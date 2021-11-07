@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.1
+
+### Patch Changes
+
+- e2841eb94: require non-null non-default variables in react-apollo refetchFn
+
 ## 3.2.0
 
 ### Minor Changes

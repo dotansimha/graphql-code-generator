@@ -1,4 +1,9 @@
-import { generateInfiniteQueryKey, generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import {
+  generateInfiniteQueryKey,
+  generateMutationKey,
+  generateQueryKey,
+  generateQueryVariablesSignature,
+} from './variables-generator';
 
 import { FetcherRenderer } from './fetcher';
 import { HardcodedFetch } from './config';
@@ -114,7 +119,8 @@ ${this.getFetchParams()}
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
@@ -128,6 +134,7 @@ ${this.getFetchParams()}
       TContext = unknown
     >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateMutationKey(node)},
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
       options
     );`;

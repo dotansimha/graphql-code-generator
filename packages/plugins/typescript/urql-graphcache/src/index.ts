@@ -10,7 +10,6 @@ import {
 
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { UrqlGraphCacheConfig } from './config';
-import { imports } from './constants';
 import { convertFactory, ConvertFn } from '@graphql-codegen/visitor-plugin-common';
 
 type GraphQLFlatType = Exclude<TypeNode, GraphQLWrappingType>;
@@ -210,7 +209,7 @@ function getOptimisticUpdatersConfig(
 
     fields.forEach(fieldNode => {
       const argsName = fieldNode.arguments?.length
-        ? convertName(`Mutation${capitalize(fieldNode.name.value)}Args`, {
+        ? convertName(`${capitalize(mutationType.name)}${capitalize(fieldNode.name.value)}Args`, {
             prefix: config.typesPrefix,
             suffix: config.typesSuffix,
           })
@@ -228,12 +227,24 @@ function getOptimisticUpdatersConfig(
   }
 }
 
+function getImports(config: UrqlGraphCacheConfig): string {
+  return (
+    `${
+      config.useTypeImports ? 'import type' : 'import'
+    } { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';\n` +
+    `${
+      config.useTypeImports ? 'import type' : 'import'
+    } { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';`
+  );
+}
+
 export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   _documents,
   config
 ) => {
   const convertName = convertFactory(config);
+  const imports = getImports(config);
   const keys = getKeysConfig(schema, convertName, config);
   const resolvers = getResolversConfig(schema, convertName, config);
   const { mutationUpdaters, subscriptionUpdaters } = getRootUpdatersConfig(schema, convertName, config);

@@ -1,5 +1,5 @@
 import { ParsedMapper, buildMapperImport, parseMapper } from '@graphql-codegen/visitor-plugin-common';
-import { generateInfiniteQueryKey, generateQueryKey } from './variables-generator';
+import { generateInfiniteQueryKey, generateMutationKey, generateQueryKey } from './variables-generator';
 
 import { CustomFetch } from './config';
 import { FetcherRenderer } from './fetcher';
@@ -113,7 +113,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
@@ -131,6 +132,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
       TContext = unknown
     >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateMutationKey(node)},
       ${impl},
       options
     );`;

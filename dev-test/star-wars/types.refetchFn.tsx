@@ -591,7 +591,7 @@ export type HeroNameConditionalInclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalInclusionQuery,
   HeroNameConditionalInclusionQueryVariables
 >;
-export function refetchHeroNameConditionalInclusionQuery(variables?: HeroNameConditionalInclusionQueryVariables) {
+export function refetchHeroNameConditionalInclusionQuery(variables: HeroNameConditionalInclusionQueryVariables) {
   return { query: HeroNameConditionalInclusionDocument, variables: variables };
 }
 export const HeroNameConditionalExclusionDocument = gql`
@@ -648,7 +648,7 @@ export type HeroNameConditionalExclusionQueryResult = Apollo.QueryResult<
   HeroNameConditionalExclusionQuery,
   HeroNameConditionalExclusionQueryVariables
 >;
-export function refetchHeroNameConditionalExclusionQuery(variables?: HeroNameConditionalExclusionQueryVariables) {
+export function refetchHeroNameConditionalExclusionQuery(variables: HeroNameConditionalExclusionQueryVariables) {
   return { query: HeroNameConditionalExclusionDocument, variables: variables };
 }
 export const HeroParentTypeDependentFieldDocument = gql`

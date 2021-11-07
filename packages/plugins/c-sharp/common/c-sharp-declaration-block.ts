@@ -1,4 +1,8 @@
+// This file is bundled and inlined.
+// We should probably make this a shared package though.
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { StringValueNode, NameNode } from 'graphql';
 import { transformComment } from './utils';
 

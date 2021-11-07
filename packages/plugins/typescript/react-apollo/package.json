@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-react-apollo",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use React Components/HOC/Hooks based on GraphQL operations",
   "repository": {
     "type": "git",

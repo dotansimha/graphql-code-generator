@@ -32,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const visitor = new TsVisitor(_schema, config);
 
   const visitorResult = oldVisit(ast, { leave: visitor });
-  const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
+  const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
   const directiveArgumentAndInputFieldMappings = visitor.directiveArgumentAndInputFieldMappingsDefinition;
 
@@ -54,7 +54,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   };
 };
 
-export function includeIntrospectionDefinitions(
+export function includeIntrospectionTypesDefinitions(
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
