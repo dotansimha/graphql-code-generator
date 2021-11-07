@@ -245,7 +245,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * This is useful to allow return types such as Promises and functions for fields.
    * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
    * `wrapFieldDefinitions` will wrap every single value inside the array.
-   * @default true
+   * @default false
    *
    * @example Enable wrapping entire fields
    * ```yml
