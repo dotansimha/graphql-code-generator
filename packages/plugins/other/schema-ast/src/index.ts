@@ -72,8 +72,8 @@ export interface SchemaASTConfig {
    */
   commentDescriptions?: boolean;
   /**
-   * @description Set to true in order get the schema lexicographically sorted before printed.
-   * @default false
+   * @description Set to false to disable sorting
+   * @default true
    */
   sort?: boolean;
   federation?: boolean;

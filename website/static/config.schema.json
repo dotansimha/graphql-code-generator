@@ -1003,7 +1003,7 @@
           "type": "boolean"
         },
         "sort": {
-          "description": "Set to true in order get the schema lexicographically sorted before printed.\nDefault value: \"false\"",
+          "description": "Set to false to disable sorting\nDefault value: \"true\"",
           "type": "boolean"
         },
         "federation": {
