@@ -2290,4 +2290,42 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     await validate(result);
   });
+
+  it('#7005 - avoidOptionals should preserve optional object', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        users(filter: UserFilterInput = {}): [User!]!
+        ping: String!
+      }
+
+      input UserFilterInput {
+        status: String = "ACTIVE"
+      }
+
+      type User {
+        id: ID!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: {
+          defaultValue: true,
+          field: false,
+          inputValue: true,
+          object: false,
+        },
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'filter'>>;
+        ping?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+    `);
+  });
 });
