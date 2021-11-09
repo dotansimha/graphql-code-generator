@@ -3020,31 +3020,6 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
-
-    it('Should generate optional object fields with required default values - broken in #5112', async () => {
-      const schema = buildSchema(`
-        type Query { foo(input: String = "testing"): String! }
-      `);
-      const result = await plugin(
-        schema,
-        [],
-        { avoidOptionals: { object: false, field: false, inputValue: true, defaultValue: true } },
-        { outputFile: '' }
-      );
-
-      expect(result.content).toBeSimilarStringTo(`
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Scalars['String'];
-        };
-
-        export type QueryFooArgs = {
-          input: Maybe<Scalars['String']>;
-        }
-      `);
-
-      validateTs(result);
-    });
   });
 
   describe('Enum', () => {
