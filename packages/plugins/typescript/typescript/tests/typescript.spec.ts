@@ -2998,31 +2998,6 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should generate optional object fields with required default values - broken in #5112', async () => {
-      const schema = buildSchema(`
-        type Query { foo(input: String = "testing"): String! }
-      `);
-      const result = await plugin(
-        schema,
-        [],
-        { avoidOptionals: { object: false, defaultValue: true } },
-        { outputFile: '' }
-      );
-
-      expect(result.content).toBeSimilarStringTo(`
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Scalars['String'];
-        };
-
-        export type QueryFooArgs = {
-          input: Maybe<Scalars['String']>;
-        }
-      `);
-
-      validateTs(result);
-    });
-
     it('Should generate correctly types for field arguments with default value and avoidOptionals.defaultValue option set to true - #5112', async () => {
       const schema = buildSchema(
         `type MyType { foo(a: String = "default", b: String! = "default", c: String, d: String!): String }`
@@ -3042,6 +3017,31 @@ describe('TypeScript', () => {
           d: Scalars['String'];
         };
     `);
+
+      validateTs(result);
+    });
+
+    it('Should generate optional object fields with required default values - broken in #5112', async () => {
+      const schema = buildSchema(`
+        type Query { foo(input: String = "testing"): String! }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        { avoidOptionals: { object: false, field: false, inputValue: true, defaultValue: true } },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Scalars['String'];
+        };
+
+        export type QueryFooArgs = {
+          input: Maybe<Scalars['String']>;
+        }
+      `);
 
       validateTs(result);
     });
