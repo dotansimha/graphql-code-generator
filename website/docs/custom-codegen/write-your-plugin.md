@@ -9,10 +9,10 @@ To get started with writing your GraphQL Code-Generator plugin, start by creatin
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
-    return 'Hi!';
-  },
-};
+  plugin(schema, documents, config) {
+    return 'Hi!'
+  }
+}
 ```
 
 The exported object should match the [`CodegenPlugin`](https://github.com/dotansimha/graphql-code-generator/blob/e3af1dbc80a998444a1d1b353f127f297c6a09d0/packages/utils/plugins-helpers/src/types.ts#L552) interface.
@@ -39,12 +39,12 @@ So let's use a very basic method from `GraphQLSchema`, and return a list of all 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
-    const typesMap = schema.getTypeMap();
+  plugin(schema, documents, config, info) {
+    const typesMap = schema.getTypeMap()
 
-    return Object.keys(typesMap).join('\n');
-  },
-};
+    return Object.keys(typesMap).join('\n')
+  }
+}
 ```
 
 ## Using the documents
@@ -59,16 +59,16 @@ Let's print a list of all documents files, and the name of operations in this fi
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
+  plugin(schema, documents, config, info) {
     return documents
       .map(doc => {
-        const docsNames = doc.document.definitions.map(def => def.name.value);
+        const docsNames = doc.document.definitions.map(def => def.name.value)
 
-        return `File ${doc.location} contains: ${docsNames.join(', ')}`;
+        return `File ${doc.location} contains: ${docsNames.join(', ')}`
       })
-      .join('\n');
-  },
-};
+      .join('\n')
+  }
+}
 ```
 
 ## Add plugin configuration
@@ -92,18 +92,18 @@ And then, you can use in your plugin:
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
+  plugin(schema, documents, config, info) {
     if (extname(info.outputFile) === '.graphql') {
-      return 'baz';
+      return 'baz'
     }
 
     if (config.myConfig === 'some-value') {
-      return 'foo';
+      return 'foo'
     } else {
-      return 'bar';
+      return 'bar'
     }
-  },
-};
+  }
+}
 ```
 
 ## Packing your Plugin

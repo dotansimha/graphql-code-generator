@@ -29,10 +29,10 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * ```yml
    * generates:
    *   path/to/file.ts:
-   *    plugins:
-   *      - flow
-   *    config:
-   *      useFlowReadOnlyTypes: true
+   *     plugins:
+   *       - flow
+   *     config:
+   *       useFlowReadOnlyTypes: true
    * ```
    */
   useFlowReadOnlyTypes?: boolean;

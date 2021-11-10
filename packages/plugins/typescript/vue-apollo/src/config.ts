@@ -14,13 +14,13 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo
-   *  config:
-   *    withCompositionFunctions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo
+   *     config:
+   *       withCompositionFunctions: true
    * ```
    */
   withCompositionFunctions?: boolean;
@@ -31,13 +31,13 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo
-   *  config:
-   *    vueApolloComposableImportFrom: vue
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo
+   *     config:
+   *       vueApolloComposableImportFrom: vue
    * ```
    */
   vueApolloComposableImportFrom?: 'vue' | '@vue/apollo-composable' | string;
@@ -48,13 +48,13 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo
-   *  config:
-   *    vueCompositionApiImportFrom: vue
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo
+   *     config:
+   *       vueCompositionApiImportFrom: vue
    * ```
    */
   vueCompositionApiImportFrom?: 'vue' | '@vue/composition-api' | string;
@@ -66,13 +66,13 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo
-   *  config:
-   *    addDocBlocks: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo
+   *     config:
+   *       addDocBlocks: true
    * ```
    */
   addDocBlocks?: boolean;

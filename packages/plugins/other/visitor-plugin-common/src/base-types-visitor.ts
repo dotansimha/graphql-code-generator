@@ -65,6 +65,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## With Custom Values
+   *
    * ```yml
    *   config:
    *     addUnderscoreToArgsType: true
@@ -103,12 +104,14 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Override all declarations
+   *
    * ```yml
    *   config:
    *     declarationKind: 'interface'
    * ```
    *
    * ## Override only specific declarations
+   *
    * ```yml
    *   config:
    *     declarationKind:
@@ -123,6 +126,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Disable enum prefixes
+   *
    * ```yml
    *   config:
    *     typesPrefix: I
@@ -136,31 +140,33 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Allow Promise
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: true
-   *    fieldWrapperValue: T | Promise<T>
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       wrapFieldDefinitions: true
+   *       fieldWrapperValue: T | Promise<T>
    * ```
    */
   fieldWrapperValue?: string;
   /**
-   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
+   * @description Set to `true` in order to wrap field definitions with `FieldWrapper`.
    * This is useful to allow return types such as Promises and functions.
    * @default false
    *
    * @exampleMarkdown
    * ## Enable wrapping fields
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       wrapFieldDefinitions: true
    * ```
    */
   wrapFieldDefinitions?: boolean;
@@ -170,13 +176,14 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Override all definition types
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    onlyOperationTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyOperationTypes: true
    * ```
    */
   onlyOperationTypes?: boolean;
@@ -186,22 +193,23 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Ignore enum values from schema
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    ignoreEnumValuesFromSchema: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       ignoreEnumValuesFromSchema: true
    * ```
    */
   ignoreEnumValuesFromSchema?: boolean;
   /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
-   * @description Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+   * @description Set to `true` in order to wrap field definitions with `EntireFieldWrapper`.
    * This is useful to allow return types such as Promises and functions for fields.
-   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if i.e. the field is an Array, while
    * `wrapFieldDefinitions` will wrap every single value inside the array.
    * @default true
    *
@@ -243,7 +251,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * **WARNING:** Using this option does only change the type definitions.
    *
-   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!
+   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!
    * Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
    *
    * Please use this configuration option with care!

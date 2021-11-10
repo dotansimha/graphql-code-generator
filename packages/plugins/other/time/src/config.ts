@@ -6,10 +6,10 @@ export interface TimePluginConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - time:
-   *        format: DD.MM.YY
+   *   path/to/file.ts:
+   *     plugins:
+   *       - time:
+   *           format: DD.MM.YY
    * ```
    */
   format?: string;
@@ -20,10 +20,10 @@ export interface TimePluginConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - time:
-   *        message: "The file generated on: "
+   *   path/to/file.ts:
+   *     plugins:
+   *       - time:
+   *           message: 'The file generated on: '
    * ```
    */
   message?: string;

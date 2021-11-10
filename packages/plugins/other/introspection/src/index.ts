@@ -14,11 +14,11 @@ export interface IntrospectionPluginConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * introspection.json:
-   *   plugins:
-   *     - introspection
-   *   config:
-   *     minify: true
+   *   introspection.json:
+   *     plugins:
+   *       - introspection
+   *     config:
+   *       minify: true
    * ```
    */
   minify?: boolean;
