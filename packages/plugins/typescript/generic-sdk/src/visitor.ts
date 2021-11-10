@@ -73,7 +73,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
         const returnType = usingObservable && o.operationType === 'Subscription' ? 'Observable' : 'Promise';
         const resultData = this.config.rawRequest
-          ? `{ data: ${o.operationResultType}, errors: any }`
+          ? `{ data?: ${o.operationResultType}, errors?: Array<{ message: string; extensions?: unknown }>, extensions?: unknown }`
           : o.operationResultType;
         return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
           o.operationVariablesTypes
