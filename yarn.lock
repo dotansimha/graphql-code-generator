@@ -7374,10 +7374,10 @@ flow-bin@0.164.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.164.0.tgz#dc2a1f1cd59670e7d95320232a673c6e31b11ff3"
   integrity sha512-cSAA0LLa1SlQ1YmNCYpJ19ES39WYrqjfxX8Oqhbvn6+DET8Cs+EnVkJWHVSkfK8zUupbxvSt7pDoFXePYbcJRA==
 
-flow-parser@0.163.0:
-  version "0.163.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.163.0.tgz#c2d5c77c57c53e8357016a837f3e3af04a0c87a6"
-  integrity sha512-txOsBcZ1nKsKtoAsBFnArFdq0cnPCmEHI5S2jQIgU1ZO1xtWpg64TsZSRktsaOyoWLpAvVxPap4Qbdd/TCJ3FQ==
+flow-parser@0.164.0:
+  version "0.164.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.164.0.tgz#455e16fdba12f24aa1d7631adacc524f1977b6ad"
+  integrity sha512-aJWAhnazcz0o8xIbCW5LBTf+tnsAtLwaMSCcRqA15UTkPBY1Vq1vy1WEPKwcWsve5tos5kkOeCXgd/Nal+LUUQ==
 
 flux@^4.0.1:
   version "4.0.1"
