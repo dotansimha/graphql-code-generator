@@ -20,7 +20,7 @@ export type YamlCliFlags = {
   errorsOnly: boolean;
 };
 
-function generateSearchPlaces(moduleName: string) {
+export function generateSearchPlaces(moduleName: string) {
   const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
   // gives codegen.json...
   const regular = extensions.map(ext => `${moduleName}.${ext}`);
