@@ -165,13 +165,12 @@ describe('React-Query', () => {
       TData = TTestQuery,
       TError = unknown
     >(
-      pageParamKey: keyof TTestQueryVariables,
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
     ) =>
     useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, updateInfiniteQueryVariables<TTestQueryVariables>(metaData, pageParamKey, variables))(),
+      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
@@ -259,13 +258,12 @@ describe('React-Query', () => {
       TData = TTestQuery,
       TError = unknown
     >(
-      pageParamKey: keyof TTestQueryVariables,
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
     ) =>
     useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, updateInfiniteQueryVariables<TTestQueryVariables>(metaData, pageParamKey, variables))(),
+      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <

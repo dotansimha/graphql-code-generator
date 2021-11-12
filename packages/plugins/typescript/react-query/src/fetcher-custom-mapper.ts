@@ -56,14 +56,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
-      ? `(metaData) => ${typedFetcher}(${documentVariableName}).bind(null, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))()`
-      : `(metaData) => ${typedFetcher}(${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))()`;
+      ? `(metaData) => ${typedFetcher}(${documentVariableName}).bind(null, {...variables, ...(metaData.pageParam ?? {})})()`
+      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})()`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>

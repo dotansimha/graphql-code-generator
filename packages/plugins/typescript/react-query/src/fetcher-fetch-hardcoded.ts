@@ -80,7 +80,7 @@ ${this.getFetchParams()}
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))(),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );`;
   }

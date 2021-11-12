@@ -51,7 +51,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables), headers)(),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
       options
     );`;
   }

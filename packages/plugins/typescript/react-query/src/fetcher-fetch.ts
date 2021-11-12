@@ -61,7 +61,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, updateInfiniteQueryVariables<${operationVariablesTypes}>(metaData, pageParamKey, variables))(),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );`;
   }

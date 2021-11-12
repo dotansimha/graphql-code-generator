@@ -6,6 +6,7 @@ import {
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import { generateMutationKeyMaker, generateQueryKeyMaker } from './variables-generator';
 
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { FetchFetcher } from './fetcher-fetch';
@@ -15,7 +16,6 @@ import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
 import { ReactQueryRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
-import { generateQueryKeyMaker, generateMutationKeyMaker } from './variables-generator';
 import { pascalCase } from 'change-case-all';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
@@ -116,23 +116,6 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     }
 
     return [...baseImports, `import { ${Array.from(this.reactQueryIdentifiersInUse).join(', ')} } from 'react-query';`];
-  }
-
-  public addInfiniteQueryVariableInjection(): string {
-    if (this.config.addInfiniteQuery) {
-      return `
-const updateInfiniteQueryVariables = <TVariables>( metaData: QueryFunctionContext<any, any>, pageParamKey?: keyof TVariables, variables?: TVariables & {pageParam?: string | number}) => {
-  if (
-    variables != null &&
-    metaData.pageParam != null
-  ) {
-    variables[pageParamKey ?? 'pageParam'] = metaData.pageParam ?? 0
-  }
-  return variables
-}
-      `;
-    }
-    return '';
   }
 
   public getFetcherImplementation(): string {
