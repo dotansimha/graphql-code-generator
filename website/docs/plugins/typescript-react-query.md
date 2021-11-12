@@ -274,7 +274,6 @@ import { useInfiniteMyQuery } from './generated';
 
 export const MyComponent = () => {
   const { status, data, error, isFetching } = useInfiniteAnimalsQuery(
-    'from',
     {
       catsRange: 5,
       catsStarting: 0,
