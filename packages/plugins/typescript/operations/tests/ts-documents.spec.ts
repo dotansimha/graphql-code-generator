@@ -2539,13 +2539,13 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          username?: Maybe<Scalars['String']>;
-          email?: Maybe<Scalars['String']>;
+          username?: InputMaybe<Scalars['String']>;
+          email?: InputMaybe<Scalars['String']>;
           password: Scalars['String'];
-          input?: Maybe<InputType>;
+          input?: InputMaybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+          requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
           innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
@@ -2565,7 +2565,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: Maybe<Scalars['DateTime']>;
+          test?: InputMaybe<Scalars['DateTime']>;
         }>;`
       );
       await validate(content, config);
@@ -2919,7 +2919,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: Maybe<Scalars['Boolean']>;
+          reverse?: InputMaybe<Scalars['Boolean']>;
         }>;
       `);
     });
@@ -3761,6 +3761,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(output).toBeSimilarStringTo(`
         export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -5006,8 +5007,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-        requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+        requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
         innerRequired: Array<Scalars['String']> | Scalars['String'];
       }>;`);
       await validate(content, config);
@@ -5038,8 +5039,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
-        requireString: Array<Maybe<Scalars['String']>>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+        requireString: Array<InputMaybe<Scalars['String']>>;
         innerRequired: Array<Scalars['String']>;
       }>;`);
       await validate(content, config);

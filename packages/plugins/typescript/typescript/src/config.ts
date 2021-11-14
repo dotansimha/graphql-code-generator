@@ -190,6 +190,36 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   maybeValue?: string;
   /**
+   * @description Allow to override the type value of `Maybe` for input types and arguments.
+   * This is useful in case you want to differentiate between the wrapper of input and output types.
+   * By default, this type just refers to `Maybe` type, but you can override it's definition.
+   *
+   * @default Maybe<T>
+   *
+   * @exampleMarkdown
+   * ## Allow undefined
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *    config:
+   *      inputMaybeValue: T | null | undefined
+   * ```
+   *
+   * ## Allow `null` in resolvers:
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *      - typescript-resolvers
+   *    config:
+   *      inputMaybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
+   * ```
+   */
+  inputMaybeValue?: string;
+  /**
    * @description Set to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
    * @default false

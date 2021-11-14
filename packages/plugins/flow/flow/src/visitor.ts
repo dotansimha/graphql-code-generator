@@ -64,8 +64,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return `?${super.NamedType(node, key, parent, path, ancestors)}`;
   }
 
-  ListType(node: ListTypeNode): string {
-    return `?${super.ListType(node)}`;
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+    return `?${super.ListType(node, key, parent, path, ancestors)}`;
   }
 
   NonNullType(node: NonNullTypeNode): string {

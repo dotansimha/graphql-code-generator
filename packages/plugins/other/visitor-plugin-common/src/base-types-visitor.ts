@@ -781,7 +781,7 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode): string {
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);

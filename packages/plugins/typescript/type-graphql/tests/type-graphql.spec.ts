@@ -149,7 +149,7 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InterfaceType()
       export abstract class ITest {
-        
+
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
         id!: Maybe<Scalars['ID']>;
       }
@@ -223,7 +223,7 @@ describe('type-graphql', () => {
 
         @TypeGraphQL.Field(type => [String], { nullable: true })
         arr!: Maybe<Array<Scalars['String']>>;
-        
+
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
       }
@@ -300,7 +300,7 @@ describe('type-graphql', () => {
 
         @TypeGraphQL.Field(type => [String], { nullable: true })
         arr!: Maybe<Array<Scalars['String']>>;
-        
+
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
       }
@@ -338,7 +338,7 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
         @TypeGraphQL.FooBar()
         export abstract class ITest {
-          
+
           @TypeGraphQL.Bar(type => TypeGraphQL.ID, { nullable: true })
           id!: Maybe<Scalars['ID']>;
         }
@@ -663,7 +663,7 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InterfaceType({ description: 'ITest interface description' })
       export abstract class ITest {
-        
+
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { description: 'id field description\\ninside ITest interface', nullable: true })
         id!: Maybe<Scalars['ID']>;
       }
@@ -798,15 +798,15 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`export type QueryRegularFunctionArgs = {
         mandatoryId: Scalars['ID'];
-        optionalId?: Maybe<Scalars['ID']>;
+        optionalId?: InputMaybe<Scalars['ID']>;
       };`);
 
     expect(result.content).toBeSimilarStringTo(` @TypeGraphQL.ArgsType()
        export class QueryTypeGraphQlFunctionArgs {
-      
+
          @TypeGraphQL.Field(type => TypeGraphQL.ID)
          mandatoryId!: Scalars['ID'];
-      
+
          @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
          optionalId!: Maybe<Scalars['ID']>;
        };`);
