@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript
 
+## 2.4.0
+
+### Minor Changes
+
+- 4c5c84c1b: Added InputMaybe, a different type of Maybe type for input/arguments
+
 ## 2.3.1
 
 ### Patch Changes

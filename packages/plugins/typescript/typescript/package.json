@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript types",
   "repository": {
     "type": "git",
