@@ -1,15 +1,27 @@
-import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawClientSideBasePluginConfig, ClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.
  */
-export interface MSWRawPluginConfig extends RawClientSideBasePluginConfig {
+export interface MSWConfig {
   /**
-   * GraphQL endpoint to use when working with multiple backends.
+   * @description GraphQL endpoint to use when working with multiple backends.
+   *
    * @see https://mswjs.io/docs/api/graphql/link
+   *
+   * @exampleMarkdown
+   * ```yml
+   *   config:
+   *     link:
+   *       name: stripe
+   *       endpoint: https://api.stripe.com/graphql
+   * ```
    */
   link?: {
     endpoint: string;
     name: string;
   };
 }
+
+export interface MSWRawPluginConfig extends RawClientSideBasePluginConfig, MSWConfig {}
+export interface MSWPluginConfig extends ClientSideBasePluginConfig, MSWConfig {}

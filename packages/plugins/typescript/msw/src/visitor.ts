@@ -7,7 +7,7 @@ import {
 import { MSWRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema, print } from 'graphql';
-import { camelCase, pascalCase } from 'change-case-all';
+import { pascalCase } from 'change-case-all';
 
 export interface MSWPluginConfig extends ClientSideBasePluginConfig {
   link?: {
@@ -49,12 +49,27 @@ export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPlu
       endpoint = `const ${link.name} = graphql.link('${link.endpoint}')\n`;
     }
 
-    const infix = pascalCase(link?.name || '');
+    const suffix = pascalCase(link?.name || '');
     const operations = this._operationsToInclude.map(
       ({ node, operationType, operationResultType, operationVariablesTypes }) => {
         if (operationType === 'Query' || operationType === 'Mutation') {
-          const name = camelCase(node.name.value) + operationType + infix;
-          return `export const ${name}Handler = (resolver: ResponseResolver<GraphQLRequest<${operationVariablesTypes}>, GraphQLContext<${operationResultType}>, any>) =>
+          const handlerName = `mock${pascalCase(node.name.value)}${operationType}${suffix}`;
+
+          /** @ts-expect-error name DOES exist on @type{import('graphql').SelectionNode} */
+          const selections = node.selectionSet.selections.map(sel => sel.name.value).join(', ');
+          const variables = node.variableDefinitions.map(def => def.variable.name.value).join(', ');
+
+          return `/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * ${handlerName}((req, res, ctx) => {${variables && `\n *   const { ${variables} } = req.variables;`}
+ *   return res(
+ *     ctx.data({ ${selections} })
+ *   )
+ * })
+ */
+export const ${handlerName} = (resolver: ResponseResolver<GraphQLRequest<${operationVariablesTypes}>, GraphQLContext<${operationResultType}>, any>) =>
   ${link?.name || 'graphql'}.${operationType.toLowerCase()}<${operationResultType}, ${operationVariablesTypes}>(
     '${node.name.value}',
     resolver
@@ -64,7 +79,7 @@ export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPlu
       }
     );
 
-    return [endpoint, ...operations].join('');
+    return [endpoint, ...operations].join('\n');
   }
 
   buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) {
