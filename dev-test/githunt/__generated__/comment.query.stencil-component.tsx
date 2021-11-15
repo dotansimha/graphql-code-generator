@@ -6,8 +6,8 @@ import { Component, Prop, h } from '@stencil/core';
 declare global {
   export type CommentQueryVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
-    limit?: Types.Maybe<Types.Scalars['Int']>;
-    offset?: Types.Maybe<Types.Scalars['Int']>;
+    limit?: Types.InputMaybe<Types.Scalars['Int']>;
+    offset?: Types.InputMaybe<Types.Scalars['Int']>;
   }>;
 
   export type CommentQuery = {
