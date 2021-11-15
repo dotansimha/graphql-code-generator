@@ -2751,6 +2751,24 @@
         }
       }
     },
+    "MSWConfig": {
+      "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.",
+      "type": "object",
+      "properties": {
+        "link": {
+          "description": "GraphQL endpoint to use when working with multiple backends.\nDefault value: \"undefined\"",
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "JavaApolloAndroidPluginConfig": {
       "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.",
       "type": "object",
@@ -4276,6 +4294,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "typescript-msw"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/MSWConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "java-apollo-android"
                 }
               }
@@ -4925,6 +4962,14 @@
               "additionalProperties": false,
               "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
             },
+            "typescript-msw": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/MSWConfig"
+            },
+            "@graphql-codegen/typescript-msw": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/MSWConfig"
+            },
             "java-apollo-android": {
               "additionalProperties": false,
               "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
@@ -5209,6 +5254,14 @@
             {
               "const": "@graphql-codegen/typescript-document-nodes",
               "description": "This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-msw",
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-msw",
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "java-apollo-android",
