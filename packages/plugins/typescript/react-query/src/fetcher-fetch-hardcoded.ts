@@ -27,7 +27,10 @@ export class HardcodedFetchFetcher implements FetcherRenderer {
     let fetchParamsPartial = '';
 
     if (this.config.fetchParams) {
-      fetchParamsPartial = `\n    ...(${this.config.fetchParams}),`;
+      const fetchParamsString =
+        typeof this.config.fetchParams === 'string' ? this.config.fetchParams : JSON.stringify(this.config.fetchParams);
+
+      fetchParamsPartial = `\n    ...(${fetchParamsString}),`;
     }
 
     return `    method: "POST",${fetchParamsPartial}`;
