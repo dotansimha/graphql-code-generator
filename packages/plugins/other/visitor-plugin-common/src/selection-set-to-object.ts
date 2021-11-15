@@ -334,7 +334,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected buildSelectionSetString(
     parentSchemaType: GraphQLObjectType,
-    selectionNodes: Array<SelectionNode | FragmentSpreadUsage>
+    selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>
   ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
@@ -398,7 +398,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
           }
         } else if (selectionNode.kind === 'Directive') {
-          if (['skip', 'include'].includes(selectionNode.name.value)) {
+          if (['skip', 'include'].includes(selectionNode?.name?.value)) {
             inlineFragmentConditional = true;
           }
         } else {
