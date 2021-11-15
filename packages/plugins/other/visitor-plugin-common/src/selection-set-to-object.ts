@@ -18,6 +18,7 @@ import {
   GraphQLObjectType,
   GraphQLOutputType,
   isTypeSubTypeOf,
+  DirectiveNode,
 } from 'graphql';
 import {
   getPossibleTypes,
@@ -107,10 +108,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
+        const directives = (node.directives as DirectiveNode[]) || undefined;
 
         if (isObjectType(typeOnSchema)) {
           this._appendToTypeMap(types, typeOnSchema.name, fields);
           this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
+          this._appendToTypeMap(types, typeOnSchema.name, directives);
           this._collectInlineFragments(typeOnSchema, inlines, types);
         } else if (isInterfaceType(typeOnSchema) && parentType.getInterfaces().includes(typeOnSchema)) {
           this._appendToTypeMap(types, parentType.name, fields);
@@ -349,6 +352,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
+    let inlineFragmentConditional = false;
 
     for (const selectionNode of selectionNodes) {
       if ('kind' in selectionNode) {
@@ -393,6 +397,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
           }
+        } else if (selectionNode.kind === 'Directive') {
+          if (['skip', 'include'].includes(selectionNode.name.value)) {
+            inlineFragmentConditional = true;
+          }
         } else {
           throw new TypeError('Unexpected type.');
         }
@@ -433,7 +441,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
-      const isConditional = hasConditionalDirectives(field);
+      const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
         name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
