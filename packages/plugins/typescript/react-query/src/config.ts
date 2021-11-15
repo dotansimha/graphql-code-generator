@@ -1,6 +1,6 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
-export type HardcodedFetch = { endpoint: string; fetchParams?: string };
+export type HardcodedFetch = { endpoint: string; fetchParams?: string | Record<string, any> };
 export type CustomFetch = { func: string; isReactHook?: boolean } | string;
 
 /**

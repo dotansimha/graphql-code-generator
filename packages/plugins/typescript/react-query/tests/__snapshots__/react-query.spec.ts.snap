@@ -318,6 +318,53 @@ export const useTestMutation = <
     );"
 `;
 
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with fetch config and fetchParams object 2`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables,
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test'] : ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      'test',
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
+`;
+
 exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with hardcoded endpoint 1`] = `
 "
 export const TestDocument = \`
