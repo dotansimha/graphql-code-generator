@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
-  episode?: Types.InputMaybe<Types.Episode>;
+  episode?: Types.Maybe<Types.Episode>;
 }>;
 
 export type HeroParentTypeDependentFieldQuery = {

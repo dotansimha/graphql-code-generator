@@ -6,8 +6,8 @@ import { Component, Prop, h } from '@stencil/core';
 declare global {
   export type FeedQueryVariables = Types.Exact<{
     type: Types.FeedType;
-    offset?: Types.InputMaybe<Types.Scalars['Int']>;
-    limit?: Types.InputMaybe<Types.Scalars['Int']>;
+    offset?: Types.Maybe<Types.Scalars['Int']>;
+    limit?: Types.Maybe<Types.Scalars['Int']>;
   }>;
 
   export type FeedQuery = {

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -29,7 +28,7 @@ export type Mutation = {
 };
 
 export type MutationCreateTweetArgs = {
-  body?: InputMaybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
 };
 
 export type MutationDeleteTweetArgs = {
@@ -58,7 +57,7 @@ export type Query = {
 };
 
 export type QueryNotificationsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 export type QueryTweetArgs = {
@@ -66,10 +65,10 @@ export type QueryTweetArgs = {
 };
 
 export type QueryTweetsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort_field?: InputMaybe<Scalars['String']>;
-  sort_order?: InputMaybe<Scalars['String']>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort_field?: Maybe<Scalars['String']>;
+  sort_order?: Maybe<Scalars['String']>;
 };
 
 export type QueryUserArgs = {
