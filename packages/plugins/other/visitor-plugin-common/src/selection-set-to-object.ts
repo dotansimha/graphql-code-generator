@@ -99,7 +99,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   _collectInlineFragments(
     parentType: GraphQLNamedType,
     nodes: InlineFragmentNode[],
-    types: Map<string, Array<SelectionNode | FragmentSpreadUsage>>
+    types: Map<string, Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
