@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.2.0
+
+### Minor Changes
+
+- f7a320a2d: Updates react-query to include the useInfiniteQuery as a config option
+
 ## 3.1.1
 
 ### Patch Changes
