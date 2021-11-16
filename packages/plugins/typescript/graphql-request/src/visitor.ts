@@ -34,7 +34,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGraphQLRequestPluginConfig) {
     super(schema, fragments, rawConfig, {
       rawRequest: getConfigValue(rawConfig.rawRequest, false),
-      extensionsType: getConfigValue(rawConfig.extensionsType, "any"),
+      extensionsType: getConfigValue(rawConfig.extensionsType, 'any'),
     });
 
     autoBind(this);
@@ -113,7 +113,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
             o.operationVariablesTypes
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
             o.operationResultType
-          } | undefined; extensions?: ${this.config.extensionsType}; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+          } | undefined; extensions?: ${
+            this.config.extensionsType
+          }; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
     return withWrapper((wrappedRequestHeaders) => client.rawRequest<${
       o.operationResultType
     }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');

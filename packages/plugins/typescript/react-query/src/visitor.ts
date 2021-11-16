@@ -1,21 +1,22 @@
 import {
-  ClientSideBaseVisitor,
   ClientSideBasePluginConfig,
-  LoadedFragment,
+  ClientSideBaseVisitor,
   DocumentMode,
+  LoadedFragment,
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
-import { ReactQueryRawPluginConfig } from './config';
-import autoBind from 'auto-bind';
-import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { FetcherRenderer } from './fetcher';
-import { FetchFetcher } from './fetcher-fetch';
-import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
-import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
+import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import { generateMutationKeyMaker, generateQueryKeyMaker } from './variables-generator';
+
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
+import { FetchFetcher } from './fetcher-fetch';
+import { FetcherRenderer } from './fetcher';
+import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
+import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
+import { ReactQueryRawPluginConfig } from './config';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
-import { generateQueryKeyMaker, generateMutationKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
@@ -23,9 +24,14 @@ export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   exposeQueryKeys: boolean;
   exposeMutationKeys: boolean;
   exposeFetcher: boolean;
+  addInfiniteQuery: boolean;
 }
 
 export interface ReactQueryMethodMap {
+  infiniteQuery: {
+    hook: string;
+    options: string;
+  };
   query: {
     hook: string;
     options: string;
@@ -42,6 +48,10 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   public reactQueryIdentifiersInUse = new Set<string>();
 
   public queryMethodMap: ReactQueryMethodMap = {
+    infiniteQuery: {
+      hook: 'useInfiniteQuery',
+      options: 'UseInfiniteQueryOptions',
+    },
     query: {
       hook: 'useQuery',
       options: 'UseQueryOptions',
@@ -65,6 +75,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
       exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
+      addInfiniteQuery: getConfigValue(rawConfig.addInfiniteQuery, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -98,6 +109,10 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
 
     if (!this.hasOperations) {
       return baseImports;
+    }
+
+    if (this.config.addInfiniteQuery) {
+      this.reactQueryIdentifiersInUse.add('QueryFunctionContext');
     }
 
     return [...baseImports, `import { ${Array.from(this.reactQueryIdentifiersInUse).join(', ')} } from 'react-query';`];
@@ -152,7 +167,17 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         query += `\nuse${operationName}.document = ${documentVariableName};\n`;
       }
       if (this.config.exposeQueryKeys) {
-        query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+        query += `\n${generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables)};\n`;
+      }
+      if (this.config.addInfiniteQuery) {
+        query += `\n${this.fetcher.generateInfiniteQueryHook(
+          node,
+          documentVariableName,
+          operationName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        )}\n`;
       }
 
       // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook

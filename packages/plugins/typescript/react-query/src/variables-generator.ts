@@ -6,6 +6,10 @@ export function generateQueryVariablesSignature(
 ): string {
   return `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 }
+export function generateInfiniteQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
+  if (hasRequiredVariables) return `['${node.name.value}.infinite', variables]`;
+  return `variables === undefined ? ['${node.name.value}.infinite'] : ['${node.name.value}.infinite', variables]`;
+}
 
 export function generateQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
   if (hasRequiredVariables) return `['${node.name.value}', variables]`;

@@ -29,6 +29,19 @@ export const useTestQuery = <
       useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
       options
     );
+export const useInfiniteTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables,
+      options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
@@ -76,6 +89,19 @@ export const useTestQuery = <
       myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
       options
     );
+export const useInfiniteTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables,
+      options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {

@@ -82,7 +82,13 @@ export interface SchemaASTConfig {
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  { commentDescriptions = false, includeDirectives = false, includeIntrospectionTypes = false, sort = false, federation }
+  {
+    commentDescriptions = false,
+    includeDirectives = false,
+    includeIntrospectionTypes = false,
+    sort = false,
+    federation,
+  }
 ): Promise<string> => {
   const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospectionTypes });
 
