@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 2.3.0
+
+### Minor Changes
+
+- 0b31d8390: Added config option `rawRequest` to typescript-generic-sdk which allows return to include both `data` and `errors` on the top level
+
 ## 2.2.1
 
 ### Patch Changes
