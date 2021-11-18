@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_graphql_codegen_website=self.webpackChunk_graphql_codegen_website||[]).push([[1477],{30010:function(e){e.exports={blogPosts:[]}}}]);
