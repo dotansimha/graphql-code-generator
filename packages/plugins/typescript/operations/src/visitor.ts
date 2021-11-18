@@ -23,6 +23,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
+  maybeValue: string;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -47,11 +48,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const avoidOptionals = normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false));
+    const defaultMaybeValue = 'T | null' + (avoidOptionals ? ' | undefined' : '');
+    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
 
     const wrapOptional = (type: string) => {
       if (preResolveTypes === true) {
-        const optionalUndefined = avoidOptionals.field ? '' : ' | undefined';
-        return `${type} | null` + optionalUndefined;
+        return maybeValue.replace('T', type);
       }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
