@@ -10,4 +10,22 @@ export interface RawGenericSdkPluginConfig extends RawClientSideBasePluginConfig
    * usingObservableFrom: "import { Observable } from 'rxjs';"
    */
   usingObservableFrom?: string;
+
+  /**
+   * @description By default the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-generic-sdk
+   *  config:
+   *    rawRequest: true
+   * ```
+   */
+  rawRequest?: boolean;
 }

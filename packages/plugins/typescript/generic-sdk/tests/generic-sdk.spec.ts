@@ -143,6 +143,36 @@ async function test() {
       expect(output).toMatchSnapshot();
     });
 
+    it('Should support rawRequest', async () => {
+      const config = { rawRequest: true };
+      const docs = [{ filePath: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+        async function rawRequestTest() {
+          const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+          const sdk = getSdk(requester);
+
+          await sdk.feed();
+          await sdk.feed3();
+          await sdk.feed4();
+
+          const result = await sdk.feed2({ v: "1" });
+
+          if (result.data.feed) {
+            if (result.data.feed[0]) {
+              const id = result.data.feed[0].id
+            }
+          }
+        }
+      `;
+      const output = await validate(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
+
     it('Should generate a correct wrap method when usingObservableFrom is set', async () => {
       const config = { usingObservableFrom: "import Observable from 'zen-observable';" };
       const docs = [{ filePath: '', document: docWithSubscription }];
