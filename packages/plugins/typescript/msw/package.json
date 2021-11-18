@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-msw",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "GraphQL Code Generator plugin for generating MSW mock handlers based on GraphQL operations",
   "repository": {
     "type": "git",
