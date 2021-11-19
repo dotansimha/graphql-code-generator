@@ -125,10 +125,10 @@ describe('TypeScript Mongo', () => {
     });
 
     it('Should allow to customize objectIdType import with custom import', async () => {
-      const result = await plugin(schema, [], { objectIdType: 'ObjectId#bson' }, { outputFile: '' });
-      expect(result).toContain(`_id: ObjectId`);
-      expect(result).not.toContain(`ObjectID`);
-      expect(result).toContain(`import { ObjectId } from 'bson';`);
+      const result = await plugin(schema, [], { objectIdType: 'ObjectID#bson' }, { outputFile: '' });
+      expect(result).toContain(`_id: ObjectID`);
+      expect(result).not.toContain(`ObjectId`);
+      expect(result).toContain(`import { ObjectID } from 'bson';`);
       await validate(result, schema, {});
     });
 
