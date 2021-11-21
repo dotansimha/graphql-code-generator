@@ -82,5 +82,7 @@ export function wrapFieldType(
 }
 
 export function isOfTypeList(typeNode: TypeNode): boolean {
-  return typeNode.kind === Kind.LIST_TYPE;
+  return (
+    typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE)
+  );
 }
