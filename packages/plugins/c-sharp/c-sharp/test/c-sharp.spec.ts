@@ -5,7 +5,7 @@ import { CSharpResolversPluginRawConfig } from '../src/config';
 import { getJsonAttributeSourceConfiguration } from '../src/json-attributes';
 import each from 'jest-each';
 
-fdescribe('C#', () => {
+describe('C#', () => {
   describe('Using directives', () => {
     it('Should include dotnet using directives', async () => {
       const schema = buildSchema(/* GraphQL */ `
@@ -261,6 +261,7 @@ fdescribe('C#', () => {
         /// <summary>
         /// User id
         /// </summary>
+        [System.ComponentModel.DataAnnotations.Required]
         [JsonRequired]
         public int id { get; set; }
       `);
@@ -475,13 +476,13 @@ fdescribe('C#', () => {
           `);
 
           const config: CSharpResolversPluginRawConfig = {
-            emitJsonAttributes: true,
             jsonAttributesSource: source,
           };
           const result = await plugin(schema, [], config, { outputFile: '' });
           const jsonConfig = getJsonAttributeSourceConfiguration(source);
           const attributes =
             `
+            [System.ComponentModel.DataAnnotations.Required]
           ` +
             (jsonConfig.requiredAttribute == null
               ? ``
@@ -520,15 +521,15 @@ fdescribe('C#', () => {
         const result = await plugin(schema, [], config, { outputFile: '' });
 
         expect(result).toBeSimilarStringTo(`
-          [Required]
+          [System.ComponentModel.DataAnnotations.Required]
           public int intReq { get; set; }
-          [Required]
+          [System.ComponentModel.DataAnnotations.Required]
           public double fltReq { get; set; }
-          [Required]
+          [System.ComponentModel.DataAnnotations.Required]
           public string idReq { get; set; }
-          [Required]
+          [System.ComponentModel.DataAnnotations.Required]
           public string strReq { get; set; }
-          [Required]
+          [System.ComponentModel.DataAnnotations.Required]
           public bool boolReq { get; set; }
         `);
       });
@@ -615,8 +616,10 @@ fdescribe('C#', () => {
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<int> arr1 { get; set; }
           public IEnumerable<double?> arr2 { get; set; }
+          [System.ComponentModel.DataAnnotations.Required]
           [JsonRequired]
           public IEnumerable<int?> arr3 { get; set; }
+          [System.ComponentModel.DataAnnotations.Required]
           [JsonRequired]
           public IEnumerable<bool> arr4 { get; set; }
         `);
@@ -640,8 +643,10 @@ fdescribe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<IEnumerable<int>> arr1 { get; set; }
+          [System.ComponentModel.DataAnnotations.Required]
           [JsonRequired]
           public IEnumerable<IEnumerable<IEnumerable<double?>>> arr2 { get; set; }
+          [System.ComponentModel.DataAnnotations.Required]
           [JsonRequired]
           public IEnumerable<IEnumerable<Complex>> arr3 { get; set; }
         `);
@@ -723,8 +728,8 @@ fdescribe('C#', () => {
     });
   });
 
-  fdescribe('Composition types', () => {
-    fit('Correctly generate interface + concrete types for UnionType', async () => {
+  describe('Composition types', () => {
+    it('Correctly generate interface + concrete types for CompositionType', async () => {
       const schema = buildSchema(/* GraphQL */ `
         union Vehicle = Airplane | Car
 
@@ -749,7 +754,7 @@ fdescribe('C#', () => {
       expect(result).toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Car; } }');
     });
 
-    it('Correctly generate interface + concrete types for UnionType, but with definitions inverted', async () => {
+    it('Correctly generate interface + concrete types for CompositionType, but with definitions inverted', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Car {
           licensePlate: String
@@ -784,9 +789,9 @@ fdescribe('C#', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
-      expect(result).toContain('[JsonConverter(typeof(UnionTypeConverter))]');
+      expect(result).toContain('[JsonConverter(typeof(CompositionTypeConverter))]');
       expect(result).toContain('public Vehicle firstVeichle { get; set; }');
-      expect(result).toContain('[JsonConverter(typeof(UnionTypeListConverter))]');
+      expect(result).toContain('[JsonConverter(typeof(CompositionTypeListConverter))]');
       expect(result).toContain('public List<Vehicle> tail { get; set; }');
     });
 
@@ -805,9 +810,9 @@ fdescribe('C#', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
-      expect(result).toContain('[JsonConverter(typeof(UnionTypeConverter))]');
+      expect(result).toContain('[JsonConverter(typeof(CompositionTypeConverter))]');
       expect(result).toContain('public Vehicle firstVeichle { get; set; }');
-      expect(result).toContain('[JsonConverter(typeof(UnionTypeListConverter))]');
+      expect(result).toContain('[JsonConverter(typeof(CompositionTypeListConverter))]');
       expect(result).toContain('public List<Vehicle> tail { get; set; }');
     });
   });
