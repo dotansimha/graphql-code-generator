@@ -1,5 +1,31 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.0
+
+### Minor Changes
+
+- efae660d1: Added an option to allow to skip generating code related to graphql-modules library
+
 ## 2.1.6
 
 ### Patch Changes

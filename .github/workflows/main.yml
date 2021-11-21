@@ -1,4 +1,4 @@
-name: CI
+name: Testing
 
 on:
   push:
@@ -9,13 +9,89 @@ on:
       - master
 
 jobs:
+  lint:
+    name: Linting Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@master
+        with:
+          node-version: 17
+      - name: Cache Yarn
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-17-16-yarn-
+      - name: Install Dependencies using Yarn
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+  dev-tests:
+    name: Validating dev-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@master
+        with:
+          node-version: 17
+      - name: Cache Yarn
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-17-16-yarn-
+      - name: Install Dependencies using Yarn
+        run: yarn install
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
+      - name: Test dev-tests
+        run: |
+          yarn run generate:examples
+          git diff --exit-code -- dev-test/
+  esm:
+    name: Testing ESM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@master
+        with:
+          node-version: 17
+      - name: Cache Yarn
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-17-16-yarn-
+      - name: Install Dependencies using Yarn
+        run: yarn install
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
+      - name: Test ESM
+        run: node scripts/test-esm.mjs
   test:
-    name: Testing on Node ${{matrix.node_version}}
+    name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        node_version: [12, '16.8.0']
+        os: [ubuntu-latest] # remove windows to speed up the tests
+        node_version: [12, 17]
+        graphql_version:
+          - 15
+          - 16
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -27,29 +103,23 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-yarn-
+            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-
+      - name: Use GraphQL v${{matrix.graphql_version}}
+        run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
+      - name: Install Dependencies using Yarn
+        run: yarn install
       - name: Cache Jest
         uses: actions/cache@v2
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-${{matrix.node_version}}-jest-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-jest-
-      - name: Install Dependencies using Yarn
-        run: yarn install
-      - name: Lint
-        run: yarn lint
+            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
       - name: Build
         run: yarn build
       - name: Test
         run: yarn test
         env:
           CI: true
-      - name: Test dev-tests
-        run: |
-          yarn run generate:examples
-          git diff --exit-code -- dev-test/
-      - name: Test ESM
-        run: node scripts/test-esm.mjs

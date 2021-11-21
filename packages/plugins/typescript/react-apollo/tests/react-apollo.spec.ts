@@ -21,6 +21,7 @@ describe('React Apollo', () => {
   });
 
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -36,6 +37,23 @@ describe('React Apollo', () => {
       }
     }
   `);
+
+  const queryWithRequiredVariablesDoc = parse(/* GraphQL */ `
+    query WithRequiredVariables($type: FeedType!) {
+      feed(type: $type) {
+        id
+      }
+    }
+  `);
+
+  const queryWithNonNullDefaultVariablesDoc = parse(/* GraphQL */ `
+    query WithNonNullDefaultVariables($type: FeedType! = HOT) {
+      feed(type: $type) {
+        id
+      }
+    }
+  `);
+
   const mutationDoc = parse(/* GraphQL */ `
     mutation test($name: String) {
       submitRepository(repoFullName: $name) {
@@ -1777,21 +1795,43 @@ export function useListenToCommentsSubscription(baseOptions?: Apollo.Subscriptio
     it('should generate a function for use with refetchQueries', async () => {
       const docs = [{ location: '', document: basicDoc }];
 
-      const content = (await plugin(
-        schema,
-        docs,
-        {
-          withHooks: true,
-          withRefetchFn: true,
-        },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      )) as Types.ComplexPluginOutput;
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(
         `export function refetchTestQuery(variables?: TestQueryVariables) {
       return { query: TestDocument, variables: variables }
+    }`
+      );
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should require variables if they contain non-null non-default arguments', async () => {
+      const docs = [{ location: '', document: queryWithRequiredVariablesDoc }];
+
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(
+        `export function refetchWithRequiredVariablesQuery(variables: WithRequiredVariablesQueryVariables) {
+      return { query: WithRequiredVariablesDocument, variables: variables }
+    }`
+      );
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should not require variables if they contain non-null default arguments', async () => {
+      const docs = [{ location: '', document: queryWithNonNullDefaultVariablesDoc }];
+
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(
+        `export function refetchWithNonNullDefaultVariablesQuery(variables?: WithNonNullDefaultVariablesQueryVariables) {
+      return { query: WithNonNullDefaultVariablesDocument, variables: variables }
     }`
       );
       await validateTypeScript(content, schema, docs, {});

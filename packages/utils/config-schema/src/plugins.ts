@@ -151,6 +151,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-document-nodes',
   },
   {
+    file: '../../plugins/typescript/msw/src/config.ts',
+    identifier: 'MSWConfig',
+    name: 'typescript-msw',
+  },
+  {
     file: '../../plugins/java/apollo-android/src/plugin.ts',
     identifier: 'JavaApolloAndroidPluginConfig',
     name: 'java-apollo-android',

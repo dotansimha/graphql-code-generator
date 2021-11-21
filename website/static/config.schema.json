@@ -146,6 +146,10 @@
           "description": "For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "exposeMutationKeys": {
+          "description": "For each generate mutation hook adds getKey() function. Useful for call outside of functional component.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "exposeFetcher": {
           "description": "For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.\nIt is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.\nDefault value: \"false\"",
           "type": "boolean"
@@ -478,6 +482,10 @@
         },
         "maybeValue": {
           "description": "Allow to override the type value of `Maybe`.\nDefault value: \"T | null\"",
+          "type": "string"
+        },
+        "inputMaybeValue": {
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
           "type": "string"
         },
         "noExport": {
@@ -990,12 +998,16 @@
           "description": "Include directives to Schema output.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "includeIntrospectionTypes": {
+          "description": "Include introspection types to Schema output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "commentDescriptions": {
           "description": "Set to true in order to print description as comments (using # instead of \"\"\")\nDefault value: \"false\"",
           "type": "boolean"
         },
         "sort": {
-          "description": "Set to true in order get the schema lexicographically sorted before printed.\nDefault value: \"false\"",
+          "description": "Set to false to disable sorting\nDefault value: \"true\"",
           "type": "boolean"
         },
         "federation": {
@@ -1059,6 +1071,10 @@
         },
         "maybeValue": {
           "description": "Allow to override the type value of `Maybe`.\nDefault value: \"T | null\"",
+          "type": "string"
+        },
+        "inputMaybeValue": {
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
           "type": "string"
         },
         "noExport": {
@@ -2735,6 +2751,24 @@
         }
       }
     },
+    "MSWConfig": {
+      "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.",
+      "type": "object",
+      "properties": {
+        "link": {
+          "description": "GraphQL endpoint to use when working with multiple backends.\nDefault value: \"undefined\"",
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "JavaApolloAndroidPluginConfig": {
       "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.",
       "type": "object",
@@ -3450,6 +3484,10 @@
         "encapsulateModuleTypes": {
           "type": "string",
           "description": "Configure how to encapsulate the module types, to avoid confusion.\n\n`namespace` (default): will wrap all types in a TypeScript namespace, using the module name.\n`prefix`: will prefix all types from a specific module with the module name.\n`none`: will skip encapsulation, and generate type as-is.\nDefault value: \"namespace\""
+        },
+        "useGraphQLModules": {
+          "type": "boolean",
+          "description": "By default, the generated types will be generate some code specific to `graphql-modules` library.\n\nIf you are not using GraphQL-Modules, you can disable this feature by setting this to `false`.\nDefault value: \"true\""
         }
       }
     },
@@ -3497,7 +3535,12 @@
     },
     "GqlTagConfig": {
       "type": "object",
-      "properties": {}
+      "properties": {
+        "augmentedModuleName": {
+          "description": "Instead of generating a `gql` function, this preset can also generate a d.ts that will enhance the `gql` function of your framework.\n\nE.g. `graphql-tag` or `@urql/core`.",
+          "type": "string"
+        }
+      }
     },
     "Types.InstanceOrArray": {
       "anyOf": [
@@ -4251,6 +4294,25 @@
               "plugins": {
                 "contains": {
                   "type": "string",
+                  "const": "typescript-msw"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "#/definitions/MSWConfig"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "plugins": {
+                "contains": {
+                  "type": "string",
                   "const": "java-apollo-android"
                 }
               }
@@ -4900,6 +4962,14 @@
               "additionalProperties": false,
               "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig"
             },
+            "typescript-msw": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/MSWConfig"
+            },
+            "@graphql-codegen/typescript-msw": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/MSWConfig"
+            },
             "java-apollo-android": {
               "additionalProperties": false,
               "$ref": "#/definitions/JavaApolloAndroidPluginConfig"
@@ -5184,6 +5254,14 @@
             {
               "const": "@graphql-codegen/typescript-document-nodes",
               "description": "This plugin generates TypeScript source (`.ts`) file from GraphQL files (`.graphql`).\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-msw",
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-msw",
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "java-apollo-android",

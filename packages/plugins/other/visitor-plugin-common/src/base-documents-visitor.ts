@@ -24,6 +24,7 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
     case 'subscription':
       return schema.getSubscriptionType();
   }
+  throw new Error(`Unknown operation type: ${operation}`);
 }
 
 export interface ParsedDocumentsConfig extends ParsedTypesConfig {

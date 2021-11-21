@@ -1,5 +1,23 @@
 # @graphql-codegen/cli
 
+## 2.3.0
+
+### Minor Changes
+
+- 50c1d3247: feat(cli): export loadCodegenConfig to load codegen configuration files
+
+### Patch Changes
+
+- 04e2d833b: export generateSearchPlaces
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/core@2.3.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 2.2.1
 
 ### Patch Changes

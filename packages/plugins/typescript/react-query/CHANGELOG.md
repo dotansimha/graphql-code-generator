@@ -1,5 +1,37 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 3.2.0
+
+### Minor Changes
+
+- f7a320a2d: Updates react-query to include the useInfiniteQuery as a config option
+
+## 3.1.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
+## 3.1.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 3.0.3
 
 ### Patch Changes

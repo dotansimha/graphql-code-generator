@@ -1,5 +1,31 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.2
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 3.2.1
+
+### Patch Changes
+
+- e2841eb94: require non-null non-default variables in react-apollo refetchFn
+
+## 3.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 3.1.6
 
 ### Patch Changes

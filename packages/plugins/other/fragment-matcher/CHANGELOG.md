@@ -1,5 +1,16 @@
 # @graphql-codegen/fragment-matcher
 
+## 3.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 3.1.0
 
 ### Minor Changes

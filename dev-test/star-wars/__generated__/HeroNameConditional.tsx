@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   includeName: Types.Scalars['Boolean'];
 }>;
 
@@ -14,7 +14,7 @@ export type HeroNameConditionalInclusionQuery = {
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   skipName: Types.Scalars['Boolean'];
 }>;
 

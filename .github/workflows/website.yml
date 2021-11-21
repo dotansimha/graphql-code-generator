@@ -16,14 +16,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@master
         with:
-          node-version: '16.8.0'
-      - name: Cache Yarn
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{matrix.node_version}}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-yarn-
+          node-version: 14.18.1
       - name: Install Dependencies
         run: yarn install
       - name: Build Plugins

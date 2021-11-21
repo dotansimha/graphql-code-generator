@@ -1,5 +1,31 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 4.3.0
+
+### Minor Changes
+
+- 3b87f049a: Add the extensionsType config in order to change the default type for extensions when rawRequest is true.
+
+## 4.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 4.1.6
 
 ### Patch Changes

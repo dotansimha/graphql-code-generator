@@ -1,5 +1,17 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.3.1
+
+### Patch Changes
+
+- bcc5636fc: fix wrong dependency version range
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
 ## 2.2.0
 
 ### Minor Changes

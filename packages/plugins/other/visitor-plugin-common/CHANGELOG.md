@@ -1,5 +1,23 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.5.1
+
+### Patch Changes
+
+- a9f1f1594: Use maybeValue as default output for optionals on preResolveTypes: true
+- 9ea6621ec: add missing ListType method parameters
+
+## 2.5.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 2.4.0
 
 ### Minor Changes

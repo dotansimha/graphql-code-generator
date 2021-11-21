@@ -516,6 +516,39 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#6815 - Generate different type for Maybe wrapper based on input variables', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test(id: ID): String
+          testWithInput(filter: Filter): String
+        }
+
+        input Filter {
+          a: String
+          b: Int
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          maybeValue: 'T | null',
+          inputMaybeValue: 'T | null | undefined',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      const output = mergeOutputs([result]);
+      expect(output).toContain(`export type InputMaybe<T> = T | null | undefined;`);
+      expect(output).toContain(`export type Maybe<T> = T | null;`);
+      expect(output).toContain(`test?: Maybe<Scalars['String']>;`);
+      expect(output).toContain(`id?: InputMaybe<Scalars['ID']>;`);
+      expect(output).toContain(`filter?: InputMaybe<Filter>;`);
+      expect(output).toContain(`a?: InputMaybe<Scalars['String']>;`);
+      expect(output).toContain(`b?: InputMaybe<Scalars['Int']>;`);
+    });
+
     it('#5643 - Incorrect combinations of declartionKinds leads to syntax error', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Base {
@@ -743,8 +776,8 @@ describe('TypeScript', () => {
       };`);
       expect(output).toBeSimilarStringTo(`
       export type IQueryExampleQueryArgs = {
-        i?: Maybe<IUpdateFilterOptionInput>;
-        t?: Maybe<FilterOption>;
+        i?: InputMaybe<IUpdateFilterOptionInput>;
+        t?: InputMaybe<FilterOption>;
       };`);
     });
 
@@ -828,7 +861,7 @@ describe('TypeScript', () => {
      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
-      a?: Maybe<MyEnum>;
+      a?: InputMaybe<MyEnum>;
     };`);
     });
 
@@ -1050,7 +1083,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          foo: Maybe<Scalars['String']>;
+          foo: InputMaybe<Scalars['String']>;
           bar: Scalars['String'];
         }
       `);
@@ -1275,8 +1308,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -1350,8 +1383,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypefooArgs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
       `);
@@ -1446,7 +1479,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export class MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1487,7 +1520,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1527,7 +1560,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export interface MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1601,7 +1634,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export interface MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -2501,8 +2534,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -2528,8 +2561,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type Imytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
       `);
@@ -2809,8 +2842,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -2826,9 +2859,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2849,9 +2882,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c: Maybe<Scalars['String']>;
+          c: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
       };
     `);
@@ -2867,10 +2900,10 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<MyInput>;
+          a?: InputMaybe<MyInput>;
           b: MyInput;
-          c?: Maybe<Array<Maybe<MyInput>>>;
-          d: Array<Maybe<MyInput>>;
+          c?: InputMaybe<Array<InputMaybe<MyInput>>>;
+          d: Array<InputMaybe<MyInput>>;
           e: Array<MyInput>;
         };
     `);
@@ -2884,7 +2917,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type TInput = {
-          name?: Maybe<Scalars['String']>;
+          name?: InputMaybe<Scalars['String']>;
         };
       `);
 
@@ -2895,8 +2928,8 @@ describe('TypeScript', () => {
         };
 
         export type TMutationFooArgs = {
-          id?: Maybe<Scalars['ID']>;
-          input?: Maybe<TInput>;
+          id?: InputMaybe<Scalars['ID']>;
+          input?: InputMaybe<TInput>;
         };
       `);
 
@@ -2923,7 +2956,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type NodeTextArgs = {
           arg1: Scalars['String'];
-          arg2?: Maybe<Scalars['String']>;
+          arg2?: InputMaybe<Scalars['String']>;
         };
       `);
       await validateTs(result);
@@ -2937,9 +2970,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2955,9 +2988,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2978,9 +3011,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -3318,14 +3351,14 @@ describe('TypeScript', () => {
     // Filter.contain should be optional
     expect(output.content).toBeSimilarStringTo(`
       export type Filter = {
-        contain?: Maybe<Scalars['String']>;
+        contain?: InputMaybe<Scalars['String']>;
       };
     `);
     // filter should be non-optional
     expect(output.content).toBeSimilarStringTo(`
       export type QueryListArgs = {
-        after?: Maybe<Scalars['String']>;
-        orderBy?: Maybe<OrderBy>;
+        after?: InputMaybe<Scalars['String']>;
+        orderBy?: InputMaybe<OrderBy>;
         filter: Filter;
       };
     `);

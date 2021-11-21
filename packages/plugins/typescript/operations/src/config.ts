@@ -135,4 +135,31 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   addOperationExport?: boolean;
+  /**
+   * @description Allow to override the type value of `Maybe`.
+   * @default T | null
+   *
+   * @exampleMarkdown
+   * ## Allow undefined
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *    config:
+   *      maybeValue: T | null | undefined
+   * ```
+   *
+   * ## Allow `null` in resolvers:
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *      - typescript-resolvers
+   *    config:
+   *      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
+   * ```
+   */
+  maybeValue?: string;
 }

@@ -50,6 +50,7 @@ module.exports = {
           'plugins/named-operations-object',
           'plugins/typescript-type-graphql',
           'plugins/typescript-apollo-next',
+          'plugins/typescript-msw',
         ],
       },
       {

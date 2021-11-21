@@ -59,7 +59,18 @@ export interface ReactQueryRawPluginConfig
 
   /**
    * @default false
-   * @description For each generate query hook addds `fetcher` field with a corresponding GraphQL query using the fetcher.
+   * @description For each generate mutation hook adds getKey() function. Useful for call outside of functional component.
+   * @exampleMarkdown
+   * ```ts
+   *  const mutation = useUserDetailsMutation(...);
+   *  const key = useUserDetailsMutation.getKey();
+   * ```
+   */
+  exposeMutationKeys?: boolean;
+
+  /**
+   * @default false
+   * @description For each generate query hook adds `fetcher` field with a corresponding GraphQL query using the fetcher.
    * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.
    * @exampleMarkdown
    * ```ts
@@ -73,4 +84,10 @@ export interface ReactQueryRawPluginConfig
    * @description Changes the default "TError" generic type.
    */
   errorType?: string;
+
+  /**
+   * @default false
+   * @description Adds an Infinite Query along side the standard one
+   */
+  addInfiniteQuery?: boolean;
 }

@@ -28,8 +28,6 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 `);
 ```
 
-{@import ../generated-config/gql-tag-operations-preset.md}
-
 ## Getting Started
 
 In order to use this preset, you need to add the following configuration to your `codegen.yml`:
@@ -146,6 +144,8 @@ const Tweets = () => {
 };
 ```
 
+You can find a [full `gql-tag-operations` example of this in the GraphQL Code Generator GitHub repository](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/gql-tag-operations).
+
 ## Improving bundle-size with the gql-tag-operations babel plugin
 
 Because the generated code output is a single `gql` function that looks similar to the following code, code-splitting and tree-shaking is not easily possible.
@@ -219,7 +219,7 @@ export default {
 
 Afterwards, you won't have to worry about bundle size anymore!
 
-## Using module augmentation for using an existing `gql` function from a library
+## Using module augmentation for an existing `gql` function from a library
 
 Sometimes the library you are using, let's use `urql` for this example, already exposes a `gql` function and instead of generating a new one you would prefer to just generate types that extend the type-definitions of that `gql` function.
 
@@ -268,7 +268,7 @@ const FooQuery = gql(/* GraphQL */ `
 `);
 ```
 
-**NOTE**: In case you are using fragments you MUST use the gql-tag-operations plugin as otherwise the `gql` calls that reference global fragments will cause runtime errors, as the `gql` operation cannot find the global fragment.
+**NOTE**: In case you are using fragments you **MUST** use the gql-tag-operations babel plugin as otherwise the `gql` calls that reference global fragments will cause runtime errors, as the `gql` operation cannot find the global fragment. Unfortunately, it is also **NOT** possible to embed fragments with template string interpolation, as it breaks TypeScript type-inference.
 
 ```ts
 import { gql } from 'urql';
@@ -282,3 +282,7 @@ const FooQuery = gql(/* GraphQL */ `
   }
 `);
 ```
+
+You can find a [full `gql-tag-operations-urql` example of this in the GraphQL Code Generator GitHub repository](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/gql-tag-operations-urql).
+
+{@import ../generated-config/gql-tag-operations-preset.md}

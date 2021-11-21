@@ -191,8 +191,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
       },
     },
-    enter: {
-      VariableDefinition: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
+    VariableDefinition: {
+      enter: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(
           (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
         );
@@ -202,7 +202,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
         foundFields++;
       },
-      InputValueDefinition: (node: InputValueDefinitionNode, key, parent, path, anscestors) => {
+    },
+    InputValueDefinition: {
+      enter: (node: InputValueDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(
           (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
         );

@@ -109,7 +109,7 @@ export const plugin: PluginFunction = async (
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
   const useExplicitTyping = config.useExplicitTyping;
 
-  const introspection = await execute({
+  const introspection = (await execute({
     schema: cleanSchema,
     document: parse(`
       {
@@ -124,7 +124,7 @@ export const plugin: PluginFunction = async (
         }
       }
     `),
-  });
+  })) as any;
   const ext = extname(info.outputFile).toLowerCase();
 
   if (!introspection.data) {
@@ -136,7 +136,7 @@ export const plugin: PluginFunction = async (
     return { ...acc, ...{ [type.name]: type.possibleTypes.map(possibleType => possibleType.name) } };
   };
 
-  const filteredData: PossibleTypesResultData | IntrospectionResultData =
+  const filteredData: IntrospectionResultData | PossibleTypesResultData =
     apolloClientVersion === 2
       ? {
           __schema: {
