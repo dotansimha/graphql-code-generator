@@ -86,70 +86,69 @@ private static ConcurrentDictionary<string, Func<JToken, object>> ToObjectForTyp
 /// <returns>JToken::ToObject[__typeName]</returns>
 public static Func<JToken, object> GetToObjectMethodForTargetType(string typeName)
 {
-    if (!ToObjectForTypenameCache.ContainsKey(typeName))
-    {
-        // Get the type corresponding to the typename
-        Type targetType = typeof(YammerGQLTypes).Assembly
-            .GetTypes()
-            .ToList()
-            .Where(t => t.Name == typeName)
-            .FirstOrDefault();
+  if (!ToObjectForTypenameCache.ContainsKey(typeName))
+  {
+    // Get the type corresponding to the typename
+    Type targetType = typeof(YammerGQLTypes).Assembly
+      .GetTypes()
+      .ToList()
+      .Where(t => t.Name == typeName)
+      .FirstOrDefault();
 
-        // Create a parametrised ToObject method using targetType as <TypeArgument>
-        var method = typeof(JToken).GetMethods()
-            .Where(m => m.Name == "ToObject" && m.IsGenericMethod && m.GetParameters().Length == 0).FirstOrDefault();
-        var genericMethod = method.MakeGenericMethod(targetType);
-        var toObject = (Func<JToken, object>)genericMethod.CreateDelegate(Expression.GetFuncType(typeof(JToken), typeof(object)));
-        ToObjectForTypenameCache[typeName] = toObject;
-    }
+    // Create a parametrised ToObject method using targetType as <TypeArgument>
+    var method = typeof(JToken).GetMethods()
+        .Where(m => m.Name == "ToObject" && m.IsGenericMethod && m.GetParameters().Length == 0).FirstOrDefault();
+    var genericMethod = method.MakeGenericMethod(targetType);
+    var toObject = (Func<JToken, object>)genericMethod.CreateDelegate(Expression.GetFuncType(typeof(JToken), typeof(object)));
+    ToObjectForTypenameCache[typeName] = toObject;
+  }
 
-    return ToObjectForTypenameCache[typeName];
+  return ToObjectForTypenameCache[typeName];
 }
-
 
 /// <summary>
 /// Converts an instance of a composition type to the appropriate implementation of the interface
 /// </summary>
 public class CompositionTypeConverter : JsonConverter
 {
-    /// <inheritdoc />
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+  /// <inheritdoc />
+  public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+  {
+    if (reader.TokenType == JsonToken.Null)
     {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
-        }
-
-        var loadedObject = JObject.Load(reader);
-
-        var typeNameObject = loadedObject["__typename"];
-
-        if (typeNameObject == null)
-        {
-            throw new JsonWriterException($"CompositionTypeConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
-        }
-
-        var typeName = loadedObject["__typename"].Value<string>();
-
-        var toObject = GetToObjectMethodForTargetType(typeName);
-
-        // Invoke and parse it
-        object objectParsed = toObject(loadedObject);
-
-        return objectParsed;
+      return null;
     }
 
-    /// <inheritdoc />
-    public override bool CanConvert(Type objectType)
+    var loadedObject = JObject.Load(reader);
+
+    var typeNameObject = loadedObject["__typename"];
+
+    if (typeNameObject == null)
     {
-        throw new NotImplementedException();
+      throw new JsonWriterException($"CompositionTypeConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
     }
 
-    /// <inheritdoc />
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-    {
-        throw new NotImplementedException("Tried to write a GQL Composition type to JSON");
-    }
+    var typeName = loadedObject["__typename"].Value<string>();
+
+    var toObject = GetToObjectMethodForTargetType(typeName);
+
+    // Invoke and parse it
+    object objectParsed = toObject(loadedObject);
+
+    return objectParsed;
+  }
+
+  /// <inheritdoc />
+  public override bool CanConvert(Type objectType)
+  {
+    throw new NotImplementedException();
+  }
+
+  /// <inheritdoc />
+  public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+  {
+    throw new NotImplementedException("Tried to write a GQL Composition type to JSON");
+  }
 }
 
 /// <summary>
@@ -157,50 +156,50 @@ public class CompositionTypeConverter : JsonConverter
 /// </summary>
 public class CompositionTypeListConverter : JsonConverter
 {
-    /// <inheritdoc />
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+  /// <inheritdoc />
+  public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+  {
+    if (reader.TokenType == JsonToken.Null)
     {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
-        }
-
-        var items = JArray.Load(reader).Children();
-        IList list = Activator.CreateInstance(objectType) as IList;
-
-        foreach (var item in items)
-        {
-            var typeNameObject = item["__typename"];
-
-            if (typeNameObject == null)
-            {
-                throw new JsonWriterException($"CompositionTypeListConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
-            }
-
-            var typeName = item["__typename"].Value<string>();
-
-            var toObject = GetToObjectMethodForTargetType(typeName);
-
-            // Invoke and parse it
-            object objectParsed = toObject(item);
-
-            list.Add(objectParsed);
-        }
-
-        return list;
+      return null;
     }
 
-    /// <inheritdoc />
-    public override bool CanConvert(Type objectType)
+    var items = JArray.Load(reader).Children();
+    IList list = Activator.CreateInstance(objectType) as IList;
+
+    foreach (var item in items)
     {
-        throw new NotImplementedException();
+      var typeNameObject = item["__typename"];
+
+      if (typeNameObject == null)
+      {
+        throw new JsonWriterException($"CompositionTypeListConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
+      }
+
+      var typeName = item["__typename"].Value<string>();
+
+      var toObject = GetToObjectMethodForTargetType(typeName);
+
+      // Invoke and parse it
+      object objectParsed = toObject(item);
+
+      list.Add(objectParsed);
     }
 
-    /// <inheritdoc />
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-    {
-        throw new NotImplementedException("Tried to write a GQL Composition type list to JSON");
-    }
+    return list;
+  }
+
+  /// <inheritdoc />
+  public override bool CanConvert(Type objectType)
+  {
+    throw new NotImplementedException();
+  }
+
+  /// <inheritdoc />
+  public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+  {
+    throw new NotImplementedException("Tried to write a GQL Composition type list to JSON");
+  }
 }
   `;
 
@@ -339,17 +338,16 @@ public class CompositionTypeListConverter : JsonConverter
     }
 
     if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
-      // [Required] Should be always inserted for required fields to use in `GetInputObject()` when JSON attributes are not used
-      // or there are no JSON attributes in selected attribute source that provides `JsonRequired` alternative
+      // [System.ComponentModel.DataAnnotations.Required] Should be always inserted for required fields to use in `GetInputObject()`,
+      // even when JSON attributes are not used or there are no JSON attributes
+      // in selected attribute source that provides `JsonRequired` alternative
+      attributes.push('[System.ComponentModel.DataAnnotations.Required]');
+
       if (this._parsedConfig.emitJsonAttributes) {
         const jsonRequiredAttribute = this.jsonAttributesConfiguration.requiredAttribute;
         if (jsonRequiredAttribute != null) {
           attributes.push(`[${jsonRequiredAttribute}]`);
-        } else {
-          attributes.push('[Required]');
         }
-      } else {
-        attributes.push('[Required]');
       }
     }
 
