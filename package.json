@@ -50,7 +50,7 @@
     "@types/jest": "27.0.3",
     "@types/mkdirp": "1.0.2",
     "@types/node": "16.11.9",
-    "@types/react": "17.0.34",
+    "@types/react": "17.0.36",
     "@types/webpack-env": "1.16.3",
     "@typescript-eslint/eslint-plugin": "5.3.1",
     "@typescript-eslint/parser": "5.3.1",
