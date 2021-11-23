@@ -244,9 +244,9 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
     const originalErrors = result.errors.map(error => error.originalError|| error);
     throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
@@ -272,20 +272,44 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-      const result = await feedCompiled.query(root, context, variables);
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
+      const result = await feedCompiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
-      const result = await feed2Compiled.query(root, context, variables);
+    async feed2(variables: Feed2QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed2Query> {
+      const result = await feed2Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed2');
     },
-    async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
-      const result = await feed3Compiled.query(root, context, variables);
+    async feed3(variables?: Feed3QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed3Query> {
+      const result = await feed3Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed3');
     },
-    async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
-      const result = await feed4Compiled.query(root, context, variables);
+    async feed4(variables?: Feed4QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed4Query> {
+      const result = await feed4Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed4');
     }
   };
@@ -710,9 +734,9 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
     const originalErrors = result.errors.map(error => error.originalError|| error);
     throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
@@ -726,12 +750,24 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-      const result = await feedCompiled.query(root, context, variables);
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
+      const result = await feedCompiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async commentAdded(variables?: CommentAddedSubscriptionVariables, context = globalContext, root = globalRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
-      const result = await commentAddedCompiled.subscribe!(root, context, variables);
+    async commentAdded(variables?: CommentAddedSubscriptionVariables, context?: TOperationContext, root?: TOperationRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
+      const result = await commentAddedCompiled.subscribe!({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleSubscriptionResult(result, 'commentAdded');
     }
   };
@@ -983,9 +1019,9 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
     const originalErrors = result.errors.map(error => error.originalError|| error);
     throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
     const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed');
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
@@ -1011,20 +1047,44 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-      const result = await feedCompiled.query(root, context, variables);
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
+      const result = await feedCompiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async feed2(variables: Feed2QueryVariables, context = globalContext, root = globalRoot): Promise<Feed2Query> {
-      const result = await feed2Compiled.query(root, context, variables);
+    async feed2(variables: Feed2QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed2Query> {
+      const result = await feed2Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed2');
     },
-    async feed3(variables?: Feed3QueryVariables, context = globalContext, root = globalRoot): Promise<Feed3Query> {
-      const result = await feed3Compiled.query(root, context, variables);
+    async feed3(variables?: Feed3QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed3Query> {
+      const result = await feed3Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed3');
     },
-    async feed4(variables?: Feed4QueryVariables, context = globalContext, root = globalRoot): Promise<Feed4Query> {
-      const result = await feed4Compiled.query(root, context, variables);
+    async feed4(variables?: Feed4QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed4Query> {
+      const result = await feed4Compiled.query({
+        ...globalRoot,
+        ...root
+      }, {
+        ...globalContext,
+        ...context
+      }, variables);
       return handleExecutionResult(result, 'feed4');
     }
   };
