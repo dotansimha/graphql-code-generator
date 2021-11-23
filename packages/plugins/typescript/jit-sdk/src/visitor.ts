@@ -100,8 +100,14 @@ if(!(isCompiledQuery(${compiledQueryVariableName}))) {
         indentMultiline(
           `async ${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, context = globalContext, root = globalRoot): Promise<${returnType}> {
-  const result = await ${compiledQueryVariableName}.${methodName}(root, context, variables);
+          }, context?: TOperationContext, root?: TOperationRoot): Promise<${returnType}> {
+  const result = await ${compiledQueryVariableName}.${methodName}({
+    ...globalRoot,
+    ...root
+  }, {
+    ...globalContext,
+    ...context
+  }, variables);
   return ${handlerName}(result, '${operationName}');
 }`,
           2
@@ -125,9 +131,9 @@ if(!(isCompiledQuery(${compiledQueryVariableName}))) {
     const originalErrors = result.errors.map(error => error.originalError|| error);
     throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
 ${compiledQueries.join('\n\n')}
 
   return {
