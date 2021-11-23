@@ -39,7 +39,7 @@
     ]
   },
   "devDependencies": {
-    "@apollo/client": "3.5.4",
+    "@apollo/client": "3.5.5",
     "@babel/core": "7.16.0",
     "@babel/preset-env": "7.16.4",
     "@babel/preset-typescript": "7.16.0",
