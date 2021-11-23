@@ -272,7 +272,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context: TOperationContext, root: TOperationRoot): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
       const result = await feedCompiled.query({
         ...globalRoot,
         ...root
@@ -282,7 +282,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async feed2(variables: Feed2QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed2Query> {
+    async feed2(variables: Feed2QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed2Query> {
       const result = await feed2Compiled.query({
         ...globalRoot,
         ...root
@@ -292,7 +292,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed2');
     },
-    async feed3(variables?: Feed3QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed3Query> {
+    async feed3(variables?: Feed3QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed3Query> {
       const result = await feed3Compiled.query({
         ...globalRoot,
         ...root
@@ -302,7 +302,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed3');
     },
-    async feed4(variables?: Feed4QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed4Query> {
+    async feed4(variables?: Feed4QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed4Query> {
       const result = await feed4Compiled.query({
         ...globalRoot,
         ...root
@@ -750,7 +750,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context: TOperationContext, root: TOperationRoot): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
       const result = await feedCompiled.query({
         ...globalRoot,
         ...root
@@ -760,7 +760,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async commentAdded(variables?: CommentAddedSubscriptionVariables, context: TOperationContext, root: TOperationRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
+    async commentAdded(variables?: CommentAddedSubscriptionVariables, context?: TOperationContext, root?: TOperationRoot): Promise<AsyncIterableIterator<CommentAddedSubscription> | CommentAddedSubscription> {
       const result = await commentAddedCompiled.subscribe!({
         ...globalRoot,
         ...root
@@ -1047,7 +1047,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     }
 
   return {
-    async feed(variables?: FeedQueryVariables, context: TOperationContext, root: TOperationRoot): Promise<FeedQuery> {
+    async feed(variables?: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
       const result = await feedCompiled.query({
         ...globalRoot,
         ...root
@@ -1057,7 +1057,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed');
     },
-    async feed2(variables: Feed2QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed2Query> {
+    async feed2(variables: Feed2QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed2Query> {
       const result = await feed2Compiled.query({
         ...globalRoot,
         ...root
@@ -1067,7 +1067,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed2');
     },
-    async feed3(variables?: Feed3QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed3Query> {
+    async feed3(variables?: Feed3QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed3Query> {
       const result = await feed3Compiled.query({
         ...globalRoot,
         ...root
@@ -1077,7 +1077,7 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
       }, variables);
       return handleExecutionResult(result, 'feed3');
     },
-    async feed4(variables?: Feed4QueryVariables, context: TOperationContext, root: TOperationRoot): Promise<Feed4Query> {
+    async feed4(variables?: Feed4QueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<Feed4Query> {
       const result = await feed4Compiled.query({
         ...globalRoot,
         ...root
