@@ -7801,10 +7801,10 @@ graphql-helix@1.9.1:
   resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.9.1.tgz#7bbb0c78642604ef531649f14800154b83b1fb45"
   integrity sha512-Of4iMFy+lesAF52RsgTlSUtgAlogWNQt8xp817fcgdJtGNO1bo4RPR4yXD5vZYHbw01Vm2fmaPOCUps5BJJSXw==
 
-graphql-jit@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.0.tgz#c406b65b193218db512e4fdc5a9605a53ca3b436"
-  integrity sha512-NN0e8tl6S46zcDGbTp5B9pWSARDx8cmrGds5V0t5X8RqsLqckJG1cr4HvpVBsSjbuphj2PXBlnk49L3ddFGJhw==
+graphql-jit@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.1.tgz#d27052da0c8f39937e114de9fb4163fec3a661fc"
+  integrity sha512-j2hYKtT+qpNAgnLP7xwRIpAQd8FnHgSobS+n8eUy28t15JjUO2qecfsvovI/WdDEt1rGmhROg1e1j3BAsmwtiQ==
   dependencies:
     "@graphql-typed-document-node/core" "3.1.0"
     fast-json-stringify "^1.13.0"
