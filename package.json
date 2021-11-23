@@ -47,7 +47,7 @@
     "@graphql-typed-document-node/core": "3.1.0",
     "@reduxjs/toolkit": "1.6.2",
     "@types/common-tags": "1.8.1",
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.0.3",
     "@types/mkdirp": "1.0.2",
     "@types/node": "16.11.7",
     "@types/react": "17.0.34",
