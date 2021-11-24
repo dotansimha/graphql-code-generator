@@ -7639,10 +7639,10 @@ i18next-fs-backend@^1.0.7:
   resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-1.1.1.tgz#1d8028926803f63784ffa0f2b1478fb369f92735"
   integrity sha512-RFkfy10hNxJqc7MVAp5iAZq0Tum6msBCNebEe3OelOBvrROvzHUPaR8Qe10RQrOGokTm0W4vJGEJzruFkEt+hQ==
 
-i18next@^20.1.0:
-  version "20.6.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-20.6.1.tgz#535e5f6e5baeb685c7d25df70db63bf3cc0aa345"
-  integrity sha512-yCMYTMEJ9ihCwEQQ3phLo7I/Pwycf8uAx+sRHwwk5U9Aui/IZYgQRyMqXafQOw5QQ7DM1Z+WyEXWIqSuJHhG2A==
+i18next@^21.5.3:
+  version "21.5.3"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.5.3.tgz#b2d4fd24bef7ea4ec4eba2ed3cadc0c28c0e3b4c"
+  integrity sha512-9R8127a0/N5okiD7eeo6XBPQsHgHsLr1GdQEa35Pcw305ArC9KZDLs9kbgdn3xuVUNYlVu8+gWzz73eVkna0gA==
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -9897,16 +9897,16 @@ negotiator@0.6.2:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
 
-next-i18next@8.10.0:
-  version "8.10.0"
-  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-8.10.0.tgz#94440d796d7c3d16a74218ac72df296daf13aaa3"
-  integrity sha512-nY3tw+uU6lzZq7YfqRr0lFBiz15txIeYBX5R6rVeAK8wWFsCRJpZ6lTm02DMC+MfD1G6LmtpR6bmOOaBD3TR9A==
+next-i18next@9.2.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-9.2.0.tgz#00d9c1f817648b492e017e0b956cd2b818f0c0d2"
+  integrity sha512-cWhrgxYz9IZZQ81Vc4NgogaKSANN827qHRkyVuoscOerJBHNMr7t3vO1szj/M1qnyE7yIV0NHczCS4VyqWbQAg==
   dependencies:
     "@babel/runtime" "^7.13.17"
     "@types/hoist-non-react-statics" "^3.3.1"
     core-js "^3"
     hoist-non-react-statics "^3.2.0"
-    i18next "^20.1.0"
+    i18next "^21.5.3"
     i18next-fs-backend "^1.0.7"
     react-i18next "^11.8.13"
 
