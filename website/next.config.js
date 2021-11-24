@@ -25,4 +25,18 @@ module.exports = withGuildDocs({
     return config;
   },
   swcMinify: false,
+  async redirects() {
+    return [
+      {
+        source: '/docs/presets/:presetName',
+        destination: '/plugins/:presetName-preset',
+        permanent: true,
+      },
+      {
+        source: '/docs/plugins/:pluginName',
+        destination: '/plugins/:pluginName',
+        permanent: true,
+      }
+    ];
+  },
 });
