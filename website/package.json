@@ -22,7 +22,7 @@
     "concurrently": "6.4.0",
     "esbuild-register": "3.1.2",
     "eslint-config-next": "12.0.4",
-    "jsonpath": "^1.1.1",
+    "jsonpath": "1.1.1",
     "typescript": "4.4.4",
     "wait-on": "6.0.0"
   },
