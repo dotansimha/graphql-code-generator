@@ -3,7 +3,7 @@ export type ModulesConfig = {
    * @name baseTypesPath
    * @type string
    * @description Required, should point to the base schema types file.
-   * The key of the output is used a the base path for this file.
+   * The key of the output is used a base path for this file.
    *
    * @example
    * ```yml
@@ -20,7 +20,7 @@ export type ModulesConfig = {
   /**
    * @name importBaseTypesFrom
    * @type string
-   * @description Overrides the package import for the base types. Use this if you are within a monorepo and you wish
+   * @description Overrides the package import for the base types. Use this if you are within a monorepo, and you wish
    * to import the base types directly from a different package, and not from a relative path.
    *
    */
@@ -86,7 +86,7 @@ export type ModulesConfig = {
    * @name useGraphQLModules
    * @type boolean
    * @default true
-   * @description By default, the generated types will be generate some code specific to `graphql-modules` library.
+   * @description By default, the generated types will generate some code specific to `graphql-modules` library.
    *
    * If you are not using GraphQL-Modules, you can disable this feature by setting this to `false`.
    */

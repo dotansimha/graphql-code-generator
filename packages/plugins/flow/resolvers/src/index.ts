@@ -14,7 +14,7 @@ import { FlowResolversVisitor } from './visitor';
  *
  * It generates types for your entire schema: types, input types, enum, interface, scalar and union.
  *
- * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
+ * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.
  */
 export interface RawFlowResolversConfig extends RawResolversConfig {}
 

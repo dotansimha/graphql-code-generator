@@ -56,7 +56,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
   preResolveTypes?: boolean;
   /**
    * @default false
-   * @description Avoid adding `__typename` for root types. This is ignored when a selection explictly specifies `__typename`.
+   * @description Avoid adding `__typename` for root types. This is ignored when a selection explicitly specifies `__typename`.
    *
    * @exampleMarkdown
    * ```yml
