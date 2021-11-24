@@ -60,33 +60,6 @@ const Marketplace: FC<MarketplaceProps> = ({ data }) => {
             onClick: ev => handlePushRoute(linkHref, ev),
           },
           description: <Markdown content={rawPlugin.description} />,
-          modal: {
-            header: {
-              image: rawPlugin.iconUrl
-                ? {
-                    src: rawPlugin.iconUrl,
-                    alt: rawPlugin.title,
-                  }
-                : undefined,
-              description: {
-                href: `https://npmjs.com/package/${rawPlugin.npmPackage}`,
-                children: `${rawPlugin.npmPackage} on npm`,
-                title: `${rawPlugin.npmPackage} on NPM`,
-                target: '_blank',
-                rel: 'noopener noreferrer',
-              },
-            },
-            content: (
-              <>
-                <PackageInstall packages={rawPlugin.npmPackage} />
-                <RemoteGHMarkdown
-                  directory={rawPlugin.stats?.repositoryDirectory}
-                  repo={rawPlugin.stats?.repositoryLink}
-                  content={rawPlugin.content}
-                />
-              </>
-            ),
-          },
           update: rawPlugin.stats?.modifiedDate || new Date().toISOString(),
           image: rawPlugin.iconUrl
             ? {
@@ -109,7 +82,7 @@ const Marketplace: FC<MarketplaceProps> = ({ data }) => {
   const trendingItems = useMemo(
     () =>
       marketplaceItems
-        .filter(i => i.raw.stats?.weeklyNPMDownloads && i.raw.npmPackage !== '@envelop/core')
+        .filter(i => i.raw.stats?.weeklyNPMDownloads)
         .sort((a, b) => {
           const aMonthlyDownloads = a.raw.stats?.weeklyNPMDownloads || 0;
           const bMonthlyDownloads = b.raw.stats?.weeklyNPMDownloads || 0;
@@ -119,37 +92,11 @@ const Marketplace: FC<MarketplaceProps> = ({ data }) => {
     [marketplaceItems]
   );
 
-  // const randomThirdParty = useMemo(() => {
-  //   if (marketplaceItems && marketplaceItems.length > 0) {
-  //     return [...marketplaceItems]
-  //       .filter(item => item.raw.npmPackage !== '@envelop/core')
-  //       .sort(() => 0.5 - Math.random())
-  //       .slice(0, 3);
-  //   }
-
-  //   return [];
-  // }, [marketplaceItems]);
-
   return (
     <>
       <Head>
         <title>Plugin Hub</title>
       </Head>
-
-      {/* <CardsColorful
-            cards={randomThirdParty.map(item => ({
-              title: item.title,
-              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              category: 'Discover new Envelop plugins!',
-              link: {
-                href: `https://www.npmjs.com/package/${item.raw.npmPackage}`,
-                target: '_blank',
-                rel: 'noopener norefereer',
-                title: 'Learn more',
-              },
-              color: '#3547E5',
-            }))}
-          /> */}
       <MarketplaceSearch
         title="Explore Plugin Hub"
         tagsFilter={ALL_TAGS as any as string[]}
@@ -161,19 +108,19 @@ const Marketplace: FC<MarketplaceProps> = ({ data }) => {
           title: 'Trending',
           items: trendingItems,
           placeholder: '0 items',
-          pagination: 8,
+          pagination: 10,
         }}
         secondaryList={{
           title: 'Recently Updated',
           items: recentlyUpdatedItems,
           placeholder: '0 items',
-          pagination: 8,
+          pagination: 10,
         }}
         queryList={{
           title: 'Search Results',
           items: marketplaceItems,
           placeholder: 'No results for {query}',
-          pagination: 8,
+          pagination: 10,
         }}
       />
     </>

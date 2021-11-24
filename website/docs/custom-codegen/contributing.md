@@ -138,7 +138,7 @@ export const plugin: PluginFunction<Partial<MyPluginConfig>, MyPluginConfig> = (
 
 > `config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
 
-You can follow the plugin tips in [Write Your Plugin](write-your-plugin.md), [Validate Configuration](validate-configuration.md) and [Using Visitor](using-visitor.md) sections.
+You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Validate Configuration](./validate-configuration) and [Using Visitor](./using-visitor) sections.
 
 ## 7. Test your plugin
 
@@ -185,13 +185,19 @@ In order to add it to the website, do the following:
 1. Add JSDoc annotations to your config object, it can also include default value, examples and type:
 
 ````ts
+// packages/plugins/my-plugin/config.ts
+
+/**
+ * My plugin is super cool!!!
+ */
 export type MyPluginConfig = {
   /**
    * @name name
    * @description This allow you to generate a greeting with custom name
    * @default anonymous
    *
-   * @example Change the name
+   * @exampleMarkdown
+   * ## Change the name
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -205,36 +211,39 @@ export type MyPluginConfig = {
 }
 ````
 
-Now, open `./website/generate-config.js` and add a record to the mapping in that file, point the file with the configuration annotation, and the output file:
+Now, open `website/src/lib/plugins-docs.ts` and add a record to the `pluginsConfigurations` variable in that file, and point the file with the configuration annotation:
 
-```js
-const mapping = {
-  '../packages/plugins/my-plugin/src/index.ts': BASE_DIR + '/my-plugin.md'
-}
+```ts
+export const pluginsConfigurations: PluginConfig[] = [
+  {
+    file: '../packages/plugins/my-plugin/config.ts', // file where the Config interface/type is located
+    identifier: 'MyPluginConfig', // name of the Config interface/type
+    name: 'my-plugin', // name if you plugin package
+  },
+  // ...
+];
 ```
 
-Now, navigate to the `website` directory and run `yarn generate:config-docs` -this will take a minute, and it will generate the `.md` for all plugins. You should find your `my-plugin.md` file under `website/docs/generated-config` directory.
+> Adding your plugin here will automatically include your plugin in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action), and will generate a markdown documentation automatically based on your TypeScript types.
 
-Now, run `yarn start` to run the website. Your markdown file is loaded, but it's not displayed yet, so let's create a new page for it first.
+## 10. Website & Plugins Hub
 
-Create `my-plugin.md` under `website/docs/plugins/` and add the following content to it, and include the generated configuration API reference:
+To add your plugin to the website and [Plugin Hub](/plugins), add your plugin package information in `website/src/lib/plugins.ts`:
 
-```md
----
-id: my-plugin
-title: My Plugin
----
-
-This is my new plugin.
-
-Add here some custom instructions, explanations, installation guide and more.
-
-{@impоrt ../generated-config/my-plugin.md}
+```ts
+const PACKAGES: Package<Tags>[] = [
+  {
+    identifier: 'my-plugin', // package id, will be used for the url slug
+    title: 'my-plugin', // page title
+    npmPackage: '@graphql-codegen/my-plugin', // name of the npm package
+    iconUrl: '/assets/img/icons/codegen.svg', // you can specify a custom icon, or use codegen's
+    tags: ['plugin', 'utilities'], // add tags for the search engine
+  },
 ```
 
-Your plugin page should be available in: `http://localhost:3000/docs/plugins/my-plugin`
+Go ahead to `website` directory and run the website using `yarn dev`.
 
-Now, just add it to the website sidebar by updating `website/sidebar.js` file.
+Your plugin page should be available in: `http://localhost:3000/plugins/my-plugin`
 
 ## 10. Add it to the live demo (optional)
 
@@ -243,6 +252,4 @@ Our website has a live demo in the main page for most plugins, and you can add i
 To add a new example to the live demo, start by making sure that your plugin package is available for the website:
 
 1. Edit `website/package.json` and add your plugin package under `dependencies`.
-2. Edit `website/src/components/live-demo/plugins.ts` and add a mapping for the name of your plugin, and it's package. This is required in order to have lazy loading and dynamic imports in our website.
-
-Now, add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.
+1. Add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.

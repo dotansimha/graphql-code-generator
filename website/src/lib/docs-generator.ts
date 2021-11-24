@@ -31,7 +31,7 @@ function generateContentForSchema(schema: TJS.Definition): string {
       const prop = schema.properties![propName] as TJS.Definition;
 
       return `<details>
-  <summary class="collapse-title">
+  <summary className="collapse-title">
    ${propName}
   </summary>
 

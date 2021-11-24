@@ -35,3 +35,16 @@ article {
 details > *:last-child {
   padding-bottom: 2rem;
 }
+
+.admonition {
+  margin-top: 10px;
+}
+
+.admonition-heading h5 {
+  text-transform: none;
+}
+
+.chakra-link {
+  color: #0070f3;
+  text-decoration: none;
+}

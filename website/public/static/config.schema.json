@@ -45,10 +45,7 @@
         },
         "watch": {
           "description": "A flag to trigger codegen when there are changes in the specified GraphQL schemas.\n\nYou can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
-          "anyOf": [
-            { "type": "array", "items": { "type": "string" } },
-            { "type": ["string", "boolean"] }
-          ]
+          "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": ["string", "boolean"] }]
         },
         "watchConfig": {
           "description": "Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
@@ -399,10 +396,7 @@
         },
         "content": {
           "description": "The actual content you wish to add, either a string or array of strings.\nYou can also specify a path to a local file and the content if it will be loaded by codegen.",
-          "anyOf": [
-            { "type": "array", "items": { "type": "string" } },
-            { "type": "string" }
-          ]
+          "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }]
         }
       }
     },
@@ -425,10 +419,7 @@
       "properties": {
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
-          "anyOf": [
-            { "$ref": "#/definitions/AvoidOptionalsConfig" },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
         },
         "constEnums": {
           "description": "Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.\nDefault value: \"false\"",
@@ -587,15 +578,12 @@
       "type": "object",
       "properties": {
         "arrayInputCoercion": {
-          "description": "The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}\nallows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
+          "description": "The [GraphQL spec]{@link https ://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}allows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
-          "anyOf": [
-            { "$ref": "#/definitions/AvoidOptionalsConfig" },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
         },
         "immutableTypes": {
           "description": "Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.\nDefault value: \"false\"",
@@ -1002,10 +990,7 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
-          "anyOf": [
-            { "$ref": "#/definitions/AvoidOptionalsConfig" },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
         },
         "constEnums": {
           "description": "Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.\nDefault value: \"false\"",
@@ -1465,10 +1450,7 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "anyOf": [
-            { "$ref": "#/definitions/AvoidOptionalsConfig" },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
@@ -3070,10 +3052,7 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "anyOf": [
-            { "$ref": "#/definitions/AvoidOptionalsConfig" },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
@@ -3610,10 +3589,7 @@
       }
     },
     "Types.RequireExtension": {
-      "anyOf": [
-        { "type": "array", "items": { "type": "string" } },
-        { "type": "string" }
-      ]
+      "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }]
     },
     "Types.InstanceOrArray_1": {
       "anyOf": [
@@ -3621,10 +3597,7 @@
         {
           "type": "array",
           "items": {
-            "anyOf": [
-              { "$ref": "#/definitions/Types.CustomDocumentLoader" },
-              { "type": "string" }
-            ]
+            "anyOf": [{ "$ref": "#/definitions/Types.CustomDocumentLoader" }, { "type": "string" }]
           }
         },
         { "type": "string" }
@@ -4296,10 +4269,7 @@
       }
     },
     "T_1": {
-      "anyOf": [
-        { "type": "array", "items": { "type": ["string", "object"] } },
-        { "type": ["string", "object"] }
-      ]
+      "anyOf": [{ "type": "array", "items": { "type": ["string", "object"] } }, { "type": ["string", "object"] }]
     },
     "Partial": { "$ref": "#/definitions/__type_1" },
     "Types.ConfiguredPlugin": {
@@ -4408,16 +4378,10 @@
     },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
-      "anyOf": [
-        { "type": "object", "additionalProperties": { "type": "string" } },
-        { "type": "string" }
-      ]
+      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
     },
     "NamingConvention": {
-      "anyOf": [
-        { "$ref": "#/definitions/NamingConventionMap" },
-        { "type": ["string", "object"] }
-      ]
+      "anyOf": [{ "$ref": "#/definitions/NamingConventionMap" }, { "type": ["string", "object"] }]
     },
     "NamingConventionMap": {
       "additionalProperties": false,
@@ -4433,13 +4397,7 @@
       "type": "string"
     },
     "DocumentMode": {
-      "enum": [
-        "documentNode",
-        "documentNodeImportFragments",
-        "external",
-        "graphQLTag",
-        "string"
-      ],
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
     },
     "AvoidOptionalsConfig": {

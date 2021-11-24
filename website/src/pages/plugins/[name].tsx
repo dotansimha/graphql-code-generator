@@ -82,12 +82,7 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
   return (
     <>
       <Container p="1.5rem" maxWidth={1200}>
-        <Title>
-          <Link href="/plugins" passHref>
-            <a>Plugin Hub</a>
-          </Link>
-          {' >'} {pluginData.title}
-        </Title>
+        <Title>{pluginData.title}</Title>
         <Grid templateColumns={['1fr', '1fr', '1fr 350px']} gap={4}>
           <Box>
             <PackageInstall packages={pluginData.npmPackage} />
@@ -98,7 +93,7 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
             />
           </Box>
           <Box gridRow={['1', '1', 'auto']}>
-            <SubTitle>Plugin Details</SubTitle>
+            <SubTitle>Package Details</SubTitle>
             <SimpleGrid columns={2}>
               <div>Package</div>
               <div>

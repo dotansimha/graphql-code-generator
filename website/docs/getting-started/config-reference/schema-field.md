@@ -238,7 +238,7 @@ module.exports = buildSchema(/* GraphQL */ `
 `)
 ```
 
-> You can also import from TypeScript files, but don't forget to specify [require field](require-field.md).
+> You can also import from TypeScript files, but don't forget to specify [require field](./require-field).
 
 ### String
 

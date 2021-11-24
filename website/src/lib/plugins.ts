@@ -43,15 +43,13 @@ function loadGeneratedReadme(options: { templateFile: string; pluginIdentifier: 
     };
   }
 
-  if (!existsSync(options.templateFile)) {
-    console.warn(`Docs template file "${options.templateFile}" not found!`);
-    return '';
+  let templateBase = '{@apiDocs}';
+
+  if (existsSync(options.templateFile)) {
+    templateBase = readFileSync(options.templateFile, 'utf-8');
   }
 
-  let out = readFileSync(options.templateFile, 'utf-8').replace(
-    '{@apiDocs}',
-    generatedDocs.docs[options.pluginIdentifier] || ''
-  );
+  let out = templateBase.replace('{@apiDocs}', generatedDocs.docs[options.pluginIdentifier] || '');
 
   Object.keys(staticMapping).forEach(key => {
     out = out.replace(key, staticMapping![key]);
@@ -163,7 +161,7 @@ const PACKAGES: Package<Tags>[] = [
     identifier: 'typescript-mongodb',
     title: 'TypeScript MongoDB',
     npmPackage: '@graphql-codegen/typescript-mongodb',
-    iconUrl: '/assets/img/icons/mongodb.svg',
+    iconUrl: '/assets/img/icons/mongodb.png',
     tags: ['plugin', 'typescript', 'mongodb'],
   },
   {

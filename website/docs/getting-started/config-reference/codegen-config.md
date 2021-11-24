@@ -31,7 +31,7 @@ generates:
       - typescript-operations
 ```
 
-An example for a very large config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
+If you are looking for a reference file, an example for a [large configuration file can be seen here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
 :::tip YAML Config Validation & auto-complete
 If you are using VSCode as your IDE, make sure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml), this will add validation and auto-complete for available plugins, plugins config and general structure of the `codegen.yml` file!
@@ -41,27 +41,27 @@ If you are using VSCode as your IDE, make sure to [install the YAML plugin](http
 
 Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L92)):
 
-- [**`schema` (required)**](schema-field.md#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field.md#available-formats).
+- [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](./schema-field#available-formats).
 
-- [**`documents`**](documents-field.md#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide this options with a string instead of an array, in case you're dealing with a single document. You can read more about the supported formats [here](documents-field.md#available-formats).
+- [**`documents`**](./documents-field#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide this options with a string instead of an array, in case you're dealing with a single document. You can read more about the supported formats [here](./documents-field#available-formats).
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins, and they can be specified in this section. A full list of supported plugins can be found [here](../../plugins/index.md). You can also point to a custom plugin in a local file (see [Custom Plugins](../../custom-codegen/index.md)).
+  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins, and they can be specified in this section. A full list of supported plugins can be found [here](/plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](docs/custom-codegen)).
 
-  - [**`generates.preset`**](../../presets/index.md) - A list of available presets for generated files. Such as [`near-operation-file`](../../presets/near-operation-file.md#example), which generates files alongside your documents.
+  - **`generates.preset`** - A list of presets to use for the output. Presets are a way to dynamically create the list of output files, based on the input schema. [`near-operation-file-preset`](/plugins/near-operation-file-preset) is a good example.
 
-  - [**`generates.schema`**](schema-field.md#output-file-level) - Same as root `schema`, but applies only for the specific output file.
+  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file.
 
-  - [**`generates.documents`**](documents-field.md#output-file-level) - Same as root `documents`, but applies only for the specific output file.
+  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, but applies only for the specific output file.
 
-  - [**`generates.config`**](config-field.md#output-level) - Same as root `config`, but applies only for the specific output file.
+  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file.
 
   - **`generates.overwrite`** - Same as root `overwrite`, but applies only for the specific output file.
 
-- [**`require`**](require-field.md) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6). Note that values that specified in your `.yml` file will get loaded after loading the `.yml` file.
+- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6). Note that values that specified in your `.yml` file will get loaded after loading the `.yml` file.
 
-- [**`config`**](config-field.md#root-level) - Options that we would like to provide to the specified plugins. The options may vary depends on what plugins you specified. Read the documentation of that specific plugin for more information. You can read more about how to pass configuration to plugins [here](config-field.md).
+- [**`config`**](./config-field#root-level) - Options that we would like to provide to the specified plugins. The options may vary depends on what plugins you specified. Read the documentation of that specific plugin for more information. You can read more about how to pass configuration to plugins [here](./config-field).
 
 - **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by default).
 
@@ -71,7 +71,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`errorsOnly`** - A flag to suppress printing anything except errors.
 
-- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. You can read more about lifecycle hooks [here](lifecycle-hooks.md). You can specify this on your root configuration or on each output.
+- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. You can read more about lifecycle hooks [here](./lifecycle-hooks). You can specify this on your root configuration or on each output.
 
 - **`pluginLoader`** - If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than `require`.
 

@@ -22,13 +22,15 @@ const styles: typeof chakraTheme['styles'] = {
   }),
 };
 
+const accentColor = '#0070f3';
+
 const theme = extendTheme({
   colors: {
     gray: {
       50: '#fafafa',
       100: '#f5f5f5',
       200: '#e5e5e5',
-      300: '#d4d4d4',
+      300: '#5c3a3a',
       400: '#a3a3a3',
       500: '#737373',
       600: '#525252',
@@ -38,6 +40,7 @@ const theme = extendTheme({
       900: '#171717',
     },
   },
+  accentColor,
   fonts: {
     heading: 'TGCFont, sans-serif',
     body: 'TGCFont, sans-serif',
@@ -48,8 +51,6 @@ const theme = extendTheme({
   },
   styles,
 });
-
-const accentColor = '#1cc8ee';
 
 const serializedMdx = process.env.SERIALIZED_MDX_ROUTES;
 const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) };
@@ -81,7 +82,7 @@ function AppContent(appProps: AppProps) {
           },
           {
             children: 'Docs & API',
-            href: '/docs',
+            href: '/docs/getting-started',
             title: 'Read more about GraphQL Code Generator',
             onClick: e => handlePushRoute('/docs/getting-started', e),
           },
