@@ -145,7 +145,7 @@ export const createWatcher = (
 
   // the promise never resolves to keep process running
   return new Promise<void>((resolve, reject) => {
-    executeCodegen(initalContext)
+    (config.watchConfig?.skipFirst ? Promise.resolve([]) : executeCodegen(initalContext))
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {

@@ -16,6 +16,7 @@ const { lstat } = promises;
 export type YamlCliFlags = {
   config: string;
   watch: boolean | string | string[];
+  watchSkipFirst: boolean;
   require: string[];
   overwrite: boolean;
   project: string;
@@ -182,7 +183,7 @@ export function buildOptions() {
     w: {
       alias: 'watch',
       describe:
-        'Watch for changes and execute generation automatically. You can also specify a glob expreession for custom watch list.',
+        'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
       coerce: (watch: any) => {
         if (watch === 'false') {
           return false;
@@ -192,6 +193,11 @@ export function buildOptions() {
         }
         return !!watch;
       },
+    },
+    watchSkipFirst: {
+      type: 'boolean' as const,
+      describe: 'Skip initial generation in watch mode. Good for previously ran scripts (e.g. pre-script commands).',
+      coerce: (watch: any) => !!watch,
     },
     r: {
       alias: 'require',
@@ -254,6 +260,15 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
 
   if (cliFlags.watch) {
     config.watch = cliFlags.watch;
+
+    if (cliFlags.watchSkipFirst) {
+      if (!config.watchConfig) {
+        config.watchConfig = {
+          usePolling: false,
+        };
+      }
+      config.watchConfig.skipFirst = cliFlags.watchSkipFirst;
+    }
   }
 
   if (cliFlags.overwrite === true) {
