@@ -16,7 +16,7 @@ We currently support and maintain [these plugins](https://graphql-code-generator
 
 ### Quick Start
 
-> You can follow the instructions in [GraphQL-Code-Generator website](https://graphql-code-generator.com/docs/getting-started/installation).
+> You can find the complete instructions in [GraphQL-Code-Generator website](https://graphql-code-generator.com/docs/getting-started/installation).
 
 Start by installing the basic deps of GraphQL Codegen;
 
