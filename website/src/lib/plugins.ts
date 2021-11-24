@@ -22,6 +22,7 @@ export const ALL_TAGS = [
   'reason',
   'relay',
   'jsdoc',
+  'resolvers',
   'plugin',
   'preset',
 ] as const;
@@ -71,7 +72,7 @@ const PACKAGES: Package<Tags>[] = [
     title: 'graphql-modules-preset',
     npmPackage: '@graphql-codegen/graphql-modules-preset',
     iconUrl: 'https://www.graphql-modules.com/img/just-logo.svg',
-    tags: ['preset', 'utilities'],
+    tags: ['preset', 'utilities', 'resolvers'],
   },
   {
     identifier: 'import-types-preset',
@@ -239,7 +240,7 @@ const PACKAGES: Package<Tags>[] = [
     title: 'TypeScript Urql',
     npmPackage: '@graphql-codegen/typescript-urql',
     iconUrl: '/assets/img/icons/typescript.svg',
-    tags: ['plugin', 'typescript', 'urql'],
+    tags: ['plugin', 'typescript', 'urql', 'react'],
   },
   {
     identifier: 'typescript-vue-apollo',
@@ -315,7 +316,7 @@ const PACKAGES: Package<Tags>[] = [
     identifier: 'reason-client',
     title: 'Reason Client',
     npmPackage: 'graphql-codegen-reason-client',
-    iconUrl: '/assets/img/icons/graphql.svg',
+    iconUrl: 'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg',
     tags: ['plugin', 'reason'],
   },
   {
@@ -330,14 +331,14 @@ const PACKAGES: Package<Tags>[] = [
     title: 'Fragment Matcher',
     npmPackage: '@graphql-codegen/fragment-matcher',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin'],
+    tags: ['plugin', 'apollo'],
   },
   {
     identifier: 'introspection',
     title: 'Introspection',
     npmPackage: '@graphql-codegen/introspection',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin'],
+    tags: ['plugin', 'utilities'],
   },
   {
     identifier: 'jsdoc',
@@ -358,21 +359,21 @@ const PACKAGES: Package<Tags>[] = [
     title: 'Schema AST',
     npmPackage: '@graphql-codegen/schema-ast',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin'],
+    tags: ['plugin', 'utilities'],
   },
   {
     identifier: 'time',
     title: 'Time',
     npmPackage: '@graphql-codegen/time',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin'],
+    tags: ['plugin', 'utilities'],
   },
   {
     identifier: 'urql-introspection',
     title: 'Urql Introspection for Schema Awareness',
     npmPackage: '@graphql-codegen/urql-introspection',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin', 'urql'],
+    tags: ['plugin', 'urql', 'typescript'],
   },
 ];
 
