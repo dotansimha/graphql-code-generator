@@ -113,7 +113,7 @@
     "babel-jest": "27.3.1",
     "jest-runner": "27.3.1",
     "graphql": "16.0.1",
-    "graphql-language-service-interface": "2.9.1",
+    "graphql-language-service-interface": "2.9.3",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0"
   },
