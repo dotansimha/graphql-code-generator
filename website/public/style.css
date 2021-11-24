@@ -48,3 +48,11 @@ details > *:last-child {
   color: #0070f3;
   text-decoration: none;
 }
+
+.chakra-collapse a {
+  border-left-width: 0 !important;
+}
+
+aside {
+  position: static !important;
+}
