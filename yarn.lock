@@ -1146,7 +1146,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.13.17", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.13.17", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.16.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
   integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
@@ -2405,10 +2405,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/client@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.0.tgz#86e3c94872a8ff45a3fb5994ed8daf63cfbfffe2"
-  integrity sha512-8JQaDSi4T4b7sM0NU/yplWNrli/SU2FqAxaK9OrKHilFCqkVr7TCmS3iO6hbmqIlqcig/wXiifZviaBVJETfwQ==
+"@guild-docs/client@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.1.tgz#5fe80f075e20c11404cce03db97f6523ce8e4dd9"
+  integrity sha512-Mjfhsmd4euv6tDbpJWrorOEUBTcqxbMjdAlCipyFDwLG5+uShvJCqn8/OfLV8FWQ0SrYEY7nf5ZWfasughjlqQ==
   dependencies:
     "@guild-docs/mdx-remote" "^1.0.1"
     "@guild-docs/types" "^1.1.0"
@@ -2417,6 +2417,7 @@
     nprogress "^0.2.0"
     react-icons "4.3.1"
     react-intersection-observer "^8.32.4"
+    react-sticky-box "0.9.3"
     react-use "^17.3.1"
     remove-markdown "^0.3.0"
     use-immer "^0.6.0"
@@ -11149,6 +11150,14 @@ react-select@5.2.1:
     memoize-one "^5.0.0"
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
+
+react-sticky-box@0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/react-sticky-box/-/react-sticky-box-0.9.3.tgz#8450d4cef8e4fdd7b0351520365bc98c97da11af"
+  integrity sha512-Y/qO7vTqAvXuRR6G6ZCW4fX2Bz0GZRwiiLTVeZN5CVz9wzs37ev0Xj3KSKF/PzF0jifwATivI4t24qXG8rSz4Q==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    resize-observer-polyfill "^1.5.1"
 
 react-style-singleton@^2.1.0:
   version "2.1.1"
