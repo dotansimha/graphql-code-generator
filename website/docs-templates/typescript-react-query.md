@@ -269,8 +269,9 @@ query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsSt
 }
 ```
 
+<!-- prettier-ignore -->
 ```tsx
-import { useInfiniteMyQuery } from './generated'
+import { useInfiniteMyQuery } from './generated';
 
 export const MyComponent = () => {
   const { status, data, error, isFetching } = useInfiniteAnimalsQuery(
@@ -278,20 +279,20 @@ export const MyComponent = () => {
       catsRange: 5,
       catsStarting: 0,
       dogsRange: 10,
-      dogsStarting: 0
+      dogsStarting: 0,
     },
     {
       getNextPageParam: (lastPage, allPages) => {
-        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1)
-        const totalDogs = lastPage.dogs.items?.length ?? 0
+        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1);
+        const totalDogs = lastPage.dogs.items?.length ?? 0;
         if (totalLocal < totalDogs) {
           return {
             catsStarting: totalLocal * 5,
-            dogsStarting: totalLocal * 10
-          }
+            dogsStarting: totalLocal * 10,
+          };
         }
-      }
+      },
     }
-  )
-}
+  );
+};
 ```

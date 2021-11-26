@@ -1,8 +1,9 @@
-import { basename } from 'path';
-import { FC, useState, useEffect } from 'react';
-import classnames from 'classnames';
+import { FC, useEffect, useState } from 'react';
+
 import Editor from './Editor';
+import { basename } from 'path';
 import classes from './styles.module.css';
+import classnames from 'classnames';
 
 const CodegenOutput: FC = ({ outputArray, editorProps, error }) => {
   const [index, setIndex] = useState(0);
