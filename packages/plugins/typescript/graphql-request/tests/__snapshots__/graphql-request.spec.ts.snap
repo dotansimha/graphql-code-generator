@@ -2,6 +2,7 @@
 
 exports[`graphql-request sdk Should allow passing wrapper arg to generated getSdk 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -29,8 +30,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -74,8 +75,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -189,7 +190,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -286,6 +287,7 @@ async function test() {
 
 exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -314,8 +316,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -359,8 +361,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -474,7 +476,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -564,6 +566,7 @@ async function test() {
 
 exports[`graphql-request sdk Should generate a correct wrap method with documentMode=string 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -591,8 +594,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -636,8 +639,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -751,7 +754,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -841,6 +844,7 @@ async function test() {
 
 exports[`graphql-request sdk Should support extensionType when rawRequest is true and documentMode = "DocumentNode" 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -871,8 +875,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -916,8 +920,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -1031,7 +1035,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1125,6 +1129,7 @@ async function test() {
 
 exports[`graphql-request sdk Should support rawRequest when documentMode = "documentNode" 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1155,8 +1160,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1200,8 +1205,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -1315,7 +1320,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1409,6 +1414,7 @@ async function test() {
 
 exports[`graphql-request sdk Should support useTypeImports 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1437,8 +1443,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1482,8 +1488,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -1597,7 +1603,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1688,6 +1694,7 @@ async function test() {
 
 exports[`graphql-request sdk extensionType should be irrelevant when rawRequest is false 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1716,8 +1723,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1761,8 +1768,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -1876,7 +1883,7 @@ export type Feed2QueryVariables = Exact<{
 export type Feed2Query = { __typename?: 'Query', feed?: Array<{ __typename?: 'Entry', id: number } | null | undefined> | null | undefined };
 
 export type Feed3QueryVariables = Exact<{
-  v?: Maybe<Scalars['String']>;
+  v?: InputMaybe<Scalars['String']>;
 }>;
 
 

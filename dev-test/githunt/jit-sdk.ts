@@ -3,6 +3,7 @@ import { compileQuery, isCompiledQuery } from 'graphql-jit';
 import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -55,8 +56,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A list of options for the sort order of the feed */
@@ -108,8 +109,8 @@ export type QueryEntryArgs = {
 };
 
 export type QueryFeedArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   type: FeedType;
 };
 
@@ -189,8 +190,8 @@ export type OnCommentAddedSubscription = {
 
 export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CommentQuery = {
@@ -263,8 +264,8 @@ export type FeedEntryFragment = {
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FeedQuery = {
@@ -509,9 +510,13 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
     const originalErrors = result.errors.map(error => error.originalError || error);
     throw new AggregateError(originalErrors, `Failed to execute ${operationName}: \n\t${originalErrors.join('\n\t')}`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(
+  schema: GraphQLSchema,
+  globalContext?: TGlobalContext,
+  globalRoot?: TGlobalRoot
+) {
   const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded');
   if (!isCompiledQuery(onCommentAddedCompiled)) {
     const originalErrors = onCommentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
@@ -560,46 +565,124 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
   return {
     async onCommentAdded(
       variables: OnCommentAddedSubscriptionVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<AsyncIterableIterator<OnCommentAddedSubscription> | OnCommentAddedSubscription> {
-      const result = await onCommentAddedCompiled.subscribe!(root, context, variables);
+      const result = await onCommentAddedCompiled.subscribe!(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleSubscriptionResult(result, 'onCommentAdded');
     },
-    async Comment(variables: CommentQueryVariables, context = globalContext, root = globalRoot): Promise<CommentQuery> {
-      const result = await CommentCompiled.query(root, context, variables);
+    async Comment(
+      variables: CommentQueryVariables,
+      context?: TOperationContext,
+      root?: TOperationRoot
+    ): Promise<CommentQuery> {
+      const result = await CommentCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'Comment');
     },
     async CurrentUserForProfile(
       variables?: CurrentUserForProfileQueryVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<CurrentUserForProfileQuery> {
-      const result = await CurrentUserForProfileCompiled.query(root, context, variables);
+      const result = await CurrentUserForProfileCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'CurrentUserForProfile');
     },
-    async Feed(variables: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-      const result = await FeedCompiled.query(root, context, variables);
+    async Feed(variables: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
+      const result = await FeedCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'Feed');
     },
     async submitRepository(
       variables: SubmitRepositoryMutationVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<SubmitRepositoryMutation> {
-      const result = await submitRepositoryCompiled.query(root, context, variables);
+      const result = await submitRepositoryCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'submitRepository');
     },
     async submitComment(
       variables: SubmitCommentMutationVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<SubmitCommentMutation> {
-      const result = await submitCommentCompiled.query(root, context, variables);
+      const result = await submitCommentCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'submitComment');
     },
-    async vote(variables: VoteMutationVariables, context = globalContext, root = globalRoot): Promise<VoteMutation> {
-      const result = await voteCompiled.query(root, context, variables);
+    async vote(
+      variables: VoteMutationVariables,
+      context?: TOperationContext,
+      root?: TOperationRoot
+    ): Promise<VoteMutation> {
+      const result = await voteCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'vote');
     },
   };

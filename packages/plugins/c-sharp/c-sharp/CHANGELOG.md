@@ -1,5 +1,13 @@
 # @graphql-codegen/c-sharp
 
+## 4.2.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
 ## 4.2.0
 
 ### Minor Changes

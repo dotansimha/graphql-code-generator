@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.4.2
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+  - @graphql-codegen/typescript@2.4.1
+
+## 2.4.1
+
+### Patch Changes
+
+- 3d57ec666: loosen return type of SubscriptionSubscribeFn from `PromiseOrValue<AsyncIterator>` to `PromiseOrValue<AsyncIterable>`. This fixes type conflicts with libraries such as `ix/asynciterable` and is what `graphql-js` expects.
+
 ## 2.4.0
 
 ### Minor Changes

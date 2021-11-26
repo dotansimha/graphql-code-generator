@@ -30,12 +30,12 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   baseTypesPath: string;
@@ -47,13 +47,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importAllFragmentsFrom: '~types'
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importAllFragmentsFrom: '~types'
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importAllFragmentsFrom?: string | FragmentImportFromFn;
@@ -64,14 +64,14 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    extension: .generated.tsx
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       extension: .generated.tsx
+   *     plugins:
+   *       - typescript-operations
+   *       - typescript-react-apollo
    * ```
    */
   extension?: string;
@@ -82,13 +82,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       cwd: /some/path
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   cwd?: string;
@@ -99,13 +99,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    folder: __generated__
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       folder: __generated__
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   folder?: string;
@@ -116,13 +116,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: SchemaTypes
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importTypesNamespace: SchemaTypes
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importTypesNamespace?: string;

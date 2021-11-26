@@ -65,12 +65,12 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-mongodb
-   *  config:
-   *    avoidOptionals: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-mongodb
+   *     config:
+   *       avoidOptionals: true
    * ```
    */
   avoidOptionals?: boolean;

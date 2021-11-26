@@ -3,7 +3,7 @@ id: from-0-18
 title: Migration to 1.0.0
 ---
 
-*March 20th, 2019*
+_March 20th, 2019_
 
 ## What has changed?
 
@@ -120,7 +120,9 @@ It will generates for you types that are pointing to the new form of types. It s
 
 To use it, start by installing from NPM:
 
-    yarn add -D @graphql-codegen/typescript-compatibility
+```sh
+yarn add -D @graphql-codegen/typescript-compatibility
+```
 
 Then, add it to your codegen configuration:
 

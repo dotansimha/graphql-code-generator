@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-apollo-client-helpers
 
+## 2.1.8
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
 ## 2.1.7
 
 ### Patch Changes

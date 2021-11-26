@@ -11,18 +11,17 @@ import babelPlugin from './babel';
 
 export type GqlTagConfig = {
   /**
-   * @description Instead of generating a `gql` function, this preset can also generate a d.ts that will enhance the `gql` function of your framework.
+   * @description Instead of generating a `gql` function, this preset can also generate a `d.ts` that will enhance the `gql` function of your framework.
    *
    * E.g. `graphql-tag` or `@urql/core`.
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * gql/:
-   *  preset: gql-tag-operations-preset
-   *  presetConfig:
-   *    augmentedModuleName: '@urql/core'
-   *
+   *   gql/:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       augmentedModuleName: '@urql/core'
    * ```
    */
   augmentedModuleName?: string;

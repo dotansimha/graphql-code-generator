@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/bin.js",
@@ -86,7 +86,7 @@
     "@types/glob": "7.2.0",
     "@types/inquirer": "7.3.3",
     "@types/is-glob": "4.0.2",
-    "@types/js-yaml": "4.0.4",
+    "@types/js-yaml": "4.0.5",
     "@types/listr": "0.14.4",
     "@types/minimatch": "3.0.5",
     "@types/mkdirp": "1.0.2",
@@ -96,7 +96,7 @@
     "dotenv": "10.0.0",
     "js-yaml": "4.1.0",
     "make-dir": "3.1.0",
-    "prettier": "2.4.1"
+    "prettier": "2.5.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"

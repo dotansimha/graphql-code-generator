@@ -38,6 +38,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  inputMaybeValue: string;
   noExport: boolean;
   useImplementingTypes: boolean;
 }
@@ -55,6 +56,10 @@ export class TsVisitor<
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
+      inputMaybeValue: getConfigValue(
+        pluginConfig.inputMaybeValue,
+        getConfigValue(pluginConfig.maybeValue, 'Maybe<T>')
+      ),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
@@ -84,7 +89,8 @@ export class TsVisitor<
         pluginConfig.enumPrefix,
         this.config.enumValues,
         false,
-        this.config.directiveArgumentAndInputFieldMappings
+        this.config.directiveArgumentAndInputFieldMappings,
+        'InputMaybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -143,6 +149,7 @@ export class TsVisitor<
   public getWrapperDefinitions(): string[] {
     const definitions: string[] = [
       this.getMaybeValue(),
+      this.getInputMaybeValue(),
       this.getExactDefinition(),
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
@@ -174,9 +181,16 @@ export class TsVisitor<
     return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
   }
 
+  public getInputMaybeValue(): string {
+    return `${this.getExportPrefix()}type InputMaybe<T> = ${this.config.inputMaybeValue};`;
+  }
+
   protected clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+    if (str.startsWith('InputMaybe')) {
+      return str.replace(/InputMaybe<(.*?)>$/, '$1');
     }
 
     return str;
@@ -190,12 +204,19 @@ export class TsVisitor<
     return super.getExportPrefix();
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
-    return `Maybe<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  getMaybeWrapper(ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+    return isInputContext ? 'InputMaybe' : 'Maybe';
   }
 
-  ListType(node: ListTypeNode): string {
-    return `Maybe<${super.ListType(node)}>`;
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  }
+
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.ListType(node, key, parent, path, ancestors)}>`;
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {

@@ -10,12 +10,12 @@ export interface NamedOperationsObjectPluginConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - named-operations-object
-   *  config:
-   *    identifierName: ListAllOperations
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - named-operations-object
+   *     config:
+   *       identifierName: ListAllOperations
    * ```
    */
   identifierName?: string;
