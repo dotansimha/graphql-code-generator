@@ -6,7 +6,7 @@ import { transformDocs } from './src/lib/transform';
 
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
 const DEFAULT_JSDOC_KEY = 'default';
-const OUT_DIR = './public/static/';
+const OUT_DIR = './public';
 
 async function generate(): Promise<void> {
   const { schema } = transformDocs();
