@@ -218,15 +218,15 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
 #### Usage example (`isReactHook: true`)
 
 ```tsx
-export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
+export const useFetchData = <TData, TVariables>(query: string): ((variables?: TVariables) => Promise<TData>) => {
   // it is safe to call React Hooks here.
-  const { url, headers } = React.useContext(FetchParamsContext);
+  const { url, headers } = React.useContext(FetchParamsContext)
   return async (variables?: TVariables) => {
     const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...headers,
+        ...headers
       },
       body: JSON.stringify({
         query,
@@ -270,7 +270,7 @@ query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsSt
 ```
 
 ```tsx
-import { useInfiniteMyQuery } from './generated';
+import { useInfiniteMyQuery } from './generated'
 
 export const MyComponent = () => {
   const { status, data, error, isFetching } = useInfiniteAnimalsQuery(
@@ -278,20 +278,20 @@ export const MyComponent = () => {
       catsRange: 5,
       catsStarting: 0,
       dogsRange: 10,
-      dogsStarting: 0,
+      dogsStarting: 0
     },
     {
       getNextPageParam: (lastPage, allPages) => {
-        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1);
-        const totalDogs = lastPage.dogs.items?.length ?? 0;
+        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1)
+        const totalDogs = lastPage.dogs.items?.length ?? 0
         if (totalLocal < totalDogs) {
           return {
             catsStarting: totalLocal * 5,
-            dogsStarting: totalLocal * 10,
-          };
+            dogsStarting: totalLocal * 10
+          }
         }
-      },
+      }
     }
-  );
-};
+  )
+}
 ```
