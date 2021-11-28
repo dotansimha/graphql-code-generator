@@ -31,5 +31,5 @@ export function generateMutationKey(node: OperationDefinitionNode): string {
 }
 
 export function generateMutationKeyMaker(node: OperationDefinitionNode, operationName: string) {
-  return `\nuse${operationName}.getKey = () => ${generateMutationKey(node)}};\n`;
+  return `\nuse${operationName}.getKey = () => ${generateMutationKey(node)};\n`;
 }

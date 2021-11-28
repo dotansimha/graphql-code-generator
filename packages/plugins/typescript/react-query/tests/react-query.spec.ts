@@ -341,7 +341,7 @@ describe('React-Query', () => {
           exposeMutationKeys: true,
         };
         const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
-        expect(out.content).toBeSimilarStringTo(`useTestMutation.getKey = () => 'test'`);
+        expect(out.content).toBeSimilarStringTo(`useTestMutation.getKey = () => 'test'\n`);
       });
     });
 
