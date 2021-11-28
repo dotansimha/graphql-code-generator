@@ -3145,10 +3145,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@1.8.1":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.8.1.tgz#cac9bb43062bed8b2d88d81c3999e9a1428c8605"
-  integrity sha512-+aqFuHMFl6LotXDfMsqVjydY4JPVL6FFudDYJr99p8LjbgTRZYC6blmj56g2QEZO+03Xtm09m1WI949NckpeWw==
+"@theguild/components@1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.8.2.tgz#ce7232543714708cb79af8afd5fb5cfbd8625eff"
+  integrity sha512-XUVrR+/fQ80mV8HM+2ApYsU6dDcJBzu1Uz4FbXOBDqJRvRIR2dbLhsndKk+FRS70YaW5SWbVGnwHBYDTSteuGw==
   dependencies:
     "@emotion/react" "^11.4.0"
     "@emotion/styled" "^11.3.0"
