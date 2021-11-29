@@ -2890,15 +2890,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/command@1.8.4", "@oclif/command@^1.8.3":
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.4.tgz#176a4c2e9db5eac99dddb5f480ffd577e20e91ed"
-  integrity sha512-fZVzaIzC0CSj5KCgAp84Z+LHqSwElA6G2lCRiQW4UfDaOx1CrHXbUCqGDBpV6lG1sobuJzKlsS6mh5fmJWeEyw==
+"@oclif/command@1.8.6", "@oclif/command@^1.8.5":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.6.tgz#7b42060e30bf0beae2be2e6d9b887b0ccb4b140b"
+  integrity sha512-tIcGPpf7ndGe0Sp22RbPhZbwKjfrebHzCfe1SHRlqlJNy2xS3FT50i9p+dZmF+7Zpn4CEcBHag1TCdfFCTc1vQ==
   dependencies:
     "@oclif/config" "^1.17.1"
     "@oclif/errors" "^1.3.5"
     "@oclif/parser" "^3.8.6"
-    "@oclif/plugin-help" "^3.2.6"
+    "@oclif/plugin-help" "^3.2.8"
     debug "^4.1.1"
     semver "^7.3.2"
 
@@ -2940,15 +2940,15 @@
     chalk "^4.1.0"
     tslib "^2.0.0"
 
-"@oclif/plugin-help@^3.2.6":
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-3.2.6.tgz#20593f06c95b488dd3b66c004d79fb2a865595d4"
-  integrity sha512-0MnjhZfaa+RW0vEyqeSs37tlqH8M4U9LVwZeJAALuD4m8RnojOnoIT9SaxJNj5Cr+2dsxA7kGI+c67/9YZ76Xw==
+"@oclif/plugin-help@^3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-3.2.8.tgz#6020f1969aa98343b9a63ff9de82eec5eae98405"
+  integrity sha512-LVeXpab7NYEUiVIwGlLRMlQd1M1JIq15OXboN1K2OmtGxujxZ4PAVNTsHFQ1sckE5QDAh/n48wlvWDpJmnrdSw==
   dependencies:
-    "@oclif/command" "^1.8.3"
+    "@oclif/command" "^1.8.5"
     "@oclif/config" "^1.17.1"
     "@oclif/errors" "^1.3.5"
-    chalk "^4.1.0"
+    chalk "^4.1.2"
     indent-string "^4.0.0"
     lodash "^4.17.21"
     string-width "^4.2.0"
