@@ -2405,18 +2405,18 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/client@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.1.tgz#5fe80f075e20c11404cce03db97f6523ce8e4dd9"
-  integrity sha512-Mjfhsmd4euv6tDbpJWrorOEUBTcqxbMjdAlCipyFDwLG5+uShvJCqn8/OfLV8FWQ0SrYEY7nf5ZWfasughjlqQ==
+"@guild-docs/client@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.2.tgz#660b367ebaabd65f6f84316d4a32da75cb93834e"
+  integrity sha512-IrYoqtx08n3xhegBNbiSHqoB2o5ECU3tih7uKvjqoMIDz+EiBdqjRwHh0ME/H4C2zc167irj6QErcwNSHjaVXA==
   dependencies:
     "@guild-docs/mdx-remote" "^1.0.1"
     "@guild-docs/types" "^1.1.0"
-    immer "^9.0.6"
+    immer "^9.0.7"
     next-seo "^4.28.1"
     nprogress "^0.2.0"
     react-icons "4.3.1"
-    react-intersection-observer "^8.32.4"
+    react-intersection-observer "^8.32.5"
     react-sticky-box "0.9.3"
     react-use "^17.3.1"
     remove-markdown "^0.3.0"
@@ -7697,10 +7697,10 @@ image-size@1.0.0:
   dependencies:
     queue "6.0.2"
 
-immer@^9.0.6:
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
-  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
+immer@^9.0.6, immer@^9.0.7:
+  version "9.0.7"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.7.tgz#b6156bd7db55db7abc73fd2fdadf4e579a701075"
+  integrity sha512-KGllzpbamZDvOIxnmJ0jI840g7Oikx58lBPWV0hUh7dtAyZpFqqrBZdKka5GlTwMTZ1Tjc/bKKW4VSFAt6BqMA==
 
 immutable@~3.7.6:
   version "3.7.6"
@@ -11041,10 +11041,10 @@ react-instantsearch-dom@^6.11.0:
     react-fast-compare "^3.0.0"
     react-instantsearch-core "^6.12.1"
 
-react-intersection-observer@^8.32.4:
-  version "8.32.4"
-  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.32.4.tgz#42767671c8045a2eda564eb1fa60ca7f9b0874f3"
-  integrity sha512-iZK+u2z2Jpw9ez+cEFR4Hts3eNtW9XiEhwy2wGgKVe+pRUboWko827kvmyb7BtQUeX+/kRcTeHpw6uWSLyI57w==
+react-intersection-observer@^8.32.5:
+  version "8.32.5"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.32.5.tgz#92e8d8888b0b43a5c10c398e0d483d574bce7f3e"
+  integrity sha512-4xKdUWRNdPueXXxTyMOV41w6qIa4tsV7BbWOW+IYsvGPP7wxOj9V6o3cKywie+/VDr5Qs7pCzi5Wom78dUxj1w==
 
 react-is@17.0.2, react-is@^17.0.0, react-is@^17.0.1:
   version "17.0.2"
