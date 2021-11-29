@@ -23,6 +23,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   RawGraphQLRequestPluginConfig,
   GraphQLRequestPluginConfig
 > {
+  private _externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -50,6 +51,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         this._additionalImports.push(`import { print } from 'graphql'`);
       }
     }
+
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
   }
 
   public OperationDefinition(node: OperationDefinitionNode) {
@@ -75,6 +78,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+
     this._operationsToInclude.push({
       node,
       documentVariableName,
