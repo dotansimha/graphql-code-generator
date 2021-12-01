@@ -76,7 +76,7 @@
     "graphql-tag": "2.12.6",
     "husky": "7.0.4",
     "java-ast": "0.3.0",
-    "jest": "27.4.2",
+    "jest": "27.4.3",
     "jest-docblock": "27.4.0",
     "jest-junit": "13.0.0",
     "lint-staged": "12.1.2",
@@ -111,7 +111,7 @@
   "resolutions": {
     "prettier": "2.5.0",
     "babel-jest": "27.4.2",
-    "jest-runner": "27.4.2",
+    "jest-runner": "27.4.3",
     "graphql": "16.0.1",
     "graphql-language-service-interface": "2.9.5",
     "**/apollo-language-server/graphql": "^16.0.0",
