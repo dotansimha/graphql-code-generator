@@ -25,7 +25,7 @@
     "tslib": "~2.3.0"
   },
   "devDependencies": {
-    "@oclif/command": "1.8.6"
+    "@oclif/command": "1.8.7"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
