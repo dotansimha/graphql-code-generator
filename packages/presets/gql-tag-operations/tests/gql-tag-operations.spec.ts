@@ -1,4 +1,5 @@
 import { executeCodegen } from '@graphql-codegen/cli';
+import '@graphql-codegen/testing';
 import path from 'path';
 import { preset } from '../src';
 
@@ -324,5 +325,206 @@ describe('gql-tag-operations-preset', () => {
     `);
 
     expect(result[1].content.match(/query a {/g).length).toBe(3);
+  });
+
+  describe('fragment masking', () => {
+    it('fragmentMasking: true', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1.ts': {
+            preset,
+            plugins: [],
+            presetConfig: {
+              fragmentMasking: true,
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(4);
+      expect(result.map(res => res.filename)).toEqual([
+        'out1.ts/fragment-masking.ts',
+        'out1.ts/index.ts',
+        'out1.ts/gql.ts',
+        'out1.ts/graphql.ts',
+      ]);
+
+      expect(result[1].content).toMatchInlineSnapshot(`
+      "export * from \\"./gql\\"
+      export * from \\"./fragment-masking\\""
+      `);
+
+      expect(result[0].content).toMatchInlineSnapshot(`
+      "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+
+      export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+        infer TType,
+        any
+      >
+        ? TType extends { ' $fragmentName': infer TKey }
+          ? TKey extends string
+            ? { ' $fragmentRefs': { [key in TKey]: TType } }
+            : never
+          : never
+        : never;
+
+
+      export function useFragment<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: FragmentType<DocumentNode<TType, any>>
+      ): TType {
+        return fragmentType as any
+      }
+      "
+      `);
+    });
+
+    it('fragmentMasking: {}', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1.ts': {
+            preset,
+            plugins: [],
+            presetConfig: {
+              fragmentMasking: {},
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(4);
+    });
+
+    it('fragmentMasking.unmaskFunctionName', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1.ts': {
+            preset,
+            plugins: [],
+            presetConfig: {
+              fragmentMasking: {
+                unmaskFunctionName: 'iLikeTurtles',
+              },
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(4);
+      expect(result[0].content).toMatchSnapshot(`
+      "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+
+      export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+        infer TType,
+        any
+      >
+        ? TType extends { ' $fragmentName': infer TKey }
+          ? TKey extends string
+            ? { ' $fragmentRefs': { [key in TKey]: TType } }
+            : never
+          : never
+        : never;
+
+
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: FragmentType<DocumentNode<TType, any>>
+      ): TType {
+        return fragmentType as any
+      }
+      "
+      `);
+
+      expect(result[0].content).toBeSimilarStringTo(`
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: FragmentType<DocumentNode<TType, any>>
+      ): TType {
+        return fragmentType as any
+      }
+      `);
+    });
+  });
+
+  it('fragmentMasking.augmentedModuleName', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+            c: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      generates: {
+        out1: {
+          preset,
+          plugins: [],
+          presetConfig: {
+            fragmentMasking: {
+              augmentedModuleName: '@urql/fragment',
+            },
+          },
+        },
+      },
+    });
+
+    expect(result).toHaveLength(4);
+    expect(result[0].filename).toEqual('out1/fragment-masking.d.ts');
+    expect(result[0].content).toMatchSnapshot(`
+    "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+    declare module \\"@urql/fragment\\" {
+    export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+      infer TType,
+      any
+    >
+      ? TType extends { ' $fragmentName': infer TKey }
+        ? TKey extends string
+          ? { ' $fragmentRefs': { [key in TKey]: TType } }
+          : never
+        : never
+      : never;
+
+    export function useFragment<TType>(
+      _documentNode: DocumentNode<TType, any>,
+      fragmentType: FragmentType<DocumentNode<TType, any>>
+    ): TType
+    }"
+    `);
   });
 });

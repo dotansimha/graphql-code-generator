@@ -45,7 +45,7 @@ export const plugin: PluginFunction<{
   return [
     documentNodeImport,
     `declare module "${augmentedModuleName}" {`,
-    [documentNodeImport, `\n`, fragmentTypeHelper, `\n`, createUnmaskFunctionTypeDefinition(unmaskFunctionName)]
+    [...fragmentTypeHelper.split(`\n`), `\n`, ...createUnmaskFunctionTypeDefinition(unmaskFunctionName).split(`\n`)]
       .map(line => (line === `\n` ? line : `  ${line}`))
       .join(``),
     `}`,
