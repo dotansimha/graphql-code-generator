@@ -1,5 +1,5 @@
 import * as addPlugin from '@graphql-codegen/add';
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
@@ -8,6 +8,7 @@ import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import babelPlugin from './babel';
+import * as fragmentMaskingPlugin from './fragment-masking-plugin';
 
 export type FragmentMaskingConfig = {
   /**
@@ -132,7 +133,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       fragmentMaskingFileGenerateConfig = {
         filename: `${options.baseOutputDir}/fragment-masking.${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
-          [`fragment-masking`]: { plugin: fragmentMaskingPlugin },
+          [`fragment-masking`]: fragmentMaskingPlugin,
         },
         plugins: [
           {
@@ -195,52 +196,3 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
 };
 
 export { babelPlugin };
-
-const fragmentTypeHelper = `
-export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
-  infer TType,
-  any
->
-  ? TType extends { ' $fragmentName': infer TKey }
-    ? TKey extends string
-      ? { ' $fragmentRefs': { [key in TKey]: TType } }
-      : never
-    : never
-  : never;`;
-
-const defaultUnmaskFunctionName = 'useFragment';
-
-const createUnmaskFunctionTypeDefinition = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-export function ${unmaskFunctionName}<TType>(
-  _documentNode: DocumentNode<TType, any>,
-  fragmentType: FragmentType<DocumentNode<TType, any>>
-): TType`;
-
-const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinition(unmaskFunctionName)} {
-  return fragmentType as any
-}
-`;
-
-const fragmentMaskingPlugin: PluginFunction<{
-  useTypeImports?: boolean;
-  augmentedModuleName?: string;
-  unmaskFunctionName?: string;
-}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
-  const documentNodeImport = `${
-    useTypeImports ? 'import type' : 'import'
-  } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`;
-
-  if (augmentedModuleName == null) {
-    return [documentNodeImport, `\n`, fragmentTypeHelper, `\n`, createUnmaskFunction(unmaskFunctionName)].join(``);
-  }
-
-  return [
-    documentNodeImport,
-    `declare module "${augmentedModuleName}" {`,
-    [documentNodeImport, `\n`, fragmentTypeHelper, `\n`, createUnmaskFunctionTypeDefinition(unmaskFunctionName)]
-      .map(line => (line === `\n` ? line : `  ${line}`))
-      .join(``),
-    `}`,
-  ].join(`\n`);
-};
