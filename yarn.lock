@@ -7227,15 +7227,15 @@ graphql-helix@1.10.3:
   resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.10.3.tgz#b9fd383fd1b56ec28b9364d871f0aed5a02d2717"
   integrity sha512-DBWId8YgIGJQX8isjDoXsEB7qokXtkKRRKvz/f20yvrqnqemw4TQzFTEbtNthFJR8Su6LQmknUUV3eRuPJULTQ==
 
-graphql-jit@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.1.tgz#d27052da0c8f39937e114de9fb4163fec3a661fc"
-  integrity sha512-j2hYKtT+qpNAgnLP7xwRIpAQd8FnHgSobS+n8eUy28t15JjUO2qecfsvovI/WdDEt1rGmhROg1e1j3BAsmwtiQ==
+graphql-jit@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.2.tgz#8cf08863c22377ea4a0c4b3c12a258f3c94934ca"
+  integrity sha512-u+FuMCBZfoB0v8Iw6blh+D3Feke2m6hS1TFhStJcLTCOyH+KmJPo3XCFJC5QLHxqT+PJEfyf0S+zKJUZjZrhsg==
   dependencies:
     "@graphql-typed-document-node/core" "3.1.0"
     fast-json-stringify "^1.13.0"
     generate-function "^2.3.1"
-    json-schema "^0.2.3"
+    json-schema "^0.4.0"
     lodash.memoize "^4.1.2"
     lodash.merge "4.6.2"
     lodash.mergewith "4.6.2"
@@ -8831,10 +8831,10 @@ json-schema-traverse@^0.4.1:
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
   integrity sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==
 
-json-schema@^0.2.3:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.5.tgz#97997f50972dd0500214e208c407efa4b5d7063b"
-  integrity sha512-gWJOWYFrhQ8j7pVm0EM8Slr+EPVq1Phf6lvzvD/WCeqkrx/f2xBI0xOsRRS9xCn3I4vKtP519dvs3TP09r24wQ==
+json-schema@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.4.0.tgz#f7de4cf6efab838ebaeb3236474cbba5a1930ab5"
+  integrity sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==
 
 json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
