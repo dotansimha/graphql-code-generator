@@ -16,35 +16,45 @@ describe('gql-tag-operations-preset', () => {
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        'out1.ts': {
+        out1: {
           preset,
           plugins: [],
         },
       },
     });
 
-    expect(result[0].content).toMatchInlineSnapshot(`
-      "/* eslint-disable */
-      import * as graphql from './graphql';
-      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+    expect(result).toHaveLength(3);
+    // index.ts (re-exports)
+    expect(result[0].filename).toEqual('out1/index.ts');
+    expect(result[0].content).toEqual('export * from "./gql"');
 
-      const documents = {
-          \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\": graphql.ADocument,
-          \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\": graphql.BDocument,
-          \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\": graphql.CFragmentDoc,
-      };
+    // gql.ts
+    expect(result[1].filename).toEqual('out1/gql.ts');
+    expect(result[1].content).toMatchInlineSnapshot(`
+    "/* eslint-disable */
+    import * as graphql from './graphql';
+    import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-      export function gql(source: \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"];
-      export function gql(source: \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"];
-      export function gql(source: \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"];
+    const documents = {
+        \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\": graphql.ADocument,
+        \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\": graphql.BDocument,
+        \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\": graphql.CFragmentDoc,
+    };
 
-      export function gql(source: string): unknown;
-      export function gql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
+    export function gql(source: \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"];
+    export function gql(source: \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"];
+    export function gql(source: \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"];
 
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    export function gql(source: string): unknown;
+    export function gql(source: string) {
+      return (documents as any)[source] ?? {};
+    }
+
+    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
+
+    // graphql.ts
+    expect(result[2].filename).toEqual('out1/graphql.ts');
   });
 
   it('can generate simple examples lowercase names', async () => {
@@ -60,34 +70,45 @@ describe('gql-tag-operations-preset', () => {
       ],
       documents: path.join(__dirname, 'fixtures/simple-lowercase-operation-name.ts'),
       generates: {
-        'out1.ts': {
+        out1: {
           preset,
           plugins: [],
         },
       },
     });
-    expect(result[0].content).toMatchInlineSnapshot(`
-      "/* eslint-disable */
-      import * as graphql from './graphql';
-      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-      const documents = {
-          \\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\": graphql.ADocument,
-          \\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\": graphql.BDocument,
-          \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\": graphql.CFragmentDoc,
-      };
+    expect(result).toHaveLength(3);
+    // index.ts (re-exports)
+    expect(result[0].filename).toEqual('out1/index.ts');
+    expect(result[0].content).toEqual('export * from "./gql"');
 
-      export function gql(source: \\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\"];
-      export function gql(source: \\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\"];
-      export function gql(source: \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"];
+    // gql.ts
+    expect(result[1].filename).toEqual('out1/gql.ts');
+    expect(result[1].content).toMatchInlineSnapshot(`
+    "/* eslint-disable */
+    import * as graphql from './graphql';
+    import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-      export function gql(source: string): unknown;
-      export function gql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
+    const documents = {
+        \\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\": graphql.ADocument,
+        \\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\": graphql.BDocument,
+        \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\": graphql.CFragmentDoc,
+    };
 
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    export function gql(source: \\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query a {\\\\n    a\\\\n  }\\\\n\\"];
+    export function gql(source: \\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query b {\\\\n    b\\\\n  }\\\\n\\"];
+    export function gql(source: \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"];
+
+    export function gql(source: string): unknown;
+    export function gql(source: string) {
+      return (documents as any)[source] ?? {};
+    }
+
+    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
+
+    // graphql.ts
+    expect(result[2].filename).toEqual('out1/graphql.ts');
   });
 
   it('generates \\n regardless of whether the source contains LF or CRLF', async () => {
@@ -156,9 +177,9 @@ describe('gql-tag-operations-preset', () => {
       },
     });
 
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(3);
 
-    expect(result[0].content).toMatchInlineSnapshot(`
+    expect(result[1].content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as graphql from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -180,7 +201,7 @@ describe('gql-tag-operations-preset', () => {
 
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
-    expect(result[1].content).toMatchInlineSnapshot(`
+    expect(result[2].content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -221,10 +242,10 @@ describe('gql-tag-operations-preset', () => {
       export const BDocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"B\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"b\\"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(result[0].content).toContain(
+    expect(result[1].content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
     );
-    expect(result[1].content).toContain(
+    expect(result[2].content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
     );
   });
@@ -250,9 +271,9 @@ describe('gql-tag-operations-preset', () => {
       },
     });
 
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(3);
 
-    expect(result[0].content).toMatchInlineSnapshot(`
+    expect(result[1].content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as graphql from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -271,7 +292,7 @@ describe('gql-tag-operations-preset', () => {
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
 
-    expect(result[1].content).toMatchInlineSnapshot(`
+    expect(result[2].content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -302,6 +323,6 @@ describe('gql-tag-operations-preset', () => {
       export const ADocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(result[0].content.match(/query a {/g).length).toBe(3);
+    expect(result[1].content.match(/query a {/g).length).toBe(3);
   });
 });

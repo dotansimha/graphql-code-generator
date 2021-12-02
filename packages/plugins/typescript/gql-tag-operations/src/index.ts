@@ -21,40 +21,13 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
   : never;
 `.split(`\n`);
 
-const maskingTypePartial = `
-export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
-  infer TType,
-  any
->
-  ? TType extends { ' $fragmentName': infer TKey }
-    ? TKey extends string
-      ? { ' $fragmentRefs': { [key in TKey]: TType } }
-      : never
-    : never
-  : never;
-
-export const useFragment = <TType>(
-  _documentNode: DocumentNode<TType, any>,
-  fragmentType: FragmentType<DocumentNode<TType, any>>
-): TType => {
-  return fragmentType as any;
-};
-`;
-
 export const plugin: PluginFunction<{
-  inlineFragmentTypes?: string;
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
   augmentedModuleName?: string;
-}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName, inlineFragmentTypes }, _info) => {
+}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName }, _info) => {
   if (!sourcesWithOperations) {
     return '';
-  }
-
-  const maskingPartials: Array<string> = [];
-
-  if (inlineFragmentTypes === 'mask') {
-    maskingPartials.push(`\n`, maskingTypePartial);
   }
 
   if (augmentedModuleName == null) {
@@ -74,7 +47,6 @@ export const plugin: PluginFunction<{
       `}\n`,
       `\n`,
       ...documentTypePartial,
-      ...maskingPartials,
     ].join(``);
   }
 
@@ -91,7 +63,6 @@ export const plugin: PluginFunction<{
       .map(line => (line === `\n` ? line : `  ${line}`))
       .join(``),
     `}`,
-    ...maskingPartials,
   ].join(`\n`);
 };
 

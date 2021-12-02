@@ -410,4 +410,4 @@ generates:
     documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx'
     preset: gql-tag-operations-preset
     presetConfig:
-      maskFragments: true
+      fragmentMasking: true
