@@ -6844,10 +6844,10 @@ flow-bin@0.166.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.166.0.tgz#2450055cfd8d8949587c185801e000ee5988203a"
   integrity sha512-K+NfLBG8Pe21rRDiJAEa88gQsIHmz8sGGjNo5CuX8maU3lrwMs4NP4rJ41DCB6eynkF1EX5iZmjA/e1rT192qw==
 
-flow-parser@0.166.0:
-  version "0.166.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.166.0.tgz#0c0998af887e9476ef742fad94b7d32da6c7be24"
-  integrity sha512-YZCDEORZNCp0wTPSqcuYSg7W4cwWdVpArjAiy0tgY712oJvWiKAxaoSp+64GQmycDUpQiq1gtbupBdGg8Mp3bA==
+flow-parser@0.166.1:
+  version "0.166.1"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.166.1.tgz#6869ab40bd71e1129053f53435864b08616d57e9"
+  integrity sha512-7iJ1cPcOYL/eOPGpGPaxwW8MytKGeXSnfvJA0uIvymXI4MnjjhZLWz1qPIqj2hfYJ7p/yXssbv7k2H3C90cyDw==
 
 focus-lock@^0.9.1:
   version "0.9.2"
