@@ -3011,9 +3011,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
