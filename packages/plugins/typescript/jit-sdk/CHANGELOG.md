@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-jit-sdk
 
+## 1.2.0
+
+### Minor Changes
+
+- becd51c0a: feat(jit-sdk): seperate global and operation scoped context and root
+
 ## 1.1.1
 
 ### Patch Changes

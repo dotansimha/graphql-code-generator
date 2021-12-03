@@ -52,7 +52,3 @@ details > *:last-child {
 .chakra-collapse a {
   border-left-width: 0 !important;
 }
-
-aside {
-  position: static !important;
-}
