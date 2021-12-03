@@ -2291,7 +2291,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     await validate(result);
   });
 
-  it('#7005 - avoidOptionals should preserve optional object', async () => {
+  it('#7005 - avoidOptionals should preserve optional resolvers', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
         users(filter: UserFilterInput = {}): [User!]!
@@ -2313,9 +2313,10 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       {
         avoidOptionals: {
           defaultValue: true,
-          field: false,
+          field: true,
           inputValue: true,
-          object: false,
+          object: true,
+          resolvers: false,
         },
       } as any,
       { outputFile: 'graphql.ts' }

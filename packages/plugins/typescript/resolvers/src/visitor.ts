@@ -74,7 +74,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    const avoidOptionals = this.config.avoidOptionals?.object ?? this.config.avoidOptionals === true;
+    const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
     return `${schemaTypeName}${avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
