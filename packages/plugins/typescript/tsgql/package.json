@@ -14,6 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
+    "@graphql-codegen/graphql-modules-preset": "^2.3.1",
     "@graphql-codegen/plugin-helpers": "^2.3.0",
     "@graphql-tools/utils": "^8.1.1",
     "tslib": "~2.3.0"

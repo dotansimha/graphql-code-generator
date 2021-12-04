@@ -5,6 +5,7 @@ import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } fr
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
 import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+export { extractDeclared } from './builder';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {

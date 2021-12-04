@@ -1,4 +1,4 @@
-import { typeDefs } from 'tsgql';
+import { typeDefs, ResolversOf } from './tsgql';
 
 const sdl = typeDefs(/* GraphQL */ `
   type Query {
@@ -6,8 +6,9 @@ const sdl = typeDefs(/* GraphQL */ `
   }
 `);
 
-export const resolvers: typeof sdl = {
+export const resolvers: ResolversOf<typeof sdl> = {
   Query: {
     foo: () => 'test',
+    goo2: () => 'test2',
   },
 };
