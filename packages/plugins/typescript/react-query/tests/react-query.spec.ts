@@ -730,6 +730,48 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
+    it('Should generate query correctly with fetch config and fetchParams object', async () => {
+      const config = {
+        fetcher: {
+          endpoint: 'http://localhost:3000/graphql',
+          fetchParams: {
+            headers: {
+              Authorization: 'Bearer XYZ',
+            },
+          },
+        },
+        typesPrefix: 'T',
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend[1]).toMatchInlineSnapshot(`
+"
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+  return async (): Promise<TData> => {
+    const res = await fetch(\\"http://localhost:3000/graphql\\", {
+    method: \\"POST\\",
+    ...({\\"headers\\":{\\"Authorization\\":\\"Bearer XYZ\\"}}),
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0];
+
+      throw new Error(message);
+    }
+
+    return json.data;
+  }
+}"
+`);
+
+      expect(out.content).toMatchSnapshot();
+      await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+
     it('Should generate query correctly with hardcoded endpoint from env var', async () => {
       const config = {
         fetcher: {
