@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.3.2
+
+### Patch Changes
+
+- 22f6e4a92: Don't import `print` as type when supporting `useTypeImports` & `rawRequest` and `documentMode` is not a `string`.
+
 ## 4.3.1
 
 ### Patch Changes

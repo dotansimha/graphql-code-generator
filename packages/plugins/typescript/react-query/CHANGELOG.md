@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.2.2
+
+### Patch Changes
+
+- 0d71a60d9: stringify fetchParams if an object was provided via YAML config
+
 ## 3.2.1
 
 ### Patch Changes
