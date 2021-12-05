@@ -14,9 +14,26 @@ export type Scalars = {
   Float: number;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  doSomething: SomeResult;
+};
+
 export type Query = {
   __typename?: 'Query';
   foo: Scalars['String'];
+};
+
+export type SomeResult = {
+  __typename?: 'SomeResult';
+  changed: User;
+};
+
+export type User = {
+  __typename?: 'User';
+  age: Scalars['Int'];
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -92,15 +109,30 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  SomeResult: ResolverTypeWrapper<SomeResult>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Int: Scalars['Int'];
+  Mutation: {};
   Query: {};
+  SomeResult: SomeResult;
   String: Scalars['String'];
+  User: User;
+};
+
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+> = {
+  doSomething?: Resolver<ResolversTypes['SomeResult'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -110,14 +142,40 @@ export type QueryResolvers<
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type SomeResultResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SomeResult'] = ResolversParentTypes['SomeResult']
+> = {
+  changed?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SomeResult?: SomeResultResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 
 type RawSdlToResolversMapping = {
-  'type Query {\n  foo: String!\n}': Resolvers;
+  'type Query {\n  foo: String!\n}\n\nextend type User {\n  age: Int!\n}': { Query?: Pick<QueryResolvers, 'foo'> } & {
+    User?: Pick<UserResolvers, 'age'>;
+  };
+  'type Mutation {\n  doSomething: SomeResult!\n}\n\ntype SomeResult {\n  changed: User!\n}\n\ntype User {\n  id: String\n  name: String\n}': {
+    Mutation?: Pick<MutationResolvers, 'doSomething'>;
+  } & { SomeResult?: Pick<SomeResultResolvers, 'changed'> } & { User?: Pick<UserResolvers, 'id' | 'name'> };
 };
-type SdlToResolversMapping = { [K in keyof RawSdlToResolversMapping as Trim<K>]: Resolvers };
+type SdlToResolversMapping = { [K in keyof RawSdlToResolversMapping as Trim<K>]: RawSdlToResolversMapping[K] };
 type Whitespace = '\n' | ' ';
 type Trim<T> = T extends `${Whitespace}${infer U}`
   ? Trim<U>
