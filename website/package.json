@@ -61,6 +61,7 @@
     "@graphql-codegen/typescript-graphql-request": "4.3.2",
     "@graphql-codegen/typescript-mongodb": "2.2.1",
     "@graphql-codegen/typescript-msw": "1.0.0",
+    "@graphql-codegen/typescript-operation-types": "2.2.1",
     "@graphql-codegen/typescript-operations": "2.2.1",
     "@graphql-codegen/typescript-react-apollo": "3.2.2",
     "@graphql-codegen/typescript-react-query": "3.2.2",
