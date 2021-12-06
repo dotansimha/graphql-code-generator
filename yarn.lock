@@ -2405,12 +2405,12 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/client@1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.2.tgz#660b367ebaabd65f6f84316d4a32da75cb93834e"
-  integrity sha512-IrYoqtx08n3xhegBNbiSHqoB2o5ECU3tih7uKvjqoMIDz+EiBdqjRwHh0ME/H4C2zc167irj6QErcwNSHjaVXA==
+"@guild-docs/client@1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.3.tgz#815b94953f9deb83fd5ce810c455cead6da6ecfb"
+  integrity sha512-BGCYc4eRj+DCdiFM6we11QUohYmSf1Mm9jqufJH0nijj6hLTgYcUnDPuwlm7YuAY1UOpEyknFQLWn2hrED4gRQ==
   dependencies:
-    "@guild-docs/mdx-remote" "^1.0.1"
+    "@guild-docs/mdx-remote" "^1.0.2"
     "@guild-docs/types" "^1.1.0"
     immer "^9.0.7"
     next-seo "^4.28.1"
@@ -2421,17 +2421,17 @@
     react-use "^17.3.1"
     remove-markdown "^0.3.0"
     use-immer "^0.6.0"
-    zustand "^3.6.5"
+    zustand "^3.6.6"
 
-"@guild-docs/mdx-remote@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@guild-docs/mdx-remote/-/mdx-remote-1.0.1.tgz#e5db16b20550fbbba74423d077bbf3ecf13733ce"
-  integrity sha512-x5AMrnbGRRbTsju3FEyi6jzLDHwFhoAzef3fTNVFU442XDkB5JMwi7yA5Q52yaFur+l6LFYjkeT2hHfjSZn5EA==
+"@guild-docs/mdx-remote@^1.0.1", "@guild-docs/mdx-remote@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@guild-docs/mdx-remote/-/mdx-remote-1.0.2.tgz#c9e69e8c032d6d7da900ba9b45965140f1d7748a"
+  integrity sha512-1wQBiZwm8o2AS2fW8cGh5Kwvl371PFt+tnvzB5umO3zV5eVdKtbdYe0ukMLcPxy9He5YOnAyceQ/hGaSjbIyww==
   dependencies:
-    "@guild-docs/types" "^1.0.3"
+    "@guild-docs/types" "^1.1.0"
     "@mdx-js/mdx" "^1.6.22"
     "@mdx-js/react" "^1.6.22"
-    unified "^10.1.0"
+    unified "^10.1.1"
     unist-util-remove "^3.1.0"
 
 "@guild-docs/server@2.1.4":
@@ -2451,7 +2451,7 @@
     unified "^10.1.1"
     unist-util-visit "^4.1.0"
 
-"@guild-docs/types@^1.0.3", "@guild-docs/types@^1.1.0":
+"@guild-docs/types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@guild-docs/types/-/types-1.1.0.tgz#edfbb34f57be26bf7e03643eb1134f918647b3a6"
   integrity sha512-ivBhwKj5+u/YsKvDA45+zwrWPt7ByAVWqGFmKn67PdyCfeG8QMDSZt5mS2ET7RNaVe1PTTiXd3sWEaj3U2Ndag==
@@ -13209,7 +13209,7 @@ unified@9.2.0:
     trough "^1.0.0"
     vfile "^4.0.0"
 
-unified@^10.0.0, unified@^10.1.0, unified@^10.1.1:
+unified@^10.0.0, unified@^10.1.1:
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/unified/-/unified-10.1.1.tgz#345e349e3ab353ab612878338eb9d57b4dea1d46"
   integrity sha512-v4ky1+6BN9X3pQrOdkFIPWAaeDsHPE1svRDxq7YpTc2plkIqFMwukfqM+l0ewpP9EfwARlt9pPFAeWYhHm8X9w==
@@ -14053,10 +14053,10 @@ zen-observable@0.8.15, zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zustand@^3.6.5:
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.6.5.tgz#42a459397907d6bf0e2375351394733b2f83ee44"
-  integrity sha512-/WfLJuXiEJimt61KGMHebrFBwckkCHGhAgVXTgPQHl6IMzjqm6MREb1OnDSnCRiSmRdhgdFCctceg6tSm79hiw==
+zustand@^3.6.6:
+  version "3.6.6"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.6.6.tgz#3b7473a15813f7af9784233abd052c3b4560bbcc"
+  integrity sha512-y4755cIzJHQFEHgTQ5cHrlHdmXMxm5N3DU05Q27yT6rK4lKs2336t5IsAz5q9/GRaoEz6o8SiCOPDhZd5BnneA==
 
 zwitch@^1.0.0:
   version "1.0.5"
