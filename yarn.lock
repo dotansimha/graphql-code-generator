@@ -2423,7 +2423,7 @@
     use-immer "^0.6.0"
     zustand "^3.6.6"
 
-"@guild-docs/mdx-remote@^1.0.1", "@guild-docs/mdx-remote@^1.0.2":
+"@guild-docs/mdx-remote@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@guild-docs/mdx-remote/-/mdx-remote-1.0.2.tgz#c9e69e8c032d6d7da900ba9b45965140f1d7748a"
   integrity sha512-1wQBiZwm8o2AS2fW8cGh5Kwvl371PFt+tnvzB5umO3zV5eVdKtbdYe0ukMLcPxy9He5YOnAyceQ/hGaSjbIyww==
@@ -2434,12 +2434,12 @@
     unified "^10.1.1"
     unist-util-remove "^3.1.0"
 
-"@guild-docs/server@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@guild-docs/server/-/server-2.1.4.tgz#87824282434c45827011251b343a859a053205e5"
-  integrity sha512-OKYoiISL1MI4VwbicUylFmFLg1GkxakqPg+UjKChux25LZdECIu+3iEt5aY4ri8cMXC519f7TxbuWT1xfYKcoA==
+"@guild-docs/server@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@guild-docs/server/-/server-2.1.5.tgz#2ec6fa50044cc5d3bc3ba8dc94b0786c86564d1d"
+  integrity sha512-weiowwsXOzd2GGr+7hIiNGOHPW1KSjJzidQeA46BEK/KpQT2NUCXSBDzHHIUiFYzcupGHZsCa3iAvd6sCGzkJQ==
   dependencies:
-    "@guild-docs/mdx-remote" "^1.0.1"
+    "@guild-docs/mdx-remote" "^1.0.2"
     "@guild-docs/types" "^1.1.0"
     github-slugger "^1.4.0"
     globby "^11.0.4"
