@@ -375,6 +375,13 @@ const PACKAGES: Package<Tags>[] = [
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'urql', 'typescript'],
   },
+  {
+    identifier: 'typescript-operation-types',
+    title: 'Typescript Operation Types',
+    npmPackage: '@graphql-codegen/typescript-operation-types',
+    iconUrl: '/assets/img/icons/typescript.svg',
+    tags: ['plugin', 'typescript'],
+  },
 ];
 
 export const packageList = PACKAGES.map(p => ({

@@ -381,6 +381,24 @@ generates:
       - typescript-react-apollo
     config:
       withRefetchFn: true
+  ./dev-test/star-wars/types.onlyOperations.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      preResolveTypes: false
+      omitObjectTypes: false
+    plugins:
+      - typescript-operation-types
+      - typescript-operations
+  ./dev-test/star-wars/types.onlyOperations.omitObjectTypes.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      omitObjectTypes: true
+      preResolveTypes: true
+    plugins:
+      - typescript-operation-types
+      - typescript-operations
   ./dev-test/test-message/types.tsx:
     schema: ./dev-test/test-message/schema.graphql
     documents: ./dev-test/test-message/documents.ts

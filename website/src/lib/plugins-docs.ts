@@ -205,4 +205,9 @@ export const pluginsConfigurations: PluginConfig[] = [
     identifier: 'UrqlIntrospectionConfig',
     name: 'urql-introspection',
   },
+  {
+    file: '../packages/plugins/typescript/operation-types/src/config.ts',
+    identifier: 'TypescriptOperationTypesPluginConfig',
+    name: 'typescript-operation-types',
+  },
 ];
