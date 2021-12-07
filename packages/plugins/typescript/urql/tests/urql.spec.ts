@@ -563,6 +563,54 @@ export function useSubmitRepositoryMutation() {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('Should generate hooks for query with required arguments', async () => {
+      const documents = parse(/* GraphQL */ `
+        query RequiredArg($feedType: FeedType!, $limit: Int = 10) {
+          feed(type: $feedType, limit: $limit) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false },
+        { outputFile: 'graphql.tsx' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useRequiredArgQuery(options: Omit<Urql.UseQueryArgs<RequiredArgQueryVariables>, 'query'>) {
+  return Urql.useQuery<RequiredArgQuery>({ query: RequiredArgDocument, ...options });
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate hooks for query with default value arguments', async () => {
+      const documents = parse(/* GraphQL */ `
+        query DefaultValueArg($feedType: FeedType! = "HOT", $limit: Int) {
+          feed(type: $feedType, limit: $limit) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false },
+        { outputFile: 'graphql.tsx' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useDefaultValueArgQuery(options?: Omit<Urql.UseQueryArgs<DefaultValueArgQueryVariables>, 'query'>) {
+  return Urql.useQuery<DefaultValueArgQuery>({ query: DefaultValueArgDocument, ...options });
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('Should not generate hooks for query and mutation', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
