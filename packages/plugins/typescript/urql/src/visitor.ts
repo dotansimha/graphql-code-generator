@@ -124,8 +124,14 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
 };`;
     }
 
+    const isVariablesRequired = node.variableDefinitions.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && variableDef.defaultValue == null
+    );
+
     return `
-export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
+export function use${operationName}(options${
+      isVariablesRequired ? '' : '?'
+    }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
 };`;
   }
