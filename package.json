@@ -72,7 +72,7 @@
     "flow-parser": "0.166.1",
     "fs-extra": "10.0.0",
     "globby": "11.0.4",
-    "graphql": "16.0.1",
+    "graphql": "16.1.0",
     "graphql-tag": "2.12.6",
     "husky": "7.0.4",
     "java-ast": "0.3.0",
@@ -112,7 +112,7 @@
     "prettier": "2.5.1",
     "babel-jest": "27.4.2",
     "jest-runner": "27.4.3",
-    "graphql": "16.0.1",
+    "graphql": "16.1.0",
     "graphql-language-service-interface": "2.10.1",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0"
