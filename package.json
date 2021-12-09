@@ -52,7 +52,7 @@
     "@types/webpack-env": "1.16.3",
     "@typescript-eslint/eslint-plugin": "5.6.0",
     "@typescript-eslint/parser": "5.6.0",
-    "@urql/exchange-graphcache": "4.3.5",
+    "@urql/exchange-graphcache": "4.3.6",
     "@vue/apollo-composable": "4.0.0-alpha.16",
     "@vue/composition-api": "1.4.1",
     "apollo-client": "2.6.10",
