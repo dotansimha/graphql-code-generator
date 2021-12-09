@@ -36,7 +36,12 @@ module.exports = withGuildDocs({
         source: '/docs/plugins/:pluginName',
         destination: '/plugins/:pluginName',
         permanent: true,
-      }
+      },
+      {
+        source: '/docs/getting-started/config-reference/codegen-config',
+        destination: '/docs/config-reference/codegen-config',
+        permanent: true,
+      },
     ];
   },
 });
