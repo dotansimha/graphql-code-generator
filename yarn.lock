@@ -2890,10 +2890,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/command@1.8.10", "@oclif/command@^1.8.9":
-  version "1.8.10"
-  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.10.tgz#417683d0d52a9acefe9e119a149544295bef2c8a"
-  integrity sha512-GHL3Cdmabg2VAt5DL2GmRwmlROsN+Ma0JfxWlAhsKjxsa5vdWZ7BG82+A1NJQFgElm808z22Pldb7A4OJCq1pw==
+"@oclif/command@1.8.11", "@oclif/command@^1.8.9":
+  version "1.8.11"
+  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.11.tgz#926919fe8ddb7ab778fef8a8f2951c975f35e0c2"
+  integrity sha512-2fGLMvi6J5+oNxTaZfdWPMWY8oW15rYj0V8yLzmZBAEjfzjLqLIzJE9IlNccN1zwRqRHc1bcISSRDdxJ56IS/Q==
   dependencies:
     "@oclif/config" "^1.18.2"
     "@oclif/errors" "^1.3.5"
