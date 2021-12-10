@@ -7214,10 +7214,10 @@ graphql-jit@0.7.2:
     lodash.merge "4.6.2"
     lodash.mergewith "4.6.2"
 
-graphql-language-service-interface@2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.10.1.tgz#0f81a3da576bad61da878b59c228901236358426"
-  integrity sha512-2n/nrt0QD8UnxzDKKHWomYuLK9uxGxyPztA6wI24Kng8Iw7jQk/doIti63z4xPKNi4CtbumSjk1TRYUZ/bgViw==
+graphql-language-service-interface@2.10.2:
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.10.2.tgz#de9386f699e446320256175e215cdc10ccf9f9b7"
+  integrity sha512-RKIEBPhRMWdXY3fxRs99XysTDnEgAvNbu8ov/5iOlnkZsWQNzitjtd0O0l1CutQOQt3iXoHde7w8uhCnKL4tcg==
   dependencies:
     graphql-config "^4.1.0"
     graphql-language-service-parser "^1.10.4"
