@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.1.0",
-    "@urql/introspection": "0.3.0",
+    "@urql/introspection": "0.3.1",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {
