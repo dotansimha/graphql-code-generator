@@ -43,7 +43,7 @@
     "@babel/preset-typescript": "7.16.0",
     "@changesets/cli": "2.17.0",
     "@graphql-typed-document-node/core": "3.1.1",
-    "@reduxjs/toolkit": "1.6.2",
+    "@reduxjs/toolkit": "1.7.0",
     "@types/common-tags": "1.8.1",
     "@types/jest": "27.0.3",
     "@types/mkdirp": "1.0.2",
