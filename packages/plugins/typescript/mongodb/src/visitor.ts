@@ -5,8 +5,7 @@ import {
   getConfigValue,
   ParsedConfig,
   BaseVisitor,
-  buildScalars,
-  DEFAULT_SCALARS,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './config';
@@ -56,7 +55,7 @@ function resolveObjectId(pointer: string | null | undefined): { identifier: stri
 
 export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, TypeScriptMongoPluginParsedConfig> {
   constructor(private _schema: GraphQLSchema, pluginConfig: TypeScriptMongoPluginConfig) {
-    super(pluginConfig, ({
+    super(pluginConfig, {
       dbTypeSuffix: pluginConfig.dbTypeSuffix || 'DbObject',
       dbInterfaceSuffix: pluginConfig.dbInterfaceSuffix || 'DbInterface',
       objectIdType: resolveObjectId(pluginConfig.objectIdType).identifier,
@@ -64,8 +63,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       idFieldName: pluginConfig.idFieldName || '_id',
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false),
-      scalars: buildScalars(_schema, pluginConfig.scalars, DEFAULT_SCALARS),
-    } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
+      scalars: buildScalarsFromConfig(_schema, pluginConfig),
+    } as Partial<TypeScriptMongoPluginParsedConfig> as any);
     autoBind(this);
   }
 
@@ -84,9 +83,9 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.FLOAT:
       case Kind.BOOLEAN:
       case Kind.ENUM:
-        return (valueNode.value as any) as T;
+        return valueNode.value as any as T;
       case Kind.LIST:
-        return (valueNode.values.map(v => this._resolveDirectiveValue<T>(v)) as any) as T;
+        return valueNode.values.map(v => this._resolveDirectiveValue<T>(v)) as any as T;
       case Kind.NULL:
         return null;
       case Kind.OBJECT:

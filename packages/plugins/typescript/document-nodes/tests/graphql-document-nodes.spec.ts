@@ -315,7 +315,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export const MyQuery: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}}]}}]};
+    export const MyQuery = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}}]}}]} as unknown as DocumentNode;
     `);
     validateTs(mergeOutputs([result]));
   });

@@ -21,6 +21,7 @@ describe('React Apollo', () => {
   });
 
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -36,6 +37,23 @@ describe('React Apollo', () => {
       }
     }
   `);
+
+  const queryWithRequiredVariablesDoc = parse(/* GraphQL */ `
+    query WithRequiredVariables($type: FeedType!) {
+      feed(type: $type) {
+        id
+      }
+    }
+  `);
+
+  const queryWithNonNullDefaultVariablesDoc = parse(/* GraphQL */ `
+    query WithNonNullDefaultVariables($type: FeedType! = HOT) {
+      feed(type: $type) {
+        id
+      }
+    }
+  `);
+
   const mutationDoc = parse(/* GraphQL */ `
     mutation test($name: String) {
       submitRepository(repoFullName: $name) {
@@ -370,6 +388,52 @@ describe('React Apollo', () => {
         content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length
       ).toBe(3);
     });
+
+    it('#6001 - Should not use TypesSuffix on function names', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query user {
+              user(id: 1) {
+                id
+                username
+                email
+              }
+            }
+          `),
+        },
+      ];
+
+      const content = await plugin(schema, docs, { typesSuffix: 'Type' });
+
+      expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
+      // String matching `useUserQuery` but not `useUserQueryType`.
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQuery)(?!.useUserQueryType)(.+)/));
+    });
+
+    it('#6212 - Should use TypesSuffix on function names if hooksSuffix provided', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query user {
+              user(id: 1) {
+                id
+                username
+                email
+              }
+            }
+          `),
+        },
+      ];
+
+      const content = await plugin(schema, docs, { typesSuffix: 'Type', hooksSuffix: 'HookXYZ' });
+
+      expect(content.content).toEqual(expect.stringMatching(/UserQueryType/));
+      // String matching `useUserQuery` but not `useUserQueryType`.
+      expect(content.content).toEqual(expect.stringMatching(/(?=.useUserQueryHookXYZ)(?!.useUserQueryType)(.+)/));
+    });
   });
 
   describe('Imports', () => {
@@ -447,36 +511,44 @@ describe('React Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
@@ -500,36 +572,44 @@ describe('React Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<Notifications, NotificationsVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
@@ -825,7 +905,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export const TestDocument: DocumentNode = {"kind":"Document","defin`
+        `[{"kind":"Field","name":{"kind":"Name","value":"avatar_url"}}]}}]}}]}}]}}]} as unknown as DocumentNode;`
       );
 
       // For issue #1599 - make sure there are not `loc` properties
@@ -1715,21 +1795,43 @@ export function useListenToCommentsSubscription(baseOptions?: Apollo.Subscriptio
     it('should generate a function for use with refetchQueries', async () => {
       const docs = [{ location: '', document: basicDoc }];
 
-      const content = (await plugin(
-        schema,
-        docs,
-        {
-          withHooks: true,
-          withRefetchFn: true,
-        },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      )) as Types.ComplexPluginOutput;
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(
         `export function refetchTestQuery(variables?: TestQueryVariables) {
       return { query: TestDocument, variables: variables }
+    }`
+      );
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should require variables if they contain non-null non-default arguments', async () => {
+      const docs = [{ location: '', document: queryWithRequiredVariablesDoc }];
+
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(
+        `export function refetchWithRequiredVariablesQuery(variables: WithRequiredVariablesQueryVariables) {
+      return { query: WithRequiredVariablesDocument, variables: variables }
+    }`
+      );
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should not require variables if they contain non-null default arguments', async () => {
+      const docs = [{ location: '', document: queryWithNonNullDefaultVariablesDoc }];
+
+      const content = (await plugin(schema, docs, {
+        withRefetchFn: true,
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(
+        `export function refetchWithNonNullDefaultVariablesQuery(variables?: WithNonNullDefaultVariablesQueryVariables) {
+      return { query: WithNonNullDefaultVariablesDocument, variables: variables }
     }`
       );
       await validateTypeScript(content, schema, docs, {});
@@ -1796,7 +1898,7 @@ export function useListenToCommentsSubscription(baseOptions?: Apollo.Subscriptio
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(
-        `export const TestDocument: DocumentNode = {"kind":"Document","defin`
+        `[{"kind":"Field","name":{"kind":"Name","value":"avatar_url"}}]}}]}}]}}]}}]} as unknown as DocumentNode;`
       );
 
       // For issue #1599 - make sure there are not `loc` properties

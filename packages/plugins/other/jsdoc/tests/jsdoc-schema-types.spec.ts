@@ -212,5 +212,46 @@ describe('JSDoc Plugin', () => {
 
       expect(result).toEqual(expect.stringContaining(`* @property {string} foo - DEPRECATED: ${warning}`));
     });
+
+    it('should not generate [object Object] for directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        directive @client(always: Boolean) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+      `);
+
+      const config = {};
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      expect(result).not.toEqual(expect.stringContaining('[object Object]'));
+    });
+
+    it('should not generate [object Object] or extra lines for Schema', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        schema {
+          query: RootQueryType
+          mutation: RootMutationType
+        }
+
+        type RootMutationType {
+          addItem(name: String!): String
+        }
+
+        type RootQueryType {
+          items: [String!]!
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
+      expect(result).not.toEqual(expect.stringContaining('[object Object]'));
+      expect(result).toEqual(`/**
+ * @typedef {Object} RootMutationType
+ * @property {string} [addItem]
+ */
+
+/**
+ * @typedef {Object} RootQueryType
+ * @property {Array<string>} items
+ */`);
+    });
   });
 });

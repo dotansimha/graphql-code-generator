@@ -1,5 +1,112 @@
 # @graphql-cli/codegen
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [50c1d3247]
+- Updated dependencies [04e2d833b]
+  - @graphql-codegen/cli@2.3.0
+
+## 2.1.4
+
+### Patch Changes
+
+- @graphql-codegen/cli@2.2.2
+
+## 2.1.3
+
+### Patch Changes
+
+- @graphql-codegen/cli@2.2.1
+
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [3e38de399]
+- Updated dependencies [3e38de399]
+  - @graphql-codegen/cli@2.2.0
+
+## 2.1.1
+
+### Patch Changes
+
+- Updated dependencies [d3c556f8e]
+  - @graphql-codegen/cli@2.1.1
+
+## 2.1.0
+
+### Minor Changes
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [72044c1bd]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/cli@2.1.0
+
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [edd029e87]
+  - @graphql-codegen/cli@2.0.1
+
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/cli@2.0.0
+
+## 1.17.27
+
+### Patch Changes
+
+- Updated dependencies [e1643e6d4]
+  - @graphql-codegen/cli@1.21.8
+
+## 1.17.26
+
+### Patch Changes
+
+- Updated dependencies [470336a1]
+  - @graphql-codegen/cli@1.21.7
+
+## 1.17.25
+
+### Patch Changes
+
+- Updated dependencies [3b82d1bd]
+  - @graphql-codegen/cli@1.21.6
+
+## 1.17.24
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/cli@1.21.5
+
+## 1.17.23
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/cli@1.21.4
+
 ## 1.17.22
 
 ### Patch Changes

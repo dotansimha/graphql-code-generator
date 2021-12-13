@@ -5,9 +5,9 @@ import {
   InputValueDefinitionNode,
   Kind,
   NamedTypeNode,
-  Source,
   TypeNode,
 } from 'graphql';
+import { Source } from '@graphql-tools/utils';
 import parse from 'parse-filepath';
 
 const sep = '/';
@@ -146,11 +146,11 @@ export function groupSourcesByModule(sources: Source[], basePath: string): Recor
   const grouped: Record<string, Source[]> = {};
 
   sources.forEach(source => {
-    const relativePath = getRelativePath(source.name, basePath);
+    const relativePath = getRelativePath(source.location, basePath);
 
     if (relativePath) {
       // PERF: we could guess the module by matching source.location with a list of already resolved paths
-      const mod = extractModuleDirectory(source.name, basePath);
+      const mod = extractModuleDirectory(source.location, basePath);
 
       if (!grouped[mod]) {
         grouped[mod] = [];
@@ -191,14 +191,15 @@ function ensureStartsWithSeparator(path: string) {
 /**
  * Pushes an item to a list only if the list doesn't include the item
  */
-export function pushUnique<T extends any>(list: T[], item: T): void {
+export function pushUnique<T>(list: T[], item: T): void {
   if (!list.includes(item)) {
     list.push(item);
   }
 }
 
 export function concatByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
-  return left[key].concat(right[key]);
+  // Remove duplicate, if an element is in right & left, it will be only once in the returned array.
+  return [...new Set([...left[key], ...right[key]])];
 }
 
 export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {

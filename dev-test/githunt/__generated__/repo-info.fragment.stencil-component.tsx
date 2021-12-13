@@ -1,13 +1,17 @@
 import gql from 'graphql-tag';
 
 declare global {
-  export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'> & {
-      repository: { __typename?: 'Repository' } & Pick<
-        Types.Repository,
-        'description' | 'stargazers_count' | 'open_issues_count'
-      >;
-      postedBy: { __typename?: 'User' } & Pick<Types.User, 'html_url' | 'login'>;
+  export type RepoInfoFragment = {
+    __typename?: 'Entry';
+    createdAt: number;
+    repository: {
+      __typename?: 'Repository';
+      description?: string | null | undefined;
+      stargazers_count: number;
+      open_issues_count?: number | null | undefined;
     };
+    postedBy: { __typename?: 'User'; html_url: string; login: string };
+  };
 }
 
 export const RepoInfoFragmentDoc = gql`

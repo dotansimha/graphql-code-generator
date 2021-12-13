@@ -6,9 +6,14 @@ export function generateQueryVariablesSignature(
 ): string {
   return `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 }
+export function generateInfiniteQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
+  if (hasRequiredVariables) return `['${node.name.value}.infinite', variables]`;
+  return `variables === undefined ? ['${node.name.value}.infinite'] : ['${node.name.value}.infinite', variables]`;
+}
 
-export function generateQueryKey(node: OperationDefinitionNode): string {
-  return `['${node.name.value}', variables]`;
+export function generateQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
+  if (hasRequiredVariables) return `['${node.name.value}', variables]`;
+  return `variables === undefined ? ['${node.name.value}'] : ['${node.name.value}', variables]`;
 }
 
 export function generateQueryKeyMaker(
@@ -18,5 +23,13 @@ export function generateQueryKeyMaker(
   hasRequiredVariables: boolean
 ) {
   const signature = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
-  return `\nuse${operationName}.getKey = (${signature}) => ${generateQueryKey(node)};\n`;
+  return `\nuse${operationName}.getKey = (${signature}) => ${generateQueryKey(node, hasRequiredVariables)};\n`;
+}
+
+export function generateMutationKey(node: OperationDefinitionNode): string {
+  return `'${node.name.value}'`;
+}
+
+export function generateMutationKeyMaker(node: OperationDefinitionNode, operationName: string) {
+  return `\nuse${operationName}.getKey = () => ${generateMutationKey(node)}};\n`;
 }

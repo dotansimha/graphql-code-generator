@@ -9,7 +9,6 @@ import {
   GraphQLSchema,
   GraphQLScalarType,
   StringValueNode,
-  isEqualType,
   SelectionSetNode,
   FieldNode,
   SelectionNode,
@@ -20,11 +19,11 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
-  DirectiveNode,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
+import { RawConfig } from './base-visitor';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -261,11 +260,25 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
     .join('_');
 }
 
+export function buildScalarsFromConfig(
+  schema: GraphQLSchema | undefined,
+  config: RawConfig,
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
+  defaultScalarType = 'any'
+): ParsedScalarsMap {
+  return buildScalars(
+    schema,
+    config.scalars,
+    defaultScalarsMapping,
+    config.strictScalars ? null : config.defaultScalarType || defaultScalarType
+  );
+}
+
 export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType = 'any'
+  defaultScalarType: string | null = 'any'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -292,7 +305,15 @@ export function buildScalars(
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),
           };
+        } else if (scalarType.extensions?.codegenScalarType) {
+          result[name] = {
+            isExternal: false,
+            type: scalarType.extensions.codegenScalarType as string,
+          };
         } else if (!defaultScalarsMapping[name]) {
+          if (defaultScalarType === null) {
+            throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
+          }
           result[name] = {
             isExternal: false,
             type: defaultScalarType,
@@ -323,14 +344,7 @@ function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === Kind.STRING;
 }
 
-export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return (
-    isEqualType(type, schema.getQueryType()) ||
-    isEqualType(type, schema.getMutationType()) ||
-    isEqualType(type, schema.getSubscriptionType())
-  );
-}
-
+// will be removed on next release because tools already has it
 export function getRootTypeNames(schema: GraphQLSchema): string[] {
   return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
     .filter(t => t)
@@ -344,11 +358,14 @@ export function stripMapperTypeInterpolation(identifier: string): string {
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
 export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
 
-export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): void {
+/**
+ * merge selection sets into a new selection set without mutating the inputs.
+ */
+export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): SelectionSetNode {
   const newSelections = [...selectionSet1.selections];
 
-  for (const selection2 of selectionSet2.selections) {
-    if (selection2.kind === 'FragmentSpread') {
+  for (let selection2 of selectionSet2.selections) {
+    if (selection2.kind === 'FragmentSpread' || selection2.kind === 'InlineFragment') {
       newSelections.push(selection2);
       continue;
     }
@@ -359,31 +376,38 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
 
     const match = newSelections.find(
       selection1 =>
-        selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2)
+        selection1.kind === 'Field' &&
+        getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
     );
 
     if (match) {
       // recursively merge all selection sets
       if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        mergeSelectionSets(match.selectionSet, selection2.selectionSet);
+        selection2 = {
+          ...selection2,
+          selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
+        };
       }
-      continue;
     }
 
     newSelections.push(selection2);
   }
 
-  // replace existing selections
-  selectionSet1.selections = newSelections;
+  return {
+    kind: Kind.SELECTION_SET,
+    selections: newSelections,
+  };
 }
 
 export const getFieldNodeNameValue = (node: FieldNode): string => {
   return (node.alias || node.name).value;
 };
 
-export function separateSelectionSet(
-  selections: ReadonlyArray<SelectionNode>
-): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
+  fields: FieldNode[];
+  spreads: FragmentSpreadNode[];
+  inlines: InlineFragmentNode[];
+} {
   return {
     fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
     inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
@@ -393,7 +417,7 @@ export function separateSelectionSet(
 
 export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
-    return getPossibleTypes(schema, type.ofType);
+    return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
   } else if (isObjectType(type)) {
     return [type];
   } else if (isAbstractType(type)) {
@@ -403,15 +427,9 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(directives: readonly DirectiveNode[]): boolean {
-  if (directives.length === 0) return false;
-
-  for (const directive of directives) {
-    if (['skip', 'include'].includes(directive.name.value)) {
-      return true;
-    }
-  }
-  return false;
+export function hasConditionalDirectives(field: FieldNode): boolean {
+  const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
+  return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {

@@ -7,12 +7,18 @@ declare global {
     repoFullName: Types.Scalars['String'];
   }>;
 
-  export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
-    commentAdded?: Types.Maybe<
-      { __typename?: 'Comment' } & Pick<Types.Comment, 'id' | 'createdAt' | 'content'> & {
-          postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
+  export type OnCommentAddedSubscription = {
+    __typename?: 'Subscription';
+    commentAdded?:
+      | {
+          __typename?: 'Comment';
+          id: number;
+          createdAt: number;
+          content: string;
+          postedBy: { __typename?: 'User'; login: string; html_url: string };
         }
-    >;
+      | null
+      | undefined;
   };
 }
 

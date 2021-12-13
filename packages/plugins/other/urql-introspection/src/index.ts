@@ -7,7 +7,7 @@ import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspec
 /**
  * @description This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange
  *
- * You can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.
+ * You can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.
  *
  * Urql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.
  *
@@ -17,20 +17,87 @@ import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspec
  */
 export interface UrqlIntrospectionConfig {
   /**
-   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.
+   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`. Allowed values are: `commonjs`, `es2015`.
    * @default es2015
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.json:
-   *  plugins:
-   *    - urql-introspection
-   *  config:
-   *    module: commonjs
+   *   path/to/file.json:
+   *     plugins:
+   *       - urql-introspection
+   *     config:
+   *       module: commonjs
    * ```
    */
   module?: 'commonjs' | 'es2015';
+
+  /**
+   * @name useTypeImports
+   * @type boolean
+   * @default false
+   * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
+   * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
+   *
+   * @example
+   * ```yml
+   * config:
+   *   useTypeImports: true
+   * ```
+   */
+  useTypeImports?: boolean;
+  /**
+   * @name includeScalars
+   * @type boolean
+   * @default false
+   * @description Includes scalar names (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeScalars: true
+   * ```
+   */
+  includeScalars?: boolean;
+  /**
+   * @name includeEnums
+   * @type boolean
+   * @default false
+   * @description Includes enums (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeEnums: true
+   * ```
+   */
+  includeEnums?: boolean;
+  /**
+   * @name includeInputs
+   * @type boolean
+   * @default false
+   * @description Includes all input objects (instead of an `Any` replacement) in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeInputs: true
+   * ```
+   */
+  includeInputs?: boolean;
+  /**
+   * @name includeDirectives
+   * @type boolean
+   * @default false
+   * @description Includes all directives in the output when enabled.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   includeDirectives: true
+   * ```
+   */
+  includeDirectives?: boolean;
 }
 
 const extensions = {
@@ -45,14 +112,20 @@ export const plugin: PluginFunction = async (
   pluginConfig: UrqlIntrospectionConfig,
   info
 ): Promise<string> => {
-  const config: Required<UrqlIntrospectionConfig> = {
+  const config: UrqlIntrospectionConfig = {
     module: 'es2015',
+    useTypeImports: false,
     ...pluginConfig,
   };
 
   const ext = extname(info.outputFile).toLowerCase();
 
-  const minifiedData = minifyIntrospectionQuery(minifyIntrospectionQuery(getIntrospectedSchema(schema)));
+  const minifiedData = minifyIntrospectionQuery(getIntrospectedSchema(schema), {
+    includeDirectives: config.includeDirectives,
+    includeEnums: config.includeEnums,
+    includeInputs: config.includeInputs,
+    includeScalars: config.includeScalars,
+  });
 
   const content = JSON.stringify(minifiedData, null, 2);
 
@@ -67,7 +140,8 @@ export const plugin: PluginFunction = async (
   }
 
   if (extensions.ts.includes(ext)) {
-    return `import { IntrospectionQuery } from 'graphql';
+    const typeImport = config.useTypeImports ? 'import type' : 'import';
+    return `${typeImport} { IntrospectionQuery } from 'graphql';
 export default ${content} as unknown as IntrospectionQuery;`;
   }
 
@@ -91,5 +165,9 @@ export const validate: PluginValidateFn<any> = async (
 
   if (config.module === 'commonjs' && extensions.ts.includes(ext)) {
     throw new Error(`Plugin "urql-introspection" doesn't support commonjs modules combined with TypeScript!`);
+  }
+
+  if (config.useTypeImports && !extensions.ts.includes(ext)) {
+    throw new Error(`Plugin "urql-introspection" doesn't support useTypeImports modules not combined with TypeScript!`);
   }
 };

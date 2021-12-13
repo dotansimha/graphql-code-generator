@@ -1,5 +1,124 @@
 # @graphql-codegen/cli
 
+## 2.3.0
+
+### Minor Changes
+
+- 50c1d3247: feat(cli): export loadCodegenConfig to load codegen configuration files
+
+### Patch Changes
+
+- 04e2d833b: export generateSearchPlaces
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/core@2.3.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.1
+
+### Patch Changes
+
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/core@2.2.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 2.2.0
+
+### Minor Changes
+
+- 3e38de399: enhance: sort the schema before processing to have more consistent results. You can disable it with `sort: false`.
+
+### Patch Changes
+
+- 3e38de399: fix: handle convertExtensions properly with schema definitions
+
+## 2.1.1
+
+### Patch Changes
+
+- d3c556f8e: fix: do not alter the indentation of documents
+
+## 2.1.0
+
+### Minor Changes
+
+- 39773f59b: enhance(plugins): use getDocumentNodeFromSchema and other utilities from @graphql-tools/utils
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 24185985a: bump graphql-tools package versions
+- 72044c1bd: fix: do not alter the indentation of documents loaded via graphql-config
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/core@2.1.0
+  - @graphql-codegen/plugin-helpers@2.1.0
+
+## 2.0.1
+
+### Patch Changes
+
+- edd029e87: fix(graphql-modules-preset): do not parse SDL and use extendedSources that have parsed document already
+
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- Updated dependencies [b0cb13df4]
+- Updated dependencies [d80efdec4]
+  - @graphql-codegen/core@2.0.0
+  - @graphql-codegen/plugin-helpers@2.0.0
+
+## 1.21.8
+
+### Patch Changes
+
+- e1643e6d4: Fix exception `loader.loaderId is not a function` caused by conflict with an internal dependency of Codegen.
+
+## 1.21.7
+
+### Patch Changes
+
+- 470336a1: don't require plugins for for config if preset provides plugin. Instead the preset should throw if no plugins were provided.
+- Updated dependencies [470336a1]
+  - @graphql-codegen/plugin-helpers@1.18.8
+
+## 1.21.6
+
+### Patch Changes
+
+- 3b82d1bd: update chokidar
+
+## 1.21.5
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/core@1.17.10
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 1.21.4
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.21.3
 
 ### Patch Changes

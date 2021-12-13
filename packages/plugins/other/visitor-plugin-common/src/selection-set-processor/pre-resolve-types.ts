@@ -7,7 +7,7 @@ import {
   PrimitiveField,
 } from './base';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformTypenameField(type: string, name: string): ProcessResult {
@@ -34,6 +34,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       let typeToUse = baseType.name;
 
       const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
+      const innerType = useInnerType ? removeNonNullWrapper(fieldObj.type) : undefined;
 
       if (isEnumType(baseType)) {
         typeToUse =
@@ -43,8 +44,12 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      const name = this.config.formatNamedField(field.fieldName, useInnerType ? baseType : fieldObj.type);
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, useInnerType ? baseType : fieldObj.type);
+      const name = this.config.formatNamedField(
+        field.fieldName,
+        useInnerType ? innerType : fieldObj.type,
+        field.isConditional
+      );
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 
       return {
         name,

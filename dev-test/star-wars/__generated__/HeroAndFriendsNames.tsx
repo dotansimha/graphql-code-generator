@@ -4,32 +4,30 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
-export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
-  hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-              >
-            >
-          >;
-        })
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
-          friends?: Types.Maybe<
-            Array<
-              Types.Maybe<
-                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
-                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
-              >
-            >
-          >;
-        })
-  >;
+export type HeroAndFriendsNamesQuery = {
+  __typename?: 'Query';
+  hero?:
+    | {
+        __typename?: 'Droid';
+        name: string;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
+      }
+    | {
+        __typename?: 'Human';
+        name: string;
+        friends?:
+          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export const HeroAndFriendsNamesDocument = gql`

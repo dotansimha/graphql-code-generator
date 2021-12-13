@@ -1,5 +1,256 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.5.1
+
+### Patch Changes
+
+- a9f1f1594: Use maybeValue as default output for optionals on preResolveTypes: true
+- 9ea6621ec: add missing ListType method parameters
+
+## 2.5.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.4.0
+
+### Minor Changes
+
+- ad02cb9b8: Fixed an issue where ResolversParentTypes referenced non-existing fields of ResolversParentTypes when the corresponding type was a mapped enum.
+
+## 2.3.0
+
+### Minor Changes
+
+- b9e85adae: feat(visitor-plugin-common): support custom scalar type from extensions
+
+### Patch Changes
+
+- 3c2c847be: Fix dedupleFragments option for typescript-react-query (and possibly others)
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 2.2.1
+
+### Patch Changes
+
+- 0b090e31a: Apply proper indentation to DirectiveArgs types
+
+## 2.2.0
+
+### Minor Changes
+
+- d6c2d4c09: Allow declaring Argument and InputType field mappings based on directive annotations.
+
+  **WARNING:** Using this option does only change the type definitions.
+
+  For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+
+  Please use this configuration option with care!
+
+  ```yml
+  plugins:
+    config:
+      directiveArgumentAndInputFieldMappings:
+        asNumber: number
+  ```
+
+  ```graphql
+  directive @asNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+  input MyInput {
+    id: ID! @asNumber
+  }
+
+  type User {
+    id: ID!
+  }
+
+  type Query {
+    user(id: ID! @asNumber): User
+  }
+  ```
+
+  Usage e.g. with `typescript-resolvers`
+
+  ```ts
+  const Query: QueryResolvers = {
+    user(_, args) {
+      // args.id is of type 'number'
+    },
+  };
+  ```
+
+- 5086791ac: Allow overwriting the resolver type signature based on directive usages.
+
+  **WARNING:** Using this option does only change the generated type definitions.
+
+  For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+
+  Example configuration:
+
+  ```yml
+  config:
+    # This was possible before
+    customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
+    # This is new
+    directiveResolverMappings:
+      authenticated: ../resolvers-types.ts#AuthenticatedResolver
+  ```
+
+  Example mapping file (`resolver-types.ts`):
+
+  ```ts
+  export type UnauthenticatedContext = {
+    user: null;
+  };
+
+  export type AuthenticatedContext = {
+    user: { id: string };
+  };
+
+  export type UnauthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+    parent: TParent,
+    args: TArgs,
+    context: UnauthenticatedContext,
+    info: GraphQLResolveInfo
+  ) => Promise<TResult> | TResult;
+
+  export type AuthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
+    parent: TParent,
+    args: TArgs,
+    context: AuthenticatedContext,
+    info: GraphQLResolveInfo
+  ) => Promise<TResult> | TResult;
+  ```
+
+  Example Schema:
+
+  ```graphql
+  directive @authenticated on FIELD_DEFINITION
+
+  type Query {
+    yee: String
+    foo: String @authenticated
+  }
+  ```
+
+### Patch Changes
+
+- feeae1c66: Do not throw an error when trying to merge inline fragment usages.
+
+## 2.1.2
+
+### Patch Changes
+
+- 6470e6cc9: fix(plugin-helpers): remove unnecessary import
+- 263570e50: Don't generate duplicate imports for the same identifier
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/plugin-helpers@2.1.1
+
+## 2.1.1
+
+### Patch Changes
+
+- aabeff181: Don't generate import statements for fragments declared in the file we're outputting to
+
+## 2.1.0
+
+### Minor Changes
+
+- 290170262: add getOperationVariableName function to ClientSideBasePluginConfig class
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 24185985a: bump graphql-tools package versions
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/plugin-helpers@2.1.0
+
+## 2.0.0
+
+### Major Changes
+
+- d80efdec4: Change `preResolveTypes` default to be `true` for more readable types
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- d80efdec4: Add option `inlineFragmentTypes` for deep inlining fragment types within operation types. This `inlineFragmentTypes` is set to `inline` by default (Previous behaviour is `combine`).
+
+  This behavior is the better default for users that only use Fragments for building operations and then want to have access to all the data via the operation type (instead of accessing slices of the data via fragments).
+
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/plugin-helpers@2.0.0
+
+## 1.22.0
+
+### Minor Changes
+
+- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types from resolvers in addition to enum values.\_
+
+### Patch Changes
+
+- df19a4ed: Allow multiple `{T}` instances in defaultMapper
+- Updated dependencies [470336a1]
+  - @graphql-codegen/plugin-helpers@1.18.8
+
+## 1.21.3
+
+### Patch Changes
+
+- 6762aff5: Fix for array types with @skip @include directives
+
+## 1.21.2
+
+### Patch Changes
+
+- 6aaecf1c: Fix issues with missing sub-fragments when skipTypename: true
+
+## 1.21.1
+
+### Patch Changes
+
+- cf1e5abc: Introduce new feature for removing duplicated fragments
+
+## 1.21.0
+
+### Minor Changes
+
+- 8da7dff6: Skip typechecking on generated values by casting to unknown
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+- Updated dependencies [dfd25caf]
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 1.20.0
+
+### Minor Changes
+
+- f0b5ea53: Add entireFieldWrapperValue configuration option, to wrap arrays
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.19.1
 
 ### Patch Changes

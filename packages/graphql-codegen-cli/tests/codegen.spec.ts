@@ -17,7 +17,7 @@ describe('Codegen Executor', () => {
   monorepo.correctCWD();
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers('legacy');
   });
 
   describe('Generator General Options', () => {
@@ -970,7 +970,9 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (e) {
-      expect(e).toBeFalsy();
+      // eslint-disable-next-line no-console
+      console.error(e);
+      throw new Error('This should not throw as the invalid file is excluded via glob.');
     }
   });
   it('Should allow plugins to extend schema with custom root', async () => {
@@ -1008,5 +1010,55 @@ describe('Codegen Executor', () => {
 
     expect(output.length).toBe(1);
     expect(output[0].content).toContain('Hello world!');
+  });
+
+  it('Should sort the input schema', async () => {
+    const nonSortedSchema = /* GraphQL */ `
+      type Query {
+        d: String
+        z: String
+        a: String
+      }
+
+      type User {
+        aa: String
+        a: String
+      }
+
+      type A {
+        s: String
+        b: String
+      }
+    `;
+    const output = await executeCodegen({
+      schema: [nonSortedSchema],
+      generates: {
+        'out1.graphql': {
+          plugins: ['schema-ast'],
+        },
+      },
+      config: {
+        sort: true,
+      },
+    });
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toBeSimilarStringTo(/* GraphQL */ `
+      type A {
+        b: String
+        s: String
+      }
+
+      type Query {
+        a: String
+        d: String
+        z: String
+      }
+
+      type User {
+        a: String
+        aa: String
+      }
+    `);
   });
 });

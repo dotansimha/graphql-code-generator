@@ -2,6 +2,8 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { CSharpResolversPluginRawConfig } from '../src/config';
+import { getJsonAttributeSourceConfiguration } from '../src/json-attributes';
+import each from 'jest-each';
 
 describe('C#', () => {
   describe('Using directives', () => {
@@ -15,9 +17,36 @@ describe('C#', () => {
 
       expect(result).toContain('using System;');
       expect(result).toContain('using System.Collections.Generic;');
-      expect(result).toContain('using Newtonsoft.Json;');
-      expect(result).toContain('using GraphQL;');
     });
+
+    it('Should include default JSON using directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum ns {
+          dummy
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain('using Newtonsoft.Json;');
+    });
+
+    each(['Newtonsoft.Json', 'System.Text.Json']).it(
+      `Should include configured '%s' using directives`,
+      async source => {
+        const schema = buildSchema(/* GraphQL */ `
+          enum ns {
+            dummy
+          }
+        `);
+        const config: CSharpResolversPluginRawConfig = {
+          jsonAttributesSource: source,
+        };
+        const result = await plugin(schema, [], config, { outputFile: '' });
+        const jsonConfig = getJsonAttributeSourceConfiguration(source);
+
+        expect(result).toContain(`using ${jsonConfig.namespace};`);
+      }
+    );
   });
 
   describe('Namespaces', () => {
@@ -232,6 +261,7 @@ describe('C#', () => {
         /// <summary>
         /// User id
         /// </summary>
+        [Required]
         [JsonRequired]
         public int id { get; set; }
       `);
@@ -293,20 +323,46 @@ describe('C#', () => {
       expect(result).toContain('public class @public {');
     });
 
-    it('Should generate properties for types', async () => {
+    each(['Newtonsoft.Json', 'System.Text.Json']).it(
+      `Should generate properties for types using '%s' source`,
+      async source => {
+        const schema = buildSchema(/* GraphQL */ `
+          type User {
+            id: Int
+            email: String
+          }
+        `);
+        const config: CSharpResolversPluginRawConfig = {
+          jsonAttributesSource: source,
+        };
+        const result = await plugin(schema, [], config, { outputFile: '' });
+        const jsonConfig = getJsonAttributeSourceConfiguration(source);
+
+        expect(result).toBeSimilarStringTo(`
+          [${jsonConfig.propertyAttribute}("id")]
+          public int? id { get; set; }
+          [${jsonConfig.propertyAttribute}("email")]
+          public string email { get; set; }
+        `);
+      }
+    );
+
+    it(`Should generate properties for types without JSON attributes`, async () => {
       const schema = buildSchema(/* GraphQL */ `
         type User {
           id: Int
           email: String
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const config: CSharpResolversPluginRawConfig = {
+        emitJsonAttributes: false,
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+
       expect(result).toBeSimilarStringTo(`
-        [JsonProperty("id")]
-        public int? id { get; set; }
-        [JsonProperty("email")]
-        public string email { get; set; }
-      `);
+          public int? id { get; set; }
+          public string email { get; set; }
+        `);
     });
 
     it('Should generate summary header for class and properties', async () => {
@@ -406,7 +462,50 @@ describe('C#', () => {
 
   describe('GraphQL Value Types', () => {
     describe('Scalar', () => {
-      it('Should generate properties for mandatory scalar types', async () => {
+      each(['Newtonsoft.Json', 'System.Text.Json']).it(
+        `Should generate properties for mandatory scalar types using '%s' source`,
+        async source => {
+          const schema = buildSchema(/* GraphQL */ `
+            input BasicTypeInput {
+              intReq: Int!
+              fltReq: Float!
+              idReq: ID!
+              strReq: String!
+              boolReq: Boolean!
+            }
+          `);
+
+          const config: CSharpResolversPluginRawConfig = {
+            jsonAttributesSource: source,
+          };
+          const result = await plugin(schema, [], config, { outputFile: '' });
+          const jsonConfig = getJsonAttributeSourceConfiguration(source);
+          const attributes =
+            `
+            [Required]
+          ` +
+            (jsonConfig.requiredAttribute == null
+              ? ``
+              : `
+            [${jsonConfig.requiredAttribute}]
+          `);
+
+          expect(result).toBeSimilarStringTo(`
+            ${attributes}
+            public int intReq { get; set; }
+            ${attributes}
+            public double fltReq { get; set; }
+            ${attributes}
+            public string idReq { get; set; }
+            ${attributes}
+            public string strReq { get; set; }
+            ${attributes}
+            public bool boolReq { get; set; }
+          `);
+        }
+      );
+
+      it(`Should generate properties for mandatory scalar types with JSON attributes disabled`, async () => {
         const schema = buildSchema(/* GraphQL */ `
           input BasicTypeInput {
             intReq: Int!
@@ -416,18 +515,21 @@ describe('C#', () => {
             boolReq: Boolean!
           }
         `);
-        const result = await plugin(schema, [], {}, { outputFile: '' });
+        const config: CSharpResolversPluginRawConfig = {
+          emitJsonAttributes: false,
+        };
+        const result = await plugin(schema, [], config, { outputFile: '' });
 
         expect(result).toBeSimilarStringTo(`
-          [JsonRequired]
+          [Required]
           public int intReq { get; set; }
-          [JsonRequired]
-          public float fltReq { get; set; }
-          [JsonRequired]
+          [Required]
+          public double fltReq { get; set; }
+          [Required]
           public string idReq { get; set; }
-          [JsonRequired]
+          [Required]
           public string strReq { get; set; }
-          [JsonRequired]
+          [Required]
           public bool boolReq { get; set; }
         `);
       });
@@ -446,10 +548,29 @@ describe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public int? intOpt { get; set; }
-          public float? fltOpt { get; set; }
+          public double? fltOpt { get; set; }
           public string idOpt { get; set; }
           public string strOpt { get; set; }
           public bool? boolOpt { get; set; }
+        `);
+      });
+
+      it('Should properly treat DateTime nullability', async () => {
+        const schema = buildSchema(/* GraphQL */ `
+          type Test {
+            dateOptional: Date
+            dateMandatory: Date!
+          }
+
+          scalar Date
+        `);
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result).toBeSimilarStringTo(`
+          [JsonProperty("dateOptional")]
+          public DateTime? dateOptional { get; set; }
+          [JsonProperty("dateMandatory")]
+          public DateTime dateMandatory { get; set; }
         `);
       });
     });
@@ -494,9 +615,11 @@ describe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<int> arr1 { get; set; }
-          public IEnumerable<float?> arr2 { get; set; }
+          public IEnumerable<double?> arr2 { get; set; }
+          [Required]
           [JsonRequired]
           public IEnumerable<int?> arr3 { get; set; }
+          [Required]
           [JsonRequired]
           public IEnumerable<bool> arr4 { get; set; }
         `);
@@ -520,8 +643,10 @@ describe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public IEnumerable<IEnumerable<int>> arr1 { get; set; }
+          [Required]
           [JsonRequired]
-          public IEnumerable<IEnumerable<IEnumerable<float?>>> arr2 { get; set; }
+          public IEnumerable<IEnumerable<IEnumerable<double?>>> arr2 { get; set; }
+          [Required]
           [JsonRequired]
           public IEnumerable<IEnumerable<Complex>> arr3 { get; set; }
         `);
@@ -542,7 +667,7 @@ describe('C#', () => {
 
         expect(result).toBeSimilarStringTo(`
           public int? @int { get; set; }
-          public float? @float { get; set; }
+          public double? @float { get; set; }
           public string @string { get; set; }
           public bool? @bool { get; set; }
         `);
@@ -573,7 +698,7 @@ describe('C#', () => {
 
       expect(result).toBeSimilarStringTo(`
         public int? val { get; set; }
-        public float? flt { get; set; }
+        public double? flt { get; set; }
         public string str { get; set; }
         public bool? flag { get; set; }
         public Length? hair { get; set; }

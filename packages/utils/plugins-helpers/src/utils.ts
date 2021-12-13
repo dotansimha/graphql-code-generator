@@ -31,6 +31,6 @@ export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
   }
 }
 
-export function removeNonNullWrapper(type: GraphQLOutputType): GraphQLNamedType {
+export function removeNonNullWrapper(type: GraphQLOutputType): GraphQLOutputType {
   return isNonNullType(type) ? type.ofType : type;
 }

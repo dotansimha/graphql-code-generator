@@ -3,13 +3,11 @@ export const C_SHARP_SCALARS = {
   String: 'string',
   Boolean: 'bool',
   Int: 'int',
-  Float: 'float',
+  Float: 'double',
   Date: 'DateTime',
 };
 
-// All native C# built-in value types
-// See https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types
-export const csharpNativeValueTypes = [
+export const csharpValueTypes = [
   'bool',
   'byte',
   'sbyte',
@@ -23,4 +21,5 @@ export const csharpNativeValueTypes = [
   'ulong',
   'short',
   'ushort',
+  'DateTime',
 ];

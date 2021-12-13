@@ -546,7 +546,25 @@ describe('Flow Operations Plugin', () => {
         ),
       ]);
 
-      expect(result).toMatchSnapshot();
+      expect(result).toMatchInlineSnapshot(`
+"// @flow
+
+type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
+
+export type UserFieldsFragment = ({
+    ...$Pick<User, {| id: *, username: *, role?: * |}>,
+  ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+});
+
+export type MeQueryVariables = {};
+
+
+export type MeQuery = {| me?: ?({
+      ...$Pick<User, {| id: *, username: *, role?: * |}>,
+    ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+  }) |};
+"
+`);
       validateFlow(result);
     });
 
@@ -652,9 +670,9 @@ describe('Flow Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type MeQuery = {| me?: ?({
-        ...$Pick<User, {| username: * |}>,
-      ...UserFieldsFragment
-    }) |};
+            ...$Pick<User, {| username: *, id: * |}>,
+          ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+        }) |};
       `);
       validateFlow(result);
     });
@@ -696,10 +714,9 @@ describe('Flow Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type MeQuery = {| me?: ?({
-        ...$Pick<User, {| username: * |}>,
-      ...UserFieldsFragment,
-      ...UserProfileFragment
-    }) |};
+        ...$Pick<User, {| username: *, id: * |}>,
+      ...{| profile?: ?$Pick<Profile, {| age?: * |}> |}
+      }) |};
       `);
       validateFlow(result);
     });
@@ -1265,7 +1282,7 @@ describe('Flow Operations Plugin', () => {
       };
       export type UserQuery = { user: ({
             ...$MakeOptional<$Pick<User, { id: *, name: * }>, { name: * }>,
-          ...{ address?: ?$Pick<Address, { city: * }>, friends?: ?Array<$Pick<User, { id: * }>> }
+          ...{ address?: $Pick<Address, { city: * }>, friends?: Array<$Pick<User, { id: * }>> }
         }) };
       `);
 
@@ -1322,7 +1339,7 @@ describe('Flow Operations Plugin', () => {
         showAddress: $ElementType<Scalars, 'Boolean'>,
         showName: $ElementType<Scalars, 'Boolean'>,
       };
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: ?string, address?: ?{ __typename?: 'Address', city: string }, friends?: ?Array<{ __typename?: 'User', id: string }> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };
       `);
 
       validateFlow(result);

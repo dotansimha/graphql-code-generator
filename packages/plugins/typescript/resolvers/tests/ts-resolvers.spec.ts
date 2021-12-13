@@ -8,57 +8,6 @@ import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
 
 describe('TypeScript Resolvers Plugin', () => {
   describe('Backward Compatability', () => {
-    it('Should generate IDirectiveResolvers by default', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;`);
-      await validate(result);
-    });
-
-    it('Should not generate IDirectiveResolvers when prefix is overwritten', async () => {
-      const config = { typesPrefix: 'PREFIX_' };
-      const result = await plugin(schema, [], config, { outputFile: '' });
-      expect(result.content).not.toContain(`export type IDirectiveResolvers`);
-      expect(result.content).not.toContain(`export type DirectiveResolvers`);
-      expect(result.content).toContain(`export type PREFIX_DirectiveResolvers`);
-      await validate(result, config);
-    });
-
-    it('Should generate IResolvers by default', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
-      await validate(result);
-    });
-
-    it('Should not generate IResolvers when prefix is overwritten', async () => {
-      const config = { typesPrefix: 'PREFIX_' };
-      const result = await plugin(schema, [], config, { outputFile: '' });
-      expect(result.content).not.toContain(`export type IResolvers`);
-      expect(result.content).not.toContain(`export type Resolvers`);
-      expect(result.content).toContain(`export type PREFIX_Resolvers`);
-      await validate(result, config);
-    });
-
-    it('Should generate IResolvers by default with deprecated warning', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result.content).toBeSimilarStringTo(`
-      /**
-       * @deprecated
-       * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
-      */
-      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
-      await validate(result);
-    });
-
     it('should produce IResolvers compatible with graphql-tools', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
@@ -122,13 +71,14 @@ describe('TypeScript Resolvers Plugin', () => {
     });
   });
 
-  it('Should use StitchingResolver by default', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+  it('Should use StitchingResolver when its active on config', async () => {
+    const result = await plugin(schema, [], { noSchemaStitching: false }, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`export type StitchingResolver<TResult, TParent, TContext, TArgs>`);
     expect(result.content).toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
+        | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
@@ -202,6 +152,107 @@ describe('TypeScript Resolvers Plugin', () => {
       const content = mergeOutputs([result]);
       expect(content).toMatchSnapshot();
     });
+
+    it('directiveResolverMappings - should generate correct types (inline definition)', async () => {
+      const config = {
+        noSchemaStitching: true,
+        directiveResolverMappings: {
+          authenticated: `
+(
+  parent: TParent,
+  args: TArgs,
+  context: AuthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;`,
+        },
+      };
+      const result = await plugin(schema, [], config, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> =
+(
+  parent: TParent,
+  args: TArgs,
+  context: AuthenticatedContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
+};
+export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+`);
+      expect(result.content).toBeSimilarStringTo(`
+export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+  foo?: ResolverAuthenticated<ResolversTypes['String'], ParentType, ContextType>;
+  otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+  withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+  unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+      `);
+    });
+
+    it('makeResolverTypeCallable - should remove ResolverWithResolve type from resolver union', async () => {
+      const result = await plugin(schema, [], { makeResolverTypeCallable: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>;
+    `);
+
+      expect(result.content).not.toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>
+      | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+    `);
+
+      await validate(result);
+    });
+
+    it('makeResolverTypeCallable - adds ResolverWithResolve type to resolver union when set to false', async () => {
+      const result = await plugin(schema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
+
+      expect(result.content).not.toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>;
+    `);
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      ResolverFn<TResult, TParent, TContext, TArgs>
+      | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+    `);
+
+      await validate(result);
+    });
+  });
+
+  it('directiveResolverMappings - should generate correct types (import definition)', async () => {
+    const config = {
+      noSchemaStitching: true,
+      directiveResolverMappings: {
+        authenticated: `../resolver-types.ts#AuthenticatedResolver`,
+      },
+    };
+    const result = await plugin(schema, [], config, { outputFile: '' });
+    expect(result.prepend).toContain(
+      "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts';"
+    );
+    expect(result.content).toBeSimilarStringTo(`
+export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
+};
+export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+`);
+    expect(result.content).toBeSimilarStringTo(`
+export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+foo?: ResolverAuthenticated<ResolversTypes['String'], ParentType, ContextType>;
+otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+    `);
   });
 
   describe('Enums', () => {
@@ -439,25 +490,6 @@ describe('TypeScript Resolvers Plugin', () => {
     });
   });
 
-  it('Should warn when noSchemaStitching is set to false (deprecated)', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
-    const result = await plugin(
-      schema,
-      [],
-      {
-        noSchemaStitching: false,
-      },
-      { outputFile: '' }
-    );
-
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][0]).toContain('noSchemaStitching');
-
-    spy.mockRestore();
-
-    await validate(result);
-  });
-
   it('Should allow to override ResolverTypeWrapper signature', async () => {
     const result = (await plugin(
       schema,
@@ -515,12 +547,13 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.content).not.toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
+        | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-        ResolverFn<TResult, TParent, TContext, TArgs>;
+        ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
     await validate(result);
@@ -620,9 +653,11 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -694,9 +729,11 @@ describe('TypeScript Resolvers Plugin', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };`);
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
@@ -769,9 +806,11 @@ describe('TypeScript Resolvers Plugin', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -858,9 +897,11 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -931,9 +972,11 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.prepend).toContain(`import ContextType from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1004,9 +1047,11 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.prepend).toContain(`import type { default as ContextType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String'];
-    arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -2210,7 +2255,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         { outputFile: 'graphql.ts' }
       )) as Types.ComplexPluginOutput;
 
-      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`);
+      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {\n  role?: Maybe<UserRole>;\n};`);
       expect(output.content).toContain(
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`
       );

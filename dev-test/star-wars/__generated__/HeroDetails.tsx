@@ -4,14 +4,16 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroDetailsQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
-export type HeroDetailsQuery = { __typename?: 'Query' } & {
-  hero?: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'primaryFunction' | 'name'>)
-  >;
+export type HeroDetailsQuery = {
+  __typename?: 'Query';
+  hero?:
+    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
+    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
+    | null
+    | undefined;
 };
 
 export const HeroDetailsDocument = gql`

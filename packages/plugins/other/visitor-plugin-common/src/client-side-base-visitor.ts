@@ -4,18 +4,16 @@ import {
   FragmentDefinitionNode,
   print,
   OperationDefinitionNode,
-  visit,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
 } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue, buildScalars } from './utils';
+import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { getConfigValue, buildScalarsFromConfig } from './utils';
 import { LoadedFragment, ParsedImport } from './types';
 import { basename, extname } from 'path';
-import { DEFAULT_SCALARS } from './scalars';
 import { pascalCase } from 'change-case-all';
 import { generateFragmentImportStatement } from './imports';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
@@ -45,12 +43,14 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## graphql.macro
+   *
    * ```yml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
    *
    * ## Gatsby
+   *
    * ```yml
    * config:
    *   gqlImport: gatsby#graphql
@@ -106,6 +106,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default graphQLTag
    * @description Declares how DocumentNode are created:
+   *
    * - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
@@ -130,6 +131,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default ""
    * @description This config should be used if `documentMode` is `external`. This has 2 usage:
+   *
    * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
@@ -197,7 +199,7 @@ export class ClientSideBaseVisitor<
     documents?: Types.DocumentFile[]
   ) {
     super(rawConfig, {
-      scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
+      scalars: buildScalarsFromConfig(_schema, rawConfig),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       optimizeDocumentNode: getConfigValue(rawConfig.optimizeDocumentNode, true),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
@@ -237,7 +239,7 @@ export class ClientSideBaseVisitor<
 
     const names: Set<string> = new Set();
 
-    visit(document, {
+    oldVisit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
           names.add(node.name.value);
@@ -263,14 +265,16 @@ export class ClientSideBaseVisitor<
   }
 
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
-    const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
+    const includeNestedFragments =
+      this.config.documentMode === DocumentMode.documentNode ||
+      (this.config.dedupeFragments && document.kind === 'OperationDefinition');
 
     return this._extractFragments(document, includeNestedFragments).map(document =>
       this.getFragmentVariableName(document)
     );
   }
 
-  protected _includeFragments(fragments: string[]): string {
+  protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
         return this._fragments
@@ -280,6 +284,9 @@ export class ClientSideBaseVisitor<
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
         return '';
       } else {
+        if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
+          return '';
+        }
         return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
     }
@@ -296,7 +303,7 @@ export class ClientSideBaseVisitor<
 
     const doc = this._prepareDocument(`
     ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
-    ${this._includeFragments(fragments)}`);
+    ${this._includeFragments(fragments, node.kind)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       let gqlObj = gqlTag([doc]);
@@ -313,7 +320,7 @@ export class ClientSideBaseVisitor<
         gqlObj = optimizeDocumentNode(gqlObj);
       }
 
-      if (fragments.length > 0) {
+      if (fragments.length > 0 && (!this.config.dedupeFragments || node.kind === 'OperationDefinition')) {
         const definitions = [
           ...gqlObj.definitions.map(t => JSON.stringify(t)),
           ...fragments.map(name => `...${name}.definitions`),
@@ -335,7 +342,9 @@ export class ClientSideBaseVisitor<
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this.getFragmentVariableName(fragmentDocument);
     const fragmentTypeSuffix = this.getFragmentSuffix(fragmentDocument);
-    return `export const ${name}${this.getDocumentNodeSignature(
+    return `export const ${name} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(
+      fragmentDocument
+    )}${this.getDocumentNodeSignature(
       this.convertName(fragmentDocument.name.value, {
         useTypesPrefix: true,
         suffix: fragmentTypeSuffix,
@@ -346,7 +355,7 @@ export class ClientSideBaseVisitor<
           })
         : 'unknown',
       fragmentDocument
-    )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(fragmentDocument)};`;
+    )};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -499,8 +508,38 @@ export class ClientSideBaseVisitor<
         documentMode === DocumentMode.string ||
         documentMode === DocumentMode.documentNodeImportFragments
       ) {
-        fragmentImports.forEach(fragmentImport => {
-          this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+        // keep track of what imports we've already generated so we don't try
+        // to import the same identifier twice
+        const alreadyImported = new Map<string, Set<string>>();
+
+        const deduplicatedImports = fragmentImports
+          .map(fragmentImport => {
+            const { path, identifiers } = fragmentImport.importSource;
+            if (!alreadyImported.has(path)) {
+              alreadyImported.set(path, new Set<string>());
+            }
+
+            const alreadyImportedForPath = alreadyImported.get(path);
+            const newIdentifiers = identifiers.filter(identifier => !alreadyImportedForPath.has(identifier.name));
+            newIdentifiers.forEach(newIdentifier => alreadyImportedForPath.add(newIdentifier.name));
+
+            // filter the set of identifiers in this fragment import to only
+            // the ones we haven't already imported from this path
+            return {
+              ...fragmentImport,
+              importSource: {
+                ...fragmentImport.importSource,
+                identifiers: newIdentifiers,
+              },
+            };
+          })
+          // remove any imports that now have no identifiers in them
+          .filter(fragmentImport => fragmentImport.importSource.identifiers.length > 0);
+
+        deduplicatedImports.forEach(fragmentImport => {
+          if (fragmentImport.outputPath !== fragmentImport.importSource.path) {
+            this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+          }
         });
       }
     }
@@ -528,7 +567,7 @@ export class ClientSideBaseVisitor<
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments
     ) {
-      return `: DocumentNode`;
+      return ` as unknown as DocumentNode`;
     }
 
     return '';
@@ -549,14 +588,18 @@ export class ClientSideBaseVisitor<
     return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
   }
 
-  public OperationDefinition(node: OperationDefinitionNode): string {
-    this._collectedOperations.push(node);
-
-    const documentVariableName = this.convertName(node, {
+  public getOperationVariableName(node: OperationDefinitionNode) {
+    return this.convertName(node, {
       suffix: this.config.documentVariableSuffix,
       prefix: this.config.documentVariablePrefix,
       useTypesPrefix: false,
     });
+  }
+
+  public OperationDefinition(node: OperationDefinitionNode): string {
+    this._collectedOperations.push(node);
+
+    const documentVariableName = this.getOperationVariableName(node);
 
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
@@ -572,13 +615,9 @@ export class ClientSideBaseVisitor<
     if (this.config.documentMode !== DocumentMode.external) {
       // only generate exports for named queries
       if (documentVariableName !== '') {
-        documentString = `${
-          this.config.noExport ? '' : 'export'
-        } const ${documentVariableName}${this.getDocumentNodeSignature(
-          operationResultType,
-          operationVariablesTypes,
-          node
-        )} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(node)};`;
+        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
+          this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+        } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
       }
     }
 

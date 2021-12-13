@@ -5,8 +5,8 @@ import {
   LoadedFragment,
   indentMultiline,
   getBaseTypeNode,
-  buildScalars,
   indent,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import {
@@ -18,8 +18,6 @@ import {
   VariableDefinitionNode,
   isScalarType,
   FieldNode,
-  printSchema,
-  parse,
   DocumentNode,
   isEnumType,
   isInputObjectType,
@@ -28,15 +26,17 @@ import {
   InputObjectTypeDefinitionNode,
   EnumTypeDefinitionNode,
   FragmentSpreadNode,
+  DirectiveNode,
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import {
   getListInnerTypeNode,
   C_SHARP_SCALARS,
   getListTypeField,
   getListTypeDepth,
   CSharpFieldType,
+  convertSafeName,
   isValueType,
   wrapFieldType,
   CSharpDeclarationBlock,
@@ -88,7 +88,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         querySuffix: rawConfig.querySuffix || defaultSuffix,
         mutationSuffix: rawConfig.mutationSuffix || defaultSuffix,
         subscriptionSuffix: rawConfig.subscriptionSuffix || defaultSuffix,
-        scalars: buildScalars(schema, rawConfig.scalars, C_SHARP_SCALARS),
+        scalars: buildScalarsFromConfig(schema, rawConfig, C_SHARP_SCALARS),
         typesafeOperation: rawConfig.typesafeOperation || false,
       },
       documents
@@ -97,7 +97,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     this.overruleConfigSettings();
     autoBind(this);
 
-    this._schemaAST = parse(printSchema(schema));
+    this._schemaAST = getCachedDocumentNodeFromSchema(schema);
   }
 
   // Some settings aren't supported with C#, overruled here
@@ -156,7 +156,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
 
   protected _gql(node: OperationDefinitionNode): string {
     const fragments = this._transformFragments(node);
-    const doc = this._prepareDocument([print(node), this._includeFragments(fragments)].join('\n'));
+    const doc = this._prepareDocument([print(node), this._includeFragments(fragments, node.kind)].join('\n'));
 
     return doc.replace(/"/g, '""');
   }
@@ -185,7 +185,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
   }
 
   public getCSharpImports(): string {
-    return ['Newtonsoft.Json', 'GraphQL', 'GraphQL.Client.Abstractions'].map(i => `using ${i};`).join('\n') + '\n';
+    return (
+      ['System', 'Newtonsoft.Json', 'GraphQL', 'GraphQL.Client.Abstractions'].map(i => `using ${i};`).join('\n') + '\n'
+    );
   }
 
   private _operationSuffix(operationType: string): string {
@@ -268,7 +270,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
   }
 
   private _getResponseFieldRecursive(
-    node: OperationDefinitionNode | FieldNode | FragmentSpreadNode,
+    node: OperationDefinitionNode | FieldNode | FragmentSpreadNode | DirectiveNode,
     parentSchema: ObjectTypeDefinitionNode
   ): string {
     switch (node.kind) {
@@ -305,7 +307,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           return indentMultiline(
             [
               `[JsonProperty("${node.name.value}")]`,
-              `public ${responseTypeName} ${node.name.value} { get; set; }`,
+              `public ${responseTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
             ].join('\n') + '\n'
           );
         } else {
@@ -325,7 +327,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           const innerClassDefinition = new CSharpDeclarationBlock()
             .access('public')
             .asKind('class')
-            .withName(selectionBaseTypeName)
+            .withName(convertSafeName(selectionBaseTypeName))
             .withBlock(
               '\n' +
                 node.selectionSet.selections
@@ -341,7 +343,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
             [
               innerClassDefinition,
               `[JsonProperty("${node.name.value}")]`,
-              `public ${selectionTypeName} ${node.name.value} { get; set; }`,
+              `public ${selectionTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
             ].join('\n') + '\n'
           );
         }
@@ -359,6 +361,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
             return this._getResponseFieldRecursive(s, parentSchema);
           })
           .join('\n');
+      }
+      default: {
+        return '';
       }
     }
   }
@@ -387,7 +392,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
               return indentMultiline(
                 [
                   `[JsonProperty("${v.variable.name.value}")]`,
-                  `public ${inputTypeName} ${v.variable.name.value} { get; set; }`,
+                  `public ${inputTypeName} ${convertSafeName(v.variable.name.value)} { get; set; }`,
                 ].join('\n') + '\n'
               );
             })
@@ -437,6 +442,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         ].join('\n');
       }
     }
+    throw new Error(`Unexpected operation type: ${node.operation}`);
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {
@@ -455,9 +461,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
       const gqlBlock = indentMultiline(this._gql(node), 4);
-      documentString = `${
-        this.config.noExport ? '' : 'public'
-      } static string ${documentVariableName} = @"\n${gqlBlock}";`;
+      documentString = `${this.config.noExport ? '' : 'public'} static string ${convertSafeName(
+        documentVariableName
+      )} = @"\n${gqlBlock}";`;
     }
 
     const operationType: string = node.operation;
@@ -548,7 +554,7 @@ ${this._getOperationMethod(node)}
     const inputClass = new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.convertName(node))
+      .withName(convertSafeName(this.convertName(node)))
       .withBlock(
         '\n' +
           node.fields
@@ -559,9 +565,10 @@ ${this._getOperationMethod(node)}
               const inputType = this.resolveFieldType(f.type);
               const inputTypeName = wrapFieldType(inputType, inputType.listType, 'System.Collections.Generic.List');
               return indentMultiline(
-                [`[JsonProperty("${f.name.value}")]`, `public ${inputTypeName} ${f.name.value} { get; set; }`].join(
-                  '\n'
-                ) + '\n'
+                [
+                  `[JsonProperty("${f.name.value}")]`,
+                  `public ${inputTypeName} ${convertSafeName(f.name.value)} { get; set; }`,
+                ].join('\n') + '\n'
               );
             })
             .filter(f => !!f)
@@ -579,7 +586,7 @@ ${this._getOperationMethod(node)}
     const enumDefinition = new CSharpDeclarationBlock()
       .access('public')
       .asKind('enum')
-      .withName(this.convertName(node.name))
+      .withName(convertSafeName(this.convertName(node.name)))
       .withBlock(indentMultiline(node.values?.map(v => v.name.value).join(',\n'))).string;
 
     return indentMultiline(enumDefinition, 2);

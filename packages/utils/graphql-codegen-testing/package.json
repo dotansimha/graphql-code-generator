@@ -2,8 +2,18 @@
   "name": "@graphql-codegen/testing",
   "version": "1.17.7",
   "description": "GraphQL Codegen Testing Utils",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
@@ -23,16 +33,16 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "peerDependencies": {
-    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0",
+    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^1.18.4",
+    "@graphql-codegen/plugin-helpers": "^2.3.1",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
-    "graphql-helix": "1.2.3",
-    "nock": "13.0.11",
-    "tslib": "~2.2.0"
+    "graphql-helix": "1.10.3",
+    "nock": "13.2.1",
+    "tslib": "~2.3.0"
   },
   "publishConfig": {
     "directory": "dist",

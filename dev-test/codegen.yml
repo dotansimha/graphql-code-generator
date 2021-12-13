@@ -61,7 +61,8 @@ generates:
       - typescript
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
+    documents:
+      - ./dev-test/githunt/**/*.graphql
     plugins:
       - typescript-graphql-files-modules
   ./dev-test/githunt/typed-document-nodes.ts:
@@ -109,15 +110,6 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-  ./dev-test/githunt/types.preResolveTypes.compatibility.ts:
-    schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
-    config:
-      preResolveTypes: true
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-compatibility
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -198,8 +190,19 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
-    config:
-      fetcher:
+  ./dev-test/githunt/types.rtk-query.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - add:
+          content: 'module.hot?.accept();'
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query:
+          importBaseApiFrom: '../../packages/plugins/typescript/rtk-query/tests/baseApi'
+          exportHooks: true
+          overrideExisting: 'module.hot?.status() === "apply"'
+
   ./dev-test/githunt/types.apolloAngular.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -231,9 +234,13 @@ generates:
       - typescript-operations
       - typescript-urql
       - urql-introspection
+      - typescript-urql-graphcache
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
+    documents:
+      - ./dev-test/githunt/**/*.graphql
+      - ./dev-test/githunt-invalid/**/*.graphql
+      - '!./dev-test/githunt-invalid/**/*.graphql'
     preset: near-operation-file
     presetConfig:
       extension: .stencil-component.tsx
@@ -252,6 +259,20 @@ generates:
       - typescript
       - typescript-operations
       - typescript-vue-apollo
+  ./dev-test/githunt/types.vueApolloSmartOps.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-apollo-smart-ops
+  ./dev-test/githunt/jit-sdk.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-jit-sdk
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -374,3 +395,13 @@ generates:
       gqlImport: graphql-tag
       hooksImportFrom: '@apollo/react-hooks'
       withMutationFn: false
+  ./dev-test/gql-tag-operations/gql:
+    schema: ./dev-test/gql-tag-operations/schema.graphql
+    documents: './dev-test/gql-tag-operations/src/**/*.ts'
+    preset: gql-tag-operations-preset
+  ./dev-test/gql-tag-operations-urql/gql:
+    schema: ./dev-test/gql-tag-operations-urql/schema.graphql
+    documents: './dev-test/gql-tag-operations-urql/src/**/*.ts'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      augmentedModuleName: '@urql/core'

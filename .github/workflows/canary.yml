@@ -5,11 +5,25 @@ on:
     branches:
       - master
 
+  workflow_dispatch:
+    inputs:
+      onDemand:
+        description: 'Are you sure?'
+        required: true
+        default: 'yes'
+      npmTag:
+        description: 'NPM Tag'
+        required: true
+        default: 'alpha'
+      npmVersionSuffix:
+        description: 'Custom NPM Version Suffix'
+        required: false
+
 jobs:
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.pull_request.head.repo.full_name == github.repository || github.event.inputs.onDemand == 'yes'
     steps:
       - name: Checkout Master
         uses: actions/checkout@v2
@@ -18,7 +32,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: 17
       - name: Configure Git Credentials
         run: |
           git config --global user.email "theguild-bot@users.noreply.github.com"
@@ -32,9 +46,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-14-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-14-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install --ignore-engines && git checkout yarn.lock
       - name: Release Canary
@@ -44,6 +58,10 @@ jobs:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'yarn release:canary'
           changesets: true
+        env:
+          ON_DEMAND: ${{github.event.inputs.onDemand}}
+          NPM_TAG: ${{github.event.inputs.npmTag || 'alpha'}}
+          NPM_VERSION_SUFFIX: ${{github.event.inputs.npmVersionSuffix}}
       - name: Publish a message
         if: steps.canary.outputs.released
         uses: 'kamilkisiela/pr-comment@master'

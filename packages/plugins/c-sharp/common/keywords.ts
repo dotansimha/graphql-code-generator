@@ -1,8 +1,13 @@
+// This file is bundled and inlined.
+// We should probably make this a shared package though.
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NameNode } from 'graphql';
+
 /**
  * C# keywords
  * https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/
  */
-export const csharpKeywords = [
+const csharpKeywords = new Set([
   'abstract',
   'as',
   'base',
@@ -81,4 +86,19 @@ export const csharpKeywords = [
   'void',
   'volatile',
   'while',
-];
+]);
+
+/**
+ * Checks name against list of keywords. If it is, will prefix value with @
+ *
+ * Note:
+ * This class should first invoke the convertName from base-visitor to convert the string or node
+ * value according the naming configuration, eg upper or lower case. Then resulting string checked
+ * against the list or keywords.
+ * However the generated C# code is not yet able to handle fields that are in a different case so
+ * the invocation of convertName is omitted purposely.
+ */
+export function convertSafeName(node: NameNode | string): string {
+  const name = typeof node === 'string' ? node : node.value;
+  return csharpKeywords.has(name) ? `@${name}` : name;
+}

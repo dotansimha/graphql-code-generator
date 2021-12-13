@@ -32,6 +32,15 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withMutationOptionsType: boolean;
   addDocBlocks: boolean;
   defaultBaseOptions: { [key: string]: string };
+  hooksSuffix: string;
+}
+
+function hasRequiredVariables(node: OperationDefinitionNode): boolean {
+  return (
+    node.variableDefinitions?.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue
+    ) ?? false
+  );
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -78,6 +87,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
         rawConfig.gqlImport,
         rawConfig.reactApolloVersion === 2 ? null : `${APOLLO_CLIENT_3_UNIFIED_PACKAGE}#gql`
       ),
+      hooksSuffix: getConfigValue(rawConfig.hooksSuffix, ''),
     });
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -110,11 +120,23 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return GROUPED_APOLLO_CLIENT_3_IDENTIFIER;
   }
 
+  private usesExternalHooksOnly(): boolean {
+    const apolloReactCommonIdentifier = this.getApolloReactCommonIdentifier();
+    return (
+      apolloReactCommonIdentifier === GROUPED_APOLLO_CLIENT_3_IDENTIFIER &&
+      this.config.apolloReactHooksImportFrom !== APOLLO_CLIENT_3_UNIFIED_PACKAGE &&
+      this.config.withHooks &&
+      !this.config.withComponent &&
+      !this.config.withHOC
+    );
+  }
+
   private getApolloReactCommonImport(isTypeImport: boolean): string {
     const apolloReactCommonIdentifier = this.getApolloReactCommonIdentifier();
 
     return `${this.getImportStatement(
-      isTypeImport && apolloReactCommonIdentifier !== GROUPED_APOLLO_CLIENT_3_IDENTIFIER
+      isTypeImport &&
+        (apolloReactCommonIdentifier !== GROUPED_APOLLO_CLIENT_3_IDENTIFIER || this.usesExternalHooksOnly())
     )} * as ${apolloReactCommonIdentifier} from '${this.config.apolloReactCommonImportFrom}';`;
   }
 
@@ -247,9 +269,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       useTypesPrefix: false,
     });
 
-    const isVariablesRequired =
-      operationType === 'Query' &&
-      node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
+    const isVariablesRequired = operationType === 'Query' && hasRequiredVariables(node);
 
     this.imports.add(this.getReactImport());
     this.imports.add(this.getApolloReactCommonImport(true));
@@ -327,10 +347,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ): string {
     const nodeName = node.name?.value ?? '';
     const suffix = this._getHookSuffix(nodeName, operationType);
-    const operationName: string = this.convertName(nodeName, {
-      suffix,
-      useTypesPrefix: false,
-    });
+    const operationName: string =
+      this.convertName(nodeName, {
+        suffix,
+        useTypesPrefix: false,
+        useTypesSuffix: false,
+      }) + this.config.hooksSuffix;
 
     this.imports.add(this.getApolloReactCommonImport(true));
     this.imports.add(this.getApolloReactHooksImport(false));
@@ -443,12 +465,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     }
 
     const nodeName = node.name?.value ?? '';
-    const operationName: string = this.convertName(nodeName, {
-      suffix: this._getHookSuffix(nodeName, operationType),
-      useTypesPrefix: false,
-    });
+    const operationName: string =
+      this.convertName(nodeName, {
+        suffix: this._getHookSuffix(nodeName, operationType),
+        useTypesPrefix: false,
+      }) + this.config.hooksSuffix;
 
-    return `export function refetch${operationName}(variables?: ${operationVariablesTypes}) {
+    const optional = hasRequiredVariables(node) ? '' : '?';
+
+    return `export function refetch${operationName}(variables${optional}: ${operationVariablesTypes}) {
       return { query: ${this.getDocumentNodeVariable(node, documentVariableName)}, variables: variables }
     }`;
   }

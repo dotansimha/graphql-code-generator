@@ -1,5 +1,24 @@
 {
-    "yaml.schemas": {
-      "./website/static/config.schema.json": "*codegen.*"
-    }
-  }
+  "yaml.schemas": {
+    "./website/static/config.schema.json": "*codegen.*"
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [80],
+  "editor.wordWrapColumn": 110,
+  "prettier.semi": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 110,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "node_modules": false,
+    "test-lib": true,
+    "lib": true,
+    "coverage": true,
+    "npm": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

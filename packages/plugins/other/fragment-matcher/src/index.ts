@@ -38,17 +38,17 @@ interface PossibleTypesResultData {
  */
 export interface FragmentMatcherConfig {
   /**
-   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.
+   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`. Allowed values are: `commonjs`, `es2015`.
    * @default es2015
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.json:
-   *  plugins:
-   *    - fragment-matcher
-   *  config:
-   *    module: commonjs
+   *   path/to/file.json:
+   *     plugins:
+   *       - fragment-matcher
+   *     config:
+   *       module: commonjs
    * ```
    */
   module?: 'commonjs' | 'es2015';
@@ -59,11 +59,11 @@ export interface FragmentMatcherConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - fragment-matcher
-   *  config:
-   *    apolloClientVersion: 3
+   *   path/to/file.ts:
+   *     plugins:
+   *       - fragment-matcher
+   *     config:
+   *       apolloClientVersion: 3
    * ```
    */
   apolloClientVersion?: 2 | 3;
@@ -74,11 +74,11 @@ export interface FragmentMatcherConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - fragment-matcher
-   *  config:
-   *    useExplicitTyping: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - fragment-matcher
+   *     config:
+   *       useExplicitTyping: true
    * ```
    */
   useExplicitTyping?: boolean;
@@ -109,7 +109,7 @@ export const plugin: PluginFunction = async (
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
   const useExplicitTyping = config.useExplicitTyping;
 
-  const introspection = await execute({
+  const introspection = (await execute({
     schema: cleanSchema,
     document: parse(`
       {
@@ -124,7 +124,7 @@ export const plugin: PluginFunction = async (
         }
       }
     `),
-  });
+  })) as any;
   const ext = extname(info.outputFile).toLowerCase();
 
   if (!introspection.data) {
@@ -136,7 +136,7 @@ export const plugin: PluginFunction = async (
     return { ...acc, ...{ [type.name]: type.possibleTypes.map(possibleType => possibleType.name) } };
   };
 
-  const filteredData: PossibleTypesResultData | IntrospectionResultData =
+  const filteredData: IntrospectionResultData | PossibleTypesResultData =
     apolloClientVersion === 2
       ? {
           __schema: {

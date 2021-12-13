@@ -19,6 +19,8 @@ export interface BaseVisitorConvertOptions {
   useTypesSuffix?: boolean;
 }
 
+export type InlineFragmentTypeOptions = 'inline' | 'combine';
+
 export interface ParsedConfig {
   scalars: ParsedScalarsMap;
   convert: ConvertFn;
@@ -30,9 +32,37 @@ export interface ParsedConfig {
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
   useTypeImports: boolean;
+  dedupeFragments: boolean;
+  allowEnumStringTypes: boolean;
+  inlineFragmentTypes: InlineFragmentTypeOptions;
 }
 
 export interface RawConfig {
+  /**
+   * @description Makes scalars strict.
+   *
+   * If scalars are found in the schema that are not defined in `scalars`
+   * an error will be thrown during codegen.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   strictScalars: true
+   * ```
+   */
+  strictScalars?: boolean;
+  /**
+   * @description Allows you to override the type that unknown scalars will have.
+   * @default any
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   defaultScalarType: unknown
+   * ```
+   */
+  defaultScalarType?: string;
   /**
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
@@ -52,8 +82,8 @@ export interface RawConfig {
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
-   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
-   * which is to preserves underscores.
+   * Additionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,
+   * which is to preserve underscores.
    *
    * Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
    * [See more](https://github.com/btxtiger/change-case-all)
@@ -112,7 +142,7 @@ export interface RawConfig {
   typesSuffix?: string;
   /**
    * @default false
-   * @description Does not add __typename to the generated types, unless it was specified in the selection set.
+   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
    *
    * @exampleMarkdown
    * ```yml
@@ -161,6 +191,27 @@ export interface RawConfig {
    * @ignore
    */
   globalNamespace?: boolean;
+  /**
+   * @description  Removes fragment duplicates for reducing data transfer.
+   * It is done by removing sub-fragments imports from fragment definition
+   * Instead - all of them are imported to the Operation node.
+   * @type boolean
+   * @default false
+   */
+  dedupeFragments?: boolean;
+  /**
+   * @ignore
+   */
+  allowEnumStringTypes?: boolean;
+  /**
+   * @description Whether fragment types should be inlined into other operations.
+   * "inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
+   * "combine" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).
+   *
+   * @type string
+   * @default inline
+   */
+  inlineFragmentTypes?: InlineFragmentTypeOptions;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -178,6 +229,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       useTypeImports: !!rawConfig.useTypeImports,
+      dedupeFragments: !!rawConfig.dedupeFragments,
+      allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
+      inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       ...((additionalConfig || {}) as any),
     };
 

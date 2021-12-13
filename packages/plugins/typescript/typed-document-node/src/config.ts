@@ -17,4 +17,21 @@ export interface TypeScriptTypedDocumentNodesConfig extends RawClientSideBasePlu
    * ```
    */
   flattenGeneratedTypes?: boolean;
+
+  /**
+   * @description Add __typename to selection set
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript-operations
+   *    - typed-document-node
+   *  config:
+   *    addTypenameToSelectionSets: true
+   * ```
+   */
+  addTypenameToSelectionSets?: boolean;
 }

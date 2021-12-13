@@ -1,7 +1,5 @@
-import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import {
-  printSchema,
-  parse,
   visit,
   ListTypeNode,
   DocumentNode,
@@ -43,15 +41,18 @@ const createDescriptionBlock = (nodeWithDesc: any | { description?: StringValueN
 };
 
 export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) => {
-  const parsedSchema = parse(printSchema(schema));
+  const parsedSchema = getCachedDocumentNodeFromSchema(schema);
   const mappedDocuments = documents.map(document => document.document).filter(document => document !== undefined);
   const ast = concatAST([parsedSchema, ...(mappedDocuments as Array<DocumentNode>)]);
 
-  const schemaTypes: Array<string> = visit(ast, {
+  const schemaTypes = visit(ast, {
     Document: {
       leave(node) {
         return node.definitions;
       },
+    },
+    SchemaDefinition: {
+      leave: () => null,
     },
     ObjectTypeDefinition: {
       leave(node: unknown) {
@@ -129,6 +130,12 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return ` - DEPRECATED: ${reason.value.value}`;
       },
     },
+    DirectiveDefinition: {
+      enter() {
+        /** This plugin currently does not support unused Directives. */
+        return null;
+      },
+    },
     FieldDefinition: {
       enter(node) {
         if (node.type.kind === 'NonNullType') {
@@ -202,7 +209,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return null;
       },
     },
-  });
+  }) as unknown as string[];
 
   return schemaTypes.join('\n\n');
 };

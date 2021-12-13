@@ -6,22 +6,42 @@ import { Component, Prop, h } from '@stencil/core';
 declare global {
   export type CommentQueryVariables = Types.Exact<{
     repoFullName: Types.Scalars['String'];
-    limit?: Types.Maybe<Types.Scalars['Int']>;
-    offset?: Types.Maybe<Types.Scalars['Int']>;
+    limit?: Types.InputMaybe<Types.Scalars['Int']>;
+    offset?: Types.InputMaybe<Types.Scalars['Int']>;
   }>;
 
-  export type CommentQuery = { __typename?: 'Query' } & {
-    currentUser?: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>>;
-    entry?: Types.Maybe<
-      { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'createdAt' | 'commentCount'> & {
-          postedBy: { __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>;
-          comments: Array<Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
-          repository: { __typename?: 'Repository' } & Pick<
-            Types.Repository,
-            'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
+  export type CommentQuery = {
+    __typename?: 'Query';
+    currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
+    entry?:
+      | {
+          __typename?: 'Entry';
+          id: number;
+          createdAt: number;
+          commentCount: number;
+          postedBy: { __typename?: 'User'; login: string; html_url: string };
+          comments: Array<
+            | {
+                __typename?: 'Comment';
+                id: number;
+                createdAt: number;
+                content: string;
+                postedBy: { __typename?: 'User'; login: string; html_url: string };
+              }
+            | null
+            | undefined
           >;
+          repository: {
+            __typename?: 'Repository';
+            description?: string | null | undefined;
+            open_issues_count?: number | null | undefined;
+            stargazers_count: number;
+            full_name: string;
+            html_url: string;
+          };
         }
-    >;
+      | null
+      | undefined;
   };
 }
 

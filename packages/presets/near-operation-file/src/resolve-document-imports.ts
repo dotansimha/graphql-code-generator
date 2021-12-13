@@ -50,9 +50,10 @@ interface ResolveDocumentImportResult {
 export function resolveDocumentImports<T>(
   presetOptions: Types.PresetFnArgs<T>,
   schemaObject: GraphQLSchema,
-  importResolverOptions: DocumentImportResolverOptions
+  importResolverOptions: DocumentImportResolverOptions,
+  dedupeFragments = false
 ): Array<ResolveDocumentImportResult> {
-  const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject);
+  const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject, dedupeFragments);
   const { baseOutputDir, documents } = presetOptions;
   const { generateFilePath, schemaTypesSource, baseDir, typesImport } = importResolverOptions;
 

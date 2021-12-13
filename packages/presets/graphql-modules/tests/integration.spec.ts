@@ -25,7 +25,7 @@ describe('Integration', () => {
   monorepo.correctCWD();
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers('legacy');
   });
 
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
@@ -47,7 +47,22 @@ describe('Integration', () => {
     }
   });
 
-  test.only('should allow to override importBaseTypesFrom correctly', async () => {
+  test('should not duplicate type even if type and extend type are in the same module', async () => {
+    try {
+      const output = await executeCodegen(options);
+
+      const userResolversStr = `export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;`;
+      const nbOfTimeUserResolverFound = output[4].content.split(userResolversStr).length - 1;
+
+      expect(nbOfTimeUserResolverFound).toBe(1);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      throw e;
+    }
+  });
+
+  test('should allow to override importBaseTypesFrom correctly', async () => {
     const output = await executeCodegen({
       generates: {
         './tests/test-files/modules': {
@@ -70,6 +85,30 @@ describe('Integration', () => {
     expect(output[2].content).toMatch(importStatement);
     expect(output[3].content).toMatch(importStatement);
     expect(output[4].content).toMatch(importStatement);
+  });
+
+  test('should allow to disable graphql-modules', async () => {
+    const output = await executeCodegen({
+      generates: {
+        './tests/test-files/modules': {
+          schema: './tests/test-files/modules/*/types/*.graphql',
+          plugins: ['typescript', 'typescript-resolvers'],
+          preset: 'graphql-modules',
+          presetConfig: {
+            importBaseTypesFrom: '@types',
+            baseTypesPath: 'global-types.ts',
+            filename: 'module-types.ts',
+            encapsulateModuleTypes: 'none',
+            useGraphQLModules: false,
+          },
+        },
+      },
+    });
+
+    for (const record of output) {
+      expect(record).not.toContain(`graphql-modules`);
+      expect(record).not.toContain(`gm.`);
+    }
   });
 
   test('each module-types should include a relative import to glob-types module', async () => {

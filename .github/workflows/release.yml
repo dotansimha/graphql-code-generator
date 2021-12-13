@@ -26,7 +26,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: 17
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
@@ -35,9 +35,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-14-15-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-14-15-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install && git checkout yarn.lock
       - name: Create Release Pull Request or Publish to npm

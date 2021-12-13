@@ -11,13 +11,13 @@ To add your plugin validation method, export a function called `validate` from y
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
-    const typesMap = schema.getTypeMap();
+  plugin(schema, documents, config, info) {
+    const typesMap = schema.getTypeMap()
 
-    return Object.keys(typesMap).join('\n');
+    return Object.keys(typesMap).join('\n')
   },
   validate: (schema, documents, config, outputFile, allPlugins) => {}
-};
+}
 ```
 
 > `outputFile` is the name of the output file, and you can use it to enforce specific filename of specific file extension.
@@ -28,15 +28,15 @@ You can now check the schema, documents, configuration, output file and sibling 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
-    const typesMap = schema.getTypeMap();
+  plugin(schema, documents, config, info) {
+    const typesMap = schema.getTypeMap()
 
-    return Object.keys(typesMap).join('\n');
+    return Object.keys(typesMap).join('\n')
   },
-  validate: (schema, documents, config, outputFile, allPlugins) => {
+  validate(schema, documents, config, outputFile, allPlugins) {
     if (!config.mustHave) {
-      throw new Error(`You must specify "mustHave" in my plugin configuration!`);
+      throw new Error(`You must specify "mustHave" in my plugin configuration!`)
     }
   }
-};
+}
 ```

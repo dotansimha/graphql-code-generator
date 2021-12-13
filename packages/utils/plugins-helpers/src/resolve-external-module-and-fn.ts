@@ -1,10 +1,11 @@
+import { createRequire } from 'module';
+import { cwd } from 'process';
+import * as changeCaseAll from 'change-case-all';
+
 export function resolveExternalModuleAndFn(pointer: any): any {
   if (typeof pointer === 'function') {
     return pointer;
   }
-
-  // eslint-disable-next-line no-eval
-  const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
 
   // eslint-disable-next-line prefer-const
   let [moduleName, functionName] = pointer.split('#');
@@ -12,15 +13,19 @@ export function resolveExternalModuleAndFn(pointer: any): any {
   if (moduleName === 'change-case') {
     moduleName = 'change-case-all';
   }
-  const { resolve } = importExternally('path');
-  const localFilePath = resolve(process.cwd(), moduleName);
-  const { existsSync } = importExternally('fs');
-  const localFileExists = existsSync(localFilePath);
-  const importFrom = importExternally('import-from');
-  const loadedModule = localFileExists ? importExternally(localFilePath) : importFrom(process.cwd(), moduleName);
 
-  if (!(functionName in loadedModule) && typeof loadedModule !== 'function') {
-    throw new Error(`${functionName} couldn't be found in module ${moduleName}!`);
+  let loadedModule: any;
+  if (moduleName === 'change-case-all') {
+    loadedModule = changeCaseAll;
+  } else {
+    // we have to use a path to a filename here (it does not need to exist.)
+    // https://github.com/dotansimha/graphql-code-generator/issues/6553
+    const cwdRequire = createRequire(cwd() + '/index.js');
+    loadedModule = cwdRequire(moduleName);
+
+    if (!(functionName in loadedModule) && typeof loadedModule !== 'function') {
+      throw new Error(`${functionName} couldn't be found in module ${moduleName}!`);
+    }
   }
 
   return loadedModule[functionName] || loadedModule;

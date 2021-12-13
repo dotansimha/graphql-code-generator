@@ -1,5 +1,5 @@
 import { validate, plugin } from '../src/index';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -8,44 +8,6 @@ import { codegen } from '@graphql-codegen/core';
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
 describe('Schema AST', () => {
-  describe('Issues', () => {
-    it('#4919 - should support sorting the schema', async () => {
-      const schema = buildSchema(/* GraphQL */ `
-        type Query {
-          d: String
-          z: String
-          a: String
-        }
-
-        type User {
-          aa: String
-          a: String
-        }
-
-        type A {
-          s: String
-          b: String
-        }
-      `);
-      const content = await plugin(schema, [], { sort: true });
-      expect(content).toBeSimilarStringTo(`
-      type A {
-        b: String
-        s: String
-      }
-      
-      type Query {
-        a: String
-        d: String
-        z: String
-      }
-      
-      type User {
-        a: String
-        aa: String
-      }`);
-    });
-  });
   describe('Validation', () => {
     it('Should enforce graphql extension when its the only plugin', async () => {
       const fileName = 'output.ts';
@@ -141,34 +103,66 @@ describe('Schema AST', () => {
       `);
     });
 
-    it('Should print schema with as # when commentDescriptions=true', async () => {
-      const testSchema = buildSchema(/* GraphQL */ `
-        type Query {
-          """
-          test
-          """
-          fieldTest: String
-        }
-      `);
-      const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
+    if (versionInfo.major < 16) {
+      it('Should print schema with as # when commentDescriptions=true', async () => {
+        const testSchema = buildSchema(/* GraphQL */ `
+          type Query {
+            """
+            test
+            """
+            fieldTest: String
+          }
+        `);
+        const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
 
-      expect(content).toBeSimilarStringTo(`
+        expect(content).toBeSimilarStringTo(`
         type Query {
           #  test
           fieldTest: String
         }
       `);
-    });
+      });
+    }
 
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });
 
       expect(content).toBeSimilarStringTo(`
-        directive @modify(limit: Int) on FIELD_DEFINITION 
+        directive @modify(limit: Int) on FIELD_DEFINITION
       `);
       expect(content).toBeSimilarStringTo(`
         type Query {
           fieldTest: String @modify(limit: 1)
+        }
+      `);
+    });
+
+    it('Should print schema with introspection when "includeIntrospectionTypes" is set', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: true });
+
+      expect(content).toBeSimilarStringTo(`
+        type __Schema
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
+          __schema: __Schema!
+          __type(name: String!): __Type
+        }
+      `);
+    });
+
+    it('Should print schema without introspection when "includeIntrospectionTypes" is unset', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: false });
+
+      expect(content).not.toBeSimilarStringTo(`
+        type __Schema
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
         }
       `);
     });
@@ -231,14 +225,14 @@ describe('Schema AST', () => {
           id: ID
           side: String
         }
-        
+
         type Droid {
           id: ID
           model: String
         }
-        
+
         union People = Character | Jedi | Droid
-        
+
         type Query {
           allPeople: [People]
         }

@@ -38,6 +38,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  inputMaybeValue: string;
   noExport: boolean;
   useImplementingTypes: boolean;
 }
@@ -55,6 +56,10 @@ export class TsVisitor<
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
+      inputMaybeValue: getConfigValue(
+        pluginConfig.inputMaybeValue,
+        getConfigValue(pluginConfig.maybeValue, 'Maybe<T>')
+      ),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
@@ -64,6 +69,8 @@ export class TsVisitor<
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
+      entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
+      wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -80,7 +87,10 @@ export class TsVisitor<
         null,
         enumNames,
         pluginConfig.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        false,
+        this.config.directiveArgumentAndInputFieldMappings,
+        'InputMaybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -90,7 +100,7 @@ export class TsVisitor<
   }
 
   protected _getTypeForNode(node: NamedTypeNode): string {
-    const typeAsString = (node.name as any) as string;
+    const typeAsString = node.name as any as string;
 
     if (this.config.useImplementingTypes) {
       const allTypesMap = this._schema.getTypeMap();
@@ -112,12 +122,34 @@ export class TsVisitor<
       }
     }
 
-    return super._getTypeForNode(node);
+    const typeString = super._getTypeForNode(node);
+    const schemaType = this._schema.getType(node.name as any as string);
+
+    if (isEnumType(schemaType)) {
+      // futureProofEnums + enumsAsTypes combination adds the future value to the enum type itself
+      // so it's not necessary to repeat it in the usage
+      const futureProofEnumUsageEnabled = this.config.futureProofEnums === true && this.config.enumsAsTypes !== true;
+
+      if (futureProofEnumUsageEnabled && this.config.allowEnumStringTypes === true) {
+        return `${typeString} | '%future added value' | ` + '`${' + typeString + '}`';
+      }
+
+      if (futureProofEnumUsageEnabled) {
+        return `${typeString} | '%future added value'`;
+      }
+
+      if (this.config.allowEnumStringTypes === true) {
+        return `${typeString} | ` + '`${' + typeString + '}`';
+      }
+    }
+
+    return typeString;
   }
 
   public getWrapperDefinitions(): string[] {
     const definitions: string[] = [
       this.getMaybeValue(),
+      this.getInputMaybeValue(),
       this.getExactDefinition(),
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
@@ -125,6 +157,9 @@ export class TsVisitor<
 
     if (this.config.wrapFieldDefinitions) {
       definitions.push(this.getFieldWrapperValue());
+    }
+    if (this.config.wrapEntireDefinitions) {
+      definitions.push(this.getEntireFieldWrapperValue());
     }
 
     return definitions;
@@ -146,9 +181,16 @@ export class TsVisitor<
     return `${this.getExportPrefix()}type Maybe<T> = ${this.config.maybeValue};`;
   }
 
+  public getInputMaybeValue(): string {
+    return `${this.getExportPrefix()}type InputMaybe<T> = ${this.config.inputMaybeValue};`;
+  }
+
   protected clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+    if (str.startsWith('InputMaybe')) {
+      return str.replace(/InputMaybe<(.*?)>$/, '$1');
     }
 
     return str;
@@ -162,12 +204,19 @@ export class TsVisitor<
     return super.getExportPrefix();
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
-    return `Maybe<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  getMaybeWrapper(ancestors): string {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+    return isInputContext ? 'InputMaybe' : 'Maybe';
   }
 
-  ListType(node: ListTypeNode): string {
-    return `Maybe<${super.ListType(node)}>`;
+  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.NamedType(node, key, parent, path, ancestors)}>`;
+  }
+
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+    return `${this.getMaybeWrapper(ancestors)}<${super.ListType(node, key, parent, path, ancestors)}>`;
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
@@ -188,7 +237,7 @@ export class TsVisitor<
       .export()
       .asKind('type')
       .withName(this.convertName(node))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withContent(possibleTypes).string;
     // return super.UnionTypeDefinition(node, key, parent).concat(withFutureAddedValue).join("");
   }
@@ -204,7 +253,9 @@ export class TsVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = (node.type as any) as string;
+    const typeString = this.config.wrapEntireDefinitions
+      ? `EntireFieldWrapper<${node.type}>`
+      : (node.type as any as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = this.getFieldComment(node);
@@ -226,20 +277,26 @@ export class TsVisitor<
       !this.config.avoidOptionals.inputValue &&
       (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
         (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
-    const comment = transformComment((node.description as any) as string, 1);
-    const { type } = this.config.declarationKind;
+    const comment = transformComment(node.description as any as string, 1);
+    const declarationKind = this.config.declarationKind.type;
+
+    let type: string = node.type as any as string;
+    if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
+      type = this._getDirectiveOverrideType(node.directives) || type;
+    }
+
     return (
       comment +
       indent(
-        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${
-          node.type
-        }${this.getPunctuation(type)}`
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
+          addOptionalSign ? '?' : ''
+        }: ${type}${this.getPunctuation(declarationKind)}`
       )
     );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumName = (node.name as any) as string;
+    const enumName = node.name as any as string;
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
@@ -267,15 +324,15 @@ export class TsVisitor<
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
-        .withComment((node.description as any) as string)
+        .withComment(node.description as any as string)
         .withName(enumTypeName)
         .withContent(
           '\n' +
             node.values
               .map(enumOption => {
-                const name = (enumOption.name as unknown) as string;
+                const name = enumOption.name as unknown as string;
                 const enumValue: string | number = getValueFromConfig(name) ?? name;
-                const comment = transformComment((enumOption.description as any) as string, 1);
+                const comment = transformComment(enumOption.description as any as string, 1);
 
                 return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
               })
@@ -287,17 +344,19 @@ export class TsVisitor<
     if (this.config.numericEnums) {
       const block = new DeclarationBlock(this._declarationBlockConfig)
         .export()
-        .withComment((node.description as any) as string)
+        .withComment(node.description as any as string)
         .withName(enumTypeName)
         .asKind('enum')
         .withBlock(
           node.values
             .map((enumOption, i) => {
-              const valueFromConfig = getValueFromConfig((enumOption.name as unknown) as string);
+              const valueFromConfig = getValueFromConfig(enumOption.name as unknown as string);
               const enumValue: string | number = valueFromConfig ?? i;
-              const comment = transformComment((enumOption.description as any) as string, 1);
-
-              return comment + indent((enumOption.name as unknown) as string) + ` = ${enumValue}`;
+              const comment = transformComment(enumOption.description as any as string, 1);
+              const optionName = this.makeValidEnumIdentifier(
+                this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+              );
+              return comment + indent(optionName) + ` = ${enumValue}`;
             })
             .concat(...withFutureAddedValue)
             .join(',\n')
@@ -317,13 +376,13 @@ export class TsVisitor<
         .export()
         .asKind('const')
         .withName(enumTypeName)
-        .withComment((node.description as any) as string)
+        .withComment(node.description as any as string)
         .withBlock(
           node.values
             .map(enumOption => {
               const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
-              const comment = transformComment((enumOption.description as any) as string, 1);
-              const name = (enumOption.name as unknown) as string;
+              const comment = transformComment(enumOption.description as any as string, 1);
+              const name = enumOption.name as unknown as string;
               const enumValue: string | number = getValueFromConfig(name) ?? name;
 
               return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
@@ -338,7 +397,7 @@ export class TsVisitor<
       .export()
       .asKind(this.config.constEnums ? 'const enum' : 'enum')
       .withName(enumTypeName)
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 

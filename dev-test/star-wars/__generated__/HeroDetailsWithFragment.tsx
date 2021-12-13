@@ -1,18 +1,20 @@
 import * as Types from '../types.d';
 
-import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
 import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
-export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
-  hero?: Types.Maybe<
-    ({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
-  >;
+export type HeroDetailsWithFragmentQuery = {
+  __typename?: 'Query';
+  hero?:
+    | { __typename?: 'Droid'; primaryFunction?: string | null | undefined; name: string }
+    | { __typename?: 'Human'; height?: number | null | undefined; name: string }
+    | null
+    | undefined;
 };
 
 export const HeroDetailsWithFragmentDocument = gql`

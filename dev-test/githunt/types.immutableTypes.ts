@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -11,24 +12,48 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  readonly __typename?: 'Query';
-  /** A feed of repository submissions */
-  readonly feed?: Maybe<ReadonlyArray<Maybe<Entry>>>;
-  /** A single entry */
-  readonly entry?: Maybe<Entry>;
-  /** Return the currently logged in user, or null if nobody is logged in */
-  readonly currentUser?: Maybe<User>;
+/** A comment about an entry, submitted by a user */
+export type Comment = {
+  readonly __typename?: 'Comment';
+  /** The text of the comment */
+  readonly content: Scalars['String'];
+  /** A timestamp of when the comment was posted */
+  readonly createdAt: Scalars['Float'];
+  /** The SQL ID of this entry */
+  readonly id: Scalars['Int'];
+  /** The GitHub user who posted the comment */
+  readonly postedBy: User;
+  /** The repository which this comment is about */
+  readonly repoName: Scalars['String'];
 };
 
-export type QueryFeedArgs = {
-  type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+/** Information about a GitHub repository submitted to GitHunt */
+export type Entry = {
+  readonly __typename?: 'Entry';
+  /** The number of comments posted about this repository */
+  readonly commentCount: Scalars['Int'];
+  /** Comments posted about this repository */
+  readonly comments: ReadonlyArray<Maybe<Comment>>;
+  /** A timestamp of when the entry was submitted */
+  readonly createdAt: Scalars['Float'];
+  /** The hot score of this repository */
+  readonly hotScore: Scalars['Float'];
+  /** The SQL ID of this entry */
+  readonly id: Scalars['Int'];
+  /** The GitHub user who submitted this entry */
+  readonly postedBy: User;
+  /** Information about the repository from GitHub */
+  readonly repository: Repository;
+  /** The score of this repository, upvotes - downvotes */
+  readonly score: Scalars['Int'];
+  /** XXX to be changed */
+  readonly vote: Vote;
 };
 
-export type QueryEntryArgs = {
-  repoFullName: Scalars['String'];
+/** Information about a GitHub repository submitted to GitHunt */
+export type EntryCommentsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A list of options for the sort order of the feed */
@@ -41,97 +66,19 @@ export enum FeedType {
   Top = 'TOP',
 }
 
-/** Information about a GitHub repository submitted to GitHunt */
-export type Entry = {
-  readonly __typename?: 'Entry';
-  /** Information about the repository from GitHub */
-  readonly repository: Repository;
-  /** The GitHub user who submitted this entry */
-  readonly postedBy: User;
-  /** A timestamp of when the entry was submitted */
-  readonly createdAt: Scalars['Float'];
-  /** The score of this repository, upvotes - downvotes */
-  readonly score: Scalars['Int'];
-  /** The hot score of this repository */
-  readonly hotScore: Scalars['Float'];
-  /** Comments posted about this repository */
-  readonly comments: ReadonlyArray<Maybe<Comment>>;
-  /** The number of comments posted about this repository */
-  readonly commentCount: Scalars['Int'];
-  /** The SQL ID of this entry */
-  readonly id: Scalars['Int'];
-  /** XXX to be changed */
-  readonly vote: Vote;
-};
-
-/** Information about a GitHub repository submitted to GitHunt */
-export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-};
-
-/**
- * A repository object from the GitHub API. This uses the exact field names returned by the
- * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
-export type Repository = {
-  readonly __typename?: 'Repository';
-  /** Just the name of the repository, e.g. GitHunt-API */
-  readonly name: Scalars['String'];
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  readonly full_name: Scalars['String'];
-  /** The description of the repository */
-  readonly description?: Maybe<Scalars['String']>;
-  /** The link to the repository on GitHub */
-  readonly html_url: Scalars['String'];
-  /** The number of people who have starred this repository on GitHub */
-  readonly stargazers_count: Scalars['Int'];
-  /** The number of open issues on this repository on GitHub */
-  readonly open_issues_count?: Maybe<Scalars['Int']>;
-  /** The owner of this repository on GitHub, e.g. apollostack */
-  readonly owner?: Maybe<User>;
-};
-
-/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
-export type User = {
-  readonly __typename?: 'User';
-  /** The name of the user, e.g. apollostack */
-  readonly login: Scalars['String'];
-  /** The URL to a directly embeddable image for this user's avatar */
-  readonly avatar_url: Scalars['String'];
-  /** The URL of this user's GitHub page */
-  readonly html_url: Scalars['String'];
-};
-
-/** A comment about an entry, submitted by a user */
-export type Comment = {
-  readonly __typename?: 'Comment';
-  /** The SQL ID of this entry */
-  readonly id: Scalars['Int'];
-  /** The GitHub user who posted the comment */
-  readonly postedBy: User;
-  /** A timestamp of when the comment was posted */
-  readonly createdAt: Scalars['Float'];
-  /** The text of the comment */
-  readonly content: Scalars['String'];
-  /** The repository which this comment is about */
-  readonly repoName: Scalars['String'];
-};
-
-/** XXX to be removed */
-export type Vote = {
-  readonly __typename?: 'Vote';
-  readonly vote_value: Scalars['Int'];
-};
-
 export type Mutation = {
   readonly __typename?: 'Mutation';
+  /** Comment on a repository, returns the new comment */
+  readonly submitComment?: Maybe<Comment>;
   /** Submit a new repository, returns the new submission */
   readonly submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
   readonly vote?: Maybe<Entry>;
-  /** Comment on a repository, returns the new comment */
-  readonly submitComment?: Maybe<Comment>;
+};
+
+export type MutationSubmitCommentArgs = {
+  commentContent: Scalars['String'];
+  repoFullName: Scalars['String'];
 };
 
 export type MutationSubmitRepositoryArgs = {
@@ -143,17 +90,47 @@ export type MutationVoteArgs = {
   type: VoteType;
 };
 
-export type MutationSubmitCommentArgs = {
-  repoFullName: Scalars['String'];
-  commentContent: Scalars['String'];
+export type Query = {
+  readonly __typename?: 'Query';
+  /** Return the currently logged in user, or null if nobody is logged in */
+  readonly currentUser?: Maybe<User>;
+  /** A single entry */
+  readonly entry?: Maybe<Entry>;
+  /** A feed of repository submissions */
+  readonly feed?: Maybe<ReadonlyArray<Maybe<Entry>>>;
 };
 
-/** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
-  Cancel = 'CANCEL',
-}
+export type QueryEntryArgs = {
+  repoFullName: Scalars['String'];
+};
+
+export type QueryFeedArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  type: FeedType;
+};
+
+/**
+ * A repository object from the GitHub API. This uses the exact field names returned by the
+ * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
+ */
+export type Repository = {
+  readonly __typename?: 'Repository';
+  /** The description of the repository */
+  readonly description?: Maybe<Scalars['String']>;
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
+  readonly full_name: Scalars['String'];
+  /** The link to the repository on GitHub */
+  readonly html_url: Scalars['String'];
+  /** Just the name of the repository, e.g. GitHunt-API */
+  readonly name: Scalars['String'];
+  /** The number of open issues on this repository on GitHub */
+  readonly open_issues_count?: Maybe<Scalars['Int']>;
+  /** The owner of this repository on GitHub, e.g. apollostack */
+  readonly owner?: Maybe<User>;
+  /** The number of people who have starred this repository on GitHub */
+  readonly stargazers_count: Scalars['Int'];
+};
 
 export type Subscription = {
   readonly __typename?: 'Subscription';
@@ -165,105 +142,224 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: Scalars['String'];
 };
 
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export type User = {
+  readonly __typename?: 'User';
+  /** The URL to a directly embeddable image for this user's avatar */
+  readonly avatar_url: Scalars['String'];
+  /** The URL of this user's GitHub page */
+  readonly html_url: Scalars['String'];
+  /** The name of the user, e.g. apollostack */
+  readonly login: Scalars['String'];
+};
+
+/** XXX to be removed */
+export type Vote = {
+  readonly __typename?: 'Vote';
+  readonly vote_value: Scalars['Int'];
+};
+
+/** The type of vote to record, when submitting a vote */
+export enum VoteType {
+  Cancel = 'CANCEL',
+  Down = 'DOWN',
+  Up = 'UP',
+}
+
 export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
 }>;
 
-export type OnCommentAddedSubscription = { readonly __typename?: 'Subscription' } & {
-  readonly commentAdded?: Maybe<
-    { readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
-        readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+export type OnCommentAddedSubscription = {
+  readonly __typename?: 'Subscription';
+  readonly commentAdded?:
+    | {
+        readonly __typename?: 'Comment';
+        readonly id: number;
+        readonly createdAt: number;
+        readonly content: string;
+        readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
       }
-  >;
+    | null
+    | undefined;
 };
 
 export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type CommentQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>>;
-  readonly entry?: Maybe<
-    { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
-        readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
-        readonly comments: ReadonlyArray<Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>>;
-        readonly repository: { readonly __typename?: 'Repository' } & Pick<
-          Repository,
-          'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
+export type CommentQuery = {
+  readonly __typename?: 'Query';
+  readonly currentUser?:
+    | { readonly __typename?: 'User'; readonly login: string; readonly html_url: string }
+    | null
+    | undefined;
+  readonly entry?:
+    | {
+        readonly __typename?: 'Entry';
+        readonly id: number;
+        readonly createdAt: number;
+        readonly commentCount: number;
+        readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+        readonly comments: ReadonlyArray<
+          | {
+              readonly __typename?: 'Comment';
+              readonly id: number;
+              readonly createdAt: number;
+              readonly content: string;
+              readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+            }
+          | null
+          | undefined
         >;
+        readonly repository: {
+          readonly __typename?: 'Repository';
+          readonly description?: string | null | undefined;
+          readonly open_issues_count?: number | null | undefined;
+          readonly stargazers_count: number;
+          readonly full_name: string;
+          readonly html_url: string;
+        };
       }
-  >;
+    | null
+    | undefined;
 };
 
-export type CommentsPageCommentFragment = { readonly __typename?: 'Comment' } & Pick<
-  Comment,
-  'id' | 'createdAt' | 'content'
-> & { readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'> };
+export type CommentsPageCommentFragment = {
+  readonly __typename?: 'Comment';
+  readonly id: number;
+  readonly createdAt: number;
+  readonly content: string;
+  readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+};
 
 export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
-export type CurrentUserForProfileQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+export type CurrentUserForProfileQuery = {
+  readonly __typename?: 'Query';
+  readonly currentUser?:
+    | { readonly __typename?: 'User'; readonly login: string; readonly avatar_url: string }
+    | null
+    | undefined;
 };
 
-export type FeedEntryFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
-    readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
-        readonly owner?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>>;
-      };
-  } & VoteButtonsFragment &
-  RepoInfoFragment;
+export type FeedEntryFragment = {
+  readonly __typename?: 'Entry';
+  readonly id: number;
+  readonly commentCount: number;
+  readonly score: number;
+  readonly createdAt: number;
+  readonly repository: {
+    readonly __typename?: 'Repository';
+    readonly full_name: string;
+    readonly html_url: string;
+    readonly description?: string | null | undefined;
+    readonly stargazers_count: number;
+    readonly open_issues_count?: number | null | undefined;
+    readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null | undefined;
+  };
+  readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
+  readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+};
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type FeedQuery = { readonly __typename?: 'Query' } & {
-  readonly currentUser?: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>;
-  readonly feed?: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>>;
+export type FeedQuery = {
+  readonly __typename?: 'Query';
+  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string } | null | undefined;
+  readonly feed?:
+    | ReadonlyArray<
+        | {
+            readonly __typename?: 'Entry';
+            readonly id: number;
+            readonly commentCount: number;
+            readonly score: number;
+            readonly createdAt: number;
+            readonly repository: {
+              readonly __typename?: 'Repository';
+              readonly full_name: string;
+              readonly html_url: string;
+              readonly description?: string | null | undefined;
+              readonly stargazers_count: number;
+              readonly open_issues_count?: number | null | undefined;
+              readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null | undefined;
+            };
+            readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
+            readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
   repoFullName: Scalars['String'];
 }>;
 
-export type SubmitRepositoryMutation = { readonly __typename?: 'Mutation' } & {
-  readonly submitRepository?: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+export type SubmitRepositoryMutation = {
+  readonly __typename?: 'Mutation';
+  readonly submitRepository?: { readonly __typename?: 'Entry'; readonly createdAt: number } | null | undefined;
 };
 
-export type RepoInfoFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
-    readonly repository: { readonly __typename?: 'Repository' } & Pick<
-      Repository,
-      'description' | 'stargazers_count' | 'open_issues_count'
-    >;
-    readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
+export type RepoInfoFragment = {
+  readonly __typename?: 'Entry';
+  readonly createdAt: number;
+  readonly repository: {
+    readonly __typename?: 'Repository';
+    readonly description?: string | null | undefined;
+    readonly stargazers_count: number;
+    readonly open_issues_count?: number | null | undefined;
   };
+  readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+};
 
 export type SubmitCommentMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
 }>;
 
-export type SubmitCommentMutation = { readonly __typename?: 'Mutation' } & {
-  readonly submitComment?: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>;
+export type SubmitCommentMutation = {
+  readonly __typename?: 'Mutation';
+  readonly submitComment?:
+    | {
+        readonly __typename?: 'Comment';
+        readonly id: number;
+        readonly createdAt: number;
+        readonly content: string;
+        readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+      }
+    | null
+    | undefined;
 };
 
-export type VoteButtonsFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & {
-    readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
-  };
+export type VoteButtonsFragment = {
+  readonly __typename?: 'Entry';
+  readonly score: number;
+  readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
+};
 
 export type VoteMutationVariables = Exact<{
   repoFullName: Scalars['String'];
   type: VoteType;
 }>;
 
-export type VoteMutation = { readonly __typename?: 'Mutation' } & {
-  readonly vote?: Maybe<
-    { readonly __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
-        readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+export type VoteMutation = {
+  readonly __typename?: 'Mutation';
+  readonly vote?:
+    | {
+        readonly __typename?: 'Entry';
+        readonly score: number;
+        readonly id: number;
+        readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
       }
-  >;
+    | null
+    | undefined;
 };

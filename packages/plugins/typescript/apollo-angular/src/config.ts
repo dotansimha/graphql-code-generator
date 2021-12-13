@@ -7,7 +7,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  *
  * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
  *
- * To shed some more light regards this template, it's recommended to go through the this article: http://apollographql.com/docs/angular/basics/services.html , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
+ * To shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
  */
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**

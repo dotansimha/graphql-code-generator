@@ -4,8 +4,8 @@ import {
   EnumValuesMap,
   indentMultiline,
   indent,
-  buildScalars,
   getBaseTypeNode,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { CSharpResolversPluginRawConfig } from './config';
 import {
@@ -24,7 +24,6 @@ import {
   isEnumType,
   DirectiveNode,
   StringValueNode,
-  NameNode,
   NamedTypeNode,
 } from 'graphql';
 import {
@@ -34,11 +33,16 @@ import {
   isValueType,
   getListInnerTypeNode,
   CSharpFieldType,
-  csharpKeywords,
+  convertSafeName,
   wrapFieldType,
   getListTypeField,
 } from '../../common/common';
 import { pascalCase } from 'change-case-all';
+import {
+  JsonAttributesSource,
+  JsonAttributesSourceConfiguration,
+  getJsonAttributeSourceConfiguration,
+} from './json-attributes';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -46,10 +50,12 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
   listType: string;
   enumValues: EnumValuesMap;
   emitRecords: boolean;
+  emitJsonAttributes: boolean;
+  jsonAttributesSource: JsonAttributesSource;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
-  private readonly keywords = new Set(csharpKeywords);
+  private readonly jsonAttributesConfiguration: JsonAttributesSourceConfiguration;
 
   constructor(rawConfig: CSharpResolversPluginRawConfig, private _schema: GraphQLSchema) {
     super(rawConfig, {
@@ -58,27 +64,22 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       namespaceName: rawConfig.namespaceName || 'GraphQLCodeGen',
       className: rawConfig.className || 'Types',
       emitRecords: rawConfig.emitRecords || false,
-      scalars: buildScalars(_schema, rawConfig.scalars, C_SHARP_SCALARS),
+      emitJsonAttributes: rawConfig.emitJsonAttributes ?? true,
+      jsonAttributesSource: rawConfig.jsonAttributesSource || 'Newtonsoft.Json',
+      scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
-  }
 
-  /**
-   * Checks name against list of keywords. If it is, will prefix value with @
-   *
-   * Note:
-   * This class should first invoke the convertName from base-visitor to convert the string or node
-   * value according the naming configuration, eg upper or lower case. Then resulting string checked
-   * against the list or keywords.
-   * However the generated C# code is not yet able to handle fields that are in a different case so
-   * the invocation of convertName is omitted purposely.
-   */
-  private convertSafeName(node: NameNode | string): string {
-    const name = typeof node === 'string' ? node : node.value;
-    return this.keywords.has(name) ? `@${name}` : name;
+    if (this._parsedConfig.emitJsonAttributes) {
+      this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
+    }
   }
 
   public getImports(): string {
-    const allImports = ['System', 'System.Collections.Generic', 'Newtonsoft.Json', 'GraphQL'];
+    const allImports = ['System', 'System.Collections.Generic', 'System.ComponentModel.DataAnnotations'];
+    if (this._parsedConfig.emitJsonAttributes) {
+      const jsonAttributesNamespace = this.jsonAttributesConfiguration.namespace;
+      allImports.push(jsonAttributesNamespace);
+    }
     return allImports.map(i => `using ${i};`).join('\n') + '\n';
   }
 
@@ -93,7 +94,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     return new CSharpDeclarationBlock()
       .access('public')
       .asKind('class')
-      .withName(this.convertSafeName(this.config.className))
+      .withName(convertSafeName(this.config.className))
       .withBlock(indentMultiline(content)).string;
   }
 
@@ -112,7 +113,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
       const enumHeader = this.getFieldHeader(node);
-      const enumOption = this.convertSafeName(node.name);
+      const enumOption = convertSafeName(node.name);
       return enumHeader + indent(this.getEnumValue(enumName, enumOption));
     };
   }
@@ -143,12 +144,25 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       attributes.push(`[Obsolete("${deprecationReason}")]`);
     }
 
-    if (node.kind === Kind.FIELD_DEFINITION) {
-      attributes.push(`[JsonProperty("${node.name.value}")]`);
+    if (this._parsedConfig.emitJsonAttributes) {
+      if (node.kind === Kind.FIELD_DEFINITION) {
+        const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
+        if (jsonPropertyAttribute != null) {
+          attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
+        }
+      }
     }
 
     if (node.kind === Kind.INPUT_VALUE_DEFINITION && fieldType.isOuterTypeRequired) {
-      attributes.push(`[JsonRequired]`);
+      // Should be always inserted for required fields to use in `GetInputObject()` when JSON attributes are not used
+      // or there are no JSON attributes in selected attribute source that provides `JsonRequired` alternative
+      attributes.push('[Required]');
+      if (this._parsedConfig.emitJsonAttributes) {
+        const jsonRequiredAttribute = this.jsonAttributesConfiguration.requiredAttribute;
+        if (jsonRequiredAttribute != null) {
+          attributes.push(`[${jsonRequiredAttribute}]`);
+        }
+      }
     }
 
     if (commentText || attributes.length > 0) {
@@ -256,7 +270,7 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; init; } = ${fieldName};`);
       })
@@ -264,14 +278,14 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
     const recordInitializer = inputValueArray
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
-        const fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+        const fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return `${csharpFieldType} ${fieldName}`;
       })
       .join(', ');
     return `
 #region ${name}
-${classSummary}public record ${this.convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
+${classSummary}public record ${convertSafeName(name)}(${recordInitializer})${interfaceImpl} {
   #region members
 ${recordMembers}
   #endregion
@@ -292,7 +306,7 @@ ${recordMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = convertSafeName(arg.name);
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
@@ -300,7 +314,7 @@ ${recordMembers}
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)}${interfaceImpl} {
+${classSummary}public class ${convertSafeName(name)}${interfaceImpl} {
   #region members
 ${classMembers}
   #endregion
@@ -324,22 +338,22 @@ ${classMembers}
 
         if (this.config.emitRecords) {
           // record
-          fieldName = this.convertSafeName(pascalCase(this.convertName(arg.name)));
+          fieldName = convertSafeName(pascalCase(this.convertName(arg.name)));
           getterSetter = '{ get; }';
         } else {
           // class
-          fieldName = this.convertSafeName(arg.name);
+          fieldName = convertSafeName(arg.name);
           getterSetter = '{ get; set; }';
         }
 
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
 
-        return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} ${getterSetter}`);
+        return fieldHeader + indent(`${csharpFieldType} ${fieldName} ${getterSetter}`);
       })
       .join('\n\n');
 
     return `
-${classSummary}public interface ${this.convertSafeName(name)} {
+${classSummary}public interface ${convertSafeName(name)} {
 ${classMembers}
 }`;
   }
@@ -354,7 +368,7 @@ ${classMembers}
       .map(arg => {
         const fieldType = this.resolveInputFieldType(arg.type, !!arg.defaultValue);
         const fieldHeader = this.getFieldHeader(arg, fieldType);
-        const fieldName = this.convertSafeName(arg.name);
+        const fieldName = convertSafeName(arg.name);
         const csharpFieldType = wrapFieldType(fieldType, fieldType.listType, this.config.listType);
         return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
       })
@@ -362,7 +376,7 @@ ${classMembers}
 
     return `
 #region ${name}
-${classSummary}public class ${this.convertSafeName(name)} {
+${classSummary}public class ${convertSafeName(name)} {
   #region members
 ${classMembers}
   #endregion
@@ -377,8 +391,15 @@ ${classMembers}
     {
       var value = propertyInfo.GetValue(this);
       var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-
-      var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+${
+  this._parsedConfig.emitJsonAttributes && this.jsonAttributesConfiguration.requiredAttribute != null
+    ? `
+      var requiredProp = propertyInfo.GetCustomAttributes(typeof(${this.jsonAttributesConfiguration.requiredAttribute}Attribute), false).Length > 0;
+`
+    : `
+      var requiredProp = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), false).Length > 0;
+`
+}
       if (requiredProp || value != defaultValue)
       {
         d[propertyInfo.Name] = value;

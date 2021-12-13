@@ -97,11 +97,17 @@ export type ResolversParentTypes = {
   Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
-export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
+export type MyDirectiveDirectiveArgs = {
+  arg: $ElementType<Scalars, 'Int'>,
   arg2: $ElementType<Scalars, 'String'>,
-  arg3: $ElementType<Scalars, 'Boolean'>, };
+  arg3: $ElementType<Scalars, 'Boolean'>,
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AuthenticatedDirectiveArgs = { };
+
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
@@ -166,22 +172,11 @@ export type Resolvers<ContextType = any> = {
   MyScalar?: GraphQLScalarType<>,
 };
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = {
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>,
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>,
 };
-
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;",
+",
   "prepend": Array [
     "import { type GraphQLResolveInfo } from 'graphql';",
     "export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;",

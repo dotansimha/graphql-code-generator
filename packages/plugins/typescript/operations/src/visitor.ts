@@ -19,9 +19,11 @@ import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-t
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
+  arrayInputCoercion: boolean;
   avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
+  maybeValue: string;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -32,17 +34,27 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     super(
       config,
       {
+        arrayInputCoercion: getConfigValue(config.arrayInputCoercion, true),
         noExport: getConfigValue(config.noExport, false),
         avoidOptionals: normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false)),
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
+        preResolveTypes: getConfigValue(config.preResolveTypes, true),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
 
     autoBind(this);
 
+    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
+    const avoidOptionals = normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false));
+    const defaultMaybeValue = 'T | null' + (avoidOptionals ? ' | undefined' : '');
+    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
+
     const wrapOptional = (type: string) => {
+      if (preResolveTypes === true) {
+        return maybeValue.replace('T', type);
+      }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
     };
@@ -71,7 +83,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       avoidOptionals: this.config.avoidOptionals,
     };
-    const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
+    const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
     );
     this.setSelectionSetHandler(
@@ -96,7 +108,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         enumsNames,
         this.config.enumPrefix,
         this.config.enumValues,
-        true
+        this.config.arrayInputCoercion,
+        undefined,
+        'InputMaybe'
       )
     );
     this._declarationBlockConfig = {
@@ -105,7 +119,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace
+    return !this.config.globalNamespace && this.config.inlineFragmentTypes === 'combine'
       ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
       : [];
   }

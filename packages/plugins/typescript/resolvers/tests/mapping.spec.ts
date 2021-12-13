@@ -722,8 +722,11 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String']; arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
@@ -802,8 +805,11 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String']; arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
@@ -880,8 +886,11 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
-    arg2: Scalars['String']; arg3: Scalars['Boolean']; };
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
     `);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);

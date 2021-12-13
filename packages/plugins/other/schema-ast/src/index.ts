@@ -1,14 +1,21 @@
 import {
   GraphQLSchema,
-  lexicographicSortSchema,
+  parse,
+  extendSchema,
+  printIntrospectionSchema,
   printSchema,
   visit,
   buildASTSchema,
-  parse as parseSchema,
+  print,
 } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
+import {
+  PluginFunction,
+  PluginValidateFn,
+  Types,
+  removeFederation,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
 /**
  * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
@@ -32,7 +39,24 @@ export interface SchemaASTConfig {
    */
   includeDirectives?: boolean;
   /**
-   * @description Set to true in order to print description as comments (using # instead of """)
+   * @description Include introspection types to Schema output.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * schema:
+   *   - './src/schema.graphql'
+   * generates:
+   *   path/to/file.graphql:
+   *     plugins:
+   *       - schema-ast
+   *     config:
+   *       includeIntrospectionTypes: true
+   * ```
+   */
+  includeIntrospectionTypes?: boolean;
+  /**
+   * @description Set to true in order to print description as comments (using `#` instead of `"""`)
    * @default false
    *
    * @exampleMarkdown
@@ -48,8 +72,8 @@ export interface SchemaASTConfig {
    */
   commentDescriptions?: boolean;
   /**
-   * @description Set to true in order get the schema lexicographically sorted before printed.
-   * @default false
+   * @description Set to false to disable sorting
+   * @default true
    */
   sort?: boolean;
   federation?: boolean;
@@ -58,16 +82,24 @@ export interface SchemaASTConfig {
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  { commentDescriptions = false, includeDirectives = false, sort = false, federation }
-): Promise<string> => {
-  let outputSchema = federation ? removeFederation(schema) : schema;
-  outputSchema = sort ? lexicographicSortSchema(outputSchema) : outputSchema;
-
-  if (includeDirectives) {
-    return printSchemaWithDirectives(outputSchema);
+  {
+    commentDescriptions = false,
+    includeDirectives = false,
+    includeIntrospectionTypes = false,
+    sort = false,
+    federation,
   }
+): Promise<string> => {
+  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospectionTypes });
 
-  return printSchema(outputSchema, { commentDescriptions: commentDescriptions });
+  return [
+    includeIntrospectionTypes ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
+    includeDirectives
+      ? print(transformedSchemaAndAst.ast)
+      : (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions }),
+  ]
+    .filter(Boolean)
+    .join('\n');
 };
 
 export const validate: PluginValidateFn<any> = async (
@@ -85,22 +117,32 @@ export const validate: PluginValidateFn<any> = async (
 };
 
 export function transformSchemaAST(schema: GraphQLSchema, config: { [key: string]: any }) {
-  const printedSchema = printSchema(schema);
-  const astNode = parseSchema(printedSchema);
+  schema = config.federation ? removeFederation(schema) : schema;
 
-  const transformedAST = config.disableDescriptions
-    ? visit(astNode, {
+  if (config.includeIntrospectionTypes) {
+    // See: https://spec.graphql.org/June2018/#sec-Schema-Introspection
+    const introspectionAST = parse(`
+      extend type Query {
+        __schema: __Schema!
+        __type(name: String!): __Type
+      }
+    `);
+
+    schema = extendSchema(schema, introspectionAST);
+  }
+  let ast = getCachedDocumentNodeFromSchema(schema);
+  ast = config.disableDescriptions
+    ? visit(ast, {
         leave: node => ({
           ...node,
           description: undefined,
         }),
       })
-    : astNode;
-
-  const transformedSchema = config.disableDescriptions ? buildASTSchema(transformedAST) : schema;
+    : ast;
+  schema = config.disableDescriptions ? buildASTSchema(ast) : schema;
 
   return {
-    schema: transformedSchema,
-    ast: transformedAST,
+    schema,
+    ast,
   };
 }

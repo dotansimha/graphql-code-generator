@@ -3,7 +3,7 @@ id: federation
 title: Apollo Federation
 ---
 
-The `typescript-resolvers` plugin also supports [Apollo Federation](https://www.apollographql.com/docs/apollo-server/federation/introduction/).
+The `typescript-resolvers` plugin also supports [Apollo Federation](https://apollographql.com/docs/apollo-server/federation/introduction).
 
 In order to use it, add `federation: true` to your configuration:
 

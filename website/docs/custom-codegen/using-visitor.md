@@ -36,69 +36,66 @@ MyOtherType.myOtherField
 
 To get started with a basic visitor, start by extracting the `astNode` of your `GraphQLSchema`:
 
-```javascript
-const { printSchema, parse } = require('graphql');
+```js
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers')
 
 module.exports = {
-  plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
-  },
-};
+  plugin(schema, documents, config) {
+    const astNode = getCachedDocumentNodeFromSchema(schema) // Transforms the GraphQLSchema into ASTNode
+  }
+}
 ```
-
-> Note: if you wish to have GraphQL directives when you print your schema, use `printSchemaWithDirectives` from `graphql-toolkit` package.
 
 Then, create your initial visitor, in our case, we would like to transform a `FieldDefinition` and `ObjectTypeDefinition`, so let's create an object with a stub definitions, an use `visit` to run it:
 
-```javascript
-const { printSchema, parse, visit } = require('graphql');
+```js
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers')
+const { visit } = require('graphql')
 
 module.exports = {
   plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
+    const astNode = getCachedDocumentNodeFromSchema(schema) // Transforms the GraphQLSchema into ASTNode
     const visitor = {
-      FieldDefinition: node => {
+      FieldDefinition(node) {
         // This function triggered per each field
       },
-      ObjectTypeDefinition: node => {
+      ObjectTypeDefinition(node) {
         // This function triggered per each type
-      },
-    };
+      }
+    }
 
-    const result = visit(astNode, { leave: visitor });
+    const result = visit(astNode, { leave: visitor })
 
-    return result.definitions.join('\n');
-  },
-};
+    return result.definitions.join('\n')
+  }
+}
 ```
 
 Now, let's implement `ObjectTypeDefinition` and `FieldDefinition`:
 
-```javascript
-const { printSchema, parse, visit } = require('graphql');
+```js
+const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-helpers')
+const { visit } = require('graphql')
 
 module.exports = {
   plugin: (schema, documents, config) => {
-    const printedSchema = printSchema(schema); // Returns a string representation of the schema
-    const astNode = parse(printedSchema); // Transforms the string into ASTNode
+    const astNode = getCachedDocumentNodeFromSchema(schema) // Transforms the GraphQLSchema into ASTNode
     const visitor = {
-      FieldDefinition: node => {
+      FieldDefinition(node) {
         // Transform the field AST node into a string, containing only the name of the field
-        return node.name.value;
+        return node.name.value
       },
-      ObjectTypeDefinition: node => {
+      ObjectTypeDefinition(node) {
         // "node.fields" is an array of strings, because we transformed it using "FieldDefinition".
-        return node.fields.map(field => `${node.name.value}.${field}`).join('\n');
-      },
-    };
+        return node.fields.map(field => `${node.name.value}.${field}`).join('\n')
+      }
+    }
 
-    const result = visit(astNode, { leave: visitor });
+    const result = visit(astNode, { leave: visitor })
 
-    return result.definitions.join('\n');
-  },
-};
+    return result.definitions.join('\n')
+  }
+}
 ```
 
 ## Codegen and Visitors

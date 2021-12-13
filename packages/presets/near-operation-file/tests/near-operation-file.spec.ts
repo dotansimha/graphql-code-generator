@@ -1,6 +1,8 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { executeCodegen } from '@graphql-codegen/cli';
+import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import { generateFragmentImportStatement } from '@graphql-codegen/visitor-plugin-common';
-import { buildASTSchema, buildSchema, parse, printSchema } from 'graphql';
+import { buildASTSchema, buildSchema, parse } from 'graphql';
+import path from 'path';
 import { preset } from '../src/index';
 
 describe('near-operation-file preset', () => {
@@ -194,7 +196,7 @@ describe('near-operation-file preset', () => {
             baseTypesPath: 'types.ts',
           },
           schemaAst: testSchema,
-          schema: parse(printSchema(testSchema)),
+          schema: getCachedDocumentNodeFromSchema(testSchema),
           documents: [
             {
               location: '/some/deep/path/src/graphql/queries.graphql',
@@ -370,6 +372,115 @@ describe('near-operation-file preset', () => {
       expect(getFragmentImportsFromResult(result)).toContain(
         `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`
       );
+    });
+
+    it('#6439 - generating code only for the last query inside a file', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/issue-6439.ts'),
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations'],
+          },
+        },
+      });
+
+      expect(result[0].content).toMatchInlineSnapshot(`
+        "import * as Types from '../../../../../out1.ts/types';
+
+        export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
+
+        export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', a?: string | null | undefined };
+
+        export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+        export type CQuery = { __typename?: 'Query', a?: string | null | undefined };
+        "
+      `);
+    });
+
+    it('#6520 - self-importing fragment', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              user(id: String!): User!
+            }
+
+            type User {
+              id: String!
+              email: String
+              username: String
+            }
+          `,
+        ],
+        documents: [path.join(__dirname, 'fixtures/issue-6520.ts')],
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations', 'typescript-react-apollo'],
+          },
+        },
+      });
+
+      expect(result[0].content).not.toMatch(`import { UserFieldsFragmentDoc }`);
+    });
+
+    it('#6546 - duplicate fragment imports', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              user(id: String!): User!
+            }
+
+            type User {
+              id: String!
+              email: String
+              username: String
+            }
+          `,
+        ],
+        documents: [
+          path.join(__dirname, 'fixtures/issue-6546-queries.ts'),
+          path.join(__dirname, 'fixtures/issue-6546-fragments.ts'),
+        ],
+        generates: {
+          'out1.ts': {
+            preset: preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations', 'typescript-react-apollo'],
+          },
+        },
+      });
+
+      const queriesContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-6546-queries/)).content;
+      const imports = queriesContent.match(/import.*UsernameFragmentFragmentDoc/g);
+      expect(imports).toHaveLength(1);
     });
   });
 
@@ -640,7 +751,7 @@ describe('near-operation-file preset', () => {
         {
           location: './test.graphql',
           document: parse(/* GraphQL */ `
-            query($id: String) {
+            query ($id: String) {
               user(id: $id) {
                 ...UserFields
               }
@@ -933,9 +1044,177 @@ describe('near-operation-file preset', () => {
       `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated';`
     );
   });
+
+  it('Should import relevant fragments on dedupeFragments', async () => {
+    const testSchema = parse(/* GraphQL */ `
+      schema {
+        query: Query
+      }
+
+      type Query {
+        animals: [Animal!]!
+      }
+
+      type Group {
+        id: ID!
+        name: String!
+      }
+      type Animal {
+        id: ID!
+        name: String!
+        group: Group
+      }
+    `);
+
+    const operations = [
+      {
+        location: '/operations/document.graphql',
+        document: parse(/* GraphQL */ `
+          #import "./fragments/MyAnimalFragment.graphql"
+
+          query Test {
+            animals {
+              ...MyAnimalFragment
+            }
+          }
+        `),
+      },
+      {
+        location: '/operations/fragments/AnotherGroupFragment.graphql',
+        document: parse(/* GraphQL */ `
+          fragment AnotherGroupFragment on Group {
+            id
+          }
+        `),
+      },
+      {
+        location: '/operations/fragments/MyAnimalFragment.graphql',
+        document: parse(/* GraphQL */ `
+          #import "./MyGroupFragment.graphql"
+
+          fragment MyAnimalFragment on Animal {
+            name
+            group {
+              ...MyGroupFragment
+            }
+          }
+        `),
+      },
+      {
+        location: '/operations/fragments/MyGroupFragment.graphql',
+        document: parse(/* GraphQL */ `
+          #import "./AnotherGroupFragment.graphql"
+
+          fragment MyGroupFragment on Group {
+            ...AnotherGroupFragment
+            name
+          }
+        `),
+      },
+    ];
+
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        skipTypename: true,
+        dedupeFragments: true,
+        exportFragmentSpreadSubTypes: true,
+      },
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: '../types',
+      },
+      schema: testSchema,
+      schemaAst: buildASTSchema(testSchema),
+      documents: operations,
+      plugins: [{ typescript: {} }, { 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { typescript: {} as any, 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result)).toContain(
+      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment';`
+    );
+
+    expect(getFragmentImportsFromResult(result)).toContain(
+      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment';`
+    );
+  });
+
+  it('Should import relevant nested fragments on dedupeFragments', async () => {
+    const schema = parse(/* GraphQL */ `
+      type Address {
+        city: String
+      }
+
+      type Author {
+        address: Address
+      }
+
+      type Book {
+        author: Author
+      }
+
+      type Query {
+        book: Book
+      }
+    `);
+
+    const operations = [
+      {
+        location: '/author.graphql',
+        document: parse(/* GraphQL */ `
+          fragment Address on Address {
+            city
+          }
+
+          fragment Author on Author {
+            address {
+              ...Address
+            }
+          }
+        `),
+      },
+      {
+        location: '/book.graphql',
+        document: parse(/* GraphQL */ `
+          fragment Book on Book {
+            author {
+              ...Author
+            }
+          }
+
+          query Book {
+            book {
+              ...Book
+            }
+          }
+        `),
+      },
+    ];
+
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        dedupeFragments: true,
+      },
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: './types',
+      },
+      schema,
+      schemaAst: buildASTSchema(schema),
+      documents: operations,
+      plugins: [{ typescript: {} }, { 'typescript-operations': {} }, { 'typed-document-node': {} }],
+      pluginMap: { typescript: {} as any, 'typescript-operations': {} as any, 'typed-document-node': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result, 1)).toContain(
+      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author';`
+    );
+  });
 });
 
-const getFragmentImportsFromResult = (result: Types.GenerateOptions[]) =>
-  result[0].config.fragmentImports
+const getFragmentImportsFromResult = (result: Types.GenerateOptions[], index = 0) =>
+  result[index].config.fragmentImports
     .map(importStatement => generateFragmentImportStatement(importStatement, 'both'))
     .join('\n');

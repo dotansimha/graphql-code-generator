@@ -1,6 +1,11 @@
-import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
-import { parse, visit, GraphQLSchema } from 'graphql';
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
+import {
+  Types,
+  PluginFunction,
+  PluginValidateFn,
+  getCachedDocumentNodeFromSchema,
+  oldVisit,
+} from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema } from 'graphql';
 import { extname } from 'path';
 import gql from 'graphql-tag';
 import { TsMongoVisitor } from './visitor';
@@ -12,9 +17,8 @@ export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
   config: TypeScriptMongoPluginConfig
 ) => {
   const visitor = new TsMongoVisitor(schema, config);
-  const printedSchema = printSchemaWithDirectives(schema);
-  const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, { leave: visitor as any });
+  const astNode = getCachedDocumentNodeFromSchema(schema);
+  const visitorResult = oldVisit(astNode, { leave: visitor });
   const header = visitor.objectIdImport;
 
   return [header, ...visitorResult.definitions.filter(d => typeof d === 'string')].join('\n');

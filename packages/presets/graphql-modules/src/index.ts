@@ -1,13 +1,14 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { concatAST, isScalarType, parse } from 'graphql';
+import { concatAST, isScalarType } from 'graphql';
 import { resolve, relative, join } from 'path';
 import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
 import { buildModule } from './builder';
 import { ModulesConfig } from './config';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const { baseOutputDir } = options;
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
 
@@ -24,7 +25,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       throw new Error(`Preset "graphql-modules" requires to use GraphQL SDL`);
     }
 
-    const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.sources, baseOutputDir);
+    const extensions: any = options.schemaAst!.extensions;
+    const sourcesByModuleMap = groupSourcesByModule(extensions.extendedSources, baseOutputDir);
     const modules = Object.keys(sourcesByModuleMap);
 
     const baseVisitor = new BaseVisitor(options.config, {});
@@ -78,13 +80,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       const importPath = options.presetConfig.importBaseTypesFrom || normalize(join(relativePath, baseTypesFilename));
       const sources = sourcesByModuleMap[moduleName];
 
-      const moduleDocument = concatAST(
-        sources.map(source =>
-          parse(source.body, {
-            noLocation: true,
-          })
-        )
-      );
+      const moduleDocument = concatAST(sources.map(source => source.document));
 
       const shouldDeclare = filename.endsWith('.d.ts');
 
@@ -109,6 +105,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 shouldDeclare,
                 schema,
                 baseVisitor,
+                useGraphQLModules,
                 rootTypes: [
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,

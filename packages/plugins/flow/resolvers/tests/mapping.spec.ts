@@ -214,8 +214,11 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
+    export type MyDirectiveDirectiveArgs = {
+      arg: $ElementType<Scalars, 'Int'>,
+      arg2: $ElementType<Scalars, 'String'>,
+      arg3: $ElementType<Scalars, 'Boolean'>,
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -293,8 +296,11 @@ describe('ResolversTypes', () => {
 
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
+    export type MyDirectiveDirectiveArgs = {
+      arg: $ElementType<Scalars, 'Int'>,
+      arg2: $ElementType<Scalars, 'String'>,
+      arg3: $ElementType<Scalars, 'Boolean'>,
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -371,8 +377,11 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
+    export type MyDirectiveDirectiveArgs = {
+      arg: $ElementType<Scalars, 'Int'>,
+      arg2: $ElementType<Scalars, 'String'>,
+      arg3: $ElementType<Scalars, 'Boolean'>,
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -448,8 +457,11 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
+    export type MyDirectiveDirectiveArgs = {
+      arg: $ElementType<Scalars, 'Int'>,
+      arg2: $ElementType<Scalars, 'String'>,
+      arg3: $ElementType<Scalars, 'Boolean'>,
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -525,8 +537,11 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyBaseType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
+    export type MyDirectiveDirectiveArgs = {
+      arg: $ElementType<Scalars, 'Int'>,
+      arg2: $ElementType<Scalars, 'String'>,
+      arg3: $ElementType<Scalars, 'Boolean'>,
+    };
     `);
 
     expect(result.content).toBeSimilarStringTo(`

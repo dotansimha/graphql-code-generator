@@ -2,6 +2,7 @@
 
 exports[`TypeScript Resolvers Plugin Config allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -18,7 +19,6 @@ export type Scalars = {
   MyScalar: any;
 };
 
-
 export type MyType = {
   __typename?: 'MyType';
   foo: Scalars['String'];
@@ -29,7 +29,7 @@ export type MyType = {
 
 
 export type MyTypeWithArgsArgs = {
-  arg?: Maybe<Scalars['String']>;
+  arg?: InputMaybe<Scalars['String']>;
   arg2: Scalars['String'];
 };
 
@@ -66,13 +66,16 @@ export type SomeNode = Node & {
 };
 
 export type MyUnion = MyType | MyOtherType;
-
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -86,7 +89,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -167,11 +170,17 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Scalars['Int'];
   arg2: Scalars['String'];
-  arg3: Scalars['Boolean']; };
+  arg3: Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AuthenticatedDirectiveArgs = { };
+
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -235,22 +244,11 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;
         export const myTypeResolvers: MyTypeResolvers<{}, { parentOverride: boolean }> = {
           foo: (parentValue) => {
             const a: boolean = parentValue.parentOverride;
@@ -270,7 +268,11 @@ export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -284,7 +286,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -365,11 +367,17 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Types.Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Types.Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Types.Scalars['Int'];
   arg2: Types.Scalars['String'];
-  arg3: Types.Scalars['Boolean']; };
+  arg3: Types.Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AuthenticatedDirectiveArgs = { };
+
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -433,26 +441,16 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>;
 }>;
-
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+"
 `;
 
 exports[`TypeScript Resolvers Plugin Config optionalInfoArgument - should allow to have optional info argument 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -469,7 +467,6 @@ export type Scalars = {
   MyScalar: any;
 };
 
-
 export type MyType = {
   __typename?: 'MyType';
   foo: Scalars['String'];
@@ -480,7 +477,7 @@ export type MyType = {
 
 
 export type MyTypeWithArgsArgs = {
-  arg?: Maybe<Scalars['String']>;
+  arg?: InputMaybe<Scalars['String']>;
   arg2: Scalars['String'];
 };
 
@@ -517,13 +514,16 @@ export type SomeNode = Node & {
 };
 
 export type MyUnion = MyType | MyOtherType;
-
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -537,7 +537,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info?: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -618,11 +618,17 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
 }>;
 
-export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+export type MyDirectiveDirectiveArgs = {
+  arg: Scalars['Int'];
   arg2: Scalars['String'];
-  arg3: Scalars['Boolean']; };
+  arg3: Scalars['Boolean'];
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AuthenticatedDirectiveArgs = { };
+
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -686,20 +692,9 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MyScalar?: GraphQLScalarType;
 }>;
 
-
-/**
- * @deprecated
- * Use \\"Resolvers\\" root object instead. If you wish to get \\"IResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   myDirective?: MyDirectiveDirectiveResolver<any, any, ContextType>;
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>;
 }>;
-
-
-/**
- * @deprecated
- * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+"
 `;

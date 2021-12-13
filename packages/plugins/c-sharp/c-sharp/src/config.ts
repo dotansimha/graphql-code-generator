@@ -1,4 +1,5 @@
 import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common';
+import { JsonAttributesSource } from './json-attributes';
 
 /**
  * @description This plugin generates C# `class` identifier for your schema types.
@@ -77,4 +78,36 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * ```
    */
   emitRecords?: boolean;
+
+  /**
+   * @default true
+   * @description Should JSON attributes be emitted for produced types and properties ot not
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/c-sharp/my-org/my-app/Types.cs:
+   *     plugins:
+   *       - c-sharp
+   *     config:
+   *       emitJsonAttributes: false
+   * ```
+   */
+  emitJsonAttributes?: boolean;
+
+  /**
+   * @default Newtonsoft.Json
+   * @description Library that should be used to emit JSON attributes. Ignored when `emitJsonAttributes` is `false` or not specified
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/c-sharp/my-org/my-app/Types.cs:
+   *     plugins:
+   *       - c-sharp
+   *     config:
+   *       jsonAttributesSource: System.Text.Json
+   * ```
+   */
+  jsonAttributesSource?: JsonAttributesSource;
 }

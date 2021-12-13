@@ -1,6 +1,6 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptTypedDocumentNodesConfig } from 'packages/plugins/typescript/typed-document-node/src/config';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
+import { TypeScriptTypedDocumentNodesConfig } from './config';
 import { extname } from 'path';
 import {
   LoadedFragment,
@@ -31,7 +31,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   ];
 
   const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),
@@ -53,3 +53,5 @@ export const validate: PluginValidateFn<RawClientSideBasePluginConfig> = async (
     throw new Error(`Plugin "typed-document-node" requires extension to be ".ts" or ".tsx"!`);
   }
 };
+
+export { TypeScriptTypedDocumentNodesConfig };

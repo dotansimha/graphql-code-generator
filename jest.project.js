@@ -11,15 +11,9 @@ module.exports = ({ dirname, projectMode = true }) => {
 
   return {
     ...(CI || !projectMode ? {} : { displayName: pkg.name.replace('@graphql-codegen/', '') }),
-    transform: { '^.+\\.tsx?$': 'ts-jest' },
+    transform: { '^.+\\.tsx?$': 'babel-jest' },
     testEnvironment: 'node',
     rootDir: dirname,
-    globals: {
-      'ts-jest': {
-        diagnostics: false,
-        tsconfig: 'tsconfig.json',
-      },
-    },
     restoreMocks: true,
     reporters: ['default'],
     modulePathIgnorePatterns: ['dist'],
@@ -27,5 +21,6 @@ module.exports = ({ dirname, projectMode = true }) => {
     cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
+    testTimeout: 20000,
   };
 };

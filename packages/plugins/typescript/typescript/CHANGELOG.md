@@ -1,5 +1,234 @@
 # @graphql-codegen/typescript
 
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 2.4.0
+
+### Minor Changes
+
+- 4c5c84c1b: Added InputMaybe, a different type of Maybe type for input/arguments
+
+## 2.3.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+- Updated dependencies [f3833243d]
+- Updated dependencies [6c898efe5]
+  - @graphql-codegen/schema-ast@2.4.0
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 2.2.3
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
+## 2.2.1
+
+### Patch Changes
+
+- cfa0a8f80: Apply missing namingConvention when numericEnums is used
+
+## 2.2.0
+
+### Minor Changes
+
+- d6c2d4c09: Allow declaring Argument and InputType field mappings based on directive annotations.
+
+  **WARNING:** Using this option does only change the type definitions.
+
+  For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+
+  Please use this configuration option with care!
+
+  ```yml
+  plugins:
+    config:
+      directiveArgumentAndInputFieldMappings:
+        asNumber: number
+  ```
+
+  ```graphql
+  directive @asNumber on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+  input MyInput {
+    id: ID! @asNumber
+  }
+
+  type User {
+    id: ID!
+  }
+
+  type Query {
+    user(id: ID! @asNumber): User
+  }
+  ```
+
+  Usage e.g. with `typescript-resolvers`
+
+  ```ts
+  const Query: QueryResolvers = {
+    user(_, args) {
+      // args.id is of type 'number'
+    },
+  };
+  ```
+
+- 8261e4161: Make futureProofEnums option work for all enum output types, (it worked only with enumsAsTypes)
+
+### Patch Changes
+
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [263570e50]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/visitor-plugin-common@2.1.2
+  - @graphql-codegen/plugin-helpers@2.1.1
+
+## 2.1.1
+
+### Patch Changes
+
+- Updated dependencies [aabeff181]
+  - @graphql-codegen/visitor-plugin-common@2.1.1
+
+## 2.1.0
+
+### Minor Changes
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- Updated dependencies [290170262]
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/visitor-plugin-common@2.1.0
+  - @graphql-codegen/plugin-helpers@2.1.0
+
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Patch Changes
+
+- Updated dependencies [d80efdec4]
+- Updated dependencies [d80efdec4]
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/visitor-plugin-common@2.0.0
+  - @graphql-codegen/plugin-helpers@2.0.0
+
+## 1.23.0
+
+### Minor Changes
+
+- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types from resolvers in addition to enum values.\_
+
+### Patch Changes
+
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+
+## 1.22.4
+
+### Patch Changes
+
+- Updated dependencies [6762aff5]
+  - @graphql-codegen/visitor-plugin-common@1.21.3
+
+## 1.22.3
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
+## 1.22.2
+
+### Patch Changes
+
+- Updated dependencies [cf1e5abc]
+  - @graphql-codegen/visitor-plugin-common@1.21.1
+
+## 1.22.1
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+- Updated dependencies [8da7dff6]
+  - @graphql-codegen/visitor-plugin-common@1.21.0
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 1.22.0
+
+### Minor Changes
+
+- f0b5ea53: Add entireFieldWrapperValue configuration option, to wrap arrays
+- 097bea2f: Added new configuration settings for scalars: `strictScalars` and `defaultScalarType`
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.21.1
 
 ### Patch Changes

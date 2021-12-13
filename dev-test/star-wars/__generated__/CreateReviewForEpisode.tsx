@@ -8,8 +8,9 @@ export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   review: Types.ReviewInput;
 }>;
 
-export type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
-  createReview?: Types.Maybe<{ __typename?: 'Review' } & Pick<Types.Review, 'stars' | 'commentary'>>;
+export type CreateReviewForEpisodeMutation = {
+  __typename?: 'Mutation';
+  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null | undefined } | null | undefined;
 };
 
 export const CreateReviewForEpisodeDocument = gql`

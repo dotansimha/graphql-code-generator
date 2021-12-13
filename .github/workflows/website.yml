@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Use Node 14
+      - name: Use Node
         uses: actions/setup-node@master
         with:
-          node-version: 14
+          node-version: 14.18.1
       - name: Install Dependencies
         run: yarn install
       - name: Build Plugins

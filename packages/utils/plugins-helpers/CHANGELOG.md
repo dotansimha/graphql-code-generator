@@ -1,5 +1,75 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.3.1
+
+### Patch Changes
+
+- bcc5636fc: fix wrong dependency version range
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+## 2.2.0
+
+### Minor Changes
+
+- 7c60e5acc: feat(core): ability to skip some specific validation rules with skipDocumentsValidation option
+
+## 2.1.1
+
+### Patch Changes
+
+- 6470e6cc9: fix(plugin-helpers): remove unnecessary import
+- 35199dedf: Fix module not found bug in resolveExternalModuleAndFn
+
+## 2.1.0
+
+### Minor Changes
+
+- 39773f59b: enhance(plugins): use getDocumentNodeFromSchema and other utilities from @graphql-tools/utils
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- 24185985a: bump graphql-tools package versions
+
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+## 1.18.8
+
+### Patch Changes
+
+- 470336a1: don't require plugins for for config if preset provides plugin. Instead the preset should throw if no plugins were provided.
+
+## 1.18.7
+
+### Patch Changes
+
+- dfd25caf: chore(deps): bump graphql-tools versions
+
+## 1.18.6
+
+### Patch Changes
+
+- 637338cb: fix: make lifecycle hooks definition a partial
+
+## 1.18.5
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+
 ## 1.18.4
 
 ### Patch Changes

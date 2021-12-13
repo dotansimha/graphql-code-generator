@@ -1,5 +1,248 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.2.2
+
+### Patch Changes
+
+- 0d71a60d9: stringify fetchParams if an object was provided via YAML config
+
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 3.2.0
+
+### Minor Changes
+
+- f7a320a2d: Updates react-query to include the useInfiniteQuery as a config option
+
+## 3.1.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
+## 3.1.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 3.0.3
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 3.0.1
+
+### Patch Changes
+
+- 4695472ee: make sourceData param required when user does not provide endpoint in config
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
+## 3.0.0
+
+### Major Changes
+
+- 545c47039: Change `fetchParams` configuration option from object to string.The string will be inserted 1:1 into the generated code. This is a breaking change!
+
+  This allows more flexibility for customization. Here are some examples:
+
+  **Use an imported object for configuration**
+
+  ```yaml
+  schema: MY_SCHEMA_PATH
+  documents: './src/**/*.graphql'
+  generates:
+    ./generates.ts:
+      plugins:
+        - add:
+            content: "import { endpointUrl, fetchParams } from './my-config';"
+        - typescript
+        - typescript-operations
+        - typescript-react-query
+      config:
+        fetcher:
+          endpoint: 'endpointUrl'
+          fetchParams: 'fetchParams'
+  ```
+
+  **Use environment variables for configuration**
+
+  ```yaml
+  schema: MY_SCHEMA_PATH
+  documents: './src/**/*.graphql'
+  generates:
+    ./generates.ts:
+      plugins:
+        - typescript
+        - typescript-operations
+        - typescript-react-query
+      config:
+        fetcher:
+          endpoint: 'endpointUrl'
+          # Multiline string
+          fetchParams: >
+            {
+              headers: {
+                apiKey: process.env.APIKEY,
+                somethingElse: process.env.SOMETHING,
+              },
+            }
+  ```
+
+- 5dc59c86f: Queries without variables will no longer have an undefined entry in their query key
+
+### Minor Changes
+
+- 99af5063e: Allow passing `headers` to `graphql-request`.
+
+### Patch Changes
+
+- ec2cba5e0: [typescript-react-query] Pass dataSource as argument to fetcher
+
+## 2.1.3
+
+### Patch Changes
+
+- Updated dependencies [d6c2d4c09]
+- Updated dependencies [feeae1c66]
+- Updated dependencies [5086791ac]
+  - @graphql-codegen/visitor-plugin-common@2.2.0
+
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [6470e6cc9]
+- Updated dependencies [263570e50]
+- Updated dependencies [35199dedf]
+  - @graphql-codegen/visitor-plugin-common@2.1.2
+  - @graphql-codegen/plugin-helpers@2.1.1
+
+## 2.1.1
+
+### Patch Changes
+
+- Updated dependencies [aabeff181]
+  - @graphql-codegen/visitor-plugin-common@2.1.1
+
+## 2.1.0
+
+### Minor Changes
+
+- 440172cfe: support ESM
+
+### Patch Changes
+
+- b6525bc40: Make typescript-react-query respect the dedupeOperationSuffix option for hook names
+- Updated dependencies [290170262]
+- Updated dependencies [24185985a]
+- Updated dependencies [39773f59b]
+- Updated dependencies [440172cfe]
+  - @graphql-codegen/visitor-plugin-common@2.1.0
+  - @graphql-codegen/plugin-helpers@2.1.0
+
+## 2.0.0
+
+### Major Changes
+
+- b0cb13df4: Update to latest `graphql-tools` and `graphql-config` version.
+
+  ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
+
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+
+### Minor Changes
+
+- a5de375a7: Added new flag for `exposeFetcher` for exporting the fetcher
+
+### Patch Changes
+
+- Updated dependencies [d80efdec4]
+- Updated dependencies [d80efdec4]
+- Updated dependencies [b0cb13df4]
+  - @graphql-codegen/visitor-plugin-common@2.0.0
+  - @graphql-codegen/plugin-helpers@2.0.0
+
+## 1.3.5
+
+### Patch Changes
+
+- Updated dependencies [df19a4ed]
+- Updated dependencies [470336a1]
+- Updated dependencies [9005cc17]
+  - @graphql-codegen/visitor-plugin-common@1.22.0
+  - @graphql-codegen/plugin-helpers@1.18.8
+
+## 1.3.4
+
+### Patch Changes
+
+- Updated dependencies [6762aff5]
+  - @graphql-codegen/visitor-plugin-common@1.21.3
+
+## 1.3.3
+
+### Patch Changes
+
+- Updated dependencies [6aaecf1c]
+  - @graphql-codegen/visitor-plugin-common@1.21.2
+
+## 1.3.2
+
+### Patch Changes
+
+- Updated dependencies [cf1e5abc]
+  - @graphql-codegen/visitor-plugin-common@1.21.1
+
+## 1.3.1
+
+### Patch Changes
+
+- Updated dependencies [dfd25caf]
+- Updated dependencies [8da7dff6]
+  - @graphql-codegen/visitor-plugin-common@1.21.0
+  - @graphql-codegen/plugin-helpers@1.18.7
+
+## 1.3.0
+
+### Minor Changes
+
+- 5c119438: Added an option exposeDocument to expose a document from the hook
+
+### Patch Changes
+
+- d9212aa0: fix(visitor-plugin-common): guard for a runtime type error
+- Updated dependencies [d9212aa0]
+- Updated dependencies [f0b5ea53]
+- Updated dependencies [097bea2f]
+  - @graphql-codegen/visitor-plugin-common@1.20.0
+  - @graphql-codegen/plugin-helpers@1.18.5
+
 ## 1.2.4
 
 ### Patch Changes

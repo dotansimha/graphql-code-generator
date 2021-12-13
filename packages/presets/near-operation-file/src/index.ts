@@ -1,10 +1,17 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
-import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
+import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema, DocumentNode, Kind } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
 import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
-import { FragmentImport, ImportDeclaration, ImportSource } from '@graphql-codegen/visitor-plugin-common';
+import {
+  FragmentImport,
+  getConfigValue,
+  ImportDeclaration,
+  ImportSource,
+  LoadedFragment,
+} from '@graphql-codegen/visitor-plugin-common';
 
 export { resolveDocumentImports, DocumentImportResolverOptions };
 
@@ -23,12 +30,12 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   baseTypesPath: string;
@@ -40,13 +47,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importAllFragmentsFrom: '~types'
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importAllFragmentsFrom: '~types'
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importAllFragmentsFrom?: string | FragmentImportFromFn;
@@ -57,31 +64,31 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    extension: .generated.tsx
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       extension: .generated.tsx
+   *     plugins:
+   *       - typescript-operations
+   *       - typescript-react-apollo
    * ```
    */
   extension?: string;
   /**
-   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
+   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execution path is not your project root directory.
    * @default process.cwd()
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       cwd: /some/path
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   cwd?: string;
@@ -92,13 +99,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    folder: __generated__
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       folder: __generated__
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   folder?: string;
@@ -109,13 +116,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: SchemaTypes
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importTypesNamespace: SchemaTypes
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importTypesNamespace?: string;
@@ -152,29 +159,70 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
-    const sources = resolveDocumentImports(options, schemaObject, {
-      baseDir,
-      generateFilePath(location: string) {
-        const newFilePath = defineFilepathSubfolder(location, folder);
+    const sources = resolveDocumentImports(
+      options,
+      schemaObject,
+      {
+        baseDir,
+        generateFilePath(location: string) {
+          const newFilePath = defineFilepathSubfolder(location, folder);
 
-        return appendExtensionToFilePath(newFilePath, extension);
+          return appendExtensionToFilePath(newFilePath, extension);
+        },
+        schemaTypesSource: {
+          path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
+          namespace: importTypesNamespace,
+        },
+        typesImport: options.config.useTypeImports ?? false,
       },
-      schemaTypesSource: {
-        path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
-        namespace: importTypesNamespace,
-      },
-      typesImport: options.config.useTypeImports ?? false,
-    });
+      getConfigValue(options.config.dedupeFragments, false)
+    );
 
-    return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, fragmentImports, ...source }) => {
-      let fragmentImportsArr = fragmentImports;
+    const filePathsMap = new Map<
+      string,
+      {
+        importStatements: Set<string>;
+        documents: Array<Source>;
+        externalFragments: Array<
+          LoadedFragment<{
+            level: number;
+          }>
+        >;
+        fragmentImports: Array<ImportDeclaration<FragmentImport>>;
+      }
+    >();
+
+    for (const source of sources) {
+      let record = filePathsMap.get(source.filename);
+      if (record === undefined) {
+        record = {
+          importStatements: new Set(),
+          documents: [],
+          externalFragments: [],
+          fragmentImports: [],
+        };
+        filePathsMap.set(source.filename, record);
+      }
+
+      for (const importStatement of source.importStatements) {
+        record.importStatements.add(importStatement);
+      }
+      record.documents.push(...source.documents);
+      record.externalFragments.push(...source.externalFragments);
+      record.fragmentImports.push(...source.fragmentImports);
+    }
+
+    const artifacts: Array<Types.GenerateOptions> = [];
+
+    for (const [filename, record] of filePathsMap.entries()) {
+      let fragmentImportsArr = record.fragmentImports;
 
       if (importAllFragmentsFrom) {
-        fragmentImportsArr = fragmentImports.map<ImportDeclaration<FragmentImport>>(t => {
+        fragmentImportsArr = record.fragmentImports.map<ImportDeclaration<FragmentImport>>(t => {
           const newImportSource: ImportSource<FragmentImport> =
             typeof importAllFragmentsFrom === 'string'
               ? { ...t.importSource, path: importAllFragmentsFrom }
-              : importAllFragmentsFrom(t.importSource, source.filename);
+              : importAllFragmentsFrom(t.importSource, filename);
 
           return {
             ...t,
@@ -187,7 +235,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         // TODO/NOTE I made globalNamespace include schema types - is that correct?
         ...(options.config.globalNamespace
           ? []
-          : importStatements.map(importStatement => ({ add: { content: importStatement } }))),
+          : Array.from(record.importStatements).map(importStatement => ({ add: { content: importStatement } }))),
         ...options.plugins,
       ];
       const config = {
@@ -196,20 +244,35 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         // are exported from operations file
         exportFragmentSpreadSubTypes: true,
         namespacedImportName: importTypesNamespace,
-        externalFragments,
+        externalFragments: record.externalFragments,
         fragmentImports: fragmentImportsArr,
       };
 
-      return {
-        ...source,
+      const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [] };
+      const combinedSource: Source = {
+        rawSDL: '',
+        document: document,
+        location: record.documents[0].location,
+      };
+
+      for (const source of record.documents) {
+        combinedSource.rawSDL += source.rawSDL;
+        (combinedSource.document.definitions as any).push(...source.document.definitions);
+      }
+
+      artifacts.push({
+        filename,
+        documents: [combinedSource],
         plugins,
         pluginMap,
         config,
         schema: options.schema,
         schemaAst: schemaObject,
         skipDocumentsValidation: true,
-      };
-    });
+      });
+    }
+
+    return artifacts;
   },
 };
 

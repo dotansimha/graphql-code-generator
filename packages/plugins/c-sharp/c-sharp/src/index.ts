@@ -1,5 +1,5 @@
-import { parse, GraphQLSchema, printSchema, visit } from 'graphql';
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema } from 'graphql';
+import { PluginFunction, Types, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { CSharpResolversVisitor } from './visitor';
 import { CSharpResolversPluginRawConfig } from './config';
 
@@ -9,9 +9,8 @@ export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
   config: CSharpResolversPluginRawConfig
 ): Promise<string> => {
   const visitor = new CSharpResolversVisitor(config, schema);
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, { leave: visitor as any });
+  const astNode = getCachedDocumentNodeFromSchema(schema);
+  const visitorResult = oldVisit(astNode, { leave: visitor });
   const imports = visitor.getImports();
   const blockContent = visitorResult.definitions.filter(d => typeof d === 'string').join('\n');
   const wrappedBlockContent = visitor.wrapWithClass(blockContent);

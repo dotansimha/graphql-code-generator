@@ -1,12 +1,12 @@
 import {
   BaseVisitor,
-  buildScalars,
   EnumValuesMap,
   indent,
   indentMultiline,
   ParsedConfig,
   transformComment,
   getBaseTypeNode,
+  buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { KotlinResolversPluginRawConfig } from './config';
 import {
@@ -54,7 +54,7 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
       listType: rawConfig.listType || 'Iterable',
       withTypes: rawConfig.withTypes || false,
       package: rawConfig.package || defaultPackageName,
-      scalars: buildScalars(_schema, rawConfig.scalars, KOTLIN_SCALARS),
+      scalars: buildScalarsFromConfig(_schema, rawConfig, KOTLIN_SCALARS),
     });
   }
 
@@ -105,9 +105,13 @@ ${enumValues}
 }`;
   }
 
-  protected resolveInputFieldType(
-    typeNode: TypeNode
-  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } {
+  protected resolveInputFieldType(typeNode: TypeNode): {
+    baseType: string;
+    typeName: string;
+    isScalar: boolean;
+    isArray: boolean;
+    nullable: boolean;
+  } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray =
@@ -281,7 +285,7 @@ ${classMembers}
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
     const name = this.convertName(node);
-    const fields = (node.fields as unknown) as FieldDefinitionReturnType[];
+    const fields = node.fields as unknown as FieldDefinitionReturnType[];
 
     const fieldNodes = [];
     const argsTypes = [];
