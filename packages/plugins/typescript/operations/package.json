@@ -26,6 +26,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
