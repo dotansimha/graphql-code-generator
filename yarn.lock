@@ -2921,14 +2921,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/command@1.8.14":
-  version "1.8.14"
-  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.14.tgz#5ccfd053db07a9ffde8458c6a79b061dd8353b8e"
-  integrity sha512-GIweWCcGAIVREKUZe6HIvBgsa0luveymyPHUt8gQ09SR/wXl0ZvHraGuDzhOE58XUHOiYYi4Ir+1FpNXEPoLcw==
+"@oclif/command@1.8.15":
+  version "1.8.15"
+  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.8.15.tgz#0639e5c60e36deba88dd852de4dca231fb29138a"
+  integrity sha512-lMRsr38sm4XBDBt2u88nvGyk3YxMjQenfX1HM140ZckTVqwuvFVZLP4HZ0rSAK9FdJzfryO/tH5hovdiC6bgsw==
   dependencies:
     "@oclif/config" "^1.18.2"
     "@oclif/errors" "^1.3.5"
-    "@oclif/help" "^1.0.0"
+    "@oclif/help" "^1.0.1"
     "@oclif/parser" "^3.8.6"
     debug "^4.1.1"
     semver "^7.3.2"
@@ -2956,10 +2956,10 @@
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/help@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@oclif/help/-/help-1.0.0.tgz#aa3c01ba9c93d026500243d0ae9665ebfbcfed46"
-  integrity sha512-5uiVU+eF3kW5kC3T+Bxyydk3WekhYYifxgnZFLbthCQrjpJETdo7ELL26djMz0AmMIzhiZLWADeLNMSVTiLUaw==
+"@oclif/help@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@oclif/help/-/help-1.0.1.tgz#fd96a3dd9fb2314479e6c8584c91b63754a7dff5"
+  integrity sha512-8rsl4RHL5+vBUAKBL6PFI3mj58hjPCp2VYyXD4TAa7IMStikFfOH2gtWmqLzIlxAED2EpD0dfYwo9JJxYsH7Aw==
   dependencies:
     "@oclif/config" "1.18.2"
     "@oclif/errors" "1.3.5"
