@@ -115,7 +115,8 @@
     "graphql": "16.1.0",
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
-    "**/@types/graphql-upload/graphql": "^16.0.0"
+    "**/@types/graphql-upload/graphql": "^16.0.0",
+    "log-update": "4.0.0"
   },
   "dependencies": {
     "dotenv": "10.0.0",
