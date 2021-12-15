@@ -2340,6 +2340,55 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config);
     });
 
+    it('Should support merging identical fragment union types with skipTypename', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type TestQuery = { notifications: Array<{ id: string }> };
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for merged fragment union types with skipTypename', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Notifiction {
+          id
+          ... on TextNotification {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content)
+        .toBeSimilarStringTo(`type N_GFw1nTaQe9Baa0Kl4ZiXr4Ani9RzBaFgSyPIeMxpKi_Fragment = { text: string, id: string };
+
+        type N_KcImDwswPdfEz26F36P15a6QjQma3cbCJugGx70kUu_Fragment = { id: string };
+
+        export type NFragment = N_GFw1nTaQe9Baa0Kl4ZiXr4Ani9RzBaFgSyPIeMxpKi_Fragment | N_KcImDwswPdfEz26F36P15a6QjQma3cbCJugGx70kUu_Fragment;
+      `);
+      await validate(content, config);
+    });
+
     it('Should support inline fragments', async () => {
       const ast = parse(/* GraphQL */ `
         query currentUser {

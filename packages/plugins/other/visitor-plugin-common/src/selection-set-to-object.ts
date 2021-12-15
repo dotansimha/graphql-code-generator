@@ -363,7 +363,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const key = this.selectionSetStringFromFields(fields);
         prev[key] = {
           fields,
-          types: [...(prev[key]?.types ?? []), typeInfo],
+          types: [...(prev[key]?.types ?? []), typeInfo].filter(Boolean),
         };
 
         return prev;
@@ -373,14 +373,23 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       // string literal union of typenames.
       const compacted = Object.keys(grouped).reduce<Record<string, string[]>>((acc, key) => {
         const typeNames = grouped[key].types.map(t => t.type);
-        const typenameUnion = this._processor.transformTypenameField(typeNames.join(' | '), grouped[key].types[0].name);
+        const typenameUnion = grouped[key].types[0]
+          ? this._processor.transformTypenameField(typeNames.join(' | '), grouped[key].types[0].name)
+          : [];
         const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
 
         // The keys here will be used to generate intermediary
         // fragment names. To avoid blowing up the type name on large
         // unions, calculate a stable hash here instead.
+        //
+        // Also use fragment hashing if skipTypename is true, since we
+        // then don't have a typename for naming the fragment.
         acc[
-          typeNames.length <= 3 ? typeNames.join('_') : createHash('sha256').update(typeNames.join()).digest('base64')
+          typeNames.length <= 3 && typeNames.length > 0
+            ? typeNames.join('_')
+            : createHash('sha256')
+                .update(typeNames.join() || transformedSet || '')
+                .digest('base64')
         ] = [transformedSet];
         return acc;
       }, {});
