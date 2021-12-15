@@ -241,6 +241,14 @@ describe('Java', () => {
       }`);
     });
 
+    it('Should generate check type for enum when arg with enum list', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      expect(result).toBeSimilarStringTo(`this.roles = ((List<Object>) args.get("roles")).stream()
+		.map(item -> item instanceof UserRole ? item : UserRole.valueOf((String) item))
+        .map(UserRole.class::cast)
+        .collect(Collectors.toList());`);
+    });
+
     it('Should generate input class per each input, also with nested input types', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
