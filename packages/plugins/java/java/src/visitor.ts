@@ -203,10 +203,12 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
           this._addListImport = true;
           if (typeToUse.isEnum) {
             return indentMultiline(
-              `this.${this.config.classMembersPrefix}${arg.name.value} = ((List<Object>) args.get("${arg.name.value}")).stream()
-		.map(item -> item instanceof ${typeToUse.baseType} ? item : ${typeToUse.baseType}.valueOf((String) item))
-		.map(${typeToUse.baseType}.class::cast)
-		.collect(Collectors.toList());`,
+              `if (args.get("${arg.name.value}") != null) {
+		this.${this.config.classMembersPrefix}${arg.name.value} = ((List<Object>) args.get("${arg.name.value}")).stream()
+				.map(item -> item instanceof ${typeToUse.baseType} ? item : ${typeToUse.baseType}.valueOf((String) item))
+				.map(${typeToUse.baseType}.class::cast)
+				.collect(Collectors.toList());
+}`,
               3
             );
           }
