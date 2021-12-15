@@ -15,6 +15,7 @@ describe('Java', () => {
       user(id: ID!): User!
       searchUser(searchFields: SearchUser!): [User!]!
       updateUser(input: UpdateUserMetadataInput!): [User!]!
+      authorize(roles: [UserRole]): Boolean
     }
 
     input InputWithArray {
