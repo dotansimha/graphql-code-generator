@@ -100,13 +100,13 @@ Make sure to follow the following instructions:
   },
 ```
 
-> `graphql` must be a devDependency in order to allow develoeprs to choose their own version.
+> `graphql` must be a devDependency in order to allow developers to choose their own version.
 
 > `tslib` is required to compile plugins.
 
 > `@graphql-codegen/plugin-helpers` contains helpful types and utils. Make sure it has the same version as your package.
 
-Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so run the following command again, in the root direcory:
+Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so run the following command again, in the root directory:
 
 ```sh
 yarn
@@ -218,10 +218,10 @@ export const pluginsConfigurations: PluginConfig[] = [
   {
     file: '../packages/plugins/my-plugin/config.ts', // file where the Config interface/type is located
     identifier: 'MyPluginConfig', // name of the Config interface/type
-    name: 'my-plugin', // name if you plugin package
-  },
+    name: 'my-plugin' // name if you plugin package
+  }
   // ...
-];
+]
 ```
 
 > Adding your plugin here will automatically include your plugin in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action), and will generate a markdown documentation automatically based on your TypeScript types.

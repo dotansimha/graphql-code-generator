@@ -11,7 +11,7 @@ Our goals (and achievements) for 1.0.0 release was:
 
 - Rename all package from `graphql-codegen-...` to scoped packages `@graphql-codegen/...`.
 - Stabilize the core package and the YML configuration file.
-- Remove the old, deprecated code from this repostory (everything related to `flattenDocuments` and `buildSchemaContext`).
+- Remove the old, deprecated code from this repository (everything related to `flattenDocuments` and `buildSchemaContext`).
 - Separate the CLI package from the core package, and create an easy-to-use and easy-to-consume core package.
 - Add better support for running the codegen in non-node environments, by clearing unused dependencies and add support for tree shaking.
 - Remove the dependency for Handlebars from this repository.
@@ -23,13 +23,13 @@ Our goals (and achievements) for 1.0.0 release was:
 
 ### New TypeScript Libraries
 
-During the refactor, we rewrote all TypeScript-related plugins. By doing that, we introducted some breaking changes.
+During the refactor, we rewrote all TypeScript-related plugins. By doing that, we introduced some breaking changes.
 
 Before those changes, you had to depend on `typescript-common` plugin, and add `typescript-server` and `typescript-client` (and others) on top of it.
 
 Now, `typescript` plugin is the plugin you need to use for backend (it combines `typescript-common` and `typescript-server`), and use `typescript-operations` on top of it for the client-side.
 
-The reason for this change is the fact that now `typescript-operations` uses `Pick<>` to create the client-side types, instead of generating tons of `namepsace`s and `interface`s.
+The reason for this change is the fact that now `typescript-operations` uses `Pick<>` to create the client-side types, instead of generating tons of `namespace`s and `interface`s.
 
 ## How to migrate?
 
@@ -111,7 +111,7 @@ And for client-side:
 
 We tried to avoid breaking changes, but it's not always possible. We had a lot of issues we couldn't fix before because we didn't want to introduce breaking changes.
 
-It was very hard for us to track breaking changes in the past, but it it's easier for us, and we promise to be semver-compatiable.
+It was very hard for us to track breaking changes in the past, but it it's easier for us, and we promise to be semver-compatible.
 
 You can find a list of all breaking changes in [GitHub Releases page](https://github.com/dotansimha/graphql-code-generator/releases/).
 
@@ -135,4 +135,4 @@ Then, add it to your codegen configuration:
     - typescript-compatibility
 ```
 
-> Note: If `typescript-react-apollo` plugin also specified in your config file, it will generate backward-compatibily for it.
+> Note: If `typescript-react-apollo` plugin also specified in your config file, it will generate backward-compatibility for it.
