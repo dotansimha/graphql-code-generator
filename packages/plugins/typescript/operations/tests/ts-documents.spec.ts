@@ -2379,13 +2379,14 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content)
-        .toBeSimilarStringTo(`type N_GFw1nTaQe9Baa0Kl4ZiXr4Ani9RzBaFgSyPIeMxpKi_Fragment = { text: string, id: string };
+      expect(content).toBeSimilarStringTo(
+        `type N_TextNotification_Fragment = { text: string, id: string };
 
-        type N_KcImDwswPdfEz26F36P15a6QjQma3cbCJugGx70kUu_Fragment = { id: string };
+         type N_ImageNotification_Fragment = { id: string };
 
-        export type NFragment = N_GFw1nTaQe9Baa0Kl4ZiXr4Ani9RzBaFgSyPIeMxpKi_Fragment | N_KcImDwswPdfEz26F36P15a6QjQma3cbCJugGx70kUu_Fragment;
-      `);
+         export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+      `
+      );
       await validate(content, config);
     });
 

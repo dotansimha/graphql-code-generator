@@ -363,7 +363,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const key = this.selectionSetStringFromFields(fields);
         prev[key] = {
           fields,
-          types: [...(prev[key]?.types ?? []), typeInfo].filter(Boolean),
+          types: [...(prev[key]?.types ?? []), typeInfo || { name: '', type: type.name }].filter(Boolean),
         };
 
         return prev;
@@ -373,7 +373,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       // string literal union of typenames.
       const compacted = Object.keys(grouped).reduce<Record<string, string[]>>((acc, key) => {
         const typeNames = grouped[key].types.map(t => t.type);
-        const typenameUnion = grouped[key].types[0]
+        const typenameUnion = grouped[key].types[0].name
           ? this._processor.transformTypenameField(typeNames.join(' | '), grouped[key].types[0].name)
           : [];
         const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
@@ -385,7 +385,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         // Also use fragment hashing if skipTypename is true, since we
         // then don't have a typename for naming the fragment.
         acc[
-          typeNames.length <= 3 && typeNames.length > 0
+          typeNames.length <= 3
             ? typeNames.join('_')
             : createHash('sha256')
                 .update(typeNames.join() || transformedSet || '')
