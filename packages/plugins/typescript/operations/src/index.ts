@@ -11,7 +11,11 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
-  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
+  const documents = config.flattenGeneratedTypes
+    ? optimizeOperations(schema, rawDocuments, {
+        includeFragments: config.flattenGeneratedTypesIncludeFragments,
+      })
+    : rawDocuments;
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [

@@ -3856,6 +3856,87 @@ describe('TypeScript Operations Plugin', () => {
         );`);
     });
 
+    it('Handles fragments across files with flattenGeneratedTypes', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          search: [Dimension!]
+        }
+
+        type Dimension {
+          id: String
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SearchPopular {
+          search {
+            ...SearchableFragment
+          }
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment SearchableFragment on Dimension {
+          id
+        }
+      `);
+
+      const config = {
+        flattenGeneratedTypes: true,
+        flattenGeneratedTypesIncludeFragments: true,
+        preResolveTypes: true,
+      };
+
+      const { content } = await plugin(
+        testSchema,
+        [
+          { location: '', document: query },
+          { location: '', document: fragment },
+        ],
+        config,
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      const output = await validate(content, config, testSchema);
+
+      expect(output).toBeSimilarStringTo(`
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          search?: Maybe<Array<Dimension>>;
+        };
+
+        export type Dimension = {
+          __typename?: 'Dimension';
+          id?: Maybe<Scalars['String']>;
+        };
+        export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null | undefined };
+
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null | undefined }> | null | undefined };`);
+    });
+
     it('Should add operation name when addOperationExport is true', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type User {
