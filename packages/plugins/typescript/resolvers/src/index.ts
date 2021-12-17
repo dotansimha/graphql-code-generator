@@ -4,8 +4,9 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
@@ -84,7 +85,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
 
   // runs visitor
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
   const legacyStitchingResolverType = `
@@ -198,7 +199,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info${optionalSignForInfoArg}: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,

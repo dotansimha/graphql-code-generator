@@ -1,5 +1,57 @@
 # @graphql-codegen/typescript
 
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 2.4.0
+
+### Minor Changes
+
+- 4c5c84c1b: Added InputMaybe, a different type of Maybe type for input/arguments
+
+## 2.3.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+- Updated dependencies [f3833243d]
+- Updated dependencies [6c898efe5]
+  - @graphql-codegen/schema-ast@2.4.0
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 2.2.3
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.2.2
 
 ### Patch Changes

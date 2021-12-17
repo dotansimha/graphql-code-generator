@@ -7,7 +7,7 @@ import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspec
 /**
  * @description This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange
  *
- * You can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness/.
+ * You can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.
  *
  * Urql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.
  *
@@ -17,17 +17,17 @@ import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspec
  */
 export interface UrqlIntrospectionConfig {
   /**
-   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`.  Allowed values are: `commonjs`,  `es2015`.
+   * @description Compatible only with JSON extension, allow you to choose the export type, either `module.exports` or `export default`. Allowed values are: `commonjs`, `es2015`.
    * @default es2015
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.json:
-   *  plugins:
-   *    - urql-introspection
-   *  config:
-   *    module: commonjs
+   *   path/to/file.json:
+   *     plugins:
+   *       - urql-introspection
+   *     config:
+   *       module: commonjs
    * ```
    */
   module?: 'commonjs' | 'es2015';

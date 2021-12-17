@@ -1,5 +1,48 @@
 # @graphql-codegen/typescript-urql
 
+## 3.4.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 3.4.0
+
+### Minor Changes
+
+- ada1fc7ac: Fix Urql import operations being prefixed into the Urql type import
+
+## 3.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 3.2.2
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 3.2.0
 
 ### Minor Changes

@@ -142,7 +142,10 @@ export class TypeGraphQLVisitor<
         null,
         enumNames,
         this.config.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        undefined,
+        undefined,
+        'Maybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -162,7 +165,7 @@ export class TypeGraphQLVisitor<
 
     if (node.description) {
       // Add description as TypeGraphQL description instead of comment
-      decoratorOptions.description = escapeString((node.description as unknown) as string);
+      decoratorOptions.description = escapeString(node.description as unknown as string);
       (node as any).description = undefined;
     }
 
@@ -175,6 +178,10 @@ export class TypeGraphQLVisitor<
 
   public getFixDecoratorDefinition(): string {
     return `${this.getExportPrefix()}${FIX_DECORATOR_SIGNATURE}`;
+  }
+
+  getMaybeWrapper() {
+    return 'Maybe';
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode): string {
@@ -200,8 +207,8 @@ export class TypeGraphQLVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    const isGraphQLType = GRAPHQL_TYPES.includes((node.name as unknown) as string);
-    if (!isGraphQLType && !this.hasTypeDecorators((node.name as unknown) as string)) {
+    const isGraphQLType = GRAPHQL_TYPES.includes(node.name as unknown as string);
+    if (!isGraphQLType && !this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.ObjectTypeDefinition(node, key, parent);
     }
 
@@ -232,7 +239,7 @@ export class TypeGraphQLVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.InputObjectTypeDefinition(node);
     }
 
@@ -279,7 +286,7 @@ export class TypeGraphQLVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.InterfaceTypeDefinition(node, key, parent);
     }
 
@@ -377,7 +384,7 @@ export class TypeGraphQLVisitor<
     }
 
     const fieldDecorator = this.config.decoratorName.field;
-    let typeString = (node.type as any) as string;
+    let typeString = node.type as any as string;
 
     const type = this.parseType(typeString);
 
@@ -447,7 +454,7 @@ export class TypeGraphQLVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.EnumTypeDefinition(node);
     }
 

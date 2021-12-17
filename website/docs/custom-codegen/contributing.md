@@ -13,15 +13,15 @@ To be able to clone, build and develop codegen, you'll need to have the followin
 
 - [GitHub Account](https://github.com)
 - [Git](https://git-scm.com/downloads)
-- [NodeJS](https://nodejs.org/en/) (v10/v12/v13)
-- [Yarn](https://yarnpkg.com/) (v1)
-- Any code editor (we recommend [VSCode](https://code.visualstudio.com/))
+- [NodeJS](https://nodejs.org/en) (v10/v12/v13)
+- [Yarn](https://yarnpkg.com) (v1)
+- Any code editor (we recommend [VSCode](https://code.visualstudio.com))
 
 GraphQL Code Generator is using the following stack to manage the source code:
 
-1. [TypeScript](https://www.typescriptlang.org/) - for writing the code
+1. [TypeScript](https://typescriptlang.org) - for writing the code
 2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling and development workflow
-3. [Jest](https://jestjs.io/) - for running tests.
+3. [Jest](https://jestjs.io) - for running tests.
 
 ## 2. Fork and Clone
 
@@ -37,7 +37,9 @@ GraphQL Code Generator is built as a monorepo, using [Yarn Workspaces](https://c
 
 So now that you have a local copy of the project, start by installing the dependencies for all packages in the repo, by running the following in the root directory of the project:
 
-    yarn
+```sh
+yarn
+```
 
 > If you make changes, add libraries or new packages, make sure to install the dependencies again, but always from the root directory, otherwise you'll break the monorepo structure.
 
@@ -45,8 +47,10 @@ So now that you have a local copy of the project, start by installing the depend
 
 To test the initial scripts and verify that you have a valid development environment, start by running the following scripts from the root directory:
 
-    yarn build
-    yarn test
+```sh
+yarn build
+yarn test
+```
 
 The command above will make sure to build all common/core packages, and will make sure that all tests are passing.
 
@@ -104,63 +108,67 @@ Make sure to follow the following instructions:
 
 Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so run the following command again, in the root direcory:
 
-    yarn
+```sh
+yarn
+```
 
 ## 6. Create your plugin
 
 To create your new plugin, simply create `src/index.ts` in your plugin directory, and start with the following:
 
 ```ts
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers'
 
 export type MyPluginConfig = {
-  name: string;
-};
+  name: string
+}
 
 export const plugin: PluginFunction<Partial<MyPluginConfig>, MyPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
-  return `Hello ${config.name || 'anonymous'}!`;
-};
+  return `Hello ${config.name || 'anonymous'}!`
+}
 ```
 
 > `schema` is the merged `GraphQLSchema` object, from all sources. this will always be available for plugin.
 
-> `documents` is an array of GraphQL operations (query/mutatation/subscription/fragment). This is optional, and you can use it only if your plugin needs it.
+> `documents` is an array of GraphQL operations (query/mutation/subscription/fragment). This is optional, and you can use it only if your plugin needs it.
 
 > `config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
 
-You can follow the plugin tips in [Write Your Plugin](write-your-plugin.md), [Validate Configuration](validate-configuration.md) and [Using Visitor](using-visitor.md) sections.
+You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Validate Configuration](./validate-configuration) and [Using Visitor](./using-visitor) sections.
 
 ## 7. Test your plugin
 
 To test your plugin, create a test file - `tests/plugin.spec.ts` with the following content;
 
 ```ts
-import { plugin } from '../src';
+import { plugin } from '../src'
 
 describe('My Plugin', () => {
   const schema = buildSchema(/* GraphQL */ `
     type Query {
       foo: String!
     }
-  `);
+  `)
 
   it('Should greet', async () => {
     const result = await plugin(schema, [], {
-      name: 'Dotan',
-    });
+      name: 'Dotan'
+    })
 
-    expect(result).toBe('Hello Dotan!');
-  });
-});
+    expect(result).toBe('Hello Dotan!')
+  })
+})
 ```
 
 Now, to make sure it works, run the following in your plugin directory:
 
-    yarn test
+```sh
+yarn test
+```
 
 ## 8. Integration
 
@@ -177,13 +185,19 @@ In order to add it to the website, do the following:
 1. Add JSDoc annotations to your config object, it can also include default value, examples and type:
 
 ````ts
+// packages/plugins/my-plugin/config.ts
+
+/**
+ * My plugin is super cool!!!
+ */
 export type MyPluginConfig = {
   /**
    * @name name
    * @description This allow you to generate a greeting with custom name
    * @default anonymous
    *
-   * @example Change the name
+   * @exampleMarkdown
+   * ## Change the name
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -193,40 +207,43 @@ export type MyPluginConfig = {
    *    name: Uri
    * ```
    */
-  name: string;
-};
+  name: string
+}
 ````
 
-Now, open `./website/generate-config.js` and add a record to the mapping in that file, point the file with the configuration annotation, and the output file:
+Now, open `website/src/lib/plugins-docs.ts` and add a record to the `pluginsConfigurations` variable in that file, and point the file with the configuration annotation:
 
-```js
-const mapping = {
-  '../packages/plugins/my-plugin/src/index.ts': BASE_DIR + '/my-plugin.md',
-};
+```ts
+export const pluginsConfigurations: PluginConfig[] = [
+  {
+    file: '../packages/plugins/my-plugin/config.ts', // file where the Config interface/type is located
+    identifier: 'MyPluginConfig', // name of the Config interface/type
+    name: 'my-plugin', // name if you plugin package
+  },
+  // ...
+];
 ```
 
-Now, navigate to the `website` directory and run `yarn generate:config-docs` -this will take a minute, and it will generate the `.md` for all plugins. You should find your `my-plugin.md` file under `website/docs/generated-config` directory.
+> Adding your plugin here will automatically include your plugin in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action), and will generate a markdown documentation automatically based on your TypeScript types.
 
-Now, run `yarn start` to run the website. You markdown file is loaded, but it's not displayed yet, so let's create a new page for it first.
+## 10. Website & Plugins Hub
 
-Create `my-plugin.md` under `website/docs/plugins/` and add the following content to it, and include the generated configuration API reference:
+To add your plugin to the website and [Plugin Hub](/plugins), add your plugin package information in `website/src/lib/plugins.ts`:
 
-```md
----
-id: my-plugin
-title: My Plugin
----
-
-This is my new plugin.
-
-Add here some custom instructions, explainations, installation guide and more.
-
-{@import ../generated-config/my-plugin.md}
+```ts
+const PACKAGES: Package<Tags>[] = [
+  {
+    identifier: 'my-plugin', // package id, will be used for the url slug
+    title: 'my-plugin', // page title
+    npmPackage: '@graphql-codegen/my-plugin', // name of the npm package
+    iconUrl: '/assets/img/icons/codegen.svg', // you can specify a custom icon, or use codegen's
+    tags: ['plugin', 'utilities'], // add tags for the search engine
+  },
 ```
 
-Your plugin page should be available in: `http://localhost:3000/docs/plugins/my-plugin`
+Go ahead to `website` directory and run the website using `yarn dev`.
 
-Now, just add it it to the website sidebar by updating `website/sidebar.js` file.
+Your plugin page should be available in: `http://localhost:3000/plugins/my-plugin`
 
 ## 10. Add it to the live demo (optional)
 
@@ -235,6 +252,4 @@ Our website has a live demo in the main page for most plugins, and you can add i
 To add a new example to the live demo, start by making sure that your plugin package is available for the website:
 
 1. Edit `website/package.json` and add your plugin package under `dependencies`.
-2. Edit `website/src/components/live-demo/plugins.js` and add a mapping for the name of your plugin and it's package. This is required in order to have lazy loading and dynamic imports in our website.
-
-Now, add your example under `website/src/components/live-demo/examples.js` - you can add a custom schema, documents and configuration.
+1. Add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.

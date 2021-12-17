@@ -14,27 +14,29 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Override all definition types
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    avoidOptionals: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       avoidOptionals: true
    * ```
    *
    * ## Override only specific definition types
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    avoidOptionals:
-   *      field: true
-   *      inputValue: true
-   *      object: true
-   *      defaultValue: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       avoidOptionals:
+   *         field: true
+   *         inputValue: true
+   *         object: true
+   *         defaultValue: true
    * ```
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;
@@ -45,26 +47,26 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    constEnums: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       constEnums: true
    * ```
    */
   constEnums?: boolean;
   /**
-   * @description Generates enum as TypeScript `type` instead of `enum`. Useful it you wish to generate `.d.ts` declaration file instead of `.ts`
+   * @description Generates enum as TypeScript `type` instead of `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`
    * @default false
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    enumsAsTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       enumsAsTypes: true
    * ```
    */
   enumsAsTypes?: boolean;
@@ -75,11 +77,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    numericEnums: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       numericEnums: true
    * ```
    */
   numericEnums?: boolean;
@@ -91,12 +93,12 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    enumsAsTypes: true
-   *    futureProofEnums: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       enumsAsTypes: true
+   *       futureProofEnums: true
    * ```
    */
   futureProofEnums?: boolean;
@@ -108,11 +110,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    futureProofUnions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       futureProofUnions: true
    * ```
    */
   futureProofUnions?: boolean;
@@ -123,11 +125,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    enumsAsConst: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       enumsAsConst: true
    * ```
    */
   enumsAsConst?: boolean;
@@ -137,13 +139,14 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown Override all definition types
+   * <!-- TODO: this block loses indentation during generation docs, find why and fix -->
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    onlyOperationTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyOperationTypes: true
    * ```
    */
   onlyOperationTypes?: boolean;
@@ -154,11 +157,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    immutableTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       immutableTypes: true
    * ```
    */
   immutableTypes?: boolean;
@@ -168,13 +171,45 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Allow undefined
+   *
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       maybeValue: T | null | undefined
+   * ```
+   *
+   * ## Allow `null` in resolvers:
+   *
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
+   * ```
+   */
+  maybeValue?: string;
+  /**
+   * @description Allow to override the type value of `Maybe` for input types and arguments.
+   * This is useful in case you want to differentiate between the wrapper of input and output types.
+   * By default, this type just refers to `Maybe` type, but you can override it's definition.
+   *
+   * @default Maybe<T>
+   *
+   * @exampleMarkdown
+   * ## Allow undefined
    * ```yml
    * generates:
    *  path/to/file.ts:
    *    plugins:
    *      - typescript
    *    config:
-   *      maybeValue: T | null | undefined
+   *      inputMaybeValue: T | null | undefined
    * ```
    *
    * ## Allow `null` in resolvers:
@@ -185,10 +220,10 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *      - typescript
    *      - typescript-resolvers
    *    config:
-   *      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
+   *      inputMaybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
    * ```
    */
-  maybeValue?: string;
+  inputMaybeValue?: string;
   /**
    * @description Set to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
@@ -196,13 +231,14 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Disable all export from a file
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    noExport: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       noExport: true
    * ```
    */
   noExport?: boolean;
@@ -212,13 +248,14 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Disable description generation
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    disableDescriptions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       disableDescriptions: true
    * ```
    */
   disableDescriptions?: boolean;
@@ -228,33 +265,34 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Override all definition types
+   *
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    useImplementingTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       useImplementingTypes: true
    * ```
    */
   useImplementingTypes?: boolean;
   /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
-   * @description Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+   * @description Set to `true` in order to wrap field definitions with `EntireFieldWrapper`.
    * This is useful to allow return types such as Promises and functions for fields.
-   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if i.e. the field is an Array, while
    * `wrapFieldDefinitions` will wrap every single value inside the array.
-   * @default true
+   * @default false
    *
    * @example Enable wrapping entire fields
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapEntireFieldDefinitions: false
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       wrapEntireFieldDefinitions: false
    * ```
    */
   wrapEntireFieldDefinitions?: boolean;
@@ -268,11 +306,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @example Only allow values
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    entireFieldWrapperValue: T
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       entireFieldWrapperValue: T
    * ```
    */
   entireFieldWrapperValue?: string;

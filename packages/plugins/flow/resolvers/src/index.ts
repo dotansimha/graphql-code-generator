@@ -4,8 +4,9 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 /**
@@ -13,7 +14,7 @@ import { FlowResolversVisitor } from './visitor';
  *
  * It generates types for your entire schema: types, input types, enum, interface, scalar and union.
  *
- * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
+ * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.
  */
 export interface RawFlowResolversConfig extends RawResolversConfig {}
 
@@ -31,7 +32,7 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const defsToInclude: string[] = [visitor.getResolverTypeWrapperSignature()];
 

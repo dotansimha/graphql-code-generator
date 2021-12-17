@@ -1,5 +1,6 @@
 import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -72,8 +73,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A list of options for the sort order of the feed */
@@ -125,8 +126,8 @@ export type QueryEntryArgs = {
 };
 
 export type QueryFeedArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   type: FeedType;
 };
 
@@ -206,8 +207,8 @@ export type OnCommentAddedSubscription = {
 
 export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CommentQuery = {
@@ -280,8 +281,8 @@ export type FeedEntryFragment = {
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FeedQuery = {
@@ -534,6 +535,7 @@ export const useSubmitRepositoryMutation = <TError = unknown, TContext = unknown
   options?: UseMutationOptions<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>
 ) =>
   useMutation<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>(
+    'submitRepository',
     (variables?: SubmitRepositoryMutationVariables) =>
       fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
         dataSource.endpoint,
@@ -555,6 +557,7 @@ export const useSubmitCommentMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>
 ) =>
   useMutation<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>(
+    'submitComment',
     (variables?: SubmitCommentMutationVariables) =>
       fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
         dataSource.endpoint,
@@ -580,6 +583,7 @@ export const useVoteMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<VoteMutation, TError, VoteMutationVariables, TContext>
 ) =>
   useMutation<VoteMutation, TError, VoteMutationVariables, TContext>(
+    'vote',
     (variables?: VoteMutationVariables) =>
       fetcher<VoteMutation, VoteMutationVariables>(
         dataSource.endpoint,

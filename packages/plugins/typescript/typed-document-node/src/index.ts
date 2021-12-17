@@ -1,5 +1,5 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { TypeScriptTypedDocumentNodesConfig } from './config';
 import { extname } from 'path';
 import {
@@ -31,7 +31,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   ];
 
   const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),

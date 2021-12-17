@@ -1,5 +1,27 @@
 # @graphql-codegen/core
 
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.0
+
+### Minor Changes
+
+- 7c60e5acc: feat(core): ability to skip some specific validation rules with skipDocumentsValidation option
+
+### Patch Changes
+
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.1.0
 
 ### Minor Changes

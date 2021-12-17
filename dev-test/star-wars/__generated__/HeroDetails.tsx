@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroDetailsQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroDetailsQuery = {

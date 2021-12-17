@@ -5,7 +5,7 @@ import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroDetailsWithFragmentQuery = {

@@ -26,6 +26,7 @@ import {
   InputObjectTypeDefinitionNode,
   EnumTypeDefinitionNode,
   FragmentSpreadNode,
+  DirectiveNode,
 } from 'graphql';
 import { CSharpOperationsRawPluginConfig } from './config';
 import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
@@ -269,7 +270,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
   }
 
   private _getResponseFieldRecursive(
-    node: OperationDefinitionNode | FieldNode | FragmentSpreadNode,
+    node: OperationDefinitionNode | FieldNode | FragmentSpreadNode | DirectiveNode,
     parentSchema: ObjectTypeDefinitionNode
   ): string {
     switch (node.kind) {
@@ -361,6 +362,9 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
           })
           .join('\n');
       }
+      default: {
+        return '';
+      }
     }
   }
 
@@ -438,6 +442,7 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
         ].join('\n');
       }
     }
+    throw new Error(`Unexpected operation type: ${node.operation}`);
   }
 
   public OperationDefinition(node: OperationDefinitionNode): string {

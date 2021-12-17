@@ -4,86 +4,88 @@ import {
   isComplexPluginOutput,
   federationSpec,
   getCachedDocumentNodeFromSchema,
+  AddToSchemaResult,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, DefinitionNode, Kind, print, NameNode } from 'graphql';
+import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { checkValidationErrors, validateGraphQlDocuments, Source } from '@graphql-tools/utils';
+import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/schema';
+import {
+  getSkipDocumentsValidationOption,
+  hasFederationSpec,
+  pickFlag,
+  prioritize,
+  shouldValidateDocumentsAgainstSchema,
+  shouldValidateDuplicateDocuments,
+} from './utils';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
 
-  if (documents.length > 0 && !options.skipDocumentsValidation) {
+  const skipDocumentsValidation = getSkipDocumentsValidationOption(options);
+
+  if (documents.length > 0 && shouldValidateDuplicateDocuments(skipDocumentsValidation)) {
     validateDuplicateDocuments(documents);
   }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
-  if (!options.schemaAst) {
-    options.schemaAst = mergeSchemas({
-      schemas: [],
-      typeDefs: [options.schema],
-      convertExtensions: true,
-      assumeValid: true,
-      assumeValidSDL: true,
-      ...options.config,
-    } as any);
-  }
-
   // merged schema with parts added by plugins
-  let schemaChanged = false;
-  let schemaAst = pluginPackages.reduce((schemaAst, plugin) => {
+  const additionalTypeDefs: AddToSchemaResult[] = [];
+  for (const plugin of pluginPackages) {
     const addToSchema =
       typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
 
-    if (!addToSchema) {
-      return schemaAst;
+    if (addToSchema) {
+      additionalTypeDefs.push(addToSchema);
     }
+  }
 
-    return mergeSchemas({
-      schemas: [schemaAst],
-      typeDefs: [addToSchema],
-    });
-  }, options.schemaAst);
-
-  const federationInConfig = pickFlag('federation', options.config);
+  const federationInConfig: boolean = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
-  if (
-    isFederation &&
-    !schemaAst.getDirective('external') &&
-    !schemaAst.getDirective('requires') &&
-    !schemaAst.getDirective('provides') &&
-    !schemaAst.getDirective('key')
-  ) {
-    schemaChanged = true;
-    schemaAst = mergeSchemas({
-      schemas: [schemaAst],
-      typeDefs: [federationSpec],
-      convertExtensions: true,
-      assumeValid: true,
-      assumeValidSDL: true,
-    } as any);
+  if (isFederation && !hasFederationSpec(options.schemaAst || options.schema)) {
+    additionalTypeDefs.push(federationSpec);
   }
 
-  if (schemaChanged) {
-    options.schema = getCachedDocumentNodeFromSchema(schemaAst);
-  }
+  // Use mergeSchemas, only if there is no GraphQLSchema provided or the schema should be extended
+  const mergeNeeded = !options.schemaAst || additionalTypeDefs.length > 0;
 
-  const skipDocumentValidation =
-    typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
+  const schemaInstance = mergeNeeded
+    ? mergeSchemas({
+        // If GraphQLSchema provided, use it
+        schemas: options.schemaAst ? [options.schemaAst] : [],
+        // If GraphQLSchema isn't provided but DocumentNode is, use it to get the final GraphQLSchema
+        typeDefs: options.schemaAst ? additionalTypeDefs : [options.schema, ...additionalTypeDefs],
+        convertExtensions: true,
+        assumeValid: true,
+        assumeValidSDL: true,
+        ...options.config,
+      } as any)
+    : options.schemaAst;
 
-  if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
+  const schemaDocumentNode =
+    mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
+
+  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)) {
+    const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
+    if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
+      ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
+    }
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
-      options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
-    const errors = await validateGraphQlDocuments(options.schemaAst, [
-      ...documents,
-      ...extraFragments.map(f => ({
-        location: f.importFrom,
-        document: { kind: Kind.DOCUMENT, definitions: [f.node] },
-      })),
-    ]);
+      pickFlag('externalFragments', options.config) || [];
+    const errors = await validateGraphQlDocuments(
+      schemaInstance,
+      [
+        ...documents,
+        ...extraFragments.map(f => ({
+          location: f.importFrom,
+          document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
+        })),
+      ],
+      specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)))
+    );
     checkValidationErrors(errors);
   }
 
@@ -109,8 +111,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           name,
           config: execConfig,
           parentConfig: options.config,
-          schema: options.schema,
-          schemaAst,
+          schema: schemaDocumentNode,
+          schemaAst: schemaInstance,
           documents: options.documents,
           outputFilename: options.filename,
           allPlugins: options.plugins,
@@ -267,22 +269,4 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       );
     }
   });
-}
-
-function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
-  return obj && typeof obj === 'object' && !Array.isArray(obj);
-}
-
-function prioritize<T>(...values: T[]): T {
-  const picked = values.find(val => typeof val === 'boolean');
-
-  if (typeof picked !== 'boolean') {
-    return values[values.length - 1];
-  }
-
-  return picked;
-}
-
-function pickFlag(flag: string, config: Types.PluginConfig): boolean | undefined {
-  return isObjectMap(config) ? (config as any)[flag] : undefined;
 }

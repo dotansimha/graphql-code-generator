@@ -9,6 +9,9 @@ import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLo
 import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
 import { createRequire } from 'module';
+import { promises } from 'fs';
+
+const { lstat } = promises;
 
 export type YamlCliFlags = {
   config: string;
@@ -20,7 +23,7 @@ export type YamlCliFlags = {
   errorsOnly: boolean;
 };
 
-function generateSearchPlaces(moduleName: string) {
+export function generateSearchPlaces(moduleName: string) {
   const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
   // gives codegen.json...
   const regular = extensions.map(ext => `${moduleName}.${ext}`);
@@ -58,20 +61,64 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
   return loader;
 }
 
-export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
-  const moduleName = 'codegen';
+export interface LoadCodegenConfigOptions {
+  /**
+   * The path to the config file or directory contains the config file.
+   * @default process.cwd()
+   */
+  configFilePath?: string;
+  /**
+   * The name of the config file
+   * @default codegen
+   */
+  moduleName?: string;
+  /**
+   * Additional search paths for the config file you want to check
+   */
+  searchPlaces?: string[];
+  /**
+   * @default codegen
+   */
+  packageProp?: string;
+  /**
+   * Overrides or extends the loaders for specific file extensions
+   */
+  loaders?: Record<string, (filepath: string, content: string) => Promise<Types.Config> | Types.Config>;
+}
+
+export interface LoadCodegenConfigResult {
+  filepath: string;
+  config: Types.Config;
+  isEmpty?: boolean;
+}
+
+export async function loadCodegenConfig({
+  configFilePath,
+  moduleName,
+  searchPlaces: additionalSearchPlaces,
+  packageProp,
+  loaders: customLoaders,
+}: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
+  configFilePath = configFilePath || process.cwd();
+  moduleName = moduleName || 'codegen';
+  packageProp = packageProp || moduleName;
   const cosmi = cosmiconfig(moduleName, {
-    searchPlaces: generateSearchPlaces(moduleName),
-    packageProp: moduleName,
+    searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
+    packageProp,
     loaders: {
       '.json': customLoader('json'),
       '.yaml': customLoader('yaml'),
       '.yml': customLoader('yaml'),
       '.js': customLoader('js'),
       noExt: customLoader('yaml'),
+      ...customLoaders,
     },
   });
+  const pathStats = await lstat(configFilePath);
+  return pathStats.isDirectory() ? cosmi.search(configFilePath) : cosmi.load(configFilePath);
+}
 
+export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
@@ -80,7 +127,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     });
   }
 
-  const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
+  const result = await loadCodegenConfig({ configFilePath });
 
   if (!result) {
     if (configFilePath) {
@@ -88,9 +135,9 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
         `Config ${configFilePath} does not exist`,
         `
         Config ${configFilePath} does not exist.
-  
+
           $ graphql-codegen --config ${configFilePath}
-  
+
         Please make sure the --config points to a correct file.
       `
       );
@@ -99,7 +146,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     throw new DetailedError(
       `Unable to find Codegen config file!`,
       `
-        Please make sure that you have a configuration file under the current directory! 
+        Please make sure that you have a configuration file under the current directory!
       `
     );
   }

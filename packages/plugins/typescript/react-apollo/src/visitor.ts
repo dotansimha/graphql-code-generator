@@ -35,6 +35,14 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   hooksSuffix: string;
 }
 
+function hasRequiredVariables(node: OperationDefinitionNode): boolean {
+  return (
+    node.variableDefinitions?.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue
+    ) ?? false
+  );
+}
+
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
   private _externalImportPrefix: string;
   private imports = new Set<string>();
@@ -261,9 +269,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       useTypesPrefix: false,
     });
 
-    const isVariablesRequired =
-      operationType === 'Query' &&
-      node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
+    const isVariablesRequired = operationType === 'Query' && hasRequiredVariables(node);
 
     this.imports.add(this.getReactImport());
     this.imports.add(this.getApolloReactCommonImport(true));
@@ -465,7 +471,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
         useTypesPrefix: false,
       }) + this.config.hooksSuffix;
 
-    return `export function refetch${operationName}(variables?: ${operationVariablesTypes}) {
+    const optional = hasRequiredVariables(node) ? '' : '?';
+
+    return `export function refetch${operationName}(variables${optional}: ${operationVariablesTypes}) {
       return { query: ${this.getDocumentNodeVariable(node, documentVariableName)}, variables: variables }
     }`;
   }

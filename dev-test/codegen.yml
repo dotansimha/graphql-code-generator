@@ -266,6 +266,13 @@ generates:
       - typescript
       - typescript-operations
       - typescript-vue-apollo-smart-ops
+  ./dev-test/githunt/jit-sdk.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-jit-sdk
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql

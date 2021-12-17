@@ -1,5 +1,5 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlVisitor } from './visitor';
 import { extname } from 'path';
@@ -22,8 +22,8 @@ export const plugin: PluginFunction<VueUrqlRawPluginConfig, Types.ComplexPluginO
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new UrqlVisitor(schema, allFragments, config) as any;
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitor = new UrqlVisitor(schema, allFragments, config);
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),

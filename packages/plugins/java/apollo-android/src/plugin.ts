@@ -1,5 +1,5 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, concatAST, visit, Kind, FragmentDefinitionNode } from 'graphql';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { InputTypeVisitor } from './input-type-visitor';
 import { BaseJavaVisitor } from './base-java-visitor';
@@ -17,12 +17,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     package: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       package: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   package?: string;
@@ -32,12 +32,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     typePackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       typePackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   typePackage?: string;
@@ -47,12 +47,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     fragmentPackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       fragmentPackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   fragmentPackage?: string;
@@ -100,7 +100,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig, Types.Complex
     return { content: '' };
   }
 
-  const visitResult = visit(allAst, visitor as any);
+  const visitResult = oldVisit(allAst, visitor as any);
   const additionalContent = visitor.additionalContent();
   const imports = visitor.getImports();
 

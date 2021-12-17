@@ -330,13 +330,57 @@ describe('TypeScript Operations Plugin', () => {
             text @skip(if: $skip)
           }
         `,
-        { experimentalFragmentVariables: true }
+        // < v15 compatibility
+        { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any
       );
       const config = { experimentalFragmentVariables: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
       expect(content).toMatchSnapshot();
+    });
+
+    it('should resolve optionals according to maybeValue', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          age: Int
+          address: String!
+          nicknames: [String!]
+          parents: [User!]!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showProperty: Boolean!) {
+          user {
+            name
+            age
+            address @include(if: $showProperty)
+            nicknames @include(if: $showProperty)
+            parents @include(if: $showProperty)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: "T | 'specialType'",
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      `);
     });
   });
 
@@ -2663,13 +2707,13 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          username?: Maybe<Scalars['String']>;
-          email?: Maybe<Scalars['String']>;
+          username?: InputMaybe<Scalars['String']>;
+          email?: InputMaybe<Scalars['String']>;
           password: Scalars['String'];
-          input?: Maybe<InputType>;
+          input?: InputMaybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-          requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+          requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
           innerRequired: Array<Scalars['String']> | Scalars['String'];
         }>;`
       );
@@ -2689,7 +2733,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: Maybe<Scalars['DateTime']>;
+          test?: InputMaybe<Scalars['DateTime']>;
         }>;`
       );
       await validate(content, config);
@@ -3043,7 +3087,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: Maybe<Scalars['Boolean']>;
+          reverse?: InputMaybe<Scalars['Boolean']>;
         }>;
       `);
     });
@@ -3885,6 +3929,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(output).toBeSimilarStringTo(`
         export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -3896,7 +3941,6 @@ describe('TypeScript Operations Plugin', () => {
           Int: number;
           Float: number;
         };
-
 
         export type Query = {
           __typename?: 'Query';
@@ -3920,7 +3964,6 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Searchable = Dimension | DimValue;
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
-
 
         export type SearchPopularQuery = (
           { __typename?: 'Query' }
@@ -4971,22 +5014,22 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-"type CatFragment_Duck_Fragment = {};
+        "type CatFragment_Duck_Fragment = {};
 
-type CatFragment_Lion_Fragment = { id: string };
+        type CatFragment_Lion_Fragment = { id: string };
 
-type CatFragment_Puma_Fragment = { id: string };
+        type CatFragment_Puma_Fragment = { id: string };
 
-type CatFragment_Wolf_Fragment = {};
+        type CatFragment_Wolf_Fragment = {};
 
-export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
 
-export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+        export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
-"
-`);
+        export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
+        "
+      `);
     });
 
     it('#3950 - Invalid output with fragments and skipTypename: false', async () => {
@@ -5041,22 +5084,22 @@ export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> 
       );
 
       expect(content).toMatchInlineSnapshot(`
-"type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
+        "type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
 
-type CatFragment_Lion_Fragment = { __typename?: 'Lion', id: string };
+        type CatFragment_Lion_Fragment = { __typename?: 'Lion', id: string };
 
-type CatFragment_Puma_Fragment = { __typename?: 'Puma', id: string };
+        type CatFragment_Puma_Fragment = { __typename?: 'Puma', id: string };
 
-type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
+        type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
 
-export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
 
-export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
+        export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
-"
-`);
+        export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
+        "
+      `);
     });
 
     it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
@@ -5130,8 +5173,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
-        requireString: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+        requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
         innerRequired: Array<Scalars['String']> | Scalars['String'];
       }>;`);
       await validate(content, config);
@@ -5162,8 +5205,8 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
-        requireString: Array<Maybe<Scalars['String']>>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+        requireString: Array<InputMaybe<Scalars['String']>>;
         innerRequired: Array<Scalars['String']>;
       }>;`);
       await validate(content, config);
@@ -5272,7 +5315,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         expect(content).toBeSimilarStringTo(`
           export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type InlineFragmentQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5343,7 +5385,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
           export type SpreadFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type SpreadFragmentQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5401,7 +5442,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-
           export type SpreadFragmentWithSelectionQueryQuery = (
             { __typename?: 'Query' }
             & { user: (
@@ -5458,7 +5498,6 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
           );
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
 
           export type SpreadFragmentWithSelectionQueryQuery = (
             { __typename?: 'Query' }
@@ -5518,8 +5557,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showAddress: Scalars['Boolean'];
       }>;
 
-
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string | null | undefined, nicknames?: Array<string> | null | undefined, parents?: Array<User> | null | undefined } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -5572,7 +5610,7 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showAddress: Scalars['Boolean'];
         showName: Scalars['Boolean'];
       }>;
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string | null | undefined, address?: { __typename?: 'Address', city: string } | null | undefined, friends?: Array<{ __typename?: 'User', id: string }> | null | undefined } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
 
     it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
@@ -5621,19 +5659,18 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
         showName: Scalars['Boolean'];
       }>;
 
-
       export type UserQuery = (
         { __typename?: 'Query' }
         & { user: (
           { __typename?: 'User' }
           & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
-          & { address?: Maybe<(
+          & { address?: (
             { __typename?: 'Address' }
             & Pick<Address, 'city'>
-          )>, friends?: Maybe<Array<(
+          ), friends?: Array<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
-          )>> }
+          )> }
         ) }
       );`);
     });
@@ -5713,8 +5750,207 @@ export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: '
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null | undefined } }`
       );
+    });
+
+    it('On avoidOptionals:true, optionals (?) on types should be avoided', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          me: User!
+        }
+
+        type User {
+          messages: [Message!]!
+        }
+
+        type Message {
+          content: String!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query MyQuery($include: Boolean!) {
+          me {
+            messages @include(if: $include) {
+              content
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          nonOptionalTypename: true,
+          preResolveTypes: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type MyQueryQuery = (
+          { __typename: 'Query' }
+          & { me: (
+            { __typename: 'User' }
+            & { messages?: Array<(
+              { __typename: 'Message' }
+              & Pick<Message, 'content'>
+            )> }
+          ) }
+        );
+      `);
+    });
+
+    it('inline fragment with conditional directives and avoidOptionals', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+          group: Group!
+        }
+
+        type User {
+          name: String
+        }
+
+        type Group {
+          id: Int!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($withUser: Boolean! = false) {
+          ... @include(if: $withUser) {
+            user {
+              name
+            }
+            group {
+              id
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true, avoidOptionals: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = {
+        __typename?: 'Query',
+        user?: {
+          __typename?: 'User',
+          name: string | null | undefined
+        } | null | undefined,
+        group?: {
+          __typename?: 'Group',
+          id: number
+        }
+      };`);
+    });
+
+    it('resolve optionals according to maybeValue together with avoidOptionals and conditional directives', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          age: Int
+          address: String!
+          nicknames: [String!]
+          parents: [User!]!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showProperty: Boolean!) {
+          user {
+            name
+            age
+            address @include(if: $showProperty)
+            nicknames @include(if: $showProperty)
+            parents @include(if: $showProperty)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: "T | 'specialType'",
+          avoidOptionals: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      `);
+    });
+
+    it('inline fragment with conditional directives and avoidOptionals, without preResolveTypes', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+          group: Group!
+        }
+
+        type User {
+          name: String
+        }
+
+        type Group {
+          id: Int!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($withUser: Boolean! = false) {
+          ... @include(if: $withUser) {
+            user {
+              name
+            }
+            group {
+              id
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: false, avoidOptionals: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = (
+        { __typename?: 'Query' }
+        & { user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'name'>
+        )>, group?: (
+          { __typename?: 'Group' }
+          & Pick<Group, 'id'>
+        ) }
+      );`);
     });
   });
 
