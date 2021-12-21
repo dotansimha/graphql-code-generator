@@ -15,7 +15,7 @@ Regardless of the language/environment that you're using, GraphQL Code Generator
 
 ### Integration example with TypeScript
 
-![Codegen flow exmaple](/assets/illustrations/codegen_flow1.png)
+![Codegen flow example](/assets/illustrations/codegen_flow1.png)
 
 For example, given the following GraphQL schema:
 
@@ -54,43 +54,43 @@ generates:
 So now, GraphQL Code Generator, with the `@graphql-codegen/typescript` plugin can generate the following TypeScript typings file:
 
 ```ts
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T | null
+export type InputMaybe<T> = Maybe<T>
 
 // ...
 
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-};
+  ID: string
+  String: string
+  Boolean: boolean
+  Int: number
+  Float: number
+}
 
 export type Author = {
-  __typename?: 'Author';
-  id: Scalars['Int'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  posts?: Maybe<Array<Maybe<Post>>>;
-};
+  __typename?: 'Author'
+  id: Scalars['Int']
+  firstName: Scalars['String']
+  lastName: Scalars['String']
+  posts?: Maybe<Array<Maybe<Post>>>
+}
 
 export type AuthorPostsArgs = {
-  findTitle?: InputMaybe<Scalars['String']>;
-};
+  findTitle?: InputMaybe<Scalars['String']>
+}
 
 export type Post = {
-  __typename?: 'Post';
-  id: Scalars['Int'];
-  title: Scalars['String'];
-  author: Author;
-};
+  __typename?: 'Post'
+  id: Scalars['Int']
+  title: Scalars['String']
+  author: Author
+}
 
 export type Query = {
-  __typename?: 'Query';
-  posts?: Maybe<Array<Maybe<Post>>>;
-};
+  __typename?: 'Query'
+  posts?: Maybe<Array<Maybe<Post>>>
+}
 ```
 
 ## What's next?
