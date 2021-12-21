@@ -212,7 +212,7 @@ const PACKAGES: Package<Tags>[] = [
     title: 'TypeScript RTK-Query',
     npmPackage: '@graphql-codegen/typescript-rtk-query',
     iconUrl: '/assets/img/icons/typescript.svg',
-    tags: ['plugin', 'typescript'],
+    tags: ['plugin', 'typescript', 'react'],
   },
   {
     identifier: 'typescript-stencil-apollo',
