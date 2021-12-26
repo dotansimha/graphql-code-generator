@@ -6220,12 +6220,13 @@ esbuild-openbsd-64@0.14.5:
   resolved "https://registry.yarnpkg.com/esbuild-openbsd-64/-/esbuild-openbsd-64-0.14.5.tgz#046827c211daa2b6a2241a9f910321e116d2cc24"
   integrity sha512-RZzRUu1RYKextJgXkHhAsuhLDvm73YP/wogpUG9MaAGvKTxnKAKRuaw2zJfnbz8iBqBQB2no2PmpVBNbqUTQrw==
 
-esbuild-register@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/esbuild-register/-/esbuild-register-3.2.1.tgz#500db2ed42f35d1d5139a9a5d657b86fcd0ec387"
-  integrity sha512-LFgzsqCHsFUpTZdYJFTl1o5p60+C4nZ65BzFYPS1jKGwiKk6JLH8tuLwuydvpgreNUAeDUhTPJgJNjmpZKSOpQ==
+esbuild-register@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/esbuild-register/-/esbuild-register-3.3.0.tgz#4acbf8aba540cf73bbc5b475c4ba7d11aeb71258"
+  integrity sha512-X4irLPLJwwuy8WSI9KsG2htKOoQBveVbmjYGBeBNnha+9IL56wffjj4VeU5zDb3PQtWaE7cdAML87L3rZUYhZw==
   dependencies:
     jsonc-parser "^3.0.0"
+    tsconfig-paths "^3.12.0"
 
 esbuild-sunos-64@0.14.5:
   version "0.14.5"
@@ -12998,10 +12999,10 @@ ts-node@^9:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-tsconfig-paths@^3.11.0, tsconfig-paths@^3.9.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.11.0.tgz#954c1fe973da6339c78e06b03ce2e48810b65f36"
-  integrity sha512-7ecdYDnIdmv639mmDwslG6KQg1Z9STTz1j7Gcz0xa+nshh/gKDAHcPxRbWOsA3SPp0tXP2leTcY9Kw+NAkfZzA==
+tsconfig-paths@^3.11.0, tsconfig-paths@^3.12.0, tsconfig-paths@^3.9.0:
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.12.0.tgz#19769aca6ee8f6a1a341e38c8fa45dd9fb18899b"
+  integrity sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==
   dependencies:
     "@types/json5" "^0.0.29"
     json5 "^1.0.1"
