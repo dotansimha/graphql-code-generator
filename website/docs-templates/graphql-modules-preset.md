@@ -16,7 +16,7 @@ If you are not using `graphql-modules`, you can set `useGraphQLModules: false` t
 
 ## Configuration
 
-{@import ../generated-config/graphql-modules-preset.md}
+{@apiDocs}
 
 ## Usage Example
 
