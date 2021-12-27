@@ -2436,10 +2436,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/client@1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.3.tgz#815b94953f9deb83fd5ce810c455cead6da6ecfb"
-  integrity sha512-BGCYc4eRj+DCdiFM6we11QUohYmSf1Mm9jqufJH0nijj6hLTgYcUnDPuwlm7YuAY1UOpEyknFQLWn2hrED4gRQ==
+"@guild-docs/client@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-1.3.4.tgz#3837c2200f22b96170ea3644fb504e3c9f7fbd06"
+  integrity sha512-0r8FqlubBGftCM2vu5NuTB002E3DRiDhfHdwWASulZfm24tRdeVRXklvc20QupbV3NJRWCvL2/jWZzoWYFIUAA==
   dependencies:
     "@guild-docs/mdx-remote" "^1.0.2"
     "@guild-docs/types" "^1.1.0"
@@ -2447,12 +2447,12 @@
     next-seo "^4.28.1"
     nprogress "^0.2.0"
     react-icons "4.3.1"
-    react-intersection-observer "^8.32.5"
+    react-intersection-observer "^8.33.1"
     react-sticky-box "0.9.3"
     react-use "^17.3.1"
     remove-markdown "^0.3.0"
     use-immer "^0.6.0"
-    zustand "^3.6.6"
+    zustand "^3.6.8"
 
 "@guild-docs/mdx-remote@^1.0.2":
   version "1.0.2"
@@ -11175,10 +11175,10 @@ react-instantsearch-dom@6.17.0:
     react-fast-compare "^3.0.0"
     react-instantsearch-core "^6.17.0"
 
-react-intersection-observer@^8.32.5:
-  version "8.32.5"
-  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.32.5.tgz#92e8d8888b0b43a5c10c398e0d483d574bce7f3e"
-  integrity sha512-4xKdUWRNdPueXXxTyMOV41w6qIa4tsV7BbWOW+IYsvGPP7wxOj9V6o3cKywie+/VDr5Qs7pCzi5Wom78dUxj1w==
+react-intersection-observer@^8.33.1:
+  version "8.33.1"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.33.1.tgz#8e6442cac7052ed63056e191b7539e423e7d5c64"
+  integrity sha512-3v+qaJvp3D1MlGHyM+KISVg/CMhPiOlO6FgPHcluqHkx4YFCLuyXNlQ/LE6UkbODXlQcLOppfX6UMxCEkUhDLw==
 
 react-is@17.0.2, react-is@^17.0.0, react-is@^17.0.1:
   version "17.0.2"
@@ -14117,10 +14117,10 @@ zen-observable@0.8.15, zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zustand@^3.6.6:
-  version "3.6.6"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.6.6.tgz#3b7473a15813f7af9784233abd052c3b4560bbcc"
-  integrity sha512-y4755cIzJHQFEHgTQ5cHrlHdmXMxm5N3DU05Q27yT6rK4lKs2336t5IsAz5q9/GRaoEz6o8SiCOPDhZd5BnneA==
+zustand@^3.6.8:
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.6.8.tgz#17f24351aa9e1fbf46f3addb0bcb81b05940d79f"
+  integrity sha512-8dqxig1l/o/N4M3DGxhweLVyCvNsd40oU3fXuY4MfqX1notavmjljCnSeTN3FGfYzbo963w4un2ChYsPB/0gKA==
 
 zwitch@^1.0.0:
   version "1.0.5"
