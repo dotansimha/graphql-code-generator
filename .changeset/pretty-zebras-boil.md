@@ -54,7 +54,6 @@
 '@graphql-codegen/graphql-modules-preset': patch
 '@graphql-codegen/import-types-preset': patch
 '@graphql-codegen/near-operation-file-preset': patch
-'@graphql-codegen/testing': patch
 '@graphql-codegen/plugin-helpers': patch
 ---
 
