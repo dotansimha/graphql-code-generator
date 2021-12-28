@@ -7,6 +7,7 @@ import { ExtendComponents, handlePushRoute, CombinedThemeProvider, DocsPage, App
 import { Header, Subheader, FooterExtended } from '@theguild/components';
 import 'remark-admonitions/styles/classic.css';
 import '../../public/style.css';
+import Script from 'next/script';
 
 ExtendComponents({
   HelloWorld() {
@@ -61,6 +62,7 @@ function AppContent(appProps: AppProps) {
 
   return (
     <>
+      <Script src="https://the-guild.dev/static/crisp.js" />
       <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
       <Subheader
         activeLink={router.asPath}
