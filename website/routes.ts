@@ -39,7 +39,7 @@ export function getRoutes(): IRoutes {
           ['federation', 'Apollo Federation'],
           'apollo-local-state',
           'create-react-app',
-          ['gatsby', 'GatsbyJS'],
+          ['gatsby', 'Gatsby'],
         ],
       },
       'docs/custom-codegen': {
