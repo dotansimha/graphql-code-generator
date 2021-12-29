@@ -1,6 +1,6 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
-import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, Profiler, createProfiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
@@ -21,6 +21,7 @@ export type YamlCliFlags = {
   project: string;
   silent: boolean;
   errorsOnly: boolean;
+  profile: boolean;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -214,6 +215,10 @@ export function buildOptions() {
       describe: 'Only print errors',
       type: 'boolean' as const,
     },
+    profile: {
+      describe: 'Use profiler to measure performance',
+      type: 'boolean' as const,
+    },
     p: {
       alias: 'project',
       describe: 'Name of a project in GraphQL Config',
@@ -272,6 +277,10 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     context.useProject(cliFlags.project);
   }
 
+  if (cliFlags.profile === true) {
+    context.useProfiler();
+  }
+
   context.updateConfig(config);
 }
 
@@ -281,8 +290,11 @@ export class CodegenContext {
   private config: Types.Config;
   private _project?: string;
   private _pluginContext: { [key: string]: any } = {};
+
   cwd: string;
   filepath: string;
+  profiler: Profiler;
+  profilerOutput?: string;
 
   constructor({
     config,
@@ -297,6 +309,7 @@ export class CodegenContext {
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
     this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.profiler = createNoopProfiler();
   }
 
   useProject(name?: string) {
@@ -330,6 +343,16 @@ export class CodegenContext {
       ...this.getConfig(),
       ...config,
     };
+  }
+
+  useProfiler() {
+    this.profiler = createProfiler();
+
+    const now = new Date(); // 2011-10-05T14:48:00.000Z
+    const datetime = now.toISOString().split('.')[0]; // 2011-10-05T14:48:00
+    const datetimeNormalized = datetime.replace(/-|:/g, ''); // 20111005T144800
+
+    this.profilerOutput = `codegen-${datetimeNormalized}.json`;
   }
 
   getPluginContext(): { [key: string]: any } {

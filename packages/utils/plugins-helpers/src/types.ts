@@ -1,5 +1,6 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+import type { Profiler } from './profiler';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -15,6 +16,7 @@ export namespace Types {
     };
     skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
+    profiler?: Profiler;
   }
 
   export type FileOutput = {
@@ -319,6 +321,7 @@ export namespace Types {
     pluginContext?: {
       [name: string]: any;
     };
+    profiler?: Profiler;
   };
 
   export type OutputPreset<TPresetConfig = any> = {
