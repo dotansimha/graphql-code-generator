@@ -10,6 +10,7 @@ import { GraphQLSchema } from 'graphql';
 import yaml from 'yaml';
 import { createRequire } from 'module';
 import { promises } from 'fs';
+import { cacheResult } from '@theguild/buddy';
 
 const { lstat } = promises;
 
@@ -336,6 +337,8 @@ export class CodegenContext {
     return this._pluginContext;
   }
 
+  // [ ] This will break watch mode - cache forever
+  @cacheResult(cacheKeyFactory<Types.Schema>())
   async loadSchema(pointer: Types.Schema): Promise<GraphQLSchema> {
     const config = this.getConfig(defaultSchemaLoadOptions);
     if (this._graphqlConfig) {
@@ -345,6 +348,8 @@ export class CodegenContext {
     return loadSchema(pointer, config);
   }
 
+  // [ ] This will break watch mode - cache forever
+  @cacheResult(cacheKeyFactory<Types.OperationDocument[]>())
   async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
@@ -360,4 +365,10 @@ export class CodegenContext {
 
 export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
+}
+
+function cacheKeyFactory<T>() {
+  return function stringifyPointer(value: T) {
+    return JSON.stringify(value);
+  };
 }
