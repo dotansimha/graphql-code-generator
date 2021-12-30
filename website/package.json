@@ -82,7 +82,7 @@
     "graphql": "16.2.0",
     "js-yaml": "4.1.0",
     "next": "12.0.7",
-    "next-i18next": "10.0.1",
+    "next-i18next": "10.1.0",
     "next-remote-watch": "1.0.0",
     "next-seo": "4.28.1",
     "node-polyfill-webpack-plugin": "1.1.4",
