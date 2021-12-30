@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.2.3
+
+### Patch Changes
+
+- 9b4629465: fix invalid generated TypeScript code due to the `exposeMutationKey` option adding an unnecessary bracket
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 3.2.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @graphql-codegen/schema-ast
 
+## 2.4.1
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.4.0
 
 ### Minor Changes
