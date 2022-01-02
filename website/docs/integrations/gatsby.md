@@ -1,9 +1,9 @@
 ---
 id: gatsby
-title: GatsbyJS
+title: Gatsby
 ---
 
-If you are building apps using [GatsbyJS](https://gatsbyjs.org), you can use GraphQL Code Generator to generate TypeScript types.
+If you are building apps using [Gatsby](https://gatsbyjs.com), you can use GraphQL Code Generator to generate TypeScript types.
 
 The codegen knows automatically to look for the import of the `graphql` tag for `gatsby` package.
 
@@ -32,7 +32,7 @@ If you are having issues with this glob expression, or if you are seeing perform
 
 ## Community Plugins
 
-There are also community Gatsby plugins that integrate with @graphl-codegen:
+There are also community Gatsby plugins that integrate with `@graphql-codegen`:
 
 - [gatsby-plugin-graphql-codegen](https://github.com/d4rekanguok/gatsby-typescript/tree/master/packages/gatsby-plugin-graphql-codegen)
 - [gatsby-plugin-typegen](https://github.com/cometkim/gatsby-plugin-typegen)
