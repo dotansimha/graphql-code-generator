@@ -13,7 +13,9 @@ import { JsonFileLoader } from '@graphql-tools/json-file-loader';
 import { UrlLoader } from '@graphql-tools/url-loader';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
-import { join, extname } from 'path';
+import path, { join, extname } from 'path';
+import { Source } from '@graphql-tools/utils/loaders';
+import { makeDefaultLoader } from './codegen';
 
 export const defaultSchemaLoadOptions = {
   assumeValidSDL: true,
@@ -58,20 +60,37 @@ export async function loadSchema(
 
         ${e.message || e}
         ${e.stack || ''}
-    
+
         GraphQL Code Generator supports:
           - ES Modules and CommonJS exports (export as default or named export "schema")
           - Introspection JSON File
           - URL of GraphQL endpoint
           - Multiple files with type definitions (glob expression)
           - String in config file
-    
+
         Try to use one of above options and run codegen again.
-    
+
       `
     );
   }
 }
+
+const requiredLoader = async (pointers: Types.CustomDocumentRequire[]): Promise<Source[]> => {
+  return Promise.all(
+    pointers.map(async pointer => {
+      const userLoader = (await makeDefaultLoader(process.cwd())(pointer.require)) as (params: {
+        config: Record<string, any>;
+        schema: GraphQLSchema;
+      }) => Source[] | Promise<Source[]>;
+      const documents = userLoader(pointer.config || {}, schema);
+      return documents;
+    })
+  ).then(results => [].concat(...results));
+};
+
+const isRequirePointer = (pointer: UnnormalizedTypeDefPointer): pointer is Types.CustomDocumentRequire => {
+  return typeof pointer === 'object' && 'require' in pointer;
+};
 
 export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
@@ -97,7 +116,26 @@ export async function loadDocuments(
     ignore.push(join(process.cwd(), generatePath));
   }
 
-  const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
+  const loaderPointers: UnnormalizedTypeDefPointer[] = [];
+  const requestPointers: Types.CustomDocumentRequire[] = [];
+
+  if (Array.isArray(documentPointers)) {
+    documentPointers.forEach(pointer => {
+      if (isRequirePointer(pointer)) {
+        requestPointers.push(pointer);
+      } else {
+        loaderPointers.push(pointer);
+      }
+    });
+  } else {
+    if (isRequirePointer(documentPointers)) {
+      requestPointers.push(documentPointers);
+    } else {
+      loaderPointers.push(documentPointers);
+    }
+  }
+
+  const loadedFromToolkit = await loadDocumentsToolkit(loaderPointers, {
     ...defaultDocumentsLoadOptions,
     ignore,
     loaders,
@@ -105,5 +143,7 @@ export async function loadDocuments(
     ...config.config,
   });
 
-  return loadedFromToolkit;
+  const loadedAlterantively = await requiredLoader(requestPointers);
+
+  return [...loadedFromToolkit, ...loadedAlterantively];
 }

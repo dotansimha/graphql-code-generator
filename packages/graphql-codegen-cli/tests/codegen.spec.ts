@@ -920,6 +920,27 @@ describe('Codegen Executor', () => {
         expect(error.message).toContain('Failed to load custom loader');
       }
     });
+
+    it('Should allow loading docs by require+config method', async () => {
+      await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            require: './tests/test-documents/valid.graphql',
+            config: {
+              loader: './tests/custom-loaders/custom-documents-loader.js',
+            },
+          },
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
+    });
   });
 
   it('should load schema with custom fetch', async () => {

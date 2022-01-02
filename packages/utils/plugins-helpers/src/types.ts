@@ -202,7 +202,12 @@ export namespace Types {
   export interface CustomDocumentLoader {
     [path: string]: CustomDocumentLoaderOptions;
   }
-  export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader;
+  export interface CustomDocumentRequire {
+    require: string;
+    // TODO: define config onject
+    config: object;
+  }
+  export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader | CustomDocumentRequire;
 
   /* Plugin Definition */
   export type PluginConfig<T = any> = { [key: string]: T };
