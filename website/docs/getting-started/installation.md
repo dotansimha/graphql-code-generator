@@ -17,11 +17,9 @@ Then, install the GraphQL Code Generator CLI package:
     # or, with yarn:
     yarn add -D @graphql-codegen/cli
 
-
 :::caution Global Installation
 Please avoid installing `graphql`, `@graphql-codegen/cli` and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
 :::
-
 
 :::caution Monorepo Project
 If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and file. This might break and fail in case of hoisting.
@@ -38,6 +36,10 @@ After installing those dependencies, GraphQL Code Generator can help you configu
     npx graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
+
+:::caution Installation of plugins
+The init process above adds the required plugins to your `package.json` file with the right version numbers but does not install the plugins by itself. The plugins can then be installed by running either an `npm install` or `yarn install` from the directory where your `package.json` exists.
+:::
 
 If you don't want to use the wizard, we've got you covered, just continue reading the next sections.
 
