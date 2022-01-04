@@ -167,12 +167,12 @@ describe('React-Query', () => {
     >(
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useInfiniteQuery<TTestQuery, TError, TData>(
+    ) =>{
+    return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
       (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
-    );`);
+    )};`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
       TError = unknown,
       TContext = unknown
@@ -260,12 +260,13 @@ describe('React-Query', () => {
     >(
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useInfiniteQuery<TTestQuery, TError, TData>(
+    ) =>{
+      const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
+      return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => query({...variables, ...(metaData.pageParam ?? {})}),
       options
-    );`);
+    )};`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
         TError = unknown,
         TContext = unknown
