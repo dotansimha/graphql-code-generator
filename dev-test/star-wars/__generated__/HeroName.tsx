@@ -2,7 +2,7 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroNameQueryVariables = Types.Exact<{
   episode?: Types.InputMaybe<Types.Episode>;
 }>;
