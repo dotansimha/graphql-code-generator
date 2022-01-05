@@ -299,7 +299,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     providedIn: ${this._providedIn(node)}
   })
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
-    document = ${this._getDocumentNodeVariable(node, documentVariableName)};
+    override document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
     constructor(${this.dependencyInjections}) {
       super(${this.dependencyInjectionArgs});
