@@ -55,8 +55,9 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `(metaData) => ${typedFetcher}(${documentVariableName}).bind(null, {...variables, ...(metaData.pageParam ?? {})})()`
+      ? `(metaData) => query({...variables, ...(metaData.pageParam ?? {})})`
       : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})()`;
 
     return `export const useInfinite${operationName} = <
@@ -65,12 +66,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     >(
       ${variables},
       ${options}
-    ) =>
-    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+    ) =>{
+    ${implHookOuter}
+    return ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
       ${impl},
       options
-    );`;
+    )};`;
   }
 
   generateQueryHook(

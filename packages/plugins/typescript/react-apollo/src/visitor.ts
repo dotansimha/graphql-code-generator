@@ -163,7 +163,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getDefaultOptions(): string {
-    return `const defaultOptions =  ${JSON.stringify(this.config.defaultBaseOptions)}`;
+    return `const defaultOptions = ${JSON.stringify(this.config.defaultBaseOptions)} as const;`;
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {

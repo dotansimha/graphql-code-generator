@@ -3,7 +3,7 @@ import * as Types from '../types.d';
 import { gql } from '@apollo/client';
 import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = {

@@ -7,7 +7,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLSchema, ExecutionResult } from 'graphql';
-import { compileQuery, isCompiledQuery } from 'graphql-jit';
+import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';
 import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
@@ -246,26 +246,31 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
   }
   return result.data as unknown as T;
 }
-export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
-    const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}) {
+    const feedCompiled = compileQuery(schema, FeedDocument, 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed2Compiled = compileQuery(schema, Feed2Document, 'feed2');
+    const feed2Compiled = compileQuery(schema, Feed2Document, 'feed2', jitOptions);
     if(!(isCompiledQuery(feed2Compiled))) {
       const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed3Compiled = compileQuery(schema, Feed3Document, 'feed3');
+    const feed3Compiled = compileQuery(schema, Feed3Document, 'feed3', jitOptions);
     if(!(isCompiledQuery(feed3Compiled))) {
       const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed4Compiled = compileQuery(schema, Feed4Document, 'feed4');
+    const feed4Compiled = compileQuery(schema, Feed4Document, 'feed4', jitOptions);
     if(!(isCompiledQuery(feed4Compiled))) {
       const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
@@ -526,7 +531,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLSchema, ExecutionResult } from 'graphql';
-import { compileQuery, isCompiledQuery } from 'graphql-jit';
+import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';
 import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
@@ -736,14 +741,19 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
   }
   return result.data as unknown as T;
 }
-export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
-    const feedCompiled = compileQuery(schema, FeedDocument, 'feed');
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}) {
+    const feedCompiled = compileQuery(schema, FeedDocument, 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const commentAddedCompiled = compileQuery(schema, CommentAddedDocument, 'commentAdded');
+    const commentAddedCompiled = compileQuery(schema, CommentAddedDocument, 'commentAdded', jitOptions);
     if(!(isCompiledQuery(commentAddedCompiled))) {
       const originalErrors = commentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile commentAdded: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
@@ -783,7 +793,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { GraphQLSchema, ExecutionResult } from 'graphql';
 import { parse } from 'graphql';
-import { compileQuery, isCompiledQuery } from 'graphql-jit';
+import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';
 import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -1021,26 +1031,31 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
   }
   return result.data as unknown as T;
 }
-export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
-    const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed');
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}) {
+    const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed2Compiled = compileQuery(schema, parse(Feed2Document), 'feed2');
+    const feed2Compiled = compileQuery(schema, parse(Feed2Document), 'feed2', jitOptions);
     if(!(isCompiledQuery(feed2Compiled))) {
       const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed3Compiled = compileQuery(schema, parse(Feed3Document), 'feed3');
+    const feed3Compiled = compileQuery(schema, parse(Feed3Document), 'feed3', jitOptions);
     if(!(isCompiledQuery(feed3Compiled))) {
       const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
     }
 
-    const feed4Compiled = compileQuery(schema, parse(Feed4Document), 'feed4');
+    const feed4Compiled = compileQuery(schema, parse(Feed4Document), 'feed4', jitOptions);
     if(!(isCompiledQuery(feed4Compiled))) {
       const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
       throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);

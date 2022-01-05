@@ -42,7 +42,7 @@ jobs:
         run: yarn install && git checkout yarn.lock
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@master
+        uses: changesets/action@@v1
         with:
           publish: yarn release
           commit: 'chore(release): update monorepo packages versions'

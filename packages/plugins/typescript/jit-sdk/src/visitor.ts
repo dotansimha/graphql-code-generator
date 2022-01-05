@@ -33,7 +33,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
     if (this.config.documentMode === DocumentMode.string) {
       this._additionalImports.push(`import { parse } from 'graphql';`);
     }
-    this._additionalImports.push(`import { compileQuery, isCompiledQuery } from 'graphql-jit';`);
+    this._additionalImports.push(`import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';`);
     this._additionalImports.push(
       `import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';`
     );
@@ -74,7 +74,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
             this.config.documentMode === DocumentMode.string
               ? `parse(${o.documentVariableName})`
               : o.documentVariableName
-          }, '${operationName}');
+          }, '${operationName}', jitOptions);
 if(!(isCompiledQuery(${compiledQueryVariableName}))) {
   const originalErrors = ${compiledQueryVariableName}?.errors?.map(error => error.originalError || error) || [];
   throw new AggregateError(originalErrors, \`Failed to compile ${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
@@ -133,7 +133,12 @@ if(!(isCompiledQuery(${compiledQueryVariableName}))) {
   }
   return result.data as unknown as T;
 }
-export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, globalContext?: TGlobalContext, globalRoot?: TGlobalRoot) {
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}) {
 ${compiledQueries.join('\n\n')}
 
   return {

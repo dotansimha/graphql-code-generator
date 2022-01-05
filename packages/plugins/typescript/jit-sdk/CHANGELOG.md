@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-jit-sdk
 
+## 2.0.0
+
+### Major Changes
+
+- 170e43474: feat(jit-sdk): ability to provide compiler options while creating the sdk
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-jit-sdk",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK that uses GraphQL JIT",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "graphql-jit": "0.7.2",
-    "@graphql-tools/utils": "8.5.5"
+    "@graphql-tools/utils": "8.6.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

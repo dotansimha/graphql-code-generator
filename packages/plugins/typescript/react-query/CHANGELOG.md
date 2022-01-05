@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.3.0
+
+### Minor Changes
+
+- fc92334d4: Gets rid of graphql-tag from peerdeps of typescript-react-query plugin
+
 ## 3.2.3
 
 ### Patch Changes
