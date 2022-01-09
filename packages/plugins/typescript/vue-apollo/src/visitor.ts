@@ -9,7 +9,7 @@ import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase } from 'change-case-all';
+import { pascalCase, titleCase } from 'change-case-all';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
   withCompositionFunctions: boolean;
@@ -20,7 +20,7 @@ export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
 
 interface BuildCompositionFunctions {
   operationName: string;
-  operationType: 'Query' | 'Mutation' | 'Subscription';
+  operationType: 'Query' | 'Mutation' | 'Subscription' | 'LazyQuery';
   operationResultType: string;
   operationVariablesTypes: string;
   operationHasNonNullableVariable: boolean;
@@ -198,7 +198,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       operationVariablesTypes,
     });
 
-    const compositionFunction = this.buildCompositionFunction({
+    let compositionFunction = this.buildCompositionFunction({
       operationName,
       operationType,
       operationResultType,
@@ -207,6 +207,28 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       operationHasVariables,
       documentNodeVariable,
     });
+
+    if (operationType === 'Query') {
+      const lazyOperationName: string = this.convertName(node.name.value, {
+        suffix: titleCase('LazyQuery'),
+        useTypesPrefix: false,
+      });
+
+      const lazyOperationType = 'LazyQuery';
+
+      compositionFunction +=
+        '\n' +
+        this.buildCompositionFunction({
+          operationName: lazyOperationName,
+          operationType: lazyOperationType,
+          operationResultType,
+          operationVariablesTypes,
+          operationHasNonNullableVariable,
+          operationHasVariables,
+          documentNodeVariable,
+        });
+    }
+
     return [
       ...insertIf(this.config.addDocBlocks, [this.buildCompositionFunctionsJSDoc(node, operationName, operationType)]),
       compositionFunction,
@@ -233,6 +255,13 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       case 'Query': {
         return `export function use${operationName}(${variables}options: VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}>> = {}) {
   return VueApolloComposable.useQuery<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, ${
+          operationHasVariables ? 'variables' : '{}'
+        }, options);
+}`;
+      }
+      case 'LazyQuery': {
+        return `export function use${operationName}(${variables}options: VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<${operationResultType}, ${operationVariablesTypes}>> = {}) {
+  return VueApolloComposable.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, ${
           operationHasVariables ? 'variables' : '{}'
         }, options);
 }`;
