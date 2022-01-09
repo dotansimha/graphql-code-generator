@@ -742,7 +742,11 @@ describe('C#', () => {
         }
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const config: CSharpResolversPluginRawConfig = {
+        emitCompositionTypes: true,
+      };
+
+      const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
       expect(result).toContain('public enum VehicleKind {');
@@ -763,7 +767,11 @@ describe('C#', () => {
         union Vehicle = Car
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const config: CSharpResolversPluginRawConfig = {
+        emitCompositionTypes: true,
+      };
+
+      const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
       expect(result).toContain('public enum VehicleKind {');
@@ -786,7 +794,11 @@ describe('C#', () => {
         }
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const config: CSharpResolversPluginRawConfig = {
+        emitCompositionTypes: true,
+      };
+
+      const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
       expect(result).toContain('[JsonConverter(typeof(CompositionTypeConverter))]');
@@ -807,7 +819,11 @@ describe('C#', () => {
         }
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const config: CSharpResolversPluginRawConfig = {
+        emitCompositionTypes: true,
+      };
+
+      const result = await plugin(schema, [], config, { outputFile: '' });
 
       expect(result).toContain('public interface Vehicle {');
       expect(result).toContain('[JsonConverter(typeof(CompositionTypeConverter))]');
