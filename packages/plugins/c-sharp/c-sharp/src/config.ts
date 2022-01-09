@@ -110,4 +110,20 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * ```
    */
   jsonAttributesSource?: JsonAttributesSource;
+
+  /**
+   * @default true
+   * @description Whether to emit Composition Types, i.e.: Union types and types implementing interfaces. NOTE: Composition Types have a dependency on `Newtonsoft.Json` being installed as a dependency
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   src/main/c-sharp/my-org/my-app/Types.cs:
+   *     plugins:
+   *       - c-sharp
+   *     config:
+   *       emitCompositionTypes: false
+   * ```
+   */
+  emitCompositionTypes?: boolean;
 }

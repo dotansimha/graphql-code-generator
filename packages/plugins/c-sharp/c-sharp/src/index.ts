@@ -11,11 +11,14 @@ export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
 ): Promise<string> => {
   const astNode = getCachedDocumentNodeFromSchema(schema);
 
-  const compositionTypesVisitor = new CompositionTypeVisitor();
-  const compositionTypesResult = oldVisit(astNode, { leave: compositionTypesVisitor });
-  const relevantDefinitions = compositionTypesResult.definitions.filter(d => d.constructor === Array);
+  let compositionTypesData;
 
-  const compositionTypesData = compositionTypesVisitor.getCompositionTypeDataFromDefinitions(relevantDefinitions);
+  if (config.emitCompositionTypes) {
+    const compositionTypesVisitor = new CompositionTypeVisitor();
+    const compositionTypesResult = oldVisit(astNode, { leave: compositionTypesVisitor });
+    const relevantDefinitions = compositionTypesResult.definitions.filter(d => d.constructor === Array);
+    compositionTypesData = compositionTypesVisitor.getCompositionTypeDataFromDefinitions(relevantDefinitions);
+  }
 
   const visitor = new CSharpResolversVisitor(config, schema, compositionTypesData);
   const visitorResult = oldVisit(astNode, { leave: visitor });

@@ -56,6 +56,7 @@ export interface CSharpResolverParsedConfig extends ParsedConfig {
   emitRecords: boolean;
   emitJsonAttributes: boolean;
   jsonAttributesSource: JsonAttributesSource;
+  emitCompositionTypes: boolean;
 }
 
 export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRawConfig, CSharpResolverParsedConfig> {
@@ -125,7 +126,7 @@ public class CompositionTypeConverter : JsonConverter
 
     if (typeNameObject == null)
     {
-      throw new JsonWriterException($"CompositionTypeConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
+      throw new JsonSerializationException($"CompositionTypeConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
     }
 
     var typeName = loadedObject["__typename"].Value<string>();
@@ -173,7 +174,7 @@ public class CompositionTypeListConverter : JsonConverter
 
       if (typeNameObject == null)
       {
-        throw new JsonWriterException($"CompositionTypeListConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
+        throw new JsonSerializationException($"CompositionTypeListConverter Exception: missing __typeName field when parsing {objectType.Name}. Requesting the __typename field is required for converting Composition Types");
       }
 
       var typeName = item["__typename"].Value<string>();
@@ -206,7 +207,7 @@ public class CompositionTypeListConverter : JsonConverter
   constructor(
     rawConfig: CSharpResolversPluginRawConfig,
     private _schema: GraphQLSchema,
-    compositionTypesData: CompositionTypesData
+    compositionTypesData?: CompositionTypesData
   ) {
     super(rawConfig, {
       enumValues: rawConfig.enumValues || {},
@@ -216,6 +217,7 @@ public class CompositionTypeListConverter : JsonConverter
       emitRecords: rawConfig.emitRecords || false,
       emitJsonAttributes: rawConfig.emitJsonAttributes ?? true,
       jsonAttributesSource: rawConfig.jsonAttributesSource || 'Newtonsoft.Json',
+      emitCompositionTypes: rawConfig.emitCompositionTypes ?? true,
       scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
 
@@ -223,8 +225,10 @@ public class CompositionTypeListConverter : JsonConverter
       this.jsonAttributesConfiguration = getJsonAttributeSourceConfiguration(this._parsedConfig.jsonAttributesSource);
     }
 
-    this.compositionTypeToImplementationsMap = compositionTypesData.compositionTypeToImplementationsMap;
-    this.compositionTypeNames = compositionTypesData.compositionTypeNames;
+    this.compositionTypeToImplementationsMap =
+      compositionTypesData?.compositionTypeToImplementationsMap || new Map<string, string[]>();
+
+    this.compositionTypeNames = compositionTypesData?.compositionTypeNames || new Set<string>();
   }
 
   public getImports(): string {
@@ -236,12 +240,17 @@ public class CompositionTypeListConverter : JsonConverter
       'System.Collections',
       'System.Linq',
       'System.Linq.Expressions',
-      'Newtonsoft.Json.Linq',
     ];
+
     if (this._parsedConfig.emitJsonAttributes) {
       const jsonAttributesNamespace = this.jsonAttributesConfiguration.namespace;
       allImports.push(jsonAttributesNamespace);
     }
+
+    if (this._parsedConfig.emitCompositionTypes) {
+      allImports.push('Newtonsoft.Json.Linq');
+    }
+
     return allImports.map(i => `using ${i};`).join('\n') + '\n';
   }
 
@@ -352,6 +361,7 @@ public class CompositionTypeListConverter : JsonConverter
     }
 
     if (
+      this._parsedConfig.emitCompositionTypes &&
       node.kind === Kind.FIELD_DEFINITION &&
       (node.type.kind === Kind.NON_NULL_TYPE || node.type.kind === Kind.NAMED_TYPE || node.type.kind === Kind.LIST_TYPE)
     ) {

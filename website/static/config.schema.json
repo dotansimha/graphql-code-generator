@@ -802,6 +802,10 @@
           "$ref": "#/definitions/JsonAttributesSource",
           "description": "Library that should be used to emit JSON attributes. Ignored when `emitJsonAttributes` is `false` or not specified\nDefault value: \"Newtonsoft.Json\""
         },
+        "emitCompositionTypes": {
+          "description": "Whether to emit Composition Types, i.e.: Union types and types implementing interfaces. NOTE: Composition Types have a dependency on `Newtonsoft.Json` being installed as a dependency",
+          "type": "boolean"
+        },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
           "type": "boolean"
