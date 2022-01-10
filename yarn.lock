@@ -1689,6 +1689,17 @@
     "@chakra-ui/utils" "1.9.1"
     react-fast-compare "3.2.0"
 
+"@chakra-ui/system@1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/system/-/system-1.9.1.tgz#3abf6e7d4ed7c65708d217aee32fb9e293f8608b"
+  integrity sha512-zO/PIsosJalC58eh0vFeQGTigUpp9iHLFgUQDjs+STdreXGqYZdpRCYxriMt0ZBHNL+N8arHqlzXOlZxSZk1sA==
+  dependencies:
+    "@chakra-ui/color-mode" "1.3.3"
+    "@chakra-ui/react-utils" "1.2.1"
+    "@chakra-ui/styled-system" "1.16.0"
+    "@chakra-ui/utils" "1.9.1"
+    react-fast-compare "3.2.0"
+
 "@chakra-ui/table@1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@chakra-ui/table/-/table-1.3.1.tgz#a66cc8d1c579d1ebd16aadef5043ab8025c82519"
