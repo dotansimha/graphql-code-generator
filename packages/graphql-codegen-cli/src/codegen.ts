@@ -21,6 +21,8 @@ import path from 'path';
 import { createRequire } from 'module';
 import Listr from 'listr';
 
+import { createHmac } from 'crypto';
+
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
     from = path.join(from, '__fake.js');
@@ -47,6 +49,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       }
     };
   }
+
+  const schemaMap = {};
+  const docMap = {};
 
   const context = ensureContext(input);
   const config = context.getConfig();
@@ -210,8 +215,22 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           Object.assign(schemaPointerMap, unnormalizedPtr);
                         }
                       }
-                      outputSchemaAst = await context.loadSchema(schemaPointerMap);
-                      outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+
+                      const hash = createHmac('sha256', JSON.stringify(schemaPointerMap)).digest('hex');
+
+                      if (schemaMap[hash]) {
+                        outputSchemaAst = schemaMap[hash]['outputSchemaAst'];
+                        outputSchema = schemaMap[hash]['outputSchema'];
+                      } else {
+                        outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                        outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+
+                        schemaMap[hash] = {
+                          schemaPointerMap: schemaPointerMap,
+                          outputSchemaAst: outputSchemaAst,
+                          outputSchema: outputSchema,
+                        };
+                      }
                     }, filename),
                   },
                   {
@@ -220,7 +239,18 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       debugLog(`[CLI] Loading Documents`);
 
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
-                      const documents = await context.loadDocuments(allDocuments);
+                      const hash = createHmac('sha256', JSON.stringify(allDocuments)).digest('hex');
+
+                      let documents: Types.DocumentFile[];
+
+                      if (docMap[hash]) {
+                        documents = docMap[hash]['documents'];
+                      } else {
+                        documents = await context.loadDocuments(allDocuments);
+                        docMap[hash] = {
+                          documents: documents,
+                        };
+                      }
 
                       if (documents.length > 0) {
                         outputDocuments.push(...documents);
