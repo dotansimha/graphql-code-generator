@@ -13,7 +13,7 @@ import { FetchFetcher } from './fetcher-fetch';
 import { FetcherRenderer } from './fetcher';
 import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
 import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
-import { ReactQueryRawPluginConfig } from './config';
+import { InfiniteQueryOptions, ReactQueryRawPluginConfig } from './config';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
@@ -24,7 +24,7 @@ export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   exposeQueryKeys: boolean;
   exposeMutationKeys: boolean;
   exposeFetcher: boolean;
-  addInfiniteQuery: boolean;
+  addInfiniteQuery?: InfiniteQueryOptions;
 }
 
 export interface ReactQueryMethodMap {
@@ -75,7 +75,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
       exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
-      addInfiniteQuery: getConfigValue(rawConfig.addInfiniteQuery, false),
+      addInfiniteQuery: ReactQueryVisitor.getInfiniteQueryOptions(rawConfig),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -98,6 +98,14 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
     }
 
     return new CustomMapperFetcher(this, raw);
+  }
+
+  private static getInfiniteQueryOptions(rawConfig: ReactQueryRawPluginConfig): InfiniteQueryOptions | undefined {
+    const raw = getConfigValue(rawConfig.addInfiniteQuery, false);
+    if (!raw) {
+      return undefined;
+    }
+    return typeof raw === 'boolean' ? {} : raw;
   }
 
   public get hasOperations() {
@@ -178,13 +186,18 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
           operationVariablesTypes,
           hasRequiredVariables
         )}\n`;
-        if (this.config.exposeQueryKeys) {
+
+        if (this.config.addInfiniteQuery.exposeQueryKeys ?? this.config.exposeQueryKeys) {
           query += `\n${generateInfiniteQueryKeyMaker(
             node,
             operationName,
             operationVariablesTypes,
             hasRequiredVariables
           )};\n`;
+        }
+
+        if (this.config.addInfiniteQuery.markAsInfinite) {
+          query += `\nuseInfinite${operationName}.isInfinite = true as const;\n`;
         }
       }
 

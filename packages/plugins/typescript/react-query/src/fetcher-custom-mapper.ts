@@ -1,5 +1,10 @@
 import { ParsedMapper, buildMapperImport, parseMapper } from '@graphql-codegen/visitor-plugin-common';
-import { generateInfiniteQueryKey, generateMutationKey, generateQueryKey } from './variables-generator';
+import {
+  generateInfiniteQueryKey,
+  generateMutationKey,
+  generateQueryKey,
+  generateQueryVariablesSignature,
+} from './variables-generator';
 
 import { CustomFetch } from './config';
 import { FetcherRenderer } from './fetcher';
@@ -47,7 +52,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
@@ -83,7 +88,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);

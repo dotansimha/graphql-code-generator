@@ -1165,6 +1165,42 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
     });
   });
 
+  describe('advanced infinite query options', () => {
+    it('Should generate getKey for each query', async () => {
+      const configs = [
+        {
+          fetcher: 'fetch',
+          addInfiniteQuery: {
+            exposeQueryKeys: true,
+          },
+        },
+        {
+          fetcher: 'fetch',
+          exposeQueryKeys: true,
+          addInfiniteQuery: true,
+        },
+      ];
+
+      for (const config of configs) {
+        const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+        expect(out.content).toBeSimilarStringTo(
+          `useInfiniteTestQuery.getKey = (variables?: TestQueryVariables) => variables === undefined ? ['test.infinite'] : ['test.infinite', variables];`
+        );
+      }
+    });
+
+    it('Should generate isInfinite property', async () => {
+      const config = {
+        fetcher: 'fetch',
+        addInfiniteQuery: {
+          markAsInfinite: true,
+        },
+      };
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo('useInfiniteTestQuery.isInfinite = true as const;');
+    });
+  });
+
   it('Should not generate fetcher if there are no operations', async () => {
     const out = (await plugin(schema, notOperationDocs, {})) as Types.ComplexPluginOutput;
     expect(out.prepend).not.toBeSimilarStringTo(`function fetcher<TData, TVariables>(`);

@@ -2,6 +2,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
 
 export type HardcodedFetch = { endpoint: string; fetchParams?: string | Record<string, any> };
 export type CustomFetch = { func: string; isReactHook?: boolean } | string;
+export type InfiniteQueryOptions = { exposeQueryKeys?: boolean; markAsInfinite?: boolean };
 
 /**
  * @description This plugin generates `React-Query` Hooks with TypeScript typings.
@@ -91,5 +92,5 @@ export interface ReactQueryRawPluginConfig
    * @default false
    * @description Adds an Infinite Query along side the standard one
    */
-  addInfiniteQuery?: boolean;
+  addInfiniteQuery?: boolean | InfiniteQueryOptions;
 }
