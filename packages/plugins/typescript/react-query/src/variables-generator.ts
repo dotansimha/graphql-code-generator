@@ -39,19 +39,6 @@ export function generateQueryKeyMaker(
   return `\nuse${operationName}.getKey = (${signature}) => ${generateQueryKey(node, hasRequiredVariables)};\n`;
 }
 
-export function generateInfiniteQueryKeyMaker(
-  node: OperationDefinitionNode,
-  operationName: string,
-  operationVariablesTypes: string,
-  hasRequiredVariables: boolean
-) {
-  const signature = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
-  return `\nuseInfinite${operationName}.getKey = (${signature}) => ${generateInfiniteQueryKey(
-    node,
-    hasRequiredVariables
-  )};\n`;
-}
-
 export function generateMutationKey(node: OperationDefinitionNode): string {
   return `'${node.name.value}'`;
 }
