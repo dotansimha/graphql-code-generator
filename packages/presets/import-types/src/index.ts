@@ -49,12 +49,12 @@ export type ImportTypesConfig = {
    *     preset: import-types
    *     presetConfig:
    *       typesPath: types.ts
-   *       preventPluginsTypes: true
+   *       preservePluginsTypes: true
    *     plugins:
    *       - typescript-operations
    * ```
    */
-  preventPluginsTypes?: boolean;
+  preservePluginsTypes?: boolean;
 };
 
 export type FragmentNameToFile = {
@@ -63,7 +63,7 @@ export type FragmentNameToFile = {
 
 export const preset: Types.OutputPreset<ImportTypesConfig> = {
   buildGeneratesSection: options => {
-    const { typesPath, importTypesNamespace = 'Types', preventPluginsTypes = false } = options.presetConfig;
+    const { typesPath, importTypesNamespace = 'Types', preservePluginsTypes = false } = options.presetConfig;
 
     if (!typesPath) {
       throw new Error(
@@ -81,7 +81,7 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
       // This is for the operations plugin
       namespacedImportName: importTypesNamespace,
       // This is for the client-side runtime plugins
-      importOperationTypesFrom: !preventPluginsTypes && importTypesNamespace,
+      importOperationTypesFrom: !preservePluginsTypes && importTypesNamespace,
       externalFragments: [],
     };
     options.documents.map(documentFile => {
