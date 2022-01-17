@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.4
+
+### Patch Changes
+
+- c9386e87a: Generate "defaultOptions" as const object
+
 ## 3.2.3
 
 ### Patch Changes

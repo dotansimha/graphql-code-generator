@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.3.1
+
+### Patch Changes
+
+- 758c220da: Fix the React-Query InfiniteQuery hook error
+
 ## 3.3.0
 
 ### Minor Changes
