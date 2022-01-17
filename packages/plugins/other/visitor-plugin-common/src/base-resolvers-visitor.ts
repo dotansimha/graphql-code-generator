@@ -20,6 +20,7 @@ import {
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
   buildScalarsFromConfig,
+  capitalize,
 } from './utils';
 import {
   NameNode,
@@ -375,6 +376,7 @@ export class BaseResolversVisitor<
   protected _hasScalars = false;
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
+  protected _resolverFnAliases: String[];
   private _directiveResolverMappings: Record<string, string>;
   private _shouldMapType: { [typeName: string]: boolean } = {};
 
@@ -437,6 +439,10 @@ export class BaseResolversVisitor<
 
   public getResolverTypeWrapperSignature(): string {
     return `export type ResolverTypeWrapper<T> = ${this.config.resolverTypeWrapperSignature};`;
+  }
+
+  protected getResolverFunctionAliases() {
+    return this._resolverFnAliases.join('\n');
   }
 
   protected shouldMapType(type: GraphQLNamedType, duringCheck: string[] = []): boolean {
@@ -1011,6 +1017,24 @@ export class BaseResolversVisitor<
         if (signature.genericTypes.length >= 3) {
           signature.genericTypes = signature.genericTypes.slice(0, 3);
         }
+      }
+
+      const isRootType = [
+        this.schema.getQueryType()?.name,
+        this.schema.getMutationType()?.name,
+        this.schema.getSubscriptionType()?.name,
+      ].includes(parentName);
+
+      if (this.config["exportRootResolverFnAlias"] && isRootType) {
+        const modifier = this.config.avoidOptionals ? '' : ' | undefined';
+        const block = new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(`${capitalize(signature.name)}ResolverFn<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(`ResolversParentTypes['${parentType}']`)}>`)
+          .withContent(`${signature.type}<${signature.genericTypes.join(', ')}>${modifier}`);
+
+        this._resolverFnAliases.push(block.string);
+        return indent(`${signature.name}${signature.modifier}: ${capitalize(signature.name)}ResolverFn<ContextType, ParentType>`);
       }
 
       return indent(

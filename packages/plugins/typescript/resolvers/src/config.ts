@@ -148,4 +148,14 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   makeResolverTypeCallable?: boolean;
+  /**
+   * @description Set to `true` to generate alias types for resolver function.
+   *
+   * @exampleMarkdown
+   * ```yml
+   *  config:
+   *    exportRootResolverFnAlias: true
+   * ```
+   */
+   exportRootResolverFnAlias?: boolean;
 }

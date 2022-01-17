@@ -494,3 +494,7 @@ function clearOptional(str: string): string {
 function stripTrailingSpaces(str: string): string {
   return str.replace(/ +\n/g, '\n');
 }
+
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
