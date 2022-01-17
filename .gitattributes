@@ -1,0 +1,2 @@
+# This fixture must contain CRLF as line breaks. See https://github.com/dotansimha/graphql-code-generator/issues/7362
+packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts eol=crlf
