@@ -291,7 +291,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestQuery.fetcher = (variables?: TestQueryVariables) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables);`
+        `useTestQuery.fetcher = (variables?: TestQueryVariables, options?: HeadersInit) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables, options);`
       );
     });
 
@@ -318,7 +318,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestMutation.fetcher = (variables?: TestMutationVariables) => customFetcher<TestMutation, TestMutationVariables>(TestDocument, variables);`
+        `useTestMutation.fetcher = (variables?: TestMutationVariables, options?: HeadersInit) => customFetcher<TestMutation, TestMutationVariables>(TestDocument, variables, options);`
       );
     });
 
