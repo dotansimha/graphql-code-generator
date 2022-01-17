@@ -21,8 +21,6 @@ import path from 'path';
 import { createRequire } from 'module';
 import Listr from 'listr';
 
-import { createHmac } from 'crypto';
-
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
     from = path.join(from, '__fake.js');
@@ -34,6 +32,24 @@ const makeDefaultLoader = (from: string) => {
     return import(relativeRequire.resolve(mod));
   };
 };
+
+// TODO: Replace any with types
+function createCache(loader: (key: string) => Promise<any>) {
+  const cache = new Map<string, any>();
+
+  return {
+    load(key: string): Promise<any> {
+      if (cache.has(key)) {
+        return cache.get(key);
+      }
+
+      const value = loader(key);
+
+      cache.set(key, value);
+      return value;
+    },
+  };
+}
 
 export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source: string) {
@@ -49,9 +65,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       }
     };
   }
-
-  const schemaMap = {};
-  const docMap = {};
 
   const context = ensureContext(input);
   const config = context.getConfig();
@@ -88,6 +101,22 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
+
+  const schemaCache = createCache(async function (hash) {
+    const outputSchemaAst = await context.loadSchema(JSON.parse(hash));
+    const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+    return {
+      outputSchemaAst: outputSchemaAst,
+      outputSchema: outputSchema,
+    };
+  });
+
+  const docCache = createCache(async function (hash) {
+    const documents = await context.loadDocuments(JSON.parse(hash));
+    return {
+      documents: documents,
+    };
+  });
 
   async function normalize() {
     /* Load Require extensions */
@@ -216,21 +245,11 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         }
                       }
 
-                      const hash = createHmac('sha256', JSON.stringify(schemaPointerMap)).digest('hex');
+                      const hash = JSON.stringify(schemaPointerMap);
+                      const result = await schemaCache.load(hash);
 
-                      if (schemaMap[hash]) {
-                        outputSchemaAst = schemaMap[hash]['outputSchemaAst'];
-                        outputSchema = schemaMap[hash]['outputSchema'];
-                      } else {
-                        outputSchemaAst = await context.loadSchema(schemaPointerMap);
-                        outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
-
-                        schemaMap[hash] = {
-                          schemaPointerMap: schemaPointerMap,
-                          outputSchemaAst: outputSchemaAst,
-                          outputSchema: outputSchema,
-                        };
-                      }
+                      outputSchemaAst = await result.outputSchemaAst;
+                      outputSchema = result.outputSchema;
                     }, filename),
                   },
                   {
@@ -239,18 +258,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       debugLog(`[CLI] Loading Documents`);
 
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
-                      const hash = createHmac('sha256', JSON.stringify(allDocuments)).digest('hex');
 
-                      let documents: Types.DocumentFile[];
+                      const hash = JSON.stringify(allDocuments);
 
-                      if (docMap[hash]) {
-                        documents = docMap[hash]['documents'];
-                      } else {
-                        documents = await context.loadDocuments(allDocuments);
-                        docMap[hash] = {
-                          documents: documents,
-                        };
-                      }
+                      const result = await docCache.load(hash);
+
+                      const documents: Types.DocumentFile[] = result.documents;
 
                       if (documents.length > 0) {
                         outputDocuments.push(...documents);
