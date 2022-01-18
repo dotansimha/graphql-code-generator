@@ -1148,6 +1148,23 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
     });
   });
 
+  describe.only('exposeQueryKeys: true, addInfiniteQuery: true', () => {
+    it('Should generate getKey for each query - also infinite queries', async () => {
+      const config = {
+        fetcher: 'fetch',
+        exposeQueryKeys: true,
+        addInfiniteQuery: true,
+      };
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(
+        `useTestQuery.getKey = (variables?: TestQueryVariables) => variables === undefined ? ['test'] : ['test', variables];`
+      );
+      expect(out.content).toBeSimilarStringTo(
+        `useInfiniteTestQuery.getKey = (variables?: TestQueryVariables) => variables === undefined ? ['test.infinite'] : ['test.infinite', variables];`
+      );
+    });
+  });
+
   it('Should not generate fetcher if there are no operations', async () => {
     const out = (await plugin(schema, notOperationDocs, {})) as Types.ComplexPluginOutput;
     expect(out.prepend).not.toBeSimilarStringTo(`function fetcher<TData, TVariables>(`);
