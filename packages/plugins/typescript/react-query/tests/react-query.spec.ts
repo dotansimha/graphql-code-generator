@@ -1148,7 +1148,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
     });
   });
 
-  describe.only('exposeQueryKeys: true, addInfiniteQuery: true', () => {
+  describe('exposeQueryKeys: true, addInfiniteQuery: true', () => {
     it('Should generate getKey for each query - also infinite queries', async () => {
       const config = {
         fetcher: 'fetch',
