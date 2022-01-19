@@ -34,11 +34,11 @@ const makeDefaultLoader = (from: string) => {
 };
 
 // TODO: Replace any with types
-function createCache(loader: (key: string) => Promise<any>) {
-  const cache = new Map<string, any>();
+function createCache<T>(loader: (key: string) => Promise<T>) {
+  const cache = new Map<string, T>();
 
   return {
-    load(key: string): Promise<any> {
+    load(key: string): Promise<T> {
       if (cache.has(key)) {
         return cache.get(key);
       }
@@ -102,7 +102,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
-  const schemaCache = createCache(async function (hash) {
+  const schemaLoadingCache = createCache(async function (hash) {
     const outputSchemaAst = await context.loadSchema(JSON.parse(hash));
     const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
     return {
@@ -111,7 +111,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     };
   });
 
-  const docCache = createCache(async function (hash) {
+  const documentsLoadingCache = createCache(async function (hash) {
     const documents = await context.loadDocuments(JSON.parse(hash));
     return {
       documents: documents,
@@ -246,7 +246,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       }
 
                       const hash = JSON.stringify(schemaPointerMap);
-                      const result = await schemaCache.load(hash);
+                      const result = await schemaLoadingCache.load(hash);
 
                       outputSchemaAst = await result.outputSchemaAst;
                       outputSchema = result.outputSchema;
@@ -260,9 +260,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
 
                       const hash = JSON.stringify(allDocuments);
-
-                      const result = await docCache.load(hash);
-
+                      const result = await documentsLoadingCache.load(hash);
                       const documents: Types.DocumentFile[] = result.documents;
 
                       if (documents.length > 0) {
