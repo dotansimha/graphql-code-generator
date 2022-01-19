@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.2.3
+
+### Patch Changes
+
+- 015d34451: fix: gql-tag-operations generates invalid types on Windows #7362
+
 ## 1.2.2
 
 ### Patch Changes
