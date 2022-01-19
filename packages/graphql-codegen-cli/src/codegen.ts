@@ -35,7 +35,7 @@ const makeDefaultLoader = (from: string) => {
 
 // TODO: Replace any with types
 function createCache<T>(loader: (key: string) => Promise<T>) {
-  const cache = new Map<string, T>();
+  const cache = new Map<string, Promise<T>>();
 
   return {
     load(key: string): Promise<T> {
