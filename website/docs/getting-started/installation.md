@@ -5,17 +5,9 @@ title: Installation
 
 ## Installing Codegen
 
-First, make sure that you the `graphql` package in your project's dependencies, since GraphQL Code Generator depends on it:
+Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in your project's dependencies:
 
-    npm install --save graphql
-    # or, with yarn:
-    yarn add graphql
-
-Then, install the GraphQL Code Generator CLI package:
-
-    npm install --save @graphql-codegen/cli
-    # or, with yarn:
-    yarn add -D @graphql-codegen/cli
+<PackageInstall packages={["graphql", "@graphql-codegen/cli"]} />
 
 :::caution Global Installation
 Please avoid installing `graphql`, `@graphql-codegen/cli` and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
@@ -27,46 +19,81 @@ If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please no
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 :::
 
-## Initialization Wizard
+# Development workflow
 
-After installing those dependencies, GraphQL Code Generator can help you configure your project based on some popular flows:
+The GraphQL Code Generator should be integrated as part of your development workflow.
 
-    yarn graphql-codegen init
-    # or, with npx:
-    npx graphql-codegen init
+### Scripts Integration
 
-Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
-
-:::caution Installation of plugins
-The init process above adds the required plugins to your `package.json` file with the right version numbers but does not install the plugins by itself. The plugins can then be installed by running either an `npm install` or `yarn install` from the directory where your `package.json` exists.
-:::
-
-If you don't want to use the wizard, we've got you covered, just continue reading the next sections.
-
-## Manual Setup
-
-If you wish to configure codegen manually, please start by creating a `codegen.yml` file in your project's root directory:
-
-```yaml
-schema: schema.graphql # you can also point to a GraphQL endpoint!
-generates:
-  types.ts:
-    plugins:
-      - @graphql-codegen/typescript
-```
-
-GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them, for example, if you are using `@graphql-codegen/typescript` plugin, please make sure install it locally in your project
-
-Although this can be used directly, it's recommended to add the code generation script to your `package.json`:
+If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your `package.json`, for example:
 
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen"
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "generate": "graphql-codegen",
+    "prestart": "yarn generate",
+    "predev": "yarn generate"
   }
 }
 ```
 
-This will simplify its usage, and you'll be able to run the codegen with the following command: `npm run generate`.
+This way, the codegen will generate the output according to your configuration before each time you run `dev` or `start` scripts.
 
-You can learn more about [`codegen.yml` and the available configurations here](/docs/getting-started/config-reference/codegen-config), and [you can find a list of all available plugins here](/plugins)
+It's also useful to run the codegen during your continuous integration flow and make sure that you code always compiles with the generated output, this way you can detect breaking changes in your GraphQL schema and GraphQL documents.
+
+### Watch Mode
+
+If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
+
+You can either run it in a separate terminal session, or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
+
+```json
+{
+  "scripts": {
+    "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
+    "start": "node app.js",
+    "generate": "graphql-codegen",
+    "prestart": "yarn generate"
+  }
+}
+```
+
+If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
+
+<!-- prettier-ignore -->
+:::shell `--watch` flag
+    yarn graphql-codegen --watch "src/**/*.js"
+:::
+
+Use this when you are loading your schema or documents from a single code file, that depends on other files internally, because codegen can't tell that you're using those files automatically.
+
+By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead in unusual cases where system support is unavailable.
+
+```yml
+watch: true
+# Passed directly through to chokidar's file watch configuration
+watchConfig:
+  usePolling: true
+  interval: 1000
+```
+
+### Monorepo and Yarn Workspaces
+
+If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend to install the codegen in the root of your monorepo.
+
+If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
+
+```yml
+schema: 'server/src/**/*.graphql'
+documents: 'client/src/**/*.graphql'
+generates:
+  client/src/models.ts:
+    - typescript
+    - typescript-operations
+  server/src/models.ts:
+    - typescript
+    - typescript-resolvers
+```
+

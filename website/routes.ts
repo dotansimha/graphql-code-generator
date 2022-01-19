@@ -8,8 +8,9 @@ export function getRoutes(): IRoutes {
         $name: 'Getting Started',
         $routes: [
           ['index', 'Introduction'],
+          ['how-does-it-work', 'How does it work?'],
           ['installation', 'Installation'],
-          ['development-workflow', 'Development Workflow'],
+          ['setup', 'Setup'],
           ['further-reading', 'Further Reading'],
         ],
       },

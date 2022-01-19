@@ -107,7 +107,9 @@
               "type": "object",
               "properties": {
                 "endpoint": { "type": "string" },
-                "fetchParams": { "type": "string" }
+                "fetchParams": {
+                  "anyOf": [{ "$ref": "#/definitions/Record<string,any>" }, { "type": "string" }]
+                }
               }
             },
             {
@@ -4376,6 +4378,7 @@
         }
       }
     },
+    "Record<string,any>": { "type": "object" },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
