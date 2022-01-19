@@ -2,4 +2,4 @@
 '@graphql-codegen/cli': minor
 ---
 
-Perf optimization to codegen cli
+Performance optimizations in schema and documents loading (shared promises)
