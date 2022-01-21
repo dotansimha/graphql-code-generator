@@ -4,9 +4,13 @@ import type {
   DocumentNode,
   FieldNode,
   Kind,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
   OperationTypeNode,
   SelectionNode,
   SelectionSetNode,
+  TypeNode,
   VariableDefinitionNode,
 } from 'graphql';
 // IMPORTS END
@@ -71,7 +75,24 @@ type SDKSelectionTypedDocumentNode<
 
 export const SDKFieldArgumentSymbol = Symbol('SDKFieldArguments');
 
-type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = { [key: string]: keyof TSDKInputTypeMap };
+type SDKInputNonNullType<T extends string> = `${T}!`;
+type SDKInputListType<T extends string> = `[${T}]`;
+
+/**
+ * Poor mans implementation, this should actually be recursive as you could potentially indefinitely nest non nullable and list types...
+ * Right now we only allow Type, [Type], [Type]!, [Type!] and [Type!]!
+ */
+type SDKInputContainerType<T extends string> =
+  | T
+  | SDKInputNonNullType<T>
+  | SDKInputListType<T>
+  | SDKInputNonNullType<SDKInputListType<T>>
+  | SDKInputListType<SDKInputNonNullType<T>>
+  | SDKInputNonNullType<SDKInputListType<SDKInputNonNullType<T>>>;
+
+type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = {
+  [key: string]: SDKInputContainerType<Exclude<keyof TSDKInputTypeMap, number | symbol>>;
+};
 
 type SDKSelectionWithVariables<
   /** GraphQLTypeName -> TS type */
@@ -247,6 +268,65 @@ const buildSelectionSet = (sdkSelectionSet: SDKSelectionSet): SelectionSetNode =
   return selectionSet;
 };
 
+/**
+ * Poor mans GraphQL `parseType` (https://github.com/graphql/graphql-js/blob/a91fdc600f2012a60e44356c373e51c5dd20ba81/src/language/parser.ts#L157-L166)
+ * But in a more compact way :)
+ */
+const buildTypeNode = (name: string): TypeNode => {
+  let entry: Mutable<ListTypeNode | NonNullTypeNode>;
+  let previous: Mutable<ListTypeNode | NonNullTypeNode>;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    if (name.endsWith('!')) {
+      name = name.substring(0, name.length - 1);
+      const current: NonNullTypeNode = {
+        kind: 'NonNullType' as Kind.NON_NULL_TYPE,
+        // Yeah... this is illegal - but we assign it in the next loop run
+        type: null,
+      };
+      if (previous) {
+        previous.type = current;
+        previous = current;
+      } else if (!entry) {
+        entry = previous = current;
+      }
+      continue;
+    }
+    if (name.endsWith(']')) {
+      name = name.substring(1, name.length - 1);
+      const current: ListTypeNode = {
+        kind: 'ListType' as Kind.LIST_TYPE,
+        // Yeah... this is illegal - but we assign it in the next loop run
+        type: null,
+      };
+      if (previous) {
+        previous.type = current;
+        previous = current;
+      } else if (!entry) {
+        entry = previous = current;
+      }
+      continue;
+    }
+    break;
+  }
+
+  const last: NamedTypeNode = {
+    kind: 'NamedType' as Kind.NAMED_TYPE,
+    name: {
+      kind: 'Name' as Kind.NAME,
+      value: name,
+    },
+  };
+
+  if (entry === undefined) {
+    return last;
+  }
+
+  previous.type = last;
+  return entry;
+};
+
 const buildVariableDefinitions = (args: Record<string, string>): Array<VariableDefinitionNode> => {
   const variableDefinitions: Array<VariableDefinitionNode> = [];
   for (const [variableName, inputType] of Object.entries(args)) {
@@ -259,14 +339,7 @@ const buildVariableDefinitions = (args: Record<string, string>): Array<VariableD
           value: variableName,
         },
       },
-      type: {
-        // TODO: ! (non-null) and [] (list) handling
-        kind: 'NamedType' as Kind.NAMED_TYPE,
-        name: {
-          kind: 'Name' as Kind.NAME,
-          value: inputType,
-        },
-      },
+      type: buildTypeNode(inputType),
     });
   }
 

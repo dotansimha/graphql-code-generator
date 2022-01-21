@@ -356,4 +356,373 @@ describe('SDKLogic', () => {
 
     expect(document).toStrictEqual(expectedDocument);
   });
+
+  it('query with non nullable variables', () => {
+    type InputTypes = {
+      String: string;
+      Int: number;
+      Boolean: number;
+    };
+
+    type SelectionType = SDKSelectionSet<{
+      __typename?: true;
+      user?: SDKSelectionSet<{
+        id?: boolean;
+        login?: boolean;
+      }> & {
+        [SDKFieldArgumentSymbol]: {
+          id: 'String!';
+        };
+      };
+    }>;
+    type ResultType = {
+      __typename?: 'Query';
+      user?: {
+        id?: InputTypes['String'];
+        login?: InputTypes['String'];
+      };
+    };
+
+    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+
+    const document = sdk.query({
+      name: 'UserById',
+      variables: {
+        idVariableName: 'String!',
+      },
+      selection: {
+        user: {
+          [SDKFieldArgumentSymbol]: {
+            id: 'idVariableName',
+          },
+          id: true,
+        },
+      },
+    });
+
+    const expectedDocument: DocumentNode = {
+      kind: Kind.DOCUMENT,
+      definitions: [
+        {
+          kind: Kind.OPERATION_DEFINITION,
+          name: {
+            kind: Kind.NAME,
+            value: 'UserById',
+          },
+          operation: OperationTypeNode.QUERY,
+          variableDefinitions: [
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.NON_NULL_TYPE,
+                type: {
+                  kind: Kind.NAMED_TYPE,
+                  name: {
+                    kind: Kind.NAME,
+                    value: 'String',
+                  },
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'idVariableName',
+                },
+              },
+            },
+          ],
+          selectionSet: {
+            kind: Kind.SELECTION_SET,
+            selections: [
+              {
+                kind: Kind.FIELD,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'user',
+                },
+                arguments: [
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'id',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'idVariableName',
+                      },
+                    },
+                  },
+                ],
+                selectionSet: {
+                  kind: Kind.SELECTION_SET,
+                  selections: [
+                    {
+                      kind: Kind.FIELD,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'id',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    expect(document).toStrictEqual(expectedDocument);
+  });
+
+  it('query with list variables', () => {
+    type InputTypes = {
+      String: string;
+      Int: number;
+      Boolean: number;
+    };
+
+    type SelectionType = SDKSelectionSet<{
+      __typename?: true;
+      user?: SDKSelectionSet<{
+        id?: boolean;
+        login?: boolean;
+      }> & {
+        [SDKFieldArgumentSymbol]: {
+          id: '[String]';
+        };
+      };
+    }>;
+    type ResultType = {
+      __typename?: 'Query';
+      user?: {
+        id?: InputTypes['String'];
+        login?: InputTypes['String'];
+      };
+    };
+
+    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+
+    const document = sdk.query({
+      name: 'UserById',
+      variables: {
+        idVariableName: '[String]',
+      },
+      selection: {
+        user: {
+          [SDKFieldArgumentSymbol]: {
+            id: 'idVariableName',
+          },
+          id: true,
+        },
+      },
+    });
+
+    const expectedDocument: DocumentNode = {
+      kind: Kind.DOCUMENT,
+      definitions: [
+        {
+          kind: Kind.OPERATION_DEFINITION,
+          name: {
+            kind: Kind.NAME,
+            value: 'UserById',
+          },
+          operation: OperationTypeNode.QUERY,
+          variableDefinitions: [
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.LIST_TYPE,
+                type: {
+                  kind: Kind.NAMED_TYPE,
+                  name: {
+                    kind: Kind.NAME,
+                    value: 'String',
+                  },
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'idVariableName',
+                },
+              },
+            },
+          ],
+          selectionSet: {
+            kind: Kind.SELECTION_SET,
+            selections: [
+              {
+                kind: Kind.FIELD,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'user',
+                },
+                arguments: [
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'id',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'idVariableName',
+                      },
+                    },
+                  },
+                ],
+                selectionSet: {
+                  kind: Kind.SELECTION_SET,
+                  selections: [
+                    {
+                      kind: Kind.FIELD,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'id',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    expect(document).toStrictEqual(expectedDocument);
+  });
+
+  it('query with list variables', () => {
+    type InputTypes = {
+      String: string;
+      Int: number;
+      Boolean: number;
+    };
+
+    type SelectionType = SDKSelectionSet<{
+      __typename?: true;
+      user?: SDKSelectionSet<{
+        id?: boolean;
+        login?: boolean;
+      }> & {
+        [SDKFieldArgumentSymbol]: {
+          id: '[String!]';
+        };
+      };
+    }>;
+    type ResultType = {
+      __typename?: 'Query';
+      user?: {
+        id?: InputTypes['String'];
+        login?: InputTypes['String'];
+      };
+    };
+
+    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+
+    const document = sdk.query({
+      name: 'UserById',
+      variables: {
+        idVariableName: '[String!]',
+      },
+      selection: {
+        user: {
+          [SDKFieldArgumentSymbol]: {
+            id: 'idVariableName',
+          },
+          id: true,
+        },
+      },
+    });
+
+    const expectedDocument: DocumentNode = {
+      kind: Kind.DOCUMENT,
+      definitions: [
+        {
+          kind: Kind.OPERATION_DEFINITION,
+          name: {
+            kind: Kind.NAME,
+            value: 'UserById',
+          },
+          operation: OperationTypeNode.QUERY,
+          variableDefinitions: [
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.LIST_TYPE,
+                type: {
+                  kind: Kind.NON_NULL_TYPE,
+                  type: {
+                    kind: Kind.NAMED_TYPE,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'String',
+                    },
+                  },
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'idVariableName',
+                },
+              },
+            },
+          ],
+          selectionSet: {
+            kind: Kind.SELECTION_SET,
+            selections: [
+              {
+                kind: Kind.FIELD,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'user',
+                },
+                arguments: [
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'id',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'idVariableName',
+                      },
+                    },
+                  },
+                ],
+                selectionSet: {
+                  kind: Kind.SELECTION_SET,
+                  selections: [
+                    {
+                      kind: Kind.FIELD,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'id',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    expect(document).toStrictEqual(expectedDocument);
+  });
 });
