@@ -16,7 +16,7 @@ This process, applied to the `@graphql-codegen/typescript` plugin is illustrated
 ![Codegen flow example](/assets/illustrations/codegen_flow1.png)
 
 
-### Example with `@graphql-codegen/typescript`
+## Example with `@graphql-codegen/typescript`
 
 
 Given the following GraphQL schema:

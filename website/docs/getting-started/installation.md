@@ -19,9 +19,9 @@ If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please no
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 :::
 
-# Development workflow
+## Development workflow
 
-The GraphQL Code Generator should be integrated as part of your development workflow.
+GraphQL Code Generator should be integrated as part of your development workflow.
 
 ### Scripts Integration
 

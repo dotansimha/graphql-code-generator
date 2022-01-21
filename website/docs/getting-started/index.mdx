@@ -41,19 +41,90 @@ type Query {
 
 Most React Apollo / URQL component would query the API as follows:
 
-```tsx
-import { postsQuery } from './graphql/generated'
+<CodeTabs namespace={`getting-started-front-end-codetabs`}>
 
-// `postsQuery` is a fully typed GraphQL Document Node!
+<CodeTab label="React Apollo">
+
+```tsx
+import { gql, useQuery } from '@apollo/client';
+
+
+interface PostQuery {
+  posts: {
+    id: string
+    title: string
+    author?: {
+      id: string
+      firstName: string
+      lastName: string
+    }
+  }[]
+}
+
+const postsQueryDocument = gql`
+  query Posts {
+    posts {
+        id
+        title
+        author {
+          id
+          firstName
+          lastName
+        }
+    }
+  }
+`
 
 const Posts = () => {
-  const { data } = useQuery(postsQuery)
-
-  // `data` is fully typed and in-sync with the last Schema version!
+  const { data } = useQuery<PostQuery>(postsQueryDocument);
 
   // ...
 }
 ```
+
+</CodeTab>
+
+<CodeTab label="URQL React">
+
+```tsx
+import { useQuery } from "urql";
+
+interface PostQuery {
+  posts: {
+    id: string
+    title: string
+    author?: {
+      id: string
+      firstName: string
+      lastName: string
+    }
+  }[]
+}
+
+const postsQueryDocument = `
+  query Posts {
+    posts {
+        id
+        title
+        author {
+          id
+          firstName
+          lastName
+        }
+    }
+  }
+`
+
+const Posts = () => {
+  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+
+  // ...
+}
+```
+
+</CodeTab>
+
+</CodeTabs>
 
 However, not typing or manually maintaining the data-types can lead to many issues:
 
@@ -76,19 +147,42 @@ After a few steps to [install](/docs/getting-started/installation) and [configur
 up-to-date as follows:
 
 
-```tsx
-import { postsQuery } from './graphql/generated'
+<CodeTabs namespace={`getting-started-front-end-codetabs`}>
 
-// `postsQuery` is a fully typed GraphQL Document Node!
+<CodeTab label="React Apollo">
+
+```tsx
+import { useQuery } from '@apollo/client';
+import { postsQueryDocument } from './graphql/generated';
+
 
 const Posts = () => {
-  const { data } = useQuery(postsQuery)
+  const { data } = useQuery<PostQuery>(postsQueryDocument);
 
-  // `data` is fully typed and in-sync with the last Schema version!
-
+  // `result` is fully typed!
   // ...
 }
 ```
+
+</CodeTab>
+
+<CodeTab label="URQL React">
+
+```tsx
+import { useQuery } from "urql";
+import { postsQueryDocument } from './graphql/generated';
+
+const Posts = () => {
+  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+
+  // `result` is fully typed!
+  // ...
+}
+```
+
+</CodeTab>
+
+</CodeTabs>
 
 Now, with a simple configuration and a npm/yarn script, the front-end developers will benefit from:
 
@@ -105,7 +199,7 @@ Now, with a simple configuration and a npm/yarn script, the front-end developers
 
 <br />
 
-:::info How does GraphQL Code Generator work?
+:::tip How does GraphQL Code Generator work?
 More details on the inner working of GraphQL Code Generator are available on [this page](/docs/getting-started/how-does-it-work).
 :::
 

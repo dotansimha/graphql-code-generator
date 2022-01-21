@@ -3,7 +3,11 @@ id: further-reading
 title: Further Reading
 ---
 
-If you'd like to learn more, you may find the following resources helpful.
+GraphQL Code Generator's community has written many articles over the years 🚀.
+
+The following articles are also great guides covering famous or lesser-known capabilities of GraphQL Code Generator.
+
+<br />
 
 ### TypeScript
 
