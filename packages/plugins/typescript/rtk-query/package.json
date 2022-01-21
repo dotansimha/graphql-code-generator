@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-rtk-query",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "GraphQL Code Generator plugin for injecting graphql endpoints into a preconfigured RTK Query api",
   "repository": {
     "type": "git",
