@@ -1,5 +1,5 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, isEnumType, isObjectType, isScalarType } from 'graphql';
+import { GraphQLSchema, isEnumType, isInputObjectType, isObjectType, isScalarType } from 'graphql';
 import { buildObjectTypeSelectionString } from './buildObjectTypeSelectionString';
 import { buildSDKObjectString } from './buildSDKObjectString';
 import { TypedDocumentSDKConfig } from './config';
@@ -19,12 +19,20 @@ export const plugin: PluginFunction<TypedDocumentSDKConfig> = (
       contents.push(buildObjectTypeSelectionString(graphQLType));
     }
     // input types
-    if (isScalarType(graphQLType) || isEnumType(graphQLType) || isScalarType(graphQLType)) {
-      inputTypeMap.push(graphQLType.name, graphQLType.name);
+    if (isScalarType(graphQLType)) {
+      inputTypeMap.push(`  ${graphQLType.name}: Scalars['${graphQLType.name}'];`);
+    }
+
+    if (isEnumType(graphQLType)) {
+      inputTypeMap.push(`  ${graphQLType.name}: ${graphQLType.name};`);
+    }
+
+    if (isInputObjectType(graphQLType)) {
+      inputTypeMap.push(`  ${graphQLType.name}: ${graphQLType.name};`);
     }
   }
 
-  contents.push(`type SDKInputTypes =${inputTypeMap.join(`\n  | `)}`);
+  contents.push(`type GeneratedSDKInputTypes = {\n${inputTypeMap.join('')}`);
 
   // sdk object
   contents.push(buildSDKObjectString(schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()));

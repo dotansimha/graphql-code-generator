@@ -15,6 +15,7 @@ export const buildSDKObjectString = (
 
   return stripIndent`
     export const sdk = createSDK<
+      GeneratedSDKInputTypes,
       ${buildObjectSelectionSetName(queryType.name)},
       ${queryType.name},
       ${mutationType ? buildObjectSelectionSetName(mutationType.name) : 'void'},

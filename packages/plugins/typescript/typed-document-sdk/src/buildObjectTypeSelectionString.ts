@@ -9,7 +9,7 @@ import {
   isUnionType,
 } from 'graphql';
 
-export const buildObjectSelectionSetName = (name: string) => `SDK${name}SelectionSet`;
+export const buildObjectSelectionSetName = (name: string) => `GeneratedSDKSelectionSet${name}`;
 
 const buildFieldSelectionSetString = (field: GraphQLField<any, any>): string => {
   const resultType = getNamedType(field.type);

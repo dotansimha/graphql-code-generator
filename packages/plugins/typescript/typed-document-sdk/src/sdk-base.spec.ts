@@ -4,7 +4,7 @@ import { createSDK, SDKFieldArgumentSymbol, SDKSelectionSet } from './sdk-base';
 describe('SDKLogic', () => {
   it('anonymous query operation', () => {
     const sdk = createSDK<
-      string,
+      {},
       SDKSelectionSet<{
         __typename?: true;
       }>,
@@ -45,7 +45,7 @@ describe('SDKLogic', () => {
 
   it('named query operation', () => {
     const sdk = createSDK<
-      string,
+      {},
       SDKSelectionSet<{
         __typename?: true;
       }>,
@@ -96,7 +96,7 @@ describe('SDKLogic', () => {
       __typename?: 'Query';
     };
 
-    const sdk = createSDK<string, SelectionType, ResultType, SelectionType, ResultType>();
+    const sdk = createSDK<{}, SelectionType, ResultType, SelectionType, ResultType>();
     const operation = sdk.mutation({
       selection: {
         __typename: true,
@@ -136,7 +136,7 @@ describe('SDKLogic', () => {
       __typename?: 'Query';
     };
 
-    const sdk = createSDK<string, SelectionType, ResultType, SelectionType, ResultType, SelectionType, ResultType>();
+    const sdk = createSDK<{}, SelectionType, ResultType, SelectionType, ResultType, SelectionType, ResultType>();
     const operation = sdk.subscription({
       selection: {
         __typename: true,
@@ -170,7 +170,7 @@ describe('SDKLogic', () => {
 
   it('nested operation', () => {
     const sdk = createSDK<
-      string,
+      {},
       SDKSelectionSet<{
         __typename?: true;
         foo?: {
@@ -238,21 +238,31 @@ describe('SDKLogic', () => {
     });
   });
 
-  it('query with variables', () => {
+  it('query with primitive variables', () => {
+    type InputTypes = {
+      String: string;
+      Int: number;
+      Boolean: number;
+    };
+
     type SelectionType = SDKSelectionSet<{
       __typename?: true;
       user?: SDKSelectionSet<{
         id?: boolean;
+        login?: boolean;
       }> & {
-        [SDKFieldArgumentSymbol]?: {
+        [SDKFieldArgumentSymbol]: {
           id?: 'String';
         };
       };
     }>;
     type ResultType = {
       __typename?: 'Query';
+      user?: {
+        id?: InputTypes['String'];
+        login?: InputTypes['String'];
+      };
     };
-    type InputTypes = 'String' | 'Int' | 'Boolean';
 
     const sdk = createSDK<InputTypes, SelectionType, ResultType>();
 
