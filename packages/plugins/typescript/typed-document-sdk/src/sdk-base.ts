@@ -25,9 +25,12 @@ type Impossible<K extends keyof any> = {
 type NoExtraProperties<T, U extends T = T> = U & Impossible<Exclude<keyof U, keyof T>>;
 
 /** Require at least one property in the object defined. */
-type AtLeastOnePropertyOf<T> = {
-  [K in keyof T]: { [L in K]-?: T[L] } & { [L in Exclude<keyof T, K>]?: T[L] };
-}[keyof T];
+type AtLeastOnePropertyOf<T> = Exclude<
+  {
+    [K in keyof T]: { [L in K]-?: T[L] } & { [L in Exclude<keyof T, K>]?: T[L] };
+  }[keyof T],
+  void
+>;
 
 /**
  * @source https://stackoverflow.com/a/56874389/4202031
@@ -55,7 +58,12 @@ type SDKInputTypeMap = { [inputTypeName: string]: any };
 type SDKArgumentType<
   T_SDKInputTypeMap extends SDKInputTypeMap,
   T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap>
-> = { [T_VariableName in keyof T_VariableDefinitions]: T_SDKInputTypeMap[T_VariableDefinitions[T_VariableName]] };
+> = {
+  [T_VariableName in keyof T_VariableDefinitions]: SDKInputContainerUnwrap<
+    T_SDKInputTypeMap,
+    T_VariableDefinitions[T_VariableName]
+  >;
+};
 
 type SDKSelectionTypedDocumentNode<
   T_Selection extends SDKSelection,
@@ -90,6 +98,20 @@ type SDKInputContainerType<T extends string> =
   | SDKInputListType<SDKInputNonNullType<T>>
   | SDKInputNonNullType<SDKInputListType<SDKInputNonNullType<T>>>;
 
+/**
+ * Unwrap something like [Type!] to the actual runtime type.
+ */
+type SDKInputContainerUnwrap<
+  T_SDKInputTypeMap extends SDKInputTypeMap,
+  T_Typename extends keyof SDKVariableDefinitions<T_SDKInputTypeMap>
+> = T_Typename extends keyof T_SDKInputTypeMap
+  ? T_SDKInputTypeMap[T_Typename] | null | undefined
+  : T_Typename extends SDKInputNonNullType<infer Inner>
+  ? Exclude<SDKInputContainerUnwrap<T_SDKInputTypeMap, Inner>, null | undefined>
+  : T_Typename extends SDKInputListType<infer Inner>
+  ? Array<SDKInputContainerUnwrap<T_SDKInputTypeMap, Inner>>
+  : never;
+
 type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = {
   [key: string]: SDKInputContainerType<Exclude<keyof TSDKInputTypeMap, number | symbol>>;
 };
@@ -97,23 +119,23 @@ type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = {
 type SDKSelectionWithVariables<
   /** GraphQLTypeName -> TS type */
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_Type extends SDKSelectionSet,
+  T_SDKSelectionSet extends SDKSelectionSet,
   /** variableName -> GraphQLTypeName */
   T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap> | void
 > = {
-  [U_FieldName in keyof T_Type]: U_FieldName extends typeof SDKFieldArgumentSymbol
+  [U_FieldName in keyof T_SDKSelectionSet]: U_FieldName extends typeof SDKFieldArgumentSymbol
     ? T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap>
       ? {
-          // From T_VariableDefinitions we want all keys whose value IS `T_Type[U_FieldName][V_ArgumentName]`
-          [V_ArgumentName in keyof T_Type[U_FieldName] /* ArgumentType */]: KeysMatching<
+          // From T_VariableDefinitions we want all keys whose value IS `T_SDKSelectionSet[U_FieldName][V_ArgumentName]`
+          [V_ArgumentName in keyof T_SDKSelectionSet[U_FieldName] /* ArgumentType */]: KeysMatching<
             T_VariableDefinitions,
-            T_Type[U_FieldName][V_ArgumentName]
+            T_SDKSelectionSet[U_FieldName][V_ArgumentName]
           >;
         }
       : never
-    : T_Type[U_FieldName] extends SDKSelectionSet
-    ? SDKSelectionWithVariables<T_SDKInputTypeMap, T_Type[U_FieldName], T_VariableDefinitions>
-    : T_Type[U_FieldName];
+    : T_SDKSelectionSet[U_FieldName] extends SDKSelectionSet
+    ? SDKSelectionWithVariables<T_SDKInputTypeMap, T_SDKSelectionSet[U_FieldName], T_VariableDefinitions>
+    : T_SDKSelectionSet[U_FieldName];
 };
 
 type SDK<
