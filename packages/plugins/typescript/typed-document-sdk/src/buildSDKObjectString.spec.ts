@@ -18,7 +18,8 @@ describe('buildSDKObjectString', () => {
     });
     expect(buildSDKObjectString(objectType, null, null)).toMatchInlineSnapshot(`
       "export const sdk = createSDK<
-        SDKQueryRootSelectionSet,
+        GeneratedSDKInputTypes,
+        GeneratedSDKSelectionSetQueryRoot,
         QueryRoot,
         void,
         void,
@@ -46,9 +47,10 @@ describe('buildSDKObjectString', () => {
     });
     expect(buildSDKObjectString(queryType, mutationType, null)).toMatchInlineSnapshot(`
       "export const sdk = createSDK<
-        SDKQueryRootSelectionSet,
+        GeneratedSDKInputTypes,
+        GeneratedSDKSelectionSetQueryRoot,
         QueryRoot,
-        SDKMutationRootSelectionSet,
+        GeneratedSDKSelectionSetMutationRoot,
         MutationRoot,
         void,
         void,
@@ -82,11 +84,12 @@ describe('buildSDKObjectString', () => {
     });
     expect(buildSDKObjectString(queryType, mutationType, subscriptionType)).toMatchInlineSnapshot(`
       "export const sdk = createSDK<
-        SDKQueryRootSelectionSet,
+        GeneratedSDKInputTypes,
+        GeneratedSDKSelectionSetQueryRoot,
         QueryRoot,
-        SDKMutationRootSelectionSet,
+        GeneratedSDKSelectionSetMutationRoot,
         MutationRoot,
-        SDKSubscriptionSelectionSet,
+        GeneratedSDKSelectionSetSubscription,
         Subscription,
       >()"
     `);

@@ -13,7 +13,7 @@ describe('buildObjectTypeSelectionString', () => {
     });
 
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
-      "type SDKHelloSelectionSet = SDKSelectionSet<{
+      "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
         a?: true;
       }>;"
@@ -30,9 +30,9 @@ describe('buildObjectTypeSelectionString', () => {
     });
 
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
-      "type SDKHelloSelectionSet = SDKSelectionSet<{
+      "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
-        a?: SDKHelloSelectionSet;
+        a?: GeneratedSDKSelectionSetHello;
       }>;"
     `);
   });
@@ -52,7 +52,7 @@ describe('buildObjectTypeSelectionString', () => {
     });
 
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
-      "type SDKHelloSelectionSet = SDKSelectionSet<{
+      "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
         a?: true | {
           [SDKFieldArgumentSymbol]?: {
@@ -78,7 +78,7 @@ describe('buildObjectTypeSelectionString', () => {
     });
 
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
-      "type SDKHelloSelectionSet = SDKSelectionSet<{
+      "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
         a?: {
           [SDKFieldArgumentSymbol]: {
