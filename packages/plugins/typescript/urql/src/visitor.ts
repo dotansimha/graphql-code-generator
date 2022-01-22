@@ -9,7 +9,6 @@ import {
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { pascalCase } from 'change-case-all';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -106,7 +105,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationVariablesTypes: string
   ): string {
     const operationName: string = this.convertName(node.name?.value ?? '', {
-      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+      suffix: this.getOperationSuffix(node, operationType),
       useTypesPrefix: false,
     });
 
