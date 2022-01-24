@@ -3,9 +3,9 @@ id: svelte
 title: 'Guide: Svelte / Kit'
 ---
 
-GraphQL Code Generator and the community are providing typed code generation for Apollo, SvelteKit native and other clients.
+GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit native, and other clients.
 
-Plugins and available options vary depending on the selected codegen, for this reason, you will find guides for each of them below:
+Plugins and available options vary depending on the selected codegen; for this reason, you will find guides for each of them below:
 
 <br />
 
@@ -124,7 +124,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.ts` file.
+Running the following generates the `graphql/generated.ts` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -148,7 +148,7 @@ We can now update our code as follows:
 
 For more advanced configuration (ex: async queries), please refer to the [plugin documentation](/plugins/typescript-svelte-apollo) and the [Github repository README](https://github.com/ticruz38/graphql-codegen-svelte-apollo).
 
-For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
 <p>&nbsp;</p>
 
@@ -158,7 +158,7 @@ For a different organisation of the generated files, please refer to the ["Gener
 
 ## SvelteKit Native
 
-With this [Codegen](https://github.com/jycouet/sveltekit-my-minion), you get SvelteKit SSR (Server Side Rendering) and Caching out of the box!
+With this [Codegen](https://github.com/jycouet/sveltekit-my-minion), you get SvelteKit SSR (Server Side Rendering) and Caching out-of-the-box!
 
 Just a few configuration steps are required to get SvelteKit stores fully typed + All Operations fully typed:
 
@@ -199,7 +199,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.ts` file.
+Running the following generates the `graphql/generated.ts` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -225,5 +225,7 @@ We can now update our code as follows:
 <p>&nbsp;</p>
 
 For more advanced configuration, please refer to the [plugin documentation](https://github.com/jycouet/sveltekit-my-minion).
+
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
 <p>&nbsp;</p>
