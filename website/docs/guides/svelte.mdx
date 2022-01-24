@@ -67,11 +67,11 @@ and the following reference script:
     }
   `
 
-  $: posts = query(postsQueryDocument);
+  const posts = query(postsQueryDocument);
 </script>
 
 <!-- UI -->
-{$posts.data}
+{posts.data}
 ```
 
 Just a few configuration steps are required to get observable Apollo queries with Typescript typings:
