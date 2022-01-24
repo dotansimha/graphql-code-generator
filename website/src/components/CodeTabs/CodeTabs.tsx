@@ -42,8 +42,6 @@ const CodeTabsRenderer = ({ children, namespace }: { namespace: string; children
   const [index, setTabIndex] = useCurrentTab(namespace);
   const { value: tabs } = useContext(CodeTabsTabContext);
 
-  console.log(children);
-
   return (
     <Tabs
       width="100%"

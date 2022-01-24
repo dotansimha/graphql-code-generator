@@ -39,50 +39,12 @@ type Query {
 }
 ```
 
-Most React Apollo / URQL component would query the API as follows:
+### From the front-end
+
+
+Most implementation on client-side without GraphQL Code Generator would query the API as follows:
 
 <CodeTabs namespace={`getting-started-front-end-codetabs`}>
-
-<CodeTab label="React Apollo">
-
-```tsx
-import { gql, useQuery } from '@apollo/client';
-
-
-interface PostQuery {
-  posts: {
-    id: string
-    title: string
-    author?: {
-      id: string
-      firstName: string
-      lastName: string
-    }
-  }[]
-}
-
-const postsQueryDocument = gql`
-  query Posts {
-    posts {
-        id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
-    }
-  }
-`
-
-const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
-
-  // ...
-}
-```
-
-</CodeTab>
 
 <CodeTab label="URQL React">
 
@@ -124,6 +86,179 @@ const Posts = () => {
 
 </CodeTab>
 
+<CodeTab label="React Query">
+
+```tsx
+import { request, gql } from "graphql-request";
+import { useQuery } from "react-query";
+
+interface PostQuery {
+  posts: {
+    id: string
+    title: string
+    author?: {
+      id: string
+      firstName: string
+      lastName: string
+    }
+  }[]
+}
+
+const postsQueryDocument = gql`
+  query Posts {
+    posts {
+        id
+        title
+        author {
+          id
+          firstName
+          lastName
+        }
+    }
+  }
+`
+
+const Posts = () => {
+  const { data } = useQuery<PostQuery>("posts", async () => {
+    const {
+      posts,
+    } = await request(
+      endpoint,
+      postsQueryDocument
+    );
+    return posts;
+  });
+
+  // ...
+}
+```
+
+</CodeTab>
+
+<CodeTab label="Vue Apollo">
+
+```vue
+<template>
+  <div class="apollo">
+    <!-- UI... -->
+  </div>
+</template>
+
+<script>
+interface PostQueryVariables {
+  id: string
+}
+
+export default {
+  apollo: {
+    post: {
+      query: gql`query ($id: ID!) {
+        post(id: $id) {
+          id
+          title
+          author {
+            id
+            firstName
+            lastName
+          }
+        }
+      }`,
+      variables: {
+        id: 1
+      } as PostQueryVariables,
+    },
+  },
+  data () {
+    return {
+      post: undefined,
+    }
+  },
+};
+</script>
+```
+
+</CodeTab>
+
+<CodeTab label="Angular Apollo">
+
+```tsx
+const GET_POSTS = gql`
+  query Posts {
+    posts {
+        id
+        title
+        author {
+          id
+          firstName
+          lastName
+        }
+    }
+  }
+`;
+
+interface Post {
+  id: string
+  title: string
+  author?: {
+    id: string
+    firstName: string
+    lastName: string
+  }
+}
+
+@Component({ /* ... */ })
+class PostsComponent implements OnInit, OnDestroy {
+  posts: Post[];
+
+  private querySubscription: Subscription;
+
+  ngOnInit() {
+    this.querySubscription = this.apollo
+      .watchQuery({
+        query: GET_POSTS,
+      })
+      .valueChanges.subscribe(({ data }) => {
+        this.posts = data.posts as Post[];
+      });
+  }
+  ngOnDestroy() {
+    this.querySubscription.unsubscribe();
+  }
+}
+```
+
+</CodeTab>
+
+<CodeTab label="Svelte Apollo">
+
+```svelte
+<script lang="ts">
+  import { query } from "svelte-apollo";
+
+  const postsQueryDocument = gql`
+    query Posts {
+      posts {
+          id
+          title
+          author {
+            id
+            firstName
+            lastName
+          }
+      }
+    }
+  `
+
+  const posts = query(postsQueryDocument);
+</script>
+
+<ul>
+    { /* UI */ }
+</ul>
+```
+
+</CodeTab>
+
 </CodeTabs>
 
 However, not typing or manually maintaining the data-types can lead to many issues:
@@ -149,22 +284,6 @@ up-to-date as follows:
 
 <CodeTabs namespace={`getting-started-front-end-codetabs`}>
 
-<CodeTab label="React Apollo">
-
-```tsx
-import { useQuery } from '@apollo/client';
-import { postsQueryDocument } from './graphql/generated';
-
-
-const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
-
-  // `result` is fully typed!
-  // ...
-}
-```
-
-</CodeTab>
 
 <CodeTab label="URQL React">
 
@@ -173,11 +292,96 @@ import { useQuery } from "urql";
 import { postsQueryDocument } from './graphql/generated';
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+  const [result] = useQuery({ query: postsQueryDocument});
 
   // `result` is fully typed!
   // ...
 }
+```
+
+</CodeTab>
+
+
+<CodeTab label="React Query">
+
+```tsx
+import { usePosts } from "../graphql/generated";
+
+
+const Posts = () => {
+  const { data } = usePosts()
+
+  // `data` is typed!
+
+  // ...
+}
+```
+
+</CodeTab>
+
+<CodeTab label="Vue Apollo">
+
+```vue
+<template>
+  <div class="apollo">
+    <!-- UI... -->
+  </div>
+</template>
+
+<script>
+import { usePostQuery } from '../generated/graphql';
+
+export default {
+  apollo: usePostQuery({
+    // `variables` is properly typed!
+    variables: {
+      id: 1
+    }
+  }),
+  data () {
+    return {
+      post: undefined,
+    }
+  },
+};
+</script>
+```
+
+</CodeTab>
+
+<CodeTab label="Angular Apollo">
+
+```tsx
+import { PostsGQL, PostsQuery } from './graphql'
+//BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+@Component({ /* ... */ })
+export class PostsComponent {
+  posts: Observable<PostsQuery['posts']>
+
+  constructor(postsGQL: PostsGQL) {
+    this.posts = postsGQL.watch().valueChanges.pipe(map(result => result.data.posts))
+  }
+}
+```
+
+</CodeTab>
+
+<CodeTab label="Svelte Apollo">
+
+```svelte
+<script lang="ts">
+  import { Posts } from "../graphql/generated";
+
+  // `posts` is fully typed, also are `Posts()` options!
+  const posts = Posts();
+</script>
+
+<ul>
+    { /* UI */ }
+</ul>
 ```
 
 </CodeTab>
@@ -203,12 +407,9 @@ Now, with a simple configuration and a npm/yarn script, the front-end developers
 More details on the inner working of GraphQL Code Generator are available on [this page](/docs/getting-started/how-does-it-work).
 :::
 
-<br />
+### To the back-end
 
-GraphQL Code Generator is not limited to the generation of type-safe operations on the client-side.
-
-Many other plugins helps in generating typings for GraphQL servers resolvers ([Node.js](/plugins/typescript-resolvers) and [Java](/plugins/java-resolvers)), type-safe
-[GraphQL requests for Apollo Android](/plugins/java-apollo-android) or full typed [TypeScript SDK](/plugins/typescript-generic-sdk)!
+_// TODO_
 
 
 <p>&nbsp;</p>

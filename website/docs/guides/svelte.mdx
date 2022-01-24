@@ -1,4 +1,147 @@
 ---
 id: svelte
-title: Svelte and GraphQL Code Generator
+title: "Guide: Svelte"
 ---
+
+
+:::info
+
+GraphQL Code Generator is currently only providing a plugin for Svelte and Apollo.
+
+In order to get typed Queries with Svelte outside of Apollo, please refer to the ["TypeScript-only for front-end" guide](/docs/guides/front-end-typescript-only).
+
+:::
+
+
+## Svelte Apollo
+
+
+GraphQL Code Generator provides the `graphql-codegen-svelte-apollo` plugin that generates full-typed Apollo GraphQL services.
+
+Taking the following schema:
+
+```graphql
+# schema.graphql
+
+type Author {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  posts(findTitle: String): [Post]
+}
+
+type Post {
+  id: Int!
+  title: String!
+  author: Author
+}
+
+type Query {
+  posts: [Post]
+}
+```
+
+and the following reference script:
+
+```svelte
+<script lang="ts">
+  import { query } from "svelte-apollo";
+
+  const postsQueryDocument = gql`
+    query Posts {
+      posts {
+          id
+          title
+          author {
+            id
+            firstName
+            lastName
+          }
+      }
+    }
+  `
+
+  const posts = query(postsQueryDocument);
+</script>
+
+<ul>
+    { /* UI */ }
+</ul>
+```
+
+Just a few configuration steps are required to get observable Apollo queries with Typescript typings:
+
+**1. Install the `graphql-codegen-svelte-apollo` plugin**
+
+<PackageInstall packages={["graphql-codegen-svelte-apollo", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+
+<br />
+
+**2. Configure the plugin**
+
+Create or update your `codegen.yaml` file as follows:
+
+```yaml
+schema: http://my-graphql-api.com/graphql
+documents: './src/**/*.tsx'
+generates:
+  ./graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - graphql-codegen-svelte-apollo
+```
+
+:::tip `schema` and `documents` values
+`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+
+`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
+:::
+
+<br />
+
+**3. Run the codegen and update your code**
+
+Assuming that, as recommended, your `package.json` has the following script:
+
+```json
+{
+  "scripts": {
+    "generate": "graphql-codegen",
+  }
+}
+```
+
+<br />
+
+Running the following will generate the `graphql/generated.tsx` file.
+
+<PackageRun scripts={['generate']} />
+
+<br />
+
+We can now update our code as follows:
+
+
+```svelte
+<script lang="ts">
+  import { Posts } from "../graphql/generated";
+
+  // `posts` is fully typed, also are `Posts()` options!
+  const posts = Posts();
+</script>
+
+<ul>
+    { /* UI */ }
+</ul>
+```
+
+
+<p>&nbsp;</p>
+
+For more advanced configuration (custom fetcher, authentication), please refer to the [plugin documentation](/plugins/typescript-svelte-apollo).
+
+For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
+
+
+<p>&nbsp;</p>

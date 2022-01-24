@@ -17,9 +17,10 @@ export function getRoutes(): IRoutes {
         $name: 'Guides',
         $routes: [
           ['react', 'React'],
-          ['vue', 'Vue'],
+          ['vue', 'Vue.js'],
           ['angular', 'Angular'],
           ['svelte', 'Svelte'],
+          ['front-end-typescript-only', 'TypeScript only (front-end)'],
           ['graphql-server-apollo-yoga', 'Apollo Server / GraphQL Yoga'],
           ['graphql-modules', 'GraphQL Modules'],
           ['further-reading', 'Further Reading'],

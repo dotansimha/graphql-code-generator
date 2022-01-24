@@ -1,6 +1,6 @@
 ---
 id: react
-title: React and GraphQL Code Generator
+title: "Guide: React and GraphQL"
 ---
 
 
@@ -12,7 +12,6 @@ The plugins and available options vary depending on the target client, for this 
 
 - [React Query](#react-query)
 - [Apollo and URQL](#apollo-and-urql)
-- [Other clients](#other-clients)
 
 <p>&nbsp;</p>
 
@@ -50,6 +49,7 @@ type Query {
 Most React Query usage with GraphQL and TypeScript will look as follows:
 
 ```tsx
+import { useQuery } from "react-query";
 import { request, gql } from "graphql-request";
 
 interface PostQuery {
@@ -103,7 +103,7 @@ Not typing or manually maintaining the data-types can lead to many issues:
   - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 
-For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-react-query` plugin that generated typed hook for each GraphQL operation.
+For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-react-query` plugin that generates typed hook for each GraphQL operation.
 
 <br />
 
@@ -111,7 +111,7 @@ Just a few configuration steps are required to get those typed hooks generated:
 
 **1. Install the `@graphql-codegen/typescript-react-query` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-react-query"]} />
+<PackageInstall packages={["@graphql-codegen/typescript-react-query", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
 
 <br />
 
@@ -164,6 +164,7 @@ We can now update our code as follows:
 
 ```tsx
 import gql from 'graphql-tag'
+import { useQuery } from "react-query";
 import { usePosts } from "../graphql/generated";
 
 gql`
@@ -317,7 +318,7 @@ import { postsQueryDocument } from './graphql/generated';
 
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
+  const { data } = useQuery(postsQueryDocument);
 
   // `result` is fully typed!
   // ...
@@ -333,7 +334,7 @@ import { useQuery } from "urql";
 import { postsQueryDocument } from './graphql/generated';
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+  const [result] = useQuery({ query: postsQueryDocument});
 
   // `result` is fully typed!
   // ...
@@ -371,7 +372,7 @@ query {
 
 **2. Install the `@graphql-codegen/typed-document-node` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typed-document-node"]} />
+<PackageInstall packages={["@graphql-codegen/typed-document-node", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
 
 <br />
 
@@ -614,11 +615,11 @@ Just a few configuration steps are required to get those typed hooks generated:
 
 For React Apollo:
 
-<PackageInstall packages={["@graphql-codegen/typescript-react-apollo"]} />
+<PackageInstall packages={["@graphql-codegen/typescript-react-apollo", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
 
 For URQL React:
 
-<PackageInstall packages={["@graphql-codegen/typescript-urql"]} />
+<PackageInstall packages={["@graphql-codegen/typescript-urql", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
 
 <br />
 
@@ -741,75 +742,3 @@ For more advanced configuration (custom fetcher, authentication), please refer t
 
 For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
 
-
-
-
-
-<p>&nbsp;</p>
-
-----
-
-<p>&nbsp;</p>
-
-## Other React GraphQL clients
-
-Even while using a another GraphQL Cient (not listed above), GraphQL Code Generator still got you covered!
-
-`@graphql-codegen/typescript-operations` is the perfect plugin is your prefer only manipulatin generated TypeScript types.
-
-Given the following example:
-
-```tsx
-import gql from 'graphql-tag';
-
-const postsQueryDocument = gql`
-  query Posts {
-    posts {
-        id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
-    }
-  }
-`
-
-
-const Posts = () => {
-  const { data } = useCustomFetchGraphQLData(postsQueryDocument);
-}
-```
-
-Using `@graphql-codegen/typescript-operations` would generate the type definitions for only defined Query, Mutation, Subscription and Fragment.
-
-Which will give the flexibility to keep your GraphQL client use it as follow:
-
-
-```tsx
-import gql from 'graphql-tag';
-import { PostsQuery } from '../graphql/generated.tsx';
-
-const postsQueryDocument = gql`
-  query {
-    posts {
-        id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
-    }
-  }
-`
-
-
-const Posts = () => {
-  const { data } = useCustomFetchGraphQLData(postsQueryDocument);
-}
-```
-
-
-For more information on the `@graphql-codegen/typescript-operations` plugin configuration , please refer to its [documentation](/plugins/typescript-resolvers).
