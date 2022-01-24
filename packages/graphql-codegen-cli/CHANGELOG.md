@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.4.0
+
+### Minor Changes
+
+- 4c42e2a71: Performance optimizations in schema and documents loading (shared promises)
+
 ## 2.3.1
 
 ### Patch Changes
