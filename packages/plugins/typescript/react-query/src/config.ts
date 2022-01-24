@@ -49,7 +49,7 @@ export interface ReactQueryRawPluginConfig
 
   /**
    * @default false
-   * @description For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates.
+   * @description For each generate query hook adds getKey(variables: QueryVariables) function. Useful for cache updates. If addInfiniteQuery is true, it will also add a getKey function to each infinite query.
    * @exampleMarkdown
    * ```ts
    * const query = useUserDetailsQuery(...)

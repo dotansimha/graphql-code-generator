@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-rtk-query
 
+## 2.2.3
+
+### Patch Changes
+
+- e5b762733: bugfix: remove attempt to export injected api for fragment files
+
 ## 2.2.2
 
 ### Patch Changes
