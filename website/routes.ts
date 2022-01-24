@@ -19,7 +19,7 @@ export function getRoutes(): IRoutes {
           ['react', 'React'],
           ['vue', 'Vue.js'],
           ['angular', 'Angular'],
-          ['svelte', 'Svelte'],
+          ['svelte', 'Svelte / Kit'],
           ['front-end-typescript-only', 'TypeScript only (front-end)'],
           ['graphql-server-apollo-yoga', 'Apollo Server / GraphQL Yoga'],
           ['graphql-modules', 'GraphQL Modules'],
