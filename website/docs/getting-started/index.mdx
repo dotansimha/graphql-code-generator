@@ -11,12 +11,16 @@ From back-end to front-end, GraphQL Code Generator will automate the generation 
 - **Typed GraphQL resolvers**, for any Node.js (GraphQL Yoga, GraphQL Modules, TypeGraphQL or Apollo) or Java GraphQL server.
 - **Full-typed Node.js SDKs, Apollo Android** support, and more!
 
+
 <p>&nbsp;</p>
+
+----
+
 <p>&nbsp;</p>
 
 ## The perfect GraphQL Developer Experience
 
-To illustrate how GraphQL Code Generator improves your Developer Experience, let's take a look the following schema and its usage in a front-end application:
+To illustrate how GraphQL Code Generator improves your Developer Experience, let's take a look at the front-end and back-end usage of the following schema:
 
 ```graphql
 # schema.graphql
@@ -38,6 +42,15 @@ type Query {
   posts: [Post]
 }
 ```
+
+We will see that GraphQL Code Generator is a gamer-changer in your GraphQL Stack.
+
+
+<p>&nbsp;</p>
+
+----
+
+<p>&nbsp;</p>
 
 ### From the front-end
 
@@ -261,7 +274,7 @@ class PostsComponent implements OnInit, OnDestroy {
 
 </CodeTabs>
 
-However, not typing or manually maintaining the data-types can lead to many issues:
+Not typing or manually maintaining the data-types can lead to many issues:
 
 
   - **outdated typing** (regarding the current Schema)
@@ -407,10 +420,128 @@ Now, with a simple configuration and a npm/yarn script, the front-end developers
 More details on the inner working of GraphQL Code Generator are available on [this page](/docs/getting-started/how-does-it-work).
 :::
 
+
+<p>&nbsp;</p>
+
+----
+
+<p>&nbsp;</p>
+
 ### To the back-end
 
-_// TODO_
+Most GraphQL API resolvers remains untyped or wrongly typed which leads to multiple issues:
 
+- resolvers not compliant to the Schema definition
+
+- unhandled scenarios
+
+- typos in the resolvers' function type signature
+
+<br/>
+
+For this reason, GraphQL Code Generator provides multiple plugins that helps automating the generation of resolvers' typings.
+
+Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
+
+<CodeTabs namespace={`getting-started-back-end-codetabs`}>
+
+<CodeTab label="Apollo Server">
+
+```ts
+import { ApolloServer } from "apollo-server";
+import { loadDocuments } from "@graphql-tools/load";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+
+import { Resolvers } from './resolvers-types';
+
+
+const typeDefs = await loadDocuments('./schema.graphql', {
+    file,
+    loaders: [
+        new GraphQLFileLoader()
+    ]
+})
+
+
+const resolvers: Resolvers = {
+  Query: {
+    // typed resolvers!
+  }
+}
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+// The `listen` method launches a web server.
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
+```
+
+</CodeTab>
+
+<CodeTab label="GraphQL Yoga">
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { loadDocuments } from "@graphql-tools/load";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+
+import { Resolvers } from './resolvers-types';
+
+const typeDefs = await loadDocuments('./schema.graphql', {
+    file,
+    loaders: [
+        new GraphQLFileLoader()
+    ]
+})
+
+const resolvers: Resolvers = {
+  Query: {
+    // typed resolvers!
+  }
+}
+
+const server = createServer({
+  typeDefs,
+  resolvers,
+})
+
+server.start()
+```
+
+</CodeTab>
+
+<CodeTab label="GraphQL Modules">
+
+Given the following structure:
+
+```
+- src/
+  - modules/
+    - user/
+      - resolvers.ts
+      - typedefs/
+        - user.graphql
+    - product/
+      - resolvers.ts
+      - typedefs/
+        - product.graphql
+```
+
+The User module resolvers would be:
+
+```tsx
+// src/modules/user/resolvers.ts
+import { UsersModule } from './generated-types/module-types'
+
+export const resolvers: UsersModule.Resolvers = {
+  // Here you can implement only the types and fields defined in your module!
+}
+```
+
+</CodeTab>
+
+</CodeTabs>
 
 <p>&nbsp;</p>
 
