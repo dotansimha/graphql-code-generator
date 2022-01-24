@@ -41,9 +41,8 @@ export function getRoutes(): IRoutes {
       'docs/advanced': {
         $name: 'Advanced Usage',
         $routes: [
-          ['generated-files-organisation', 'Generated files organisation'],
+          ['generated-files-colocation', 'Generated files colocation'],
           ['programmatic-usage', 'Programmatic Usage'],
-          ['lifecycle-hooks', 'Lifecycle Hooks'],
         ],
       },
       'docs/integrations': {
