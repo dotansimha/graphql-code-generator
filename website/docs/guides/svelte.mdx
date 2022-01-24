@@ -1,21 +1,20 @@
 ---
 id: svelte
-title: 'Guide: Svelte'
+title: 'Guide: Svelte / Kit'
 ---
 
-:::info
+GraphQL Code Generator and the community are providing typed code generation for Apollo, SvelteKit native and other clients.
 
-GraphQL Code Generator is currently only providing a plugin for Svelte and Apollo.
+Plugins and available options vary depending on the selected codegen, for this reason, you will find guides for each of them below:
 
-In order to get typed Queries with Svelte outside of Apollo, please refer to the ["TypeScript-only for front-end" guide](/docs/guides/front-end-typescript-only).
+<br />
 
-:::
+- [Svelte Apollo](#svelte-apollo)
+- [SvelteKit Native](#sveltekit-native)
 
-## Svelte Apollo
+<p>&nbsp;</p>
 
-Thank to the [community-built plugin](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme) `graphql-codegen-svelte-apollo`, GraphQL Code Generator generates full-typed Apollo GraphQL services for Svelte.
-
-Taking the following schema:
+All the following guides query the schema below:
 
 ```graphql
 # schema.graphql
@@ -38,6 +37,16 @@ type Query {
 }
 ```
 
+<p>&nbsp;</p>
+
+---
+
+<p>&nbsp;</p>
+
+## Svelte Apollo
+
+Thank to the [community-built plugin](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme) `graphql-codegen-svelte-apollo`, GraphQL Code Generator generates full-typed Apollo GraphQL services for Svelte.
+
 and the following reference script:
 
 ```svelte
@@ -58,12 +67,11 @@ and the following reference script:
     }
   `
 
-  const posts = query(postsQueryDocument);
+  $: posts = query(postsQueryDocument);
 </script>
 
-<ul>
-    { /* UI */ }
-</ul>
+<!-- UI -->
+{$posts.data}
 ```
 
 Just a few configuration steps are required to get observable Apollo queries with Typescript typings:
@@ -116,7 +124,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.tsx` file.
+Running the following will generate the `graphql/generated.ts` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -141,5 +149,81 @@ We can now update our code as follows:
 For more advanced configuration (ex: async queries), please refer to the [plugin documentation](/plugins/typescript-svelte-apollo) and the [Github repository README](https://github.com/ticruz38/graphql-codegen-svelte-apollo).
 
 For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
+
+<p>&nbsp;</p>
+
+---
+
+<p>&nbsp;</p>
+
+## SvelteKit Native
+
+With this [Codegen](https://github.com/jycouet/sveltekit-my-minion), you get SvelteKit SSR (Server Side Rendering) and Caching out of the box!
+
+Just a few configuration steps are required to get SvelteKit stores fully typed + All Operations fully typed:
+
+**1. Install the plugin**
+
+<PackageInstall packages={['-D @sveltekit-my-minion/graphql-codegen-stores']} />
+
+<br />
+
+**2. Configure the plugin**
+
+Create or update your `codegen.yaml` file as follows:
+
+```yaml
+schema: http://my-graphql-api.com/graphql # Or schema: ./src/schema.graphql
+documents: './src/**/*.gql'
+generates:
+  ./graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - '@sveltekit-my-minion/graphql-codegen-stores'
+```
+
+<br />
+
+**3. Run the codegen and update your code**
+
+Assuming that, as recommended, your `package.json` has the following script:
+
+```json
+{
+  "scripts": {
+    "generate": "graphql-codegen"
+  }
+}
+```
+
+<br />
+
+Running the following will generate the `graphql/generated.ts` file.
+
+<PackageRun scripts={['generate']} />
+
+<br />
+
+We can now update our code as follows:
+
+```svelte
+<script context="module" lang="ts">
+  import { PostsQuery } from "../graphql/generated";
+
+  export async function load({ fetch }) {
+    await PostsQuery({ fetch });
+    // now you have `PostsQueryStore` store available and fully typed!
+    return {};
+  }
+</script>
+
+<!-- UI -->
+{$PostsQueryStore.data}
+```
+
+<p>&nbsp;</p>
+
+For more advanced configuration, please refer to the [plugin documentation](https://github.com/jycouet/sveltekit-my-minion).
 
 <p>&nbsp;</p>
