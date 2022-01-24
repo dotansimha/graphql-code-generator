@@ -5,7 +5,7 @@ title: Further Reading
 
 GraphQL Code Generator's community has written many articles over the years 🚀.
 
-The following articles are also great guides covering famous or lesser-known capabilities of GraphQL Code Generator.
+The following articles are also excellent guides covering famous or lesser-known capabilities of GraphQL Code Generator.
 
 <br />
 

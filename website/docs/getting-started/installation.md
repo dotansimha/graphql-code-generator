@@ -10,11 +10,11 @@ Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in
 <PackageInstall packages={["graphql", "@graphql-codegen/cli"]} />
 
 :::caution Global Installation
-Please avoid installing `graphql`, `@graphql-codegen/cli` and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
+Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
 :::
 
 :::caution Monorepo Project
-If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and file. This might break and fail in case of hoisting.
+If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
 
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 :::
@@ -39,15 +39,15 @@ If you wish to run the codegen before starting your server/app, you can use `pre
 }
 ```
 
-This way, the codegen will generate the output according to your configuration before each time you run `dev` or `start` scripts.
+This way, the codegen generates the output according to your configuration before each time you run `dev` or `start` scripts.
 
-It's also useful to run the codegen during your continuous integration flow and make sure that you code always compiles with the generated output, this way you can detect breaking changes in your GraphQL schema and GraphQL documents.
+It's also helpful to run the codegen during your continuous integration flow and ensure that your code continually compiles with the generated output; this way, you can detect breaking changes in your GraphQL schema and GraphQL documents.
 
 ### Watch Mode
 
 If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
 
-You can either run it in a separate terminal session, or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
+You can either run it in a separate terminal session or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
 
 ```json
 {
@@ -67,9 +67,9 @@ If you wish, you can specify a custom list of files to watch, by adding a glob e
     yarn graphql-codegen --watch "src/**/*.js"
 :::
 
-Use this when you are loading your schema or documents from a single code file, that depends on other files internally, because codegen can't tell that you're using those files automatically.
+Use this when you are loading your schema or documents from a single code file that depends on other files internally because codegen can't tell that you're using those files automatically.
 
-By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead in unusual cases where system support is unavailable.
+By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead of in unusual cases where system support is unavailable.
 
 ```yml
 watch: true
@@ -81,7 +81,7 @@ watchConfig:
 
 ### Monorepo and Yarn Workspaces
 
-If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend to install the codegen in the root of your monorepo.
+If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your monorepo.
 
 If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
 

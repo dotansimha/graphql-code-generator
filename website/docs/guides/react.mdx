@@ -4,9 +4,9 @@ title: "Guide: React and GraphQL"
 ---
 
 
-GraphQL Code Generator is providing typed code generation for React Query, URQL React, React Apollo Client and other clients.
+GraphQL Code Generator provides typed code generation for React Query, URQL React, React Apollo Client, and other clients.
 
-The plugins and available options vary depending on the target client, for this reason, you will find guides for each of them below:
+The plugins and available options vary depending on the target client; for this reason, you find guides for each of them below:
 
 <br />
 
@@ -103,7 +103,7 @@ Not typing or manually maintaining the data-types can lead to many issues:
   - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 
-For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-react-query` plugin that generates typed hook for each GraphQL operation.
+For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-react-query` plugin that generates a typed hook for each GraphQL operation.
 
 <br />
 
@@ -195,7 +195,7 @@ const Posts = () => {
 
 For more advanced configuration (custom fetcher, authentication), please refer to the [plugin documentation](/plugins/typescript-react-query#using-graphql-request).
 
-For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
 
 <p>&nbsp;</p>
@@ -208,9 +208,9 @@ For a different organisation of the generated files, please refer to the ["Gener
 
 ### Optimal configuration for Apollo and URQL
 
-While Apollo and URQL have their own GraphQL Code Generator plugins that generate fully-typed hooks, they are also both compatible with a plugin named `@graphql-codegen/typed-document-node`.
+While Apollo and URQL have their GraphQL Code Generator plugins that generate fully-typed hooks, they are also compatible with a plugin named `@graphql-codegen/typed-document-node`.
 
-`@graphql-codegen/typed-document-node` plugin is providing the best Developer Experience for Apollo and URQL:
+`@graphql-codegen/typed-document-node` plugin provides the best Developer Experience for Apollo and URQL:
 
 - low bundle impact (compared to other plugins)
 - better backward compatibility (easier to migrate to)
@@ -350,8 +350,8 @@ Just a few configuration steps are required to get those typed document nodes ge
 
 **1. Move all your GraphQL documents in dedicated `.graphql` files**
 
-In order to have `@graphql-codegen/typed-document-node` working and to avoid code duplication,
-we highly recommend to move all `gql` document declaration outside of `.tsx`/`.ts` files.
+To have `@graphql-codegen/typed-document-node` working and avoid code duplication,
+we highly recommend moving all `gql` document declarations outside of `.tsx`/`.ts` files.
 For this, create a colocated `.graphql` file for each GraphQL document, as follows:
 
 ```graphql
@@ -413,7 +413,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.tsx` file.
+Running the following generates the `graphql/generated.tsx` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -471,7 +471,7 @@ If you are curious about `@graphql-codegen/typed-document-node` inner workings, 
 
 ### Typed hooks for Apollo and URQL
 
-GraphQL Code Generator proposes also two plugins (one for Apollo, one for URQL) that generate fully-typed hooks.
+GraphQL Code Generator also proposes two plugins (one for Apollo one for URQL) that generate fully-typed hooks.
 
 
 Given the following code example:
@@ -601,12 +601,12 @@ const Posts = () => {
 
 </CodeTabs>
 
-Some my prefer this approach to `@graphql-codegen/typed-document-node` since its results in a full abstraction of the query logic and less imports.
+Some might prefer this approach to `@graphql-codegen/typed-document-node` since its results in a total abstraction of the query logic and fewer imports.
 
 However, keep in mind that hooks generation results in:
 
 - greater bundle size
-- increase of the number of specific hooks in the given application
+- an increase of the number of specific hooks in the given application
 
 
 Just a few configuration steps are required to get those typed hooks generated:
@@ -688,7 +688,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.tsx` file.
+Running the following generates the `graphql/generated.tsx` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -740,5 +740,5 @@ For more advanced configuration (custom fetcher, authentication), please refer t
 
 <br />
 
-For a different organisation of the generated files, please refer to the ["Generated files organisation"](/docs/advanced/generated-files-organisation) page.
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 

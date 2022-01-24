@@ -4,7 +4,8 @@ title: "Guide: GraphQL Modules"
 ---
 
 
-GraphQL Code Generator's `` plugin helps to generate resolvers type for each modules of a GraphQL Modules GraphQL API.
+GraphQL Code Generator's `@graphql-codegen/graphql-modules-preset` plugin helps to
+generate resolvers type for each module of a GraphQL Modules GraphQL API.
 
 Given the following GraphQL API structure using GraphQL Modules:
 
@@ -68,7 +69,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 <br />
 
-Running the following will generate the `graphql/generated.tsx` file.
+Running the following generates the `graphql/generated.tsx` file.
 
 <PackageRun scripts={['generate']} />
 
@@ -81,7 +82,7 @@ The User module resolvers would be:
 import { UsersModule } from './generated-types/module-types'
 
 export const resolvers: UsersModule.Resolvers = {
-  // Here you can implement only the types and fields defined in your module!
+  // Here, you can implement only the types and fields defined in your module!
 }
 ```
 

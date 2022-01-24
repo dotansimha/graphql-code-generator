@@ -3,14 +3,14 @@ id: how-does-it-work
 title: How does GraphQL Code Generator work?
 ---
 
-In order to generate powerful code and types, GraphQL Code Generator relies on 2 main core concepts of GraphQL:
+In order to generate code and types, GraphQL Code Generator relies on 2 main core concepts of GraphQL:
 
-- **GraphQL Introspection** allows to fetch the types defined in the target GraphQL API
+- **GraphQL Introspection** allows fetching the types defined in the target GraphQL API
 - **GraphQL AST** allows to navigate through both client-side operations and remote schema types
 
-Once all GraphQL types (schema types and operations) are identified, GraphQL Code Generator is relying on a set of plugins to generate specific code snippet and types.
+Once all GraphQL types (schema types and operations) are identified, GraphQL Code Generator relies on a set of plugins to generate specific code snippets and types.
 
-This process, applied to the `@graphql-codegen/typescript` plugin is illustrated below:
+This process, applied to the `@graphql-codegen/typescript` plugin, is illustrated below:
 
 
 ![Codegen flow example](/assets/illustrations/codegen_flow1.png)
@@ -101,7 +101,7 @@ generates:
       - typescript-react-query
 ```
 
-`@graphql-codegen/typescript` plugin can generate the following TypeScript typings and React hooks file based on defined operations:
+`@graphql-codegen/typescript` plugin can generate the following TypeScript typings and React hooks files based on defined operations:
 
 ```ts
 // ...
@@ -207,15 +207,15 @@ export const useFindUserQuery = <
     );
 ```
 
-Now our React components can use the type safe `useFindUserQuery()` hook to query the GraphQL API.
+Now our React components can use the type-safe `useFindUserQuery()` hook to query the GraphQL API.
 
 <p>&nbsp;</p>
 
 ## What's next?
 
-Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project, and use the basic plugins to generate some code.
+Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project.
 
-You can go over [the list of available plugins](/plugins) and find more plugins that matches your needs.
+The, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that match your needs.
 
 If you are having issues, you can reach us this the following:
 

@@ -3,11 +3,11 @@ id: index
 title: Introduction to GraphQL Code Generator
 ---
 
-GraphQL Code Generator is a tool that provides a set of plugins that will help you get the best of your GraphQL stack.
+GraphQL Code Generator is a tool that provides a set of plugins that help you get the best out of your GraphQL stack.
 
-From back-end to front-end, GraphQL Code Generator will automate the generation of:
+From back-end to front-end, GraphQL Code Generator automates the generation of:
 
-- **Typed Queries, Mutations and Subscriptions** for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or React Query.
+- **Typed Queries, Mutations and, Subscriptions** for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 - **Typed GraphQL resolvers**, for any Node.js (GraphQL Yoga, GraphQL Modules, TypeGraphQL or Apollo) or Java GraphQL server.
 - **Full-typed Node.js SDKs, Apollo Android** support, and more!
 
@@ -43,7 +43,7 @@ type Query {
 }
 ```
 
-We will see that GraphQL Code Generator is a gamer-changer in your GraphQL Stack.
+The following sections showcase why GraphQL Code Generator is a game-changer in your GraphQL Stack.
 
 
 <p>&nbsp;</p>
@@ -284,8 +284,8 @@ Not typing or manually maintaining the data-types can lead to many issues:
   - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 
-The strength of your front-end application types is based on your data types, therefore, any mistake on your
-manually maintained data types will ripple in many of your components.
+The strength of your front-end application types is based on your data types.
+Any mistake on your manually maintained data types ripples in many of your components.
 
 
 For this reason, automating and generating the typing of your GraphQL operations will both improve the developer
@@ -401,13 +401,13 @@ export class PostsComponent {
 
 </CodeTabs>
 
-Now, with a simple configuration and a npm/yarn script, the front-end developers will benefit from:
+Now, with a simple configuration and an npm/yarn script, the front-end developers benefit from:
 
 
   - **up-to-date typings**
 
 
-  - **autocompletion on all queries, mutations and subscription variables and results**
+  - **autocompletion on all queries, mutations and, subscription variables and results**
 
 
   - **less boilerplate** (thanks to full code generation such as React hooks generation)
@@ -429,9 +429,9 @@ More details on the inner working of GraphQL Code Generator are available on [th
 
 ### To the back-end
 
-Most GraphQL API resolvers remains untyped or wrongly typed which leads to multiple issues:
+Most GraphQL API resolvers remain untyped or wrongly typed which, leads to multiple issues:
 
-- resolvers not compliant to the Schema definition
+- resolvers not compliant with the Schema definition
 
 - unhandled scenarios
 
@@ -439,7 +439,7 @@ Most GraphQL API resolvers remains untyped or wrongly typed which leads to multi
 
 <br/>
 
-For this reason, GraphQL Code Generator provides multiple plugins that helps automating the generation of resolvers' typings.
+For this reason, GraphQL Code Generator provides multiple plugins that help automate the generation of resolvers' typings.
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
@@ -535,7 +535,7 @@ The User module resolvers would be:
 import { UsersModule } from './generated-types/module-types'
 
 export const resolvers: UsersModule.Resolvers = {
-  // Here you can implement only the types and fields defined in your module!
+  // Here, you can implement only the types and fields defined in your module!
 }
 ```
 
@@ -550,7 +550,7 @@ export const resolvers: UsersModule.Resolvers = {
 
 Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project, and use the basic plugins to generate some code.
 
-You can go over [the list of available plugins](/plugins) and find more plugins that matches your needs.
+You can go over [the list of available plugins](/plugins) and find more plugins that match your needs.
 
 If you are having issues, you can reach us this the following:
 
