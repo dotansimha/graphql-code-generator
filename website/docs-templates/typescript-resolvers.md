@@ -2,6 +2,12 @@
 id: typescript-resolvers
 ---
 
+> Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator) for a quick introduction to this plugin and its features:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/tHMaNmqPIC4" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+
+> [More weekly episodes are available in `graphql.wtf`](https://graphql.wtf/) by [Jamie Barton](https://twitter.com/notrab).
+
 {@apiDocs}
 
 ## Usage Example

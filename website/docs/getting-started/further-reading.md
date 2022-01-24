@@ -7,6 +7,7 @@ If you'd like to learn more, you may find the following resources helpful.
 
 ### TypeScript
 
+- [graphql.wtf](https://graphql.wtf/) by [Jamie Barton](https://twitter.com/notrab).
 - [GraphQL Codegen For Effortless GraphQL and Typescript](https://www.youtube.com/watch?v=CtcjrPCwojQ) by [LevelUpTuts](https://leveluptutorials.com/)
 - [GraphQL with TypeScript done right](https://the-guild.dev/blog/graphql-with-typescript-done-right) by [Charly Poly](https://charlypoly.com/)
 - [Best Practices for integrating GraphQL Code Generator in your frontend applications](https://the-guild.dev/blog/graphql-codegen-best-practices)
