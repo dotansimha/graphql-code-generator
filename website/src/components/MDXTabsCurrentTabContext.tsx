@@ -5,7 +5,7 @@ interface Context {
   update: (ns: string, value: number) => void;
 }
 
-export const CodeTabsContext = createContext<Context>({
+export const MDXTabsCurrentTabContext = createContext<Context>({
   value: {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   update: () => {},
@@ -24,5 +24,5 @@ export const Provider: React.FunctionComponent = ({ children }) => {
     [updateValue, value]
   );
 
-  return <CodeTabsContext.Provider value={{ value, update }}>{children}</CodeTabsContext.Provider>;
+  return <MDXTabsCurrentTabContext.Provider value={{ value, update }}>{children}</MDXTabsCurrentTabContext.Provider>;
 };

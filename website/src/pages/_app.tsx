@@ -11,17 +11,17 @@ import 'remark-admonitions/styles/classic.css';
 import '../../public/style.css';
 import Script from 'next/script';
 import React from 'react';
-import { Provider as CodeTabsContextProvider } from 'components/CodeTabsContext';
+import { Provider as MDXTabsCurrentTabContextProvider } from 'components/MDXTabsCurrentTabContext';
 
-const CodeTabs = dynamic(() => import('components/CodeTabs/CodeTabs'));
-const CodeTab = dynamic(() => import('components/CodeTabs/CodeTab'));
+const MDXTabs = dynamic(() => import('components/MDXTabs/MDXTabs'));
+const MDXTab = dynamic(() => import('components/MDXTabs/MDXTab'));
 
 ExtendComponents({
   HelloWorld() {
     return <p>Hello World!</p>;
   },
-  CodeTabs,
-  CodeTab,
+  MDXTabs,
+  MDXTab,
 });
 
 const styles: typeof chakraTheme['styles'] = {
@@ -120,7 +120,7 @@ function AppContent(appProps: AppProps) {
         }}
       />
       {isDocs ? (
-        <CodeTabsContextProvider>
+        <MDXTabsCurrentTabContextProvider>
           <DocsPage
             appProps={appProps}
             accentColor={accentColor}
@@ -138,7 +138,7 @@ function AppContent(appProps: AppProps) {
               },
             }}
           />
-        </CodeTabsContextProvider>
+        </MDXTabsCurrentTabContextProvider>
       ) : (
         <Component {...pageProps} />
       )}

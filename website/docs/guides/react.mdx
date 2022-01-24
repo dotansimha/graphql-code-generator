@@ -219,9 +219,9 @@ While Apollo and URQL have their GraphQL Code Generator plugins that generate fu
 Given the following code example:
 
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { gql, useQuery } from '@apollo/client';
@@ -260,9 +260,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -300,17 +300,17 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 installing and configuring the `@graphql-codegen/typed-document-node` plugin would allow the following refactoring:
 
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { useQuery } from '@apollo/client';
@@ -325,9 +325,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -341,9 +341,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 Just a few configuration steps are required to get those typed document nodes generated:
@@ -421,9 +421,9 @@ Running the following generates the `graphql/generated.tsx` file.
 
 We can now update our code as follows:
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { useQuery } from '@apollo/client';
@@ -438,9 +438,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -454,9 +454,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 <p>&nbsp;</p>
@@ -476,9 +476,9 @@ GraphQL Code Generator also proposes two plugins (one for Apollo one for URQL) t
 
 Given the following code example:
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { gql, useQuery } from '@apollo/client';
@@ -517,9 +517,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -557,18 +557,18 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 installing and configuring the `@graphql-codegen/typescript-react-apollo` or `@graphql-codegen/typescript-urql` plugin would allow the following refactoring:
 
 
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { usePostsQuery } from './graphql/generated';
@@ -582,9 +582,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { usePostsQuery } from './graphql/generated';
@@ -597,9 +597,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 Some might prefer this approach to `@graphql-codegen/typed-document-node` since its results in a total abstraction of the query logic and fewer imports.
 
@@ -628,9 +628,9 @@ For URQL React:
 Create or update your `codegen.yaml` file as follows:
 
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```yaml
 schema: http://my-graphql-api.com/graphql
@@ -645,9 +645,9 @@ generates:
       withHooks: true
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```yaml
 schema: http://my-graphql-api.com/graphql
@@ -662,9 +662,9 @@ generates:
       withHooks: true
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 :::tip `schema` and `documents` values
 `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
@@ -696,9 +696,9 @@ Running the following generates the `graphql/generated.tsx` file.
 
 We can now update our code as follows:
 
-<CodeTabs namespace={`guides-react-codetabs`}>
+<MDXTabs namespace={`guides-react-codetabs`}>
 
-<CodeTab label="React Apollo">
+<MDXTab label="React Apollo">
 
 ```tsx
 import { usePostsQuery } from './graphql/generated';
@@ -712,9 +712,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { usePostsQuery } from './graphql/generated';
@@ -727,9 +727,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 <p>&nbsp;</p>
 

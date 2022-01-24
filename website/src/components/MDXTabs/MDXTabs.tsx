@@ -1,9 +1,10 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
-import { CodeTabsContext } from 'components/CodeTabsContext';
+import { MDXTabsCurrentTabContext } from 'components/MDXTabsCurrentTabContext';
 import React, { Children, createContext, ReactNode, useCallback, useContext, useState } from 'react';
 
+// fetch active tabIndex across all instances of <MDXTabs> sharing the same namespace
 const useCurrentTab = (namespace: string): [number, (i: number) => void] => {
-  const { value, update } = useContext(CodeTabsContext);
+  const { value, update } = useContext(MDXTabsCurrentTabContext);
 
   const setTab = useCallback(
     (i: number) => {
@@ -15,17 +16,17 @@ const useCurrentTab = (namespace: string): [number, (i: number) => void] => {
   return [value[namespace], setTab];
 };
 
-interface CodeTabsTabContext {
+interface MDXTabCurrentTabsContext {
   value: string[];
   addTab: (value: string) => void;
 }
 
-export const CodeTabsTabContext = createContext<CodeTabsTabContext>({
+export const MDXTabCurrentTabsContext = createContext<MDXTabCurrentTabsContext>({
   value: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addTab: () => {},
 });
-const CodeTabsTabContextProvider: React.FunctionComponent = ({ children }) => {
+const MDXTabsCurrentTabsContextProvider: React.FunctionComponent = ({ children }) => {
   const [value, updateValue] = useState<string[]>([]);
 
   const addTab = useCallback(
@@ -35,12 +36,12 @@ const CodeTabsTabContextProvider: React.FunctionComponent = ({ children }) => {
     [updateValue]
   );
 
-  return <CodeTabsTabContext.Provider value={{ value, addTab }}>{children}</CodeTabsTabContext.Provider>;
+  return <MDXTabCurrentTabsContext.Provider value={{ value, addTab }}>{children}</MDXTabCurrentTabsContext.Provider>;
 };
 
-const CodeTabsRenderer = ({ children, namespace }: { namespace: string; children: ReactNode }) => {
+const MDXTabsRenderer = ({ children, namespace }: { namespace: string; children: ReactNode }) => {
   const [index, setTabIndex] = useCurrentTab(namespace);
-  const { value: tabs } = useContext(CodeTabsTabContext);
+  const { value: tabs } = useContext(MDXTabCurrentTabsContext);
 
   return (
     <Tabs
@@ -68,11 +69,33 @@ const CodeTabsRenderer = ({ children, namespace }: { namespace: string; children
     </Tabs>
   );
 };
-
-const CodeTabs = ({ children, namespace }: { namespace: string; children: ReactNode }) => (
-  <CodeTabsTabContextProvider>
-    <CodeTabsRenderer namespace={namespace}>{children}</CodeTabsRenderer>
-  </CodeTabsTabContextProvider>
+/**
+ * Tab component that can contain MDX markup (ex: code snippet)
+ *
+ * @component
+ * @example
+ * <MDXTabs namespace={`a namespace for tabs that share same tabs type`}>
+ *
+ * <MDXTab label="Apollo Server">
+ *
+ * Apollo code example here
+ *
+ * </MDXTab>
+ *
+ *
+ * <MDXTab label="Yoga Server">
+ *
+ * Yoga code example here
+ *
+ * </MDXTab>
+ *
+ * </MDXTabs>
+ * )
+ */
+const MDXTabs = ({ children, namespace }: { namespace: string; children: ReactNode }) => (
+  <MDXTabsCurrentTabsContextProvider>
+    <MDXTabsRenderer namespace={namespace}>{children}</MDXTabsRenderer>
+  </MDXTabsCurrentTabsContextProvider>
 );
 
-export default CodeTabs;
+export default MDXTabs;

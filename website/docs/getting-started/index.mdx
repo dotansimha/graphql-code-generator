@@ -57,9 +57,9 @@ The following sections showcase why GraphQL Code Generator is a game-changer in 
 
 Most implementation on client-side without GraphQL Code Generator would query the API as follows:
 
-<CodeTabs namespace={`getting-started-front-end-codetabs`}>
+<MDXTabs namespace={`getting-started-front-end-codetabs`}>
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -97,9 +97,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="React Query">
+<MDXTab label="React Query">
 
 ```tsx
 import { request, gql } from "graphql-request";
@@ -146,9 +146,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Vue Apollo">
+<MDXTab label="Vue Apollo">
 
 ```vue
 <template>
@@ -190,9 +190,9 @@ export default {
 </script>
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Angular Apollo">
+<MDXTab label="Angular Apollo">
 
 ```tsx
 const GET_POSTS = gql`
@@ -240,9 +240,9 @@ class PostsComponent implements OnInit, OnDestroy {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Svelte Apollo">
+<MDXTab label="Svelte Apollo">
 
 ```svelte
 <script lang="ts">
@@ -270,9 +270,9 @@ class PostsComponent implements OnInit, OnDestroy {
 </ul>
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 Not typing or manually maintaining the data-types can lead to many issues:
 
@@ -295,10 +295,10 @@ After a few steps to [install](/docs/getting-started/installation) and [configur
 up-to-date as follows:
 
 
-<CodeTabs namespace={`getting-started-front-end-codetabs`}>
+<MDXTabs namespace={`getting-started-front-end-codetabs`}>
 
 
-<CodeTab label="URQL React">
+<MDXTab label="URQL React">
 
 ```tsx
 import { useQuery } from "urql";
@@ -312,10 +312,10 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
 
-<CodeTab label="React Query">
+<MDXTab label="React Query">
 
 ```tsx
 import { usePosts } from "../graphql/generated";
@@ -330,9 +330,9 @@ const Posts = () => {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Vue Apollo">
+<MDXTab label="Vue Apollo">
 
 ```vue
 <template>
@@ -360,9 +360,9 @@ export default {
 </script>
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Angular Apollo">
+<MDXTab label="Angular Apollo">
 
 ```tsx
 import { PostsGQL, PostsQuery } from './graphql'
@@ -380,9 +380,9 @@ export class PostsComponent {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="Svelte Apollo">
+<MDXTab label="Svelte Apollo">
 
 ```svelte
 <script lang="ts">
@@ -397,9 +397,9 @@ export class PostsComponent {
 </ul>
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 Now, with a simple configuration and an npm/yarn script, the front-end developers benefit from:
 
@@ -443,9 +443,9 @@ For this reason, GraphQL Code Generator provides multiple plugins that help auto
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
-<CodeTabs namespace={`getting-started-back-end-codetabs`}>
+<MDXTabs namespace={`getting-started-back-end-codetabs`}>
 
-<CodeTab label="Apollo Server">
+<MDXTab label="Apollo Server">
 
 ```ts
 import { ApolloServer } from "apollo-server";
@@ -477,9 +477,9 @@ server.listen().then(({ url }) => {
 });
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="GraphQL Yoga">
+<MDXTab label="GraphQL Yoga">
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -509,9 +509,9 @@ const server = createServer({
 server.start()
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="GraphQL Modules">
+<MDXTab label="GraphQL Modules">
 
 Given the following structure:
 
@@ -539,9 +539,9 @@ export const resolvers: UsersModule.Resolvers = {
 }
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 <p>&nbsp;</p>
 

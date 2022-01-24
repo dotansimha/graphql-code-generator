@@ -82,9 +82,9 @@ type Query {
 Create or update your `codegen.yaml` file as follows:
 
 
-<CodeTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
+<MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
 
-<CodeTab label="Apollo Server">
+<MDXTab label="Apollo Server">
 
 ```yaml
 schema: schema.graphql
@@ -97,9 +97,9 @@ generates:
       - typescript-resolvers
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="GraphQL Yoga">
+<MDXTab label="GraphQL Yoga">
 
 ```yaml
 schema: schema.graphql
@@ -110,9 +110,9 @@ generates:
       - typescript-resolvers
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 <br />
@@ -140,9 +140,9 @@ Running the following generates the `graphql/generated.tsx` file.
 We can now write/migrate our GraphQL API implementation as follows:
 
 
-<CodeTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
+<MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
 
-<CodeTab label="Apollo Server">
+<MDXTab label="Apollo Server">
 
 ```ts
 import { ApolloServer } from "apollo-server";
@@ -174,9 +174,9 @@ server.listen().then(({ url }) => {
 });
 ```
 
-</CodeTab>
+</MDXTab>
 
-<CodeTab label="GraphQL Yoga">
+<MDXTab label="GraphQL Yoga">
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -206,9 +206,9 @@ const server = createServer({
 server.start()
 ```
 
-</CodeTab>
+</MDXTab>
 
-</CodeTabs>
+</MDXTabs>
 
 
 
