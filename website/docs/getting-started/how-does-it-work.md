@@ -215,7 +215,7 @@ Now our React components can use the type-safe `useFindUserQuery()` hook to quer
 
 Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project.
 
-The, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that match your needs.
+Then, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that match your needs.
 
 If you are having issues, you can reach us this the following:
 
