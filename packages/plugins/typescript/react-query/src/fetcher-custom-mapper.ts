@@ -156,6 +156,6 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = `${typedFetcher}(${documentVariableName}, variables, options)`;
 
-    return `\nuse${operationName}.fetcher = (${variables}, options?: HeadersInit) => ${impl};`;
+    return `\nuse${operationName}.fetcher = (${variables}, options?: RequestInit['headers']) => ${impl};`;
   }
 }
