@@ -19,81 +19,44 @@ If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please no
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 :::
 
-## Development workflow
 
-GraphQL Code Generator should be integrated as part of your development workflow.
+GraphQL Code Generator comes with dozen plugins, from front-end to back-end, from web apps to mobile apps.
+If you are not sure which plugins might be helpful for your GraphQL stack, give a try at the [_Initialization Wizard_](#initialization-wizard).
 
-### Scripts Integration
+Otherwise, you can start exploring the [plugins](/plugins) and [setting up them manually](#manual-setup).
 
-If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your `package.json`, for example:
+<p>&nbsp;</p>
 
-```json
-{
-  "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
-    "generate": "graphql-codegen",
-    "prestart": "yarn generate",
-    "predev": "yarn generate"
-  }
-}
-```
+----
 
-This way, the codegen generates the output according to your configuration before each time you run `dev` or `start` scripts.
+<p>&nbsp;</p>
 
-It's also helpful to run the codegen during your continuous integration flow and ensure that your code continually compiles with the generated output; this way, you can detect breaking changes in your GraphQL schema and GraphQL documents.
+## Setup
 
-### Watch Mode
+### Initialization Wizard
 
-If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
+Once installed, GraphQL Code Generator CLI can help you configure your project based on some popular flows:
 
-You can either run it in a separate terminal session or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
 
-```json
-{
-  "scripts": {
-    "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
-    "start": "node app.js",
-    "generate": "graphql-codegen",
-    "prestart": "yarn generate"
-  }
-}
-```
+<PackageRun scripts={['graphql-codegen init', 'install # install the choose plugins']} />
 
-If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
 
-<!-- prettier-ignore -->
-:::shell `--watch` flag
-    yarn graphql-codegen --watch "src/**/*.js"
+Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
+
+:::info npx
+The init process above can also be run through `npx`.
 :::
 
-Use this when you are loading your schema or documents from a single code file that depends on other files internally because codegen can't tell that you're using those files automatically.
 
-By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead of in unusual cases where system support is unavailable.
+### Manual Setup
 
-```yml
-watch: true
-# Passed directly through to chokidar's file watch configuration
-watchConfig:
-  usePolling: true
-  interval: 1000
-```
+Once GraphQL Code Generator is installed and added to your project's development workflow (scripts), you can start installing plugins and configuring them.
 
-### Monorepo and Yarn Workspaces
+If you are looking for the **best way to leverage GraphQL Code Generator on your stack**, you should read one of our _Guides_.
 
-If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your monorepo.
+On top of each plugin documentation, we provide one Guide for the most famous framework such as [React](/docs/guides/react) or [Apollo Server](/docs/guides/graphql-server-apollo-yoga).
+Each guide exposes the best plugins and configurations available for each framework and stack (React with Apollo / URQL / React Query, Angular with Apollo, ...).
 
-If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
+<br />
 
-```yml
-schema: 'server/src/**/*.graphql'
-documents: 'client/src/**/*.graphql'
-generates:
-  client/src/models.ts:
-    - typescript
-    - typescript-operations
-  server/src/models.ts:
-    - typescript
-    - typescript-resolvers
-```
-
+Otherwise, if you **prefer exploring plugins and skipping the high-level explanations**, the go-to ressources will be the [plugins documentation](/plugins) and the [`codegen.yaml` API reference documentation](/docs/config-reference/codegen-config).

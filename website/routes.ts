@@ -9,7 +9,7 @@ export function getRoutes(): IRoutes {
         $routes: [
           ['index', 'Introduction'],
           ['installation', 'Installation'],
-          ['setup', 'Setup'],
+          ['development-workflow', 'Development workflow'],
         ],
       },
       'docs/guides': {
