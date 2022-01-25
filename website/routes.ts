@@ -8,7 +8,6 @@ export function getRoutes(): IRoutes {
         $name: 'Getting Started',
         $routes: [
           ['index', 'Introduction'],
-          ['how-does-it-work', 'How does it work?'],
           ['installation', 'Installation'],
           ['setup', 'Setup'],
         ],
@@ -43,6 +42,7 @@ export function getRoutes(): IRoutes {
         $routes: [
           ['generated-files-colocation', 'Generated files colocation'],
           ['programmatic-usage', 'Programmatic Usage'],
+          ['how-does-it-work', 'How does it work?'],
         ],
       },
       'docs/integrations': {

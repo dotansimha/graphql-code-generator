@@ -210,16 +210,3 @@ export const useFindUserQuery = <
 Now our React components can use the type-safe `useFindUserQuery()` hook to query the GraphQL API.
 
 <p>&nbsp;</p>
-
-## What's next?
-
-Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project.
-
-Then, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that match your needs.
-
-If you are having issues, you can reach us this the following:
-
-- Found a bug? [report it in our GitHub repo](https://github.com/dotansimha/graphql-code-generator)
-- Need help or have a question? You can use the live chat box in the corner of the screen, [ask it in our GitHub Discussions page](https://github.com/dotansimha/graphql-code-generator/discussions) or [reach us directly in our Discord](http://bit.ly/guild-chat).
-- We have more awesome [open source tools](https://github.com/the-guild-org/Stack)!
-- You can [visit our website](http://the-guild.dev) for more information about us and what we do
