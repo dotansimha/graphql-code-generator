@@ -3,13 +3,13 @@ id: index
 title: Introduction to GraphQL Code Generator
 ---
 
-GraphQL Code Generator is a tool that provides a set of plugins that help you get the best out of your GraphQL stack.
+GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack.
 
 From back-end to front-end, GraphQL Code Generator automates the generation of:
 
 - **Typed Queries, Mutations and, Subscriptions** for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 - **Typed GraphQL resolvers**, for any Node.js (GraphQL Yoga, GraphQL Modules, TypeGraphQL or Apollo) or Java GraphQL server.
-- **Full-typed Node.js SDKs, Apollo Android** support, and more!
+- **Fully-typed Node.js SDKs, Apollo Android** support, and more!
 
 
 <p>&nbsp;</p>
@@ -20,7 +20,7 @@ From back-end to front-end, GraphQL Code Generator automates the generation of:
 
 ## The perfect GraphQL Developer Experience
 
-To illustrate how GraphQL Code Generator improves your Developer Experience, let's take a look at the front-end and back-end usage of the following schema:
+To illustrate how GraphQL Code Generator improves your developer experience, let's take a look at the front-end and back-end usage of the following schema:
 
 ```graphql
 # schema.graphql
@@ -43,7 +43,7 @@ type Query {
 }
 ```
 
-The following sections showcase why GraphQL Code Generator is a game-changer in your GraphQL Stack.
+The following sections showcase why GraphQL Code Generator is a game-changer for your GraphQL Stack.
 
 
 <p>&nbsp;</p>
@@ -55,7 +55,7 @@ The following sections showcase why GraphQL Code Generator is a game-changer in 
 ### From the front-end
 
 
-Most implementation on client-side without GraphQL Code Generator would query the API as follows:
+Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
 <MDXTabs namespace={`getting-started-front-end-codetabs`}>
 
@@ -274,7 +274,7 @@ class PostsComponent implements OnInit, OnDestroy {
 
 </MDXTabs>
 
-Not typing or manually maintaining the data-types can lead to many issues:
+Manually maintaining the GraphQL operation types or the complete absence of types can lead to many issues:
 
 
   - **outdated typing** (regarding the current Schema)
@@ -291,7 +291,7 @@ Any mistake on your manually maintained data types ripples in many of your compo
 For this reason, automating and generating the typing of your GraphQL operations will both improve the developer
 experience and stability of your stack.
 
-After a few steps to [install](/docs/getting-started/installation) and [configure](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
+After [installing](/docs/getting-started/installation) and [configuring](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
 up-to-date as follows:
 
 
@@ -401,7 +401,7 @@ export class PostsComponent {
 
 </MDXTabs>
 
-Now, with a simple configuration and an npm/yarn script, the front-end developers benefit from:
+Now, with simple configuration and an npm/yarn script, a front-end developers benefits from:
 
 
   - **up-to-date typings**
@@ -431,13 +431,13 @@ More details on the inner working of GraphQL Code Generator are available on [th
 
 Most GraphQL API resolvers remain untyped or wrongly typed which, leads to multiple issues:
 
-- resolvers not compliant with the Schema definition
+- resolvers are not compliant with the schema definition
 
 - typos in the resolvers' function type signature
 
 <br/>
 
-For this reason, GraphQL Code Generator provides multiple plugins that help automate the generation of resolvers' typings.
+For this reason, GraphQL Code Generator provides multiple plugins that help you automate the generation of resolvers' typings.
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
@@ -548,11 +548,11 @@ export const resolvers: UsersModule.Resolvers = {
 
 Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project.
 
-Then, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that match your needs.
+Then, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that satisfy your needs.
 
-If you are having issues, you can reach us this the following:
+If you are experiencing any issues, you can reach us via the following channels:
 
 - Found a bug? [report it in our GitHub repo](https://github.com/dotansimha/graphql-code-generator)
-- Need help or have a question? You can use the live chat box in the corner of the screen, [ask it in our GitHub Discussions page](https://github.com/dotansimha/graphql-code-generator/discussions) or [reach us directly in our Discord](http://bit.ly/guild-chat).
+- Need help or have a question? You can use the live chat box in the corner of the screen, [ask it in our GitHub Discussions page](https://github.com/dotansimha/graphql-code-generator/discussions) or [reach out to us directly in our Discord](http://bit.ly/guild-chat).
 - We have more awesome [open source tools](https://github.com/the-guild-org/Stack)!
 - You can [visit our website](http://the-guild.dev) for more information about us and what we do
