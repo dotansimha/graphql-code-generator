@@ -1,5 +1,19 @@
 # @graphql-codegen/typescript-mongodb
 
+## 2.3.0
+
+### Minor Changes
+
+- a1e13faf6: Change ObjectID import to ObjectId since mongodb has deprecated ObjectID
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/typescript@2.4.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.2.1
 
 ### Patch Changes

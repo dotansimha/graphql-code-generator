@@ -1,5 +1,33 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.3.2
+
+### Patch Changes
+
+- fa517214c: Generate `getKey` function on generated infinite queries when both `exposeQueryKeys` and `addInfiniteQuery` settings are `true`.
+
+## 3.3.1
+
+### Patch Changes
+
+- 758c220da: Fix the React-Query InfiniteQuery hook error
+
+## 3.3.0
+
+### Minor Changes
+
+- fc92334d4: Gets rid of graphql-tag from peerdeps of typescript-react-query plugin
+
+## 3.2.3
+
+### Patch Changes
+
+- 9b4629465: fix invalid generated TypeScript code due to the `exposeMutationKey` option adding an unnecessary bracket
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 3.2.2
 
 ### Patch Changes

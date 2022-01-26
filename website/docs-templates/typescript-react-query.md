@@ -218,7 +218,7 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
 #### Usage example (`isReactHook: true`)
 
 ```tsx
-export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
+export const useFetchData = <TData, TVariables>(query: string): ((variables?: TVariables) => Promise<TData>) => {
   // it is safe to call React Hooks here.
   const { url, headers } = React.useContext(FetchParamsContext)
   return async (variables?: TVariables) => {
@@ -269,6 +269,7 @@ query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsSt
 }
 ```
 
+<!-- prettier-ignore -->
 ```tsx
 import { useInfiniteMyQuery } from './generated';
 

@@ -9,7 +9,19 @@ export function getRoutes(): IRoutes {
         $routes: [
           ['index', 'Introduction'],
           ['installation', 'Installation'],
-          ['development-workflow', 'Development Workflow'],
+          ['development-workflow', 'Development workflow'],
+        ],
+      },
+      'docs/guides': {
+        $name: 'Guides',
+        $routes: [
+          ['react', 'React'],
+          ['vue', 'Vue.js'],
+          ['angular', 'Angular'],
+          ['svelte', 'Svelte / Kit'],
+          ['front-end-typescript-only', 'TypeScript only (front-end)'],
+          ['graphql-server-apollo-yoga', 'Apollo Server / GraphQL Yoga'],
+          ['graphql-modules', 'GraphQL Modules'],
           ['further-reading', 'Further Reading'],
         ],
       },
@@ -22,13 +34,15 @@ export function getRoutes(): IRoutes {
           ['config-field', 'plugin config'],
           ['require-field', 'require field'],
           ['naming-convention', 'Naming Convention'],
+          ['lifecycle-hooks', 'Lifecycle Hooks'],
         ],
       },
       'docs/advanced': {
         $name: 'Advanced Usage',
         $routes: [
+          ['generated-files-colocation', 'Generated files colocation'],
           ['programmatic-usage', 'Programmatic Usage'],
-          ['lifecycle-hooks', 'Lifecycle Hooks'],
+          ['how-does-it-work', 'How does it work?'],
         ],
       },
       'docs/integrations': {
@@ -43,10 +57,10 @@ export function getRoutes(): IRoutes {
         ],
       },
       'docs/custom-codegen': {
-        $name: 'Custom Plugins',
+        $name: 'Writing Plugins',
         $routes: [
           ['index', 'What are Plugins?'],
-          ['write-your-plugin', 'Write Your Plugin'],
+          ['plugin-structure', 'Plugin structure'],
           ['validate-configuration', 'Validate Configuration'],
           ['extend-schema', 'Extend Schema'],
           ['using-visitor', 'Using Visitor Pattern'],

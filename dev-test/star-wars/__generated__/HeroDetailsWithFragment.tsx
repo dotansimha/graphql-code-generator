@@ -3,7 +3,7 @@ import * as Types from '../types.d';
 import { gql } from '@apollo/client';
 import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{
   episode?: Types.InputMaybe<Types.Episode>;
 }>;
