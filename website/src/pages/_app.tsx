@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import type { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
+
 import { appWithTranslation } from 'next-i18next';
 import { extendTheme, theme as chakraTheme } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
@@ -8,11 +10,18 @@ import { Header, Subheader, FooterExtended } from '@theguild/components';
 import 'remark-admonitions/styles/classic.css';
 import '../../public/style.css';
 import Script from 'next/script';
+import React from 'react';
+import { Provider as MDXTabsCurrentTabContextProvider } from 'components/MDXTabsCurrentTabContext';
+
+const MDXTabs = dynamic(() => import('components/MDXTabs/MDXTabs'));
+const MDXTab = dynamic(() => import('components/MDXTabs/MDXTab'));
 
 ExtendComponents({
   HelloWorld() {
     return <p>Hello World!</p>;
   },
+  MDXTabs,
+  MDXTab,
 });
 
 const styles: typeof chakraTheme['styles'] = {
@@ -111,23 +120,25 @@ function AppContent(appProps: AppProps) {
         }}
       />
       {isDocs ? (
-        <DocsPage
-          appProps={appProps}
-          accentColor={accentColor}
-          mdxRoutes={mdxRoutes}
-          mdxNavigationProps={{
-            summaryLabelProps() {
-              return {
-                textTransform: 'none',
-              };
-            },
-            linkProps() {
-              return {
-                textTransform: 'none',
-              };
-            },
-          }}
-        />
+        <MDXTabsCurrentTabContextProvider>
+          <DocsPage
+            appProps={appProps}
+            accentColor={accentColor}
+            mdxRoutes={mdxRoutes}
+            mdxNavigationProps={{
+              summaryLabelProps() {
+                return {
+                  textTransform: 'none',
+                };
+              },
+              linkProps() {
+                return {
+                  textTransform: 'none',
+                };
+              },
+            }}
+          />
+        </MDXTabsCurrentTabContextProvider>
       ) : (
         <Component {...pageProps} />
       )}
