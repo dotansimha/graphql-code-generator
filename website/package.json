@@ -63,7 +63,7 @@
     "@graphql-codegen/typescript-msw": "1.0.1",
     "@graphql-codegen/typescript-operations": "2.2.2",
     "@graphql-codegen/typescript-react-apollo": "3.2.4",
-    "@graphql-codegen/typescript-react-query": "3.3.1",
+    "@graphql-codegen/typescript-react-query": "3.3.2",
     "@graphql-codegen/typescript-resolvers": "2.4.3",
     "@graphql-codegen/typescript-rtk-query": "2.2.3",
     "@graphql-codegen/typescript-stencil-apollo": "2.2.2",

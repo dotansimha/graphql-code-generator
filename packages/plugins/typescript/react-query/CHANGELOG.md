@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.3.2
+
+### Patch Changes
+
+- fa517214c: Generate `getKey` function on generated infinite queries when both `exposeQueryKeys` and `addInfiniteQuery` settings are `true`.
+
 ## 3.3.1
 
 ### Patch Changes
