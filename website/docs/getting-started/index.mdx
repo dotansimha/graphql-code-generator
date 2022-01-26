@@ -447,18 +447,11 @@ Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers
 
 ```ts
 import { ApolloServer } from "apollo-server";
-import { loadDocuments } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+const { readFileSync } from 'fs'
 
 import { Resolvers } from './resolvers-types';
 
-
-const typeDefs = await loadDocuments('./schema.graphql', {
-    file,
-    loaders: [
-        new GraphQLFileLoader()
-    ]
-})
+const typeDefs = readFileSync('./schema.graphql').toString('utf-8')
 
 
 const resolvers: Resolvers = {
@@ -481,17 +474,11 @@ server.listen().then(({ url }) => {
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
-import { loadDocuments } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+const { readFileSync } from 'fs'
 
 import { Resolvers } from './resolvers-types';
 
-const typeDefs = await loadDocuments('./schema.graphql', {
-    file,
-    loaders: [
-        new GraphQLFileLoader()
-    ]
-})
+const typeDefs = readFileSync('./schema.graphql').toString('utf-8')
 
 const resolvers: Resolvers = {
   Query: {
