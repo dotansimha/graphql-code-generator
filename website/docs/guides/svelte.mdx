@@ -3,7 +3,7 @@ id: svelte
 title: 'Guide: Svelte / Kit'
 ---
 
-GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit native, and other clients.
+GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit _native_, and other clients.
 
 Plugins and available options vary depending on the selected codegen; for this reason, you will find guides for each of them below:
 
@@ -158,13 +158,15 @@ For a different organization of the generated files, please refer to the ["Gener
 
 ## SvelteKit Native
 
-With this [Codegen](https://github.com/jycouet/sveltekit-my-minion), you get SvelteKit SSR (Server Side Rendering) and Caching out-of-the-box!
+![logoKitQL](https://raw.githubusercontent.com/jycouet/kitql/main/logo.svg)
+
+With [KitQL Codegen](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen), you get SSR (Server Side Rendering) & Caching out-of-the-box with svelte stores.
 
 Just a few configuration steps are required to get SvelteKit stores fully typed + All Operations fully typed:
 
 **1. Install the plugin**
 
-<PackageInstall packages={['-D @sveltekit-my-minion/graphql-codegen-stores']} />
+<PackageInstall packages={['@kitql/graphql-codegen @kitql/client']} />
 
 <br />
 
@@ -180,7 +182,8 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - '@sveltekit-my-minion/graphql-codegen-stores'
+      - typed-document-node
+      - '@kitql/graphql-codegen'
 ```
 
 <br />
@@ -212,7 +215,7 @@ We can now update our code as follows:
   import { PostsQuery } from "../graphql/generated";
 
   export async function load({ fetch }) {
-    await PostsQuery({ fetch });
+    await PostsQuery({ fetch }); // This line do the query in SSR mode
     // now you have `PostsQueryStore` store available and fully typed!
     return {};
   }
@@ -224,7 +227,7 @@ We can now update our code as follows:
 
 <p>&nbsp;</p>
 
-For more advanced configuration, please refer to the [plugin documentation](https://github.com/jycouet/sveltekit-my-minion).
+For more advanced configuration, please refer to the [KitQL documentation](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen).
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
