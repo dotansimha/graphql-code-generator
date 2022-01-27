@@ -92,7 +92,7 @@
     "react-select": "5.2.2",
     "remark-admonitions": "1.2.1",
     "shiki": "0.10.0",
-    "typescript-json-schema": "0.52.0"
+    "typescript-json-schema": "0.53.0"
   },
   "babelMacros": {
     "twin": {
