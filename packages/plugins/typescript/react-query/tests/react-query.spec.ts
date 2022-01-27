@@ -147,6 +147,8 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(
         `import { useQuery, UseQueryOptions, useInfiniteQuery, UseInfiniteQueryOptions, useMutation, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
+      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
+
       expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
@@ -279,6 +281,19 @@ describe('React-Query', () => {
 
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
+    });
+
+    it('Should support useTypeImports', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#customFetcher',
+        },
+        useTypeImports: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(`import type { RequestInit } from 'graphql-request/dist/types.dom';`);
     });
 
     it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {
