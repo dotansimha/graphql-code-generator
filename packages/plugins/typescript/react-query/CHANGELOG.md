@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.4.0
+
+### Minor Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+### Patch Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
 ## 3.3.2
 
 ### Patch Changes
