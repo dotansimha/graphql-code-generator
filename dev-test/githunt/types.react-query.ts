@@ -535,7 +535,7 @@ export const useSubmitRepositoryMutation = <TError = unknown, TContext = unknown
   options?: UseMutationOptions<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>
 ) =>
   useMutation<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>(
-    'submitRepository',
+    ['submitRepository'],
     (variables?: SubmitRepositoryMutationVariables) =>
       fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
         dataSource.endpoint,
@@ -557,7 +557,7 @@ export const useSubmitCommentMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>
 ) =>
   useMutation<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>(
-    'submitComment',
+    ['submitComment'],
     (variables?: SubmitCommentMutationVariables) =>
       fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
         dataSource.endpoint,
@@ -583,7 +583,7 @@ export const useVoteMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<VoteMutation, TError, VoteMutationVariables, TContext>
 ) =>
   useMutation<VoteMutation, TError, VoteMutationVariables, TContext>(
-    'vote',
+    ['vote'],
     (variables?: VoteMutationVariables) =>
       fetcher<VoteMutation, VoteMutationVariables>(
         dataSource.endpoint,

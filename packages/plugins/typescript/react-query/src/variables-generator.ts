@@ -40,7 +40,7 @@ export function generateQueryKeyMaker(
 }
 
 export function generateMutationKey(node: OperationDefinitionNode): string {
-  return `'${node.name.value}'`;
+  return `['${node.name.value}']`;
 }
 
 export function generateMutationKeyMaker(node: OperationDefinitionNode, operationName: string) {

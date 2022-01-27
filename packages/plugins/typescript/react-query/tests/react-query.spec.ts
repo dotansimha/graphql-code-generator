@@ -178,7 +178,7 @@ describe('React-Query', () => {
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        'test',
+        ['test'],
         (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -216,7 +216,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        'test',
+        ['test'],
         (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -272,7 +272,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        'test',
+        ['test'],
         useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
         options
       );`);
@@ -342,7 +342,7 @@ describe('React-Query', () => {
           exposeMutationKeys: true,
         };
         const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
-        expect(out.content).toBeSimilarStringTo(`useTestMutation.getKey = () => 'test'\n`);
+        expect(out.content).toBeSimilarStringTo(`useTestMutation.getKey = () => ['test']\n`);
       });
     });
 
@@ -494,7 +494,7 @@ describe('React-Query', () => {
       headers?: RequestInit['headers']
     ) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables, headers)(),
       options
     );`);
@@ -680,7 +680,7 @@ describe('React-Query', () => {
         TContext = unknown
       >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
       useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-        'test',
+        ['test'],
         (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
         options
       );`);
@@ -998,7 +998,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
           options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
         ) =>
         useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-          'test',
+          ['test'],
           (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
           options
         );`);
