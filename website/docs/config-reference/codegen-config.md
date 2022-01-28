@@ -47,7 +47,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins, and they can be specified in this section. A full list of supported plugins can be found [here](/plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](docs/custom-codegen)).
+  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates are also considered as plugins, and they can be specified in this section. A full list of supported plugins can be found [here](/plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](/docs/custom-codegen)).
 
   - **`generates.preset`** - A list of presets to use for the output. Presets are a way to dynamically create the list of output files, based on the input schema. [`near-operation-file-preset`](/plugins/near-operation-file-preset) is a good example.
 
