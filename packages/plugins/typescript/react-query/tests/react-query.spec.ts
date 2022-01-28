@@ -147,6 +147,8 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(
         `import { useQuery, UseQueryOptions, useInfiniteQuery, UseInfiniteQueryOptions, useMutation, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
+      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
+
       expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
@@ -281,6 +283,19 @@ describe('React-Query', () => {
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
     });
 
+    it('Should support useTypeImports', async () => {
+      const config = {
+        fetcher: {
+          func: './my-file#customFetcher',
+        },
+        useTypeImports: true,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(`import type { RequestInit } from 'graphql-request/dist/types.dom';`);
+    });
+
     it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {
       const config = {
         fetcher: {
@@ -291,7 +306,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestQuery.fetcher = (variables?: TestQueryVariables) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables);`
+        `useTestQuery.fetcher = (variables?: TestQueryVariables, options?: RequestInit['headers']) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables, options);`
       );
     });
 
@@ -318,7 +333,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
       expect(out.content).toBeSimilarStringTo(
-        `useTestMutation.fetcher = (variables?: TestMutationVariables) => customFetcher<TestMutation, TestMutationVariables>(TestDocument, variables);`
+        `useTestMutation.fetcher = (variables?: TestMutationVariables, options?: RequestInit['headers']) => customFetcher<TestMutation, TestMutationVariables>(TestDocument, variables, options);`
       );
     });
 

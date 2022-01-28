@@ -48,6 +48,10 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+
+    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
+
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
@@ -84,6 +88,10 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+
+    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
+
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
@@ -154,8 +162,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
-    const impl = `${typedFetcher}(${documentVariableName}, variables)`;
+    const impl = `${typedFetcher}(${documentVariableName}, variables, options)`;
 
-    return `\nuse${operationName}.fetcher = (${variables}) => ${impl};`;
+    return `\nuse${operationName}.fetcher = (${variables}, options?: RequestInit['headers']) => ${impl};`;
   }
 }
