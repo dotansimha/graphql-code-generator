@@ -368,16 +368,19 @@ export class CodegenContext {
     return loadSchema(pointer, config);
   }
 
-  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+  async loadDocuments(input: {
+    pointer: Types.OperationDocument[];
+    schema: GraphQLSchema;
+  }): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config);
+      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(input.pointer, config);
 
       return documents;
     }
 
-    return loadDocuments(pointer, config);
+    return loadDocuments(input.pointer, config, input.schema);
   }
 }
 

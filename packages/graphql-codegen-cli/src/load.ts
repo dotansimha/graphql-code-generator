@@ -75,14 +75,14 @@ export async function loadSchema(
   }
 }
 
-const requiredLoader = async (pointers: Types.CustomDocumentRequire[]): Promise<Source[]> => {
+const requiredLoader = async (pointers: Types.CustomDocumentRequire[], schema: GraphQLSchema): Promise<Source[]> => {
   return Promise.all(
     pointers.map(async pointer => {
-      const userLoader = (await makeDefaultLoader(process.cwd())(pointer.require)) as (params: {
-        config: Record<string, any>;
-        schema: GraphQLSchema;
-      }) => Source[] | Promise<Source[]>;
-      const documents = userLoader({ config: pointer.config || {}, schema });
+      const userLoader = (await makeDefaultLoader(process.cwd())(pointer.require)).default as (
+        config: Record<string, any>,
+        schema: GraphQLSchema
+      ) => Source[] | Promise<Source[]>;
+      const documents = userLoader(pointer.config || {}, schema);
       return documents;
     })
   ).then(results => [].concat(...results));
@@ -94,7 +94,8 @@ const isRequirePointer = (pointer: UnnormalizedTypeDefPointer): pointer is Types
 
 export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
-  config: Types.Config
+  config: Types.Config,
+  schema: GraphQLSchema
 ): Promise<Types.DocumentFile[]> {
   const loaders = [
     new CodeFileLoader({
@@ -143,7 +144,7 @@ export async function loadDocuments(
     ...config.config,
   });
 
-  const loadedAlterantively = await requiredLoader(requestPointers);
+  const loadedAlterantively = await requiredLoader(requestPointers, schema);
 
   return [...loadedFromToolkit, ...loadedAlterantively];
 }

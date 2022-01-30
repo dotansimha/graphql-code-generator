@@ -104,7 +104,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const documentsLoadingCache = createCache(async function (hash) {
     const documents = await context.loadDocuments(JSON.parse(hash));
     return {
-      documents: documents,
+      documents,
     };
   });
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string) {
@@ -270,7 +270,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         // get different cache for shared docs and output specific docs
                         const results = await Promise.all(
                           [rootDocuments, outputSpecificDocuments].map(docs => {
-                            const hash = JSON.stringify(docs);
+                            const hash = JSON.stringify({ pointer: docs, schema: outputSchema });
                             return documentsLoadingCache.load(hash);
                           })
                         );
