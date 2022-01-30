@@ -198,15 +198,17 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       operationVariablesTypes,
     });
 
-    let compositionFunction = this.buildCompositionFunction({
-      operationName,
-      operationType,
-      operationResultType,
-      operationVariablesTypes,
-      operationHasNonNullableVariable,
-      operationHasVariables,
-      documentNodeVariable,
-    });
+    const compositionFunctions = [
+      this.buildCompositionFunction({
+        operationName,
+        operationType,
+        operationResultType,
+        operationVariablesTypes,
+        operationHasNonNullableVariable,
+        operationHasVariables,
+        documentNodeVariable,
+      }),
+    ];
 
     if (operationType === 'Query') {
       const lazyOperationName: string = this.convertName(node.name.value, {
@@ -216,8 +218,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
 
       const lazyOperationType = 'LazyQuery';
 
-      compositionFunction +=
-        '\n' +
+      compositionFunctions.push(
         this.buildCompositionFunction({
           operationName: lazyOperationName,
           operationType: lazyOperationType,
@@ -226,12 +227,13 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
           operationHasNonNullableVariable,
           operationHasVariables,
           documentNodeVariable,
-        });
+        })
+      );
     }
 
     return [
       ...insertIf(this.config.addDocBlocks, [this.buildCompositionFunctionsJSDoc(node, operationName, operationType)]),
-      compositionFunction,
+      compositionFunctions.join('\n'),
       compositionFunctionResultType,
     ].join('\n');
   }
