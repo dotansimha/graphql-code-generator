@@ -926,9 +926,9 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: [
           {
-            require: './tests/test-documents/valid.graphql',
+            require: './tests/custom-loaders/custom-documents-loader.js',
             config: {
-              loader: './tests/custom-loaders/custom-documents-loader.js',
+              loadeFilesFrom: './tests/test-documents/valid.graphql',
             },
           },
         ],

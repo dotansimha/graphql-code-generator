@@ -13,7 +13,7 @@ import { JsonFileLoader } from '@graphql-tools/json-file-loader';
 import { UrlLoader } from '@graphql-tools/url-loader';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
-import path, { join, extname } from 'path';
+import { join, extname } from 'path';
 import { Source } from '@graphql-tools/utils/loaders';
 import { makeDefaultLoader } from './codegen';
 
@@ -82,7 +82,7 @@ const requiredLoader = async (pointers: Types.CustomDocumentRequire[]): Promise<
         config: Record<string, any>;
         schema: GraphQLSchema;
       }) => Source[] | Promise<Source[]>;
-      const documents = userLoader(pointer.config || {}, schema);
+      const documents = userLoader({ config: pointer.config || {}, schema });
       return documents;
     })
   ).then(results => [].concat(...results));

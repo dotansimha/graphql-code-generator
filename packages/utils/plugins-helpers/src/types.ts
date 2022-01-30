@@ -204,7 +204,7 @@ export namespace Types {
   }
   export interface CustomDocumentRequire {
     require: string;
-    // TODO: define config onject
+    // TODO: define config object
     config: object;
   }
   export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader | CustomDocumentRequire;
