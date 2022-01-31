@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-urql
 
+## 3.5.0
+
+### Minor Changes
+
+- 508e078aa: feat: Improve query hooks arg types
+
+### Patch Changes
+
+- ca6132e25: Respect dedupeOperationSuffix in hooks
+
 ## 3.4.2
 
 ### Patch Changes

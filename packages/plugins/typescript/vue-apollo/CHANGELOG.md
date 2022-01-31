@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 3.2.3
+
+### Patch Changes
+
+- c71c00d01: support useLazyQuery
+
 ## 3.2.2
 
 ### Patch Changes
