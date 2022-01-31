@@ -207,14 +207,14 @@ describe('gql-tag-operations-preset', () => {
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
+      export type AQuery = { __typename?: 'Query', a?: string | null };
 
       export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type BQuery = { __typename?: 'Query', b?: string | null | undefined };
+      export type BQuery = { __typename?: 'Query', b?: string | null };
 
-      export type CFragment = { __typename?: 'Query', c?: string | null | undefined };
+      export type CFragment = { __typename?: 'Query', c?: string | null };
 
       export const CFragmentDoc = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"FragmentDefinition\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"C\\"},\\"typeCondition\\":{\\"kind\\":\\"NamedType\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"Query\\"}},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"c\\"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
       export const ADocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"A\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -296,7 +296,7 @@ describe('gql-tag-operations-preset', () => {
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
+      export type AQuery = { __typename?: 'Query', a?: string | null };
 
 
       export const ADocument = {\\"kind\\":\\"Document\\",\\"definitions\\":[{\\"kind\\":\\"OperationDefinition\\",\\"operation\\":\\"query\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"},\\"selectionSet\\":{\\"kind\\":\\"SelectionSet\\",\\"selections\\":[{\\"kind\\":\\"Field\\",\\"name\\":{\\"kind\\":\\"Name\\",\\"value\\":\\"a\\"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
