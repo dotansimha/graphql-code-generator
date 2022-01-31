@@ -375,6 +375,13 @@ const PACKAGES: Package<Tags>[] = [
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'urql', 'typescript'],
   },
+  {
+    identifier: 'typescript-validation-schema',
+    title: 'TypeScript Validation Schema',
+    npmPackage: 'graphql-codegen-typescript-validation-schema',
+    iconUrl: '/assets/img/icons/graphql.svg',
+    tags: ['plugin', 'validation', 'yup', 'zod', 'typescript'],
+  },
 ];
 
 export const packageList = PACKAGES.map(p => ({
