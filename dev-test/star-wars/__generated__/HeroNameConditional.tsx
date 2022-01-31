@@ -10,7 +10,7 @@ export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
 
 export type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
-  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
@@ -20,7 +20,7 @@ export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
 
 export type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
-  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export const HeroNameConditionalInclusionDocument = gql`

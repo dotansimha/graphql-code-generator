@@ -64,7 +64,7 @@ export type GetMessagesQueryVariables = Exact<{
 
 export type GetMessagesQuery = {
   __typename?: 'Query';
-  messages?: Array<{ __typename?: 'Message'; id: string } | null | undefined> | null | undefined;
+  messages?: Array<{ __typename?: 'Message'; id: string } | null> | null;
 };
 
 export type CreateMessageMutationVariables = Exact<{
@@ -73,7 +73,7 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = {
   __typename?: 'Mutation';
-  createMessage?: { __typename?: 'Message'; id: string } | null | undefined;
+  createMessage?: { __typename?: 'Message'; id: string } | null;
 };
 
 export type DeclineMutationVariables = Exact<{
@@ -81,28 +81,19 @@ export type DeclineMutationVariables = Exact<{
   reason: Scalars['String'];
 }>;
 
-export type DeclineMutation = {
-  __typename?: 'Mutation';
-  decline?: { __typename?: 'Message'; id: string } | null | undefined;
-};
+export type DeclineMutation = { __typename?: 'Mutation'; decline?: { __typename?: 'Message'; id: string } | null };
 
 export type ApproveMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type ApproveMutation = {
-  __typename?: 'Mutation';
-  approve?: { __typename?: 'Message'; id: string } | null | undefined;
-};
+export type ApproveMutation = { __typename?: 'Mutation'; approve?: { __typename?: 'Message'; id: string } | null };
 
 export type EscalateMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type EscalateMutation = {
-  __typename?: 'Mutation';
-  escalate?: { __typename?: 'Message'; id: string } | null | undefined;
-};
+export type EscalateMutation = { __typename?: 'Mutation'; escalate?: { __typename?: 'Message'; id: string } | null };
 
 /**
  * __useGetMessagesQuery__
