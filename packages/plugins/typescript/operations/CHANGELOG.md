@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-operations
 
+## 2.2.3
+
+### Patch Changes
+
+- 7649201fe: Remove redundant mandatory 'undefined' on avoidOptionals=true
+
 ## 2.2.2
 
 ### Patch Changes
