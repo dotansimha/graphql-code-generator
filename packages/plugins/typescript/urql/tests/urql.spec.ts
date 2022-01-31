@@ -685,6 +685,31 @@ export function useDefaultValueArgQuery(options?: Omit<Urql.UseQueryArgs<Default
       expect(content.content).toContain(`export function useTest(`);
     });
 
+    it('should respect dedupeOperationSuffix for hooks', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query testQuery {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, dedupeOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export function useTestQuery(`);
+    });
+
     it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
       jest.spyOn(console, 'warn');
       const docs = [{ location: '', document: basicDoc }];
