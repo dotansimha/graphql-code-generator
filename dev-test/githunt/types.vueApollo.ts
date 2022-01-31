@@ -520,6 +520,18 @@ export function useCommentQuery(
 ) {
   return VueApolloComposable.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, variables, options);
 }
+export function useCommentLazyQuery(
+  variables:
+    | CommentQueryVariables
+    | VueCompositionApi.Ref<CommentQueryVariables>
+    | ReactiveFunction<CommentQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<CommentQuery, CommentQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<CommentQuery, CommentQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<CommentQuery, CommentQueryVariables>> = {}
+) {
+  return VueApolloComposable.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, variables, options);
+}
 export type CommentQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   CommentQuery,
   CommentQueryVariables
@@ -556,6 +568,22 @@ export function useCurrentUserForProfileQuery(
       > = {}
 ) {
   return VueApolloComposable.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+    CurrentUserForProfileDocument,
+    {},
+    options
+  );
+}
+export function useCurrentUserForProfileLazyQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>
+      > = {}
+) {
+  return VueApolloComposable.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
     CurrentUserForProfileDocument,
     {},
     options
@@ -602,6 +630,15 @@ export function useFeedQuery(
     | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}
 ) {
   return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+}
+export function useFeedLazyQuery(
+  variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}
+) {
+  return VueApolloComposable.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
 }
 export type FeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
