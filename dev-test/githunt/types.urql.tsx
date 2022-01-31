@@ -467,7 +467,7 @@ export const CommentDocument = gql`
   ${CommentsPageCommentFragmentDoc}
 `;
 
-export function useCommentQuery(options: Omit<Urql.UseQueryArgs<CommentQueryVariables>, 'query'> = {}) {
+export function useCommentQuery(options: Omit<Urql.UseQueryArgs<CommentQueryVariables>, 'query'>) {
   return Urql.useQuery<CommentQuery>({ query: CommentDocument, ...options });
 }
 export const CurrentUserForProfileDocument = gql`
@@ -480,7 +480,7 @@ export const CurrentUserForProfileDocument = gql`
 `;
 
 export function useCurrentUserForProfileQuery(
-  options: Omit<Urql.UseQueryArgs<CurrentUserForProfileQueryVariables>, 'query'> = {}
+  options?: Omit<Urql.UseQueryArgs<CurrentUserForProfileQueryVariables>, 'query'>
 ) {
   return Urql.useQuery<CurrentUserForProfileQuery>({ query: CurrentUserForProfileDocument, ...options });
 }
@@ -496,7 +496,7 @@ export const FeedDocument = gql`
   ${FeedEntryFragmentDoc}
 `;
 
-export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
+export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'>) {
   return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
 }
 export const SubmitRepositoryDocument = gql`
