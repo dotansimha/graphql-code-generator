@@ -510,10 +510,13 @@ export class BaseResolversVisitor<
     const nestedMapping: { [typeName: string]: boolean } = {};
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
-    typeNames.forEach(typeName => {
-      const schemaType = allSchemaTypes[typeName];
-      nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
-    });
+    // avoid checking all types recursively if we have no `mappers` defined
+    if (Object.keys(this.config.mappers).length > 0) {
+      typeNames.forEach(typeName => {
+        const schemaType = allSchemaTypes[typeName];
+        nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
+      });
+    }
 
     return typeNames.reduce((prev: ResolverTypes, typeName: string) => {
       const schemaType = allSchemaTypes[typeName];
