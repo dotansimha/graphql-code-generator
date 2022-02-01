@@ -376,6 +376,7 @@ export class BaseResolversVisitor<
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   private _directiveResolverMappings: Record<string, string>;
+  private _shouldMapType: { [typeName: string]: boolean } = {};
 
   constructor(
     rawConfig: TRawConfig,
@@ -438,15 +439,7 @@ export class BaseResolversVisitor<
     return `export type ResolverTypeWrapper<T> = ${this.config.resolverTypeWrapperSignature};`;
   }
 
-  protected shouldMapType(
-    type: GraphQLNamedType,
-    checkedBefore: { [typeName: string]: boolean } = {},
-    duringCheck: string[] = []
-  ): boolean {
-    if (checkedBefore[type.name] !== undefined) {
-      return checkedBefore[type.name];
-    }
-
+  protected shouldMapType(type: GraphQLNamedType, duringCheck: string[] = []): boolean {
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
       return false;
     }
@@ -469,8 +462,8 @@ export class BaseResolversVisitor<
           const field = fields[fieldName];
           const fieldType = getBaseType(field.type);
 
-          if (checkedBefore[fieldType.name] !== undefined) {
-            return checkedBefore[fieldType.name];
+          if (this._shouldMapType[fieldType.name] !== undefined) {
+            return this._shouldMapType[fieldType.name];
           }
 
           if (this.config.mappers[type.name]) {
@@ -478,7 +471,7 @@ export class BaseResolversVisitor<
           }
 
           duringCheck.push(type.name);
-          const innerResult = this.shouldMapType(fieldType, checkedBefore, duringCheck);
+          const innerResult = this.shouldMapType(fieldType, duringCheck);
 
           return innerResult;
         });
@@ -507,14 +500,15 @@ export class BaseResolversVisitor<
     shouldInclude?: (type: GraphQLNamedType) => boolean
   ): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
-    const nestedMapping: { [typeName: string]: boolean } = {};
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
     // avoid checking all types recursively if we have no `mappers` defined
     if (Object.keys(this.config.mappers).length > 0) {
       typeNames.forEach(typeName => {
-        const schemaType = allSchemaTypes[typeName];
-        nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
+        if (this._shouldMapType[typeName] === undefined) {
+          const schemaType = allSchemaTypes[typeName];
+          this._shouldMapType[typeName] = this.shouldMapType(schemaType);
+        }
       });
     }
 
@@ -597,7 +591,7 @@ export class BaseResolversVisitor<
             const baseType = getBaseType(field.type);
             const isUnion = isUnionType(baseType);
 
-            if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
+            if (!this.config.mappers[baseType.name] && !isUnion && !this._shouldMapType[baseType.name]) {
               return null;
             }
 
