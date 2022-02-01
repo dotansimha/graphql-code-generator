@@ -245,10 +245,11 @@ export type CreateReviewForEpisodeMutationVariables = Exact<{
 
 export type CreateReviewForEpisodeMutation = {
   readonly __typename?: 'Mutation';
-  readonly createReview?:
-    | { readonly __typename?: 'Review'; readonly stars: number; readonly commentary?: string | null | undefined }
-    | null
-    | undefined;
+  readonly createReview?: {
+    readonly __typename?: 'Review';
+    readonly stars: number;
+    readonly commentary?: string | null;
+  } | null;
 };
 
 export type HeroAndFriendsNamesQueryVariables = Exact<{
@@ -261,31 +262,22 @@ export type HeroAndFriendsNamesQuery = {
     | {
         readonly __typename?: 'Droid';
         readonly name: string;
-        readonly friends?:
-          | ReadonlyArray<
-              | { readonly __typename?: 'Droid'; readonly name: string }
-              | { readonly __typename?: 'Human'; readonly name: string }
-              | null
-              | undefined
-            >
+        readonly friends?: ReadonlyArray<
+          | { readonly __typename?: 'Droid'; readonly name: string }
+          | { readonly __typename?: 'Human'; readonly name: string }
           | null
-          | undefined;
+        > | null;
       }
     | {
         readonly __typename?: 'Human';
         readonly name: string;
-        readonly friends?:
-          | ReadonlyArray<
-              | { readonly __typename?: 'Droid'; readonly name: string }
-              | { readonly __typename?: 'Human'; readonly name: string }
-              | null
-              | undefined
-            >
+        readonly friends?: ReadonlyArray<
+          | { readonly __typename?: 'Droid'; readonly name: string }
+          | { readonly __typename?: 'Human'; readonly name: string }
           | null
-          | undefined;
+        > | null;
       }
-    | null
-    | undefined;
+    | null;
 };
 
 export type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
@@ -293,18 +285,9 @@ export type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 export type HeroAppearsInQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | {
-        readonly __typename?: 'Droid';
-        readonly name: string;
-        readonly appearsIn: ReadonlyArray<Episode | null | undefined>;
-      }
-    | {
-        readonly __typename?: 'Human';
-        readonly name: string;
-        readonly appearsIn: ReadonlyArray<Episode | null | undefined>;
-      }
-    | null
-    | undefined;
+    | { readonly __typename?: 'Droid'; readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
+    | { readonly __typename?: 'Human'; readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
+    | null;
 };
 
 export type HeroDetailsQueryVariables = Exact<{
@@ -314,21 +297,20 @@ export type HeroDetailsQueryVariables = Exact<{
 export type HeroDetailsQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | { readonly __typename?: 'Droid'; readonly primaryFunction?: string | null | undefined; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly height?: number | null | undefined; readonly name: string }
-    | null
-    | undefined;
+    | { readonly __typename?: 'Droid'; readonly primaryFunction?: string | null; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
+    | null;
 };
 
 type HeroDetails_Droid_Fragment = {
   readonly __typename?: 'Droid';
-  readonly primaryFunction?: string | null | undefined;
+  readonly primaryFunction?: string | null;
   readonly name: string;
 };
 
 type HeroDetails_Human_Fragment = {
   readonly __typename?: 'Human';
-  readonly height?: number | null | undefined;
+  readonly height?: number | null;
   readonly name: string;
 };
 
@@ -341,10 +323,9 @@ export type HeroDetailsWithFragmentQueryVariables = Exact<{
 export type HeroDetailsWithFragmentQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | { readonly __typename?: 'Droid'; readonly primaryFunction?: string | null | undefined; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly height?: number | null | undefined; readonly name: string }
-    | null
-    | undefined;
+    | { readonly __typename?: 'Droid'; readonly primaryFunction?: string | null; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
+    | null;
 };
 
 export type HeroNameQueryVariables = Exact<{
@@ -356,8 +337,7 @@ export type HeroNameQuery = {
   readonly hero?:
     | { readonly __typename?: 'Droid'; readonly name: string }
     | { readonly __typename?: 'Human'; readonly name: string }
-    | null
-    | undefined;
+    | null;
 };
 
 export type HeroNameConditionalInclusionQueryVariables = Exact<{
@@ -370,8 +350,7 @@ export type HeroNameConditionalInclusionQuery = {
   readonly hero?:
     | { readonly __typename?: 'Droid'; readonly name?: string }
     | { readonly __typename?: 'Human'; readonly name?: string }
-    | null
-    | undefined;
+    | null;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
@@ -384,8 +363,7 @@ export type HeroNameConditionalExclusionQuery = {
   readonly hero?:
     | { readonly __typename?: 'Droid'; readonly name?: string }
     | { readonly __typename?: 'Human'; readonly name?: string }
-    | null
-    | undefined;
+    | null;
 };
 
 export type HeroParentTypeDependentFieldQueryVariables = Exact<{
@@ -398,31 +376,22 @@ export type HeroParentTypeDependentFieldQuery = {
     | {
         readonly __typename?: 'Droid';
         readonly name: string;
-        readonly friends?:
-          | ReadonlyArray<
-              | { readonly __typename?: 'Droid'; readonly name: string }
-              | { readonly __typename?: 'Human'; readonly height?: number | null | undefined; readonly name: string }
-              | null
-              | undefined
-            >
+        readonly friends?: ReadonlyArray<
+          | { readonly __typename?: 'Droid'; readonly name: string }
+          | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
           | null
-          | undefined;
+        > | null;
       }
     | {
         readonly __typename?: 'Human';
         readonly name: string;
-        readonly friends?:
-          | ReadonlyArray<
-              | { readonly __typename?: 'Droid'; readonly name: string }
-              | { readonly __typename?: 'Human'; readonly height?: number | null | undefined; readonly name: string }
-              | null
-              | undefined
-            >
+        readonly friends?: ReadonlyArray<
+          | { readonly __typename?: 'Droid'; readonly name: string }
+          | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
           | null
-          | undefined;
+        > | null;
       }
-    | null
-    | undefined;
+    | null;
 };
 
 export type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
@@ -432,26 +401,22 @@ export type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
 export type HeroTypeDependentAliasedFieldQuery = {
   readonly __typename?: 'Query';
   readonly hero?:
-    | { readonly __typename?: 'Droid'; readonly property?: string | null | undefined }
-    | { readonly __typename?: 'Human'; readonly property?: string | null | undefined }
-    | null
-    | undefined;
+    | { readonly __typename?: 'Droid'; readonly property?: string | null }
+    | { readonly __typename?: 'Human'; readonly property?: string | null }
+    | null;
 };
 
 export type HumanFieldsFragment = {
   readonly __typename?: 'Human';
   readonly name: string;
-  readonly mass?: number | null | undefined;
+  readonly mass?: number | null;
 };
 
 export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = {
   readonly __typename?: 'Query';
-  readonly human?:
-    | { readonly __typename?: 'Human'; readonly name: string; readonly mass?: number | null | undefined }
-    | null
-    | undefined;
+  readonly human?: { readonly __typename?: 'Human'; readonly name: string; readonly mass?: number | null } | null;
 };
 
 export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
@@ -461,11 +426,9 @@ export type TwoHeroesQuery = {
   readonly r2?:
     | { readonly __typename?: 'Droid'; readonly name: string }
     | { readonly __typename?: 'Human'; readonly name: string }
-    | null
-    | undefined;
+    | null;
   readonly luke?:
     | { readonly __typename?: 'Droid'; readonly name: string }
     | { readonly __typename?: 'Human'; readonly name: string }
-    | null
-    | undefined;
+    | null;
 };

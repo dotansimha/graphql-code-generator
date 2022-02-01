@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 3.2.3
+
+### Patch Changes
+
+- c71c00d01: support useLazyQuery
+
+## 3.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 3.2.1
 
 ### Patch Changes

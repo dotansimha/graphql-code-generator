@@ -1,5 +1,20 @@
 # @graphql-cli/codegen
 
+## 2.1.7
+
+### Patch Changes
+
+- Updated dependencies [4c42e2a71]
+  - @graphql-codegen/cli@2.4.0
+
+## 2.1.6
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/cli@2.3.1
+
 ## 2.1.5
 
 ### Patch Changes

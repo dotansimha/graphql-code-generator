@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-rtk-query
 
+## 2.2.3
+
+### Patch Changes
+
+- e5b762733: bugfix: remove attempt to export injected api for fragment files
+
+## 2.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.2.1
 
 ### Patch Changes
