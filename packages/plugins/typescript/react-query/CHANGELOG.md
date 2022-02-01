@@ -1,5 +1,34 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.0
+
+### Minor Changes
+
+- ad8ffa457: Add options to exposed custom fetcher.
+  eg. This enables passing headers to fetcher for prefetchQuery & get more query possibilities (user authentication)
+
+## 3.4.0
+
+### Minor Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+### Patch Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+## 3.3.2
+
+### Patch Changes
+
+- fa517214c: Generate `getKey` function on generated infinite queries when both `exposeQueryKeys` and `addInfiniteQuery` settings are `true`.
+
+## 3.3.1
+
+### Patch Changes
+
+- 758c220da: Fix the React-Query InfiniteQuery hook error
+
 ## 3.3.0
 
 ### Minor Changes

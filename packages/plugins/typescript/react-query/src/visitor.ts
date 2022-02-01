@@ -6,7 +6,7 @@ import {
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
-import { generateMutationKeyMaker, generateQueryKeyMaker } from './variables-generator';
+import { generateMutationKeyMaker, generateQueryKeyMaker, generateInfiniteQueryKeyMaker } from './variables-generator';
 
 import { CustomMapperFetcher } from './fetcher-custom-mapper';
 import { FetchFetcher } from './fetcher-fetch';
@@ -178,6 +178,14 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
           operationVariablesTypes,
           hasRequiredVariables
         )}\n`;
+        if (this.config.exposeQueryKeys) {
+          query += `\n${generateInfiniteQueryKeyMaker(
+            node,
+            operationName,
+            operationVariablesTypes,
+            hasRequiredVariables
+          )};\n`;
+        }
       }
 
       // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook

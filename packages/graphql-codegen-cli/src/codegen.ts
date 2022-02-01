@@ -33,6 +33,24 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
+// TODO: Replace any with types
+function createCache<T>(loader: (key: string) => Promise<T>) {
+  const cache = new Map<string, Promise<T>>();
+
+  return {
+    load(key: string): Promise<T> {
+      if (cache.has(key)) {
+        return cache.get(key);
+      }
+
+      const value = loader(key);
+
+      cache.set(key, value);
+      return value;
+    },
+  };
+}
+
 export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source: string) {
     return async () => {
@@ -83,6 +101,22 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
+
+  const schemaLoadingCache = createCache(async function (hash) {
+    const outputSchemaAst = await context.loadSchema(JSON.parse(hash));
+    const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+    return {
+      outputSchemaAst: outputSchemaAst,
+      outputSchema: outputSchema,
+    };
+  });
+
+  const documentsLoadingCache = createCache(async function (hash) {
+    const documents = await context.loadDocuments(JSON.parse(hash));
+    return {
+      documents: documents,
+    };
+  });
 
   async function normalize() {
     /* Load Require extensions */
@@ -210,8 +244,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           Object.assign(schemaPointerMap, unnormalizedPtr);
                         }
                       }
-                      outputSchemaAst = await context.loadSchema(schemaPointerMap);
-                      outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+
+                      const hash = JSON.stringify(schemaPointerMap);
+                      const result = await schemaLoadingCache.load(hash);
+
+                      outputSchemaAst = await result.outputSchemaAst;
+                      outputSchema = result.outputSchema;
                     }, filename),
                   },
                   {
@@ -220,7 +258,10 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       debugLog(`[CLI] Loading Documents`);
 
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
-                      const documents = await context.loadDocuments(allDocuments);
+
+                      const hash = JSON.stringify(allDocuments);
+                      const result = await documentsLoadingCache.load(hash);
+                      const documents: Types.DocumentFile[] = result.documents;
 
                       if (documents.length > 0) {
                         outputDocuments.push(...documents);
