@@ -987,6 +987,7 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
+      const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
       const signature: {
         name: string;
         modifier: string;
@@ -994,7 +995,7 @@ export class BaseResolversVisitor<
         genericTypes: string[];
       } = {
         name: node.name as any,
-        modifier: this.config.avoidOptionals ? '' : '?',
+        modifier: avoidOptionals ? '' : '?',
         type: resolverType,
         genericTypes: [
           mappedTypeKey,
