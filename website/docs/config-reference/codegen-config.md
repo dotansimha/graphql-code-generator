@@ -129,6 +129,8 @@ The Codegen also supports several CLI flags that allow you to override the defau
 
 - **`--overwrite` (`-o`)** - Overrides the `overwrite` config to true.
 
+- **`--profile`** - Use profiler to measure performance. _(see "Profiler" in "Advanced Usage")_
+
 ## Debug Mode
 
 You can set the `DEBUG` environment variable to `1` in order to tell the codegen to print debug information.
