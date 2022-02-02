@@ -5,7 +5,7 @@ title: Apollo Federation
 
 The `typescript-resolvers` plugin also supports [Apollo Federation](https://apollographql.com/docs/apollo-server/federation/introduction).
 
-In order to use it, add `federation: true` to your configuration:
+To use it, add `federation: true` to your configuration:
 
 ```yml
 generates:
@@ -17,4 +17,4 @@ generates:
       federation: true
 ```
 
-It will make sure to add the required GraphQL directives to your codegen schema, and will generate a compatible resolvers signature for Apollo Federation.
+It will add the required GraphQL directives to your codegen schema and generate a compatible resolvers signature for Apollo Federation.

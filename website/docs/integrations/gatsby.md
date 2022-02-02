@@ -3,11 +3,11 @@ id: gatsby
 title: Gatsby
 ---
 
-If you are building apps using [Gatsby](https://gatsbyjs.com), you can use GraphQL Code Generator to generate TypeScript types.
+If you build apps using [Gatsby](https://gatsbyjs.com), you can use GraphQL Code Generator to generate TypeScript types.
 
 The codegen knows automatically to look for the import of the `graphql` tag for `gatsby` package.
 
-Using the following config file, it should cover everything specific to Gatsby:
+Using the following config file should cover everything specific to Gatsby:
 
 ```yml
 schema: http://localhost:8000/___graphql
@@ -21,11 +21,11 @@ generates:
       - typescript-operations
 ```
 
-Now, the codegen should be able to load your GraphQL operations from your source code, and also load all the internal fragments from `node_modules`.
+Now, the codegen should load your GraphQL operations from your source code and load all the internal fragments from `node_modules`.
 
 :::caution Note on `documents` section
-The glob expression above should get you started quickly, but note that it's very broad and might load many files that matches the `./node_modules/gatsby*/!(node_modules)/**/*.js` pattern.
-If you are having issues with this glob expression, or if you are seeing performance issues, please note that you need to narrow this expression to the bare minimum that is being loaded by your Gatsby instance.
+The glob expression above should get you started quickly, but note that it's vast and might load many files that match the `./node_modules/gatsby*/!(node_modules)/**/*.js` pattern.
+If you are having issues with this glob expression, or if you see performance issues, please note that you need to narrow this expression to the bare minimum that is being loaded by your Gatsby instance.
 
 [This issue might help](https://github.com/dotansimha/graphql-code-generator/issues/5024)
 :::

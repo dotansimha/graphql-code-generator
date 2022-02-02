@@ -3,9 +3,13 @@ id: contributing
 title: Contributing
 ---
 
-So now when your new plugin is ready, you can either maintain it in your own repo and npm package, or you can contribute and make it part of the GraphQL Code Generator repo.
+When your new plugin is ready, you can either:
+- maintain it in your repo and npm package
+- contribute and make it part of the GraphQL Code Generator repo
 
-Our repository contains plugins for all languages and platforms, and if your plugin could be helpful for other, please consider to create a PR and maintain it in our repo. This will also promise to run your tests against the latest core changes, and make sure that there are no breaking changes that effect your plugin.
+Our repository contains plugins for all languages and platforms.
+If your plugin could be helpful for others, please consider creating a PR and maintaining it in our repo.
+Doing so will also promise to run your tests against the latest core changes and make sure that no breaking changes affect your plugin.
 
 ## 1. Requirements
 
@@ -17,15 +21,15 @@ To be able to clone, build and develop codegen, you'll need to have the followin
 - [Yarn](https://yarnpkg.com) (v1)
 - Any code editor (we recommend [VSCode](https://code.visualstudio.com))
 
-GraphQL Code Generator is using the following stack to manage the source code:
+GraphQL Code Generator uses the following stack to manage the source code:
 
 1. [TypeScript](https://typescriptlang.org) - for writing the code
-2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling and development workflow
+2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling, and development workflow
 3. [Jest](https://jestjs.io) - for running tests.
 
 ## 2. Fork and Clone
 
-Start by [creating a Fork in GitHub](https://help.github.com/en/github/getting-started-with-github/fork-a-repo), this will allow you to make changes and push them easily later.
+Start by [creating a Fork in GitHub](https://help.github.com/en/github/getting-started-with-github/fork-a-repo); this will allow you to make changes and push them quickly later.
 
 Then, use Git [to clone](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github) your newly created fork repository.
 
@@ -33,15 +37,15 @@ It's also recommended to create a new Git branch at this point, from `master` br
 
 ## 3. Install Dependencies
 
-GraphQL Code Generator is built as a monorepo, using [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/), so it means that all scripts and dependencies are located in the root `package.json` of the project.
+GraphQL Code Generator is built as a monorepo, using [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/) it means that all scripts and dependencies are located in the root `package.json` of the project.
 
-So now that you have a local copy of the project, start by installing the dependencies for all packages in the repo, by running the following in the root directory of the project:
+Now that you have a local copy of the project, start by installing the dependencies for all packages in the repo, by running the following in the root directory of the project:
 
 ```sh
 yarn
 ```
 
-> If you make changes, add libraries or new packages, make sure to install the dependencies again, but always from the root directory, otherwise you'll break the monorepo structure.
+> If you make changes, add libraries, or new packages, make sure to install the dependencies again, but always from the root directory, otherwise you'll break the monorepo structure.
 
 ## 4. Make sure everything works
 
@@ -106,7 +110,7 @@ Make sure to follow the following instructions:
 
 > `@graphql-codegen/plugin-helpers` contains helpful types and utils. Make sure it has the same version as your package.
 
-Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so run the following command again, in the root directory:
+Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so rerun the following command, in the root directory:
 
 ```sh
 yarn
@@ -114,7 +118,7 @@ yarn
 
 ## 6. Create your plugin
 
-To create your new plugin, simply create `src/index.ts` in your plugin directory, and start with the following:
+To create your new plugin, create `src/index.ts` in your plugin directory, and start with the following:
 
 ```ts
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers'
@@ -174,15 +178,15 @@ yarn test
 
 You can also test the integration of your plugin with the codegen core and cli, the integration with other plugins and the output for some complex schemas and operations.
 
-To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.yml`, and run `yarn generate:examples` in the project root directory, to run it.
+To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.yml`, and run `yarn generate:examples` in the project root directory to run it.
 
 ## 9. Documentation
 
-GraphQL Code Generator website has API Reference for all our plugins, most of the documentation is generated from code, and some of it is written manually.
+GraphQL Code Generator website has API Reference for all our plugins. Most of the documentation is generated from code, and some of it is written manually.
 
 In order to add it to the website, do the following:
 
-1. Add JSDoc annotations to your config object, it can also include default value, examples and type:
+1. Add JSDoc annotations to your config object; it can also include a default value, examples, and type:
 
 ````ts
 // packages/plugins/my-plugin/config.ts
@@ -193,7 +197,7 @@ In order to add it to the website, do the following:
 export type MyPluginConfig = {
   /**
    * @name name
-   * @description This allow you to generate a greeting with custom name
+   * @description This allows you to generate a greeting with a custom name
    * @default anonymous
    *
    * @exampleMarkdown
@@ -224,7 +228,7 @@ export const pluginsConfigurations: PluginConfig[] = [
 ]
 ```
 
-> Adding your plugin here will automatically include your plugin in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action), and will generate a markdown documentation automatically based on your TypeScript types.
+> Adding your plugin here will automatically include it in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action) and will generate markdown documentation automatically based on your TypeScript types.
 
 ## 10. Website & Plugins Hub
 
@@ -243,11 +247,11 @@ const PACKAGES: Package<Tags>[] = [
 
 Go ahead to `website` directory and run the website using `yarn dev`.
 
-Your plugin page should be available in: `http://localhost:3000/plugins/my-plugin`
+Your plugin page should be available in `http://localhost:3000/plugins/my-plugin`
 
 ## 10. Add it to the live demo (optional)
 
-Our website has a live demo in the main page for most plugins, and you can add it there if you wish.
+Our website has a live demo on the main page for most plugins, and you can add it there if you wish.
 
 To add a new example to the live demo, start by making sure that your plugin package is available for the website:
 
