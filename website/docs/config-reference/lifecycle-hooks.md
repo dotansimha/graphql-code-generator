@@ -3,11 +3,11 @@ id: lifecycle-hooks
 title: Lifecycle Hooks
 ---
 
-The codegen allow you to specify scripts it can run for you in certain events.
+The codegen allows specifying scripts it can run for you in certain events.
 
-You can specify hooks on the root level, or specify hooks on the output level (only some of them).
+You can specify hooks on the root level or specify hooks on the output level (only some of them).
 
-Each hook has its own arguments, and it passes it to your scripts using `argv`.
+Each hook has its arguments, and it passes them to your scripts using `argv`.
 
 ## How to use?
 
@@ -33,16 +33,16 @@ generates:
 
 ## Root Level
 
-The following lifecycle hooks are supported on root level:
+The following lifecycle hooks are supported on the root level:
 
 ### `afterStart`
 
-Triggered with no arguments, when the codegen starts (after the `codegen.yml` has been parsed).
+Triggered with no arguments when the codegen starts (after the `codegen.yml` has been parsed).
 
 ### `onWatchTriggered`
 
 Triggered every time a file changes when using watch mode.
-Triggered with two arguments: the type of the event (for example, `changed`) and the path of the file.
+Triggered with two arguments: the type of the event (for example, `changed`) and the file's path.
 
 ### `onError`
 
@@ -50,32 +50,33 @@ Triggered in case of a general error in the codegen. The argument is a string co
 
 ### `beforeAllFileWrite`
 
-Executed after the codegen has done creating the output and before writing the files to the file-system.
+Executed after the codegen has created the output and before writing the files to the file system.
+
 Triggered with multiple arguments - paths for all relevant files.
 
-> Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution.
+> Not all the files will be written to the file system, because this is triggered before checking if the file has changed since last execution.
 
 ### `beforeOneFileWrite`
 
-Triggered before a file is written to the file-system. Executed with the path for the file.
+Triggered before a file is written to the file system. Executed with the path for the file.
 
-If the content of the file hasn't changed since last execution - this hooks won't be triggered.
+If the content of the file hasn't changed since the last execution - this hook won't be triggered.
 
 ### `afterOneFileWrite`
 
-Triggered after a file is written to the file-system. Executed with the path for the file.
-If the content of the file hasn't changed since last execution - this hooks won't be triggered.
+Triggered after a file is written to the file system. Executed with the path for the file.
+If the content of the file hasn't changed since the last execution - this hook won't be triggered.
 
-> This is a very useful hook, you can use it for integration with Prettier or other linters.
+> This is a very useful hook; you can use it for integration with Prettier or other linters.
 
 ### `afterAllFileWrite`
 
-Executed after writing all the files to the file-system.
+Executed after writing all the files to the file system.
 Triggered with multiple arguments - paths for all files.
 
 ### `beforeDone`
 
-Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.
+Triggered with no arguments, right before the codegen closes or when watch mode is stopped.
 
 ## Output Level
 

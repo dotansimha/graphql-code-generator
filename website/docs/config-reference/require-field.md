@@ -28,15 +28,17 @@ require:
 
 ## Specifying from the command line
 
-You can also specify `require.extensions` as a cli flag using `-r`.
+You can also specify `require.extensions` as a CLI flag using `-r`.
 
-Specifying `-r` using a CLI flag will load your `require.extension` _before_ loading the `.yml` file, and this way you can load environment variables using `dotenv` and use those environment variables in your `.yml` config file.
+Specifying the `-r` CLI flag will load your `require.extension` _before_ loading the `.yml` file.
+
+This way, you can load environment variables using `dotenv` and use those environment variables in your `.yml` config file.
 
 ### `dotenv` Integration
 
-If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm and then to use the `require` cli flag to preload the `dotenv` require extensions: `-r dotenv/config`.
+If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm and then use the `require` CLI flag: `-r dotenv/config`.
 
-It will make sure to load your `.env` file before executing the codegen and loading your `.yml` file, so environment variables that are used in your config file will be replaced with the correct value.
+It will make sure to load your `.env` file before executing the codegen and loading your `.yml` file, so environment variables used in your config file will be replaced with the correct value.
 
 To get started with this integration, make sure you have `.env` file with variables, `dotenv` installed, and codegen is being executed like that:
 
@@ -58,7 +60,7 @@ DOTENV_CONFIG_PATH="./my.env" graphql-codegen --require dotenv/config --config c
 
 > Note: You can use `cross-env` library if you are using Windows.
 
-Or, you can specify it using codegen cli, like that:
+Or, you can specify it using codegen CLI, like that:
 
 ```sh
 graphql-codegen --require dotenv/config --config codegen.yml dotenv_config_path=my.env
