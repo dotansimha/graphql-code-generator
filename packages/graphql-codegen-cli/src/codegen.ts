@@ -257,11 +257,17 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Documents`);
 
-                      const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
+                      // get different cache for shared docs and output specific docs
+                      const results = await Promise.all(
+                        [rootDocuments, outputSpecificDocuments].map(docs => {
+                          const hash = JSON.stringify(docs);
+                          return documentsLoadingCache.load(hash);
+                        })
+                      );
 
-                      const hash = JSON.stringify(allDocuments);
-                      const result = await documentsLoadingCache.load(hash);
-                      const documents: Types.DocumentFile[] = result.documents;
+                      const documents: Types.DocumentFile[] = [];
+
+                      results.forEach(source => documents.push(...source.documents));
 
                       if (documents.length > 0) {
                         outputDocuments.push(...documents);
