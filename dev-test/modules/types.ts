@@ -236,12 +236,7 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
-  donate?: Resolver<
-    Maybe<ResolversTypes['Donation']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationDonateArgs, never>
-  >;
+  donate?: Resolver<Maybe<ResolversTypes['Donation']>, ParentType, ContextType, Partial<MutationDonateArgs>>;
   pong?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
 };
 
