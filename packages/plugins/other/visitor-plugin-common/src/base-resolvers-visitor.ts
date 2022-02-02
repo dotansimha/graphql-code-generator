@@ -1027,8 +1027,7 @@ export class BaseResolversVisitor<
   }
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
-    this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
-    return `RequireFields<${argsType}, never>`;
+    return `Partial<${argsType}>`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
