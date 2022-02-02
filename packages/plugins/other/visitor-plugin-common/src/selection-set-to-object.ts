@@ -373,24 +373,34 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       // string literal union of typenames.
       const compacted = Object.keys(grouped).reduce<Record<string, string[]>>((acc, key) => {
         const typeNames = grouped[key].types.map(t => t.type);
-        const typenameUnion = grouped[key].types[0].name
-          ? this._processor.transformTypenameField(typeNames.join(' | '), grouped[key].types[0].name)
-          : [];
-        const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
+        // Don't create very large string literal unions. TypeScript
+        // will stop comparing some nested union types types when
+        // they contain props with more than some number of string
+        // literal union members (testing with TS 4.5 stops working
+        // at 25 for a naive test case:
+        // https://www.typescriptlang.org/play?ts=4.5.4&ssl=29&ssc=10&pln=29&pc=1#code/C4TwDgpgBAKg9nAMgQwE4HNoF4BQV9QA+UA3ngRQJYB21EqAXDsQEQCMLzULATJ6wGZ+3ACzCWAVnEA2cQHZxADnEBOcWwAM6jl3Z9dbIQbEGpB2QYUHlBtbp5b7O1j30ujLky7Os4wABb0nAC+ODigkFAAQlBYUOT4xGQUVLT0TKzO3G7cHqLiPtwWrFasNqx2mY6ZWXrqeexe3GyF7MXNpc3lzZXZ1dm1ruI8DTxNvGahFEkJKTR0jLMpRNx+gaicy6E4APQ7AALAAM4AtJTo1HCoEDgANhDAUMgMsAgoGNikwQDcdw9QACMXjE4shfmEItAAGI0bCzGbLfDzdIGYbiBrjVrtFidFjdFi9dj9di1Ng5dgNNjjFrqbFsXFsfFsQkOYaDckjYbjNZBHDbPaHU7nS7XP6PZBsF4wuixL6-e6PAGS6KyiXfIA
+        const max_types = 20;
+        for (let i = 0; i < typeNames.length; i += max_types) {
+          const selectedTypes = typeNames.slice(i, i + max_types);
+          const typenameUnion = grouped[key].types[0].name
+            ? this._processor.transformTypenameField(selectedTypes.join(' | '), grouped[key].types[0].name)
+            : [];
+          const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
 
-        // The keys here will be used to generate intermediary
-        // fragment names. To avoid blowing up the type name on large
-        // unions, calculate a stable hash here instead.
-        //
-        // Also use fragment hashing if skipTypename is true, since we
-        // then don't have a typename for naming the fragment.
-        acc[
-          typeNames.length <= 3
-            ? typeNames.join('_')
-            : createHash('sha256')
-                .update(typeNames.join() || transformedSet || '')
-                .digest('base64')
-        ] = [transformedSet];
+          // The keys here will be used to generate intermediary
+          // fragment names. To avoid blowing up the type name on large
+          // unions, calculate a stable hash here instead.
+          //
+          // Also use fragment hashing if skipTypename is true, since we
+          // then don't have a typename for naming the fragment.
+          acc[
+            selectedTypes.length <= 3
+              ? selectedTypes.join('_')
+              : createHash('sha256')
+                  .update(selectedTypes.join() || transformedSet || '')
+                  .digest('base64')
+          ] = [transformedSet];
+        }
         return acc;
       }, {});
 
