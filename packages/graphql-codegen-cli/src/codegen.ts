@@ -403,7 +403,5 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     throw err;
   }
 
-  // await listr.run();
-
   return result;
 }
