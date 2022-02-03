@@ -21,7 +21,7 @@
     "@types/react-dom": "17.0.11",
     "concurrently": "6.5.1",
     "esbuild-register": "3.3.2",
-    "eslint-config-next": "12.0.9",
+    "eslint-config-next": "12.0.10",
     "jsonpath": "1.1.1",
     "typescript": "4.5.5",
     "wait-on": "6.0.0"
@@ -81,7 +81,7 @@
     "framer-motion": "5.6.0",
     "graphql": "16.3.0",
     "js-yaml": "4.1.0",
-    "next": "12.0.9",
+    "next": "12.0.10",
     "next-i18next": "10.2.0",
     "next-remote-watch": "1.0.0",
     "next-seo": "4.29.0",
