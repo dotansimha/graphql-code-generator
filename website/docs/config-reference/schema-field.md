@@ -156,7 +156,7 @@ schema:
 
 ##### `commentDescriptions`
 
-When enabled, converts all deprecated forms of Graphql comments (marked with `#`) into a GraphQL description (marked with `"`) during the parsing phase.
+When enabled, converts all deprecated forms of GraphQL comments (marked with `#`) into a GraphQL description (marked with `"`) during the parsing phase.
 
 ```yml
 schema:

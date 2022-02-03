@@ -7,7 +7,7 @@ title: Write your first Plugin
 
 To get started with writing your GraphQL Code-Generator plugin, start by creating a simple `my-plugin.js` file in your project, with the following content:
 
-"`js
+```js
 module.exports = {
   plugin(schema, documents, config) {
     return 'Hi!'
@@ -35,7 +35,7 @@ The first argument of your `plugin` function is the `GraphQLSchema`.
 
 Then, the code-generator will make sure to merge all `GraphQLSchema`'s into a single, easy-to-use object that you can use to create your output.
 
-You can find the full-typed [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/2df59f18dd3f3c415eaba57d744131a674079ddf/src/type/schema.ts#L129)
+You can find the fully-typed [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/2df59f18dd3f3c415eaba57d744131a674079ddf/src/type/schema.ts#L129)
 
 So let's use a very basic method from `GraphQLSchema`, and return a list of all GraphQL types declared in the schema:
 
@@ -75,7 +75,7 @@ module.exports = {
 
 ## Add plugin configuration
 
-The third argument of your function is `config,` and it includes an object with the configuration passed to your Plugin.
+The third argument of your function is `config`, and it includes an object with the configuration passed to your Plugin.
 
 You can use it to tweak the behavior of your Plugin and allow developers to customize the output easily.
 
