@@ -31,9 +31,11 @@ Now, run the `@graphql-codegen/cli` using `graphql-codegen` command, and it will
 
 ## Using the `GraphQLSchema`
 
-The first argument of your `plugin` function is the `GraphQLSchema`. The code-generator will make sure to merge all `GraphQLSchema`s into a single, easy-to-use object, that you can use to create your output.
+The first argument of your `plugin` function is the `GraphQLSchema`.
 
-You can find the full, typed, [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/2df59f18dd3f3c415eaba57d744131a674079ddf/src/type/schema.ts#L129)
+Then, the code-generator will make sure to merge all `GraphQLSchema`'s into a single, easy-to-use object that you can use to create your output.
+
+You can find the fully-typed [API of `GraphQLSchema` here](https://github.com/graphql/graphql-js/blob/2df59f18dd3f3c415eaba57d744131a674079ddf/src/type/schema.ts#L129)
 
 So let's use a very basic method from `GraphQLSchema`, and return a list of all GraphQL types declared in the schema:
 
@@ -51,9 +53,9 @@ module.exports = {
 
 The second argument of your `plugin` method is an array of GraphQL documents. This array contains a list of `{ location: string, document: DocumentNode }`.
 
-The `location` field is the path of the file, and `DocumentNode` is an object containing all GraphQL documents that has been found in that file.
+The `location` field is the file's path, and `DocumentNode` is an object containing all GraphQL documents that have been found in that file.
 
-You can find the full, typed, [API of `DocumentNode` here](https://github.com/graphql/graphql-js/blob/main/src/language/ast.ts#L249-L253)
+You can find the fully-typed [API of `DocumentNode` here](https://github.com/graphql/graphql-js/blob/main/src/language/ast.ts#L249-L253)
 
 Let's print a list of all documents files, and the name of operations in this file:
 
@@ -73,9 +75,9 @@ module.exports = {
 
 ## Add plugin configuration
 
-The third argument of your function is `config` and it includes an object with the configuration passed to your plugin.
+The third argument of your function is `config`, and it includes an object with the configuration passed to your Plugin.
 
-You can use it to tweak the behavior of your plugin and allow developers to customize the output easily.
+You can use it to tweak the behavior of your Plugin and allow developers to customize the output easily.
 
 You can pass configuration to your plugin in the following this way:
 
@@ -108,7 +110,7 @@ module.exports = {
 
 ## Packing your Plugin
 
-To pack your Plugin as package, create a simple `package.json` file and add the `main` field, pointing to your Plugin file.
+To pack your Plugin as a package, create a simple `package.json` file and add the `main` field, pointing to your Plugin file.
 
 Then, publish it to npm using `npm publish` and test it by installing the published package from npm, and use it in your YML config file:
 
@@ -120,4 +122,4 @@ generates:
     - my-custom-plugin-package
 ```
 
-> If you are using TypeScript to write your plugin, don't forget to compile your `.ts` file using `tsc`, and point `main` to the compiled file.
+> If you are using TypeScript to write your Plugin, don't forget to compile your `.ts` file using `tsc` and point `main` to the compiled file.
