@@ -10,6 +10,8 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
 
+import { AggregateError } from '@graphql-tools/utils';
+
 import { Renderer, ErrorRenderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
@@ -395,7 +397,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           ? `${subErr.message} for "${subErr.source}"${subErr.details}`
           : subErr.message || subErr.toString()
       );
-      const newErr = new DetailedError(`${err.message} ${allErrs.join('\n\n')}`, '');
+      const newErr = new AggregateError(err.errors, `${err.message} ${allErrs.join('\n\n')}`);
       // Best-effort to all stack traces for debugging
       newErr.stack = `${newErr.stack}\n\n${err.errors.map(subErr => subErr.stack).join('\n\n')}`;
       throw newErr;
