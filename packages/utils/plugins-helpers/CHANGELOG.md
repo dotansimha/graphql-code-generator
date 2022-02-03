@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.4.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
 ## 2.3.2
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @graphql-codegen/cli
 
+## 2.5.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- f13d3554e: #5064 Display detailed errors from CLI
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/core@2.5.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
 ## 2.4.0
 
 ### Minor Changes
