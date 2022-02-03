@@ -6,8 +6,11 @@ import {
   normalizeInstanceOrArray,
   normalizeConfig,
   getCachedDocumentNodeFromSchema,
+  isDetailedError,
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
+
+import { AggregateError } from '@graphql-tools/utils';
 
 import { Renderer, ErrorRenderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
@@ -20,6 +23,7 @@ import path from 'path';
 // eslint-disable-next-line
 import { createRequire } from 'module';
 import Listr from 'listr';
+import { isListrError } from './utils/cli-error';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -384,7 +388,22 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     },
   });
 
-  await listr.run();
+  try {
+    await listr.run();
+  } catch (err) {
+    if (isListrError(err)) {
+      const allErrs = err.errors.map(subErr =>
+        isDetailedError(subErr)
+          ? `${subErr.message} for "${subErr.source}"${subErr.details}`
+          : subErr.message || subErr.toString()
+      );
+      const newErr = new AggregateError(err.errors, `${err.message} ${allErrs.join('\n\n')}`);
+      // Best-effort to all stack traces for debugging
+      newErr.stack = `${newErr.stack}\n\n${err.errors.map(subErr => subErr.stack).join('\n\n')}`;
+      throw newErr;
+    }
+    throw err;
+  }
 
   return result;
 }
