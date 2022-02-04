@@ -1,5 +1,31 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.5
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 3.2.4
+
+### Patch Changes
+
+- c9386e87a: Generate "defaultOptions" as const object
+
+## 3.2.3
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 3.2.2
 
 ### Patch Changes

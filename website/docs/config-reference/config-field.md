@@ -3,13 +3,14 @@ id: config-field
 title: '`config` field'
 ---
 
-The `config` field is used to pass configuration to Plugins. You can specify it in multiple levels of your `.yml` file.
+The `config` field is used to pass configuration to Plugins.
 
-It's a basic key-value map.
+
+`config` can be specified at many levels of the configuration:
 
 ### Root Level
 
-If you specify it in your root level, every plugin for each output file will get the config value:
+If you specify it in your root level, the options will be passed to every plugin for each output file:
 
 ```yml
 schema: schema.graphql
@@ -36,7 +37,7 @@ generates:
       - plugin2
 ```
 
-> Output level configuration overrides root level configuration.
+> Output level configuration overrides root-level configuration.
 
 ### Plugin Level
 

@@ -16,7 +16,7 @@ If you are not using `graphql-modules`, you can set `useGraphQLModules: false` t
 
 ## Configuration
 
-{@import ../generated-config/graphql-modules-preset.md}
+{@apiDocs}
 
 ## Usage Example
 
@@ -69,4 +69,4 @@ export const resolvers: MyModule.Resolvers = {
 
 ## Using without GraphQL-Modules
 
-By defualt, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false` in your preset configuration to generate fully agnostic types that are based on folder strucutre only.
+By default, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false` in your preset configuration to generate fully agnostic types that are based on folder structure only.

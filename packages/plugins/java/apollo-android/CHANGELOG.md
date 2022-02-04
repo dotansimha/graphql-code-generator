@@ -1,5 +1,27 @@
 # @graphql-codegen/java-apollo-android
 
+## 2.2.3
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+  - @graphql-codegen/java-common@2.1.10
+
+## 2.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/java-common@2.1.9
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.2.1
 
 ### Patch Changes

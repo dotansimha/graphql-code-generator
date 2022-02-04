@@ -3,7 +3,9 @@ id: programmatic-usage
 title: Programmatic Usage
 ---
 
-The codegen has also a complete programmatic API. You can use it if you need to customize the execution flow, or if you are writing a tool that uses the codegen.
+GraphQL Code Generator also provides a complete programmatic API.
+
+The programmatic API can be used if you need to customize the execution flow or write a tool that uses the codegen.
 
 ### Basic Programmatic Usage
 
@@ -42,11 +44,11 @@ const config = {
 }
 ```
 
-> The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from an external source (file, url), you can use `loadSchema` from `@graphql-tools/load`.
+> The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from an external source (file, URL), you can use `loadSchema` from `@graphql-tools/load`.
 
 Notice that a plugin name key in `pluginMap` and `plugins` must match to identify a plugin and its configuration.
 
-> You need to import the plugin in your favorite way, you can also use `await import` to lazy load it.
+> You need to import the plugin in your favorite way; you can also use `await import` to lazy load it.
 
 Then, provide the config object to `codegen`:
 
@@ -58,7 +60,7 @@ fs.writeFile(path.join(__dirname, outputFile), output, () => {
 ```
 
 :::info
-We are using this API in the live demo in GraphQL Code Generator website. [The code is here](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
+We are using this API in the live demo on the GraphQL Code Generator website. [The code is here](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
 :::
 
 :::tip Loading schema and documents
@@ -91,5 +93,5 @@ async function doSomething() {
 The return value should be of type `Promise<FileOutput[]>`.
 
 :::caution
-This usage will not work in a browser environment, because the `cli` package depends on NodeJS internals and the file system.
+This usage will not work in a browser environment because the `cli` package depends on NodeJS internals and the file system.
 :::

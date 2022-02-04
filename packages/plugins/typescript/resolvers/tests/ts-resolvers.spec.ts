@@ -1284,7 +1284,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const o = await validate(result, config, testSchema);
 
     expect(o).toContain(
-      `f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, RequireFields<TMyTypeFArgs, never>>;`
+      `f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, Partial<TMyTypeFArgs>>;`
     );
   });
 
@@ -1294,7 +1294,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(
-      `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeFArgs, never>>;`
+      `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<MyTypeFArgs>>;`
     );
     await validate(result, {}, testSchema);
   });
@@ -2085,7 +2085,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       );
       expect(o).toContain(`me?: Resolver<Maybe<ResolversTypesQL['User']>, ParentType, ContextType>;`);
       expect(o).toContain(
-        `user2?: Resolver<Maybe<ResolversTypesQL['User']>, ParentType, ContextType, RequireFields<QueryUser2ArgsQL, never>>;`
+        `user2?: Resolver<Maybe<ResolversTypesQL['User']>, ParentType, ContextType, Partial<QueryUser2ArgsQL>>;`
       );
     });
     it('should work correctly with enumPrefix: false - issue #2679', async () => {
@@ -2289,5 +2289,44 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     await validate(result);
+  });
+
+  it('#7005 - avoidOptionals should preserve optional resolvers', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        users(filter: UserFilterInput = {}): [User!]!
+        ping: String!
+      }
+
+      input UserFilterInput {
+        status: String = "ACTIVE"
+      }
+
+      type User {
+        id: ID!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: {
+          defaultValue: true,
+          field: true,
+          inputValue: true,
+          object: true,
+          resolvers: false,
+        },
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'filter'>>;
+        ping?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+    `);
   });
 });

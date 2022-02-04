@@ -274,7 +274,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null | undefined, user: { __typename?: 'User', id: string, f?: Types.E | null | undefined, j?: any | null | undefined } };`
+        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
       );
 
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
@@ -1125,7 +1125,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null | undefined, type: 'Query' };
+        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
       `);
       await validate(content, config);
     });
@@ -2302,7 +2302,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null | undefined, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null | undefined };
+        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
       `);
       await validate(content, config, gitHuntSchema);
     });
@@ -5603,7 +5603,7 @@ function test(q: GetEntityBrandDataQuery): void {
         showAddress: Scalars['Boolean'];
       }>;
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -5796,7 +5796,7 @@ function test(q: GetEntityBrandDataQuery): void {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null | undefined } }`
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
       );
     });
 
@@ -5895,8 +5895,8 @@ function test(q: GetEntityBrandDataQuery): void {
         __typename?: 'Query',
         user?: {
           __typename?: 'User',
-          name: string | null | undefined
-        } | null | undefined,
+          name: string | null
+        } | null,
         group?: {
           __typename?: 'Group',
           id: number

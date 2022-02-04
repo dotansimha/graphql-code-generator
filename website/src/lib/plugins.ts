@@ -212,7 +212,7 @@ const PACKAGES: Package<Tags>[] = [
     title: 'TypeScript RTK-Query',
     npmPackage: '@graphql-codegen/typescript-rtk-query',
     iconUrl: '/assets/img/icons/typescript.svg',
-    tags: ['plugin', 'typescript'],
+    tags: ['plugin', 'typescript', 'react'],
   },
   {
     identifier: 'typescript-stencil-apollo',
@@ -374,6 +374,13 @@ const PACKAGES: Package<Tags>[] = [
     npmPackage: '@graphql-codegen/urql-introspection',
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'urql', 'typescript'],
+  },
+  {
+    identifier: 'typescript-validation-schema',
+    title: 'TypeScript Validation Schema',
+    npmPackage: 'graphql-codegen-typescript-validation-schema',
+    iconUrl: '/assets/img/icons/graphql.svg',
+    tags: ['plugin', 'validation', 'yup', 'zod', 'typescript'],
   },
 ];
 

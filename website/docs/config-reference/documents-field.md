@@ -3,15 +3,15 @@ id: documents-field
 title: '`documents` field'
 ---
 
-The `documents` field should point to your GraphQL documents: `query`, `mutation`, `subscription` and `fragment`.
+The `documents` field should point to your GraphQL documents: `query`, `mutation`, `subscription`, and `fragment`.
 
-It's optional, and required only if you are using plugins that generates code for the client-side.
+`documents` is only required if you use plugins that generate code for the client-side.
 
-You can specify either a `string` pointing to your documents, or `string[]` point to multiple documents.
+You can specify either a `string` pointing to your documents or `string[]` pointing to multiple documents.
 
 ## How to use it?
 
-### Root level
+### Root-level
 
 You can specify the `documents` field in your root level config:
 
@@ -27,7 +27,7 @@ generates:
 
 ### Output-file level
 
-You can also specify the `documents` field in your generated file config:
+You can also specify the `documents` field in your generated file level config:
 
 ```yml
 schema: http://server1.com/graphql
@@ -41,7 +41,7 @@ generates:
 
 ### Document Scanner
 
-The code-generator has a built-in document scanner, which means that you can specify a `.graphql` file or code files that contains GraphQL documents.
+GraphQL Code Generator has a built-in document scanner, which means you can specify a `.graphql` file or code files containing GraphQL documents (ex: `.tsx`).
 
 You can tell it to find documents in TypeScript files:
 
@@ -96,14 +96,14 @@ documents:
 
 > All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
 
-Additionally, you can use code files and the codegen will try to extract the GraphQL documents from it:
+Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from it:
 
 ```yml
 documents:
   - './src/*.jsx'
 ```
 
-The codegen will try to load the file as an AST and look for explicit GraphQL operations strings, but if it can't find those, it will try to `require` the file and look for operations in the default export.
+The codegen will try to load the file as an AST and look for exact GraphQL operations strings. Still, if it can't find those, it will try to `require` the file and look for operations in the default export.
 
 You can disable the `require` if it causes errors for you (for example, because of different module system):
 
@@ -158,7 +158,7 @@ const MY_QUERY = /* GraphQL */ `
 
 By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-tools/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L12)
 
-You can add custom tags if you need, by using `pluckConfig` on the root level on your config file:
+You can add custom tags if you need by using `pluckConfig` on the root level on your config file:
 
 ```yaml
 pluckConfig:
@@ -186,7 +186,7 @@ pluckConfig:
 
 ## Custom Document Loader
 
-If your schema has a different or complicated way of loading, you can specify a custom loader with the `loader` field.
+Suppose your schema has a different or complicated way of loading. In that case, you can specify a custom loader with the `loader` field.
 
 ```yml
 documents:
@@ -205,4 +205,4 @@ module.exports = (docString, config) => {
 }
 ```
 
-> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.
+> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. `pluginContext` is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.

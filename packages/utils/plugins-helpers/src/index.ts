@@ -6,3 +6,4 @@ export * from './federation';
 export * from './errors';
 export * from './getCachedDocumentNodeFromSchema';
 export * from './oldVisit';
+export * from './profiler';

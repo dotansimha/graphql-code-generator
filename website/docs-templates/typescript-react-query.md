@@ -180,22 +180,27 @@ Depending on the `isReactHook` property, your `myFetcher` should be in the follo
 
 - `isReactHook: false`
   ```ts
-  type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables): (() => Promise<TData>)
+  type MyFetcher<TData, TVariables> = (operation: string, variables?: TVariables, options?: RequestInit['headers']): (() => Promise<TData>)
   ```
 - `isReactHook: true`
   ```ts
-  type MyFetcher<TData, TVariables> = (operation: string): ((variables?: TVariables) => Promise<TData>)
+  type MyFetcher<TData, TVariables> = (operation: string, options?: RequestInit['headers']): ((variables?: TVariables) => Promise<TData>)
   ```
 
 #### Usage example (`isReactHook: false`)
 
 ```tsx
-export const fetchData = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
+export const fetchData = <TData, TVariables>(
+  query: string,
+  variables?: TVariables,
+  options?: RequestInit['headers']
+): (() => Promise<TData>) => {
   return async () => {
     const res = await fetch('https://api.url', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(options ?? {})
       },
       body: JSON.stringify({
         query,
@@ -218,15 +223,20 @@ export const fetchData = <TData, TVariables>(query: string, variables?: TVariabl
 #### Usage example (`isReactHook: true`)
 
 ```tsx
-export const useFetchData = <TData, TVariables>(query: string): (() => Promise<TData>) => {
+export const useFetchData = <TData, TVariables>(
+  query: string,
+  options?: RequestInit['headers']
+): ((variables?: TVariables) => Promise<TData>) => {
   // it is safe to call React Hooks here.
   const { url, headers } = React.useContext(FetchParamsContext)
+
   return async (variables?: TVariables) => {
     const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...headers
+        ...headers,
+        ...(options ?? {})
       },
       body: JSON.stringify({
         query,
@@ -269,6 +279,7 @@ query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsSt
 }
 ```
 
+<!-- prettier-ignore -->
 ```tsx
 import { useInfiniteMyQuery } from './generated';
 

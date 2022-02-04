@@ -1,5 +1,26 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.6.0
+
+### Minor Changes
+
+- bef4376d5: fix: RequireFields generic making all other fields optional
+
+### Patch Changes
+
+- c8ef37ae0: fix(typescript-resolvers): Fix optional field types
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.5.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.5.1
 
 ### Patch Changes

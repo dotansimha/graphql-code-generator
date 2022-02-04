@@ -1,5 +1,36 @@
 # @graphql-codegen/cli
 
+## 2.5.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- f13d3554e: #5064 Display detailed errors from CLI
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/core@2.5.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.4.0
+
+### Minor Changes
+
+- 4c42e2a71: Performance optimizations in schema and documents loading (shared promises)
+
+## 2.3.1
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [8643b3bf3]
+- Updated dependencies [b61dc57cf]
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/core@2.4.0
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.3.0
 
 ### Minor Changes
