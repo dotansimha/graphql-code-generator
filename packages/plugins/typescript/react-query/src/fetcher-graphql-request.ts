@@ -31,7 +31,6 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
 
     const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
     this.visitor.imports.add(`${typeImport} { GraphQLClient } from 'graphql-request';`);
-    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
 
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
@@ -133,6 +132,8 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     hasRequiredVariables: boolean
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
 
     return `\nuse${operationName}.fetcher = (client: GraphQLClient, ${variables}, headers?: RequestInit['headers']) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers);`;
   }
