@@ -3934,12 +3934,11 @@ describe('TypeScript Operations Plugin', () => {
           __typename?: 'Dimension';
           id?: Maybe<Scalars['String']>;
         };
-        export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null | undefined };
+        export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-
-        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null | undefined }> | null | undefined };`);
+        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
     });
 
     it('Drops fragments with flattenGeneratedTypes', async () => {
@@ -4024,7 +4023,7 @@ describe('TypeScript Operations Plugin', () => {
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null | undefined }> | null | undefined };`);
+        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
     });
 
     it('Should add operation name when addOperationExport is true', async () => {
