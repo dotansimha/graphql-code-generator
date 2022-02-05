@@ -127,4 +127,15 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   additionalDI?: string[];
+  /**
+   * @description Add `override` modifier to make the generated code compatible with the `noImplicitOverride` option of Typescript v4.3+.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   addExplicitOverride: true
+   * ```
+   */
+  addExplicitOverride?: boolean;
 }
