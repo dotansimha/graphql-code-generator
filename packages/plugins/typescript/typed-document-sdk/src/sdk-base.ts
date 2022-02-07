@@ -90,13 +90,13 @@ type SDKInputListType<T extends string> = `[${T}]`;
  * Poor mans implementation, this should actually be recursive as you could potentially indefinitely nest non nullable and list types...
  * Right now we only allow Type, [Type], [Type]!, [Type!] and [Type!]!
  */
-type SDKInputContainerType<T extends string> =
-  | T
-  | SDKInputNonNullType<T>
-  | SDKInputListType<T>
-  | SDKInputNonNullType<SDKInputListType<T>>
-  | SDKInputListType<SDKInputNonNullType<T>>
-  | SDKInputNonNullType<SDKInputListType<SDKInputNonNullType<T>>>;
+type SDKInputContainerType<TTaxonomy extends string> =
+  | TTaxonomy
+  | SDKInputNonNullType<TTaxonomy>
+  | SDKInputListType<TTaxonomy>
+  | SDKInputNonNullType<SDKInputListType<TTaxonomy>>
+  | SDKInputListType<SDKInputNonNullType<TTaxonomy>>
+  | SDKInputNonNullType<SDKInputListType<SDKInputNonNullType<TTaxonomy>>>;
 
 /**
  * Unwrap something like [Type!] to the actual runtime type.
@@ -164,6 +164,7 @@ type SDK<
       selection: SDKSelectionWithVariables<T_SDKInputTypeMap, Q_Selection, Q_VariableDefinitions>;
     }
   ): SDKSelectionTypedDocumentNode<Q_Selection, T_QueryResultType, T_SDKInputTypeMap, Q_VariableDefinitions>;
+  arguments: typeof SDKFieldArgumentSymbol;
 } & (T_SDKMutationSelectionSet extends SDKSelectionSet
   ? T_MutationResultType extends ResultType
     ? {
@@ -401,5 +402,6 @@ export function createSDK<
     query: sdkHandler('query'),
     mutation: sdkHandler('mutation'),
     subscription: sdkHandler('subscription'),
+    arguments: SDKFieldArgumentSymbol,
   } as any;
 }

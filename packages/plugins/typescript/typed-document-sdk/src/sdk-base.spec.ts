@@ -514,7 +514,7 @@ describe('SDKLogic', () => {
       },
       selection: {
         user: {
-          [SDKFieldArgumentSymbol]: {
+          [sdk.arguments]: {
             id: 'idVariableName',
           },
           id: true,
@@ -601,7 +601,7 @@ describe('SDKLogic', () => {
     expect(document).toStrictEqual(expectedDocument);
   });
 
-  it('query with list variables', () => {
+  it('query with list variables (variance)', () => {
     type InputTypes = {
       String: string;
       Int: number;
@@ -616,6 +616,7 @@ describe('SDKLogic', () => {
       }> & {
         [SDKFieldArgumentSymbol]: {
           id: '[String!]';
+          number?: 'Int';
         };
       };
     }>;
@@ -633,11 +634,13 @@ describe('SDKLogic', () => {
       name: 'UserById',
       variables: {
         idVariableName: '[String!]',
+        a: 'Int',
       },
       selection: {
         user: {
-          [SDKFieldArgumentSymbol]: {
+          [sdk.arguments]: {
             id: 'idVariableName',
+            number: 'a',
           },
           id: true,
         },
@@ -678,6 +681,23 @@ describe('SDKLogic', () => {
                 },
               },
             },
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.NAMED_TYPE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'Int',
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'a',
+                },
+              },
+            },
           ],
           selectionSet: {
             kind: Kind.SELECTION_SET,
@@ -700,6 +720,20 @@ describe('SDKLogic', () => {
                       name: {
                         kind: Kind.NAME,
                         value: 'idVariableName',
+                      },
+                    },
+                  },
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'number',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'a',
                       },
                     },
                   },
