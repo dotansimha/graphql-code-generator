@@ -306,3 +306,59 @@ module.exports = (schemaString, config) => {
 ```
 
 > The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so the loader can modify them to pass any additional information to those plugins.
+
+### Loading API URL from TypeScript file example:
+
+If you store your API config in a file, and don't want to repeat the URL in the codegen config. You can follow the following example:
+
+```ts
+export const API_URL = 'https://example.com/graphql'
+export const PUBLIC_TOKEN = '12345'
+```
+
+Create custom loader file:
+
+```ts
+import fetch from "cross-fetch";
+import { getIntrospectionQuery, buildClientSchema } from "graphql";
+
+import {
+  API_URL,
+  PUBLIC_TOKEN,
+} from "./config";
+
+export default async () => {
+  const introspectionQuery = getIntrospectionQuery();
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Token": PUBLIC_TOKEN,
+    },
+    body: JSON.stringify({ query: introspectionQuery }),
+  });
+
+  const data = await response.json();
+
+  return buildClientSchema(data.data);
+};
+```
+
+Add custom loader to your codegen config:
+
+```yml
+schema:
+  - my-api:
+      loader: ./codegen-loader.ts
+```
+
+Finally, make sure that you have installed `ts-node`, so TypeScript file can be transpiled before running codegen.
+
+In you'r `package.json` script, add `-r ts-node/register` argument to use `ts-node` transpiler.
+
+```json
+  "scripts": {
+    "codegen": "graphql-codegen -r ts-node/register --config codegen.json"
+  }
+```
