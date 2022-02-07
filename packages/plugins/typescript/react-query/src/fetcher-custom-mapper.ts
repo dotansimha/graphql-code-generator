@@ -89,9 +89,6 @@ export class CustomMapperFetcher implements FetcherRenderer {
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 
-    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
-    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
-
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
@@ -158,6 +155,9 @@ export class CustomMapperFetcher implements FetcherRenderer {
     // We can't generate a fetcher field since we can't call react hooks outside of a React Fucntion Component
     // Related: https://reactjs.org/docs/hooks-rules.html
     if (this._isReactHook) return '';
+
+    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
 
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 

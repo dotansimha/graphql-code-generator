@@ -293,7 +293,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import type { RequestInit } from 'graphql-request/dist/types.dom';`);
+      expect(out.prepend).toContain(`import type { customFetcher } from './my-file';`);
     });
 
     it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {
@@ -305,6 +305,7 @@ describe('React-Query', () => {
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
       expect(out.content).toBeSimilarStringTo(
         `useTestQuery.fetcher = (variables?: TestQueryVariables, options?: RequestInit['headers']) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables, options);`
       );
