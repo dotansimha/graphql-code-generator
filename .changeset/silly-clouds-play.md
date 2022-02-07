@@ -3,4 +3,4 @@
 '@graphql-codegen/plugin-helpers': patch
 ---
 
-Supoport loading documents by require+config structure
+Support loading documents by require+config structure
