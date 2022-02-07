@@ -93,6 +93,25 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   flattenGeneratedTypes?: boolean;
+
+  /**
+   * @description Include all fragments types when flattenGeneratedTypes is enabled.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *     config:
+   *       flattenGeneratedTypes: true
+   *       flattenGeneratedTypesIncludeFragments: true
+   * ```
+   */
+  flattenGeneratedTypesIncludeFragments?: boolean;
+
   /**
    * @description Set to `true` in order to generate output without `export` modifier.
    * This is useful if you are generating `.d.ts` file and want it to be globally available.
