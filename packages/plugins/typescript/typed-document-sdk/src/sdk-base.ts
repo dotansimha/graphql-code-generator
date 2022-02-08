@@ -75,7 +75,7 @@ type SDKOperationTypeInner<TSelection extends SDKSelection, TResultType> =
     : // primitive field value
       TResultType;
 
-type SDKNullable<T> = T | null;
+type SDKNonNullable<T extends null> = Exclude<T, null>;
 
 type SDKSelectionKeysWithoutArguments<TSelection extends SDKSelection> = Exclude<
   keyof TSelection,
@@ -85,8 +85,8 @@ type SDKSelectionKeysWithoutArguments<TSelection extends SDKSelection> = Exclude
 type SDKOperationType<TSelection extends SDKSelection, TResultType extends ResultType> = {
   // check whether field in in result type
   [TSelectionField in SDKSelectionKeysWithoutArguments<TSelection>]: TSelectionField extends keyof TResultType
-    ? TResultType[TSelectionField] extends SDKNullable<infer TUnwrappedResult>
-      ? SDKOperationTypeInner<TSelection[TSelectionField], TUnwrappedResult> | null
+    ? null extends TResultType[TSelectionField]
+      ? SDKOperationTypeInner<TSelection[TSelectionField], SDKNonNullable<TResultType[TSelectionField]>> | null
       : SDKOperationTypeInner<TSelection[TSelectionField], TResultType[TSelectionField]>
     : never;
 };
