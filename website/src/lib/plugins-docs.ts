@@ -205,4 +205,9 @@ export const pluginsConfigurations: PluginConfig[] = [
     identifier: 'UrqlIntrospectionConfig',
     name: 'urql-introspection',
   },
+  {
+    file: '../packages/plugins/other/hasura-allow-list/src/config.ts',
+    identifier: 'HasuraAllowListPluginConfig',
+    name: 'hasura-allow-list',
+  },
 ];
