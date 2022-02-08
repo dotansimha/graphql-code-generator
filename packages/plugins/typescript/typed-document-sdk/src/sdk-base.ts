@@ -43,15 +43,57 @@ type SDKSelection = { [key: string]: any };
 
 type ResultType = { [key: string]: any };
 
-type SDKOperationType<TSelection extends SDKSelection, TType extends ResultType> = {
-  [TKey in keyof TSelection]: TKey extends keyof TType
-    ? TType[TKey] extends Record<string, any>
-      ? SDKOperationType<TSelection[TKey], TType[TKey]>
-      : TType[TKey]
+export const SDKFieldArgumentSymbol = Symbol('SDKFieldArguments');
+export const SDKUnionResultSymbol = Symbol('UnionResultSymbol');
+
+type SDKExtractUnionTargets<
+  TTargetField extends Record<string, any>,
+  TUnionMember extends string | symbol | number
+> = Exclude<TTargetField, null | undefined | never | { [key in TUnionMember]?: never | undefined | void }>;
+
+type SDKOperationTypeInner<TSelection extends SDKSelection, TResultType> =
+  // is record
+  ResultType extends Record<any, any>
+    ? // union narrowing
+      typeof SDKUnionResultSymbol extends keyof TResultType
+      ? {
+          [TUnionMember in Exclude<
+            keyof TResultType,
+            typeof SDKUnionResultSymbol
+          >]: TUnionMember extends keyof SDKExtractUnionTargets<TSelection, TUnionMember> // check whether all union members are covered
+            ? // all union members are covered
+              SDKOperationType<
+                SDKExtractUnionTargets<TSelection, TUnionMember>[TUnionMember],
+                TResultType[TUnionMember]
+              >
+            : // not all union members are covered
+              {};
+          // transform result into TypeScript union
+        }[Exclude<keyof TResultType, typeof SDKUnionResultSymbol>]
+      : // object with selection set
+        SDKOperationType<TSelection, TResultType>
+    : // primitive field value
+      TResultType;
+
+type SDKNullable<T> = T | null;
+
+type SDKSelectionKeysWithoutArguments<TSelection extends SDKSelection> = Exclude<
+  keyof TSelection,
+  typeof SDKFieldArgumentSymbol
+>;
+
+type SDKOperationType<TSelection extends SDKSelection, TResultType extends ResultType> = {
+  // check whether field in in result type
+  [TSelectionField in SDKSelectionKeysWithoutArguments<TSelection>]: TSelectionField extends keyof TResultType
+    ? TResultType[TSelectionField] extends SDKNullable<infer TUnwrappedResult>
+      ? SDKOperationTypeInner<TSelection[TSelectionField], TUnwrappedResult> | null
+      : SDKOperationTypeInner<TSelection[TSelectionField], TResultType[TSelectionField]>
     : never;
 };
 
 export type SDKSelectionSet<TType extends Record<string, any> = any> = AtLeastOnePropertyOf<NoExtraProperties<TType>>;
+
+export type SDKUnionSelectionSet<TType extends Record<string, any> = any> = AtLeastOnePropertyOf<TType>;
 
 type SDKInputTypeMap = { [inputTypeName: string]: any };
 
@@ -66,7 +108,7 @@ type SDKArgumentType<
 };
 
 type SDKSelectionTypedDocumentNode<
-  T_Selection extends SDKSelection,
+  T_Selection extends SDKSelectionSet,
   T_ResultType extends ResultType,
   T_SDKInputTypeMap extends SDKInputTypeMap | void,
   T_VariableDefinitions extends SDKVariableDefinitions<
@@ -80,8 +122,6 @@ type SDKSelectionTypedDocumentNode<
       : never
     : never
 >;
-
-export const SDKFieldArgumentSymbol = Symbol('SDKFieldArguments');
 
 type SDKInputNonNullType<T extends string> = `${T}!`;
 type SDKInputListType<T extends string> = `[${T}]`;
@@ -149,7 +189,8 @@ type SDK<
 > = {
   query<
     Q_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap> | void,
-    Q_Selection extends T_SDKQuerySelectionSet
+    Q_Selection extends T_SDKQuerySelectionSet,
+    T
   >(
     args: (
       | {
@@ -164,6 +205,7 @@ type SDK<
       selection: SDKSelectionWithVariables<T_SDKInputTypeMap, Q_Selection, Q_VariableDefinitions>;
     }
   ): SDKSelectionTypedDocumentNode<Q_Selection, T_QueryResultType, T_SDKInputTypeMap, Q_VariableDefinitions>;
+
   arguments: typeof SDKFieldArgumentSymbol;
 } & (T_SDKMutationSelectionSet extends SDKSelectionSet
   ? T_MutationResultType extends ResultType
