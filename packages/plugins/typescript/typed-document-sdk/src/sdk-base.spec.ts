@@ -1,4 +1,4 @@
-import { DocumentNode, Kind, OperationTypeNode } from 'graphql';
+import { DocumentNode, Kind, OperationTypeNode, print } from 'graphql';
 import {
   createSDK,
   SDKFieldArgumentSymbol,
@@ -24,6 +24,12 @@ describe('SDKLogic', () => {
         __typename: true,
       },
     });
+
+    expect(print(operation)).toMatchInlineSnapshot(`
+      "{
+        __typename
+      }"
+    `);
 
     expect(operation).toStrictEqual({
       kind: Kind.DOCUMENT,
@@ -68,6 +74,12 @@ describe('SDKLogic', () => {
       },
     });
 
+    expect(print(operation)).toMatchInlineSnapshot(`
+      "query Brrt {
+        __typename
+      }"
+    `);
+
     expect(operation).toStrictEqual({
       kind: Kind.DOCUMENT,
       definitions: [
@@ -111,6 +123,12 @@ describe('SDKLogic', () => {
         __typename: true,
       },
     });
+
+    expect(print(operation)).toMatchInlineSnapshot(`
+      "mutation {
+        __typename
+      }"
+    `);
 
     expect(operation).toStrictEqual({
       kind: Kind.DOCUMENT,
@@ -164,6 +182,12 @@ describe('SDKLogic', () => {
       },
     });
 
+    expect(print(operation)).toMatchInlineSnapshot(`
+      "subscription {
+        __typename
+      }"
+    `);
+
     expect(operation).toStrictEqual({
       kind: Kind.DOCUMENT,
       definitions: [
@@ -215,6 +239,15 @@ describe('SDKLogic', () => {
         },
       },
     });
+
+    expect(print(operation)).toMatchInlineSnapshot(`
+      "{
+        __typename
+        foo {
+          a
+        }
+      }"
+    `);
 
     expect(operation).toStrictEqual({
       kind: Kind.DOCUMENT,
@@ -299,7 +332,7 @@ describe('SDKLogic', () => {
     const sdk = createSDK<InputTypes, SelectionType, ArgumentType, ResultType>();
 
     const document = sdk.query({
-      name: 'AJSDGAJKSDHG',
+      name: 'UserById',
       variables: {
         idVariableName: 'String',
       },
@@ -312,6 +345,14 @@ describe('SDKLogic', () => {
         },
       },
     });
+
+    expect(print(document)).toMatchInlineSnapshot(`
+      "query UserById($idVariableName: String) {
+        user(id: $idVariableName) {
+          id
+        }
+      }"
+    `);
 
     const expectedDocument: DocumentNode = {
       kind: Kind.DOCUMENT,
@@ -440,6 +481,14 @@ describe('SDKLogic', () => {
         },
       },
     });
+
+    expect(print(document)).toMatchInlineSnapshot(`
+      "query UserById($idVariableName: String!) {
+        user(id: $idVariableName) {
+          id
+        }
+      }"
+    `);
 
     const expectedDocument: DocumentNode = {
       kind: Kind.DOCUMENT,
@@ -675,7 +724,7 @@ describe('SDKLogic', () => {
     type QueryArgumentType = {
       user: {
         [SDKFieldArgumentSymbol]: {
-          id: '[String!]!';
+          id: '[String!]';
           number?: 'Int';
         };
       };
@@ -696,21 +745,27 @@ describe('SDKLogic', () => {
     const document = sdk.query({
       name: 'UserById',
       variables: {
-        idVariableName: '[String!]!',
+        idVariableName: '[String!]',
         a: 'Int',
       },
       selection: {
-        __typename: true,
         user: {
           [sdk.arguments]: {
             id: 'idVariableName',
+            number: 'a',
           },
-          __typename: true,
           id: true,
-          login: true,
         },
       },
     });
+
+    expect(print(document)).toMatchInlineSnapshot(`
+      "query UserById($idVariableName: [String!], $a: Int) {
+        user(id: $idVariableName, number: $a) {
+          id
+        }
+      }"
+    `);
 
     const expectedDocument: DocumentNode = {
       kind: Kind.DOCUMENT,
@@ -836,12 +891,12 @@ describe('SDKLogic', () => {
     type SelectionType = SDKSelectionSet<{
       __typename?: true;
       user?: SDKUnionSelectionSet<{
-        User: SDKSelectionSet<{
+        '...User': SDKSelectionSet<{
           __typename?: true;
           id?: boolean;
           login?: boolean;
         }>;
-        Error: SDKSelectionSet<{
+        '...Error': SDKSelectionSet<{
           __typename?: true;
           reason?: boolean;
         }>;
@@ -893,12 +948,11 @@ describe('SDKLogic', () => {
             id: 'id',
             number: 'someNumber',
           },
-          User: {
+          '...User': {
             __typename: true,
             id: true,
-            login: true,
           },
-          Error: {
+          '...Error': {
             __typename: true,
             reason: true,
           },
@@ -906,11 +960,196 @@ describe('SDKLogic', () => {
       },
     });
 
+    expect(print(document)).toMatchInlineSnapshot(`
+      "query Foo($id: ID!, $someNumber: Int) {
+        user(id: $id, number: $someNumber) {
+          ... on User {
+            __typename
+            id
+          }
+          ... on Error {
+            __typename
+            reason
+          }
+        }
+      }"
+    `);
+
     const expectedDocument: DocumentNode = {
       kind: Kind.DOCUMENT,
-      definitions: [],
+      definitions: [
+        {
+          kind: Kind.OPERATION_DEFINITION,
+          operation: OperationTypeNode.QUERY,
+          name: {
+            kind: Kind.NAME,
+            value: 'Foo',
+          },
+          variableDefinitions: [
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.NON_NULL_TYPE,
+                type: {
+                  kind: Kind.NAMED_TYPE,
+                  name: {
+                    kind: Kind.NAME,
+                    value: 'ID',
+                  },
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'id',
+                },
+              },
+            },
+            {
+              kind: Kind.VARIABLE_DEFINITION,
+              type: {
+                kind: Kind.NAMED_TYPE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'Int',
+                },
+              },
+              variable: {
+                kind: Kind.VARIABLE,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'someNumber',
+                },
+              },
+            },
+          ],
+          selectionSet: {
+            kind: Kind.SELECTION_SET,
+            selections: [
+              {
+                kind: Kind.FIELD,
+                name: {
+                  kind: Kind.NAME,
+                  value: 'user',
+                },
+                arguments: [
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'id',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'id',
+                      },
+                    },
+                  },
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: {
+                      kind: Kind.NAME,
+                      value: 'number',
+                    },
+                    value: {
+                      kind: Kind.VARIABLE,
+                      name: {
+                        kind: Kind.NAME,
+                        value: 'someNumber',
+                      },
+                    },
+                  },
+                ],
+                selectionSet: {
+                  kind: Kind.SELECTION_SET,
+                  selections: [
+                    {
+                      kind: Kind.INLINE_FRAGMENT,
+                      typeCondition: {
+                        kind: Kind.NAMED_TYPE,
+                        name: {
+                          kind: Kind.NAME,
+                          value: 'User',
+                        },
+                      },
+                      selectionSet: {
+                        kind: Kind.SELECTION_SET,
+                        selections: [
+                          {
+                            kind: Kind.FIELD,
+                            name: {
+                              kind: Kind.NAME,
+                              value: '__typename',
+                            },
+                          },
+                          {
+                            kind: Kind.FIELD,
+                            name: {
+                              kind: Kind.NAME,
+                              value: 'id',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: Kind.INLINE_FRAGMENT,
+                      typeCondition: {
+                        kind: Kind.NAMED_TYPE,
+                        name: {
+                          kind: Kind.NAME,
+                          value: 'Error',
+                        },
+                      },
+                      selectionSet: {
+                        kind: Kind.SELECTION_SET,
+                        selections: [
+                          {
+                            kind: Kind.FIELD,
+                            name: {
+                              kind: Kind.NAME,
+                              value: '__typename',
+                            },
+                          },
+                          {
+                            kind: Kind.FIELD,
+                            name: {
+                              kind: Kind.NAME,
+                              value: 'reason',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
     };
-
     expect(document).toStrictEqual(expectedDocument);
+
+    type OperationType = ReturnType<Exclude<typeof document['__apiType'], null | undefined>>;
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    function api_test(value: OperationType) {
+      if (value.user.__typename === 'User') {
+        value.user.id;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        value.user.login;
+      }
+
+      if (value.user.__typename === 'Error') {
+        value.user.__typename;
+        value.user.reason;
+      }
+    }
   });
 });

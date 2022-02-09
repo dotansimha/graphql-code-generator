@@ -3,6 +3,7 @@ import type {
   ArgumentNode,
   DocumentNode,
   FieldNode,
+  InlineFragmentNode,
   Kind,
   ListTypeNode,
   NamedTypeNode,
@@ -43,26 +44,30 @@ type SDKSelection = { [key: string]: any };
 
 type ResultType = { [key: string]: any };
 
+type SDKInlineFragmentKey<T extends string> = `...${T}`;
+
 export const SDKFieldArgumentSymbol: unique symbol = Symbol('SDKFieldArguments');
 export const SDKUnionResultSymbol: unique symbol = Symbol('UnionResultSymbol');
 
-type SDKExtractUnionTargets<
-  TTargetField extends Record<string, any>,
-  TUnionMember extends string | symbol | number
-> = Exclude<TTargetField, null | undefined | never | { [key in TUnionMember]?: never | undefined | void }>;
+type SDKExtractUnionTargets<TSelection extends Record<string, any>, TUnionMember extends string> = Exclude<
+  TSelection,
+  null | undefined | never | { [key in `...${TUnionMember}`]?: never | undefined | void }
+>;
 
 type SDKOperationTypeInner<TSelection extends SDKSelection, TResultType extends Record<any, any>> =
   // union narrowing
   typeof SDKUnionResultSymbol extends keyof TResultType
     ? {
-        [TUnionMember in Exclude<
-          keyof TResultType,
-          typeof SDKUnionResultSymbol
-        >]: TUnionMember extends keyof SDKExtractUnionTargets<TSelection, TUnionMember> // check whether all union members are covered
-          ? // all union members are covered
-            SDKOperationType<SDKExtractUnionTargets<TSelection, TUnionMember>[TUnionMember], TResultType[TUnionMember]>
-          : // not all union members are covered
-            {};
+        [TUnionMember in keyof TResultType]: TUnionMember extends string
+          ? SDKInlineFragmentKey<TUnionMember> extends keyof SDKExtractUnionTargets<TSelection, TUnionMember> // check whether all union members are covered
+            ? // all union members are covered
+              SDKOperationType<
+                SDKExtractUnionTargets<TSelection, TUnionMember>[SDKInlineFragmentKey<TUnionMember>],
+                TResultType[TUnionMember]
+              >
+            : // not all union members are covered
+              {}
+          : never;
         // transform result into TypeScript union
       }[Exclude<keyof TResultType, typeof SDKUnionResultSymbol>]
     : // object with selection set
@@ -302,13 +307,27 @@ const buildSelectionSet = (sdkSelectionSet: SDKSelectionSet<Record<string, any>>
   const selections: Array<SelectionNode> = [];
 
   for (const [fieldName, selectionValue] of Object.entries(sdkSelectionSet)) {
-    const fieldNode: Mutable<FieldNode> = {
-      kind: 'Field' as Kind.FIELD,
-      name: {
-        kind: 'Name' as Kind.NAME,
-        value: fieldName,
-      },
-    };
+    const fieldNode: Mutable<FieldNode> | Mutable<InlineFragmentNode> = fieldName.startsWith('...')
+      ? {
+          kind: 'InlineFragment' as Kind.INLINE_FRAGMENT,
+          typeCondition: {
+            kind: 'NamedType' as Kind.NAMED_TYPE,
+            name: {
+              kind: 'Name' as Kind.NAME,
+              value: fieldName.replace('...', ''),
+            },
+          },
+          // we lazily add this no need for adding a noop one here ok?
+          selectionSet: null as any,
+        }
+      : {
+          kind: 'Field' as Kind.FIELD,
+          name: {
+            kind: 'Name' as Kind.NAME,
+            value: fieldName,
+          },
+        };
+
     if (typeof selectionValue === 'object') {
       fieldNode.selectionSet = buildSelectionSet(selectionValue);
 
@@ -334,7 +353,7 @@ const buildSelectionSet = (sdkSelectionSet: SDKSelectionSet<Record<string, any>>
           });
         }
         if (args.length) {
-          fieldNode.arguments = args;
+          (fieldNode as Mutable<FieldNode>).arguments = args;
         }
       }
     }
