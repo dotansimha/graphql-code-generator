@@ -42,6 +42,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
     "@changesets/cli": "2.17.0",
+    "dotenv": "16.0.0",
     "@graphql-typed-document-node/core": "3.1.1",
     "@reduxjs/toolkit": "1.7.2",
     "@types/common-tags": "1.8.1",
@@ -118,7 +119,6 @@
     "**/@types/graphql-upload/graphql": "^16.0.0"
   },
   "dependencies": {
-    "dotenv": "10.0.0",
     "patch-package": "6.4.7"
   }
 }

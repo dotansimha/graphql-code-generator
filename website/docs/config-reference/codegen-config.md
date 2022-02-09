@@ -125,7 +125,7 @@ generates:
       - typescript-operations
 ```
 
-You can load a `.env` file by adding the `-r dotenv/config` option to your CLI command.
+You can load a `.env` file by adding the `-r dotenv/config` option to your CLI command and adding `dotenv` as a dependency on your project.
 
 You can specify a default value in case an environment variable is missing:
 
