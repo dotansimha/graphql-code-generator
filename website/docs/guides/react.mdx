@@ -384,7 +384,7 @@ Create or update your `codegen.yaml` file as follows:
 schema: http://my-graphql-api.com/graphql
 documents: './src/**/*.graphql'
 generates:
-  ./src/graphql-operations.ts:
+  ./src/generated.ts:
     plugins:
       - typescript
       - typescript-operations
@@ -741,4 +741,3 @@ For more advanced configuration, please refer to the plugin documentation:
 <br />
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
-
