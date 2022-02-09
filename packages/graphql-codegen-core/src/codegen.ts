@@ -89,7 +89,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const rules = specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)));
       const schemaHash = extractHashFromSchema(schemaInstance);
 
-      if (!schemaHash || !options.cache || !documents.some(d => typeof d.hash !== 'string')) {
+      if (!schemaHash || !options.cache || documents.some(d => typeof d.hash !== 'string')) {
         return validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules);
       }
 
