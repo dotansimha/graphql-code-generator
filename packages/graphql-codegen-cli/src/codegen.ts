@@ -336,7 +336,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                 pluginMap,
                                 pluginContext,
                                 profiler: context.profiler,
-                                cache,
                               }),
                             `Build Generates Section: ${filename}`
                           );
@@ -352,13 +351,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                               pluginMap,
                               pluginContext,
                               profiler: context.profiler,
-                              cache,
                             },
                           ];
                         }
 
                         const process = async (outputArgs: Types.GenerateOptions) => {
-                          const output = await codegen(outputArgs);
+                          const output = await codegen({
+                            ...outputArgs,
+                            cache,
+                          });
                           result.push({
                             filename: outputArgs.filename,
                             content: output,
