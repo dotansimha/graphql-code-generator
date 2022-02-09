@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-operations
 
+## 2.3.0
+
+### Minor Changes
+
+- 4d413b13a: feat: Support including fragments when using flattenGeneratedTypes in typescript-operations
+
 ## 2.2.4
 
 ### Patch Changes
