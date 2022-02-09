@@ -25,6 +25,7 @@ export const ALL_TAGS = [
   'resolvers',
   'plugin',
   'preset',
+  'hasura',
 ] as const;
 
 export type Tags = typeof ALL_TAGS[number];
@@ -381,6 +382,13 @@ const PACKAGES: Package<Tags>[] = [
     npmPackage: 'graphql-codegen-typescript-validation-schema',
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'validation', 'yup', 'zod', 'typescript'],
+  },
+  {
+    identifier: 'hasura-allow-list',
+    title: 'Hasura Allow List',
+    npmPackage: '@graphql-codegen/hasura-allow-list',
+    iconUrl: '/assets/img/icons/hasura.svg',
+    tags: ['plugin', 'utilities', 'hasura'],
   },
 ];
 
