@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.3.5
+
+### Patch Changes
+
+- 275d40ae5: Allow `graphql-request@4` in `peerDependencies` range
+
 ## 4.3.4
 
 ### Patch Changes

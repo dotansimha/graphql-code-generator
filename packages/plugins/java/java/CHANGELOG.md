@@ -1,5 +1,11 @@
 # @graphql-codegen/java
 
+## 3.2.4
+
+### Patch Changes
+
+- c4c8424b1: Fix use of enum list args when the list contains Strings
+
 ## 3.2.3
 
 ### Patch Changes
