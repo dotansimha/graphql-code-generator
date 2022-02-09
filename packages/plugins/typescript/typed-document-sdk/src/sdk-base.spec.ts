@@ -1,9 +1,16 @@
 import { DocumentNode, Kind, OperationTypeNode } from 'graphql';
-import { createSDK, SDKFieldArgumentSymbol, SDKSelectionSet } from './sdk-base';
+import {
+  createSDK,
+  SDKFieldArgumentSymbol,
+  SDKSelectionSet,
+  SDKUnionResultSymbol,
+  SDKUnionSelectionSet,
+} from './sdk-base';
 
 describe('SDKLogic', () => {
   it('anonymous query operation', () => {
     const sdk = createSDK<
+      {},
       {},
       SDKSelectionSet<{
         __typename?: true;
@@ -45,6 +52,7 @@ describe('SDKLogic', () => {
 
   it('named query operation', () => {
     const sdk = createSDK<
+      {},
       {},
       SDKSelectionSet<{
         __typename?: true;
@@ -92,11 +100,12 @@ describe('SDKLogic', () => {
     type SelectionType = SDKSelectionSet<{
       __typename?: true;
     }>;
+    type ArgumentType = {};
     type ResultType = {
       __typename?: 'Query';
     };
 
-    const sdk = createSDK<{}, SelectionType, ResultType, SelectionType, ResultType>();
+    const sdk = createSDK<{}, SelectionType, ArgumentType, ResultType, SelectionType, ArgumentType, ResultType>();
     const operation = sdk.mutation({
       selection: {
         __typename: true,
@@ -132,11 +141,23 @@ describe('SDKLogic', () => {
     type SelectionType = SDKSelectionSet<{
       __typename?: true;
     }>;
+    type ArgumentType = {};
     type ResultType = {
       __typename?: 'Query';
     };
 
-    const sdk = createSDK<{}, SelectionType, ResultType, SelectionType, ResultType, SelectionType, ResultType>();
+    const sdk = createSDK<
+      {},
+      SelectionType,
+      ArgumentType,
+      ResultType,
+      SelectionType,
+      ArgumentType,
+      ResultType,
+      SelectionType,
+      ArgumentType,
+      ResultType
+    >();
     const operation = sdk.subscription({
       selection: {
         __typename: true,
@@ -170,6 +191,7 @@ describe('SDKLogic', () => {
 
   it('nested operation', () => {
     const sdk = createSDK<
+      {},
       {},
       SDKSelectionSet<{
         __typename?: true;
@@ -246,16 +268,26 @@ describe('SDKLogic', () => {
     };
 
     type SelectionType = SDKSelectionSet<{
-      __typename?: true;
+      __typename?: boolean;
       user?: SDKSelectionSet<{
         id?: boolean;
         login?: boolean;
       }> & {
-        [SDKFieldArgumentSymbol]: {
-          id?: 'String';
+        [SDKFieldArgumentSymbol]?: {
+          id?: string | never;
         };
       };
+      string?: true;
     }>;
+
+    type ArgumentType = {
+      user: {
+        [SDKFieldArgumentSymbol]: {
+          id: 'String';
+        };
+      };
+    };
+
     type ResultType = {
       __typename?: 'Query';
       user?: {
@@ -264,10 +296,10 @@ describe('SDKLogic', () => {
       };
     };
 
-    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+    const sdk = createSDK<InputTypes, SelectionType, ArgumentType, ResultType>();
 
     const document = sdk.query({
-      name: 'UserById',
+      name: 'AJSDGAJKSDHG',
       variables: {
         idVariableName: 'String',
       },
@@ -371,10 +403,19 @@ describe('SDKLogic', () => {
         login?: boolean;
       }> & {
         [SDKFieldArgumentSymbol]: {
-          id: 'String!';
+          id: string | never;
         };
       };
     }>;
+
+    type ArgumentType = {
+      user: {
+        [SDKFieldArgumentSymbol]: {
+          id: 'String!';
+        };
+      };
+    };
+
     type ResultType = {
       __typename?: 'Query';
       user?: {
@@ -383,7 +424,7 @@ describe('SDKLogic', () => {
       };
     };
 
-    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+    const sdk = createSDK<InputTypes, SelectionType, ArgumentType, ResultType>();
 
     const document = sdk.query({
       name: 'UserById',
@@ -493,10 +534,17 @@ describe('SDKLogic', () => {
         login?: boolean;
       }> & {
         [SDKFieldArgumentSymbol]: {
-          id: '[String]';
+          id: string | never;
         };
       };
     }>;
+    type ArgumentType = {
+      user: {
+        [SDKFieldArgumentSymbol]: {
+          id: '[String]';
+        };
+      };
+    };
     type ResultType = {
       __typename?: 'Query';
       user?: {
@@ -505,7 +553,7 @@ describe('SDKLogic', () => {
       };
     };
 
-    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+    const sdk = createSDK<InputTypes, SelectionType, ArgumentType, ResultType>();
 
     const document = sdk.query({
       name: 'UserById',
@@ -608,41 +656,58 @@ describe('SDKLogic', () => {
       Boolean: number;
     };
 
-    type SelectionType = SDKSelectionSet<{
-      __typename?: true;
+    // this holds the selection set
+    type QuerySelectionType = SDKSelectionSet<{
+      __typename?: boolean;
       user?: SDKSelectionSet<{
+        __typename?: boolean;
         id?: boolean;
         login?: boolean;
       }> & {
         [SDKFieldArgumentSymbol]: {
-          id: '[String!]';
-          number?: 'Int';
+          id: string | never;
+          number?: string | never;
         };
       };
     }>;
-    type ResultType = {
-      __typename?: 'Query';
-      user?: {
-        id?: InputTypes['String'];
-        login?: InputTypes['String'];
+
+    // this holds the actual argument types
+    type QueryArgumentType = {
+      user: {
+        [SDKFieldArgumentSymbol]: {
+          id: '[String!]!';
+          number?: 'Int';
+        };
       };
     };
 
-    const sdk = createSDK<InputTypes, SelectionType, ResultType>();
+    // this holds the result
+    type QueryResultType = {
+      __typename: 'Query';
+      user: {
+        __typename: 'User';
+        id: InputTypes['String'];
+        login: InputTypes['String'];
+      } | null;
+    };
+
+    const sdk = createSDK<InputTypes, QuerySelectionType, QueryArgumentType, QueryResultType>();
 
     const document = sdk.query({
       name: 'UserById',
       variables: {
-        idVariableName: '[String!]',
+        idVariableName: '[String!]!',
         a: 'Int',
       },
       selection: {
+        __typename: true,
         user: {
           [sdk.arguments]: {
             id: 'idVariableName',
-            number: 'a',
           },
+          __typename: true,
           id: true,
+          login: true,
         },
       },
     });
@@ -755,6 +820,95 @@ describe('SDKLogic', () => {
           },
         },
       ],
+    };
+
+    expect(document).toStrictEqual(expectedDocument);
+  });
+
+  it('union types', () => {
+    type InputTypes = {
+      String: string;
+      ID: string;
+      Boolean: number;
+      Int: number;
+    };
+
+    type SelectionType = SDKSelectionSet<{
+      __typename?: true;
+      user?: SDKUnionSelectionSet<{
+        User: SDKSelectionSet<{
+          __typename?: true;
+          id?: boolean;
+          login?: boolean;
+        }>;
+        Error: SDKSelectionSet<{
+          __typename?: true;
+          reason?: boolean;
+        }>;
+      }> & {
+        [SDKFieldArgumentSymbol]: {
+          id: string | never;
+          number?: string | never;
+        };
+      };
+    }>;
+
+    type ArgumentType = {
+      user: {
+        [SDKUnionResultSymbol]: true;
+        [SDKFieldArgumentSymbol]: {
+          id: 'ID!';
+          number?: 'Int';
+        };
+      };
+    };
+
+    type ResultType = {
+      __typename?: 'Query';
+      user: {
+        [SDKUnionResultSymbol]: true;
+        User: {
+          __typename: 'User';
+          id?: InputTypes['String'];
+          login?: InputTypes['String'];
+        };
+        Error: {
+          __typename: 'Error';
+          reason: InputTypes['String'];
+        };
+      };
+    };
+
+    const sdk = createSDK<InputTypes, SelectionType, ArgumentType, ResultType>();
+
+    const document = sdk.query({
+      name: 'Foo',
+      variables: {
+        id: 'ID!',
+        someNumber: 'Int',
+      },
+      selection: {
+        user: {
+          [sdk.arguments]: {
+            id: 'id',
+            number: 'someNumber',
+          },
+          User: {
+            __typename: true,
+            id: true,
+            login: true,
+          },
+          Error: {
+            __typename: true,
+            reason: true,
+          },
+        },
+      },
+    });
+
+    const expectedDocument: DocumentNode = {
+      kind: Kind.DOCUMENT,
+      definitions: [],
     };
 
     expect(document).toStrictEqual(expectedDocument);

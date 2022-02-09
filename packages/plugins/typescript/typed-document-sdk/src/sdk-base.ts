@@ -43,37 +43,30 @@ type SDKSelection = { [key: string]: any };
 
 type ResultType = { [key: string]: any };
 
-export const SDKFieldArgumentSymbol = Symbol('SDKFieldArguments');
-export const SDKUnionResultSymbol = Symbol('UnionResultSymbol');
+export const SDKFieldArgumentSymbol: unique symbol = Symbol('SDKFieldArguments');
+export const SDKUnionResultSymbol: unique symbol = Symbol('UnionResultSymbol');
 
 type SDKExtractUnionTargets<
   TTargetField extends Record<string, any>,
   TUnionMember extends string | symbol | number
 > = Exclude<TTargetField, null | undefined | never | { [key in TUnionMember]?: never | undefined | void }>;
 
-type SDKOperationTypeInner<TSelection extends SDKSelection, TResultType> =
-  // is record
-  ResultType extends Record<any, any>
-    ? // union narrowing
-      typeof SDKUnionResultSymbol extends keyof TResultType
-      ? {
-          [TUnionMember in Exclude<
-            keyof TResultType,
-            typeof SDKUnionResultSymbol
-          >]: TUnionMember extends keyof SDKExtractUnionTargets<TSelection, TUnionMember> // check whether all union members are covered
-            ? // all union members are covered
-              SDKOperationType<
-                SDKExtractUnionTargets<TSelection, TUnionMember>[TUnionMember],
-                TResultType[TUnionMember]
-              >
-            : // not all union members are covered
-              {};
-          // transform result into TypeScript union
-        }[Exclude<keyof TResultType, typeof SDKUnionResultSymbol>]
-      : // object with selection set
-        SDKOperationType<TSelection, TResultType>
-    : // primitive field value
-      TResultType;
+type SDKOperationTypeInner<TSelection extends SDKSelection, TResultType extends Record<any, any>> =
+  // union narrowing
+  typeof SDKUnionResultSymbol extends keyof TResultType
+    ? {
+        [TUnionMember in Exclude<
+          keyof TResultType,
+          typeof SDKUnionResultSymbol
+        >]: TUnionMember extends keyof SDKExtractUnionTargets<TSelection, TUnionMember> // check whether all union members are covered
+          ? // all union members are covered
+            SDKOperationType<SDKExtractUnionTargets<TSelection, TUnionMember>[TUnionMember], TResultType[TUnionMember]>
+          : // not all union members are covered
+            {};
+        // transform result into TypeScript union
+      }[Exclude<keyof TResultType, typeof SDKUnionResultSymbol>]
+    : // object with selection set
+      SDKOperationType<TSelection, TResultType>;
 
 type SDKNonNullable<T extends null> = Exclude<T, null>;
 
@@ -85,15 +78,17 @@ type SDKSelectionKeysWithoutArguments<TSelection extends SDKSelection> = Exclude
 type SDKOperationType<TSelection extends SDKSelection, TResultType extends ResultType> = {
   // check whether field in in result type
   [TSelectionField in SDKSelectionKeysWithoutArguments<TSelection>]: TSelectionField extends keyof TResultType
-    ? null extends TResultType[TSelectionField]
+    ? TSelection[TSelectionField] extends boolean
+      ? TResultType[TSelectionField]
+      : null extends TResultType[TSelectionField]
       ? SDKOperationTypeInner<TSelection[TSelectionField], SDKNonNullable<TResultType[TSelectionField]>> | null
       : SDKOperationTypeInner<TSelection[TSelectionField], TResultType[TSelectionField]>
     : never;
 };
 
-export type SDKSelectionSet<TType extends Record<string, any> = any> = AtLeastOnePropertyOf<NoExtraProperties<TType>>;
+export type SDKSelectionSet<TType> = AtLeastOnePropertyOf<NoExtraProperties<TType>>;
 
-export type SDKUnionSelectionSet<TType extends Record<string, any> = any> = AtLeastOnePropertyOf<TType>;
+export type SDKUnionSelectionSet<TType extends Record<string, any> = any> = TType; // AtLeastOnePropertyOf<TType>;
 
 type SDKInputTypeMap = { [inputTypeName: string]: any };
 
@@ -108,7 +103,7 @@ type SDKArgumentType<
 };
 
 type SDKSelectionTypedDocumentNode<
-  T_Selection extends SDKSelectionSet,
+  T_Selection,
   T_ResultType extends ResultType,
   T_SDKInputTypeMap extends SDKInputTypeMap | void,
   T_VariableDefinitions extends SDKVariableDefinitions<
@@ -159,38 +154,49 @@ type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = {
 type SDKSelectionWithVariables<
   /** GraphQLTypeName -> TS type */
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_SDKSelectionSet extends SDKSelectionSet,
+  T_SDKSelectionSet,
+  T_ArgumentType,
   /** variableName -> GraphQLTypeName */
   T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap> | void
 > = {
   [U_FieldName in keyof T_SDKSelectionSet]: U_FieldName extends typeof SDKFieldArgumentSymbol
     ? T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap>
-      ? {
-          // From T_VariableDefinitions we want all keys whose value IS `T_SDKSelectionSet[U_FieldName][V_ArgumentName]`
-          [V_ArgumentName in keyof T_SDKSelectionSet[U_FieldName] /* ArgumentType */]: KeysMatching<
-            T_VariableDefinitions,
-            T_SDKSelectionSet[U_FieldName][V_ArgumentName]
-          >;
-        }
+      ? T_ArgumentType extends { [SDKFieldArgumentSymbol]: infer U_Arguments }
+        ? {
+            // From T_VariableDefinitions we want all keys whose value matches `U_Arguments[V_ArgumentName]`
+            [V_ArgumentName in keyof T_SDKSelectionSet[U_FieldName] /* ArgumentType */]: KeysMatching<
+              T_VariableDefinitions,
+              // all legit argument values
+              V_ArgumentName extends keyof U_Arguments ? U_Arguments[V_ArgumentName] : never
+            >;
+          }
+        : never
       : never
-    : T_SDKSelectionSet[U_FieldName] extends SDKSelectionSet
-    ? SDKSelectionWithVariables<T_SDKInputTypeMap, T_SDKSelectionSet[U_FieldName], T_VariableDefinitions>
+    : T_SDKSelectionSet[U_FieldName] extends SDKSelectionSet<any>
+    ? SDKSelectionWithVariables<
+        T_SDKInputTypeMap,
+        T_SDKSelectionSet[U_FieldName],
+        U_FieldName extends keyof T_ArgumentType ? T_ArgumentType[U_FieldName] : never,
+        T_VariableDefinitions
+      >
     : T_SDKSelectionSet[U_FieldName];
 };
 
 type SDK<
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_SDKQuerySelectionSet extends SDKSelectionSet,
+  T_SDKQuerySelectionSet,
+  T_QueryArgumentType,
   T_QueryResultType extends ResultType,
-  T_SDKMutationSelectionSet extends SDKSelectionSet | void = void,
+  T_SDKMutationSelectionSet = void,
+  T_SDKMutationArgumentType = void,
   T_MutationResultType extends ResultType | void = void,
-  T_SDKSubscriptionSelectionSet extends SDKSelectionSet | void = void,
+  T_SDKSubscriptionSelectionSet = void,
+  T_SDKSubscriptionArgumentType = void,
   T_SubscriptionResultType extends ResultType | void = void
 > = {
   query<
     Q_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap> | void,
-    Q_Selection extends T_SDKQuerySelectionSet,
-    T
+    Q_Selection extends T_SDKQuerySelectionSet
   >(
     args: (
       | {
@@ -202,12 +208,12 @@ type SDK<
           variables?: never;
         }
     ) & {
-      selection: SDKSelectionWithVariables<T_SDKInputTypeMap, Q_Selection, Q_VariableDefinitions>;
+      selection: SDKSelectionWithVariables<T_SDKInputTypeMap, Q_Selection, T_QueryArgumentType, Q_VariableDefinitions>;
     }
   ): SDKSelectionTypedDocumentNode<Q_Selection, T_QueryResultType, T_SDKInputTypeMap, Q_VariableDefinitions>;
 
   arguments: typeof SDKFieldArgumentSymbol;
-} & (T_SDKMutationSelectionSet extends SDKSelectionSet
+} & (T_SDKMutationSelectionSet extends SDKSelectionSet<any>
   ? T_MutationResultType extends ResultType
     ? {
         mutation<
@@ -224,13 +230,18 @@ type SDK<
                 variables?: never;
               }
           ) & {
-            selection: SDKSelectionWithVariables<T_SDKInputTypeMap, M_Selection, M_VariableDefinitions>;
+            selection: SDKSelectionWithVariables<
+              T_SDKInputTypeMap,
+              M_Selection,
+              T_SDKMutationArgumentType,
+              M_VariableDefinitions
+            >;
           }
         ): SDKSelectionTypedDocumentNode<M_Selection, T_MutationResultType, T_SDKInputTypeMap, M_VariableDefinitions>;
       }
     : {}
   : {}) &
-  (T_SDKSubscriptionSelectionSet extends SDKSelectionSet
+  (T_SDKSubscriptionSelectionSet extends SDKSelectionSet<any>
     ? T_SubscriptionResultType extends ResultType
       ? {
           subscription<
@@ -247,7 +258,12 @@ type SDK<
                   variables?: never;
                 }
             ) & {
-              selection: SDKSelectionWithVariables<T_SDKInputTypeMap, S_Selection, S_VariableDefinitions>;
+              selection: SDKSelectionWithVariables<
+                T_SDKInputTypeMap,
+                S_Selection,
+                T_SDKSubscriptionArgumentType,
+                S_VariableDefinitions
+              >;
             }
           ): SDKSelectionTypedDocumentNode<
             S_Selection,
@@ -282,7 +298,7 @@ const getBaseDocument = (
   ],
 });
 
-const buildSelectionSet = (sdkSelectionSet: SDKSelectionSet): SelectionSetNode => {
+const buildSelectionSet = (sdkSelectionSet: SDKSelectionSet<Record<string, any>>): SelectionSetNode => {
   const selections: Array<SelectionNode> = [];
 
   for (const [fieldName, selectionValue] of Object.entries(sdkSelectionSet)) {
@@ -425,19 +441,25 @@ const sdkHandler =
 
 export function createSDK<
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_SDKQuerySelectionSet extends SDKSelectionSet,
+  T_SDKQuerySelectionSet,
+  T_SDKQueryArguments,
   T_QueryResultType extends ResultType,
-  T_SDKMutationSelectionSet extends SDKSelectionSet | void = void,
+  T_SDKMutationSelectionSet = void,
+  T_SDKMutationArguments = void,
   T_MutationResultType extends ResultType | void = void,
-  T_SDKSubscriptionSelectionSet extends SDKSelectionSet | void = void,
+  T_SDKSubscriptionSelectionSet = void,
+  T_SDKSubscriptionArguments = void,
   T_SubscriptionResultType extends ResultType | void = void
 >(): SDK<
   T_SDKInputTypeMap,
   T_SDKQuerySelectionSet,
+  T_SDKQueryArguments,
   T_QueryResultType,
   T_SDKMutationSelectionSet,
+  T_SDKMutationArguments,
   T_MutationResultType,
   T_SDKSubscriptionSelectionSet,
+  T_SDKSubscriptionArguments,
   T_SubscriptionResultType
 > {
   return {
