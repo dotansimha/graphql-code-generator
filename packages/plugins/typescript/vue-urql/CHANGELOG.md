@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-vue-urql
 
+## 2.2.4
+
+### Patch Changes
+
+- 1cbda5903: Fixes support for externally imported document nodes in plugin `typescript-vue-urql`
+
 ## 2.2.3
 
 ### Patch Changes

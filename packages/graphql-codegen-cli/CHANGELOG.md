@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 2.6.0
+
+### Minor Changes
+
+- 35566a02c: Use os.cpus to calculate concurrency limit
+- acc62e548: fix(deps): remove unnecessary `dotenv` main dependency
+- 35566a02c: Async File System
+
 ## 2.5.0
 
 ### Minor Changes

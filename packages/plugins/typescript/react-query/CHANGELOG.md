@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.2
+
+### Patch Changes
+
+- ec4a5fd70: fix(react-query): avoid unused `RequestInit` import when fetcher is not exposed
+
 ## 3.5.1
 
 ### Patch Changes
