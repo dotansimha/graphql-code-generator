@@ -51,53 +51,13 @@ export async function generate(
 
     await context.profiler.run(async () => {
       await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
-
-      await Promise.all(
-        generationResult.map(async (result: Types.FileOutput) => {
-          const exists = await fileExists(result.filename);
-
-          if (!shouldOverwrite(config, result.filename) && exists) {
-            return;
-          }
-
-          const content = result.content || '';
-          const currentHash = hash(content);
-          let previousHash = recentOutputHash.get(result.filename);
-
-          if (!previousHash && exists) {
-            previousHash = hash(await readFile(result.filename));
-          }
-
-          if (previousHash && currentHash === previousHash) {
-            debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
-
-            return;
-          }
-
-          if (content.length === 0) {
-            return;
-          }
-
-          recentOutputHash.set(result.filename, currentHash);
-          const basedir = dirname(result.filename);
-          await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
-          await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-          await mkdirp(basedir);
-          const absolutePath = isAbsolute(result.filename)
-            ? result.filename
-            : join(input.cwd || process.cwd(), result.filename);
-          await writeFile(absolutePath, result.content);
-          await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
-          await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
-        })
-      );
     }, 'Lifecycle: beforeAllFileWrite');
 
     await context.profiler.run(
-      () =>
-        Promise.all(
+      async () =>
+        await Promise.all(
           generationResult.map(async (result: Types.FileOutput) => {
-            const exists = fileExists(result.filename);
+            const exists = await fileExists(result.filename);
 
             if (!shouldOverwrite(config, result.filename) && exists) {
               return;
@@ -112,7 +72,7 @@ export async function generate(
             }
 
             if (previousHash && currentHash === previousHash) {
-              debugLog(`Skipping file (${result.filename}) writing due to identical hash...`);
+              debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
 
               return;
             }
@@ -125,7 +85,7 @@ export async function generate(
             const basedir = dirname(result.filename);
             await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-            mkdirp.sync(basedir);
+            await mkdirp(basedir);
             const absolutePath = isAbsolute(result.filename)
               ? result.filename
               : join(input.cwd || process.cwd(), result.filename);
