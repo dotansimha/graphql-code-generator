@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-angular';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
