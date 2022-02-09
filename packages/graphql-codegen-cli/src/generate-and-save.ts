@@ -3,7 +3,7 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system';
-import { mkdirp } from 'fs-extra';
+import mkdirp from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
@@ -49,52 +49,49 @@ export async function generate(
       removeStaleFiles(config, generationResult);
     }
 
-    await context.profiler.run(
-      async () => {
-        await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
+    await context.profiler.run(async () => {
+      await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
 
-        await Promise.all(
-          generationResult.map(async (result: Types.FileOutput) => {
-            const exists = await fileExists(result.filename);
+      await Promise.all(
+        generationResult.map(async (result: Types.FileOutput) => {
+          const exists = await fileExists(result.filename);
 
-            if (!shouldOverwrite(config, result.filename) && exists) {
-              return;
-            }
+          if (!shouldOverwrite(config, result.filename) && exists) {
+            return;
+          }
 
-            const content = result.content || '';
-            const currentHash = hash(content);
-            let previousHash = recentOutputHash.get(result.filename);
+          const content = result.content || '';
+          const currentHash = hash(content);
+          let previousHash = recentOutputHash.get(result.filename);
 
-            if (!previousHash && exists) {
-              previousHash = hash(await readFile(result.filename));
-            }
+          if (!previousHash && exists) {
+            previousHash = hash(await readFile(result.filename));
+          }
 
-            if (previousHash && currentHash === previousHash) {
-              debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
+          if (previousHash && currentHash === previousHash) {
+            debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
 
-              return;
-            }
+            return;
+          }
 
-            if (content.length === 0) {
-              return;
-            }
+          if (content.length === 0) {
+            return;
+          }
 
-            recentOutputHash.set(result.filename, currentHash);
-            const basedir = dirname(result.filename);
-            await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
-            await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-            await mkdirp(basedir);
-            const absolutePath = isAbsolute(result.filename)
-              ? result.filename
-              : join(input.cwd || process.cwd(), result.filename);
-            await writeFile(absolutePath, result.content);
-            await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
-            await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
-          })
-        )
-      },
-      'Lifecycle: beforeAllFileWrite'
-    )
+          recentOutputHash.set(result.filename, currentHash);
+          const basedir = dirname(result.filename);
+          await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
+          await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
+          await mkdirp(basedir);
+          const absolutePath = isAbsolute(result.filename)
+            ? result.filename
+            : join(input.cwd || process.cwd(), result.filename);
+          await writeFile(absolutePath, result.content);
+          await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
+          await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
+        })
+      );
+    }, 'Lifecycle: beforeAllFileWrite');
 
     await context.profiler.run(
       () =>
