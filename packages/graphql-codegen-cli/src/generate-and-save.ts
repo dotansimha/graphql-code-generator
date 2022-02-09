@@ -54,8 +54,8 @@ export async function generate(
     }, 'Lifecycle: beforeAllFileWrite');
 
     await context.profiler.run(
-      async () =>
-        await Promise.all(
+      () =>
+        Promise.all(
           generationResult.map(async (result: Types.FileOutput) => {
             const exists = await fileExists(result.filename);
 
