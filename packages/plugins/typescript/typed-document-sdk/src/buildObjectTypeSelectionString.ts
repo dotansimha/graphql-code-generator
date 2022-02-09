@@ -9,19 +9,15 @@ import {
   isUnionType,
 } from 'graphql';
 
-export const buildObjectSelectionSetName = (name: string) => `GeneratedSDKSelectionSet${name}`;
+export const buildSelectionSetName = (name: string) => `GeneratedSDKSelectionSet${name}`;
 
 const buildFieldSelectionSetString = (field: GraphQLField<any, any>): string => {
   const resultType = getNamedType(field.type);
 
   let value = `true`;
 
-  if (isInterfaceType(resultType) || isUnionType(resultType)) {
-    throw new Error('Not yet supported. Interfaces and Union.');
-  }
-
-  if (isObjectType(resultType)) {
-    value = buildObjectSelectionSetName(resultType.name);
+  if (isObjectType(resultType) || isInterfaceType(resultType) || isUnionType(resultType)) {
+    value = buildSelectionSetName(resultType.name);
   }
 
   if (field.args.length) {
@@ -31,7 +27,7 @@ const buildFieldSelectionSetString = (field: GraphQLField<any, any>): string => 
     for (const arg of field.args) {
       const isNonNull = isNonNullType(arg.type);
       requireArguments = isNonNull === true || requireArguments;
-      argumentPartials.push(`${arg.name}${isNonNull ? `` : `?`}: true`);
+      argumentPartials.push(`${arg.name}${isNonNull ? `` : `?`}: string | never`);
     }
 
     const args = stripIndent`
@@ -66,7 +62,7 @@ export const buildObjectTypeSelectionString = (objectType: GraphQLObjectType): s
   }
 
   return stripIndent`
-    type ${buildObjectSelectionSetName(objectType.name)} = SDKSelectionSet<{
+    type ${buildSelectionSetName(objectType.name)} = SDKSelectionSet<{
       __typename?: true;
       ${fields.join(`;\n      `)}
     }>;

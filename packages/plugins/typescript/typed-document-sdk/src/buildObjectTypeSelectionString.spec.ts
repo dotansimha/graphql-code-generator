@@ -56,7 +56,7 @@ describe('buildObjectTypeSelectionString', () => {
         __typename?: true;
         a?: true | {
           [SDKFieldArgumentSymbol]?: {
-            arg?: true;
+            arg?: string | never;
           }
         };
       }>;"
@@ -82,7 +82,7 @@ describe('buildObjectTypeSelectionString', () => {
         __typename?: true;
         a?: {
           [SDKFieldArgumentSymbol]: {
-            arg: true;
+            arg: string | never;
           }
         };
       }>;"

@@ -20,7 +20,10 @@ describe('buildSDKObjectString', () => {
       "export const sdk = createSDK<
         GeneratedSDKInputTypes,
         GeneratedSDKSelectionSetQueryRoot,
+        GeneratedSDKArgumentsQueryRoot,
         QueryRoot,
+        void,
+        void,
         void,
         void,
         void,
@@ -49,9 +52,12 @@ describe('buildSDKObjectString', () => {
       "export const sdk = createSDK<
         GeneratedSDKInputTypes,
         GeneratedSDKSelectionSetQueryRoot,
+        GeneratedSDKArgumentsQueryRoot,
         QueryRoot,
         GeneratedSDKSelectionSetMutationRoot,
+        GeneratedSDKArgumentsMutationRoot,
         MutationRoot,
+        void,
         void,
         void,
       >()"
@@ -86,10 +92,13 @@ describe('buildSDKObjectString', () => {
       "export const sdk = createSDK<
         GeneratedSDKInputTypes,
         GeneratedSDKSelectionSetQueryRoot,
+        GeneratedSDKArgumentsQueryRoot,
         QueryRoot,
         GeneratedSDKSelectionSetMutationRoot,
+        GeneratedSDKArgumentsMutationRoot,
         MutationRoot,
         GeneratedSDKSelectionSetSubscription,
+        GeneratedSDKArgumentsSubscription,
         Subscription,
       >()"
     `);

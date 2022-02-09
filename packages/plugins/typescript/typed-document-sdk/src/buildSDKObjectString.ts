@@ -1,6 +1,7 @@
 import { stripIndent } from 'common-tags';
-import { GraphQLObjectType } from 'graphql';
-import { buildObjectSelectionSetName } from './buildObjectTypeSelectionString';
+import type { GraphQLObjectType } from 'graphql';
+import { buildSelectionSetName } from './buildObjectTypeSelectionString';
+import { buildObjectArgumentsName } from './buildObjectTypeArgumentString';
 
 type Maybe<T> = T | null | undefined;
 
@@ -16,11 +17,14 @@ export const buildSDKObjectString = (
   return stripIndent`
     export const sdk = createSDK<
       GeneratedSDKInputTypes,
-      ${buildObjectSelectionSetName(queryType.name)},
+      ${buildSelectionSetName(queryType.name)},
+      ${buildObjectArgumentsName(queryType.name)},
       ${queryType.name},
-      ${mutationType ? buildObjectSelectionSetName(mutationType.name) : 'void'},
+      ${mutationType ? buildSelectionSetName(mutationType.name) : 'void'},
+      ${mutationType ? buildObjectArgumentsName(mutationType.name) : 'void'},
       ${mutationType ? mutationType : 'void'},
-      ${subscriptionType ? buildObjectSelectionSetName(subscriptionType.name) : 'void'},
+      ${subscriptionType ? buildSelectionSetName(subscriptionType.name) : 'void'},
+      ${subscriptionType ? buildObjectArgumentsName(subscriptionType.name) : 'void'},
       ${subscriptionType ? subscriptionType : 'void'},
     >()
   `;
