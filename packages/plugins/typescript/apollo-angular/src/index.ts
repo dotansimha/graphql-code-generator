@@ -3,7 +3,7 @@ import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefini
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-angular';
 import { ApolloAngularRawPluginConfig } from './config';
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
