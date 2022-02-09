@@ -93,7 +93,7 @@ type SDKOperationType<TSelection extends SDKSelection, TResultType extends Resul
 
 export type SDKSelectionSet<TType> = AtLeastOnePropertyOf<NoExtraProperties<TType>>;
 
-export type SDKUnionSelectionSet<TType extends Record<string, any> = any> = TType; // AtLeastOnePropertyOf<TType>;
+export type SDKUnionSelectionSet<TType extends Record<string, any> = any> = SDKSelectionSet<TType>;
 
 type SDKInputTypeMap = { [inputTypeName: string]: any };
 
