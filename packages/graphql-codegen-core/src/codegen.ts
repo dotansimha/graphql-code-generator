@@ -13,6 +13,7 @@ import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from
 
 import { mergeSchemas } from '@graphql-tools/schema';
 import {
+  extractHashFromSchema,
   getSkipDocumentsValidationOption,
   hasFederationSpec,
   pickFlag,
@@ -80,21 +81,27 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
       pickFlag('externalFragments', options.config) || [];
 
-    const errors = await profiler.run(
-      () =>
-        validateGraphQlDocuments(
-          schemaInstance,
-          [
-            ...documents,
-            ...extraFragments.map(f => ({
-              location: f.importFrom,
-              document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
-            })),
-          ],
-          specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)))
-        ),
-      'Validate documents against schema'
-    );
+    const errors = await profiler.run(() => {
+      const fragments = extraFragments.map(f => ({
+        location: f.importFrom,
+        document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
+      }));
+      const rules = specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)));
+      const schemaHash = extractHashFromSchema(schemaInstance);
+
+      if (!schemaHash || !options.cache || !documents.some(d => typeof d.hash !== 'string')) {
+        return validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules);
+      }
+
+      const cacheKey = [schemaHash]
+        .concat(documents.map(doc => doc.hash))
+        .concat(JSON.stringify(fragments))
+        .join(',');
+
+      return options.cache('documents-validation', cacheKey, () =>
+        validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules)
+      );
+    }, 'Validate documents against schema');
     checkValidationErrors(errors);
   }
 

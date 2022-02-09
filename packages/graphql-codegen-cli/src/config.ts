@@ -1,15 +1,17 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
 import { DetailedError, Types, Profiler, createProfiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
+import { printSchemaWithDirectives } from '@graphql-tools/utils';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
 import { findAndLoadGraphQLConfig } from './graphql-config';
 import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, print, GraphQLSchemaExtensions } from 'graphql';
 import yaml from 'yaml';
 import { createRequire } from 'module';
 import { promises } from 'fs';
+import { createHash } from 'crypto';
 
 const { lstat } = promises;
 
@@ -363,24 +365,66 @@ export class CodegenContext {
     const config = this.getConfig(defaultSchemaLoadOptions);
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
-      return this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config);
+      return addHashToSchema(
+        this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config)
+      );
     }
-    return loadSchema(pointer, config);
+    return addHashToSchema(loadSchema(pointer, config));
   }
 
   async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config);
-
-      return documents;
+      return addHashToDocumentFiles(this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config));
     }
 
-    return loadDocuments(pointer, config);
+    return addHashToDocumentFiles(loadDocuments(pointer, config));
   }
 }
 
 export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
+}
+
+function hashContent(content: string): string {
+  return createHash('sha256').update(content).digest('hex');
+}
+
+function hashSchema(schema: GraphQLSchema): string {
+  return hashContent(
+    printSchemaWithDirectives(schema, {
+      assumeValid: true,
+    })
+  );
+}
+
+function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQLSchema> {
+  return schemaPromise.then(schema => {
+    // It's consumed later on. The general purpose is to use it for caching.
+    (schema.extensions as unknown as GraphQLSchemaExtensions)['hash'] = hashSchema(schema);
+    return schema;
+  });
+}
+
+function hashDocument(doc: Types.DocumentFile) {
+  if (doc.rawSDL) {
+    return hashContent(doc.rawSDL);
+  }
+
+  if (doc.document) {
+    return hashContent(print(doc.document));
+  }
+
+  return null;
+}
+
+function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile[]>): Promise<Types.DocumentFile[]> {
+  return documentFilesPromise.then(documentFiles =>
+    documentFiles.map(doc => {
+      doc.hash = hashDocument(doc);
+
+      return doc;
+    })
+  );
 }

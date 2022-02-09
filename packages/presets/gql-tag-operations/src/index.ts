@@ -70,6 +70,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config: options.config,
         documents: sources,
+        cache: options.cache,
       },
       {
         filename: `${options.baseOutputDir}/index.${artifactFileExtension}`,
@@ -81,6 +82,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
           augmentedModuleName: options.presetConfig.augmentedModuleName,
         },
         documents: sources,
+        cache: options.cache,
       },
     ];
   },

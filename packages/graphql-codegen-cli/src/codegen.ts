@@ -38,21 +38,22 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
-// TODO: Replace any with types
-function createCache<T>(loader: (key: string) => Promise<T>) {
-  const cache = new Map<string, Promise<T>>();
+function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
+  const cache = new Map<string, Promise<unknown>>();
 
-  return {
-    load(key: string): Promise<T> {
-      if (cache.has(key)) {
-        return cache.get(key);
-      }
+  return function ensure<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T> {
+    const cacheKey = `${namespace}:${key}`;
 
-      const value = loader(key);
+    const cachedValue = cache.get(cacheKey);
 
-      cache.set(key, value);
-      return value;
-    },
+    if (cachedValue) {
+      return cachedValue as Promise<T>;
+    }
+
+    const value = factory();
+    cache.set(cacheKey, value);
+
+    return value;
   };
 }
 
@@ -93,21 +94,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
-  const schemaLoadingCache = createCache(async function (hash) {
-    const outputSchemaAst = await context.loadSchema(JSON.parse(hash));
-    const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
-    return {
-      outputSchemaAst: outputSchemaAst,
-      outputSchema: outputSchema,
-    };
-  });
+  const cache = createCache();
 
-  const documentsLoadingCache = createCache(async function (hash) {
-    const documents = await context.loadDocuments(JSON.parse(hash));
-    return {
-      documents: documents,
-    };
-  });
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string) {
     return () => {
       return context.profiler.run(async () => {
@@ -253,7 +241,14 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         }
 
                         const hash = JSON.stringify(schemaPointerMap);
-                        const result = await schemaLoadingCache.load(hash);
+                        const result = await cache('schema', hash, async () => {
+                          const outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                          const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+                          return {
+                            outputSchemaAst: outputSchemaAst,
+                            outputSchema: outputSchema,
+                          };
+                        });
 
                         outputSchemaAst = await result.outputSchemaAst;
                         outputSchema = result.outputSchema;
@@ -272,7 +267,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         const results = await Promise.all(
                           [rootDocuments, outputSpecificDocuments].map(docs => {
                             const hash = JSON.stringify(docs);
-                            return documentsLoadingCache.load(hash);
+                            return cache('documents', hash, async () => {
+                              const documents = await context.loadDocuments(docs);
+                              return {
+                                documents: documents,
+                              };
+                            });
                           })
                         );
 
@@ -336,6 +336,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                 pluginMap,
                                 pluginContext,
                                 profiler: context.profiler,
+                                cache,
                               }),
                             `Build Generates Section: ${filename}`
                           );
@@ -351,6 +352,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                               pluginMap,
                               pluginContext,
                               profiler: context.profiler,
+                              cache,
                             },
                           ];
                         }

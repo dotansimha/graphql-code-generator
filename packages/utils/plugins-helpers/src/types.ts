@@ -17,6 +17,7 @@ export namespace Types {
     skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
     profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   }
 
   export type FileOutput = {
@@ -28,7 +29,9 @@ export namespace Types {
     };
   };
 
-  export type DocumentFile = Source;
+  export interface DocumentFile extends Source {
+    hash?: string;
+  }
 
   /* Utils */
   export type Promisable<T> = T | Promise<T>;
@@ -322,6 +325,7 @@ export namespace Types {
       [name: string]: any;
     };
     profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   };
 
   export type OutputPreset<TPresetConfig = any> = {

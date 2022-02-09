@@ -54,6 +54,7 @@ export const preset: Types.OutputPreset = {
         },
         schema: options.schema,
         documents: [],
+        cache: options.cache,
       },
       ...inputTypesDocumentNode.definitions.map((ast: InputObjectTypeDefinitionNode) => {
         const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [ast] };
@@ -68,6 +69,7 @@ export const preset: Types.OutputPreset = {
           },
           schema: options.schema,
           documents: [{ document, location: '' }],
+          cache: options.cache,
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {
@@ -87,6 +89,7 @@ export const preset: Types.OutputPreset = {
           },
           schema: options.schema,
           documents: [{ document, location: '' }],
+          cache: options.cache,
         };
       }),
       ...fragments.map((ast: FragmentDefinitionNode) => {
@@ -102,6 +105,7 @@ export const preset: Types.OutputPreset = {
           },
           schema: options.schema,
           documents: [{ document, location: '' }],
+          cache: options.cache,
         };
       }),
     ];
