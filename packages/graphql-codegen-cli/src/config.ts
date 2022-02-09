@@ -359,69 +359,28 @@ export class CodegenContext {
     return this._pluginContext;
   }
 
-  loadSchema = useCache(
-    (pointer: Types.Schema): Promise<GraphQLSchema> => {
-      const config = this.getConfig(defaultSchemaLoadOptions);
-      if (this._graphqlConfig) {
-        // TODO: SchemaWithLoader won't work here
-        return this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config);
-      }
-      return loadSchema(pointer, config);
-    },
-    {
-      cacheKey(pointer) {
-        return JSON.stringify(pointer);
-      },
-      skip: () => !!this.config?.watch,
+  async loadSchema(pointer: Types.Schema): Promise<GraphQLSchema> {
+    const config = this.getConfig(defaultSchemaLoadOptions);
+    if (this._graphqlConfig) {
+      // TODO: SchemaWithLoader won't work here
+      return this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config);
     }
-  );
+    return loadSchema(pointer, config);
+  }
 
-  loadDocuments = useCache(
-    (pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> => {
-      const config = this.getConfig(defaultDocumentsLoadOptions);
-      if (this._graphqlConfig) {
-        // TODO: pointer won't work here
-        return this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config);
-      }
+  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+    const config = this.getConfig(defaultDocumentsLoadOptions);
+    if (this._graphqlConfig) {
+      // TODO: pointer won't work here
+      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config);
 
-      return loadDocuments(pointer, config);
-    },
-    {
-      cacheKey(pointer) {
-        return JSON.stringify(pointer);
-      },
-      skip: () => !!this.config?.watch,
+      return documents;
     }
-  );
+
+    return loadDocuments(pointer, config);
+  }
 }
 
 export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
-}
-
-/**
- * The goal here is to avoid loading the same schema or documents across projects.
- */
-function useCache<TKey, TResult, TInput>(
-  originalFunction: (input: TInput) => TResult,
-  { cacheKey, skip = () => false }: { cacheKey(input: TInput): TKey; skip?: () => boolean }
-) {
-  if (skip()) {
-    return originalFunction;
-  }
-
-  const cache = new Map<TKey, TResult>();
-
-  return (input: TInput) => {
-    const key = cacheKey(input);
-
-    if (cache.has(key)) {
-      return cache.get(key);
-    }
-
-    const result = originalFunction(input);
-    cache.set(key, result);
-
-    return result;
-  };
 }
