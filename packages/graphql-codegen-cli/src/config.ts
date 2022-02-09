@@ -404,7 +404,7 @@ function hashSchema(schema: GraphQLSchema): string {
 function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQLSchema> {
   return schemaPromise.then(schema => {
     // It's consumed later on. The general purpose is to use it for caching.
-    if (schema.extensions as unknown as GraphQLSchemaExtensions) {
+    if (!schema.extensions) {
       (schema.extensions as unknown as GraphQLSchemaExtensions) = {};
     }
     (schema.extensions as unknown as GraphQLSchemaExtensions)['hash'] = hashSchema(schema);
