@@ -1,5 +1,5 @@
-import { writeFile as fsWriteFile, readFile as fsReadFile, stat as fsStat } from 'fs/promises';
-import { unlink as fsUnlink } from 'fs';
+import { unlink as fsUnlink, promises } from 'fs';
+const { writeFile: fsWriteFile, readFile: fsReadFile, stat: fsStat } = promises;
 
 export function writeFile(filepath: string, content: string) {
   return fsWriteFile(filepath, content);
