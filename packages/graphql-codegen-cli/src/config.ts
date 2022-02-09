@@ -1,7 +1,13 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
-import { DetailedError, Types, Profiler, createProfiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
-import { printSchemaWithDirectives } from '@graphql-tools/utils';
+import {
+  DetailedError,
+  Types,
+  Profiler,
+  createProfiler,
+  createNoopProfiler,
+  getCachedDocumentNodeFromSchema,
+} from '@graphql-codegen/plugin-helpers';
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
@@ -392,16 +398,15 @@ function hashContent(content: string): string {
 }
 
 function hashSchema(schema: GraphQLSchema): string {
-  return hashContent(
-    printSchemaWithDirectives(schema, {
-      assumeValid: true,
-    })
-  );
+  return hashContent(print(getCachedDocumentNodeFromSchema(schema)));
 }
 
 function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQLSchema> {
   return schemaPromise.then(schema => {
     // It's consumed later on. The general purpose is to use it for caching.
+    if (schema.extensions as unknown as GraphQLSchemaExtensions) {
+      (schema.extensions as unknown as GraphQLSchemaExtensions) = {};
+    }
     (schema.extensions as unknown as GraphQLSchemaExtensions)['hash'] = hashSchema(schema);
     return schema;
   });
