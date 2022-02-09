@@ -2,7 +2,7 @@ import { lifecycleHooks } from './hooks';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
+import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system';
 import mkdirp from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
@@ -26,7 +26,7 @@ export async function generate(
     const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
     staleFilenames.forEach(filename => {
       if (shouldOverwrite(config, filename)) {
-        unlinkFile(filename, err => {
+        return unlinkFile(filename, err => {
           const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
             debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
@@ -49,16 +49,15 @@ export async function generate(
       removeStaleFiles(config, generationResult);
     }
 
-    await context.profiler.run(
-      () => lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename)),
-      'Lifecycle: beforeAllFileWrite'
-    );
+    await context.profiler.run(async () => {
+      await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
+    }, 'Lifecycle: beforeAllFileWrite');
 
     await context.profiler.run(
       () =>
         Promise.all(
           generationResult.map(async (result: Types.FileOutput) => {
-            const exists = fileExists(result.filename);
+            const exists = await fileExists(result.filename);
 
             if (!shouldOverwrite(config, result.filename) && exists) {
               return;
@@ -69,11 +68,11 @@ export async function generate(
             let previousHash = recentOutputHash.get(result.filename);
 
             if (!previousHash && exists) {
-              previousHash = hash(readSync(result.filename));
+              previousHash = hash(await readFile(result.filename));
             }
 
             if (previousHash && currentHash === previousHash) {
-              debugLog(`Skipping file (${result.filename}) writing due to identical hash...`);
+              debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
 
               return;
             }
@@ -86,11 +85,11 @@ export async function generate(
             const basedir = dirname(result.filename);
             await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-            mkdirp.sync(basedir);
+            await mkdirp(basedir);
             const absolutePath = isAbsolute(result.filename)
               ? result.filename
               : join(input.cwd || process.cwd(), result.filename);
-            writeSync(absolutePath, result.content);
+            await writeFile(absolutePath, result.content);
             await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
           })
@@ -117,7 +116,7 @@ export async function generate(
   await context.profiler.run(() => lifecycleHooks(config.hooks).beforeDone(), 'Lifecycle: beforeDone');
 
   if (context.profilerOutput) {
-    writeSync(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
+    await writeFile(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
   }
 
   return outputFiles;

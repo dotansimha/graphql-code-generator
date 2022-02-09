@@ -20,6 +20,7 @@ import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
 import fs from 'fs';
 import path from 'path';
+import { cpus } from 'os';
 // eslint-disable-next-line
 import { createRequire } from 'module';
 import Listr from 'listr';
@@ -381,8 +382,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         {
           // it doesn't stop when one of tasks failed, to finish at least some of outputs
           exitOnError: false,
-          // run 4 at once
-          concurrent: 4,
+          concurrent: cpus().length,
         }
       );
     },
