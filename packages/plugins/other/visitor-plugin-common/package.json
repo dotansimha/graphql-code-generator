@@ -17,7 +17,7 @@
     "@graphql-codegen/plugin-helpers": "^2.4.0",
     "@graphql-tools/relay-operation-optimizer": "^6.3.7",
     "@graphql-tools/utils": "^8.3.0",
-    "auto-bind": "~4.0.0",
+    "auto-bind": "~5.0.0",
     "dependency-graph": "^0.11.0",
     "graphql-tag": "^2.11.0",
     "parse-filepath": "^1.0.2",

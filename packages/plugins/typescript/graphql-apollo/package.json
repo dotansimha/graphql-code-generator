@@ -16,7 +16,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.3.2",
     "@graphql-codegen/visitor-plugin-common": "^2.5.2",
-    "auto-bind": "~4.0.0",
+    "auto-bind": "~5.0.0",
     "change-case-all": "1.0.14",
     "tslib": "~2.3.0"
   },
