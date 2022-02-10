@@ -1674,6 +1674,40 @@ export function useListenToCommentsSubscription(baseOptions?: Apollo.Subscriptio
       }`);
       await validateTypeScript(content, schema, docs, {});
     });
+    it('should generate lazy query hooks with proper hooksSuffix', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false, hooksSuffix: 'MySuffix' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+      export function useFeedLazyQueryMySuffix(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+      }`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 
   describe('MutationOptions', () => {
