@@ -1,5 +1,14 @@
 # @graphql-codegen/cli
 
+## 2.6.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+- Updated dependencies [cb9adeb96]
+  - @graphql-codegen/core@2.5.1
+  - @graphql-codegen/plugin-helpers@2.4.1
+
 ## 2.6.0
 
 ### Minor Changes
