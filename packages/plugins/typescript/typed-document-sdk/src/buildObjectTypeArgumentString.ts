@@ -41,7 +41,7 @@ export const buildObjectTypeArgumentString = (objectType: GraphQLObjectType) => 
   }
   return stripIndent`
     type ${buildObjectArgumentsName(objectType.name)} = {
-      ${fields.join(`;\n      `)}
+      ${fields.join(`\n      `)}
     };
   `;
 };

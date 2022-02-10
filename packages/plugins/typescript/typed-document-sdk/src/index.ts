@@ -8,10 +8,12 @@ import {
   isScalarType,
   isUnionType,
 } from 'graphql';
+import { buildInterfaceArgumentString } from './buildInterfaceArgumentString';
 import { buildInterfaceSelectionString } from './buildInterfaceSelectionString';
 import { buildObjectTypeArgumentString } from './buildObjectTypeArgumentString';
 import { buildObjectTypeSelectionString } from './buildObjectTypeSelectionString';
 import { buildSDKObjectString } from './buildSDKObjectString';
+import { buildUnionArgumentString } from './buildUnionArgumentString';
 import { buildUnionSelectionString } from './buildUnionSelectionString';
 import { TypedDocumentSDKConfig } from './config';
 import { importsString, contentsString } from './sdk-static';
@@ -44,15 +46,18 @@ export const plugin: PluginFunction<TypedDocumentSDKConfig> = (
     }
 
     if (isInterfaceType(graphQLType)) {
-      contents.push(buildInterfaceSelectionString(schema, graphQLType));
+      contents.push(
+        buildInterfaceSelectionString(schema, graphQLType),
+        buildInterfaceArgumentString(schema, graphQLType)
+      );
     }
 
     if (isUnionType(graphQLType)) {
-      contents.push(buildUnionSelectionString(graphQLType));
+      contents.push(buildUnionSelectionString(graphQLType), buildUnionArgumentString(graphQLType));
     }
   }
 
-  contents.push(`type GeneratedSDKInputTypes = {\n${inputTypeMap.join('')}`);
+  contents.push(`type GeneratedSDKInputTypes = {\n${inputTypeMap.join('')} }`);
 
   // sdk object
   contents.push(buildSDKObjectString(schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()));

@@ -64,7 +64,7 @@ export const buildObjectTypeSelectionString = (objectType: GraphQLObjectType): s
   return stripIndent`
     type ${buildSelectionSetName(objectType.name)} = SDKSelectionSet<{
       __typename?: true;
-      ${fields.join(`;\n      `)}
+      ${fields.join(`\n      `)}
     }>;
   `;
 };

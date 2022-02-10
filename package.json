@@ -5,7 +5,7 @@
     "postinstall": "patch-package && husky install",
     "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
     "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
-    "build": "tsc --project tsconfig.json && bob build",
+    "build": "yarn workspace @graphql-codegen/typed-document-sdk run build && tsc --project tsconfig.json && bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "test": "jest --forceExit --no-watchman",
     "lint": "eslint --ext .ts .",

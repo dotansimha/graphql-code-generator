@@ -8,6 +8,8 @@ const sdkOutPath = path.resolve(__dirname, '..', 'src', 'sdk-static.ts');
 
 const sdkBaseContents = fs.readFileSync(sdkBasePath, 'utf-8');
 
+const escape = str => str.replace(/`/g, `\``);
+
 const [imports, body] = sdkBaseContents.split('// IMPORTS END');
 
 if (body === undefined) {
@@ -17,7 +19,7 @@ if (body === undefined) {
 fs.writeFileSync(
   sdkOutPath,
   `
-export const importsString = \`${imports}\`
-export const contentsString = \`${body}\`
+export const importsString = ${JSON.stringify(imports)};
+export const contentsString = ${JSON.stringify(body)};
 `
 );
