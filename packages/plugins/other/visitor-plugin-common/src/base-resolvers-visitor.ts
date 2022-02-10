@@ -444,6 +444,18 @@ export class BaseResolversVisitor<
   protected getResolverFunctionAliases() {
     return this._resolverFnAliases.join('\n');
   }
+<<<<<<< HEAD
+=======
+
+  protected shouldMapType(
+    type: GraphQLNamedType,
+    checkedBefore: { [typeName: string]: boolean } = {},
+    duringCheck: string[] = []
+  ): boolean {
+    if (checkedBefore[type.name] !== undefined) {
+      return checkedBefore[type.name];
+    }
+>>>>>>> 6f3120719bb7aaa674d2adbc3803bfdec2998ad8
 
   protected shouldMapType(type: GraphQLNamedType, duringCheck: string[] = []): boolean {
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
