@@ -380,7 +380,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       const lazyOperationName: string = this.convertName(nodeName, {
         suffix: pascalCase('LazyQuery'),
         useTypesPrefix: false,
-      });
+      }) + this.config.hooksSuffix;
       hookFns.push(
         `export function use${lazyOperationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
           const options = {...defaultOptions, ...baseOptions}
