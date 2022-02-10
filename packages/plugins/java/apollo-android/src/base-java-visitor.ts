@@ -67,7 +67,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
         const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+        if (allInterfaces.find(int => int.name === (node.name as any as string))) {
           implementingTypes.push(graphqlType.name);
         }
       }

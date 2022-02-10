@@ -1,10 +1,39 @@
 # @graphql-codegen/schema-ast
 
+## 2.4.1
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.4.0
+
+### Minor Changes
+
+- f3833243d: added includeIntrospectionTypes option
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 2.2.0
 
 ### Minor Changes
 
-- 3e38de399: feat: sort the schema if "sort" option is provided
+- 3e38de399: enhance: sort the schema before processing to have more consistent results. You can disable it with `sort: false`.
 
 ## 2.1.0
 

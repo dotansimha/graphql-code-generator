@@ -1,10 +1,84 @@
 # @graphql-codegen/cli
 
+## 2.6.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+- Updated dependencies [cb9adeb96]
+  - @graphql-codegen/core@2.5.1
+  - @graphql-codegen/plugin-helpers@2.4.1
+
+## 2.6.0
+
+### Minor Changes
+
+- 35566a02c: Use os.cpus to calculate concurrency limit
+- acc62e548: fix(deps): remove unnecessary `dotenv` main dependency
+- 35566a02c: Async File System
+
+## 2.5.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- f13d3554e: #5064 Display detailed errors from CLI
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/core@2.5.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.4.0
+
+### Minor Changes
+
+- 4c42e2a71: Performance optimizations in schema and documents loading (shared promises)
+
+## 2.3.1
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [8643b3bf3]
+- Updated dependencies [b61dc57cf]
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/core@2.4.0
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.3.0
+
+### Minor Changes
+
+- 50c1d3247: feat(cli): export loadCodegenConfig to load codegen configuration files
+
+### Patch Changes
+
+- 04e2d833b: export generateSearchPlaces
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/core@2.3.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.1
+
+### Patch Changes
+
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/core@2.2.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.2.0
 
 ### Minor Changes
 
-- 3e38de399: feat: sort the schema if "sort" option is provided
+- 3e38de399: enhance: sort the schema before processing to have more consistent results. You can disable it with `sort: false`.
 
 ### Patch Changes
 

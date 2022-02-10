@@ -8,42 +8,42 @@ Each plugin can also specify `addToSchema` field, and to extend the `GraphQLSche
 ```js
 module.exports = {
   plugin: (schema, documents, config) => {
-    const typesMap = schema.getTypeMap();
+    const typesMap = schema.getTypeMap()
 
-    return Object.keys(typesMap).join('\n');
+    return Object.keys(typesMap).join('\n')
   },
   addToSchema: `
         type MyType { field: String }
 
         directive @myDirective on OBJECT
     `
-};
+}
 ```
 
-It's useful when you wish to add things like declerative `@directive` to your `GraphQLSchema`, that effects only the output of the codegen.
+It's useful when you wish to add things like declarative `@directive` to your `GraphQLSchema`, which affects only the output of the codegen.
 
 For example, let's add a custom `@directive` that tells the codegen to ignore a specific `type`:
 
 ```js
 module.exports = {
   plugin: (schema, documents, config, info) => {
-    const typesMap = schema.getTypeMap();
+    const typesMap = schema.getTypeMap()
 
     return Object.keys(typesMap)
       .filter(typeName => {
-        const type = typesMap[typeName];
-        const astNode = type.astNode;
+        const type = typesMap[typeName]
+        const astNode = type.astNode
 
         if (astNode && astNode.directives && astNode.directives.find(d => d.name.value === 'ignore')) {
-          return false;
+          return false
         }
 
-        return true;
+        return true
       })
-      .join('\n');
+      .join('\n')
   },
   addToSchema: `
         directive @ignore on OBJECT
     `
-};
+}
 ```

@@ -2,16 +2,14 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroTypeDependentAliasedFieldQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroTypeDependentAliasedFieldQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    { __typename?: 'Droid'; property?: Types.Maybe<string> } | { __typename?: 'Human'; property?: Types.Maybe<string> }
-  >;
+  hero?: { __typename?: 'Droid'; property?: string | null } | { __typename?: 'Human'; property?: string | null } | null;
 };
 
 export const HeroTypeDependentAliasedFieldDocument = gql`

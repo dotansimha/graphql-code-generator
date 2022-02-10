@@ -18,6 +18,7 @@ import {
   GraphQLObjectType,
   GraphQLOutputType,
   isTypeSubTypeOf,
+  DirectiveNode,
 } from 'graphql';
 import {
   getPossibleTypes,
@@ -29,7 +30,7 @@ import {
 } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import {
   LinkField,
@@ -98,19 +99,21 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   _collectInlineFragments(
     parentType: GraphQLNamedType,
     nodes: InlineFragmentNode[],
-    types: Map<string, Array<SelectionNode | FragmentSpreadUsage>>
+    types: Map<string, Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
-      return this._collectInlineFragments(parentType.ofType, nodes, types);
+      return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
+        const directives = (node.directives as DirectiveNode[]) || undefined;
 
         if (isObjectType(typeOnSchema)) {
           this._appendToTypeMap(types, typeOnSchema.name, fields);
           this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
+          this._appendToTypeMap(types, typeOnSchema.name, directives);
           this._collectInlineFragments(typeOnSchema, inlines, types);
         } else if (isInterfaceType(typeOnSchema) && parentType.getInterfaces().includes(typeOnSchema)) {
           this._appendToTypeMap(types, parentType.name, fields);
@@ -331,7 +334,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected buildSelectionSetString(
     parentSchemaType: GraphQLObjectType,
-    selectionNodes: Array<SelectionNode | FragmentSpreadUsage>
+    selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>
   ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
@@ -349,6 +352,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
+    let inlineFragmentConditional = false;
 
     for (const selectionNode of selectionNodes) {
       if ('kind' in selectionNode) {
@@ -393,6 +397,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
           }
+        } else if (selectionNode.kind === 'Directive') {
+          if (['skip', 'include'].includes(selectionNode?.name?.value)) {
+            inlineFragmentConditional = true;
+          }
         } else {
           throw new TypeError('Unexpected type.');
         }
@@ -433,14 +441,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
-      const isConditional = hasConditionalDirectives(field);
+      const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
         name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          isConditional ? removeNonNullWrapper(selectedFieldType) : selectedFieldType
+          selectedFieldType
         ),
       });
     }

@@ -305,6 +305,11 @@ export function buildScalars(
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),
           };
+        } else if (scalarType.extensions?.codegenScalarType) {
+          result[name] = {
+            isExternal: false,
+            type: scalarType.extensions.codegenScalarType as string,
+          };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
             throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
@@ -351,7 +356,7 @@ export function stripMapperTypeInterpolation(identifier: string): string {
 }
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
-export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
+export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };`;
 
 /**
  * merge selection sets into a new selection set without mutating the inputs.
@@ -389,7 +394,7 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
   }
 
   return {
-    kind: 'SelectionSet',
+    kind: Kind.SELECTION_SET,
     selections: newSelections,
   };
 }
@@ -412,7 +417,7 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 
 export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
-    return getPossibleTypes(schema, type.ofType);
+    return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
   } else if (isObjectType(type)) {
     return [type];
   } else if (isAbstractType(type)) {

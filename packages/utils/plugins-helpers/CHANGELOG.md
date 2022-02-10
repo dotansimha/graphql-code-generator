@@ -1,5 +1,41 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.4.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+
+## 2.4.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+## 2.3.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+
+## 2.3.1
+
+### Patch Changes
+
+- bcc5636fc: fix wrong dependency version range
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+## 2.2.0
+
+### Minor Changes
+
+- 7c60e5acc: feat(core): ability to skip some specific validation rules with skipDocumentsValidation option
+
 ## 2.1.1
 
 ### Patch Changes

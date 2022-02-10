@@ -1,5 +1,78 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.2.6
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 1.2.5
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 1.2.0
+
+### Minor Changes
+
+- 1e9a7e162: feat: support module augumentation for extending the types of gql functions from existing packages via the `augmentedModuleName` config option.
+
+## 1.1.5
+
+### Patch Changes
+
+- 06dfd3958: fix: follow "useTypeImports" configuration
+- 5394f19bb: prevent duplicate operations
+
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
 ## 1.1.3
 
 ### Patch Changes

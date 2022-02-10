@@ -2,7 +2,7 @@ import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
-import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
+import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema, DocumentNode, Kind } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
 import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
 import {
@@ -30,12 +30,12 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   baseTypesPath: string;
@@ -47,13 +47,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importAllFragmentsFrom: '~types'
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importAllFragmentsFrom: '~types'
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importAllFragmentsFrom?: string | FragmentImportFromFn;
@@ -64,14 +64,14 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    extension: .generated.tsx
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       extension: .generated.tsx
+   *     plugins:
+   *       - typescript-operations
+   *       - typescript-react-apollo
    * ```
    */
   extension?: string;
@@ -82,13 +82,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       cwd: /some/path
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   cwd?: string;
@@ -99,13 +99,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    folder: __generated__
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       folder: __generated__
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   folder?: string;
@@ -116,13 +116,13 @@ export type NearOperationFileConfig = {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: SchemaTypes
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: near-operation-file
+   *     presetConfig:
+   *       baseTypesPath: types.ts
+   *       importTypesNamespace: SchemaTypes
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importTypesNamespace?: string;
@@ -248,9 +248,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         fragmentImports: fragmentImportsArr,
       };
 
+      const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [] };
       const combinedSource: Source = {
         rawSDL: '',
-        document: { kind: 'Document', definitions: [] },
+        document: document,
         location: record.documents[0].location,
       };
 

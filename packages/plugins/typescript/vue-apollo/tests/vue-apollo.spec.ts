@@ -174,36 +174,44 @@ describe('Vue Apollo', () => {
         ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: ast2 }],
-          { dedupeOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast2 }],
+            { dedupeOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('VueApolloComposable.UseQueryReturn<NotificationsQuery, NotificationsQueryVariables>');
     });
 
@@ -447,6 +455,12 @@ query MyFeed {
       );
 
       expect(content.content).toBeSimilarStringTo(
+        `export function useFeedLazyQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
+             return VueApolloComposable.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, {}, options);
+           }`
+      );
+
+      expect(content.content).toBeSimilarStringTo(
         `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> = {}) {
            return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, options);
          }`
@@ -471,44 +485,54 @@ query MyFeed {
       `);
 
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          {},
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            {},
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithHardcodedQuerySuffix }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
-          { omitOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+            { omitOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsCompositionFunctionResult');
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
-          { omitOperationSuffix: false },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentNoQuerySuffix }],
+            { omitOperationSuffix: false },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
@@ -548,6 +572,12 @@ query MyFeed {
       );
 
       expect(content.content).toBeSimilarStringTo(
+        `export function useFeedQueryLazyQuery(options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
+          return VueApolloComposable.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, {}, options);
+        }`
+      );
+
+      expect(content.content).toBeSimilarStringTo(
         `export function useSubmitRepositoryMutation(options: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> = {}) {
            return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryMutationDocument, options);
         }`
@@ -564,12 +594,14 @@ query MyFeed {
         }
       `);
       expect(
-        ((await plugin(
-          schema,
-          [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
-          { omitOperationSuffix: true, dedupeOperationSuffix: true },
-          { outputFile: '' }
-        )) as any).content
+        (
+          (await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: documentWithQuerySuffix }],
+            { omitOperationSuffix: true, dedupeOperationSuffix: true },
+            { outputFile: '' }
+          )) as any
+        ).content
       ).toContain('type NotificationsQueryCompositionFunctionResult');
     });
 
@@ -798,6 +830,13 @@ query MyFeed {
         }`
       );
 
+      // lazy query with required variables
+      expect(content.content).toBeSimilarStringTo(
+        `export function useFeedLazyQuery(variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables>, options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
+           return VueApolloComposable.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+        }`
+      );
+
       // subscription with required variables
       expect(content.content).toBeSimilarStringTo(
         `export function useTestSubscription(variables: TestSubscriptionVariables | VueCompositionApi.Ref<TestSubscriptionVariables> | ReactiveFunction<TestSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>> = {}) {
@@ -838,6 +877,13 @@ query MyFeed {
       expect(content.content).toBeSimilarStringTo(
         `export function useFeedQuery(variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
            return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+        }`
+      );
+
+      // lazy query with optional variables
+      expect(content.content).toBeSimilarStringTo(
+        `export function useFeedLazyQuery(variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | ReactiveFunction<FeedQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>> = {}) {
+           return VueApolloComposable.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
         }`
       );
 

@@ -2,17 +2,17 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroDetailsQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroDetailsQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    | { __typename?: 'Droid'; primaryFunction?: Types.Maybe<string>; name: string }
-    | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
-  >;
+  hero?:
+    | { __typename?: 'Droid'; primaryFunction?: string | null; name: string }
+    | { __typename?: 'Human'; height?: number | null; name: string }
+    | null;
 };
 
 export const HeroDetailsDocument = gql`

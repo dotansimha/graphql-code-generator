@@ -1,3 +1,6 @@
+// This file is bundled and inlined.
+// We should probably make this a shared package though.
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { NameNode } from 'graphql';
 
 /**

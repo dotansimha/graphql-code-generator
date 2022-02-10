@@ -4,11 +4,11 @@ import {
   LoadedFragment,
   getConfigValue,
   OMIT_TYPE,
+  DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { pascalCase } from 'change-case-all';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -17,12 +17,30 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
+  private _externalImportPrefix = '';
+
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, false),
       withHooks: getConfigValue(rawConfig.withHooks, true),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
     });
+
+    if (this.config.importOperationTypesFrom) {
+      this._externalImportPrefix = `${this.config.importOperationTypesFrom}.`;
+
+      if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+        );
+      }
+
+      if (this.config.importOperationTypesFrom !== 'Operations') {
+        // eslint-disable-next-line no-console
+        console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
+      }
+    }
 
     autoBind(this);
   }
@@ -87,7 +105,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationVariablesTypes: string
   ): string {
     const operationName: string = this.convertName(node.name?.value ?? '', {
-      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+      suffix: this.getOperationSuffix(node, operationType),
       useTypesPrefix: false,
     });
 
@@ -105,8 +123,14 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
 };`;
     }
 
+    const isVariablesRequired = node.variableDefinitions.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && variableDef.defaultValue == null
+    );
+
     return `
-export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
+export function use${operationName}(options${
+      isVariablesRequired ? '' : '?'
+    }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
 };`;
   }
@@ -118,11 +142,27 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    const documentVariablePrefixed = this._externalImportPrefix + documentVariableName;
+    const operationResultTypePrefixed = this._externalImportPrefix + operationResultType;
+    const operationVariablesTypesPrefixed = this._externalImportPrefix + operationVariablesTypes;
+
     const component = this.config.withComponent
-      ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
+      ? this._buildComponent(
+          node,
+          documentVariablePrefixed,
+          operationType,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
+        )
       : null;
     const hooks = this.config.withHooks
-      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      ? this._buildHooks(
+          node,
+          operationType,
+          documentVariablePrefixed,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
+        )
       : null;
 
     return [component, hooks].filter(a => a).join('\n');

@@ -3,12 +3,12 @@ import * as Types from '../types.d';
 import { gql } from '@apollo/client';
 import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = {
   __typename?: 'Query';
-  human?: Types.Maybe<{ __typename?: 'Human'; name: string; mass?: Types.Maybe<number> }>;
+  human?: { __typename?: 'Human'; name: string; mass?: number | null } | null;
 };
 
 export const HumanWithNullHeightDocument = gql`

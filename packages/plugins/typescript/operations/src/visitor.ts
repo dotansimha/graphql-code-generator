@@ -23,6 +23,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
+  maybeValue: string;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -45,7 +46,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     autoBind(this);
 
+    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
+    const defaultMaybeValue = 'T | null';
+    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
+
     const wrapOptional = (type: string) => {
+      if (preResolveTypes === true) {
+        return maybeValue.replace('T', type);
+      }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
     };
@@ -74,7 +82,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       avoidOptionals: this.config.avoidOptionals,
     };
-    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
     );
@@ -100,7 +107,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         enumsNames,
         this.config.enumPrefix,
         this.config.enumValues,
-        this.config.arrayInputCoercion
+        this.config.arrayInputCoercion,
+        undefined,
+        'InputMaybe'
       )
     );
     this._declarationBlockConfig = {

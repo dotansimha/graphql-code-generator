@@ -20,7 +20,8 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumPrefix = true,
     _enumValues: ParsedEnumValuesMap = {},
     _applyCoercion: Boolean = false,
-    _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
+    _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
+    private _maybeType = 'Maybe'
   ) {
     super(
       _scalars,
@@ -38,7 +39,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
     const rgx = new RegExp(`^${this.wrapMaybe(`(.*?)`)}$`, 'i');
 
-    if (str.startsWith(`${prefix}Maybe`)) {
+    if (str.startsWith(`${prefix}${this._maybeType}`)) {
       return str.replace(rgx, '$1');
     }
 
@@ -76,7 +77,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
 
   protected wrapMaybe(type?: string) {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
-    return `${prefix}Maybe${type ? `<${type}>` : ''}`;
+    return `${prefix}${this._maybeType}${type ? `<${type}>` : ''}`;
   }
 
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {

@@ -1,5 +1,25 @@
 # @graphql-codegen/fragment-matcher
 
+## 3.2.1
+
+### Patch Changes
+
+- 8643b3bf3: Add GraphQL 16 as a peerDependency
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 3.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
 ## 3.1.0
 
 ### Minor Changes

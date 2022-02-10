@@ -1,5 +1,73 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.2.3
+
+### Patch Changes
+
+- 015d34451: fix: gql-tag-operations generates invalid types on Windows #7362
+
+## 1.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [8643b3bf3]
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/add@3.1.1
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/gql-tag-operations@1.2.5
+  - @graphql-codegen/typescript-operations@2.2.2
+  - @graphql-codegen/typed-document-node@2.2.2
+  - @graphql-codegen/typescript@2.4.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 1.2.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+- Updated dependencies [6c898efe5]
+  - @graphql-codegen/typescript@2.3.1
+
+## 1.2.0
+
+### Minor Changes
+
+- 1e9a7e162: feat: support module augumentation for extending the types of gql functions from existing packages via the `augmentedModuleName` config option.
+
+### Patch Changes
+
+- Updated dependencies [1e9a7e162]
+  - @graphql-codegen/gql-tag-operations@1.2.0
+
+## 1.1.7
+
+### Patch Changes
+
+- Updated dependencies [5c37b9d11]
+  - @graphql-codegen/typescript-operations@2.1.6
+
+## 1.1.6
+
+### Patch Changes
+
+- 06dfd3958: fix: follow "useTypeImports" configuration
+- 5394f19bb: prevent duplicate operations
+- Updated dependencies [06dfd3958]
+- Updated dependencies [25cd11d01]
+- Updated dependencies [5394f19bb]
+  - @graphql-codegen/gql-tag-operations@1.1.5
+  - @graphql-codegen/typescript-operations@2.1.5
+
+## 1.1.5
+
+### Patch Changes
+
+- @graphql-codegen/gql-tag-operations@1.1.4
+- @graphql-codegen/typescript-operations@2.1.4
+- @graphql-codegen/typed-document-node@2.1.4
+- @graphql-codegen/typescript@2.2.2
+
 ## 1.1.4
 
 ### Patch Changes

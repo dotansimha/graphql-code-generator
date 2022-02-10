@@ -2,39 +2,29 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroParentTypeDependentFieldQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroParentTypeDependentFieldQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
+  hero?:
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
-            >
-          >
-        >;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+        > | null;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              | { __typename?: 'Droid'; name: string }
-              | { __typename?: 'Human'; height?: Types.Maybe<number>; name: string }
-            >
-          >
-        >;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+        > | null;
       }
-  >;
+    | null;
 };
 
 export const HeroParentTypeDependentFieldDocument = gql`

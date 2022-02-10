@@ -1,5 +1,103 @@
 # @graphql-codegen/typescript-operations
 
+## 2.3.0
+
+### Minor Changes
+
+- 4d413b13a: feat: Support including fragments when using flattenGeneratedTypes in typescript-operations
+
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+  - @graphql-codegen/typescript@2.4.3
+
+## 2.2.3
+
+### Patch Changes
+
+- 7649201fe: Remove redundant mandatory 'undefined' on avoidOptionals=true
+
+## 2.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/typescript@2.4.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.2.1
+
+### Patch Changes
+
+- a9f1f1594: Use maybeValue as default output for optionals on preResolveTypes: true
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+  - @graphql-codegen/typescript@2.4.1
+
+## 2.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/typescript@2.3.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.1.8
+
+### Patch Changes
+
+- 8a576b49a: avoidOptionals with skip/include directives fix
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+  - @graphql-codegen/typescript@2.2.4
+
+## 2.1.7
+
+### Patch Changes
+
+- 1d570b456: avoidOptionals sub-config fix
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+  - @graphql-codegen/typescript@2.2.3
+
+## 2.1.6
+
+### Patch Changes
+
+- 5c37b9d11: Fix avoidOptional handle of Maybe types
+
+## 2.1.5
+
+### Patch Changes
+
+- 25cd11d01: correctly inline Maybe types if the `preresolveTypes` config option is set to `true`
+
+## 2.1.4
+
+### Patch Changes
+
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+  - @graphql-codegen/typescript@2.2.2
+
 ## 2.1.3
 
 ### Patch Changes

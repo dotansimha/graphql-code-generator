@@ -1,10 +1,12 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+import type { Profiler } from './profiler';
 
 export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
+    // TODO: Remove schemaAst and change schema to GraphQLSchema in the next major version
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
@@ -12,8 +14,10 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    skipDocumentsValidation?: boolean;
+    skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
+    profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   }
 
   export type FileOutput = {
@@ -25,7 +29,9 @@ export namespace Types {
     };
   };
 
-  export type DocumentFile = Source;
+  export interface DocumentFile extends Source {
+    hash?: string;
+  }
 
   /* Utils */
   export type Promisable<T> = T | Promise<T>;
@@ -318,6 +324,8 @@ export namespace Types {
     pluginContext?: {
       [name: string]: any;
     };
+    profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -398,7 +406,7 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
      */
     generates: {
-      [outputPath: string]: ConfiguredOutput;
+      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
     };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
@@ -535,6 +543,24 @@ export namespace Types {
      */
     beforeAllFileWrite: T;
   };
+
+  export type SkipDocumentsValidationOptions =
+    | {
+        /**
+         * @description Allows you to skip specific rules while validating the documents.
+         * See all the rules; https://github.com/graphql/graphql-js/tree/main/src/validation/rules
+         */
+        ignoreRules?: string[];
+        /**
+         * @description Ignore duplicate documents validation
+         */
+        skipDuplicateValidation?: boolean;
+        /**
+         * @description Skip document validation entirely against the schema
+         */
+        skipValidationAgainstSchema?: boolean;
+      }
+    | boolean;
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {

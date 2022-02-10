@@ -2,29 +2,25 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroAndFriendsNamesQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
+  hero?:
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Types.Maybe<
-          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
-        >;
+        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Types.Maybe<
-          Array<Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>>
-        >;
+        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
       }
-  >;
+    | null;
 };
 
 export const HeroAndFriendsNamesDocument = gql`

@@ -2,13 +2,13 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type TwoHeroesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type TwoHeroesQuery = {
   __typename?: 'Query';
-  r2?: Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
-  luke?: Types.Maybe<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string }>;
+  r2?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+  luke?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
 };
 
 export const TwoHeroesDocument = gql`

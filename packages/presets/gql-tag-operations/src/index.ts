@@ -7,8 +7,25 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import babelPlugin from './babel';
 
-export type GqlTagConfig = {};
+export type GqlTagConfig = {
+  /**
+   * @description Instead of generating a `gql` function, this preset can also generate a `d.ts` that will enhance the `gql` function of your framework.
+   *
+   * E.g. `graphql-tag` or `@urql/core`.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   gql/:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       augmentedModuleName: '@urql/core'
+   * ```
+   */
+  augmentedModuleName?: string;
+};
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
   buildGeneratesSection: options => {
@@ -43,6 +60,8 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       { [`gen-dts`]: { sourcesWithOperations } },
     ];
 
+    const artifactFileExtension = options.presetConfig.augmentedModuleName == null ? `ts` : `d.ts`;
+
     return [
       {
         filename: `${options.baseOutputDir}/graphql.ts`,
@@ -53,13 +72,18 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         documents: sources,
       },
       {
-        filename: `${options.baseOutputDir}/index.ts`,
+        filename: `${options.baseOutputDir}/index.${artifactFileExtension}`,
         plugins: genDtsPlugins,
         pluginMap,
         schema: options.schema,
-        config: options.config,
+        config: {
+          ...options.config,
+          augmentedModuleName: options.presetConfig.augmentedModuleName,
+        },
         documents: sources,
       },
     ];
   },
 };
+
+export { babelPlugin };

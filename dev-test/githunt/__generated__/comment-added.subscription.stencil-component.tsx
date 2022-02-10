@@ -9,13 +9,13 @@ declare global {
 
   export type OnCommentAddedSubscription = {
     __typename?: 'Subscription';
-    commentAdded?: Types.Maybe<{
+    commentAdded?: {
       __typename?: 'Comment';
       id: number;
       createdAt: number;
       content: string;
       postedBy: { __typename?: 'User'; login: string; html_url: string };
-    }>;
+    } | null;
   };
 }
 

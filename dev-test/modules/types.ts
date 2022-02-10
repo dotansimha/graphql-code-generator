@@ -1,11 +1,11 @@
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
-  { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -51,7 +51,7 @@ export type Mutation = {
 };
 
 export type MutationDonateArgs = {
-  donation?: Maybe<DonationInput>;
+  donation?: InputMaybe<DonationInput>;
 };
 
 export type PaymentOption = CreditCard | Paypal;
@@ -113,7 +113,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -236,12 +236,7 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
-  donate?: Resolver<
-    Maybe<ResolversTypes['Donation']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationDonateArgs, never>
-  >;
+  donate?: Resolver<Maybe<ResolversTypes['Donation']>, ParentType, ContextType, Partial<MutationDonateArgs>>;
   pong?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
 };
 

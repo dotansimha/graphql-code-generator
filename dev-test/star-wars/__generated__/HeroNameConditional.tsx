@@ -2,29 +2,25 @@ import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   includeName: Types.Scalars['Boolean'];
 }>;
 
 export type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    { __typename?: 'Droid'; name?: Types.Maybe<string> } | { __typename?: 'Human'; name?: Types.Maybe<string> }
-  >;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   skipName: Types.Scalars['Boolean'];
 }>;
 
 export type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
-  hero?: Types.Maybe<
-    { __typename?: 'Droid'; name?: Types.Maybe<string> } | { __typename?: 'Human'; name?: Types.Maybe<string> }
-  >;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export const HeroNameConditionalInclusionDocument = gql`

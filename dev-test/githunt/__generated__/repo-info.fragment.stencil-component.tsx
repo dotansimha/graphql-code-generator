@@ -6,9 +6,9 @@ declare global {
     createdAt: number;
     repository: {
       __typename?: 'Repository';
-      description?: Types.Maybe<string>;
+      description?: string | null;
       stargazers_count: number;
-      open_issues_count?: Types.Maybe<number>;
+      open_issues_count?: number | null;
     };
     postedBy: { __typename?: 'User'; html_url: string; login: string };
   };

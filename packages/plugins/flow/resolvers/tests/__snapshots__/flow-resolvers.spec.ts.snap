@@ -97,13 +97,15 @@ export type ResolversParentTypes = {
   Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
-export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
+export type MyDirectiveDirectiveArgs = {
+  arg: $ElementType<Scalars, 'Int'>,
   arg2: $ElementType<Scalars, 'String'>,
-  arg3: $ElementType<Scalars, 'Boolean'>, };
+  arg3: $ElementType<Scalars, 'Boolean'>,
+};
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = { };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 

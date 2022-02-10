@@ -632,6 +632,34 @@ describe('Apollo Angular', () => {
     });
   });
 
+  describe('near-operation-file', () => {
+    it('Should use Operations when preset is near-operation-file', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importDocumentNodeExternallyFrom: 'near-operation-file',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`@Injectable({
+        providedIn: 'root'
+      })
+      export class TestGQL extends Apollo.Query<TestQuery, TestQueryVariables> {
+        document = Operations.TestDocument;
+
+        constructor(apollo: Apollo.Apollo) {
+          super(apollo);
+        }
+      }`);
+    });
+  });
+
   describe('others', () => {
     it('should handle fragments', async () => {
       const myFeed = gql`

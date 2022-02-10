@@ -1,5 +1,68 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.6.0
+
+### Minor Changes
+
+- bef4376d5: fix: RequireFields generic making all other fields optional
+
+### Patch Changes
+
+- c8ef37ae0: fix(typescript-resolvers): Fix optional field types
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.5.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.5.1
+
+### Patch Changes
+
+- a9f1f1594: Use maybeValue as default output for optionals on preResolveTypes: true
+- 9ea6621ec: add missing ListType method parameters
+
+## 2.5.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.4.0
+
+### Minor Changes
+
+- ad02cb9b8: Fixed an issue where ResolversParentTypes referenced non-existing fields of ResolversParentTypes when the corresponding type was a mapped enum.
+
+## 2.3.0
+
+### Minor Changes
+
+- b9e85adae: feat(visitor-plugin-common): support custom scalar type from extensions
+
+### Patch Changes
+
+- 3c2c847be: Fix dedupleFragments option for typescript-react-query (and possibly others)
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 2.2.1
+
+### Patch Changes
+
+- 0b090e31a: Apply proper indentation to DirectiveArgs types
+
 ## 2.2.0
 
 ### Minor Changes

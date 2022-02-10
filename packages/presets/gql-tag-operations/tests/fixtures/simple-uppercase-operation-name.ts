@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars-experimental, @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
-import gql from 'gql';
+import gql from 'gql-tag';
 
 //@ts-ignore
-const A = gql`
+const A = gql(/* GraphQL */ `
   query A {
     a
   }
-`;
+`);
 
 //@ts-ignore
-const B = gql`
+const B = gql(/* GraphQL */ `
   query B {
     b
   }
-`;
+`);
 
 //@ts-ignore
-const C = gql`
-  query C {
+const C = gql(/* GraphQL */ `
+  fragment C on Query {
     c
   }
-`;
+`);

@@ -4,8 +4,9 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
@@ -62,8 +63,14 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
       } else {
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
-      defsToInclude.push(resolverWithResolve);
-      defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+
+      if (config.makeResolverTypeCallable) {
+        defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
+      } else {
+        defsToInclude.push(resolverWithResolve);
+        defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+      }
+
       directiveResolverMappings[directiveName] = resolverTypeName;
     }
   }
@@ -78,7 +85,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
 
   // runs visitor
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
   const legacyStitchingResolverType = `
@@ -123,10 +130,17 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
     `);
   }
 
-  defsToInclude.push(resolverWithResolve);
+  if (!config.makeResolverTypeCallable) {
+    defsToInclude.push(resolverWithResolve);
+  }
+
   if (noSchemaStitching) {
-    // Resolver = ResolverFn | ResolverWithResolve;
-    defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+    const defs = config.makeResolverTypeCallable
+      ? // Resolver = ResolverFn
+        `${resolverType} ${resolverFnUsage};`
+      : // Resolver = ResolverFn | ResolverWithResolve
+        `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`;
+    defsToInclude.push(defs);
   } else {
     // StitchingResolver
     // Resolver =
@@ -140,7 +154,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         stitchingResolverType,
         resolverType,
         `  | ${resolverFnUsage}`,
-        `  | ${resolverWithResolveUsage}`,
+        config.makeResolverTypeCallable ? `` : `  | ${resolverWithResolveUsage}`,
         `  | ${stitchingResolverUsage};`,
       ].join('\n')
     );
@@ -185,7 +199,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info${optionalSignForInfoArg}: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,

@@ -1,5 +1,130 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.2
+
+### Patch Changes
+
+- ec4a5fd70: fix(react-query): avoid unused `RequestInit` import when fetcher is not exposed
+
+## 3.5.1
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 3.5.0
+
+### Minor Changes
+
+- ad8ffa457: Add options to exposed custom fetcher.
+  eg. This enables passing headers to fetcher for prefetchQuery & get more query possibilities (user authentication)
+
+## 3.4.0
+
+### Minor Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+### Patch Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+## 3.3.2
+
+### Patch Changes
+
+- fa517214c: Generate `getKey` function on generated infinite queries when both `exposeQueryKeys` and `addInfiniteQuery` settings are `true`.
+
+## 3.3.1
+
+### Patch Changes
+
+- 758c220da: Fix the React-Query InfiniteQuery hook error
+
+## 3.3.0
+
+### Minor Changes
+
+- fc92334d4: Gets rid of graphql-tag from peerdeps of typescript-react-query plugin
+
+## 3.2.3
+
+### Patch Changes
+
+- 9b4629465: fix invalid generated TypeScript code due to the `exposeMutationKey` option adding an unnecessary bracket
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 3.2.2
+
+### Patch Changes
+
+- 0d71a60d9: stringify fetchParams if an object was provided via YAML config
+
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 3.2.0
+
+### Minor Changes
+
+- f7a320a2d: Updates react-query to include the useInfiniteQuery as a config option
+
+## 3.1.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
+## 3.1.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 3.0.3
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
+## 3.0.1
+
+### Patch Changes
+
+- 4695472ee: make sourceData param required when user does not provide endpoint in config
+- Updated dependencies [0b090e31a]
+  - @graphql-codegen/visitor-plugin-common@2.2.1
+
 ## 3.0.0
 
 ### Major Changes
