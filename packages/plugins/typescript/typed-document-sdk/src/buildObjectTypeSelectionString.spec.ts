@@ -54,11 +54,11 @@ describe('buildObjectTypeSelectionString', () => {
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
       "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
-        a?: true | {
+        a?: true | SDKSelectionSet<{
           [SDKFieldArgumentSymbol]?: {
             arg?: string | never;
           }
-        };
+        }>;
       }>;"
     `);
   });
@@ -80,11 +80,11 @@ describe('buildObjectTypeSelectionString', () => {
     expect(buildObjectTypeSelectionString(graphQLObjectType)).toMatchInlineSnapshot(`
       "type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
         __typename?: true;
-        a?: {
+        a?: SDKSelectionSet<{
           [SDKFieldArgumentSymbol]: {
             arg: string | never;
           }
-        };
+        }>;
       }>;"
     `);
   });

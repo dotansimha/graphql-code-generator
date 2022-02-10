@@ -888,11 +888,11 @@ describe('SDKLogic', () => {
       __typename?: true;
       a?:
         | true
-        | {
+        | SDKSelectionSet<{
             [SDKFieldArgumentSymbol]?: {
               arg?: string | never;
             };
-          };
+          }>;
     }>;
     type GeneratedSDKArgumentsHello = {
       a: GeneratedSDKArgumentsHello & {

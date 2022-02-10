@@ -31,11 +31,11 @@ const buildFieldSelectionSetString = (field: GraphQLField<any, any>): string => 
     }
 
     const args = stripIndent`
-      {
+      SDKSelectionSet<{
         [SDKFieldArgumentSymbol]${requireArguments ? `` : `?`}: {
           ${argumentPartials.join(`;\n`)};
         }
-      }
+      }>
     `
       .split(`\n`)
       .map((line, i) => (i === 0 ? line : `      ${line}`))
