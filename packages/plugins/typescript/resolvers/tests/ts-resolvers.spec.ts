@@ -962,6 +962,80 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     await validate(result);
   });
 
+  it('Should allow to override context with mapped context type', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        contextType: './my-file#MyCustomCtx',
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveArgs = {
+      arg: Scalars['Int'];
+      arg2: Scalars['String'];
+      arg3: Scalars['Boolean'];
+    };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = MyCustomCtx, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyOtherTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyUnionResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
+      };
+    `);
+
+    await validate(result);
+  });
   it('Should allow to override context with mapped context type as default export', async () => {
     const result = (await plugin(
       schema,
@@ -1141,6 +1215,29 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
         something?: Resolver<ResolversTypes['MyType'], ParentType, ContextTypeTwo>;
+      };
+    `);
+  });
+
+  it('should generate named custom field level context type for field with directive', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        directiveContextExtender: ['authenticated#./my-file#AuthenticatedContext'],
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { AuthenticatedContext } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType>>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
   });

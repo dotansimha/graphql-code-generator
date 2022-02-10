@@ -1433,6 +1433,10 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
+        "directiveContextExtender": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
         "rootValueType": {
           "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
           "type": "string"
@@ -3034,6 +3038,10 @@
         "fieldContextTypes": {
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
+        "directiveContextExtender": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
         "rootValueType": {
           "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
