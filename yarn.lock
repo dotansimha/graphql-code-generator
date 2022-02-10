@@ -1995,7 +1995,7 @@
     source-map "^0.5.7"
     stylis "^4.0.3"
 
-"@emotion/cache@^11.4.0", "@emotion/cache@^11.6.0", "@emotion/cache@^11.7.1":
+"@emotion/cache@^11.4.0", "@emotion/cache@^11.7.1":
   version "11.7.1"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.7.1.tgz#08d080e396a42e0037848214e8aa7bf879065539"
   integrity sha512-r65Zy4Iljb8oyjtLeCuBH8Qjiy107dOYC6SJq7g7GV5UCQWMObY4SJDPGFjiiVpPrOJ2hmJOoBiYTC7hwx9E2A==
@@ -2034,19 +2034,6 @@
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.5.tgz#2c40f81449a4e554e9fc6396910ed4843ec2be50"
   integrity sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==
-
-"@emotion/react@11.7.0":
-  version "11.7.0"
-  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.7.0.tgz#b179da970ac0e8415de3ac165deadf8d9c4bf89f"
-  integrity sha512-WL93hf9+/2s3cA1JVJlz8+Uy6p6QWukqQFOm2OZO5ki51hfucHMOmbSjiyC3t2Y4RI8XUmBoepoc/24ny/VBbA==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@emotion/cache" "^11.6.0"
-    "@emotion/serialize" "^1.0.2"
-    "@emotion/sheet" "^1.1.0"
-    "@emotion/utils" "^1.0.0"
-    "@emotion/weak-memoize" "^0.2.5"
-    hoist-non-react-statics "^3.3.1"
 
 "@emotion/react@11.7.1", "@emotion/react@^11.1.1":
   version "11.7.1"
@@ -3129,15 +3116,15 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@1.8.7":
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.8.7.tgz#898f93648b69372ecb518694719116c834608f00"
-  integrity sha512-ZqW6nmfBfUWyoEiUNIy3kU4Of2jowINYxQKTR3lavoLTHQ/+WfP1+hZcJ84h6ueDnh0wu1mxLNMrxRzzvAY0Rw==
+"@theguild/components@1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.9.0.tgz#06d19ff0833c3bbf4f299b40b61fc1ead1eec4d4"
+  integrity sha512-9xsFBr8T6dVFDaSiiMKJiRA2nC0L/xa5YNvytWH6KxkdVNDQ5X149cmK+WFK2pAKHyAp2Terv/jiq2YNwCGyRg==
   dependencies:
-    "@emotion/react" "11.7.0"
+    "@emotion/react" "11.7.1"
     "@emotion/styled" "11.6.0"
     algoliasearch "4.11.0"
-    focus-trap-react "8.7.1"
+    focus-trap-react "8.9.1"
     polished "4.1.3"
     react-instantsearch-dom "6.17.0"
     react-paginate "7.1.3"
@@ -6822,17 +6809,17 @@ focus-lock@^0.9.1:
   dependencies:
     tslib "^2.0.3"
 
-focus-trap-react@8.7.1:
-  version "8.7.1"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.7.1.tgz#a9e4dc866db5e6794bdb751cad9ddc8989598ec5"
-  integrity sha512-1bCCtdZXSzYVrMEcvHfHq+706OSM5r3iZsBFXy9zbnf3+5dyCFiEVWix7Sf6jUaOgshjpyDvZHiBhSlcsO9k3A==
+focus-trap-react@8.9.1:
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.9.1.tgz#5f2b3bce6a7c4de6485fd6f4c5e8c0cbaa6e9ad3"
+  integrity sha512-QGVw4ch1ZfT2IcCL1ehBgrwnFuPA0nP7hXcrZzC8SThbktt/jiXCWQSKhA2WL0nVbxTiZ7YpIu/foTekp+dcqA==
   dependencies:
-    focus-trap "^6.6.1"
+    focus-trap "^6.7.2"
 
-focus-trap@^6.6.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.6.1.tgz#761ce2c82ddd72beeb049e968bc8414e25b704aa"
-  integrity sha512-x9BWuAeF5UrfWuYKJ3jYrjcVYSYptS9CqtxH5IH7lPlZrMsaugKeAa0HtoZSBZe5DmeTMx2m0qY464ZMzqarzw==
+focus-trap@^6.7.2:
+  version "6.7.3"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.7.3.tgz#b5dc195b49c90001f08a63134471d1e6dd381ddd"
+  integrity sha512-8xCEKndV4KrseGhFKKKmczVA14yx1/hnmFICPOjcFjToxCJYj/NHH43tPc3YE/PLnLRNZoFug0EcWkGQde/miQ==
   dependencies:
     tabbable "^5.2.1"
 
