@@ -147,7 +147,6 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(
         `import { useQuery, UseQueryOptions, useInfiniteQuery, UseInfiniteQueryOptions, useMutation, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
-      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
 
       expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
@@ -305,7 +304,6 @@ describe('React-Query', () => {
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
-      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
       expect(out.content).toBeSimilarStringTo(
         `useTestQuery.fetcher = (variables?: TestQueryVariables, options?: RequestInit['headers']) => customFetcher<TestQuery, TestQueryVariables>(TestDocument, variables, options);`
       );
