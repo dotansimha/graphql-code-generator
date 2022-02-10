@@ -16,7 +16,7 @@
     "@types/classnames": "2.3.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
-    "@types/node": "16.11.22",
+    "@types/node": "16.11.24",
     "@types/react": "17.0.39",
     "@types/react-dom": "17.0.11",
     "concurrently": "7.0.0",
