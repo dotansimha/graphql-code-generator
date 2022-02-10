@@ -159,7 +159,7 @@ type SDKVariableDefinitions<TSDKInputTypeMap extends SDKInputTypeMap> = {
 type SDKSelectionWithVariables<
   /** GraphQLTypeName -> TS type */
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_SDKSelectionSet,
+  T_SDKSelectionSet extends SDKSelectionSet<any>,
   T_ArgumentType,
   /** variableName -> GraphQLTypeName */
   T_VariableDefinitions extends SDKVariableDefinitions<T_SDKInputTypeMap> | void
@@ -189,13 +189,13 @@ type SDKSelectionWithVariables<
 
 type SDK<
   T_SDKInputTypeMap extends SDKInputTypeMap,
-  T_SDKQuerySelectionSet,
+  T_SDKQuerySelectionSet extends SDKSelectionSet<any>,
   T_QueryArgumentType,
   T_QueryResultType extends ResultType,
-  T_SDKMutationSelectionSet = void,
+  T_SDKMutationSelectionSet extends SDKSelectionSet<any> | void = void,
   T_SDKMutationArgumentType = void,
   T_MutationResultType extends ResultType | void = void,
-  T_SDKSubscriptionSelectionSet = void,
+  T_SDKSubscriptionSelectionSet extends SDKSelectionSet<any> | void = void,
   T_SDKSubscriptionArgumentType = void,
   T_SubscriptionResultType extends ResultType | void = void
 > = {

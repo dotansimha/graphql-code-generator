@@ -880,6 +880,59 @@ describe('SDKLogic', () => {
     expect(document).toStrictEqual(expectedDocument);
   });
 
+  it('query primitive field with variables', () => {
+    type InputTypes = {
+      String: string;
+    };
+    type GeneratedSDKSelectionSetHello = SDKSelectionSet<{
+      __typename?: true;
+      a?:
+        | true
+        | {
+            [SDKFieldArgumentSymbol]?: {
+              arg?: string | never;
+            };
+          };
+    }>;
+    type GeneratedSDKArgumentsHello = {
+      a: GeneratedSDKArgumentsHello & {
+        [SDKFieldArgumentSymbol]: {
+          arg: 'String';
+        };
+      };
+    };
+    type GeneratedSDKResultHello = {
+      a: InputTypes['String'];
+    };
+
+    const sdk = createSDK<
+      InputTypes,
+      GeneratedSDKSelectionSetHello,
+      GeneratedSDKArgumentsHello,
+      GeneratedSDKResultHello
+    >();
+
+    const document = sdk.query({
+      name: 'Foo',
+      variables: {
+        myString: 'String',
+      },
+      selection: {
+        a: {
+          [sdk.arguments]: {
+            arg: 'myString',
+          },
+        },
+      },
+    });
+
+    expect(print(document)).toMatchInlineSnapshot(`
+      "query Foo($myString: String) {
+        a(arg: $myString)
+      }"
+    `);
+  });
+
   it('union types', () => {
     type InputTypes = {
       String: string;
@@ -892,7 +945,7 @@ describe('SDKLogic', () => {
       __typename?: true;
       user?: SDKUnionSelectionSet<{
         '...User': SDKSelectionSet<{
-          __typename?: true;
+          __typename?: boolean;
           id?: boolean;
           login?: boolean;
         }>;
@@ -924,8 +977,8 @@ describe('SDKLogic', () => {
         [SDKUnionResultSymbol]: true;
         User: {
           __typename: 'User';
-          id?: InputTypes['String'];
-          login?: InputTypes['String'];
+          id: InputTypes['String'];
+          login: InputTypes['String'];
         };
         Error: {
           __typename: 'Error';
