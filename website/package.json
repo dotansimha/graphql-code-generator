@@ -24,7 +24,7 @@
     "eslint-config-next": "12.0.10",
     "jsonpath": "1.1.1",
     "typescript": "4.5.5",
-    "wait-on": "6.0.0"
+    "wait-on": "6.0.1"
   },
   "dependencies": {
     "@chakra-ui/icons": "1.1.5",
