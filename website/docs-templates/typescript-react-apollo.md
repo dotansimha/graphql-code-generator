@@ -72,3 +72,15 @@ Codegen also supports generating High-Order-Components (deprecated in `@apollo/c
 config:
   withHOC: true
 ```
+
+> Watch [Episode #29 of `graphql.wtf`](https://graphql.wtf/episodes/29-apollo-client-3-with-graphql-code-generator) for a quick introduction to using this plugin with GraphQL Code Generator:
+
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/PYDGjTufGsk"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
