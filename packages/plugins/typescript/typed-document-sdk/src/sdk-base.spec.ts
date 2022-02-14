@@ -11,12 +11,12 @@ describe('SDKLogic', () => {
   it('anonymous query operation', () => {
     const sdk = createSDK<
       {},
-      {},
       SDKSelectionSet<{
         __typename?: true;
       }>,
+      {},
       {
-        __typename?: 'Query';
+        __typename: 'Query';
       }
     >();
     const operation = sdk.query({
@@ -59,10 +59,10 @@ describe('SDKLogic', () => {
   it('named query operation', () => {
     const sdk = createSDK<
       {},
-      {},
       SDKSelectionSet<{
         __typename?: true;
       }>,
+      {},
       {
         __typename?: 'Query';
       }
@@ -216,17 +216,17 @@ describe('SDKLogic', () => {
   it('nested operation', () => {
     const sdk = createSDK<
       {},
-      {},
       SDKSelectionSet<{
         __typename?: true;
         foo?: {
           a?: true;
         };
       }>,
+      {},
       {
-        __typename?: 'Query';
-        foo?: {
-          a?: boolean;
+        __typename: 'Query';
+        foo: {
+          a: boolean;
         };
       }
     >();
@@ -1192,6 +1192,7 @@ describe('SDKLogic', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     function api_test(value: OperationType) {
+      value;
       if (value.user.__typename === 'User') {
         value.user.id;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
