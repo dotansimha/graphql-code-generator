@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.6
+
+### Patch Changes
+
+- dfd798daa: chore(react-apollo): add hook suffix to lazy query
+
 ## 3.2.5
 
 ### Patch Changes
