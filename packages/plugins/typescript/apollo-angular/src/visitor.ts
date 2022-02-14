@@ -32,6 +32,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   subscriptionSuffix?: string;
   apolloAngularPackage: string;
   additionalDI?: string[];
+  addExplicitOverride: boolean;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
@@ -78,6 +79,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
           rawConfig.gqlImport,
           !rawConfig.apolloAngularVersion || rawConfig.apolloAngularVersion === 2 ? `apollo-angular#gql` : null
         ),
+        addExplicitOverride: getConfigValue(rawConfig.addExplicitOverride, false),
       },
       documents
     );
@@ -299,7 +301,10 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     providedIn: ${this._providedIn(node)}
   })
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
-    document = ${this._getDocumentNodeVariable(node, documentVariableName)};
+    ${this.config.addExplicitOverride ? 'override ' : ''}document = ${this._getDocumentNodeVariable(
+      node,
+      documentVariableName
+    )};
     ${this._namedClient(node)}
     constructor(${this.dependencyInjections}) {
       super(${this.dependencyInjectionArgs});
@@ -377,13 +382,13 @@ ${camelCase(o.node.name.value)}Watch(variables${
 
   interface WatchQueryOptionsAlone<V>
     extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}
-    
+
   interface QueryOptionsAlone<V>
     extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}
-    
+
   interface MutationOptionsAlone<T, V>
     extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}
-    
+
   interface SubscriptionOptionsAlone<V>
     extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}
 
