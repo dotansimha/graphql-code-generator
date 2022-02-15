@@ -114,7 +114,7 @@ const Tweet = (props: {
   /** tweet property has the correct type 🎉 */
   tweet: DocumentType<typeof TweetFragment>
 }) => {
-  return <li data-id={props.id}>{props.body}</li>
+  return <li data-id={props.tweet.id}>{props.tweet.body}</li>
 }
 
 const TweetsQuery = gql(/* GraphQL */ `
@@ -283,5 +283,118 @@ const FooQuery = gql(/* GraphQL */ `
 ```
 
 You can find a [full `gql-tag-operations-urql` example of this in the GraphQL Code Generator GitHub repository](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/gql-tag-operations-urql).
+
+
+## Fragment Masking
+
+Fragment masking is a powerful tool that allows building scalable UI components, where each component only has access to the data dependencies described by its fragments. The fragments of those components are then composed on a query operation. This pattern is also known as data masking in the context of relay. `gql-tag-operations-preset` allows using fragment masking with any GraphQL client.
+
+Fragment masking is enabled via the `fragmentMasking` config option.
+
+**codegen.yml**
+
+```yml
+schema: src/path/to/your/schema.graphql
+documents:
+  - 'src/**/*.ts'
+  - '!src/gql/**/*'
+generates:
+  src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      # enable fragment masking
+      fragmentMasking: true
+```
+
+After enabling fragment masking and re-generating your codegen artifacts you now have access to a `useFragment` function, which is utilized for unmasking dependencies.
+
+```tsx
+import { gql, FragmentType, useFragment } from '../gql'
+
+const TweetFragment = gql(/* GraphQL */ `
+  fragment TweetFragment on Tweet {
+    id
+    body
+  }
+`)
+
+const Tweet = (props: {
+  /** tweet property has the correct type 🎉 */
+  tweet: FragmentType<typeof TweetFragment>
+}) => {
+  // we unmask our fragment to the actual type
+  const tweet = useFragment(TweetFragment, props.tweet)
+  return <li data-id={tweet.id}>{tweet.body}</li>
+}
+
+const TweetsQuery = gql(/* GraphQL */ `
+  query TweetsQuery {
+    Tweets {
+      id
+      ...TweetFragment
+    }
+  }
+`)
+
+const Tweets = () => {
+  const [result] = useQuery({ query: TweetsQuery })
+  const { data, fetching, error } = result
+
+  if (fetching) return <p>Loading...</p>
+  if (error) return <p>Oh no... {error.message}</p>
+
+  return (
+    <ul>
+      {data.Tweets.map(tweet => {
+        // TypeScript error, as the fragment properties are masked.
+        tweet.body
+        return <Tweet key={tweet.id} tweet={tweet} />
+      })}
+    </ul>
+  )
+}
+```
+
+**Note**: The default `useFragment` implementation does only data masking on a TypeScript type level. If you log the object, you can all properties, including the masked ones, are available on the object. For true runtime data masking, the GraphQL client must implement it. Currently, there is no client that does this (aside from relay which should best be used with relay-compiler).
+
+### Fragment Masking with custom unmask name
+
+By default the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
+
+**codegen.yml**
+
+```yml
+schema: src/path/to/your/schema.graphql
+documents:
+  - 'src/**/*.ts'
+  - '!src/gql/**/*'
+generates:
+  src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      # enable fragment masking
+      fragmentMasking:
+        unmaskFunctionName: "getFragment"
+```
+
+### Module augmentation with fragment masking
+
+Similar to the `gql` module augmentation configuration it is also possible to generate type definitions for the unmask function. The `fragmentMasking.unmaskFunctionName` will be used when doing so.
+
+**codegen.yml**
+
+```yml
+schema: src/path/to/your/schema.graphql
+documents:
+  - 'src/**/*.ts'
+  - '!src/gql/**/*'
+generates:
+  src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking:
+        augmentedModuleName: "@something/fragment"
+```
+
 
 {@apiDocs}
