@@ -35,35 +35,131 @@ type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>> = ['scalars', 'objects', 'enums'];
 
-export function buildModule(
-  name: string,
-  doc: DocumentNode,
-  {
-    importNamespace,
-    importPath,
-    encapsulate,
-    shouldDeclare,
-    rootTypes,
-    schema,
-    baseVisitor,
-    useGraphQLModules,
-  }: {
-    importNamespace: string;
-    importPath: string;
-    encapsulate: ModulesConfig['encapsulateModuleTypes'];
-    shouldDeclare: boolean;
-    rootTypes: string[];
-    baseVisitor: BaseVisitor;
-    schema?: GraphQLSchema;
-    useGraphQLModules: boolean;
-  }
-): string {
+export function extractDeclared({ doc, rootTypes }: { doc: DocumentNode; rootTypes: string[] }) {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
   const defined: Registry = createObject(registryKeys, () => []);
   const extended: Registry = createObject(registryKeys, () => []);
-
-  // List of types used in objects, fields, arguments etc
   const usedTypes = collectUsedTypes(doc);
+
+  function collectFields(
+    node:
+      | ObjectTypeDefinitionNode
+      | ObjectTypeExtensionNode
+      | InterfaceTypeDefinitionNode
+      | InterfaceTypeExtensionNode
+      | InputObjectTypeDefinitionNode
+      | InputObjectTypeExtensionNode,
+    picksObj: Record<string, string[]>
+  ) {
+    const name = node.name.value;
+
+    if (node.fields) {
+      if (!picksObj[name]) {
+        picksObj[name] = [];
+      }
+
+      node.fields.forEach(field => {
+        picksObj[name].push(field.name.value);
+      });
+    }
+  }
+
+  function collectValuesFromEnum(node: EnumTypeDefinitionNode | EnumTypeExtensionNode) {
+    const name = node.name.value;
+
+    if (node.values) {
+      if (!picks.enums[name]) {
+        picks.enums[name] = [];
+      }
+
+      node.values.forEach(field => {
+        picks.enums[name].push(field.name.value);
+      });
+    }
+  }
+
+  function collectTypeDefinition(node: TypeDefinitionNode) {
+    const name = node.name.value;
+
+    switch (node.kind) {
+      case Kind.OBJECT_TYPE_DEFINITION: {
+        defined.objects.push(name);
+        collectFields(node, picks.objects);
+        break;
+      }
+
+      case Kind.ENUM_TYPE_DEFINITION: {
+        defined.enums.push(name);
+        collectValuesFromEnum(node);
+        break;
+      }
+
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION: {
+        defined.inputs.push(name);
+        collectFields(node, picks.inputs);
+        break;
+      }
+
+      case Kind.SCALAR_TYPE_DEFINITION: {
+        defined.scalars.push(name);
+        break;
+      }
+
+      case Kind.INTERFACE_TYPE_DEFINITION: {
+        defined.interfaces.push(name);
+        collectFields(node, picks.interfaces);
+        break;
+      }
+
+      case Kind.UNION_TYPE_DEFINITION: {
+        defined.unions.push(name);
+        break;
+      }
+    }
+  }
+
+  function collectTypeExtension(node: TypeExtensionNode) {
+    const name = node.name.value;
+
+    switch (node.kind) {
+      case Kind.OBJECT_TYPE_EXTENSION: {
+        collectFields(node, picks.objects);
+        // Do not include root types as extensions
+        // so we can use them in DefinedFields
+        if (rootTypes.includes(name)) {
+          pushUnique(defined.objects, name);
+          return;
+        }
+
+        pushUnique(extended.objects, name);
+
+        break;
+      }
+
+      case Kind.ENUM_TYPE_EXTENSION: {
+        collectValuesFromEnum(node);
+        pushUnique(extended.enums, name);
+        break;
+      }
+
+      case Kind.INPUT_OBJECT_TYPE_EXTENSION: {
+        collectFields(node, picks.inputs);
+        pushUnique(extended.inputs, name);
+        break;
+      }
+
+      case Kind.INTERFACE_TYPE_EXTENSION: {
+        collectFields(node, picks.interfaces);
+        pushUnique(extended.interfaces, name);
+        break;
+      }
+
+      case Kind.UNION_TYPE_EXTENSION: {
+        pushUnique(extended.unions, name);
+        break;
+      }
+    }
+  }
 
   visit(doc, {
     ObjectTypeDefinition(node) {
@@ -100,6 +196,34 @@ export function buildModule(
       collectTypeExtension(node);
     },
   });
+
+  return { picks, defined, extended, usedTypes };
+}
+
+export function buildModule(
+  name: string,
+  doc: DocumentNode,
+  {
+    importNamespace,
+    importPath,
+    encapsulate,
+    shouldDeclare,
+    rootTypes,
+    schema,
+    baseVisitor,
+    useGraphQLModules,
+  }: {
+    importNamespace: string;
+    importPath: string;
+    encapsulate: ModulesConfig['encapsulateModuleTypes'];
+    shouldDeclare: boolean;
+    rootTypes: string[];
+    baseVisitor: BaseVisitor;
+    schema?: GraphQLSchema;
+    useGraphQLModules: boolean;
+  }
+): string {
+  const { picks, defined, extended, usedTypes } = extractDeclared({ doc, rootTypes });
 
   // Defined and Extended types
   const visited: Registry = createObject(registryKeys, key => concatByKey(defined, extended, key));
@@ -343,133 +467,5 @@ export function buildModule(
 
   function printExportType(typeName: string): string {
     return `export type ${encapsulateTypeName(typeName)} = ${printTypeBody(typeName)};`;
-  }
-
-  //
-  //
-  //
-  // Utils
-  //
-  //
-  //
-
-  function collectFields(
-    node:
-      | ObjectTypeDefinitionNode
-      | ObjectTypeExtensionNode
-      | InterfaceTypeDefinitionNode
-      | InterfaceTypeExtensionNode
-      | InputObjectTypeDefinitionNode
-      | InputObjectTypeExtensionNode,
-    picksObj: Record<string, string[]>
-  ) {
-    const name = node.name.value;
-
-    if (node.fields) {
-      if (!picksObj[name]) {
-        picksObj[name] = [];
-      }
-
-      node.fields.forEach(field => {
-        picksObj[name].push(field.name.value);
-      });
-    }
-  }
-
-  function collectValuesFromEnum(node: EnumTypeDefinitionNode | EnumTypeExtensionNode) {
-    const name = node.name.value;
-
-    if (node.values) {
-      if (!picks.enums[name]) {
-        picks.enums[name] = [];
-      }
-
-      node.values.forEach(field => {
-        picks.enums[name].push(field.name.value);
-      });
-    }
-  }
-
-  function collectTypeDefinition(node: TypeDefinitionNode) {
-    const name = node.name.value;
-
-    switch (node.kind) {
-      case Kind.OBJECT_TYPE_DEFINITION: {
-        defined.objects.push(name);
-        collectFields(node, picks.objects);
-        break;
-      }
-
-      case Kind.ENUM_TYPE_DEFINITION: {
-        defined.enums.push(name);
-        collectValuesFromEnum(node);
-        break;
-      }
-
-      case Kind.INPUT_OBJECT_TYPE_DEFINITION: {
-        defined.inputs.push(name);
-        collectFields(node, picks.inputs);
-        break;
-      }
-
-      case Kind.SCALAR_TYPE_DEFINITION: {
-        defined.scalars.push(name);
-        break;
-      }
-
-      case Kind.INTERFACE_TYPE_DEFINITION: {
-        defined.interfaces.push(name);
-        collectFields(node, picks.interfaces);
-        break;
-      }
-
-      case Kind.UNION_TYPE_DEFINITION: {
-        defined.unions.push(name);
-        break;
-      }
-    }
-  }
-
-  function collectTypeExtension(node: TypeExtensionNode) {
-    const name = node.name.value;
-
-    switch (node.kind) {
-      case Kind.OBJECT_TYPE_EXTENSION: {
-        collectFields(node, picks.objects);
-        // Do not include root types as extensions
-        // so we can use them in DefinedFields
-        if (rootTypes.includes(name)) {
-          pushUnique(defined.objects, name);
-          return;
-        }
-
-        pushUnique(extended.objects, name);
-
-        break;
-      }
-
-      case Kind.ENUM_TYPE_EXTENSION: {
-        collectValuesFromEnum(node);
-        pushUnique(extended.enums, name);
-        break;
-      }
-
-      case Kind.INPUT_OBJECT_TYPE_EXTENSION: {
-        collectFields(node, picks.inputs);
-        pushUnique(extended.inputs, name);
-        break;
-      }
-
-      case Kind.INTERFACE_TYPE_EXTENSION: {
-        collectFields(node, picks.interfaces);
-        pushUnique(extended.interfaces, name);
-        break;
-      }
-
-      case Kind.UNION_TYPE_EXTENSION: {
-        pushUnique(extended.unions, name);
-        break;
-      }
-    }
   }
 }

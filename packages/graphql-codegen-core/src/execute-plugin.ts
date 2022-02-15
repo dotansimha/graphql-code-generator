@@ -5,8 +5,8 @@ export interface ExecutePluginOptions {
   name: string;
   config: Types.PluginConfig;
   parentConfig: Types.PluginConfig;
-  schema: DocumentNode;
-  schemaAst?: GraphQLSchema;
+  schema: DocumentNode; // This is a mixup we should address when refactoring v2
+  schemaAst?: GraphQLSchema; // This is a mixup we should address when refactoring v2
   documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];

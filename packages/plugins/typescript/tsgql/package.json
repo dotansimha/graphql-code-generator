@@ -1,0 +1,49 @@
+{
+  "name": "@graphql-codegen/tsgql",
+  "version": "0.0.0",
+  "description": "GraphQL Code Generator plugin for generating TypeScript types for resolvers signature based on TypeScript string literals",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/typescript/tsgql"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman --config ../../../../jest.config.js",
+    "prepack": "bob prepack"
+  },
+  "dependencies": {
+    "@graphql-codegen/visitor-plugin-common": "2.5.1",
+    "@graphql-codegen/graphql-modules-preset": "^2.3.1",
+    "@graphql-codegen/plugin-helpers": "^2.3.0",
+    "@graphql-tools/utils": "^8.1.1",
+    "tslib": "~2.3.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}
