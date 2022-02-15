@@ -71,7 +71,7 @@
     "listr": "^0.14.3",
     "listr-update-renderer": "^0.5.0",
     "log-symbols": "^4.0.0",
-    "minimatch": "^4.0.0",
+    "minimatch": "^5.0.0",
     "mkdirp": "^1.0.4",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
