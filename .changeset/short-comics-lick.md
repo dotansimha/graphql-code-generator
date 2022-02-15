@@ -55,9 +55,7 @@
 '@graphql-codegen/graphql-modules-preset': patch
 '@graphql-codegen/import-types-preset': patch
 '@graphql-codegen/near-operation-file-preset': patch
-'@graphql-codegen/testing': patch
 '@graphql-codegen/plugin-helpers': patch
-'@graphql-codegen/website': patch
 ---
 
 test patch on all packages for renovate/changesets-cli-2.x
