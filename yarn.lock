@@ -2401,11 +2401,6 @@
     tslib "~2.3.0"
     value-or-promise "1.0.11"
 
-"@graphql-typed-document-node/core@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.0.tgz#0eee6373e11418bfe0b5638f654df7a4ca6a3950"
-  integrity sha512-wYn6r8zVZyQJ6rQaALBEln5B1pzxb9shV5Ef97kTvn6yVGrqyXVnDqnU24MXnFubR+rZjBY9NWuxX3FB2sTsjg==
-
 "@graphql-typed-document-node/core@3.1.1", "@graphql-typed-document-node/core@^3.0.0", "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
@@ -7263,12 +7258,12 @@ graphql-helix@1.11.0:
   resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.11.0.tgz#bd8c3e9e208f853215fff7b6b45e4e46b909d0b6"
   integrity sha512-JFBuIsfeNDTTotAkHzwTmXgSpFi2bfoX4E8ZlXfgQB2gD8XgOWSTJc1ujN59ZrGBI8M/99h3tEIaH5grR17EIA==
 
-graphql-jit@0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.2.tgz#8cf08863c22377ea4a0c4b3c12a258f3c94934ca"
-  integrity sha512-u+FuMCBZfoB0v8Iw6blh+D3Feke2m6hS1TFhStJcLTCOyH+KmJPo3XCFJC5QLHxqT+PJEfyf0S+zKJUZjZrhsg==
+graphql-jit@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/graphql-jit/-/graphql-jit-0.7.3.tgz#cdc14d93efb8aba75cafb0be263cbafd4881d4d9"
+  integrity sha512-sb7j5K4uWjpzZvmhEzU9ei9bgZImmB8bnzE2u9Mi5IkDk1Hjb0wc5+r7XAy9dwWDfuAzFZnN5mOmKjsBu1+4xw==
   dependencies:
-    "@graphql-typed-document-node/core" "3.1.0"
+    "@graphql-typed-document-node/core" "^3.1.1"
     fast-json-stringify "^1.13.0"
     generate-function "^2.3.1"
     json-schema "^0.4.0"
