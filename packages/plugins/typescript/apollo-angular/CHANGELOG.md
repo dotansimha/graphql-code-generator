@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 3.4.0
+
+### Minor Changes
+
+- 77c0f08b2: Add `override` modifier to make the generated code compatible with the `noImplicitOverride` compilation option of Typescript v4.3+
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+
 ## 3.3.3
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-vue-apollo
 
+## 3.2.5
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+
 ## 3.2.4
 
 ### Patch Changes

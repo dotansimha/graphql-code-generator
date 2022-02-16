@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.6.2
+
+### Patch Changes
+
+- 1e3d37a34: resolve local presets
+
 ## 2.6.1
 
 ### Patch Changes
