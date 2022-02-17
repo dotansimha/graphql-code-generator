@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 2.3.4
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+
 ## 2.3.3
 
 ### Patch Changes
