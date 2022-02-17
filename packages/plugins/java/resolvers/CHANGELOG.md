@@ -1,5 +1,13 @@
 # @graphql-codegen/java-resolvers
 
+## 2.2.5
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+  - @graphql-codegen/java-common@2.1.12
+
 ## 2.2.4
 
 ### Patch Changes
