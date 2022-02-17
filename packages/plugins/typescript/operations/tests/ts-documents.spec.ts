@@ -6029,4 +6029,93 @@ function test(q: GetEntityBrandDataQuery): void {
       );
     `);
   });
+
+  describe('inlineFragmentTypes option', () => {
+    it("'combine' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'combine' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User' }
+            & UserFragmentFragment
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string };
+      `);
+    });
+
+    it("'inline' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'inline' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string };
+      `);
+    });
+
+    it("'mask' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'mask' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User' }
+            & { ' $fragmentRefs': { 'UserFragmentFragment': UserFragmentFragment } }
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName': 'UserFragmentFragment' };
+      `);
+    });
+  });
 });
