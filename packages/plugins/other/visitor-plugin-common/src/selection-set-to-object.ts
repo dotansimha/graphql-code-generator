@@ -492,9 +492,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const fields = [...allStrings, mergedObjectsAsString].filter(Boolean);
 
     if (fragmentsSpreadUsages.length) {
-      if (this._config.inlineFragmentTypes === 'inline') {
+      if (this._config.inlineFragmentTypes === 'combine') {
         fields.push(...fragmentsSpreadUsages);
-      } else {
+      } else if (this._config.inlineFragmentTypes === 'mask') {
         fields.push(`{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
       }
     }
