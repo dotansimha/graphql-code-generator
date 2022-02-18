@@ -181,7 +181,9 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type GraphQLResolveInfo } from 'graphql';`);
+    expect(result.prepend).toContain(
+      `import { type GraphQLResolveInfo, type GraphQLScalarType, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
@@ -192,9 +194,7 @@ describe('Flow Resolvers Plugin', () => {
       { outputFile: '' }
     ) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).not.toContain(
-      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(result.prepend).toContain(`import { type GraphQLResolveInfo } from 'graphql';`);
   });
 
   it('Should generate valid output with args', async () => {
