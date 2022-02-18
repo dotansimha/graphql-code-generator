@@ -105,6 +105,18 @@ describe('parseMapper', () => {
     });
   });
 
+  it.only('Should support generics with nested imports', () => {
+    const result = parseMapper('file#Type<import("foo").Bar>');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Type', // actual: "import": "Type<import(\"foo\")",
+      type: 'Type<import("foo").Bar>',
+      source: 'file',
+    });
+  });
+
   describe('suffix', () => {
     it('Should not add a suffix to a simple named mapper', () => {
       const result = parseMapper('MyType', null, 'Model');
