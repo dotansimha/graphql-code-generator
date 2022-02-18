@@ -3723,10 +3723,10 @@
     "@urql/core" ">=2.3.6"
     wonka "^4.0.14"
 
-"@urql/introspection@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.1.tgz#7a0d71a839bd807db57cb067a6c469fe74fb87cb"
-  integrity sha512-4Srr45lA00cVlfRGtGJqYlc2vcPN6BZwFW9EVY20yROaoADCGNxm6xmScZhxuCRQPhOB9DXtuYs2KNrOo84ZeA==
+"@urql/introspection@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.2.tgz#18b737e17779cecb74e612a965ed5dc17b978355"
+  integrity sha512-dbszrDgTyTM1ndvdTe4X7RUciVi2zXxjHhTIrWOSvU3FODX4+90uSVtdn5bXwTuwqM4bxVEc1ekaLYEUeiNLsg==
 
 "@vercel/ncc@0.31.1":
   version "0.31.1"
