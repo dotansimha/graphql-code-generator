@@ -59,7 +59,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
             }} from '${parsedMapper.source}';`
           );
         }
-        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
+        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ${resolverFnName} };`);
       } else {
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
