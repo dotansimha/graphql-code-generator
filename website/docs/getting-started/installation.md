@@ -59,4 +59,4 @@ Each guide exposes the best plugins and configurations available for each framew
 
 <br />
 
-Otherwise, if you **prefer exploring plugins and skipping the high-level explanations**, the go-to ressources will be the [plugins documentation](/plugins) and the [`codegen.yaml` API reference documentation](/docs/config-reference/codegen-config).
+Otherwise, if you **prefer exploring plugins and skipping the high-level explanations**, the go-to resources will be the [plugins documentation](/plugins) and the [`codegen.yaml` API reference documentation](/docs/config-reference/codegen-config).
