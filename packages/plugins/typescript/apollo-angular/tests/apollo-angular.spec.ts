@@ -518,7 +518,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
@@ -529,6 +529,91 @@ describe('Apollo Angular', () => {
         }
       `);
       // await validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('should include only the required SDK types for query operations', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        { sdkClass: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+        type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+        interface WatchQueryOptionsAlone<V> extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}
+
+        interface QueryOptionsAlone<V> extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}`);
+      expect(content.content).not.toContain('SubscriptionOptionsAlone');
+      expect(content.content).not.toContain('MutationOptionsAlone');
+    });
+
+    it('should include only the required SDK types for mutation operations', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        mutation Update($arg: Int) {
+          update(arg: $arg) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        { sdkClass: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+        type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+        interface MutationOptionsAlone<T, V> extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}`);
+      expect(content.content).not.toContain('WatchOptionsAlone');
+      expect(content.content).not.toContain('QueryOptionsAlone');
+      expect(content.content).not.toContain('SubscriptionOptionsAlone');
+    });
+
+    it('should include only the required SDK types for subscription operations', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        subscription MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        { sdkClass: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+        type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+        interface SubscriptionOptionsAlone<V> extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}`);
+      expect(content.content).not.toContain('WatchOptionsAlone');
+      expect(content.content).not.toContain('QueryOptionsAlone');
+      expect(content.content).not.toContain('MutationOptionsAlone');
     });
 
     it('should generate a SDK service with custom settings', async () => {
@@ -562,7 +647,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
