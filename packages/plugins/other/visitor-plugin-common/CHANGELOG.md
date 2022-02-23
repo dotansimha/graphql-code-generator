@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.1
+
+### Patch Changes
+
+- fd55e2039: fix incorrect type generation when using the inlineFragmentTypes 'combine' option that resulted in generating masked fragment output.
+
+## 2.7.0
+
+### Minor Changes
+
+- 1479233df: Add new `inlineFragmentTypes` mode `'mask'`, which allows generating masked fragment types.
+
 ## 2.6.0
 
 ### Minor Changes

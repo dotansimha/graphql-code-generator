@@ -19,7 +19,7 @@ export interface BaseVisitorConvertOptions {
   useTypesSuffix?: boolean;
 }
 
-export type InlineFragmentTypeOptions = 'inline' | 'combine';
+export type InlineFragmentTypeOptions = 'inline' | 'combine' | 'mask';
 
 export interface ParsedConfig {
   scalars: ParsedScalarsMap;

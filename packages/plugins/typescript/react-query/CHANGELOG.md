@@ -1,5 +1,25 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.5
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+
+## 3.5.4
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+
+## 3.5.3
+
+### Patch Changes
+
+- e17a7b0c3: fix(plugins/react-query): remove useless `RequestInit` import for custom fetcher
+
 ## 3.5.2
 
 ### Patch Changes

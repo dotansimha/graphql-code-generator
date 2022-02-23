@@ -1,5 +1,22 @@
 # @graphql-codegen/typescript-operations
 
+## 2.3.2
+
+### Patch Changes
+
+- fd55e2039: fix incorrect type generation when using the inlineFragmentTypes 'combine' option that resulted in generating masked fragment output.
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+  - @graphql-codegen/typescript@2.4.5
+
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+  - @graphql-codegen/typescript@2.4.4
+
 ## 2.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.4.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+
 ## 2.4.0
 
 ### Minor Changes
