@@ -252,7 +252,7 @@ export namespace Types {
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     overwrite?: boolean;
     /**
@@ -267,7 +267,7 @@ export namespace Types {
      *
      * You can specify either a single file, or multiple.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
@@ -283,7 +283,7 @@ export namespace Types {
      *
      * You can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/schema-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/schema-field
      */
     schema?: InstanceOrArray<Schema>;
     /**
@@ -292,14 +292,14 @@ export namespace Types {
      *
      * The options may vary depends on what plugins you are using.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/config-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/config-field
      */
     config?: PluginConfig;
     /**
      * @description Specifies scripts to run when events are happening in the codegen core.
      * Hooks defined on that level will effect only the current output files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
+     * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
   }
@@ -356,14 +356,14 @@ export namespace Types {
      *
      * You can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/schema-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/schema-field
      */
     schema?: InstanceOrArray<Schema>;
     /**
      * @description A path to a file which defines custom Node.JS require() handlers for custom file extensions.
      * This is essential if the code generator has to go through files which require other files in an unsupported format (by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/require-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/require-field
      * See more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.
      *
      * Note: values that specified in your .yml file will get loaded after loading the config .yml file.
@@ -386,7 +386,7 @@ export namespace Types {
      *
      * You can specify either a single file, or multiple.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
@@ -397,13 +397,13 @@ export namespace Types {
      *
      * The options may vary depends on what plugins you are using.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/config-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/config-field
      */
     config?: PluginConfig;
     /**
      * @description A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     generates: {
       [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
@@ -411,7 +411,7 @@ export namespace Types {
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     overwrite?: boolean;
     /**
@@ -452,7 +452,7 @@ export namespace Types {
     /**
      * @description Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field#graphql-tag-pluck
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field#graphql-tag-pluck
      */
     pluckConfig?: {
       /**
@@ -481,7 +481,7 @@ export namespace Types {
      * @description Specifies scripts to run when events are happening in the codegen core.
      * Hooks defined on that level will effect all output files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
+     * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
   }
