@@ -178,7 +178,7 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 ",
   "prepend": Array [
-    "import { type GraphQLResolveInfo } from 'graphql';",
+    "import { type GraphQLResolveInfo, type GraphQLScalarType, type GraphQLScalarTypeConfig } from 'graphql';",
     "export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;",
   ],
 }

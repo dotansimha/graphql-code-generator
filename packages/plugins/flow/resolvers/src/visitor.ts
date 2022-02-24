@@ -118,6 +118,8 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const nameAsString = node.name as any as string;
     const baseName = this.getTypeToUse(nameAsString);
+
+    this._hasScalars = true;
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
     return new DeclarationBlock({
