@@ -9,7 +9,7 @@ Before adding a hook, consider the alternative of having codegen ignored in your
 Codegen files should not be edited manually and formatting them slows down your codegen considerably.
 Differences can be measured in several seconds for every run on big projects.
 
-[You can read the complete documentation of lifecycle hooks here](/docs/getting-started/lifecycle-hooks)
+[You can read the complete documentation of lifecycle hooks here](/docs/config-reference/lifecycle-hooks)
 
 ## Prettier
 
