@@ -3828,10 +3828,10 @@
     "@vue/compiler-dom" "3.2.31"
     "@vue/shared" "3.2.31"
 
-"@vue/composition-api@1.4.7":
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.4.7.tgz#f213d10fc37e2ccffa4cf37be91b4af0594645b7"
-  integrity sha512-IaYlkcVTDzdVNVJNhpi3k0f5jWoLg4GJduO1pxJzItKCfGtaHAc3mxvxYc6bbsPzZ1DkW2MYJYmiiAfaYbmhIg==
+"@vue/composition-api@1.4.9":
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.4.9.tgz#6fa65284f545887b52d421f23b4fa1c41bc0ad4b"
+  integrity sha512-l6YOeg5LEXmfPqyxAnBaCv1FMRw0OGKJ4m6nOWRm6ngt5TuHcj5ZoBRN+LXh3J0u6Ur3C4VA+RiKT+M0eItr/g==
 
 "@vue/reactivity-transform@3.2.31":
   version "3.2.31"
