@@ -55,7 +55,7 @@
     "@typescript-eslint/parser": "5.12.1",
     "@urql/exchange-graphcache": "4.3.6",
     "@vue/apollo-composable": "4.0.0-alpha.16",
-    "@vue/composition-api": "1.4.7",
+    "@vue/composition-api": "1.4.9",
     "apollo-client": "2.6.10",
     "apollo-server": "3.6.3",
     "auto-bind": "4.0.0",
