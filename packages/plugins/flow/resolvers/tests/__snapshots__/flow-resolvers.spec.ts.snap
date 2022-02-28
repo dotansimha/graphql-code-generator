@@ -169,7 +169,7 @@ export type Resolvers<ContextType = any> = {
   Node?: NodeResolvers<ContextType>,
   SomeNode?: SomeNodeResolvers<ContextType>,
   MyUnion?: MyUnionResolvers<ContextType>,
-  MyScalar?: GraphQLScalarType<>,
+  MyScalar?: GraphQLScalarType,
 };
 
 export type DirectiveResolvers<ContextType = any> = {

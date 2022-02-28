@@ -55,9 +55,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'}${this.getPunctuation(
-      declarationKind
-    )}`;
+    return `${schemaTypeName}?: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
   protected transformParentGenericType(parentType: string): string {

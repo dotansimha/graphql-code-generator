@@ -4,6 +4,7 @@ import { plugin } from '../src';
 import { schema } from '../../../typescript/resolvers/tests/common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
+import { ConstructorDeclarationContext } from 'java-ast';
 
 describe('Flow Resolvers Plugin', () => {
   describe('Enums', () => {
@@ -77,6 +78,7 @@ describe('Flow Resolvers Plugin', () => {
       expect(result.content).toContain(
         `export type MyEnumResolvers = EnumResolverSignature<{| A?: *, B?: *, C?: * |}, $ElementType<ResolversTypes, 'MyEnum'>>;`
       );
+      expect(result.content).toContain(`MyEnum?: MyEnumResolvers,`);
     });
 
     it('Should generate enum internal values resolvers when enum has mappers pointing to external enum', async () => {
