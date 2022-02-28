@@ -4,7 +4,6 @@ import { plugin } from '../src';
 import { schema } from '../../../typescript/resolvers/tests/common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
-import { ConstructorDeclarationContext } from 'java-ast';
 
 describe('Flow Resolvers Plugin', () => {
   describe('Enums', () => {
