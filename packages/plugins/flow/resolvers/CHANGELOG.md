@@ -1,5 +1,13 @@
 # @graphql-codegen/flow-resolvers
 
+## 2.2.6
+
+### Patch Changes
+
+- 5a63f23f1: Fix: Flow Plugin not defining some types in generated file
+- Updated dependencies [a521216d6]
+  - @graphql-codegen/plugin-helpers@2.4.2
+
 ## 2.2.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.4.2
+
+### Patch Changes
+
+- a521216d6: broken links within documentation
+
 ## 2.4.1
 
 ### Patch Changes
