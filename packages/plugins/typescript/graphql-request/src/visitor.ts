@@ -12,7 +12,6 @@ import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
-  extensionsType: string;
 }
 
 const additionalExportedTypes = `
@@ -34,7 +33,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGraphQLRequestPluginConfig) {
     super(schema, fragments, rawConfig, {
       rawRequest: getConfigValue(rawConfig.rawRequest, false),
-      extensionsType: getConfigValue(rawConfig.extensionsType, 'any'),
     });
 
     autoBind(this);
@@ -111,11 +109,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
-            o.operationResultType
-          } | undefined; extensions?: ${
-            this.config.extensionsType
-          }; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+          }, requestHeaders?: Dom.RequestInit["headers"]) {
     return withWrapper((wrappedRequestHeaders) => client.rawRequest<${
       o.operationResultType
     }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');
@@ -123,7 +117,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+          }, requestHeaders?: Dom.RequestInit["headers"]) {
   return withWrapper((wrappedRequestHeaders) => client.request<${
     o.operationResultType
   }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');

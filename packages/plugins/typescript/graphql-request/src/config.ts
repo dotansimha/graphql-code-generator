@@ -22,17 +22,4 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * ```
    */
   rawRequest?: boolean;
-
-  /**
-   * @description Allows you to override the type for extensions when `rawRequest` is enabled.
-   * @default any
-   *
-   * @exampleMarkdown
-   * ```yml
-   * config:
-   *   rawRequest: true
-   *   extensionsType: unknown
-   * ```
-   */
-  extensionsType?: string;
 }

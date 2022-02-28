@@ -1190,10 +1190,6 @@
           "description": "By default, the `request` method return the `data` or `errors` key from the response. If you need to access the `extensions` key you can use the `rawRequest` method.\nDefault value: \"false\"",
           "type": "boolean"
         },
-        "extensionsType": {
-          "description": "Allows you to override the type for extensions when `rawRequest` is enabled.\nDefault value: \"any\"",
-          "type": "string"
-        },
         "noGraphQLTag": {
           "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
           "type": "boolean"
