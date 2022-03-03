@@ -10,7 +10,7 @@ You can test how relay-compiler affects your queries over on the [Relay Compiler
 
 ## List of Features
 
-- [Optimize your Operations](https://relay.dev/docs/en/compiler-architecture#transforms) TL;DR: reduce operation complexity and size
+- [Optimize your Operations](https://relay.dev/docs/principles-and-architecture/compiler-architecture/#transforms) TL;DR: reduce operation complexity and size
   - Inline Fragments
   - Flatten Transform
   - Skip Redundant Node Transform
