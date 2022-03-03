@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 3.4.2
+
+### Patch Changes
+
+- 423c1cac6: fix(apollo-angular): remove useless peer-dep on 'apollo-angular'
+
 ## 3.4.1
 
 ### Patch Changes
