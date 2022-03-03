@@ -80,7 +80,6 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
 
   const pluginData = data[0];
 
-
   const description = pluginData.stats?.description ? pluginData.stats.description : null;
   const title = `${pluginData.title} | GraphQL Codegen Plugin Hub`;
 
