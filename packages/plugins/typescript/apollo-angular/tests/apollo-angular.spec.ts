@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { gql } from 'apollo-angular';
+import { gql } from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
@@ -518,7 +518,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
@@ -562,7 +562,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
