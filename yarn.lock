@@ -3093,12 +3093,12 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rtk-query/graphql-request-base-query@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@rtk-query/graphql-request-base-query/-/graphql-request-base-query-1.0.3.tgz#34f5cd65ac98187ade3044174228bde83d9eccb6"
-  integrity sha512-oL/cE4Nm3GXjpVpTaFD+THwY71Tpk2XjuwYDEL8xk8gkfsx3GWbKRgcBX7x8xnUNcKobHXejjxkw9n1k/RpAbA==
+"@rtk-query/graphql-request-base-query@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@rtk-query/graphql-request-base-query/-/graphql-request-base-query-2.0.1.tgz#3b88fc61b5578b97f6b226fdd5eea502bace1e42"
+  integrity sha512-N5uzsetup6J1mSv1K9cPIemg69gvFuXM//qZrKPVQ6Ed7bEuuEmNLOFikguZtDjF+4MGl3Tjk162r0zexiWcXg==
   dependencies:
-    graphql-request "^3.4.0"
+    graphql-request "^4.0.0"
 
 "@rushstack/eslint-patch@^1.0.8":
   version "1.1.0"
@@ -7321,7 +7321,7 @@ graphql-language-service-utils@^2.7.1:
     graphql-language-service-types "^1.8.7"
     nullthrows "^1.0.0"
 
-graphql-request@4.0.0:
+graphql-request@4.0.0, graphql-request@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-4.0.0.tgz#5e4361d33df1a95ccd7ad23a8ebb6bbca9d5622f"
   integrity sha512-cdqQLCXlBGkaLdkLYRl4LtkwaZU6TfpE7/tnUQFl3wXfUPWN74Ov+Q61VuIh+AltS789YfGB6whghmCmeXLvTw==
@@ -7330,7 +7330,7 @@ graphql-request@4.0.0:
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
-graphql-request@^3.3.0, graphql-request@^3.4.0:
+graphql-request@^3.3.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.7.0.tgz#c7406e537084f8b9788541e3e6704340ca13055b"
   integrity sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==
