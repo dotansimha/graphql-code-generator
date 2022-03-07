@@ -456,7 +456,7 @@ export class BaseTypesVisitor<
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getFieldComment(node);
+    const comment = this.getDeprecationComment(node);
 
     return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -524,17 +524,6 @@ export class BaseTypesVisitor<
     }
 
     return declarationBlock;
-  }
-
-  getFieldComment(node: FieldDefinitionNode): string {
-    let commentText: string = node.description as any;
-    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
-    return comment;
   }
 
   protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
@@ -664,7 +653,7 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
         );
-        const comment = transformComment(enumOption.description as any as string, 1);
+        const comment = this.getDeprecationComment(enumOption.description as any as string, 1);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name as any).value
@@ -797,6 +786,17 @@ export class BaseTypesVisitor<
 
   SchemaDefinition() {
     return null;
+  }
+
+  getDeprecationComment(node: FieldDefinitionNode): string {
+    let commentText: string = node.description as any;
+    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+    }
+    const comment = transformComment(commentText, 1);
+    return comment;
   }
 
   protected getDeprecationReason(directive: DirectiveNode): string | void {

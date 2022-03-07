@@ -258,7 +258,7 @@ export class TsVisitor<
       : (node.type as any as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
-    const comment = this.getFieldComment(node);
+    const comment = this.getDeprecationComment(node);
     const { type } = this.config.declarationKind;
 
     return (
