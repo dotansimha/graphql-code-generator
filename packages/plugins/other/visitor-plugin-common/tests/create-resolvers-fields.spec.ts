@@ -49,7 +49,7 @@ export type ResolversParentTypes = {
     );
   });
 
-  it('checks if types are actually included when Omit is applied', () => {
+  it('generates proper types when typesPrefix is used along with `enumPrefix: false`', () => {
     /**
      * This makes sure that https://github.com/dotansimha/graphql-code-generator/issues/6709 doesn't occur again.
      * The result looked like this without the fix:
