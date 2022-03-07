@@ -563,9 +563,11 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
+      } else if (isEnumType(schemaType)) {
+        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       } else {
         shouldApplyOmit = true;
-        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
+        prev[typeName] = this.convertName(typeName, {}, true);
       }
 
       if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
