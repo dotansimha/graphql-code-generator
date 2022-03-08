@@ -58,7 +58,7 @@
     "@graphql-codegen/typescript-apollo-client-helpers": "2.1.12",
     "@graphql-codegen/typescript-generic-sdk": "2.3.4",
     "@graphql-codegen/typescript-graphql-files-modules": "2.1.1",
-    "@graphql-codegen/typescript-graphql-request": "4.3.7",
+    "@graphql-codegen/typescript-graphql-request": "4.4.0",
     "@graphql-codegen/typescript-mongodb": "2.3.3",
     "@graphql-codegen/typescript-msw": "1.0.4",
     "@graphql-codegen/typescript-operations": "2.3.2",

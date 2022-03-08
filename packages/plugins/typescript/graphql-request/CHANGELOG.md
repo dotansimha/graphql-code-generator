@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.4.0
+
+### Minor Changes
+
+- 17ad88541: Exposes `operationType` to graphql-request sdk middlewares.
+
 ## 4.3.7
 
 ### Patch Changes
