@@ -56,4 +56,19 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * ```
    */
   withTypes?: boolean;
+  /**
+   * @default false
+   * @description Allow you to omit JvmStatic annotation
+   *
+   * @exampleMarkdoWn
+   * ```yml
+   * generates:
+   *   src/main/kotlin/my-org/my-app/Types.kt:
+   *     plugins:
+   *       - kotlin
+   *     config:
+   *       omitJvmStatic: true
+   * ```
+   */
+  omitJvmStatic?: boolean;
 }
