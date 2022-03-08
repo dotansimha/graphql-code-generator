@@ -1,5 +1,11 @@
 # @graphql-codegen/kotlin
 
+## 2.2.6
+
+### Patch Changes
+
+- dcd716215: add omitJvmStatic to Kotlin plugin
+
 ## 2.2.5
 
 ### Patch Changes
