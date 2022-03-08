@@ -945,7 +945,6 @@ describe('TypeScript', () => {
       }`);
 
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      console.log(result.content);
       expect(result.content).toBeSimilarStringTo(`
       export enum MyEnum {
         A = 'A',
