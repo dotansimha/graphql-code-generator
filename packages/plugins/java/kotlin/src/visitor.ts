@@ -40,6 +40,7 @@ export interface KotlinResolverParsedConfig extends ParsedConfig {
   listType: string;
   enumValues: EnumValuesMap;
   withTypes: boolean;
+  omitJvmStatic: boolean;
 }
 
 export interface FieldDefinitionReturnType {
@@ -55,6 +56,7 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
       withTypes: rawConfig.withTypes || false,
       package: rawConfig.package || defaultPackageName,
       scalars: buildScalarsFromConfig(_schema, rawConfig, KOTLIN_SCALARS),
+      omitJvmStatic: rawConfig.omitJvmStatic || false,
     });
   }
 
@@ -97,7 +99,7 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
 ${enumValues}
         
   companion object {
-    @JvmStatic
+    ${this.config.omitJvmStatic ? '' : '@JvmStatic'}
     fun valueOfLabel(label: String): ${enumName}? {
       return values().find { it.label == label }
     }
