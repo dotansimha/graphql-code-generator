@@ -1715,7 +1715,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should extend mutiple interfaces', async () => {
+    it('Should extend multiple interfaces', async () => {
       const schema = buildSchema(`
         interface MyInterface1 {
           id: ID!
@@ -3391,7 +3391,7 @@ describe('TypeScript', () => {
     `);
   });
 
-  it('should use implementing types as node type - issue #5126', async () => {
+  it('should use implementing types as node type and properly inherit nested interfaces - issue #5126, #7615', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Matrix {
         pills: [Pill!]!
