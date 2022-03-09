@@ -63,13 +63,12 @@ export function resolveDocumentImports<T>(
       const importStatements: string[] = [];
       const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
 
-      if (
-        isUsingTypes(
-          documentFile.document,
-          externalFragments.map(m => m.name),
-          schemaObject
-        )
-      ) {
+      const externalFragmentsInjectedDocument = {
+        ...documentFile.document,
+        definitions: [...documentFile.document.definitions, ...externalFragments.map(fragment => fragment.node)],
+      };
+
+      if (isUsingTypes(externalFragmentsInjectedDocument, [], schemaObject)) {
         const schemaTypesImportStatement = generateImportStatement({
           baseDir,
           importSource: resolveImportSource(schemaTypesSource),
