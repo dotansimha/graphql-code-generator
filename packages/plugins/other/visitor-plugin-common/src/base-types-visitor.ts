@@ -456,7 +456,7 @@ export class BaseTypesVisitor<
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getDeprecationComment(node);
+    const comment = this.getNodeComment(node);
 
     return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -653,7 +653,7 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
         );
-        const comment = this.getDeprecationComment(enumOption);
+        const comment = this.getNodeComment(enumOption);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name as any).value
@@ -788,7 +788,7 @@ export class BaseTypesVisitor<
     return null;
   }
 
-  getDeprecationComment(node: FieldDefinitionNode | EnumValueDefinitionNode): string {
+  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode): string {
     let commentText: string = node.description as any;
     const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
     if (deprecationDirective) {
