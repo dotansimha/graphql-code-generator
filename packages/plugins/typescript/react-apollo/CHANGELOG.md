@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-react-apollo
 
+## 3.2.9
+
+### Patch Changes
+
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+
 ## 3.2.8
 
 ### Patch Changes

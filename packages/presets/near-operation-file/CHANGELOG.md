@@ -1,5 +1,13 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 2.2.7
+
+### Patch Changes
+
+- 84da6289c: [near-operation-file-preset] Importing root types when a fragment spread a fragment without any field
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+
 ## 2.2.6
 
 ### Patch Changes
