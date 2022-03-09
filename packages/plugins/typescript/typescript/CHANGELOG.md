@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript
 
+## 2.4.7
+
+### Patch Changes
+
+- 54718c039: Improve @Deprecated Enum Type developer experience
+- Updated dependencies [54718c039]
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+
 ## 2.4.6
 
 ### Patch Changes

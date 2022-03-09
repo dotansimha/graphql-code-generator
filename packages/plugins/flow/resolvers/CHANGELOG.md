@@ -1,5 +1,13 @@
 # @graphql-codegen/flow-resolvers
 
+## 2.2.8
+
+### Patch Changes
+
+- Updated dependencies [54718c039]
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+  - @graphql-codegen/flow@2.2.7
+
 ## 2.2.7
 
 ### Patch Changes
