@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.5.3
+
+### Patch Changes
+
+- 1f5aaf097: Fix #7566 external resolver name export for directiveResolverMappings
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+  - @graphql-codegen/typescript@2.4.6
+
 ## 2.5.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.2
+
+### Patch Changes
+
+- 11d05e361: fix(resolvers): fix conflict between `typesPrefix: true` and `enumPrefix: false`
+
 ## 2.7.1
 
 ### Patch Changes
