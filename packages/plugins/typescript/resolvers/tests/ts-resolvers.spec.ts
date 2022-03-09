@@ -238,6 +238,9 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
     expect(result.prepend).toContain(
       "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts';"
     );
+    expect(result.prepend).toContain(
+      "export { ResolverFnAuthenticated };"
+    )
     expect(result.content).toBeSimilarStringTo(`
 export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
