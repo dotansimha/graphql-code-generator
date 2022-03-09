@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.4.2
+
+### Patch Changes
+
+- Updated dependencies [54718c039]
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+
 ## 4.4.1
 
 ### Patch Changes
