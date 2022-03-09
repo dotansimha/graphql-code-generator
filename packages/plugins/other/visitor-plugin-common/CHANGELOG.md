@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.3
+
+### Patch Changes
+
+- 54718c039: Improve @Deprecated Enum Type developer experience
+
 ## 2.7.2
 
 ### Patch Changes
