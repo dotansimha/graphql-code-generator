@@ -54,7 +54,7 @@
     "@graphql-codegen/time": "3.1.1",
     "@graphql-codegen/typed-document-node": "2.2.7",
     "@graphql-codegen/typescript": "2.4.7",
-    "@graphql-codegen/typescript-apollo-angular": "3.4.4",
+    "@graphql-codegen/typescript-apollo-angular": "3.4.5",
     "@graphql-codegen/typescript-apollo-client-helpers": "2.1.14",
     "@graphql-codegen/typescript-generic-sdk": "2.3.6",
     "@graphql-codegen/typescript-graphql-files-modules": "2.1.1",
