@@ -20,6 +20,9 @@ import {
   isEnumType,
   InterfaceTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  isObjectType,
+  isInterfaceType,
+  isUnionType,
 } from 'graphql';
 import { wrapTypeNodeWithModifiers } from '@graphql-codegen/visitor-plugin-common';
 
@@ -27,6 +30,7 @@ type AdditionalField = { path: string; type: string };
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
   dbTypeSuffix: string;
   dbInterfaceSuffix: string;
+  defaultLinkOverrideTypeSuffix: string;
   objectIdType: string;
   objectIdImport: string;
   idFieldName: string;
@@ -58,6 +62,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     super(pluginConfig, {
       dbTypeSuffix: pluginConfig.dbTypeSuffix || 'DbObject',
       dbInterfaceSuffix: pluginConfig.dbInterfaceSuffix || 'DbInterface',
+      defaultLinkOverrideTypeSuffix: pluginConfig.defaultLinkOverrideTypeSuffix || 'DbObject',
       objectIdType: resolveObjectId(pluginConfig.objectIdType).identifier,
       objectIdImport: resolveObjectId(pluginConfig.objectIdType).module,
       idFieldName: pluginConfig.idFieldName || '_id',
@@ -160,8 +165,15 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     addOptionalSign: boolean
   ): void {
     const overrideType = this._getDirectiveArgValue<string>(linkDirective, 'overrideType');
-    const coreType = overrideType || getBaseTypeNode(fieldNode.type);
-    const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
+    const coreType = overrideType || getBaseTypeNode(fieldNode.type).name.value;
+    const schemaType = this._schema.getType(coreType);
+    const typeSuffix =
+      isObjectType(schemaType) || isUnionType(schemaType)
+        ? this.config.dbTypeSuffix
+        : isInterfaceType(schemaType)
+        ? this.config.dbInterfaceSuffix
+        : this.config.defaultLinkOverrideTypeSuffix;
+    const type = this.convertName(coreType, { suffix: typeSuffix });
 
     tree.addField(
       `${mapPath || fieldNode.name.value}${addOptionalSign ? '?' : ''}`,

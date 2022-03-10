@@ -24,6 +24,17 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    */
   dbInterfaceSuffix?: string;
   /**
+   * @default DbObject
+   * @description: Sets the default suffix for the generated GraphQL when a `@link` directive is used with an `overrideType` value that does not reference a type, interface, or union explicitly defined in the schema.
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   defaultLinkOverrideTypeSuffix: MySuffix
+   * ```
+   */
+  defaultLinkOverrideTypeSuffix?: string;
+  /**
    * @default mongodb#ObjectId
    * @description Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.
    *
