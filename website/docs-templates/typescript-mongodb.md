@@ -100,9 +100,11 @@ Use this directive to declare a specific GraphQL field as part of your generated
 
 Use this directive on the filed that should be mapped to a MongoDB `_id`. By default, it should be the `id` field of the GraphQL `type`.
 
-#### `@link` (on `FIELD_DEFINITION`)
+#### `@link(overrideType: String)` (on `FIELD_DEFINITION`)
 
 Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectId` type in the generated result.
+
+- `overrideType: String` - use this to override the type of the field
 
 #### `@embedded` (on `FIELD_DEFINITION`)
 
