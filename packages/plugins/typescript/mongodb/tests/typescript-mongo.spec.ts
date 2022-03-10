@@ -46,6 +46,16 @@ describe('TypeScript Mongo', () => {
       nullableLinkMap: LinkType @link @map(path: "nullableLinkId")
       nullableColumnMapPath: String @column @map(path: "nullableColumnMap.level")
       nonNullableColumnMapPath: String! @column @map(path: "nonNullableColumnMap.level")
+      nullableInterfaceLink: FeedItem @link
+      nonNullableInterfaceLink: FeedItem! @link
+      nullableInterfaceLinkWithOverride: String @link(overrideType: "FeedItem")
+      nonNullableInterfaceLinkWithOverride: String! @link(overrideType: "FeedItem")
+      nullableInterfaceWithoutDirective: FeedItem
+      nonNullableInterfaceWithoutDirective: FeedItem!
+      nullableMultipleInterfaceLinks: [FeedItem] @link
+      nonNullableMultipleInterfaceLinks: [FeedItem!]! @link
+      nullabeInterfaceLinkMap: FeedItem @link @map(path: "nullableInterfaceLinkId")
+      nonNullableInterfaceLinkMap: FeedItem! @link @map(path: "nonNullableInterfaceLinkId")
     }
 
     type EmbeddedType @entity {
@@ -287,6 +297,24 @@ describe('TypeScript Mongo', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`nonSchemaOptionalField?: string`); // non schema optional additional field
       await validate(result, schema, {});
+    });
+
+    it('Interfaces should be valid field types, not just objects - issue #7615', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      const interfaceRef = `FeedItemDbInterface['_id']`;
+      expect(result).toContain(`nullableInterfaceLink?: Maybe<${interfaceRef}>`);
+      expect(result).toContain(`nonNullableInterfaceLink: ${interfaceRef}`);
+      expect(result).toContain(`nullableInterfaceLinkWithOverride?: Maybe<${interfaceRef}>`);
+      expect(result).toContain(`nonNullableInterfaceLinkWithOverride: ${interfaceRef}`);
+      expect(result).not.toContain('nullableInterfaceWithoutDirective');
+      expect(result).not.toContain(`nonNullableInterfaceWithoutDirective`);
+      expect(result).toContain(`nullableMultipleInterfaceLinks?: Maybe<Array<Maybe<${interfaceRef}>>>`);
+      expect(result).toContain(`nonNullableMultipleInterfaceLinks: Array<${interfaceRef}>`);
+      expect(result).toContain(`nullableInterfaceLinkId?: Maybe<${interfaceRef}>`);
+      expect(result).not.toContain(`nullableInterfaceLinkMap`);
+      expect(result).toContain(`nonNullableInterfaceLinkId: ${interfaceRef}`);
+      expect(result).not.toContain(`nonNullableInterfaceLinkMap`);
     });
   });
 });
