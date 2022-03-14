@@ -1224,7 +1224,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       schema,
       [],
       {
-        directiveContextExtender: ['authenticated#./my-file#AuthenticatedContext'],
+        directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
       },
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
@@ -1234,6 +1234,54 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType>>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+  });
+
+  it('should generate named custom field level context type for field with directive and context type', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
+        contextType: './my-file#MyCustomCtx',
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { MyCustomCtx, AuthenticatedContext } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType>>;
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
+        unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+  });
+
+  it('should generate named custom field level context type for field with directive and field context type', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
+        fieldContextTypes: ['MyType.foo#./my-file#ContextTypeOne'],
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { ContextTypeOne, AuthenticatedContext } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextTypeOne>>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
         unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;

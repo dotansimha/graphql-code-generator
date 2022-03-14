@@ -1433,7 +1433,7 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
-        "directiveContextExtender": {
+        "directiveContextTypes": {
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
@@ -3039,7 +3039,7 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
-        "directiveContextExtender": {
+        "directiveContextTypes": {
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
