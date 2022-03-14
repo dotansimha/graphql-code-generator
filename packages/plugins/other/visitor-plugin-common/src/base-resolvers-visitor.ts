@@ -159,6 +159,8 @@ export interface RawResolversConfig extends RawConfig {
    * It will only affect the targeted resolvers.
    * You can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`
    *
+   * ContextTypeName should by a generic Type that take the context or field context type as only type parameter.
+   *
    * @exampleMarkdown
    * ## Directive Context Extender
    *
