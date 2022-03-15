@@ -24,6 +24,12 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-stitching.ts:
+    schema: ./dev-test/test-schema/schema-text.js
+    plugins:
+      - typescript
+      - typescript-resolvers:
+          noSchemaStitching: false
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
