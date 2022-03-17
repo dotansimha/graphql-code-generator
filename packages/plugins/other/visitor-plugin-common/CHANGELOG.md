@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.4
+
+### Patch Changes
+
+- 337fd4f77: WP: [typescript-resolvers] Add directiveContextTypes option
+
 ## 2.7.3
 
 ### Patch Changes
