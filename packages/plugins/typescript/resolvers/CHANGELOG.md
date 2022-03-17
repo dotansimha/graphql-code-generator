@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.6.0
+
+### Minor Changes
+
+- a3b348cd7: feat(resolvers): add factory signature to 'selectionSet' param of stitching resolvers
+
 ## 2.5.4
 
 ### Patch Changes
