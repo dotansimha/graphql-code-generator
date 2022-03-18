@@ -99,8 +99,9 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    const variables = `variables?: ${operationVariablesTypes}`;
-    this.visitor.imports.add(`import { GraphQLClient } from 'graphql-request';`);
+    const variables = `variables?: ${operationVariablesTypes}`;    
+    const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    this.visitor.imports.add(`${typeImport} { GraphQLClient } from 'graphql-request';`);
 
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
