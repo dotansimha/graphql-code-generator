@@ -25,6 +25,7 @@ import { cpus } from 'os';
 import { createRequire } from 'module';
 import Listr from 'listr';
 import { isListrError } from './utils/cli-error';
+import { pathToFileURL } from 'url';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -34,7 +35,10 @@ const makeDefaultLoader = (from: string) => {
   const relativeRequire = createRequire(from);
 
   return (mod: string) => {
-    return import(relativeRequire.resolve(mod));
+    mod = relativeRequire.resolve(mod);
+    mod = pathToFileURL(mod).href;
+
+    return import(mod);
   };
 };
 
