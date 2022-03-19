@@ -129,6 +129,25 @@ describe('Apollo Angular', () => {
       // await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`should add explicit override to document and namedClient property`, async () => {
+      const docs = [{ location: '', document: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          addExplicitOverride: true,
+          namedClient: 'custom',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`override document = TestDocument;`);
+      expect(content.content).toBeSimilarStringTo(`override client = 'custom';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it(`should add the correct angular imports with override`, async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
@@ -518,7 +537,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
@@ -562,7 +581,7 @@ describe('Apollo Angular', () => {
         constructor(
           private myFeedGql: MyFeedGQL
         ) {}
-        
+
         myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
           return this.myFeedGql.fetch(variables, options)
         }
