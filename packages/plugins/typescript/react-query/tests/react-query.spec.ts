@@ -481,7 +481,7 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
       expect(out.prepend).toContain(`import { GraphQLClient } from 'graphql-request';`);
       expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
-      expect(out.prepend[3])
+      expect(out.prepend[4])
         .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
           return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
         }`);
@@ -657,7 +657,7 @@ describe('React-Query', () => {
 
       expect(out.prepend).toContain(`import { useQuery, useMutation } from 'react-query';`);
       expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
-      expect(out.prepend[1])
+      expect(out.prepend[2])
         .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
         return async (): Promise<TData> => {
           const res = await fetch("http://localhost:3000/graphql", {
@@ -718,7 +718,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend[1]).toMatchInlineSnapshot(`
+      expect(out.prepend[2]).toMatchInlineSnapshot(`
 "
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
@@ -760,7 +760,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend[1]).toMatchInlineSnapshot(`
+      expect(out.prepend[2]).toMatchInlineSnapshot(`
 "
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
@@ -797,7 +797,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend[1])
+      expect(out.prepend[2])
         .toBeSimilarStringTo(`function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
         return async (): Promise<TData> => {
           const res = await fetch(process.env.ENDPOINT_URL as string, {
@@ -831,7 +831,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend[1])
+      expect(out.prepend[2])
         .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
         return async (): Promise<TData> => {
           const res = await fetch(myEndpoint as string, {
