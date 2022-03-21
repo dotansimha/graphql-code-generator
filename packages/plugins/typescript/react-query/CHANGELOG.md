@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.9
+
+### Patch Changes
+
+- 5685e5f52: enable useTypeImports
+- 5685e5f52: respect useTypeImports in react-query
+
 ## 3.5.8
 
 ### Patch Changes
