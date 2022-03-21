@@ -75,7 +75,7 @@
     "@guild-docs/client": "1.4.0",
     "@guild-docs/server": "2.2.0",
     "@monaco-editor/react": "4.3.1",
-    "@theguild/components": "1.10.1",
+    "@theguild/components": "1.10.2",
     "classnames": "2.3.1",
     "dedent": "0.7.0",
     "framer-motion": "6.2.8",
