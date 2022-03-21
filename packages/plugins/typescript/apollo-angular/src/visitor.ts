@@ -293,6 +293,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       operationVariablesTypes,
       serviceName,
     });
+    const namedClient = this._namedClient(node);
 
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
@@ -306,7 +307,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       node,
       documentVariableName
     )};
-    ${this._namedClient(node)}
+    ${namedClient !== '' ? (this.config.addExplicitOverride ? 'override ' : '') + namedClient : ''}
     constructor(${this.dependencyInjections}) {
       super(${this.dependencyInjectionArgs});
     }
