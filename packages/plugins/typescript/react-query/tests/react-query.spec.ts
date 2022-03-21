@@ -144,9 +144,8 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useInfiniteQuery, useMutation } from 'react-query';`);
       expect(out.prepend).toContain(
-        `import { UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
+        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
 
       expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
@@ -197,8 +196,9 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useMutation } from 'react-query';`);
-      expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
+      );
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
         TData = TTestQuery,
         TError = unknown
@@ -238,9 +238,8 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useInfiniteQuery, useMutation } from 'react-query';`);
       expect(out.prepend).toContain(
-        `import { UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
+        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
       expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
@@ -477,8 +476,9 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useMutation } from 'react-query';`);
-      expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
+      );
       expect(out.prepend).toContain(`import { GraphQLClient } from 'graphql-request';`);
       expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
       expect(out.prepend[3])
@@ -525,7 +525,9 @@ describe('React-Query', () => {
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend).toContain(`import type { GraphQLClient } from 'graphql-request';`);
-      expect(out.prepend).toContain(`import type { UseQueryOptions, UseMutationOptions } from 'react-query';`);
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, type UseQueryOptions, type UseMutationOptions } from 'react-query';`
+      );
     });
     it('Should generate fetcher field when exposeFetcher is true', async () => {
       const config = {
@@ -655,8 +657,9 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useMutation } from 'react-query';`);
-      expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
+      );
       expect(out.prepend[1])
         .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
         return async (): Promise<TData> => {
@@ -986,8 +989,9 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import { useQuery, useMutation } from 'react-query';`);
-      expect(out.prepend).toContain(`import { UseQueryOptions, UseMutationOptions } from 'react-query';`);
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
+      );
 
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
         TData = TTestQuery,

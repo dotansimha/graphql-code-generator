@@ -116,13 +116,14 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       this.reactQueryOptionsIdentifiersInUse.add('QueryFunctionContext');
     }
 
-    const typeImport = this.config.useTypeImports ? 'import type' : 'import';
-
-    return [
-      ...baseImports,
-      `import { ${Array.from(this.reactQueryHookIdentifiersInUse).join(', ')} } from 'react-query';`,
-      `${typeImport} { ${Array.from(this.reactQueryOptionsIdentifiersInUse).join(', ')} } from 'react-query';`,
+    const hookAndTypeImports = [
+      ...Array.from(this.reactQueryHookIdentifiersInUse),
+      ...Array.from(this.reactQueryOptionsIdentifiersInUse).map(
+        identifier => `${this.config.useTypeImports ? 'type ' : ''}${identifier}`
+      ),
     ];
+
+    return [...baseImports, `import { ${hookAndTypeImports.join(', ')} } from 'react-query';`];
   }
 
   public getFetcherImplementation(): string {
