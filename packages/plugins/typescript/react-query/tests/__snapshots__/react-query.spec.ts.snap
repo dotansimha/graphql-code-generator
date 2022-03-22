@@ -35,12 +35,13 @@ export const useInfiniteTestQuery = <
     >(
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useInfiniteQuery<TTestQuery, TError, TData>(
+    ) =>{
+    const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
+    return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => query({...variables, ...(metaData.pageParam ?? {})}),
       options
-    );
+    )};
 
 export const TestDocument = \`
     mutation test($name: String) {
@@ -54,7 +55,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       useCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument),
       options
     );"
@@ -95,12 +96,13 @@ export const useInfiniteTestQuery = <
     >(
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useInfiniteQuery<TTestQuery, TError, TData>(
+    ) =>{
+    
+    return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
       (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
-    );
+    )};
 
 export const TestDocument = \`
     mutation test($name: String) {
@@ -114,7 +116,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
@@ -161,7 +163,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => myCustomFetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
@@ -212,7 +214,7 @@ export const useTestMutation = <
       options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>
     ) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
       options
     );"
@@ -265,7 +267,7 @@ export const useTestMutation = <
       headers?: RequestInit['headers']
     ) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(client, TestDocument, variables, headers)(),
       options
     );"
@@ -312,7 +314,54 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
+      (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
+      options
+    );"
+`;
+
+exports[`React-Query fetcher: hardcoded-fetch Should generate query correctly with fetch config and fetchParams object 2`] = `
+"
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      variables?: TTestQueryVariables,
+      options?: UseQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test'] : ['test', variables],
+      fetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
+      options
+    );
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
+    useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
@@ -359,7 +408,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
@@ -406,7 +455,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"
@@ -453,7 +502,7 @@ export const useTestMutation = <
       TContext = unknown
     >(options?: UseMutationOptions<TTestMutation, TError, TTestMutationVariables, TContext>) =>
     useMutation<TTestMutation, TError, TTestMutationVariables, TContext>(
-      'test',
+      ['test'],
       (variables?: TTestMutationVariables) => fetcher<TTestMutation, TTestMutationVariables>(TestDocument, variables)(),
       options
     );"

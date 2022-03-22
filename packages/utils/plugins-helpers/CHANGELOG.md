@@ -1,5 +1,29 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.4.2
+
+### Patch Changes
+
+- a521216d6: broken links within documentation
+
+## 2.4.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+
+## 2.4.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+## 2.3.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+
 ## 2.3.1
 
 ### Patch Changes

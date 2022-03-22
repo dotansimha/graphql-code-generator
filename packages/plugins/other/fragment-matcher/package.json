@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/fragment-matcher",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.3.0",
+    "@graphql-codegen/plugin-helpers": "^2.3.2",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {
@@ -23,6 +23,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"

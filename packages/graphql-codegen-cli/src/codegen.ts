@@ -6,8 +6,11 @@ import {
   normalizeInstanceOrArray,
   normalizeConfig,
   getCachedDocumentNodeFromSchema,
+  isDetailedError,
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
+
+import { AggregateError } from '@graphql-tools/utils';
 
 import { Renderer, ErrorRenderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
@@ -17,9 +20,11 @@ import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
 import fs from 'fs';
 import path from 'path';
+import { cpus } from 'os';
 // eslint-disable-next-line
 import { createRequire } from 'module';
 import Listr from 'listr';
+import { isListrError } from './utils/cli-error';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -33,21 +38,26 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
+function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
+  const cache = new Map<string, Promise<unknown>>();
+
+  return function ensure<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T> {
+    const cacheKey = `${namespace}:${key}`;
+
+    const cachedValue = cache.get(cacheKey);
+
+    if (cachedValue) {
+      return cachedValue as Promise<T>;
+    }
+
+    const value = factory();
+    cache.set(cacheKey, value);
+
+    return value;
+  };
+}
+
 export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
-  function wrapTask(task: () => void | Promise<void>, source: string) {
-    return async () => {
-      try {
-        await Promise.resolve().then(() => task());
-      } catch (error) {
-        if (source && !(error instanceof GraphQLError)) {
-          error.source = source;
-        }
-
-        throw error;
-      }
-    };
-  }
-
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -83,6 +93,24 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
+
+  const cache = createCache();
+
+  function wrapTask(task: () => void | Promise<void>, source: string, taskName: string) {
+    return () => {
+      return context.profiler.run(async () => {
+        try {
+          await Promise.resolve().then(() => task());
+        } catch (error) {
+          if (source && !(error instanceof GraphQLError)) {
+            error.source = source;
+          }
+
+          throw error;
+        }
+      }, taskName);
+    };
+  }
 
   async function normalize() {
     /* Load Require extensions */
@@ -198,106 +226,152 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                 [
                   {
                     title: 'Load GraphQL schemas',
-                    task: wrapTask(async () => {
-                      debugLog(`[CLI] Loading Schemas`);
+                    task: wrapTask(
+                      async () => {
+                        debugLog(`[CLI] Loading Schemas`);
 
-                      const schemaPointerMap: any = {};
-                      const allSchemaUnnormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
-                      for (const unnormalizedPtr of allSchemaUnnormalizedPointers) {
-                        if (typeof unnormalizedPtr === 'string') {
-                          schemaPointerMap[unnormalizedPtr] = {};
-                        } else if (typeof unnormalizedPtr === 'object') {
-                          Object.assign(schemaPointerMap, unnormalizedPtr);
+                        const schemaPointerMap: any = {};
+                        const allSchemaUnnormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
+                        for (const unnormalizedPtr of allSchemaUnnormalizedPointers) {
+                          if (typeof unnormalizedPtr === 'string') {
+                            schemaPointerMap[unnormalizedPtr] = {};
+                          } else if (typeof unnormalizedPtr === 'object') {
+                            Object.assign(schemaPointerMap, unnormalizedPtr);
+                          }
                         }
-                      }
-                      outputSchemaAst = await context.loadSchema(schemaPointerMap);
-                      outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
-                    }, filename),
+
+                        const hash = JSON.stringify(schemaPointerMap);
+                        const result = await cache('schema', hash, async () => {
+                          const outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                          const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
+                          return {
+                            outputSchemaAst: outputSchemaAst,
+                            outputSchema: outputSchema,
+                          };
+                        });
+
+                        outputSchemaAst = await result.outputSchemaAst;
+                        outputSchema = result.outputSchema;
+                      },
+                      filename,
+                      `Load GraphQL schemas: ${filename}`
+                    ),
                   },
                   {
                     title: 'Load GraphQL documents',
-                    task: wrapTask(async () => {
-                      debugLog(`[CLI] Loading Documents`);
+                    task: wrapTask(
+                      async () => {
+                        debugLog(`[CLI] Loading Documents`);
 
-                      const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
-                      const documents = await context.loadDocuments(allDocuments);
+                        // get different cache for shared docs and output specific docs
+                        const results = await Promise.all(
+                          [rootDocuments, outputSpecificDocuments].map(docs => {
+                            const hash = JSON.stringify(docs);
+                            return cache('documents', hash, async () => {
+                              const documents = await context.loadDocuments(docs);
+                              return {
+                                documents: documents,
+                              };
+                            });
+                          })
+                        );
 
-                      if (documents.length > 0) {
-                        outputDocuments.push(...documents);
-                      }
-                    }, filename),
+                        const documents: Types.DocumentFile[] = [];
+
+                        results.forEach(source => documents.push(...source.documents));
+
+                        if (documents.length > 0) {
+                          outputDocuments.push(...documents);
+                        }
+                      },
+                      filename,
+                      `Load GraphQL documents: ${filename}`
+                    ),
                   },
                   {
                     title: 'Generate',
-                    task: wrapTask(async () => {
-                      debugLog(`[CLI] Generating output`);
+                    task: wrapTask(
+                      async () => {
+                        debugLog(`[CLI] Generating output`);
 
-                      const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
-                      const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);
-                      const pluginPackages = await Promise.all(
-                        normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
-                      );
-                      const pluginMap: { [name: string]: CodegenPlugin } = {};
-                      const preset: Types.OutputPreset = hasPreset
-                        ? typeof outputConfig.preset === 'string'
-                          ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
-                          : outputConfig.preset
-                        : null;
+                        const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
+                        const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);
+                        const pluginPackages = await Promise.all(
+                          normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                        );
+                        const pluginMap: { [name: string]: CodegenPlugin } = {};
+                        const preset: Types.OutputPreset = hasPreset
+                          ? typeof outputConfig.preset === 'string'
+                            ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
+                            : outputConfig.preset
+                          : null;
 
-                      pluginPackages.forEach((pluginPackage, i) => {
-                        const plugin = normalizedPluginsArray[i];
-                        const name = Object.keys(plugin)[0];
+                        pluginPackages.forEach((pluginPackage, i) => {
+                          const plugin = normalizedPluginsArray[i];
+                          const name = Object.keys(plugin)[0];
 
-                        pluginMap[name] = pluginPackage;
-                      });
-
-                      const mergedConfig = {
-                        ...rootConfig,
-                        ...(typeof outputFileTemplateConfig === 'string'
-                          ? { value: outputFileTemplateConfig }
-                          : outputFileTemplateConfig),
-                      };
-
-                      let outputs: Types.GenerateOptions[] = [];
-
-                      if (hasPreset) {
-                        outputs = await preset.buildGeneratesSection({
-                          baseOutputDir: filename,
-                          presetConfig: outputConfig.presetConfig || {},
-                          plugins: normalizedPluginsArray,
-                          schema: outputSchema,
-                          schemaAst: outputSchemaAst,
-                          documents: outputDocuments,
-                          config: mergedConfig,
-                          pluginMap,
-                          pluginContext,
+                          pluginMap[name] = pluginPackage;
                         });
-                      } else {
-                        outputs = [
-                          {
-                            filename,
-                            plugins: normalizedPluginsArray,
-                            schema: outputSchema,
-                            schemaAst: outputSchemaAst,
-                            documents: outputDocuments,
-                            config: mergedConfig,
-                            pluginMap,
-                            pluginContext,
-                          },
-                        ];
-                      }
 
-                      const process = async (outputArgs: Types.GenerateOptions) => {
-                        const output = await codegen(outputArgs);
-                        result.push({
-                          filename: outputArgs.filename,
-                          content: output,
-                          hooks: outputConfig.hooks || {},
-                        });
-                      };
+                        const mergedConfig = {
+                          ...rootConfig,
+                          ...(typeof outputFileTemplateConfig === 'string'
+                            ? { value: outputFileTemplateConfig }
+                            : outputFileTemplateConfig),
+                        };
 
-                      await Promise.all(outputs.map(process));
-                    }, filename),
+                        let outputs: Types.GenerateOptions[] = [];
+
+                        if (hasPreset) {
+                          outputs = await context.profiler.run(
+                            async () =>
+                              preset.buildGeneratesSection({
+                                baseOutputDir: filename,
+                                presetConfig: outputConfig.presetConfig || {},
+                                plugins: normalizedPluginsArray,
+                                schema: outputSchema,
+                                schemaAst: outputSchemaAst,
+                                documents: outputDocuments,
+                                config: mergedConfig,
+                                pluginMap,
+                                pluginContext,
+                                profiler: context.profiler,
+                              }),
+                            `Build Generates Section: ${filename}`
+                          );
+                        } else {
+                          outputs = [
+                            {
+                              filename,
+                              plugins: normalizedPluginsArray,
+                              schema: outputSchema,
+                              schemaAst: outputSchemaAst,
+                              documents: outputDocuments,
+                              config: mergedConfig,
+                              pluginMap,
+                              pluginContext,
+                              profiler: context.profiler,
+                            },
+                          ];
+                        }
+
+                        const process = async (outputArgs: Types.GenerateOptions) => {
+                          const output = await codegen({
+                            ...outputArgs,
+                            cache,
+                          });
+                          result.push({
+                            filename: outputArgs.filename,
+                            content: output,
+                            hooks: outputConfig.hooks || {},
+                          });
+                        };
+
+                        await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
+                      },
+                      filename,
+                      `Generate: ${filename}`
+                    ),
                   },
                 ],
                 {
@@ -311,14 +385,28 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         {
           // it doesn't stop when one of tasks failed, to finish at least some of outputs
           exitOnError: false,
-          // run 4 at once
-          concurrent: 4,
+          concurrent: cpus().length,
         }
       );
     },
   });
 
-  await listr.run();
+  try {
+    await listr.run();
+  } catch (err) {
+    if (isListrError(err)) {
+      const allErrs = err.errors.map(subErr =>
+        isDetailedError(subErr)
+          ? `${subErr.message} for "${subErr.source}"${subErr.details}`
+          : subErr.message || subErr.toString()
+      );
+      const newErr = new AggregateError(err.errors, `${err.message} ${allErrs.join('\n\n')}`);
+      // Best-effort to all stack traces for debugging
+      newErr.stack = `${newErr.stack}\n\n${err.errors.map(subErr => subErr.stack).join('\n\n')}`;
+      throw newErr;
+    }
+    throw err;
+  }
 
   return result;
 }

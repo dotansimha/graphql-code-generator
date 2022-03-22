@@ -1,5 +1,121 @@
 # @graphql-codegen/typescript-react-query
 
+## 3.5.9
+
+### Patch Changes
+
+- 5685e5f52: enable useTypeImports
+- 5685e5f52: respect useTypeImports in react-query
+
+## 3.5.8
+
+### Patch Changes
+
+- Updated dependencies [337fd4f77]
+  - @graphql-codegen/visitor-plugin-common@2.7.4
+
+## 3.5.7
+
+### Patch Changes
+
+- Updated dependencies [54718c039]
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+
+## 3.5.6
+
+### Patch Changes
+
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+
+## 3.5.5
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+
+## 3.5.4
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+
+## 3.5.3
+
+### Patch Changes
+
+- e17a7b0c3: fix(plugins/react-query): remove useless `RequestInit` import for custom fetcher
+
+## 3.5.2
+
+### Patch Changes
+
+- ec4a5fd70: fix(react-query): avoid unused `RequestInit` import when fetcher is not exposed
+
+## 3.5.1
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 3.5.0
+
+### Minor Changes
+
+- ad8ffa457: Add options to exposed custom fetcher.
+  eg. This enables passing headers to fetcher for prefetchQuery & get more query possibilities (user authentication)
+
+## 3.4.0
+
+### Minor Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+### Patch Changes
+
+- 04d323727: fix: ensure mutationKey is an array
+
+## 3.3.2
+
+### Patch Changes
+
+- fa517214c: Generate `getKey` function on generated infinite queries when both `exposeQueryKeys` and `addInfiniteQuery` settings are `true`.
+
+## 3.3.1
+
+### Patch Changes
+
+- 758c220da: Fix the React-Query InfiniteQuery hook error
+
+## 3.3.0
+
+### Minor Changes
+
+- fc92334d4: Gets rid of graphql-tag from peerdeps of typescript-react-query plugin
+
+## 3.2.3
+
+### Patch Changes
+
+- 9b4629465: fix invalid generated TypeScript code due to the `exposeMutationKey` option adding an unnecessary bracket
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 3.2.2
+
+### Patch Changes
+
+- 0d71a60d9: stringify fetchParams if an object was provided via YAML config
+
 ## 3.2.1
 
 ### Patch Changes

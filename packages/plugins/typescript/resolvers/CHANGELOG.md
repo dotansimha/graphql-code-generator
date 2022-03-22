@@ -1,5 +1,80 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.6.1
+
+### Patch Changes
+
+- 337fd4f77: WP: [typescript-resolvers] Add directiveContextTypes option
+- Updated dependencies [337fd4f77]
+  - @graphql-codegen/visitor-plugin-common@2.7.4
+  - @graphql-codegen/typescript@2.4.8
+
+## 2.6.0
+
+### Minor Changes
+
+- a3b348cd7: feat(resolvers): add factory signature to 'selectionSet' param of stitching resolvers
+
+## 2.5.4
+
+### Patch Changes
+
+- Updated dependencies [54718c039]
+  - @graphql-codegen/typescript@2.4.7
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+
+## 2.5.3
+
+### Patch Changes
+
+- 1f5aaf097: Fix #7566 external resolver name export for directiveResolverMappings
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+  - @graphql-codegen/typescript@2.4.6
+
+## 2.5.2
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+  - @graphql-codegen/typescript@2.4.5
+
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+  - @graphql-codegen/typescript@2.4.4
+
+## 2.5.0
+
+### Minor Changes
+
+- bef4376d5: fix: RequireFields generic making all other fields optional
+
+### Patch Changes
+
+- c8ef37ae0: fix(typescript-resolvers): Fix optional field types
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+  - @graphql-codegen/typescript@2.4.3
+
+## 2.4.3
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/typescript@2.4.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.4.2
 
 ### Patch Changes

@@ -407,7 +407,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      if (this._config.inlineFragmentTypes === 'combine') {
+      if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
         fragmentsSpreadUsages.push(selectionNode.typeName);
         continue;
       }
@@ -489,7 +489,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       mergedObjectsAsString = this._processor.buildFieldsIntoObject(allObjectsMerged);
     }
 
-    const fields = [...allStrings, mergedObjectsAsString, ...fragmentsSpreadUsages].filter(Boolean);
+    const fields = [...allStrings, mergedObjectsAsString].filter(Boolean);
+
+    if (fragmentsSpreadUsages.length) {
+      if (this._config.inlineFragmentTypes === 'combine') {
+        fields.push(...fragmentsSpreadUsages);
+      } else if (this._config.inlineFragmentTypes === 'mask') {
+        fields.push(`{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+      }
+    }
 
     return this._processor.buildSelectionSetFromStrings(fields);
   }
@@ -582,12 +590,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       })
       .filter(Boolean);
 
+    const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
+    const fragmentMaskPartial =
+      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName': '${fragmentTypeName}' }` : '';
+
     if (subTypes.length === 1) {
       return new DeclarationBlock(declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
-        .withContent(subTypes[0].content).string;
+        .withName(fragmentTypeName)
+        .withContent(subTypes[0].content + fragmentMaskPartial).string;
     }
 
     return [
@@ -602,7 +614,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       new DeclarationBlock(declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
+        .withName(fragmentTypeName)
         .withContent(subTypes.map(t => t.name).join(' | ')).string,
     ].join('\n');
   }

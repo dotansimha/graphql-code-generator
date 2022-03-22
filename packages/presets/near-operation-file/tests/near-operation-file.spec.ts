@@ -403,17 +403,17 @@ describe('near-operation-file preset', () => {
         export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a?: string | null | undefined };
+        export type AQuery = { __typename?: 'Query', a?: string | null };
 
         export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', a?: string | null | undefined };
+        export type BQuery = { __typename?: 'Query', a?: string | null };
 
         export type CQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-        export type CQuery = { __typename?: 'Query', a?: string | null | undefined };
+        export type CQuery = { __typename?: 'Query', a?: string | null };
         "
       `);
     });
@@ -481,6 +481,68 @@ describe('near-operation-file preset', () => {
       const queriesContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-6546-queries/)).content;
       const imports = queriesContent.match(/import.*UsernameFragmentFragmentDoc/g);
       expect(imports).toHaveLength(1);
+    });
+
+    it('#7547 - importing root types when a fragment spread a fragment without any fields itself', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum Role {
+          ADMIN
+          USER
+        }
+
+        type User {
+          id: ID!
+          type: Role!
+        }
+      `);
+
+      const result = await preset.buildGeneratesSection({
+        baseOutputDir: './src/',
+        config: {
+          dedupeOperationSuffix: true,
+        },
+        presetConfig: {
+          cwd: '/some/deep/path',
+          baseTypesPath: 'types.ts',
+        },
+        schemaAst: testSchema,
+        schema: getCachedDocumentNodeFromSchema(testSchema),
+        documents: [
+          {
+            location: '/some/deep/path/src/graphql/a-fragment.gql',
+            document: parse(/* GraphQL */ `
+              fragment AFragment on User {
+                ...BFragment
+              }
+            `),
+          },
+          {
+            location: '/some/deep/path/src/graphql/b-fragment.graphql',
+            document: parse(/* GraphQL */ `
+              fragment BFragment on User {
+                ...CFragment
+              }
+            `),
+          },
+          {
+            location: '/some/deep/path/src/graphql/c-fragment.graphql',
+            document: parse(/* GraphQL */ `
+              fragment CFragment on User {
+                id
+                type
+              }
+            `),
+          },
+        ],
+        plugins: [{ typescript: {} }],
+        pluginMap: { typescript: {} as any },
+      });
+
+      for (const o of result) {
+        expect(o.plugins).toEqual(
+          expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
+        );
+      }
     });
   });
 

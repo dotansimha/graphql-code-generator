@@ -27,7 +27,10 @@ export class HardcodedFetchFetcher implements FetcherRenderer {
     let fetchParamsPartial = '';
 
     if (this.config.fetchParams) {
-      fetchParamsPartial = `\n    ...(${this.config.fetchParams}),`;
+      const fetchParamsString =
+        typeof this.config.fetchParams === 'string' ? this.config.fetchParams : JSON.stringify(this.config.fetchParams);
+
+      fetchParamsPartial = `\n    ...(${fetchParamsString}),`;
     }
 
     return `    method: "POST",${fetchParamsPartial}`;
@@ -65,8 +68,8 @@ ${this.getFetchParams()}
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.infiniteQuery.options);
 
     const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
 
@@ -95,8 +98,8 @@ ${this.getFetchParams()}
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
@@ -124,8 +127,8 @@ ${this.getFetchParams()}
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.mutation.options);
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 

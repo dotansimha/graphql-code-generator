@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/urql-introspection",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.1.0",
-    "@urql/introspection": "0.3.0",
+    "@graphql-codegen/plugin-helpers": "^2.3.2",
+    "@urql/introspection": "0.3.2",
     "tslib": "~2.3.0"
   },
   "peerDependencies": {
@@ -24,6 +24,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"

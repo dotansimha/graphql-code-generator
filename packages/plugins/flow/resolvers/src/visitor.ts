@@ -55,9 +55,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'}${this.getPunctuation(
-      declarationKind
-    )}`;
+    return `${schemaTypeName}?: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
   protected transformParentGenericType(parentType: string): string {
@@ -118,6 +116,8 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const nameAsString = node.name as any as string;
     const baseName = this.getTypeToUse(nameAsString);
+
+    this._hasScalars = true;
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
     return new DeclarationBlock({

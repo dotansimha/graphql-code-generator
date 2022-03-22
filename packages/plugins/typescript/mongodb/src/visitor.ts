@@ -38,7 +38,7 @@ type Directivable = { directives?: ReadonlyArray<DirectiveNode> };
 
 function resolveObjectId(pointer: string | null | undefined): { identifier: string; module: string } {
   if (!pointer) {
-    return { identifier: 'ObjectID', module: 'mongodb' };
+    return { identifier: 'ObjectId', module: 'mongodb' };
   }
 
   if (pointer.includes('#')) {

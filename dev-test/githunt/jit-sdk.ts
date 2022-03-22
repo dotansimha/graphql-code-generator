@@ -1,5 +1,5 @@
 import { GraphQLSchema, ExecutionResult } from 'graphql';
-import { compileQuery, isCompiledQuery } from 'graphql-jit';
+import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';
 import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
@@ -176,16 +176,13 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  commentAdded?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type CommentQueryVariables = Exact<{
@@ -196,36 +193,29 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
-  entry?:
-    | {
-        __typename?: 'Entry';
-        id: number;
-        createdAt: number;
-        commentCount: number;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-        comments: Array<
-          | {
-              __typename?: 'Comment';
-              id: number;
-              createdAt: number;
-              content: string;
-              postedBy: { __typename?: 'User'; login: string; html_url: string };
-            }
-          | null
-          | undefined
-        >;
-        repository: {
-          __typename?: 'Repository';
-          description?: string | null | undefined;
-          open_issues_count?: number | null | undefined;
-          stargazers_count: number;
-          full_name: string;
-          html_url: string;
-        };
-      }
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null;
+  entry?: {
+    __typename?: 'Entry';
+    id: number;
+    createdAt: number;
+    commentCount: number;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+    comments: Array<{
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    } | null>;
+    repository: {
+      __typename?: 'Repository';
+      description?: string | null;
+      open_issues_count?: number | null;
+      stargazers_count: number;
+      full_name: string;
+      html_url: string;
+    };
+  } | null;
 };
 
 export type CommentsPageCommentFragment = {
@@ -240,7 +230,7 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
+  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null;
 };
 
 export type FeedEntryFragment = {
@@ -253,10 +243,10 @@ export type FeedEntryFragment = {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    description?: string | null | undefined;
+    description?: string | null;
     stargazers_count: number;
-    open_issues_count?: number | null | undefined;
-    owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+    open_issues_count?: number | null;
+    owner?: { __typename?: 'User'; avatar_url: string } | null;
   };
   vote: { __typename?: 'Vote'; vote_value: number };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
@@ -270,32 +260,25 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string } | null | undefined;
-  feed?:
-    | Array<
-        | {
-            __typename?: 'Entry';
-            id: number;
-            commentCount: number;
-            score: number;
-            createdAt: number;
-            repository: {
-              __typename?: 'Repository';
-              full_name: string;
-              html_url: string;
-              description?: string | null | undefined;
-              stargazers_count: number;
-              open_issues_count?: number | null | undefined;
-              owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
-            };
-            vote: { __typename?: 'Vote'; vote_value: number };
-            postedBy: { __typename?: 'User'; html_url: string; login: string };
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string } | null;
+  feed?: Array<{
+    __typename?: 'Entry';
+    id: number;
+    commentCount: number;
+    score: number;
+    createdAt: number;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description?: string | null;
+      stargazers_count: number;
+      open_issues_count?: number | null;
+      owner?: { __typename?: 'User'; avatar_url: string } | null;
+    };
+    vote: { __typename?: 'Vote'; vote_value: number };
+    postedBy: { __typename?: 'User'; html_url: string; login: string };
+  } | null> | null;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -304,7 +287,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null | undefined;
+  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null;
 };
 
 export type RepoInfoFragment = {
@@ -312,9 +295,9 @@ export type RepoInfoFragment = {
   createdAt: number;
   repository: {
     __typename?: 'Repository';
-    description?: string | null | undefined;
+    description?: string | null;
     stargazers_count: number;
-    open_issues_count?: number | null | undefined;
+    open_issues_count?: number | null;
   };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
 };
@@ -326,16 +309,13 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  submitComment?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type VoteButtonsFragment = {
@@ -351,10 +331,7 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote?:
-    | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
-    | null
-    | undefined;
+  vote?: { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } } | null;
 };
 
 export const CommentsPageCommentFragmentDoc = gql`
@@ -510,22 +487,35 @@ function handleExecutionResult<T>(result: ExecutionResult, operationName: string
     const originalErrors = result.errors.map(error => error.originalError || error);
     throw new AggregateError(originalErrors, `Failed to execute ${operationName}: \n\t${originalErrors.join('\n\t')}`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
-  const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded');
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(
+  schema: GraphQLSchema,
+  { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}
+) {
+  const onCommentAddedCompiled = compileQuery(schema, OnCommentAddedDocument, 'onCommentAdded', jitOptions);
   if (!isCompiledQuery(onCommentAddedCompiled)) {
     const originalErrors = onCommentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile onCommentAdded: \n\t${originalErrors.join('\n\t')}`);
   }
 
-  const CommentCompiled = compileQuery(schema, CommentDocument, 'Comment');
+  const CommentCompiled = compileQuery(schema, CommentDocument, 'Comment', jitOptions);
   if (!isCompiledQuery(CommentCompiled)) {
     const originalErrors = CommentCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile Comment: \n\t${originalErrors.join('\n\t')}`);
   }
 
-  const CurrentUserForProfileCompiled = compileQuery(schema, CurrentUserForProfileDocument, 'CurrentUserForProfile');
+  const CurrentUserForProfileCompiled = compileQuery(
+    schema,
+    CurrentUserForProfileDocument,
+    'CurrentUserForProfile',
+    jitOptions
+  );
   if (!isCompiledQuery(CurrentUserForProfileCompiled)) {
     const originalErrors = CurrentUserForProfileCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(
@@ -534,25 +524,25 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
     );
   }
 
-  const FeedCompiled = compileQuery(schema, FeedDocument, 'Feed');
+  const FeedCompiled = compileQuery(schema, FeedDocument, 'Feed', jitOptions);
   if (!isCompiledQuery(FeedCompiled)) {
     const originalErrors = FeedCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile Feed: \n\t${originalErrors.join('\n\t')}`);
   }
 
-  const submitRepositoryCompiled = compileQuery(schema, SubmitRepositoryDocument, 'submitRepository');
+  const submitRepositoryCompiled = compileQuery(schema, SubmitRepositoryDocument, 'submitRepository', jitOptions);
   if (!isCompiledQuery(submitRepositoryCompiled)) {
     const originalErrors = submitRepositoryCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile submitRepository: \n\t${originalErrors.join('\n\t')}`);
   }
 
-  const submitCommentCompiled = compileQuery(schema, SubmitCommentDocument, 'submitComment');
+  const submitCommentCompiled = compileQuery(schema, SubmitCommentDocument, 'submitComment', jitOptions);
   if (!isCompiledQuery(submitCommentCompiled)) {
     const originalErrors = submitCommentCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile submitComment: \n\t${originalErrors.join('\n\t')}`);
   }
 
-  const voteCompiled = compileQuery(schema, VoteDocument, 'vote');
+  const voteCompiled = compileQuery(schema, VoteDocument, 'vote', jitOptions);
   if (!isCompiledQuery(voteCompiled)) {
     const originalErrors = voteCompiled?.errors?.map(error => error.originalError || error) || [];
     throw new AggregateError(originalErrors, `Failed to compile vote: \n\t${originalErrors.join('\n\t')}`);
@@ -561,46 +551,124 @@ export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: 
   return {
     async onCommentAdded(
       variables: OnCommentAddedSubscriptionVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<AsyncIterableIterator<OnCommentAddedSubscription> | OnCommentAddedSubscription> {
-      const result = await onCommentAddedCompiled.subscribe!(root, context, variables);
+      const result = await onCommentAddedCompiled.subscribe!(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleSubscriptionResult(result, 'onCommentAdded');
     },
-    async Comment(variables: CommentQueryVariables, context = globalContext, root = globalRoot): Promise<CommentQuery> {
-      const result = await CommentCompiled.query(root, context, variables);
+    async Comment(
+      variables: CommentQueryVariables,
+      context?: TOperationContext,
+      root?: TOperationRoot
+    ): Promise<CommentQuery> {
+      const result = await CommentCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'Comment');
     },
     async CurrentUserForProfile(
       variables?: CurrentUserForProfileQueryVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<CurrentUserForProfileQuery> {
-      const result = await CurrentUserForProfileCompiled.query(root, context, variables);
+      const result = await CurrentUserForProfileCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'CurrentUserForProfile');
     },
-    async Feed(variables: FeedQueryVariables, context = globalContext, root = globalRoot): Promise<FeedQuery> {
-      const result = await FeedCompiled.query(root, context, variables);
+    async Feed(variables: FeedQueryVariables, context?: TOperationContext, root?: TOperationRoot): Promise<FeedQuery> {
+      const result = await FeedCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'Feed');
     },
     async submitRepository(
       variables: SubmitRepositoryMutationVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<SubmitRepositoryMutation> {
-      const result = await submitRepositoryCompiled.query(root, context, variables);
+      const result = await submitRepositoryCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'submitRepository');
     },
     async submitComment(
       variables: SubmitCommentMutationVariables,
-      context = globalContext,
-      root = globalRoot
+      context?: TOperationContext,
+      root?: TOperationRoot
     ): Promise<SubmitCommentMutation> {
-      const result = await submitCommentCompiled.query(root, context, variables);
+      const result = await submitCommentCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'submitComment');
     },
-    async vote(variables: VoteMutationVariables, context = globalContext, root = globalRoot): Promise<VoteMutation> {
-      const result = await voteCompiled.query(root, context, variables);
+    async vote(
+      variables: VoteMutationVariables,
+      context?: TOperationContext,
+      root?: TOperationRoot
+    ): Promise<VoteMutation> {
+      const result = await voteCompiled.query(
+        {
+          ...globalRoot,
+          ...root,
+        },
+        {
+          ...globalContext,
+          ...context,
+        },
+        variables
+      );
       return handleExecutionResult(result, 'vote');
     },
   };

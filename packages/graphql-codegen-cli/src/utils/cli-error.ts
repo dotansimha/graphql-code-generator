@@ -1,4 +1,11 @@
+import { DetailedError } from '@graphql-codegen/plugin-helpers';
 import { isBrowser, isNode } from './is-browser';
+
+type CompositeError = Error | DetailedError;
+type ListrError = Error & { errors: CompositeError[] };
+export function isListrError(err: Error & { name?: unknown; errors?: unknown }): err is ListrError {
+  return err.name === 'ListrError' && Array.isArray(err.errors) && err.errors.length > 0;
+}
 
 export function cliError(err: any, exitOnError = true) {
   let msg: string;

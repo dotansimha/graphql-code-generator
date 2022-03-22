@@ -7,7 +7,7 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  *
  * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
  *
- * To shed some more light regards this template, it's recommended to go through the this article: https://apollo-angular.com/docs/get-started , and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
+ * To shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12
  */
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
@@ -127,4 +127,15 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   additionalDI?: string[];
+  /**
+   * @description Add `override` modifier to make the generated code compatible with the `noImplicitOverride` option of Typescript v4.3+.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * config:
+   *   addExplicitOverride: true
+   * ```
+   */
+  addExplicitOverride?: boolean;
 }

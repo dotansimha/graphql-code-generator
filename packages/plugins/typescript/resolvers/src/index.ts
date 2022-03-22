@@ -59,7 +59,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
             }} from '${parsedMapper.source}';`
           );
         }
-        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
+        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ${resolverFnName} };`);
       } else {
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
@@ -95,7 +95,7 @@ export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
 };`;
   const newStitchingResolverType = `
 export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
+  selectionSet: string | ((fieldNode: FieldNode) => SelectionSetNode);
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
   const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
@@ -158,6 +158,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         `  | ${stitchingResolverUsage};`,
       ].join('\n')
     );
+    imports.push('SelectionSetNode', 'FieldNode');
   }
 
   if (config.customResolverFn) {

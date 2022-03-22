@@ -17,12 +17,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     package: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       package: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   package?: string;
@@ -32,12 +32,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     typePackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       typePackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   typePackage?: string;
@@ -47,12 +47,12 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @exampleMarkdown
    * ```yml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     fragmentPackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       fragmentPackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   fragmentPackage?: string;

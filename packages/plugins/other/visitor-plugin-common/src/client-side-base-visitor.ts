@@ -43,12 +43,14 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## graphql.macro
+   *
    * ```yml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
    *
    * ## Gatsby
+   *
    * ```yml
    * config:
    *   gqlImport: gatsby#graphql
@@ -104,6 +106,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default graphQLTag
    * @description Declares how DocumentNode are created:
+   *
    * - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
@@ -128,6 +131,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default ""
    * @description This config should be used if `documentMode` is `external`. This has 2 usage:
+   *
    * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *

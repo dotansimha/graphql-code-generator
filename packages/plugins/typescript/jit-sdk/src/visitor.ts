@@ -33,7 +33,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
     if (this.config.documentMode === DocumentMode.string) {
       this._additionalImports.push(`import { parse } from 'graphql';`);
     }
-    this._additionalImports.push(`import { compileQuery, isCompiledQuery } from 'graphql-jit';`);
+    this._additionalImports.push(`import { compileQuery, isCompiledQuery, CompilerOptions } from 'graphql-jit';`);
     this._additionalImports.push(
       `import { AggregateError, isAsyncIterable, mapAsyncIterator } from '@graphql-tools/utils';`
     );
@@ -74,7 +74,7 @@ export class JitSdkVisitor extends ClientSideBaseVisitor<RawJitSdkPluginConfig, 
             this.config.documentMode === DocumentMode.string
               ? `parse(${o.documentVariableName})`
               : o.documentVariableName
-          }, '${operationName}');
+          }, '${operationName}', jitOptions);
 if(!(isCompiledQuery(${compiledQueryVariableName}))) {
   const originalErrors = ${compiledQueryVariableName}?.errors?.map(error => error.originalError || error) || [];
   throw new AggregateError(originalErrors, \`Failed to compile ${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
@@ -100,8 +100,14 @@ if(!(isCompiledQuery(${compiledQueryVariableName}))) {
         indentMultiline(
           `async ${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, context = globalContext, root = globalRoot): Promise<${returnType}> {
-  const result = await ${compiledQueryVariableName}.${methodName}(root, context, variables);
+          }, context?: TOperationContext, root?: TOperationRoot): Promise<${returnType}> {
+  const result = await ${compiledQueryVariableName}.${methodName}({
+    ...globalRoot,
+    ...root
+  }, {
+    ...globalContext,
+    ...context
+  }, variables);
   return ${handlerName}(result, '${operationName}');
 }`,
           2
@@ -125,9 +131,14 @@ if(!(isCompiledQuery(${compiledQueryVariableName}))) {
     const originalErrors = result.errors.map(error => error.originalError|| error);
     throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
   }
-  return result.data as T;
+  return result.data as unknown as T;
 }
-export function getSdk<C = any, R = any>(schema: GraphQLSchema, globalContext?: C, globalRoot?: R) {
+export interface SdkOptions<TGlobalContext = any, TGlobalRoot = any> {
+  globalContext?: TGlobalContext;
+  globalRoot?: TGlobalRoot;
+  jitOptions?: Partial<CompilerOptions>;
+}
+export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContext = any, TOperationRoot = any>(schema: GraphQLSchema, { globalContext, globalRoot, jitOptions = {} }: SdkOptions<TGlobalContext, TGlobalRoot> = {}) {
 ${compiledQueries.join('\n\n')}
 
   return {

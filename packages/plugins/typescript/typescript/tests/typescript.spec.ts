@@ -937,6 +937,23 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('#7627 - enum value @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B @deprecated(reason: "Enum value \`B\` has been deprecated.")
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        /** @deprecated Enum value \`B\` has been deprecated. */
+        B = 'B'
+      }`);
+      validateTs(result);
+    });
+
     it('#1462 - Union of scalars and argument of directive', async () => {
       const schema = buildSchema(`
       union Any = String | Int | Float | ID

@@ -75,3 +75,11 @@ export function hasFederationSpec(schemaOrAST: GraphQLSchema | DocumentNode) {
   }
   return false;
 }
+
+export function extractHashFromSchema(schema: GraphQLSchema): string | null {
+  if (!schema.extensions) {
+    schema.extensions = {};
+  }
+
+  return (schema.extensions['hash'] as string) ?? null;
+}

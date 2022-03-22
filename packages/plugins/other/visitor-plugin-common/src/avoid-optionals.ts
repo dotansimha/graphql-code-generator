@@ -5,6 +5,7 @@ export const DEFAULT_AVOID_OPTIONALS: AvoidOptionalsConfig = {
   inputValue: false,
   field: false,
   defaultValue: false,
+  resolvers: false,
 };
 
 export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptionalsConfig): AvoidOptionalsConfig {
@@ -14,6 +15,7 @@ export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptional
       inputValue: avoidOptionals,
       field: avoidOptionals,
       defaultValue: avoidOptionals,
+      resolvers: avoidOptionals,
     };
   }
 

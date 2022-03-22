@@ -1,5 +1,43 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.3.0
+
+### Minor Changes
+
+- 1479233df: The plugin now generates an `gql.ts` file for the `gql` function, whose contents are re-exported from the `index.ts` file. In module augmentation mode the `index.ts` file is omitted and only a `gql.d.ts` file is generated.
+
+  Support for fragment masking via the new `fragmentMasking` configuration option. [Check out the Fragment Masking Documentation](https://graphql-code-generator.com/plugins/gql-tag-operations-preset#fragment-masking).
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+  - @graphql-codegen/gql-tag-operations@1.2.7
+  - @graphql-codegen/typescript-operations@2.3.1
+  - @graphql-codegen/typed-document-node@2.2.4
+  - @graphql-codegen/typescript@2.4.4
+
+## 1.2.3
+
+### Patch Changes
+
+- 015d34451: fix: gql-tag-operations generates invalid types on Windows #7362
+
+## 1.2.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [8643b3bf3]
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/add@3.1.1
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/gql-tag-operations@1.2.5
+  - @graphql-codegen/typescript-operations@2.2.2
+  - @graphql-codegen/typed-document-node@2.2.2
+  - @graphql-codegen/typescript@2.4.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 1.2.1
 
 ### Patch Changes

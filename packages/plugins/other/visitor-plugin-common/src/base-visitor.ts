@@ -19,7 +19,7 @@ export interface BaseVisitorConvertOptions {
   useTypesSuffix?: boolean;
 }
 
-export type InlineFragmentTypeOptions = 'inline' | 'combine';
+export type InlineFragmentTypeOptions = 'inline' | 'combine' | 'mask';
 
 export interface ParsedConfig {
   scalars: ParsedScalarsMap;
@@ -82,8 +82,8 @@ export interface RawConfig {
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
-   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behavior,
-   * which is to preserves underscores.
+   * Additionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,
+   * which is to preserve underscores.
    *
    * Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
    * [See more](https://github.com/btxtiger/change-case-all)
@@ -142,7 +142,7 @@ export interface RawConfig {
   typesSuffix?: string;
   /**
    * @default false
-   * @description Does not add __typename to the generated types, unless it was specified in the selection set.
+   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
    *
    * @exampleMarkdown
    * ```yml
@@ -206,7 +206,7 @@ export interface RawConfig {
   /**
    * @description Whether fragment types should be inlined into other operations.
    * "inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
-   * "combine" is the previous behavior that uses fragment type references without inlining the types (and might cauuse issues with deeply nested fragment that uses list types).
+   * "combine" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).
    *
    * @type string
    * @default inline

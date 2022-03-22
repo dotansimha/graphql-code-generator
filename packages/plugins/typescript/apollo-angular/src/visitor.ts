@@ -5,6 +5,7 @@ import {
   LoadedFragment,
   indentMultiline,
   getConfigValue,
+  indent,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
@@ -32,6 +33,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   subscriptionSuffix?: string;
   apolloAngularPackage: string;
   additionalDI?: string[];
+  addExplicitOverride: boolean;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<
@@ -78,6 +80,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
           rawConfig.gqlImport,
           !rawConfig.apolloAngularVersion || rawConfig.apolloAngularVersion === 2 ? `apollo-angular#gql` : null
         ),
+        addExplicitOverride: getConfigValue(rawConfig.addExplicitOverride, false),
       },
       documents
     );
@@ -290,6 +293,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       operationVariablesTypes,
       serviceName,
     });
+    const namedClient = this._namedClient(node);
 
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
@@ -299,8 +303,11 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     providedIn: ${this._providedIn(node)}
   })
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
-    document = ${this._getDocumentNodeVariable(node, documentVariableName)};
-    ${this._namedClient(node)}
+    ${this.config.addExplicitOverride ? 'override ' : ''}document = ${this._getDocumentNodeVariable(
+      node,
+      documentVariableName
+    )};
+    ${namedClient !== '' ? (this.config.addExplicitOverride ? 'override ' : '') + namedClient : ''}
     constructor(${this.dependencyInjections}) {
       super(${this.dependencyInjectionArgs});
     }
@@ -320,6 +327,10 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
           return 'fetch';
       }
     };
+
+    const hasMutations = this._operationsToInclude.find(o => o.operationType === 'Mutation');
+    const hasSubscriptions = this._operationsToInclude.find(o => o.operationType === 'Subscription');
+    const hasQueries = this._operationsToInclude.find(o => o.operationType === 'Query');
 
     const allPossibleActions = this._operationsToInclude
       .map(o => {
@@ -372,20 +383,32 @@ ${camelCase(o.node.name.value)}Watch(variables${
       ? ''
       : `{ providedIn: 'root' }`;
 
-    return `
-  type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+    // Generate these types only if they're going to be used,
+    // to avoid "unused variable" compile errors in generated code
+    const omitType =
+      hasQueries || hasMutations || hasSubscriptions
+        ? `type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;`
+        : '';
+    const watchType = hasQueries
+      ? `interface WatchQueryOptionsAlone<V> extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}`
+      : '';
+    const queryType = hasQueries
+      ? `interface QueryOptionsAlone<V> extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}`
+      : '';
+    const mutationType = hasMutations
+      ? `interface MutationOptionsAlone<T, V> extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}`
+      : '';
+    const subscriptionType = hasSubscriptions
+      ? `interface SubscriptionOptionsAlone<V> extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}`
+      : '';
 
-  interface WatchQueryOptionsAlone<V>
-    extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}
-    
-  interface QueryOptionsAlone<V>
-    extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}
-    
-  interface MutationOptionsAlone<T, V>
-    extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}
-    
-  interface SubscriptionOptionsAlone<V>
-    extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}
+    const types = [omitType, watchType, queryType, mutationType, subscriptionType]
+      .filter(s => s)
+      .map(s => indent(s, 1))
+      .join('\n\n');
+
+    return `
+${types}
 
   @Injectable(${providedIn})
   export class ${serviceName} {

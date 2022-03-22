@@ -48,15 +48,17 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.infiniteQuery.options);
 
     const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `(metaData) => ${typedFetcher}(${documentVariableName}).bind(null, {...variables, ...(metaData.pageParam ?? {})})()`
+      ? `(metaData) => query({...variables, ...(metaData.pageParam ?? {})})`
       : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})()`;
 
     return `export const useInfinite${operationName} = <
@@ -65,12 +67,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     >(
       ${variables},
       ${options}
-    ) =>
-    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+    ) =>{
+    ${implHookOuter}
+    return ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
       ${impl},
       options
-    );`;
+    )};`;
   }
 
   generateQueryHook(
@@ -82,9 +85,10 @@ export class CustomMapperFetcher implements FetcherRenderer {
     hasRequiredVariables: boolean
   ): string {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
+
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
@@ -117,8 +121,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.mutation.options);
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
@@ -152,8 +156,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
-    const impl = `${typedFetcher}(${documentVariableName}, variables)`;
+    const impl = `${typedFetcher}(${documentVariableName}, variables, options)`;
 
-    return `\nuse${operationName}.fetcher = (${variables}) => ${impl};`;
+    return `\nuse${operationName}.fetcher = (${variables}, options?: RequestInit['headers']) => ${impl};`;
   }
 }

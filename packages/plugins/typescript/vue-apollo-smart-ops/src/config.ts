@@ -21,13 +21,13 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    withSmartOperationFunctions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       withSmartOperationFunctions: true
    * ```
    */
   withSmartOperationFunctions?: boolean;
@@ -35,23 +35,25 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @name vueApolloOperationFunctionsImportFrom
    * @description The `typescript-vue-apollo-smart-ops` plugin requires three functions that are used to define your
    *              query, subscription and mutation operation functions:
-   *                - `createMutationFunction`
-   *                - `createSmartQueryOptionsFunction`
-   *                - `createSmartSubscriptionOptionsFunction`
-   *              By default these functions are provided by the `vue-apollo-smart-ops` package, but you can substitute
+   *
+   *              - `createMutationFunction`
+   *              - `createSmartQueryOptionsFunction`
+   *              - `createSmartSubscriptionOptionsFunction`
+   *
+   *              By default, these functions are provided by the `vue-apollo-smart-ops` package, but you can substitute
    *              your own import path if you want to replace them with other implementations.
    * @default vue-apollo-smart-ops
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueApolloOperationFunctionsImportFrom: vue-apollo-smart-ops
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueApolloOperationFunctionsImportFrom: vue-apollo-smart-ops
    * ```
    */
   vueApolloOperationFunctionsImportFrom?: 'vue-apollo-smart-ops' | string;
@@ -65,14 +67,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueApolloErrorType: ApolloError
-   *    vueApolloErrorTypeImportFrom: apollo-client
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueApolloErrorType: ApolloError
+   *       vueApolloErrorTypeImportFrom: apollo-client
    * ```
    */
   vueApolloErrorType?: 'ApolloError' | string;
@@ -86,14 +88,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueApolloErrorType: ApolloError
-   *    vueApolloErrorTypeImportFrom: apollo-client
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueApolloErrorType: ApolloError
+   *       vueApolloErrorTypeImportFrom: apollo-client
    * ```
    */
   vueApolloErrorTypeImportFrom?: 'apollo-client' | string;
@@ -110,14 +112,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueApolloErrorHandlerFunction: handleApolloError
-   *    vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueApolloErrorHandlerFunction: handleApolloError
+   *       vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
    * ```
    */
   vueApolloErrorHandlerFunction?: string;
@@ -130,14 +132,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueApolloErrorHandlerFunction: handleApolloError
-   *    vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueApolloErrorHandlerFunction: handleApolloError
+   *       vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
    * ```
    */
   vueApolloErrorHandlerFunctionImportFrom?: string;
@@ -152,14 +154,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueAppType: Vue
-   *    vueAppTypeImportFrom: vue/types/vue
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueAppType: Vue
+   *       vueAppTypeImportFrom: vue/types/vue
    * ```
    */
   vueAppType?: string;
@@ -172,14 +174,14 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    vueAppType: Vue
-   *    vueAppTypeImportFrom: vue/types/vue
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       vueAppType: Vue
+   *       vueAppTypeImportFrom: vue/types/vue
    * ```
    */
   vueAppTypeImportFrom?: string;
@@ -193,13 +195,13 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-vue-apollo-smart-ops
-   *  config:
-   *    addDocBlocks: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-vue-apollo-smart-ops
+   *     config:
+   *       addDocBlocks: true
    * ```
    */
   addDocBlocks?: boolean;

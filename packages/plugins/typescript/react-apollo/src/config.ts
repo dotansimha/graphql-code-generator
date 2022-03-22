@@ -7,53 +7,53 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @description Customize the output by enabling/disabling the generated Component (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/components/
+   * @description Customize the output by enabling/disabling the generated Component (deprecated since Apollo-Client v3). For more details: https://apollographql.com/docs/react/api/react/components
    * @default false
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withComponent: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withComponent: true
    * ```
    */
   withComponent?: boolean;
   /**
-   * @description Customize the output by enabling/disabling the HOC (deprecated since Apollo-Client v3). For more details: https://www.apollographql.com/docs/react/api/react/hoc/
+   * @description Customize the output by enabling/disabling the HOC (deprecated since Apollo-Client v3). For more details: https://apollographql.com/docs/react/api/react/hoc
    * @default false
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withHOC: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withHOC: true
    * ```
    */
   withHOC?: boolean;
   /**
-   * @description Customized the output by enabling/disabling the generated React Hooks. For more details: https://www.apollographql.com/docs/react/api/react/hooks/
+   * @description Customized the output by enabling/disabling the generated React Hooks. For more details: https://apollographql.com/docs/react/api/react/hooks
    * @default true
    *
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withHooks: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withHooks: true
    * ```
    */
   withHooks?: boolean;
@@ -64,13 +64,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withMutationFn: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withMutationFn: true
    * ```
    */
   withMutationFn?: boolean;
@@ -81,13 +81,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withRefetchFn: false
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withRefetchFn: false
    * ```
    */
   withRefetchFn?: boolean;
@@ -125,13 +125,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    reactApolloVersion: 2
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       reactApolloVersion: 2
    * ```
    */
   reactApolloVersion?: 2 | 3;
@@ -142,13 +142,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withResultType: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withResultType: true
    * ```
    */
   withResultType?: boolean;
@@ -159,13 +159,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withMutationOptionsType: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       withMutationOptionsType: true
    * ```
    */
   withMutationOptionsType?: boolean;
@@ -177,13 +177,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @exampleMarkdown
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    addDocBlocks: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *       - typescript-react-apollo
+   *     config:
+   *       addDocBlocks: true
    * ```
    */
   addDocBlocks?: boolean;
