@@ -121,7 +121,6 @@ public class CompositionTypeConverter : JsonConverter
     }
 
     var loadedObject = JObject.Load(reader);
-
     var typeNameObject = loadedObject["__typename"];
 
     if (typeNameObject == null)
@@ -130,13 +129,8 @@ public class CompositionTypeConverter : JsonConverter
     }
 
     var typeName = loadedObject["__typename"].Value<string>();
-
     var toObject = GetToObjectMethodForTargetType(typeName);
-
-    // Invoke and parse it
-    object objectParsed = toObject(loadedObject);
-
-    return objectParsed;
+    return toObject(loadedObject);
   }
 
   /// <inheritdoc />
@@ -178,10 +172,7 @@ public class CompositionTypeListConverter : JsonConverter
       }
 
       var typeName = item["__typename"].Value<string>();
-
       var toObject = GetToObjectMethodForTargetType(typeName);
-
-      // Invoke and parse it
       object objectParsed = toObject(item);
 
       list.Add(objectParsed);
@@ -217,7 +208,7 @@ public class CompositionTypeListConverter : JsonConverter
       emitRecords: rawConfig.emitRecords || false,
       emitJsonAttributes: rawConfig.emitJsonAttributes ?? true,
       jsonAttributesSource: rawConfig.jsonAttributesSource || 'Newtonsoft.Json',
-      emitCompositionTypes: rawConfig.emitCompositionTypes ?? true,
+      emitCompositionTypes: rawConfig.emitCompositionTypes ?? false,
       scalars: buildScalarsFromConfig(_schema, rawConfig, C_SHARP_SCALARS),
     });
 
@@ -270,7 +261,9 @@ public class CompositionTypeListConverter : JsonConverter
   }
 
   public addCompositionTypeConverterDefinitions(blocks: string[]): string[] {
-    return [this.compositionTypeCacheDefinition, ...blocks, this.compositionTypeConvertersBlock];
+    return this._parsedConfig.emitCompositionTypes
+      ? [this.compositionTypeCacheDefinition, ...blocks, this.compositionTypeConvertersBlock]
+      : blocks;
   }
 
   protected getEnumValue(enumName: string, enumOption: string): string {
@@ -367,7 +360,7 @@ public class CompositionTypeListConverter : JsonConverter
     ) {
       const baseNode = getBaseTypeNode(node.type);
 
-      if (this.compositionTypeNames.has(baseNode.name.value)) {
+      if (this._parsedConfig.emitCompositionTypes && this.compositionTypeNames.has(baseNode.name.value)) {
         attributes.push(
           isOfTypeList(node.type) ? this.compositionTypeListConverterTag : this.compositionTypeConverterTag
         );
@@ -513,7 +506,7 @@ ${recordMembers}
 
     // Check if this class is part of a composition type, which is modelled as an interface
     const compositionInterfaces = this.compositionTypeToImplementationsMap.get(name);
-    if (compositionInterfaces) {
+    if (this._parsedConfig.emitCompositionTypes && compositionInterfaces) {
       compositionInterfaces.forEach(i => {
         allInterfaces.push({
           kind: 'NamedType',
@@ -532,7 +525,7 @@ ${recordMembers}
       return fieldHeader + indent(`public ${csharpFieldType} ${fieldName} { get; set; }`);
     });
 
-    if (compositionInterfaces) {
+    if (this._parsedConfig.emitCompositionTypes && compositionInterfaces) {
       compositionInterfaces.forEach(cInterface => {
         const fieldHeader = indentMultiline(transformComment('The kind used to discriminate the union type')) + '\n';
 
@@ -715,6 +708,8 @@ ${
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
-    return this.buildUnionType(node.name, node.description, node.types);
+    return this._parsedConfig.emitCompositionTypes
+      ? this.buildUnionType(node.name, node.description, node.types)
+      : null;
   }
 }

@@ -17,7 +17,7 @@ export interface ConcreteToCompositionName {
 }
 
 /// This visitor returns a set of definition containing a map between unionTypes
-/// And their concrete implementations, plus an array of classes which are interfaces
+/// and their concrete implementations, plus an array of classes which are interfaces
 export class CompositionTypeVisitor extends BaseVisitor {
   constructor() {
     super({}, {});

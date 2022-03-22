@@ -847,10 +847,10 @@ describe('C#', () => {
 
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
+      expect(result).not.toContain('Newtonsoft.Json.Linq');
+      expect(result).not.toContain('CompositionTypeListConverter');
       expect(result).not.toContain('public interface Vehicle {');
       expect(result).not.toContain('public enum VehicleKind {');
-      expect(result).not.toContain('Airplane');
-      expect(result).not.toContain('Car');
       expect(result).not.toContain('public class Airplane : Vehicle');
       expect(result).not.toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Airplane; } }');
       expect(result).not.toContain('public class Car : Vehicle');
