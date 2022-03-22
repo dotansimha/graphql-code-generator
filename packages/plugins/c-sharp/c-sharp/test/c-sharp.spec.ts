@@ -831,5 +831,30 @@ describe('C#', () => {
       expect(result).toContain('[JsonConverter(typeof(CompositionTypeListConverter))]');
       expect(result).toContain('public List<Vehicle> tail { get; set; }');
     });
+
+    it('Does not generate CompositionTypes if the flag is not passed', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        union Vehicle = Airplane | Car
+
+        type Airplane {
+          wingspan: Int
+        }
+
+        type Car {
+          licensePlate: String
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).not.toContain('public interface Vehicle {');
+      expect(result).not.toContain('public enum VehicleKind {');
+      expect(result).not.toContain('Airplane');
+      expect(result).not.toContain('Car');
+      expect(result).not.toContain('public class Airplane : Vehicle');
+      expect(result).not.toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Airplane; } }');
+      expect(result).not.toContain('public class Car : Vehicle');
+      expect(result).not.toContain('VehicleKind Vehicle.Kind { get { return VehicleKind.Car; } }');
+    });
   });
 });
