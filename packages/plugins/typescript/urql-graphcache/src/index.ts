@@ -79,7 +79,7 @@ function constructType(
         case Kind.UNION_TYPE_DEFINITION:
         case Kind.INPUT_OBJECT_TYPE_DEFINITION:
         case Kind.OBJECT_TYPE_DEFINITION: {
-          const finalType = `WithTypename<${tsTypeName}>${allowString ? ' | string' : ''}`;
+          const finalType = `${tsTypeName}${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
