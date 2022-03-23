@@ -152,7 +152,7 @@ async function test() {
 
       const usage = `
         async function rawRequestTest() {
-          const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+          const requester = <R, V> (doc: string, vars: V): Promise<ExecutionResult<R>> => Promise.resolve({} as unknown as ExecutionResult<R>);
           const sdk = getSdk(requester);
 
           await sdk.feed();

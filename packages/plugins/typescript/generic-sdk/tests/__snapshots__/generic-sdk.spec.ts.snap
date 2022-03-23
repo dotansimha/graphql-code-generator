@@ -237,8 +237,8 @@ export const Feed4Document = gql\`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
-export function getSdk<C>(requester: Requester<C>) {
+export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
+export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
@@ -475,8 +475,8 @@ export const CommentAddedDocument = gql\`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> & Observable<R>
-export function getSdk<C>(requester: Requester<C>) {
+export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> & Observable<R>
+export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
@@ -724,8 +724,8 @@ export const Feed4Document = \`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R>
-export function getSdk<C>(requester: Requester<C>) {
+export type Requester<C = {}, E = unknown> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R>
+export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
@@ -766,7 +766,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-import { DocumentNode } from 'graphql';
+import { DocumentNode, ExecutionResult } from 'graphql';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -997,26 +997,26 @@ export const Feed4Document = gql\`
   }
 }
     \`;
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
-export function getSdk<C>(requester: Requester<C>) {
+export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<ExecutionResult<R, E>>
+export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    feed(variables?: FeedQueryVariables, options?: C): Promise<{ data?: FeedQuery, errors?: Array<{ message: string; extensions?: unknown }>, extensions?: unknown }> {
+    feed(variables?: FeedQueryVariables, options?: C): Promise<ExecutionResult<FeedQuery, E>> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
     },
-    feed2(variables: Feed2QueryVariables, options?: C): Promise<{ data?: Feed2Query, errors?: Array<{ message: string; extensions?: unknown }>, extensions?: unknown }> {
+    feed2(variables: Feed2QueryVariables, options?: C): Promise<ExecutionResult<Feed2Query, E>> {
       return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
     },
-    feed3(variables?: Feed3QueryVariables, options?: C): Promise<{ data?: Feed3Query, errors?: Array<{ message: string; extensions?: unknown }>, extensions?: unknown }> {
+    feed3(variables?: Feed3QueryVariables, options?: C): Promise<ExecutionResult<Feed3Query, E>> {
       return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
     },
-    feed4(variables?: Feed4QueryVariables, options?: C): Promise<{ data?: Feed4Query, errors?: Array<{ message: string; extensions?: unknown }>, extensions?: unknown }> {
+    feed4(variables?: Feed4QueryVariables, options?: C): Promise<ExecutionResult<Feed4Query, E>> {
       return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
     }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
         async function rawRequestTest() {
-          const requester = <R, V> (doc: string, vars: V): Promise<R> => Promise.resolve({} as unknown as R);
+          const requester = <R, V> (doc: string, vars: V): Promise<ExecutionResult<R>> => Promise.resolve({} as unknown as ExecutionResult<R>);
           const sdk = getSdk(requester);
 
           await sdk.feed();
