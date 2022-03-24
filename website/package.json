@@ -73,7 +73,7 @@
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.2.8",
     "@graphql-codegen/typescript-vue-urql": "2.2.9",
     "@guild-docs/client": "1.4.0",
-    "@guild-docs/server": "2.2.0",
+    "@guild-docs/server": "3.0.1",
     "@monaco-editor/react": "4.3.1",
     "@theguild/components": "1.10.2",
     "classnames": "2.3.1",
