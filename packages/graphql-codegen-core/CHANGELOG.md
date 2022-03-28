@@ -1,5 +1,37 @@
 # @graphql-codegen/core
 
+## 2.5.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+- Updated dependencies [cb9adeb96]
+  - @graphql-codegen/plugin-helpers@2.4.1
+
+## 2.5.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.4.0
+
+### Minor Changes
+
+- b61dc57cf: feat(core): add graphql@16 in peer dependencies
+
+### Patch Changes
+
+- 8643b3bf3: Add GraphQL 16 as a peerDependency
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.3.0
 
 ### Minor Changes

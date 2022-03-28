@@ -163,7 +163,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getDefaultOptions(): string {
-    return `const defaultOptions =  ${JSON.stringify(this.config.defaultBaseOptions)}`;
+    return `const defaultOptions = ${JSON.stringify(this.config.defaultBaseOptions)} as const;`;
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
@@ -377,10 +377,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
 
     if (operationType === 'Query') {
-      const lazyOperationName: string = this.convertName(nodeName, {
-        suffix: pascalCase('LazyQuery'),
-        useTypesPrefix: false,
-      });
+      const lazyOperationName: string =
+        this.convertName(nodeName, {
+          suffix: pascalCase('LazyQuery'),
+          useTypesPrefix: false,
+        }) + this.config.hooksSuffix;
       hookFns.push(
         `export function use${lazyOperationName}(baseOptions?: ${this.getApolloReactHooksIdentifier()}.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
           const options = {...defaultOptions, ...baseOptions}

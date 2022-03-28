@@ -16,7 +16,7 @@ export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
 }
 
 const additionalExportedTypes = `
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 `;
 
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
@@ -45,7 +45,6 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
     if (this.config.rawRequest) {
-      this._additionalImports.push(`${typeImport} { GraphQLError } from 'graphql-request/dist/types';`);
       if (this.config.documentMode !== DocumentMode.string) {
         this._additionalImports.push(`import { print } from 'graphql'`);
       }
@@ -96,6 +95,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     const extraVariables: string[] = [];
     const allPossibleActions = this._operationsToInclude
       .map(o => {
+        const operationType = o.node.operation;
         const operationName = o.node.name.value;
         const optionalVariables =
           !o.node.variableDefinitions ||
@@ -111,14 +111,12 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: ${
-            o.operationResultType
-          } | undefined; extensions?: ${
+          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ${o.operationResultType}; extensions?: ${
             this.config.extensionsType
-          }; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+          }; headers: Dom.Headers; status: number; }> {
     return withWrapper((wrappedRequestHeaders) => client.rawRequest<${
       o.operationResultType
-    }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');
+    }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
         } else {
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
@@ -126,7 +124,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
   return withWrapper((wrappedRequestHeaders) => client.request<${
     o.operationResultType
-  }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}');
+  }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
         }
       })
@@ -135,7 +133,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
 
     return `${additionalExportedTypes}
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 ${extraVariables.join('\n')}
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {

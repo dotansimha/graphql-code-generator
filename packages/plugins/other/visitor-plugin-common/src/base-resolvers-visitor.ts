@@ -54,6 +54,7 @@ import { getRootTypeNames } from '@graphql-tools/utils';
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
   fieldContextTypes: Array<string>;
+  directiveContextTypes: Array<string>;
   rootValueType: ParsedMapper;
   mappers: {
     [typeName: string]: ParsedMapper;
@@ -151,6 +152,25 @@ export interface RawResolversConfig extends RawConfig {
    *   config:
    *     rootValueType: ./my-types#MyRootValue
    * ```
+   */
+  directiveContextTypes?: Array<string>;
+  /**
+   * @description Use this to set a custom type for a specific field `context` decorated by a directive.
+   * It will only affect the targeted resolvers.
+   * You can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`
+   *
+   * ContextTypeName should by a generic Type that take the context or field context type as only type parameter.
+   *
+   * @exampleMarkdown
+   * ## Directive Context Extender
+   *
+   * ```yml
+   * plugins
+   *   config:
+   *     directiveContextTypes:
+   *       - myCustomDirectiveName#./my-file#CustomContextExtender
+   * ```
+   *
    */
   rootValueType?: string;
   /**
@@ -375,7 +395,9 @@ export class BaseResolversVisitor<
   protected _hasScalars = false;
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
+  protected _directiveContextTypesMap: FieldContextTypeMap;
   private _directiveResolverMappings: Record<string, string>;
+  private _shouldMapType: { [typeName: string]: boolean } = {};
 
   constructor(
     rawConfig: TRawConfig,
@@ -397,6 +419,7 @@ export class BaseResolversVisitor<
       onlyResolveTypeForInterfaces: getConfigValue(rawConfig.onlyResolveTypeForInterfaces, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
+      directiveContextTypes: getConfigValue(rawConfig.directiveContextTypes, []),
       resolverTypeSuffix: getConfigValue(rawConfig.resolverTypeSuffix, 'Resolvers'),
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
@@ -431,6 +454,7 @@ export class BaseResolversVisitor<
       namedType => !isEnumType(namedType)
     );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
+    this._directiveContextTypesMap = this.createDirectivedContextType();
     this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? {};
   }
 
@@ -438,15 +462,7 @@ export class BaseResolversVisitor<
     return `export type ResolverTypeWrapper<T> = ${this.config.resolverTypeWrapperSignature};`;
   }
 
-  protected shouldMapType(
-    type: GraphQLNamedType,
-    checkedBefore: { [typeName: string]: boolean } = {},
-    duringCheck: string[] = []
-  ): boolean {
-    if (checkedBefore[type.name] !== undefined) {
-      return checkedBefore[type.name];
-    }
-
+  protected shouldMapType(type: GraphQLNamedType, duringCheck: string[] = []): boolean {
     if (type.name.startsWith('__') || this.config.scalars[type.name]) {
       return false;
     }
@@ -469,8 +485,8 @@ export class BaseResolversVisitor<
           const field = fields[fieldName];
           const fieldType = getBaseType(field.type);
 
-          if (checkedBefore[fieldType.name] !== undefined) {
-            return checkedBefore[fieldType.name];
+          if (this._shouldMapType[fieldType.name] !== undefined) {
+            return this._shouldMapType[fieldType.name];
           }
 
           if (this.config.mappers[type.name]) {
@@ -478,7 +494,7 @@ export class BaseResolversVisitor<
           }
 
           duringCheck.push(type.name);
-          const innerResult = this.shouldMapType(fieldType, checkedBefore, duringCheck);
+          const innerResult = this.shouldMapType(fieldType, duringCheck);
 
           return innerResult;
         });
@@ -507,13 +523,17 @@ export class BaseResolversVisitor<
     shouldInclude?: (type: GraphQLNamedType) => boolean
   ): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
-    const nestedMapping: { [typeName: string]: boolean } = {};
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
-    typeNames.forEach(typeName => {
-      const schemaType = allSchemaTypes[typeName];
-      nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
-    });
+    // avoid checking all types recursively if we have no `mappers` defined
+    if (Object.keys(this.config.mappers).length > 0) {
+      typeNames.forEach(typeName => {
+        if (this._shouldMapType[typeName] === undefined) {
+          const schemaType = allSchemaTypes[typeName];
+          this._shouldMapType[typeName] = this.shouldMapType(schemaType);
+        }
+      });
+    }
 
     return typeNames.reduce((prev: ResolverTypes, typeName: string) => {
       const schemaType = allSchemaTypes[typeName];
@@ -566,9 +586,11 @@ export class BaseResolversVisitor<
           .getTypes()
           .map(type => getTypeToUse(type.name))
           .join(' | ');
+      } else if (isEnumType(schemaType)) {
+        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       } else {
         shouldApplyOmit = true;
-        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
+        prev[typeName] = this.convertName(typeName, {}, true);
       }
 
       if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
@@ -594,7 +616,7 @@ export class BaseResolversVisitor<
             const baseType = getBaseType(field.type);
             const isUnion = isUnionType(baseType);
 
-            if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
+            if (!this.config.mappers[baseType.name] && !isUnion && !this._shouldMapType[baseType.name]) {
               return null;
             }
 
@@ -688,6 +710,17 @@ export class BaseResolversVisitor<
 
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const items = fieldContextType.split('#');
+      if (items.length === 3) {
+        const [path, source, contextTypeName] = items;
+        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+      }
+      const [path, contextType] = items;
+      return { ...prev, [path]: parseMapper(contextType) };
+    }, {});
+  }
+  protected createDirectivedContextType(): FieldContextTypeMap {
+    return this.config.directiveContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
@@ -791,6 +824,12 @@ export class BaseResolversVisitor<
     }
 
     Object.values(this._fieldContextTypeMap).forEach(parsedMapper => {
+      if (parsedMapper.isExternal) {
+        addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
+      }
+    });
+
+    Object.values(this._directiveContextTypesMap).forEach(parsedMapper => {
       if (parsedMapper.isExternal) {
         addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
       }
@@ -939,6 +978,8 @@ export class BaseResolversVisitor<
         return null;
       }
 
+      const contextType = this.getContextType(parentName, node);
+
       const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
@@ -987,6 +1028,7 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
+      const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
       const signature: {
         name: string;
         modifier: string;
@@ -994,16 +1036,9 @@ export class BaseResolversVisitor<
         genericTypes: string[];
       } = {
         name: node.name as any,
-        modifier: this.config.avoidOptionals ? '' : '?',
+        modifier: avoidOptionals ? '' : '?',
         type: resolverType,
-        genericTypes: [
-          mappedTypeKey,
-          parentTypeSignature,
-          this._fieldContextTypeMap[`${parentName}.${node.name}`]
-            ? this._fieldContextTypeMap[`${parentName}.${node.name}`].type
-            : 'ContextType',
-          argsType,
-        ].filter(f => f),
+        genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
       };
 
       if (this._federation.isResolveReferenceField(node)) {
@@ -1023,14 +1058,33 @@ export class BaseResolversVisitor<
     };
   }
 
+  private getFieldContextType(parentName: string, node: FieldDefinitionNode): string {
+    if (this._fieldContextTypeMap[`${parentName}.${node.name}`]) {
+      return this._fieldContextTypeMap[`${parentName}.${node.name}`].type;
+    }
+    return 'ContextType';
+  }
+
+  private getContextType(parentName: string, node: FieldDefinitionNode): string {
+    let contextType = this.getFieldContextType(parentName, node);
+
+    for (const directive of node.directives) {
+      const name = directive.name as unknown as string;
+      const directiveMap = this._directiveContextTypesMap[name];
+      if (directiveMap) {
+        contextType = `${directiveMap.type}<${contextType}>`;
+      }
+    }
+    return contextType;
+  }
+
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
     return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
   }
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
-    this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
-    return `RequireFields<${argsType}, never>`;
+    return `Partial<${argsType}>`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {

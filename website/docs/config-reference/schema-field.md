@@ -5,11 +5,11 @@ title: '`schema` field'
 
 The `schema` field should point to your `GraphQLSchema` - there are multiple ways you can specify it and load your `GraphQLSchema`.
 
-You can specify either a `string` pointing to your schema, or `string[]` point to multiple schemas, and they will be merged.
+`schema` can either be a `string` pointing to your schema or a `string[]` pointing to multiple schemas that will be merged.
 
 ## How to use it?
 
-### Root level
+### Root-level
 
 You can specify the `schema` field in your root level config, as follow:
 
@@ -51,11 +51,11 @@ generates:
       - typescript-operations
 ```
 
-> It's also useful if you have a remote schema coming from a server, and a client-side schema that available in your client-side.
+> It's also helpful if you have a remote schema from a server and a client-side schema available in your client-side.
 
 ## Available formats
 
-The following can be specified as a single value, or as an array with mixed values.
+The following can be specified as a single value or an array with mixed values.
 
 ### URL
 
@@ -78,7 +78,7 @@ schema:
         Authorization: YOUR-TOKEN-HERE
 ```
 
-> Note that spacing and indentation is very important in YAML, so please make sure it matches the examples above.
+> Note that **spacing and indentation are important in YAML**; make sure it matches the examples above.
 
 ##### `customFetch`
 
@@ -92,7 +92,7 @@ schema:
 
 ##### `method`
 
-You can specify an HTTP method to use for the introspection query. default is `POST`.
+You can specify an HTTP method for the introspection query (the default value is `POST`).
 
 ```yml
 schema:
@@ -110,7 +110,7 @@ schema: schema.json
 
 ### Local `.graphql` files
 
-You can point to a single `.graphql` file that contains AST string of your schema:
+You can point to a single `.graphql` file that contains the AST string of your schema:
 
 ```yml
 schema: schema.graphql
@@ -144,7 +144,7 @@ schema:
 
 ##### `skipGraphQLImport`
 
-By default, codegen skips `graphql-import` in favor of loading all files using glob expressions.
+By default, codegen skips `graphql-import` to load all files using glob expressions.
 
 If you are using `graphql-import` syntax in your schema definitions, you can tell codegen to use those import statements:
 
@@ -156,7 +156,7 @@ schema:
 
 ##### `commentDescriptions`
 
-This will convert all deprecated form of Graphql comments (marked with `#`) into a GraphQL descriptions (marked with `"`) during the parsing phase.
+When enabled, converts all deprecated forms of GraphQL comments (marked with `#`) into a GraphQL description (marked with `"`) during the parsing phase.
 
 ```yml
 schema:
@@ -176,19 +176,19 @@ schema:
 
 ### Code Files
 
-You can use code files and the codegen will try to extract the GraphQL schema from it, based on `gql` tag:
+You can use code files, and the codegen will try to extract the GraphQL schema from it, based on `gql` tag:
 
 ```yml
 schema: './src/**/*.ts'
 ```
 
-The codegen will try to load the file as an AST and look for explicit GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
+The codegen will try to load the file as an AST and look for exact GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
 
 #### Supported Configuration
 
 ##### `noRequire`
 
-You can disable the `require` if it causes errors for you (for example, because of different module system or missing deps):
+You can disable the `require` if it causes errors for you (for example, because of a different module system or missing dependency):
 
 ```yml
 schema:
@@ -198,7 +198,7 @@ schema:
 
 ##### `noPluck`
 
-You can disable the AST lookup phase, and tell codegen to skip and directly try to `require` each file:
+You can disable the AST lookup phase and tell codegen to skip and directly try to `require` each file:
 
 ```yml
 schema:
@@ -208,7 +208,7 @@ schema:
 
 ##### `assumeValid`
 
-Set this to `true` in order to tell codegen to skip AST validation.
+Set this to `true` to tell codegen to skip AST validation.
 
 ```yml
 schema:
@@ -218,7 +218,7 @@ schema:
 
 ### JavaScript export
 
-You can also specify a code file that exports your `GraphQLSchema` object as named export `schema` or as default export.
+You can also specify a code file that exports your `GraphQLSchema` object as export `schema` or as default export.
 
 ```yml
 schema: schema.js
@@ -242,7 +242,7 @@ module.exports = buildSchema(/* GraphQL */ `
 
 ### String
 
-You can specify your schema directly as an AST string in your config file. It's very useful for testing.
+You can specify your schema directly as an AST string in your config file. It's handy for testing.
 
 ```yml
 schema: 'type MyType { foo: String } type Query { myType: MyType }'
@@ -256,21 +256,21 @@ You can load your schema file from a remote GitHub file, using the following syn
 schema: github:user/repo#branchName:path/to/file.graphql
 ```
 
-> You can load from a JSON file, `.graphql` file or from a code file containing `gql` tag syntax.
+> You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
 
 ### Git
 
-You can load your schema file from a Git repository, using the following syntax:
+You can load your schema file from a Git repository using the following syntax:
 
 ```yml
 schema: git:branch:path/to/file.graphql
 ```
 
-> You can load from a JSON file, `.graphql` file or from a code file containing `gql` tag syntax.
+> You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
 
 ### Apollo Engine
 
-You can load your schema from Apollo Engine, with the following syntax:
+You can load your schema from Apollo Engine with the following syntax:
 
 ```yml
 schema:
@@ -283,7 +283,7 @@ schema:
 
 ## Custom Schema Loader
 
-If your schema has a different or complicated way of loading, you can point to a single code file, that does that work for you.
+If your schema has a different or complicated way of loading, you can point to a single code file that works for you.
 
 ```yml
 schema:
@@ -305,4 +305,60 @@ module.exports = (schemaString, config) => {
 }
 ```
 
-> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.
+> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so the loader can modify them to pass any additional information to those plugins.
+
+### Loading API URL from TypeScript file example:
+
+If you store your API config in a file, and don't want to repeat the URL in the codegen config. You can follow the following example:
+
+```ts
+export const API_URL = 'https://example.com/graphql'
+export const PUBLIC_TOKEN = '12345'
+```
+
+Create custom loader file:
+
+```ts
+import fetch from "cross-fetch";
+import { getIntrospectionQuery, buildClientSchema } from "graphql";
+
+import {
+  API_URL,
+  PUBLIC_TOKEN,
+} from "./config";
+
+export default async () => {
+  const introspectionQuery = getIntrospectionQuery();
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Token": PUBLIC_TOKEN,
+    },
+    body: JSON.stringify({ query: introspectionQuery }),
+  });
+
+  const data = await response.json();
+
+  return buildClientSchema(data.data);
+};
+```
+
+Add custom loader to your codegen config:
+
+```yml
+schema:
+  - my-api:
+      loader: ./codegen-loader.ts
+```
+
+Finally, make sure that you have installed `ts-node`, so TypeScript file can be transpiled before running codegen.
+
+In you'r `package.json` script, add `-r ts-node/register` argument to use `ts-node` transpiler.
+
+```json
+  "scripts": {
+    "codegen": "graphql-codegen -r ts-node/register --config codegen.json"
+  }
+```

@@ -7,7 +7,7 @@ declare global {
 
   export type CurrentUserForProfileQuery = {
     __typename?: 'Query';
-    currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
+    currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null;
   };
 }
 

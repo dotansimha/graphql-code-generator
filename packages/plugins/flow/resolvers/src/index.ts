@@ -26,8 +26,6 @@ export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginO
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
 
-  const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
-
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
@@ -113,8 +111,10 @@ ${defsToInclude.join('\n')}
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
 
   if (hasScalars()) {
-    imports.push('type GraphQLScalarTypeConfig');
+    imports.push('type GraphQLScalarType', 'type GraphQLScalarTypeConfig');
   }
+
+  const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
   if (showUnusedMappers && unusedMappers.length) {
     // eslint-disable-next-line no-console

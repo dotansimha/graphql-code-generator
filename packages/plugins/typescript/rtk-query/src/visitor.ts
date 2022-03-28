@@ -53,6 +53,10 @@ export class RTKQueryVisitor extends ClientSideBaseVisitor<RTKQueryRawPluginConf
   }
 
   public getInjectCall() {
+    if (!this.hasOperations) {
+      return '';
+    }
+
     return (
       `
 const injectedRtkApi = api.injectEndpoints({

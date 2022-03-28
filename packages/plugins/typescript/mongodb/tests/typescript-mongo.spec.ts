@@ -120,21 +120,21 @@ describe('TypeScript Mongo', () => {
     it('Should allow to customize objectIdType import with basic type', async () => {
       const result = await plugin(schema, [], { objectIdType: 'string' }, { outputFile: '' });
       expect(result).toContain(`_id: string`);
-      expect(result).not.toContain(`ObjectID`);
+      expect(result).not.toContain(`ObjectId`);
       await validate(result, schema, {});
     });
 
     it('Should allow to customize objectIdType import with custom import', async () => {
-      const result = await plugin(schema, [], { objectIdType: 'ObjectId#bson' }, { outputFile: '' });
-      expect(result).toContain(`_id: ObjectId`);
-      expect(result).not.toContain(`ObjectID`);
-      expect(result).toContain(`import { ObjectId } from 'bson';`);
+      const result = await plugin(schema, [], { objectIdType: 'ObjectID#bson' }, { outputFile: '' });
+      expect(result).toContain(`_id: ObjectID`);
+      expect(result).not.toContain(`ObjectId`);
+      expect(result).toContain(`import { ObjectID } from 'bson';`);
       await validate(result, schema, {});
     });
 
     it('Should allow to customize idFieldName', async () => {
       const result = await plugin(schema, [], { idFieldName: 'id' }, { outputFile: '' });
-      expect(result).toContain(`id: ObjectID`);
+      expect(result).toContain(`id: ObjectId`);
       expect(result).not.toContain(`_id`);
       await validate(result, schema, {});
     });
@@ -195,7 +195,7 @@ describe('TypeScript Mongo', () => {
 
     it('Should output the correct values for @id directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toContain('_id?: Maybe<ObjectID>'); // optional id
+      expect(result).toContain('_id?: Maybe<ObjectId>'); // optional id
       await validate(result, schema, {});
     });
 
@@ -226,7 +226,7 @@ describe('TypeScript Mongo', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type TestDbObject = {
-        _id: ObjectID,
+        _id: ObjectId,
         foo: string,
       };
 

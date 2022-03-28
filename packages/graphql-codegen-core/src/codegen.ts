@@ -5,6 +5,7 @@ import {
   federationSpec,
   getCachedDocumentNodeFromSchema,
   AddToSchemaResult,
+  createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
@@ -12,6 +13,7 @@ import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from
 
 import { mergeSchemas } from '@graphql-tools/schema';
 import {
+  extractHashFromSchema,
   getSkipDocumentsValidationOption,
   hasFederationSpec,
   pickFlag,
@@ -22,11 +24,12 @@ import {
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
+  const profiler = options.profiler ?? createNoopProfiler();
 
   const skipDocumentsValidation = getSkipDocumentsValidationOption(options);
 
   if (documents.length > 0 && shouldValidateDuplicateDocuments(skipDocumentsValidation)) {
-    validateDuplicateDocuments(documents);
+    await profiler.run(async () => validateDuplicateDocuments(documents), 'validateDuplicateDocuments');
   }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
@@ -52,18 +55,20 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   // Use mergeSchemas, only if there is no GraphQLSchema provided or the schema should be extended
   const mergeNeeded = !options.schemaAst || additionalTypeDefs.length > 0;
 
-  const schemaInstance = mergeNeeded
-    ? mergeSchemas({
-        // If GraphQLSchema provided, use it
-        schemas: options.schemaAst ? [options.schemaAst] : [],
-        // If GraphQLSchema isn't provided but DocumentNode is, use it to get the final GraphQLSchema
-        typeDefs: options.schemaAst ? additionalTypeDefs : [options.schema, ...additionalTypeDefs],
-        convertExtensions: true,
-        assumeValid: true,
-        assumeValidSDL: true,
-        ...options.config,
-      } as any)
-    : options.schemaAst;
+  const schemaInstance = await profiler.run(async () => {
+    return mergeNeeded
+      ? mergeSchemas({
+          // If GraphQLSchema provided, use it
+          schemas: options.schemaAst ? [options.schemaAst] : [],
+          // If GraphQLSchema isn't provided but DocumentNode is, use it to get the final GraphQLSchema
+          typeDefs: options.schemaAst ? additionalTypeDefs : [options.schema, ...additionalTypeDefs],
+          convertExtensions: true,
+          assumeValid: true,
+          assumeValidSDL: true,
+          ...options.config,
+        } as any)
+      : options.schemaAst;
+  }, 'Create schema instance');
 
   const schemaDocumentNode =
     mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
@@ -75,17 +80,28 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
     const extraFragments: { importFrom: string; node: DefinitionNode }[] =
       pickFlag('externalFragments', options.config) || [];
-    const errors = await validateGraphQlDocuments(
-      schemaInstance,
-      [
-        ...documents,
-        ...extraFragments.map(f => ({
-          location: f.importFrom,
-          document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
-        })),
-      ],
-      specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)))
-    );
+
+    const errors = await profiler.run(() => {
+      const fragments = extraFragments.map(f => ({
+        location: f.importFrom,
+        document: { kind: Kind.DOCUMENT, definitions: [f.node] } as DocumentNode,
+      }));
+      const rules = specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)));
+      const schemaHash = extractHashFromSchema(schemaInstance);
+
+      if (!schemaHash || !options.cache || documents.some(d => typeof d.hash !== 'string')) {
+        return validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules);
+      }
+
+      const cacheKey = [schemaHash]
+        .concat(documents.map(doc => doc.hash))
+        .concat(JSON.stringify(fragments))
+        .join(',');
+
+      return options.cache('documents-validation', cacheKey, () =>
+        validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules)
+      );
+    }, 'Validate documents against schema');
     checkValidationErrors(errors);
   }
 
@@ -106,20 +122,25 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
               ...pluginConfig,
             };
 
-      const result = await executePlugin(
-        {
-          name,
-          config: execConfig,
-          parentConfig: options.config,
-          schema: schemaDocumentNode,
-          schemaAst: schemaInstance,
-          documents: options.documents,
-          outputFilename: options.filename,
-          allPlugins: options.plugins,
-          skipDocumentsValidation: options.skipDocumentsValidation,
-          pluginContext: options.pluginContext,
-        },
-        pluginPackage
+      const result = await profiler.run(
+        () =>
+          executePlugin(
+            {
+              name,
+              config: execConfig,
+              parentConfig: options.config,
+              schema: schemaDocumentNode,
+              schemaAst: schemaInstance,
+              documents: options.documents,
+              outputFilename: options.filename,
+              allPlugins: options.plugins,
+              skipDocumentsValidation: options.skipDocumentsValidation,
+              pluginContext: options.pluginContext,
+              profiler,
+            },
+            pluginPackage
+          ),
+        `Plugin ${name}`
       );
 
       if (typeof result === 'string') {

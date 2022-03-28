@@ -8,11 +8,11 @@
       "properties": {
         "schema": {
           "$ref": "#/definitions/Types.InstanceOrArray",
-          "description": "A pointer(s) to your GraphQL schema. This schema will be the base schema for all your outputs.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/schema-field"
+          "description": "A pointer(s) to your GraphQL schema. This schema will be the base schema for all your outputs.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/schema-field"
         },
         "require": {
           "$ref": "#/definitions/Types.RequireExtension",
-          "description": "A path to a file which defines custom Node.JS require() handlers for custom file extensions.\nThis is essential if the code generator has to go through files which require other files in an unsupported format (by default).\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/require-field\nSee more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.\n\nNote: values that specified in your .yml file will get loaded after loading the config .yml file."
+          "description": "A path to a file which defines custom Node.JS require() handlers for custom file extensions.\nThis is essential if the code generator has to go through files which require other files in an unsupported format (by default).\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/require-field\nSee more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.\n\nNote: values that specified in your .yml file will get loaded after loading the config .yml file."
         },
         "customFetch": {
           "description": "Name for a library that implements `fetch`.\nUse this to tell codegen to use that to fetch schemas in a custom way.",
@@ -20,14 +20,14 @@
         },
         "documents": {
           "$ref": "#/definitions/Types.InstanceOrArray_1",
-          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field"
+          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/documents-field"
         },
         "config": {
           "$ref": "#/definitions/Types.PluginConfig",
-          "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/config-field"
+          "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/config-field"
         },
         "generates": {
-          "description": "A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
+          "description": "A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/codegen-config",
           "type": "object",
           "additionalProperties": {
             "anyOf": [
@@ -40,7 +40,7 @@
           }
         },
         "overwrite": {
-          "description": "A flag to overwrite files if they already exist when generating code (`true` by default).\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/codegen-config",
+          "description": "A flag to overwrite files if they already exist when generating code (`true` by default).\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/codegen-config",
           "type": "boolean"
         },
         "watch": {
@@ -73,7 +73,7 @@
           "additionalProperties": {}
         },
         "pluckConfig": {
-          "description": "Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field#graphql-tag-pluck",
+          "description": "Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/documents-field#graphql-tag-pluck",
           "type": "object",
           "properties": {
             "modules": {
@@ -92,7 +92,7 @@
         },
         "hooks": {
           "$ref": "#/definitions/Partial",
-          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
+          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/codegen-config/lifecycle-hooks"
         }
       }
     },
@@ -107,7 +107,9 @@
               "type": "object",
               "properties": {
                 "endpoint": { "type": "string" },
-                "fetchParams": { "type": "string" }
+                "fetchParams": {
+                  "anyOf": [{ "$ref": "#/definitions/Record<string,any>" }, { "type": "string" }]
+                }
               }
             },
             {
@@ -1430,6 +1432,10 @@
         "fieldContextTypes": {
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
+        "directiveContextTypes": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
         "rootValueType": {
           "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
@@ -3033,6 +3039,10 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
+        "directiveContextTypes": {
+          "$ref": "#/definitions/Array_1",
+          "description": "Use this to set a custom type for a field `context` decoreted by a specific directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
+        },
         "rootValueType": {
           "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
           "type": "string"
@@ -3656,16 +3666,16 @@
         },
         "documents": {
           "$ref": "#/definitions/Types.InstanceOrArray_1",
-          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/documents-field"
+          "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/documents-field"
         },
         "schema": {
           "$ref": "#/definitions/Types.InstanceOrArray",
-          "description": "A pointer(s) to your GraphQL schema. This schema will be available only for this specific `generates` record.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/schema-field"
+          "description": "A pointer(s) to your GraphQL schema. This schema will be available only for this specific `generates` record.\nYou can use one of the following:\n\n- URL pointing to a GraphQL endpoint\n- Path to a local `.json` file\n- Path to a local `.graphql` file\n- Glob expression pointing to multiple `.graphql` files\n- Path to a local code file (for example: `.js`) that exports `GraphQLSchema` object\n- Inline string containing GraphQL SDL schema definition\n\nYou can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/schema-field"
         },
         "config": { "additionalProperties": true },
         "hooks": {
           "$ref": "#/definitions/Partial",
-          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect only the current output files.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks"
+          "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect only the current output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks"
         }
       },
       "allOf": [
@@ -4376,6 +4386,7 @@
         }
       }
     },
+    "Record<string,any>": { "type": "object" },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]

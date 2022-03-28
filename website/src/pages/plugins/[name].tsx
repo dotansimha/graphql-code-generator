@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
+import Head from 'next/head';
 import { format } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import { Box, Center, Code, Container, Grid, SimpleGrid } from '@chakra-ui/react';
@@ -79,8 +80,23 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
 
   const pluginData = data[0];
 
+  const description = pluginData.stats?.description ? pluginData.stats.description : null;
+  const title = `${pluginData.title} | GraphQL Codegen Plugin Hub`;
+
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name="og:title" content={title} />
+        <meta name="twitter:title" content={title} />
+        {description && (
+          <>
+            <meta name="twitter:description" content={description} />
+            <meta name="og:description" content={description} />
+            <meta name="description" content={description} />
+          </>
+        )}
+      </Head>
       <Container p="1.5rem" maxWidth={1200}>
         <Title>{pluginData.title}</Title>
         <Grid templateColumns={['1fr', '1fr', '1fr 350px']} gap={4}>

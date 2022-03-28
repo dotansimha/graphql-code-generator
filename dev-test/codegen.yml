@@ -24,6 +24,12 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-stitching.ts:
+    schema: ./dev-test/test-schema/schema-text.js
+    plugins:
+      - typescript
+      - typescript-resolvers:
+          noSchemaStitching: false
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
@@ -405,3 +411,9 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       augmentedModuleName: '@urql/core'
+  ./dev-test/gql-tag-operations-masking/gql:
+    schema: ./dev-test/gql-tag-operations-masking/schema.graphql
+    documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true

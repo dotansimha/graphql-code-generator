@@ -3,9 +3,13 @@ id: prettier
 title: Prettier & Linters
 ---
 
-The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other linters, to apply your custom code-style and formatting rules. Before adding hooks consider the alternative of having codegen ignored in your linting. Codegen files are not edited manually and formatting them slows down your codegen considerably. On a big project difference can be measured in several seconds for every run.
+The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other linters, to apply your custom code style and formatting rules.
 
-[You can read the complete documentation of lifecycle hooks here](/docs/getting-started/lifecycle-hooks)
+Before adding a hook, consider the alternative of having codegen ignored in your linting.
+Codegen files should not be edited manually and formatting them slows down your codegen considerably.
+Differences can be measured in several seconds for every run on big projects.
+
+[You can read the complete documentation of lifecycle hooks here](/docs/config-reference/lifecycle-hooks)
 
 ## Prettier
 
@@ -25,7 +29,7 @@ hooks:
     - prettier --write
 ```
 
-Prefer this method if you're using near-operation-file preset as this has better performance when writing many files.
+Consider this method if you're using `near-operation-file` preset as this has better performance when writing many files.
 
 ## TSLint
 

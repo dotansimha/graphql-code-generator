@@ -1,5 +1,56 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.4
+
+### Patch Changes
+
+- 337fd4f77: WP: [typescript-resolvers] Add directiveContextTypes option
+
+## 2.7.3
+
+### Patch Changes
+
+- 54718c039: Improve @Deprecated Enum Type developer experience
+
+## 2.7.2
+
+### Patch Changes
+
+- 11d05e361: fix(resolvers): fix conflict between `typesPrefix: true` and `enumPrefix: false`
+
+## 2.7.1
+
+### Patch Changes
+
+- fd55e2039: fix incorrect type generation when using the inlineFragmentTypes 'combine' option that resulted in generating masked fragment output.
+
+## 2.7.0
+
+### Minor Changes
+
+- 1479233df: Add new `inlineFragmentTypes` mode `'mask'`, which allows generating masked fragment types.
+
+## 2.6.0
+
+### Minor Changes
+
+- bef4376d5: fix: RequireFields generic making all other fields optional
+
+### Patch Changes
+
+- c8ef37ae0: fix(typescript-resolvers): Fix optional field types
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.5.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 2.5.1
 
 ### Patch Changes

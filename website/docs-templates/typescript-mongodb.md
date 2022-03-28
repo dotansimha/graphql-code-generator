@@ -19,10 +19,10 @@ type User @entity {
 We can have the following TypeScript output:
 
 ```ts
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 export interface UserDbObject {
-  _id: ObjectID
+  _id: ObjectId
   username: string
   email?: string | null
 }
@@ -102,7 +102,7 @@ Use this directive on the filed that should be mapped to a MongoDB `_id`. By def
 
 #### `@link` (on `FIELD_DEFINITION`)
 
-Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectID` type in the generated result.
+Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectId` type in the generated result.
 
 #### `@embedded` (on `FIELD_DEFINITION`)
 
@@ -157,7 +157,7 @@ This way, you will get:
 ```typescript
 export interface BaseNotificationDbInterface {
   notificationType: string
-  _id: ObjectID
+  _id: ObjectId
   createdAt: Date
 }
 
@@ -222,14 +222,14 @@ type Profile @entity(embedded: true) {
 The generated MongoDB models should look like so:
 
 ```ts
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 export interface UserDbObject {
-  _id: ObjectID
+  _id: ObjectId
   username: string
   email: string
   profile: ProfileDbObject
-  friends: ObjectID[]
+  friends: ObjectId[]
 }
 
 export interface ProfileDbObject {

@@ -493,7 +493,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      if (this._config.inlineFragmentTypes === 'combine') {
+      if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
         fragmentsSpreadUsages.push(selectionNode.typeName);
         continue;
       }
@@ -570,7 +570,26 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformLinkFields(linkFields),
     ].filter(Boolean);
 
-    const fields = [...transformed, ...fragmentsSpreadUsages].filter(Boolean);
+    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
+    const allObjectsMerged: string[] = transformed
+      .filter(t => typeof t !== 'string')
+      .map((t: NameAndType) => `${t.name}: ${t.type}`);
+    let mergedObjectsAsString: string = null;
+
+    if (allObjectsMerged.length > 0) {
+      mergedObjectsAsString = this._processor.buildFieldsIntoObject(allObjectsMerged);
+    }
+
+    const fields = [...allStrings, mergedObjectsAsString].filter(Boolean);
+
+    if (fragmentsSpreadUsages.length) {
+      if (this._config.inlineFragmentTypes === 'combine') {
+        fields.push(...fragmentsSpreadUsages);
+      } else if (this._config.inlineFragmentTypes === 'mask') {
+        fields.push(`{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+      }
+    }
+
     return { typeInfo: typeInfoField, fields };
   }
 
@@ -662,12 +681,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       })
       .filter(Boolean);
 
+    const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
+    const fragmentMaskPartial =
+      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName': '${fragmentTypeName}' }` : '';
+
     if (subTypes.length === 1) {
       return new DeclarationBlock(declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
-        .withContent(subTypes[0].content).string;
+        .withName(fragmentTypeName)
+        .withContent(subTypes[0].content + fragmentMaskPartial).string;
     }
 
     return [
@@ -682,7 +705,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       new DeclarationBlock(declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
+        .withName(fragmentTypeName)
         .withContent(subTypes.map(t => t.name).join(' | ')).string,
     ].join('\n');
   }

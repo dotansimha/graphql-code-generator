@@ -274,7 +274,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null | undefined, user: { __typename?: 'User', id: string, f?: Types.E | null | undefined, j?: any | null | undefined } };`
+        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
       );
 
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
@@ -1125,7 +1125,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null | undefined, type: 'Query' };
+        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
       `);
       await validate(content, config);
     });
@@ -2477,7 +2477,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null | undefined, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null | undefined };
+        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
       `);
       await validate(content, config, gitHuntSchema);
     });
@@ -4029,6 +4029,176 @@ describe('TypeScript Operations Plugin', () => {
             )> }
           )>> }
         );`);
+    });
+
+    it('Handles fragments across files with flattenGeneratedTypes', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          search: [Dimension!]
+        }
+
+        type Dimension {
+          id: String
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SearchPopular {
+          search {
+            ...SearchableFragment
+          }
+        }
+
+        # Unreferenced fragments are still dropped
+        fragment ExtraFragment on Dimension {
+          id
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment SearchableFragment on Dimension {
+          id
+        }
+      `);
+
+      const config = {
+        flattenGeneratedTypes: true,
+        flattenGeneratedTypesIncludeFragments: true,
+        preResolveTypes: true,
+      };
+
+      const { content } = await plugin(
+        testSchema,
+        [
+          { location: '', document: query },
+          { location: '', document: fragment },
+        ],
+        config,
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      const output = await validate(content, config, testSchema);
+
+      expect(output).toBeSimilarStringTo(`
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          search?: Maybe<Array<Dimension>>;
+        };
+
+        export type Dimension = {
+          __typename?: 'Dimension';
+          id?: Maybe<Scalars['String']>;
+        };
+        export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null };
+
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
+    });
+
+    it('Drops fragments with flattenGeneratedTypes', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          search: [Dimension!]
+        }
+
+        type Dimension {
+          id: String
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SearchPopular {
+          search {
+            ...SearchableFragment
+          }
+        }
+
+        # Unreferenced fragments should be dropped by flattenGeneratedTypes
+        fragment ExtraFragment on Dimension {
+          id
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        # Referenced fragments should be dropped by flattenGeneratedTypes
+        fragment SearchableFragment on Dimension {
+          id
+        }
+      `);
+
+      const config = {
+        flattenGeneratedTypes: true,
+        flattenGeneratedTypesIncludeFragments: false,
+        preResolveTypes: true,
+      };
+
+      const { content } = await plugin(
+        testSchema,
+        [
+          { location: '', document: query },
+          { location: '', document: fragment },
+        ],
+        config,
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      const output = await validate(content, config, testSchema);
+
+      expect(output).toBeSimilarStringTo(`
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          search?: Maybe<Array<Dimension>>;
+        };
+
+        export type Dimension = {
+          __typename?: 'Dimension';
+          id?: Maybe<Scalars['String']>;
+        };
+
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
     });
 
     it('Should add operation name when addOperationExport is true', async () => {
@@ -5607,7 +5777,7 @@ function test(q: GetEntityBrandDataQuery): void {
         showAddress: Scalars['Boolean'];
       }>;
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null | undefined, parents?: Array<User> } };`);
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -5800,7 +5970,7 @@ function test(q: GetEntityBrandDataQuery): void {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null | undefined } }`
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
       );
     });
 
@@ -5899,8 +6069,8 @@ function test(q: GetEntityBrandDataQuery): void {
         __typename?: 'Query',
         user?: {
           __typename?: 'User',
-          name: string | null | undefined
-        } | null | undefined,
+          name: string | null
+        } | null,
         group?: {
           __typename?: 'Group',
           id: number
@@ -6033,5 +6203,94 @@ function test(q: GetEntityBrandDataQuery): void {
         )> }
       );
     `);
+  });
+
+  describe('inlineFragmentTypes option', () => {
+    it("'combine' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'combine' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User' }
+            & UserFragmentFragment
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string };
+      `);
+    });
+
+    it("'inline' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'inline' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string };
+      `);
+    });
+
+    it("'mask' yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'mask' },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User' }
+            & { ' $fragmentRefs': { 'UserFragmentFragment': UserFragmentFragment } }
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName': 'UserFragmentFragment' };
+      `);
+    });
   });
 });
