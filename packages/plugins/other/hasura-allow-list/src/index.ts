@@ -1,4 +1,5 @@
 import {
+  DefinitionNode,
   ExecutableDefinitionNode,
   FragmentDefinitionNode,
   GraphQLSchema,
@@ -65,6 +66,44 @@ function getOperationFragmentsRecursively(
   }
 }
 
+/**
+ * Gets a list of fragments from all documents. Will enforce fragment name uniqueness
+ * @param documents All the documents from which fragments will be extracted
+ * @returns global fragment definitions, guaranteed to have unique names
+ */
+function getGlobalFragments(documents: Types.DocumentFile[]): FragmentDefinitionNode[] {
+  // keep a dictionary of each fragment and its location for better error messages
+  const fragmentDictionary = new Map<string, string>();
+
+  // iterate over each document's fragments, and add them to the map
+  for (const document of documents) {
+    const fragmentDefinitions = document.document.definitions.filter(namedFragmentDefinitionFilter);
+    for (const fragment of fragmentDefinitions) {
+      const fragmentName = fragment.name.value;
+      // if the map already has a fragment by that name, throw an error with locations for both definitions
+      if (fragmentDictionary.has(fragment.name.value)) {
+        const locationA = document.location;
+        const locationB = fragmentDictionary.get(fragmentName);
+        throw new Error(`Duplicate fragment definitions for ${fragmentName} in files ${locationA}, ${locationB}`);
+      }
+      fragmentDictionary.set(fragmentName, document.location);
+    }
+  }
+
+  return documents.flatMap(document => document.document.definitions.filter(namedFragmentDefinitionFilter));
+}
+
+function getDocumentFragments(document: Types.DocumentFile): FragmentDefinitionNode[] {
+  return document.document.definitions.filter(namedFragmentDefinitionFilter);
+}
+
+function namedOperationDefinitionFilter(definition: DefinitionNode): definition is OperationDefinitionNode {
+  return definition.kind === Kind.OPERATION_DEFINITION && !!definition.name;
+}
+function namedFragmentDefinitionFilter(definition: DefinitionNode): definition is FragmentDefinitionNode {
+  return definition.kind === Kind.FRAGMENT_DEFINITION && !!definition.name;
+}
+
 export const plugin: PluginFunction<HasuraAllowListPluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
@@ -72,28 +111,20 @@ export const plugin: PluginFunction<HasuraAllowListPluginConfig> = async (
 ): Promise<Types.PluginOutput> => {
   const queries: { name: string; query: string }[] = [];
 
-  // each document (graphql file) is handled independently.
-  // any fragment required by an operation will need to be definied in the same file as the operation.
+  // if config global_fragments is set, get fragments from all documents
+  const globalFragments = !config.global_fragments ? false : getGlobalFragments(documents);
+
   for (const document of documents) {
     // filter out anonymous operations
-    const documentOperations = document.document.definitions.filter(
-      (definition): definition is OperationDefinitionNode =>
-        definition.kind === Kind.OPERATION_DEFINITION && !!definition.name
-    );
-    // filter out anonymous fragments
-    const documentFragments = document.document.definitions.filter(
-      (definition): definition is FragmentDefinitionNode =>
-        definition.kind === Kind.FRAGMENT_DEFINITION && !!definition.name
-    );
+    const documentOperations = document.document.definitions.filter(namedOperationDefinitionFilter);
+
+    // depending on global_fragments settings, either use document level or global level fragments
+    const fragments = globalFragments || getDocumentFragments(document);
 
     // for each operation in the document
     for (const operation of documentOperations) {
       // get fragments required by the operations
-      const requiredFragmentDefinitions = getOperationFragmentsRecursively(
-        operation,
-        documentFragments,
-        document.location
-      );
+      const requiredFragmentDefinitions = getOperationFragmentsRecursively(operation, fragments, document.location);
 
       // insert the operation and any fragments to our queries definition.
       // fragment order is preserved, and each fragment is separated by a new line

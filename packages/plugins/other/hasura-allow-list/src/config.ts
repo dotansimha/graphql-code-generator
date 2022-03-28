@@ -11,4 +11,9 @@ export interface HasuraAllowListPluginConfig {
    * The default value _will change_ in the future if/when newer config versions are released.
    */
   config_version?: 2 | 3;
+  /**
+   * @default false
+   * @description Whether to source fragments per-document, or globally. If set, will enforce fragment name uniqueness
+   */
+  global_fragments?: boolean;
 }
