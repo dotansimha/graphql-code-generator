@@ -304,4 +304,102 @@ describe('Hasura allow list', () => {
 
     expect(content).toBe(expectedContent);
   });
+  it('with global_fragments enabled, should use fragments from all documents', async () => {
+    const expectedContent = `- name: allowed-queries
+  definition:
+    queries:
+      - name: MyQuery1
+        query: |-
+          query MyQuery1 {
+            field
+            ...MyFragment
+            ...MyOtherFragment
+          }
+          fragment MyFragment on Query {
+            field
+          }
+          fragment MyOtherFragment on Query {
+            field
+          }
+`;
+    const document1 = parse(/* GraphQL */ `
+      query MyQuery1 {
+        field
+        ...MyFragment
+        ...MyOtherFragment
+      }
+      fragment MyFragment on Query {
+        field
+      }
+    `);
+    const document2 = parse(/* GraphQL */ `
+      fragment MyOtherFragment on Query {
+        field
+      }
+    `);
+    const content = await plugin(
+      null,
+      [
+        { document: document1, location: '/dummy/location1' },
+        { document: document2, location: '/dummy/location2' },
+      ],
+      { global_fragments: true }
+    );
+
+    expect(content).toBe(expectedContent);
+  });
+  it('with global_fragments enabled, should error on missing fragments', async () => {
+    const document1 = parse(/* GraphQL */ `
+      query MyQuery1 {
+        field
+        ...MyFragment
+        ...MyOtherFragment
+      }
+    `);
+    const document2 = parse(/* GraphQL */ `
+      fragment MyOtherFragment on Query {
+        field
+      }
+    `);
+    await expect(
+      plugin(
+        null,
+        [
+          { document: document1, location: '/dummy/location1' },
+          { document: document2, location: '/dummy/location2' },
+        ],
+        { global_fragments: true }
+      )
+    ).rejects.toThrow();
+  });
+  it('with global_fragments enabled, should error on duplicate fragments', async () => {
+    const document1 = parse(/* GraphQL */ `
+      query MyQuery1 {
+        field
+        ...MyFragment
+        ...MyOtherFragment
+      }
+      fragment MyFragment on Query {
+        field
+      }
+    `);
+    const document2 = parse(/* GraphQL */ `
+      fragment MyFragment on Query {
+        field
+      }
+      fragment MyOtherFragment on Query {
+        field
+      }
+    `);
+    await expect(
+      plugin(
+        null,
+        [
+          { document: document1, location: '/dummy/location1' },
+          { document: document2, location: '/dummy/location2' },
+        ],
+        { global_fragments: true }
+      )
+    ).rejects.toThrow();
+  });
 });
