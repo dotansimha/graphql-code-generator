@@ -79,7 +79,7 @@ function constructType(
         case Kind.UNION_TYPE_DEFINITION:
         case Kind.INPUT_OBJECT_TYPE_DEFINITION:
         case Kind.OBJECT_TYPE_DEFINITION: {
-          const finalType = `${tsTypeName}${allowString ? ' | string' : ''}`;
+          const finalType = `WithTypename<${tsTypeName}>${allowString ? ' | string' : ''}`;
           return nullable ? `Maybe<${finalType}>` : finalType;
         }
 
@@ -253,7 +253,7 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
   return {
     prepend: [imports],
     content: [
-      `export type WithTypename<T extends { __typename?: any }> = { [K in Exclude<keyof T, '__typename'>]?: T[K] } & { __typename: NonNullable<T['__typename']> };`,
+      `export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };`,
 
       keys,
 
