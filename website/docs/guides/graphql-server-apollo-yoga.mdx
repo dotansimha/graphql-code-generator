@@ -1,34 +1,37 @@
 ---
 id: graphql-server-apollo-yoga
-title: "Guide: GraphQL Yoga, Apollo Server"
+title: 'Guide: GraphQL Yoga, Apollo Server'
 ---
 
 GraphQL Code Generator's `@graphql-codegen/typescript-resolvers` plugin generates TypeScript types for your GraphQL API's resolvers.
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
-
-
 
 ## Video tutorial
 
 [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator) is a great introduction to `@graphql-codegen/typescript-resolvers`:
 
-<iframe width="100%" height="400" src="https://www.youtube.com/embed/tHMaNmqPIC4" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/tHMaNmqPIC4"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
 
 > [More weekly episodes are available in `graphql.wtf`](https://graphql.wtf/) by [Jamie Barton](https://twitter.com/notrab).
 
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
-
-
 
 ## Guide
 
@@ -40,11 +43,11 @@ Most GraphQL API resolvers remain untyped or wrongly typed, which leads to multi
 
 - typos in the resolvers' function type signature
 
-<br/>
+<br />
 
 For this reason, GraphQL Code Generator provides `@graphql-codegen/typescript-resolvers` that help automate the generation of resolvers' typings.
 
-<br/>
+<br />
 
 Just a few configuration steps are required to get the resolvers types generated:
 
@@ -73,14 +76,13 @@ type Query {
 
 **2. Install the `@graphql-codegen/typescript-resolvers` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-resolvers", "@graphql-codegen/typescript"]} />
+<PackageInstall packages={['@graphql-codegen/typescript-resolvers', '@graphql-codegen/typescript']} />
 
 <br />
 
 **3. Configure the plugin**
 
 Create or update your `codegen.yaml` file as follows:
-
 
 <MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
 
@@ -114,7 +116,6 @@ generates:
 
 </MDXTabs>
 
-
 <br />
 
 **4. Run the codegen and update your code**
@@ -124,7 +125,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -139,19 +140,17 @@ Running the following generates the `graphql/generated.tsx` file.
 
 We can now write/migrate our GraphQL API implementation as follows:
 
-
 <MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
 
 <MDXTab label="Apollo Server">
 
 ```ts
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from 'apollo-server'
 import { readFileSync } from 'fs'
 
-import { Resolvers } from './resolvers-types';
+import { Resolvers } from './resolvers-types'
 
-const typeDefs = readFileSync('./schema.graphql').toString('utf-8')
-
+const typeDefs = readFileSync('./schema.graphql', 'utf8')
 
 const resolvers: Resolvers = {
   Query: {
@@ -159,12 +158,12 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers })
 
-// The `listen` method launches a web server.
+// The `listen` method launches a web server
 server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+  console.log(`🚀  Server ready at ${url}`)
+})
 ```
 
 </MDXTab>
@@ -175,9 +174,9 @@ server.listen().then(({ url }) => {
 import { createServer } from '@graphql-yoga/node'
 import { readFileSync } from 'fs'
 
-import { Resolvers } from './resolvers-types';
+import { Resolvers } from './resolvers-types'
 
-const typeDefs = readFileSync('./schema.graphql').toString('utf-8')
+const typeDefs = readFileSync('./schema.graphql', 'utf8')
 
 const resolvers: Resolvers = {
   Query: {
@@ -187,7 +186,7 @@ const resolvers: Resolvers = {
 
 const server = createServer({
   typeDefs,
-  resolvers,
+  resolvers
 })
 
 server.start()
@@ -197,12 +196,9 @@ server.start()
 
 </MDXTabs>
 
-
-
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
