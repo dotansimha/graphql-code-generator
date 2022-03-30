@@ -41,7 +41,7 @@
     "@babel/core": "7.17.8",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
-    "@changesets/cli": "2.21.1",
+    "@changesets/cli": "2.22.0",
     "@graphql-typed-document-node/core": "3.1.1",
     "@reduxjs/toolkit": "1.8.0",
     "@types/common-tags": "1.8.1",
