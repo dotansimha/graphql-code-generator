@@ -15,7 +15,7 @@
     "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn build",
     "release": "changeset publish",
-    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
+    "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
     "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
   "workspaces": {
@@ -41,7 +41,7 @@
     "@babel/core": "7.17.8",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
-    "@changesets/cli": "2.21.1",
+    "@changesets/cli": "2.22.0",
     "@graphql-typed-document-node/core": "3.1.1",
     "@reduxjs/toolkit": "1.8.0",
     "@types/common-tags": "1.8.1",
