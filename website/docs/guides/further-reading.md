@@ -21,8 +21,7 @@ The following articles are also excellent guides covering famous or lesser-known
 ### Integrations
 
 - [Setup Hasura with GraphQL Code Generator](https://codedaily.io/tutorials/Setup-Hasura-with-GraphQL-Code-Generator) by [Jason Brown](https://twitter.com/browniefed)
-- [Working with GraphQL Code Generator and GraphCMS](https://graphcms.com/blog/working-with-graphql-code-generator-and-graphcms) by
-Jamie Barton
+- [Working with GraphQL Code Generator and GraphCMS](https://graphcms.com/blog/working-with-graphql-code-generator-and-graphcms) by Jamie Barton
 - [GraphQL-Modules integration with GraphQL Code Generator](https://www.graphql-modules.com/docs/legacy/recipes/graphql-code-generator/)
 - [GraphQL Code Generator for WPGraphQL](https://developers.wpengine.com/blog/graphql-code-generator-for-wpgraphql) by Kellen Mace
 - [GraphQL Queries in Apollo React](https://dgraph.io/learn/courses/messageboardapp/react/develop/react/graphql-queries/) by DGraph

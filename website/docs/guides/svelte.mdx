@@ -51,23 +51,23 @@ and the following reference script:
 
 ```svelte
 <script lang="ts">
-  import { query } from "svelte-apollo";
+  import { query } from 'svelte-apollo'
 
   const postsQueryDocument = gql`
     query Posts {
       posts {
+        id
+        title
+        author {
           id
-          title
-          author {
-            id
-            firstName
-            lastName
-          }
+          firstName
+          lastName
+        }
       }
     }
   `
 
-  const posts = query(postsQueryDocument);
+  const posts = query(postsQueryDocument)
 </script>
 
 <!-- UI -->
@@ -134,9 +134,9 @@ We can now update our code as follows:
 
 ```svelte
 <script lang="ts">
-  import { Posts } from "../graphql/generated";
+  import { Posts } from '../graphql/generated'
 
-  $: posts = Posts();
+  $: posts = Posts()
   // `posts` is fully typed!
 </script>
 
@@ -212,12 +212,12 @@ We can now update our code as follows:
 
 ```svelte
 <script context="module" lang="ts">
-  import { PostsQuery } from "../graphql/generated";
+  import { PostsQuery } from '../graphql/generated'
 
   export async function load({ fetch }) {
-    await PostsQuery({ fetch }); // This line do the query in SSR mode
+    await PostsQuery({ fetch }) // This line do the query in SSR mode
     // now you have `PostsQueryStore` store available and fully typed!
-    return {};
+    return {}
   }
 </script>
 

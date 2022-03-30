@@ -8,7 +8,6 @@ id: java
 
 {@apiDocs}
 
-
 ## How to use
 
 You can use it directly to transform your `input` in your resolvers:

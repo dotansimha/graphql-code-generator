@@ -1,24 +1,19 @@
 ---
 id: generated-files-colocation
-title: "Generated files colocation"
+title: Generated files colocation
 ---
-
 
 :::info Note for back-end use-cases
 
 This page covers the `@graphql-codegen/near-operation-file-preset` preset, which only applies to front-end projects.
 
-For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset
-` with the `useGraphQLModules: false` flag](https://www.graphql-code-generator.com/plugins/graphql-modules-preset).
+For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset ` with the `useGraphQLModules: false` flag](https://www.graphql-code-generator.com/plugins/graphql-modules-preset).
 
 :::
 
-
 <p>&nbsp;</p>
 
-
 Most GraphQL Code Generator configuration examples (in guides or plugins documentation) generate types in a single common file, as follows:
-
 
 ```yaml
 # Configuration for a React URQL setup
@@ -37,9 +32,7 @@ generates:
 
 All code is generated in one single `graphql/generated.ts` file.
 
-
 However, you might prefer to have those types generated in files near the original GraphQL operations, as follows:
-
 
 ```
 src/
@@ -52,14 +45,13 @@ src/
 
 `posts.generated.tsx` contains the generated code for the GraphQL query used in `Posts.tsx`.
 
-
 <p>&nbsp;</p>
 
 Just a few configuration steps are required to get this structure of colocated generated files:
 
 **1. Install the `@graphql-codegen/near-operation-file-preset` preset**
 
-<PackageInstall packages={["@graphql-codegen/near-operation-file-preset"]} />
+<PackageInstall packages={['@graphql-codegen/near-operation-file-preset']} />
 
 <br />
 
@@ -71,7 +63,6 @@ To use this preset, you need to add 2 outputs to your codegen.yml file:
 - The second is the one in charge of generating types per operation.
 
 <br />
-
 
 ```yaml
 schema: http://my-graphql-api.com/graphql
@@ -93,16 +84,13 @@ generates:
       withHooks: true
 ```
 
-
 :::tip `schema` and `documents` values
 `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
 
 `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 :::
 
-
 > Note: If you're loading your `documents` from files with the same extension as the generated files, make sure the glob you use excludes the generated files. For example, if your original glob was `src/**/*.{ts,tsx}`, use `src/**/!(*.generated).{ts,tsx}` instead.
-
 
 <br />
 
@@ -113,7 +101,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -126,10 +114,9 @@ Running the following generates the colocated `.generated.tsx` file.
 
 <br />
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
