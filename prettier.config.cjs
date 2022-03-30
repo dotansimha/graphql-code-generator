@@ -5,9 +5,10 @@ module.exports = {
   arrowParens: 'avoid',
   overrides: [
     {
-      files: '*.flow.js',
+      files: '*.{md,mdx}',
       options: {
-        parser: 'flow',
+        semi: false,
+        trailingComma: 'none',
       },
     },
   ],

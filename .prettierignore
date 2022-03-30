@@ -1,1 +1,4 @@
 dev-test/githunt-invalid/invalid.graphql
+packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
+dist/
+.next/
