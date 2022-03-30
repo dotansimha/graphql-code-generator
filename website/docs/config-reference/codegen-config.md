@@ -7,23 +7,19 @@ The Plugin Hub lists dozens of plugins with their set of options and specific ou
 
 GraphQL Code Generator relies on a configuration file named `codegen.yml` or `codegen.json` to manage all possible options, input, and output document types.
 
-
 The CLI automatically detects the defined config file and generates code accordingly.
 
 In addition, you can also define a path to your config file with the `--config` options, like so:
 
 <PackageRun scripts={['graphql-codegen --config ./path/to/config.yml']} />
 
-
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
 ## Configuration file format
-
 
 Here's an example for a possible config file:
 
@@ -43,10 +39,9 @@ If you are looking for a reference file, an example for a [large configuration f
 Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
 :::
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -104,10 +99,9 @@ Here are the supported options that you can define in the config file (see [sour
 
   - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -133,10 +127,9 @@ You can specify a default value in case an environment variable is missing:
 schema: ${SCHEMA_PATH:schema.graphql}
 ```
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -160,7 +153,7 @@ The Codegen also supports several CLI flags that allow you to override the defau
 
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -170,10 +163,9 @@ You can set the `DEBUG` environment variable to `1` to print debug information.
 
 You can set the `VERBOSE` environment variable to `1` to print more information regarding the CLI output (`listr`).
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 

@@ -5,7 +5,6 @@ title: '`config` field'
 
 The `config` field is used to pass configuration to Plugins.
 
-
 `config` can be specified at many levels of the configuration:
 
 ### Root Level

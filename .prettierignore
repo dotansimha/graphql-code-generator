@@ -1,4 +1,6 @@
 dev-test/githunt-invalid/invalid.graphql
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
+packages/plugins/flow/flow/tests/flow.js
 dist/
 .next/
+CHANGELOG.md
