@@ -19,7 +19,6 @@ If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please no
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 :::
 
-
 GraphQL Code Generator comes with dozen plugins, from front-end to back-end, from web apps to mobile apps.
 If you are not sure which plugins might be helpful for your GraphQL stack, give a try at the [_Initialization Wizard_](#initialization-wizard).
 
@@ -27,7 +26,7 @@ Otherwise, you can start exploring the [plugins](/plugins) and [setting up them 
 
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -37,16 +36,13 @@ Otherwise, you can start exploring the [plugins](/plugins) and [setting up them 
 
 Once installed, GraphQL Code Generator CLI can help you configure your project based on some popular flows:
 
-
 <PackageRun scripts={['graphql-codegen init', 'install # install the choose plugins']} />
-
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
 
 :::info npx
 The init process above can also be run through `npx`.
 :::
-
 
 ### Manual Setup
 

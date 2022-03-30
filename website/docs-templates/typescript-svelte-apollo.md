@@ -8,7 +8,6 @@ This is a community plugin, to report eventual issues or find more examples, ref
 
 It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
 
-
 ## API Reference
 
 ### `clientPath`
@@ -97,8 +96,7 @@ Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and
 
 In your application code, you can import it from the generated file, and use the query in your component code:
 
-<!-- prettier-ignore -->
-```html
+```svelte
 <script lang="ts">
   import { Transactions } from 'codegen'
 
@@ -160,8 +158,7 @@ Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and
 
 In your application code, you can import it from the generated file, and use the query in your component code:
 
-<!-- prettier-ignore -->
-```html
+```svelte
 <script lang="ts">
   import { AsyncTransactions } from 'codegen'
 
@@ -173,7 +170,7 @@ In your application code, you can import it from the generated file, and use the
     Loading...
   {:then transactions}
     {#each transactions || [] as transaction}
-        <li>Sent transaction from {transaction.from} to {transaction.to}</li>
+      <li>Sent transaction from {transaction.from} to {transaction.to}</li>
     {/each}
   {/await}
 </ul>
