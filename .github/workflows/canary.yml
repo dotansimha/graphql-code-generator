@@ -8,22 +8,37 @@ on:
   workflow_dispatch:
     inputs:
       onDemand:
-        description: 'Are you sure?'
+        description: Are you sure?
         required: true
-        default: 'yes'
+        default: yes
       npmTag:
-        description: 'NPM Tag'
+        description: NPM Tag
         required: true
-        default: 'alpha'
+        default: alpha
       npmVersionSuffix:
-        description: 'Custom NPM Version Suffix'
+        description: Custom NPM Version Suffix
         required: false
 
 jobs:
+  changes:
+    name: Check Changeset
+    runs-on: ubuntu-latest
+    outputs:
+      # Set job outputs to value from filter step
+      wasChangesetChanged: ${{steps.filter.outputs.changeset}}
+    steps:
+      - name: Check if changeset has been modified
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            changeset:
+              - added|modified: .changeset/*.md
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository || github.event.inputs.onDemand == 'yes'
+    needs: changes
+    if: (github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.wasChangesetChanged == 'true') || github.event.inputs.onDemand == 'yes'
     steps:
       - name: Checkout Master
         uses: actions/checkout@v3
@@ -41,21 +56,21 @@ jobs:
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-17-16-yarn-
+            ${{runner.os}}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install --ignore-engines && git checkout yarn.lock
       - name: Release Canary
         id: canary
-        uses: 'kamilkisiela/release-canary@master'
+        uses: kamilkisiela/release-canary@master
         with:
-          npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
+          npm-token: ${{secrets.NODE_AUTH_TOKEN}}
           npm-script: 'yarn release:canary'
           changesets: true
         env:
@@ -64,23 +79,22 @@ jobs:
           NPM_VERSION_SUFFIX: ${{github.event.inputs.npmVersionSuffix}}
       - name: Publish a message
         if: steps.canary.outputs.released
-        uses: 'kamilkisiela/pr-comment@master'
+        uses: kamilkisiela/pr-comment@master
         with:
           message: |
             The latest changes of this PR are available as alpha in npm (based on the declared `changesets`):
 
             ```
-            ${{ steps.canary.outputs.changesetsPublishedPackages}}
+            ${{steps.canary.outputs.changesetsPublishedPackages}}
             ```
-          bot-token: ${{ secrets.GH_API_TOKEN }}
-          bot: 'theguild-bot'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish a empty message
+          bot-token: ${{secrets.GH_API_TOKEN}}
+          bot: theguild-bot
+          github-token: ${{secrets.GITHUB_TOKEN}}
+      - name: Publish an empty message
         if: steps.canary.outputs.released == 'false'
-        uses: 'kamilkisiela/pr-comment@master'
+        uses: kamilkisiela/pr-comment@master
         with:
-          message: |
-            The latest changes of this PR are not available as alpha, since there are no linked `changesets` for this PR.
-          bot-token: ${{ secrets.GH_API_TOKEN }}
-          bot: 'theguild-bot'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          message: The latest changes of this PR are not available as alpha, since there are no linked `changesets` for this PR.
+          bot-token: ${{secrets.GH_API_TOKEN}}
+          bot: theguild-bot
+          github-token: ${{secrets.GITHUB_TOKEN}}
