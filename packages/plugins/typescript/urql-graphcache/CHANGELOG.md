@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 2.2.10
+
+### Patch Changes
+
+- 98f3c4e6e: removed WithTypename to preserve original graphql type
+
 ## 2.2.9
 
 ### Patch Changes
