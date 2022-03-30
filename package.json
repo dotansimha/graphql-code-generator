@@ -83,6 +83,7 @@
     "lint-staged": "12.3.7",
     "lodash": "4.17.21",
     "prettier": "2.6.1",
+    "prettier-plugin-sh": "0.8.1",
     "prettier-plugin-svelte": "2.6.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",

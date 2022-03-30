@@ -12,6 +12,10 @@ module.exports = {
       },
     },
   ],
-  // `svelte` and `prettier-plugin-svelte` packages used for formatting ```svelte code blocks in md/mdx files
-  plugins: ['prettier-plugin-svelte'],
+  plugins: [
+    // `prettier-plugin-svelte` and `svelte` packages used for formatting ```svelte code blocks in md/mdx files
+    'prettier-plugin-svelte',
+    // for prettifying shellscript, Dockerfile, properties, gitignore, dotenv
+    'prettier-plugin-sh',
+  ],
 };

@@ -5,3 +5,4 @@ packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
 .next/
 CHANGELOG.md
+.husky/_/
