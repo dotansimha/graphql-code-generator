@@ -459,7 +459,7 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.15.3.tgz#3416d9bea748052cfcb63dbcc27368105b1ed862"
   integrity sha512-O0L6v/HvqbdJawj0iBEfVQMc3/6WP+AeOsovsIgBFyJaG+W2w7eqvZB7puddATmWuARlm1SX7DwxJ/JJUnDpEA==
 
-"@babel/parser@^7.0.0", "@babel/parser@^7.1.0", "@babel/parser@^7.12.5", "@babel/parser@^7.12.7", "@babel/parser@^7.14.7", "@babel/parser@^7.15.0", "@babel/parser@^7.16.4", "@babel/parser@^7.16.7", "@babel/parser@^7.17.3", "@babel/parser@^7.17.8":
+"@babel/parser@^7.0.0", "@babel/parser@^7.1.0", "@babel/parser@^7.12.5", "@babel/parser@^7.12.7", "@babel/parser@^7.14.7", "@babel/parser@^7.15.0", "@babel/parser@^7.16.4", "@babel/parser@^7.16.7", "@babel/parser@^7.16.8", "@babel/parser@^7.17.3", "@babel/parser@^7.17.8":
   version "7.17.8"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.8.tgz#2817fb9d885dd8132ea0f8eb615a6388cca1c240"
   integrity sha512-BoHhDJrJXqcg+ZL16Xv39H9n+AqJ4pcDrQBGZN+wHxIysrLZ3/ECwCBUch/1zUNhnsXULcONU3Ei5Hmkfk6kiQ==
@@ -2181,13 +2181,13 @@
     tslib "~2.3.0"
     value-or-promise "1.0.11"
 
-"@graphql-tools/code-file-loader@^7.0.6":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-7.1.0.tgz#3fd040ce92510a12c361bac85d0d954951e231f5"
-  integrity sha512-1EVuKGzTDcZoPQAjJYy0Fw2vwLN1ZnWYDlCZLaqml87tCUzJcqcHlQw26SRhDEvVnJC/oCV+mH+2QE55UxqWuA==
+"@graphql-tools/code-file-loader@^7.2.10":
+  version "7.2.10"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-7.2.10.tgz#cdae206399061b198652964213b32309e5980af1"
+  integrity sha512-41QkLztHhoDXBp2EtbKwQNQHv4HEDzpEmbOD0y3OVOXf8TBVUnFUMlnGn77a6f4zVi3rHWxHgJJ79iyJ0MYQ5w==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "^7.1.0"
-    "@graphql-tools/utils" "^8.2.0"
+    "@graphql-tools/graphql-tag-pluck" "7.2.2"
+    "@graphql-tools/utils" "8.6.5"
     globby "^11.0.3"
     tslib "~2.3.0"
     unixify "^1.0.0"
@@ -2237,15 +2237,15 @@
     tslib "~2.3.0"
     unixify "^1.0.0"
 
-"@graphql-tools/graphql-tag-pluck@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-7.1.0.tgz#1116ef046370723b7d63ee1f66167129a6fcb8c9"
-  integrity sha512-Y0iRqHKoB0i1RCpskuFKmvnehBcKSu9awEq7ml4/RWSMHRkVlJs8PAFuChyOO6jASC2ttkyfssB6qLJugvc+DQ==
+"@graphql-tools/graphql-tag-pluck@7.2.2", "@graphql-tools/graphql-tag-pluck@^7.1.0":
+  version "7.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-7.2.2.tgz#449bb0516a2aceb9c0251c321c8cde46c7b42b7d"
+  integrity sha512-5gYk6Cj35eU6N9+2WtV4tsCcJACVPK2F3+xci2WgoPrDZXYQshx6tyuIQIFszyhxWNa1KViwCZyxVy6U1UnqzA==
   dependencies:
-    "@babel/parser" "7.15.3"
-    "@babel/traverse" "7.15.0"
-    "@babel/types" "7.15.0"
-    "@graphql-tools/utils" "^8.2.0"
+    "@babel/parser" "^7.16.8"
+    "@babel/traverse" "^7.16.8"
+    "@babel/types" "^7.16.8"
+    "@graphql-tools/utils" "8.6.5"
     tslib "~2.3.0"
 
 "@graphql-tools/import@^6.5.7":
