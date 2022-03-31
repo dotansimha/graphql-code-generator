@@ -19,17 +19,14 @@ _Please make sure the Codegen and plugins version under `package.json` matches y
 
 - [ ] 4. A pull request is pending review
 
-
-
 ---
 
-
 **Describe the bug**
+
 <!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**
 Steps to reproduce the behavior:
-
 
 1. My GraphQL schema:
 
@@ -50,6 +47,7 @@ Steps to reproduce the behavior:
 ```
 
 **Expected behavior**
+
 <!-- A clear and concise description of what you expected to happen. -->
 
 **Environment:**
@@ -59,4 +57,5 @@ Steps to reproduce the behavior:
 - NodeJS:
 
 **Additional context**
+
 <!-- Add any other context about the problem here. -->

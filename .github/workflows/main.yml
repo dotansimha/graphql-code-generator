@@ -16,20 +16,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
           node-version: 17
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-17-16-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install
+            ${{runner.os}}-17-16-yarn-
+      - name: Install Dependencies
+        run: yarn
       - name: Lint
         run: yarn lint
+  prettier-check:
+    name: 🧹 Prettier Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Master
+        uses: actions/checkout@v3
+      - name: Use Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+      - name: Cache Yarn
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
+          restore-keys: |
+            ${{runner.os}}-17-16-yarn-
+      - name: Install Dependencies
+        run: yarn
+      - name: Lint
+        run: yarn lint
+      - name: Prettier Check
+        run: yarn prettier:check
   dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
@@ -37,18 +60,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
           node-version: 17
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-17-16-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install
+            ${{runner.os}}-17-16-yarn-
+      - name: Install Dependencies
+        run: yarn
       - name: Build
         run: yarn build
         env:
@@ -64,18 +87,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
           node-version: 17
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-17-16-yarn-
-      - name: Install Dependencies using Yarn
-        run: yarn install
+            ${{runner.os}}-17-16-yarn-
+      - name: Install Dependencies
+        run: yarn
       - name: Build
         run: yarn build
         env:
@@ -89,9 +112,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
         node_version: [12, 17]
-        graphql_version:
-          - 15
-          - 16
+        graphql_version: [15, 16]
         include:
           - node-version: 12
             os: windows-latest
@@ -100,27 +121,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{matrix.node_version}}
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-
+            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
-      - name: Install Dependencies using Yarn
-        run: yarn install
+      - name: Install Dependencies
+        run: yarn
       - name: Cache Jest
         uses: actions/cache@v3
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{ hashFiles('yarn.lock') }}
+          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{ runner.os }}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
+            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
       - name: Build
         run: yarn build
       - name: Test

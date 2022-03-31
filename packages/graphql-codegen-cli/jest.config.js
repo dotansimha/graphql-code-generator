@@ -1,1 +1,1 @@
-module.exports = require('../../jest.project')({	dirname: __dirname });
+module.exports = require('../../jest.project')({ dirname: __dirname });

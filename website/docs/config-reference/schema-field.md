@@ -319,30 +319,27 @@ export const PUBLIC_TOKEN = '12345'
 Create custom loader file:
 
 ```ts
-import fetch from "cross-fetch";
-import { getIntrospectionQuery, buildClientSchema } from "graphql";
+import fetch from 'cross-fetch'
+import { getIntrospectionQuery, buildClientSchema } from 'graphql'
 
-import {
-  API_URL,
-  PUBLIC_TOKEN,
-} from "./config";
+import { API_URL, PUBLIC_TOKEN } from './config'
 
 export default async () => {
-  const introspectionQuery = getIntrospectionQuery();
+  const introspectionQuery = getIntrospectionQuery()
 
   const response = await fetch(API_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "Access-Token": PUBLIC_TOKEN,
+      'Content-Type': 'application/json',
+      'Access-Token': PUBLIC_TOKEN
     },
-    body: JSON.stringify({ query: introspectionQuery }),
-  });
+    body: JSON.stringify({ query: introspectionQuery })
+  })
 
-  const data = await response.json();
+  const data = await response.json()
 
-  return buildClientSchema(data.data);
-};
+  return buildClientSchema(data.data)
+}
 ```
 
 Add custom loader to your codegen config:

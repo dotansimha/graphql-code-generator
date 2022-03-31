@@ -7,8 +7,6 @@
     "build": "yarn generate-json-config && next build",
     "dev": "concurrently -r 'next-remote-watch ./docs ./src/pages/_app.tsx' 'wait-on -s 1 http://localhost:3000'",
     "lint": "eslint --ignore-path .gitignore --ext js,jsx,cjs,mjs,ts,tsx,cts,mts .",
-    "prettier:check": "prettier --ignore-path .gitignore --check .",
-    "prettier:write": "prettier --ignore-path .gitignore --write --list-different .",
     "next": "next",
     "generate-json-config": "ts-node generate-config-json-schema.ts"
   },
