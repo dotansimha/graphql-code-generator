@@ -3066,10 +3066,10 @@
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
-"@reduxjs/toolkit@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.0.tgz#8ae875e481ed97e4a691aafa034f876bfd0413c4"
-  integrity sha512-cdfHWfcvLyhBUDicoFwG1u32JqvwKDxLxDd7zSmSoFw/RhYLOygIRtmaMjPRUUHmVmmAGAvquLLsKKU/677kSQ==
+"@reduxjs/toolkit@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.1.tgz#94ee1981b8cf9227cda40163a04704a9544c9a9f"
+  integrity sha512-Q6mzbTpO9nOYRnkwpDlFOAbQnd3g7zj7CtHAZWz5SzE5lcV97Tf8f3SzOO8BoPOMYBFgfZaqTUZqgGu+a0+Fng==
   dependencies:
     immer "^9.0.7"
     redux "^4.1.2"
@@ -3170,10 +3170,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@theguild/components@1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.10.2.tgz#414d74a2090496b2acf86f3918172c3704b30801"
-  integrity sha512-0LC2A2GKXknEo/Rson6yTB3wxyZz2YeUapPC77gWKrN4bA0HO7CXszeiRY4ncVn/nN9KezAOmvm25lr8t2n/FQ==
+"@theguild/components@1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.10.3.tgz#7642f8d6b6c05d4c0e2ccb2b1e6e0b77f4704a46"
+  integrity sha512-mEut8RfHSAavXhfHP6vhw3jYcgTw+V3IlTHDcaXp/EMPSIQzQh9KM9XckMPxGwJH0YZ80eoDjvc4gK3p08OcQw==
   dependencies:
     "@emotion/react" "11.7.1"
     "@emotion/styled" "11.6.0"
@@ -6993,15 +6993,15 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
   integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
-flow-bin@0.174.1:
-  version "0.174.1"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.174.1.tgz#95024b83c39f42f04c3f5529044cf63e5fc60bf3"
-  integrity sha512-r69pWMF+b+dbEIq/a8V3B/p6bIjLqVUXjQqC6yDCeVSXL6BQT4QkLJeSn1i877ahFw2GiK3kzIMgfnuZBWEaPQ==
+flow-bin@0.175.0:
+  version "0.175.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.175.0.tgz#ba082ac5ad2306ce62754101c710757484c082fe"
+  integrity sha512-EqIwrZFM+mQW9Iahs5pNUCMbpOkh+k2/9312/zuwyNrNRga3R4uj4M+7Lb0grM1oVYRK5TopQiKh2jWyA9x+xg==
 
-flow-parser@0.174.1:
-  version "0.174.1"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.174.1.tgz#bb81e17fe45a1e64d9752090e819a6744a539fa0"
-  integrity sha512-nDMOvlFR+4doLpB3OJpseHZ7uEr3ENptlF6qMas/kzQmNcLzMwfQeFX0gGJ/+em7UdldB/nGsk55tDTOvjbCuw==
+flow-parser@0.175.0:
+  version "0.175.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.175.0.tgz#622c2e1dadeed0cc3d25779b143a0935bf515983"
+  integrity sha512-9XG5JGOjhODF+OQF5ufCw8XiGi+8B46scjr3Q49JxN7IDRdT2W+1AOuvKKd6j766/5E7qSuCn/dsq1y3hihntg==
 
 focus-lock@^0.9.1:
   version "0.9.2"
@@ -10824,10 +10824,10 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier-plugin-sh@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.8.1.tgz#50698d95f2006c1b3eae570d430c3c1c05a31327"
-  integrity sha512-tz0g6y+ZaJF0PWaa1F7vhCv4nLgYYl2zYzYU4XJFD1McoY0oHI+l2osvXqv1s5yQdtjdlzKszN6VY7WTaw2Gqw==
+prettier-plugin-sh@0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.8.2.tgz#ea0690e87385bcdc1cc22df63e8f182a36cb6eea"
+  integrity sha512-M8D4G5OqgZtoVKx+U/J/B/gVA4xUKmWflOjayxiDjCQbxz3HOv0zlpYeb6DXd5xMFl7jW2UY1fJjmDzI9pDBFA==
   dependencies:
     mvdan-sh "^0.5.0"
 
@@ -11108,15 +11108,20 @@ react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^17.0.0, react-is@^17.0.1:
+react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-markdown@8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-8.0.1.tgz#683b5225fccbdd7eca76aa89b621894a317dd4d6"
-  integrity sha512-g78B0KtUk8oDRt59fX9SWhMikn3/qYcQW+aVMxdIulcjCNeecAZNOmR8uXy5p4bhbuPIS8gZly81bF4pAQWYXw==
+react-is@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.0.0.tgz#026f6c4a27dbe33bf4a35655b9e1327c4e55e3f5"
+  integrity sha512-yUcBYdBBbo3QiPsgYDcfQcIkGZHfxOaoE6HLSnr1sPzMhdyxusbfKOSUbSd/ocGi32dxcj366PsTj+5oggeKKw==
+
+react-markdown@8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-8.0.2.tgz#43a12f5031abf7df5097d1351db465ceca3a69e0"
+  integrity sha512-WeXeDlCPFZBbN75AiLVEmN4gC6pNWadsZVWWxWpvrYQnUTHsB3l1PH60I1sbxTJr0oWOQc3zhxTrRQMTceNifw==
   dependencies:
     "@types/hast" "^2.0.0"
     "@types/prop-types" "^15.0.0"
@@ -11125,7 +11130,7 @@ react-markdown@8.0.1:
     hast-util-whitespace "^2.0.0"
     prop-types "^15.0.0"
     property-information "^6.0.0"
-    react-is "^17.0.0"
+    react-is "^18.0.0"
     remark-parse "^10.0.0"
     remark-rehype "^10.0.0"
     space-separated-tokens "^2.0.0"
@@ -12490,10 +12495,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte@3.46.5:
-  version "3.46.5"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.5.tgz#808daad6f3cbbeff550c3f7511f2667971eb080a"
-  integrity sha512-T4txpIgYEGTkpFY2KQoqvtDmapu/suHMx0GN2zAImdJ7liEdG29P0XpjcNHnOEU1a4lLJn1WXxreobBSIGdcbQ==
+svelte@3.46.6:
+  version "3.46.6"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.6.tgz#23046a361ba5f8bafcc9cf9f6fca6d011fb005a7"
+  integrity sha512-o9nNft/OzCz/9kJpmWa1S52GAM+huCjPIsNWydYmgei74ZWlOA9/hN9+Z12INdklghu31seEXZMRHhS1+8DETw==
 
 swap-case@^2.0.2:
   version "2.0.2"
