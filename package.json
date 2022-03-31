@@ -90,7 +90,7 @@
     "react-query": "3.34.19",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
-    "svelte": "3.46.4",
+    "svelte": "3.46.5",
     "ts-jest": "27.1.4",
     "tslib": "2.3.1",
     "typescript": "4.6.3",
