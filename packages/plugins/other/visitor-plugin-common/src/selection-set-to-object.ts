@@ -295,6 +295,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
+    // console.log('_buildGroupedSelections');
     if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
@@ -303,7 +304,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     // in case there is not a selection for each type, we need to add a empty type.
     let mustAddEmptyObject = false;
-
+    // console.log('_buildGroupedSelections', 1);
     const grouped = getPossibleTypes(this._schema, this._parentSchemaType).reduce((prev, type) => {
       const typeName = type.name;
       const schemaType = this._schema.getType(typeName);
@@ -317,7 +318,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       if (!prev[typeName]) {
         prev[typeName] = [];
       }
-
+      // console.dir({ prev }, { depth: 1 });
+      console.error(++i);
       const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes);
 
       if (transformedSet) {
@@ -328,7 +330,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
       return prev;
     }, {} as Record<string, string[]>);
-
+    // console.log('_buildGroupedSelections', 2);
     return { grouped, mustAddEmptyObject };
   }
 
@@ -626,3 +628,5 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     });
   }
 }
+
+let i = 0;
