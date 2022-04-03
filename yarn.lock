@@ -9999,10 +9999,10 @@ nano-time@1.0.0:
   dependencies:
     big-integer "^1.6.16"
 
-nanoid@^3.1.30, nanoid@^3.2.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.1.tgz#6347a18cac88af88f58af0b3594b723d5e99bb35"
-  integrity sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==
+nanoid@^3.1.30, nanoid@^3.2.0, nanoid@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.2.tgz#c89622fafb4381cd221421c69ec58547a1eec557"
+  integrity sha512-CuHBogktKwpm5g2sRgv83jEy2ijFzBwMoYA60orPDR7ynsLijJDqgsi4RDGj3OJpy3Ieb+LYwiRmIOGyytgITA==
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -10819,13 +10819,13 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier-plugin-sh@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.9.0.tgz#49395fa66a3005d6ba834212b522e232b86c57d4"
-  integrity sha512-a9oZXWf24NI86qSq0swaKDMPVff7JjzGnHiupqb/ZORJqPwqbaYR1/M7d8ZRfTLr6A8mOQe90Y4gIUr0rb2F0g==
+prettier-plugin-sh@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.10.0.tgz#43a543b37e320f07adf0b9db7ef8430d7d2b5bb4"
+  integrity sha512-sRxd+GH9xYD9EXuuEGpJSKJBBLKDQY6Fw1TViHEpF1Ce2Oo7CYKQ3fktDBwEDhnXQmo65y/+yovaJGIVR8zaAg==
   dependencies:
-    sh-syntax "^0.0.2"
-    synckit "^0.6.1"
+    sh-syntax "^0.1.3"
+    synckit "^0.6.2"
 
 prettier-plugin-svelte@2.6.0:
   version "2.6.0"
@@ -11911,11 +11911,12 @@ setprototypeof@1.1.1:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.1.1.tgz#7e95acb24aa92f5885e0abef5ba131330d4ae683"
   integrity sha512-JvdAWfbXeIGaZ9cILp38HntZSFSo3mWg6xGcJJsd+d4aRMOqauag1C63dJfDw7OaMYwEbHMOxEZ1lqVRYP2OAw==
 
-sh-syntax@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/sh-syntax/-/sh-syntax-0.0.2.tgz#cdc97b53462224f0f091955dd38de70bdeba032e"
-  integrity sha512-xChuD/H+FB/e9JlE9+X0qi4Bani3d2OnNnCSukCazKmlF4kHw6hZ0Go2HSdJ5bcG7brJVtSyX5HYfD10wGCf+Q==
+sh-syntax@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/sh-syntax/-/sh-syntax-0.1.3.tgz#ae78dc1192864f013597b5ae9914dba5dfe09326"
+  integrity sha512-h7PHRWnFzzIam5yFNON7deCoRb3DQBOlkP0cWXW7mTytNcDGDF3P0i1BDMmxmzuK6UxbVyANgiaQ73z4eDv2XQ==
   dependencies:
+    nanoid "^3.3.2"
     tslib "^2.3.1"
 
 sha.js@^2.4.0, sha.js@^2.4.11, sha.js@^2.4.8:
@@ -12541,7 +12542,7 @@ sync-fetch@0.3.1:
     buffer "^5.7.0"
     node-fetch "^2.6.1"
 
-synckit@^0.6.1:
+synckit@^0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/synckit/-/synckit-0.6.2.tgz#e1540b97825f2855f7170b98276e8463167f33eb"
   integrity sha512-Vhf+bUa//YSTYKseDiiEuQmhGCoIF3CVBhunm3r/DQnYiGT4JssmnKQc44BIyOZRK2pKjXXAgbhfmbeoC9CJpA==
