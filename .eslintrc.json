@@ -16,6 +16,7 @@
     "object-shorthand": ["error", "always"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "no-duplicate-imports": "error",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-namespace": "off",
     "no-unreachable-loop": "error",

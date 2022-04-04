@@ -6,6 +6,7 @@ import {
   ParsedConfig,
   BaseVisitor,
   buildScalarsFromConfig,
+  wrapTypeNodeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './config';
@@ -21,9 +22,9 @@ import {
   InterfaceTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { wrapTypeNodeWithModifiers } from '@graphql-codegen/visitor-plugin-common';
 
 type AdditionalField = { path: string; type: string };
+
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
   dbTypeSuffix: string;
   dbInterfaceSuffix: string;

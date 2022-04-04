@@ -30,13 +30,9 @@ import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
 import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
-import pluralize from 'pluralize';
+import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
-
-import { camelCase } from 'change-case-all';
-import { pascalCase } from 'change-case-all';
-
-const { singular, isPlural } = pluralize;
+import { camelCase, pascalCase } from 'change-case-all';
 
 export interface ChildField {
   type: GraphQLNamedType;
