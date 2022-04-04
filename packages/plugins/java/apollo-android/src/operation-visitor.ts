@@ -143,7 +143,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   private createUniqueClassName(inUse: string[], name: string, count = 0): string {
     const possibleNewName = count === 0 ? name : `${name}${count}`;
 
-    while (inUse.includes(possibleNewName)) {
+    if (inUse.includes(possibleNewName)) {
       return this.createUniqueClassName(inUse, name, count + 1);
     }
 
