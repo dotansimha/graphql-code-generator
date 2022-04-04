@@ -30,7 +30,7 @@ import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
 import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
-import { singular, isPlural } from 'pluralize';
+import pluralize from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
 import { camelCase, pascalCase } from 'change-case-all';
 
@@ -191,8 +191,8 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         if (isObject) {
           let childClsName = this.convertName(field.name);
 
-          if (isList && isPlural(childClsName)) {
-            childClsName = singular(childClsName);
+          if (isList && pluralize.isPlural(childClsName)) {
+            childClsName = pluralize.singular(childClsName);
           }
 
           this.transformSelectionSet(
