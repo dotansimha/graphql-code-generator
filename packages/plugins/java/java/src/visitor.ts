@@ -232,19 +232,17 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 }`,
             3
           );
+        } else if (arg.name.value === 'interface') {
+          // forcing prefix of _ since interface is a keyword in JAVA
+          return indent(
+            `this._${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+            3
+          );
         } else {
-          if (arg.name.value === 'interface') {
-            // forcing prefix of _ since interface is a keyword in JAVA
-            return indent(
-              `this._${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-              3
-            );
-          } else {
-            return indent(
-              `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-              3
-            );
-          }
+          return indent(
+            `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+            3
+          );
         }
       })
       .join('\n');

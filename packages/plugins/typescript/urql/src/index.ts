@@ -41,10 +41,8 @@ export const validate: PluginValidateFn<any> = async (
     if (extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "typescript-urql" requires extension to be ".tsx" when withComponent: true is set!`);
     }
-  } else {
-    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "typescript-urql" requires extension to be ".ts" or ".tsx"!`);
-    }
+  } else if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+    throw new Error(`Plugin "typescript-urql" requires extension to be ".ts" or ".tsx"!`);
   }
 };
 

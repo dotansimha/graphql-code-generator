@@ -45,10 +45,8 @@ export const validate: PluginValidateFn<any> = async (
         `Plugin "typescript-react-apollo" requires extension to be ".tsx" when withComponent: true is set!`
       );
     }
-  } else {
-    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "typescript-react-apollo" requires extension to be ".ts" or ".tsx"!`);
-    }
+  } else if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+    throw new Error(`Plugin "typescript-react-apollo" requires extension to be ".ts" or ".tsx"!`);
   }
 };
 
