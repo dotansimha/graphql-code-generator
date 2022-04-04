@@ -974,7 +974,7 @@ export class BaseResolversVisitor<
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
-      if (this._federation.skipField({ fieldNode: original, parentType: parentType })) {
+      if (this._federation.skipField({ fieldNode: original, parentType })) {
         return null;
       }
 

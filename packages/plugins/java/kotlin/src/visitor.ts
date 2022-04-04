@@ -129,20 +129,20 @@ ${enumValues}
           typeName: this.scalars[schemaType.name],
           isScalar: true,
           isArray,
-          nullable: nullable,
+          nullable,
         };
       } else {
-        result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable: nullable };
+        result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable };
       }
     } else if (isInputObjectType(schemaType)) {
       const convertedName = this.convertName(schemaType.name);
       const typeName = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
       result = {
         baseType: typeName,
-        typeName: typeName,
+        typeName,
         isScalar: false,
         isArray,
-        nullable: nullable,
+        nullable,
       };
     } else if (isEnumType(schemaType) || isObjectType(schemaType)) {
       result = {
@@ -150,10 +150,10 @@ ${enumValues}
         baseType: this.convertName(schemaType.name),
         typeName: this.convertName(schemaType.name),
         isScalar: true,
-        nullable: nullable,
+        nullable,
       };
     } else {
-      result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable: nullable };
+      result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable };
     }
 
     if (result) {

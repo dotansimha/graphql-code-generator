@@ -81,7 +81,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
 
       return {
         importElement: isDefault ? type : `${importedType} as ${type}`,
-        type: type,
+        type,
       };
     }
 
