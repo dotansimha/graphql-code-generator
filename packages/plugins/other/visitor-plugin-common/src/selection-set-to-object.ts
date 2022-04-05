@@ -307,7 +307,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const possibleTypes = getPossibleTypes(this._schema, this._parentSchemaType);
 
-    if (!this._config.mergeFragmentTypes) {
+    if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
       const grouped = possibleTypes.reduce((prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
@@ -550,7 +550,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       // Only add the typename field if we're not merging fragment
       // types. If we are merging, we need to wait until we know all
       // the involved typenames.
-      ...(typeInfoField && !this._config.mergeFragmentTypes
+      ...(typeInfoField && (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask')
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
         : []),
       ...this._processor.transformPrimitiveFields(

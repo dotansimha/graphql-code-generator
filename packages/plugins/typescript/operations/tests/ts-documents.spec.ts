@@ -2418,6 +2418,44 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config);
     });
 
+    it('Ignores merging when enabled alongside inline fragment masking', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, inlineFragmentTypes: 'mask' } as const;
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+       export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+       export type TestQuery = { __typename?: 'Query', notifications: Array<(
+        { __typename?: 'TextNotification' }
+        & { ' $fragmentRefs': { 'N_TextNotification_Fragment': N_TextNotification_Fragment } }
+       ) | (
+        { __typename?: 'ImageNotification' }
+        & { ' $fragmentRefs': { 'N_ImageNotification_Fragment': N_ImageNotification_Fragment } }
+       )> };
+
+       type N_TextNotification_Fragment = { __typename?: 'TextNotification', id: string };
+
+       type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string };
+
+       export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+     `);
+      await validate(content, config);
+    });
+
     it('Should support inline fragments', async () => {
       const ast = parse(/* GraphQL */ `
         query currentUser {
