@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.4.5
+
+### Patch Changes
+
+- 7fae9fbf4: fix(plugins/gql-request): remove unused `GraphQLError` import
+
 ## 4.4.4
 
 ### Patch Changes

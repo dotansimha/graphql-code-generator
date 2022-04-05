@@ -12,12 +12,9 @@ Once all GraphQL types (schema types and operations) are identified, GraphQL Cod
 
 This process, applied to the `@graphql-codegen/typescript` plugin, is illustrated below:
 
-
 ![Codegen flow example](/assets/illustrations/codegen_flow1.png)
 
-
 ## Example with `@graphql-codegen/typescript`
-
 
 Given the following GraphQL schema:
 
@@ -103,6 +100,8 @@ generates:
 
 `@graphql-codegen/typescript` plugin can generate the following TypeScript typings and React hooks files based on defined operations:
 
+<!-- ignore as it's generated code, prettier will remove semicolons -->
+<!-- prettier-ignore -->
 ```ts
 // ...
 

@@ -1,6 +1,6 @@
 ---
 id: vue
-title: "Guide: Vue.js"
+title: 'Guide: Vue.js'
 ---
 
 GraphQL Code Generator provides typed code generation for URQL Vue.js and Apollo Vue.js.
@@ -39,15 +39,11 @@ type Query {
 
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
-
-
 ## Vue.js URQL
-
-
 
 Most Vue.js URQL usage with TypeScript will look as follows:
 
@@ -58,8 +54,8 @@ Most Vue.js URQL usage with TypeScript will look as follows:
   </ul>
 </template>
 
-<script>
-import { useQuery } from '@urql/vue';
+<script lang="ts">
+import { useQuery } from '@urql/vue'
 
 interface PostQueryVariables {
   id: string
@@ -83,38 +79,40 @@ export default {
       `,
       // we need to type variables manually
       variables: { id: 1 } as PostQueryVariables
-    });
+    })
 
     return {
       from,
-      data: result.data,
-    };
+      data: result.data
+    }
   }
-};
+}
 </script>
 ```
 
 Not typing or manually maintaining the data-types can lead to many issues:
 
+- **outdated typing** (regarding the current Schema)
 
-  - **outdated typing** (regarding the current Schema)
+- **typos**
 
-  - **typos**
-
-  - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
-
-
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 For this reason, GraphQL Code Generator is providing a `@graphql-codegen/typescript-vue-urql` plugin that generates fully-typed composition functions with:
+
 - typed URQL options
 - typed variables
 - typed result
 
-
-
 **1. Install the `@graphql-codegen/typescript-vue-urql` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-vue-urql", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-vue-urql',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
@@ -148,7 +146,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -170,22 +168,22 @@ We can now update our code as follows:
   </ul>
 </template>
 
-<script>
-import { usePostQuery } from '../generated/graphql';
+<script lang="ts">
+import { usePostQuery } from '../generated/graphql'
 
 export default {
   setup() {
     // `variables` option and `result` are typed!
     const result = usePostQuery({
       variables: { id: 1 }
-    });
+    })
 
     return {
       from,
-      data: result.data,
-    };
+      data: result.data
+    }
   }
-};
+}
 </script>
 ```
 
@@ -195,10 +193,9 @@ For more advanced configuration, please refer to the [plugin documentation](/plu
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -213,7 +210,7 @@ Most Vue.js Apollo usage with TypeScript will look as follows:
   </div>
 </template>
 
-<script>
+<script lang="ts">
 interface PostQueryVariables {
   id: string
 }
@@ -221,52 +218,56 @@ interface PostQueryVariables {
 export default {
   apollo: {
     post: {
-      query: gql`query ($id: ID!) {
-        post(id: $id) {
-          id
-          title
-          author {
+      query: gql`
+        query ($id: ID!) {
+          post(id: $id) {
             id
-            firstName
-            lastName
+            title
+            author {
+              id
+              firstName
+              lastName
+            }
           }
         }
-      }`,
+      `,
       variables: {
         id: 1
-      } as PostQueryVariables,
-    },
-  },
-  data () {
-    return {
-      post: undefined,
+      } as PostQueryVariables
     }
   },
-};
+  data() {
+    return {
+      post: undefined
+    }
+  }
+}
 </script>
 ```
 
 Not typing or manually maintaining the data-types can lead to many issues:
 
+- **outdated typing** (regarding the current Schema)
 
-  - **outdated typing** (regarding the current Schema)
+- **typos**
 
-  - **typos**
-
-  - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
-
-
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 For this reason, GraphQL Code Generator is providing a `@graphql-codegen/typescript-vue-apollo-smart-ops` plugin that generates fully-typed composition functions with:
+
 - typed URQL options
 - typed variables
 - typed result
 
-
-
 **1. Install the `@graphql-codegen/typescript-vue-apollo-smart-ops` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-vue-apollo-smart-ops", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-vue-apollo-smart-ops',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
@@ -300,7 +301,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -322,8 +323,8 @@ We can now update our code as follows:
   </div>
 </template>
 
-<script>
-import { usePostQuery } from '../generated/graphql';
+<script lang="ts">
+import { usePostQuery } from '../generated/graphql'
 
 export default {
   apollo: usePostQuery({
@@ -332,12 +333,12 @@ export default {
       id: 1
     }
   }),
-  data () {
+  data() {
     return {
-      post: undefined,
+      post: undefined
     }
-  },
-};
+  }
+}
 </script>
 ```
 

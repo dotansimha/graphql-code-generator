@@ -110,7 +110,7 @@ First, follow the GraphQL-Code-Generator guide to install it, and make sure to a
 
 ```yml
 schema: <path-to-your-schema>
-documents: "src/commands/**/*.graphql"
+documents: 'src/commands/**/*.graphql'
 generates:
   src/types.ts:
     - typescript
@@ -151,7 +151,11 @@ client-side directive, like so:
 
 ```gql
 mutation CreateAuthor($name: String!)
-  @oclif(description: "Create a new author", example: "cli author:create --name Alice", example: "cli author:create --name Bob") {
+@oclif(
+  description: "Create a new author"
+  example: "cli author:create --name Alice"
+  example: "cli author:create --name Bob"
+) {
   createAuthor(input: { name: $name }) {
     name
   }

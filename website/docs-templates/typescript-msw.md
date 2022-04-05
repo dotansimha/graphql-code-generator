@@ -24,21 +24,21 @@ query GetUser($id: ID!) {
 Usage:
 
 ```ts
-import { mockGetUserQuery } from './generated';
+import { mockGetUserQuery } from './generated'
 
 const worker = setupWorker(
   mockGetUserQuery((req, res, ctx) => {
-    const { id } = req.variables;
+    const { id } = req.variables
 
     return res(
       ctx.data({
-        getUser: { name: 'John Doe', id: id },
+        getUser: { name: 'John Doe', id: id }
       })
-    );
+    )
   })
-);
+)
 
-worker.start();
+worker.start()
 ```
 
 The generated functions are named `mock<OperationName><OperationType>[LinkName]`. E.g., `mockGetUserQuery`, and `mockAdminMutationStripe`.

@@ -284,7 +284,6 @@ const FooQuery = gql(/* GraphQL */ `
 
 You can find a [full `gql-tag-operations-urql` example of this in the GraphQL Code Generator GitHub repository](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/gql-tag-operations-urql).
 
-
 ## Fragment Masking
 
 Fragment masking is a powerful tool that allows building scalable UI components, where each component only has access to the data dependencies described by its fragments. The fragments of those components are then composed on a query operation. This pattern is also known as data masking in the context of relay. `gql-tag-operations-preset` allows using fragment masking with any GraphQL client.
@@ -374,7 +373,7 @@ generates:
     presetConfig:
       # enable fragment masking
       fragmentMasking:
-        unmaskFunctionName: "getFragment"
+        unmaskFunctionName: 'getFragment'
 ```
 
 ### Module augmentation with fragment masking
@@ -393,8 +392,7 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       fragmentMasking:
-        augmentedModuleName: "@something/fragment"
+        augmentedModuleName: '@something/fragment'
 ```
-
 
 {@apiDocs}
