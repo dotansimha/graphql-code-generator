@@ -81,7 +81,7 @@ module.exports = withGuildDocs({
         source: '/docs/getting-started/how-does-it-work',
         destination: '/docs/advanced/how-does-it-work',
         permanent: true,
-      }
+      },
     ];
   },
 });
