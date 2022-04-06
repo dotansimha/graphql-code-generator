@@ -1,5 +1,11 @@
 # @graphql-codegen/c-sharp
 
+## 4.2.9
+
+### Patch Changes
+
+- 35364ed87: Fix namespace of JsonPropertyName
+
 ## 4.2.8
 
 ### Patch Changes
