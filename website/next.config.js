@@ -77,6 +77,11 @@ module.exports = withGuildDocs({
         destination: '/docs/config-reference/naming-convention',
         permanent: true,
       },
+      {
+        source: '/docs/getting-started/how-does-it-work',
+        destination: '/docs/advanced/how-does-it-work',
+        permanent: true,
+      }
     ];
   },
 });
