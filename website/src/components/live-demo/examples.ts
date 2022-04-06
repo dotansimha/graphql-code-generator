@@ -14,6 +14,10 @@ export const EXAMPLES_ICONS = {
     alt: 'C#',
     src: '/assets/img/icons/csharp.svg',
   },
+  dart: {
+    alt: 'Dart Flutter',
+    src: '/assets/img/icons/csharp.svg',
+  },
   flow: {
     alt: 'FlowJS',
     src: '/assets/img/icons/flow.svg',
@@ -123,6 +127,24 @@ const TS_QUERY = dedent(/* GraphQL */ `
 `);
 
 export const EXAMPLES = {
+  Dart: [
+    {
+      name: 'flutter Freezed Classes',
+      description: `This examples generates freezed classes for Object, Input, Union and Enum Types from your GraphQL schema. It also allows you to merge all Input Types as named constructors of the Object Type`,
+      tags: ['flutter', 'dart', 'freezed', 'frontend'],
+      config: `generates:
+  app_models.dart:
+    plugins:
+      - flutter-freezed-classes:
+    config:
+      fileName: app_models
+      customScalars:
+        {
+          "Date": "DateTime",
+        }`,
+      schema: TS_SCHEMA,
+    },
+  ],
   TypeScript: [
     {
       name: 'Schema types',
@@ -343,7 +365,7 @@ export const EXAMPLES = {
     {
       name: 'Resolvers Signature',
       description: `This example demonstrate how to generate a basic resolver signature, based on your GraphQL schema. With the default setup, you'll need to adjust your models types to the same structure of your GraphQL schema (see mappers example for more advanced usage).
-      
+
 [You can read more about using this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)`,
       tags: ['nodejs', 'backend'],
       config: `generates:
@@ -356,7 +378,7 @@ export const EXAMPLES = {
     {
       name: 'Resolvers Signature (with custom models)',
       description: `This example demonstrate how to generate resolvers signature, based on your GraphQL schema, with your model types (\`mappers\` configuration)
-      
+
 [You can read more about using this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)`,
       tags: ['nodejs', 'backend'],
       config: `generates:

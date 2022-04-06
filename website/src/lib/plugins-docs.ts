@@ -210,4 +210,9 @@ export const pluginsConfigurations: PluginConfig[] = [
     identifier: 'HasuraAllowListPluginConfig',
     name: 'hasura-allow-list',
   },
+  {
+    file: '../packages/plugins/dart/flutter-freezed-classes/src/config.ts', // file where the Config interface/type is located
+    identifier: 'MyPluginConfig', // name of the Config interface/type
+    name: 'flutter-freezed-classes', // name if you plugin package
+  },
 ];

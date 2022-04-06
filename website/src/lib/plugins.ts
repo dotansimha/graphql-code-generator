@@ -26,6 +26,13 @@ export const ALL_TAGS = [
   'plugin',
   'preset',
   'hasura',
+  'dart',
+  'flutter',
+  'freezed',
+  'validation',
+  'yup',
+  'zod',
+  'myzod',
 ] as const;
 
 export type Tags = typeof ALL_TAGS[number];
@@ -61,6 +68,13 @@ function loadGeneratedReadme(options: { templateFile: string; pluginIdentifier: 
 }
 
 const PACKAGES: Package<Tags>[] = [
+  {
+    identifier: 'flutter-freezed-classes', // package id, will be used for the url slug
+    title: 'flutter-freezed-classes', // page title
+    npmPackage: '@graphql-codegen/flutter-freezed-classes', // name of the npm package
+    iconUrl: '/assets/img/icons/codegen.svg', // you can specify a custom icon, or use codegen's
+    tags: ['plugin', 'utilities', 'dart', 'flutter', 'freezed'], // add tags for the search engine
+  },
   {
     identifier: 'near-operation-file-preset',
     title: 'near-operation-file-preset',
@@ -381,7 +395,7 @@ const PACKAGES: Package<Tags>[] = [
     title: 'TypeScript Validation Schema',
     npmPackage: 'graphql-codegen-typescript-validation-schema',
     iconUrl: '/assets/img/icons/graphql.svg',
-    tags: ['plugin', 'validation', 'yup', 'zod', 'typescript'],
+    tags: ['plugin', 'validation', 'yup', 'zod', 'myzod', 'typescript'],
   },
   {
     identifier: 'hasura-allow-list',
