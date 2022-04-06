@@ -1,5 +1,5 @@
 ---
-"@graphql-codegen/c-sharp": patch
+'@graphql-codegen/c-sharp': patch
 ---
 
 Fix namespace of JsonPropertyName
