@@ -6,3 +6,4 @@ dist/
 .next/
 CHANGELOG.md
 .husky/_/
+.changeset/*.md
