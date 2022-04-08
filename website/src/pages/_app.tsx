@@ -5,7 +5,14 @@ import dynamic from 'next/dynamic';
 import { appWithTranslation } from 'next-i18next';
 import { extendTheme, theme as chakraTheme } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
-import { ExtendComponents, handlePushRoute, CombinedThemeProvider, DocsPage, AppSeoProps } from '@guild-docs/client';
+import {
+  ExtendComponents,
+  handlePushRoute,
+  CombinedThemeProvider,
+  DocsPage,
+  AppSeoProps,
+  useGoogleAnalytics,
+} from '@guild-docs/client';
 import { Header, Subheader, FooterExtended } from '@theguild/components';
 import 'remark-admonitions/styles/classic.css';
 import '../../public/style.css';
@@ -68,10 +75,13 @@ const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) };
 function AppContent(appProps: AppProps) {
   const { Component, pageProps, router } = appProps;
   const isDocs = router.asPath.startsWith('/docs');
+  const analytics = useGoogleAnalytics({ router, trackingId: 'UA-128969121-3' });
 
   return (
     <>
       <Script src="https://the-guild.dev/static/crisp.js" />
+      <Script {...analytics.loadScriptProps} />
+      <Script {...analytics.configScriptProps} />
       <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
       <Subheader
         activeLink={router.asPath}
