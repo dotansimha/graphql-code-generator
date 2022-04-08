@@ -37,7 +37,6 @@ export interface ReactQueryRawPluginConfig
    * @description For each generate query hook adds `document` field with a
    * corresponding GraphQL query. Useful for `queryClient.fetchQuery`.
    * @exampleMarkdown
-   * <!-- prettier-ignore -->
    * ```ts
    * queryClient.fetchQuery(
    *   useUserDetailsQuery.getKey(variables),

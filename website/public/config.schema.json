@@ -224,7 +224,7 @@
       "type": "object",
       "properties": {
         "usingObservableFrom": {
-          "description": "usingObservableFrom: \"import Observable from 'zen-observable';\"\nOR\nusingObservableFrom: \"import { Observable } from 'rxjs';\"",
+          "description": "usingObservableFrom: `import Observable from 'zen-observable'`\nOR\nusingObservableFrom: `import { Observable } from 'rxjs'`",
           "type": "string"
         },
         "rawRequest": {
@@ -536,7 +536,7 @@
       "type": "object",
       "properties": {
         "arrayInputCoercion": {
-          "description": "The [GraphQL spec]{@link https ://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}allows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
+          "description": "The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d)\nallows arrays and a single primitive value for list input. This allows to\ndeactivate that behavior to only accept arrays instead of single values. If\nset to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output\n`bar: Array<Int>` instead of `bar: Array<Int> | Int` for the variable part.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "avoidOptionals": {
@@ -1311,7 +1311,7 @@
           "type": "string"
         },
         "customResolverFn": {
-          "description": "You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>\nDefault value: \"(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult\"",
+          "description": "You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics `<TResult, TParent, TContext, TArgs>`\nDefault value: \"(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult\"",
           "type": "string"
         },
         "directiveResolverMappings": {

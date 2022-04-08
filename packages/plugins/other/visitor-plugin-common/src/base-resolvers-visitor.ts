@@ -225,7 +225,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Wrap default types with Partial
    *
-   * You can also specify a custom wrapper for the original type, without overriding the original generated types, use "{T}" to specify the identifier. (for flow, use `$Shape<{T}>`)
+   * You can also specify a custom wrapper for the original type, without overriding the original generated types, use `{T}` to specify the identifier. (for flow, use `$Shape<{T}>`)
    *
    * ```yml
    * plugins

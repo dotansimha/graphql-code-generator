@@ -8,7 +8,7 @@ import { RawDocumentsConfig, AvoidOptionalsConfig } from '@graphql-codegen/visit
  */
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
-   * @description The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}
+   * @description The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d)
    * allows arrays and a single primitive value for list input. This allows to
    * deactivate that behavior to only accept arrays instead of single values. If
    * set to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output

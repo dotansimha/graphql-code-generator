@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-codegen/website",
+  "name": "website",
   "version": "1.17.7",
   "private": true,
   "scripts": {
@@ -81,7 +81,7 @@
     "graphql": "16.3.0",
     "js-yaml": "4.1.0",
     "next": "12.1.4",
-    "next-i18next": "10.5.0",
+    "next-i18next": "11.0.0",
     "next-remote-watch": "1.0.0",
     "next-seo": "5.4.0",
     "node-polyfill-webpack-plugin": "1.1.4",

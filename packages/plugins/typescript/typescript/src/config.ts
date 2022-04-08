@@ -139,7 +139,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown Override all definition types
-   * <!-- TODO: this block loses indentation during generation docs, find why and fix -->
    * ```yml
    * generates:
    *   path/to/file.ts:
