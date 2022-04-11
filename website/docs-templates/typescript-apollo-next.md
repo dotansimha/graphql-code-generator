@@ -56,7 +56,7 @@ Sets the version of react-apollo.
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
   plugins:
@@ -76,7 +76,7 @@ Customized the output by enabling/disabling the HOC.
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
   plugins:
@@ -96,7 +96,7 @@ Customized the output by enabling/disabling the generated React Hooks.
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
   plugins:
@@ -154,14 +154,14 @@ This is useful if you want to use modules other than `graphql-tag`, e.g. `graphq
 
 ##### graphql.macro
 
-```yml
+```yaml
 config:
   gqlImport: graphql.macro#gql
 ```
 
 ##### Gatsby
 
-```yml
+```yaml
 config:
   gqlImport: gatsby#graphql
 ```
@@ -254,13 +254,13 @@ This config should be used if `documentMode` is `external`. This has 2 usage:
 
 #### Usage Examples
 
-```yml
+```yaml
 config:
   documentMode: external
   importDocumentNodeExternallyFrom: path/to/document-node-file
 ```
 
-```yml
+```yaml
 config:
   documentMode: external
   importDocumentNodeExternallyFrom: near-operation-file
@@ -274,7 +274,7 @@ Extends or overrides the built-in scalars and custom GraphQL scalars to a custom
 
 #### Usage Examples
 
-```yml
+```yaml
 config:
   scalars:
     DateTime: Date
@@ -298,14 +298,14 @@ which is to preserve underscores.
 
 ##### Override All Names
 
-```yml
+```yaml
 config:
   namingConvention: change-case-all#lowerCase
 ```
 
 ##### Upper-case enum values
 
-```yml
+```yaml
 config:
   namingConvention:
     typeNames: change-case-all#pascalCase
@@ -314,14 +314,14 @@ config:
 
 ##### Keep names as is
 
-```yml
+```yaml
 config:
   namingConvention: keep
 ```
 
 ##### Remove Underscores
 
-```yml
+```yaml
 config:
   namingConvention:
     typeNames: change-case-all#pascalCase
@@ -337,7 +337,7 @@ Prefixes all the generated types.
 
 #### Usage Examples
 
-```yml
+```yaml
 config:
   typesPrefix: I
 ```
@@ -351,7 +351,7 @@ Does not add `__typename` to the generated types, unless it was specified in the
 
 #### Usage Examples
 
-```yml
+```yaml
 config:
   skipTypename: true
 ```
@@ -366,7 +366,7 @@ in the selection set, and makes it non-optional
 
 #### Usage Examples
 
-```yml
+```yaml
 config:
   nonOptionalTypename: true
 ```

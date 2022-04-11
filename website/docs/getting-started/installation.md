@@ -9,15 +9,15 @@ Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in
 
 <PackageInstall packages={["graphql", "@graphql-codegen/cli"]} />
 
-:::caution Global Installation
+<MDXWarning title="Global Installation">
 Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
-:::
+</MDXWarning>
 
-:::caution Monorepo Project
+<MDXWarning title="Monorepo Project">
 If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
 
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
-:::
+</MDXWarning>
 
 GraphQL Code Generator comes with dozen plugins, from front-end to back-end, from web apps to mobile apps.
 If you are not sure which plugins might be helpful for your GraphQL stack, give a try at the [_Initialization Wizard_](#initialization-wizard).
@@ -40,9 +40,9 @@ Once installed, GraphQL Code Generator CLI can help you configure your project b
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
 
-:::info npx
-The init process above can also be run through `npx`.
-:::
+> **npx**
+>
+> The init process above can also be run through `npx`.
 
 ### Manual Setup
 

@@ -19,7 +19,7 @@ The exported object should match the [`CodegenPlugin`](https://github.com/dotans
 
 Now, let's try to load and use it with the codegen. Specify the path to your `.js` file in your `codegen.yml` config file:
 
-```yml
+```yaml
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
@@ -81,7 +81,7 @@ You can use it to tweak the behavior of your Plugin and allow developers to cust
 
 You can pass configuration to your plugin in the following this way:
 
-```yml
+```yaml
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
@@ -114,7 +114,7 @@ To pack your Plugin as a package, create a simple `package.json` file and add th
 
 Then, publish it to npm using `npm publish` and test it by installing the published package from npm, and use it in your YML config file:
 
-```yml
+```yaml
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:

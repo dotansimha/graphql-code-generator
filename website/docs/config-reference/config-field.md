@@ -11,7 +11,7 @@ The `config` field is used to pass configuration to Plugins.
 
 If you specify it in your root level, the options will be passed to every plugin for each output file:
 
-```yml
+```yaml
 schema: schema.graphql
 config:
   configKey: configValue
@@ -25,7 +25,7 @@ generates:
 
 If you specify it at the output file level, every plugin for specific output will get the config value:
 
-```yml
+```yaml
 schema: schema.graphql
 generates:
   output.ts:
@@ -42,7 +42,7 @@ generates:
 
 If you specify it at the plugin level, only that plugin will get the config value:
 
-```yml
+```yaml
 schema: schema.graphql
 generates:
   output.ts:

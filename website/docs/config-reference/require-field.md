@@ -9,7 +9,7 @@ The `require` field allows you to load any external files without the need to tr
 
 To use it, install the extensions you wish to use from npm and then specify a list of `require` extensions in your root config:
 
-```yml
+```yaml
 require:
   - extension1
   - extension2
@@ -21,7 +21,7 @@ Adding `require` extension is useful if you are loading your `GraphQLSchema` or 
 
 If you wish to use TypeScript, just add [`ts-node`](https://github.com/TypeStrong/ts-node) from npm and specify its register export in your config file:
 
-```yml
+```yaml
 require:
   - ts-node/register
 ```
@@ -77,7 +77,7 @@ APIKEY=ABC123
 
 codegen.yml:
 
-```yml
+```yaml
 schema:
   - ${SCHEMAURL}:
     headers:

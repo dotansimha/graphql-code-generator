@@ -15,7 +15,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -26,7 +26,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -45,7 +45,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -60,7 +60,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -75,7 +75,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -91,7 +91,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -108,7 +108,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -123,7 +123,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -139,7 +139,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown Override all definition types
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -154,7 +154,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -171,7 +171,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Allow undefined
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -182,7 +182,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * ## Allow `null` in resolvers:
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -202,7 +202,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Allow undefined
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -212,7 +212,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    *
    * ## Allow `null` in resolvers:
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -231,7 +231,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Disable all export from a file
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -248,7 +248,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Disable description generation
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -265,7 +265,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -285,7 +285,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @example Enable wrapping entire fields
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -303,7 +303,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default T | Promise<T> | (() => T | Promise<T>)
    *
    * @example Only allow values
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -317,7 +317,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Allow using enum string values directly.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     allowEnumStringTypes: true
    * ```

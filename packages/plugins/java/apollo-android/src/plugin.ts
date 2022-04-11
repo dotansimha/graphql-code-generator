@@ -15,7 +15,7 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./app/src/main/java/:
    *     preset: java-apollo-android
@@ -30,7 +30,7 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the types generated based on input types.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./app/src/main/java/:
    *     preset: java-apollo-android
@@ -45,7 +45,7 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the fragments generated classes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./app/src/main/java/:
    *     preset: java-apollo-android

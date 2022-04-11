@@ -3,13 +3,11 @@ id: generated-files-colocation
 title: Generated files colocation
 ---
 
-:::info Note for back-end use-cases
-
-This page covers the `@graphql-codegen/near-operation-file-preset` preset, which only applies to front-end projects.
-
-For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset ` with the `useGraphQLModules: false` flag](https://www.graphql-code-generator.com/plugins/graphql-modules-preset).
-
-:::
+> **Note for back-end use-cases**
+>
+> This page covers the `@graphql-codegen/near-operation-file-preset` preset, which only applies to front-end projects.
+>
+> For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset ` with the `useGraphQLModules: false` flag](https://www.graphql-code-generator.com/plugins/graphql-modules-preset).
 
 <p>&nbsp;</p>
 
@@ -84,11 +82,11 @@ generates:
       withHooks: true
 ```
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+>
+> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 
 > Note: If you're loading your `documents` from files with the same extension as the generated files, make sure the glob you use excludes the generated files. For example, if your original glob was `src/**/*.{ts,tsx}`, use `src/**/!(*.generated).{ts,tsx}` instead.
 

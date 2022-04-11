@@ -32,6 +32,10 @@ article {
   font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;
 }
 
+.collapse-title > p {
+  display: inline-block;
+}
+
 details > *:last-child {
   padding-bottom: 2rem;
 }

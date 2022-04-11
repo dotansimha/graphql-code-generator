@@ -16,7 +16,7 @@ export interface RawGenericSdkPluginConfig extends RawClientSideBasePluginConfig
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:

@@ -31,7 +31,7 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 
 In order to use this preset, you need to add the following configuration to your `codegen.yml`:
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -226,7 +226,7 @@ This can be easily achieved by running the `gql-tag-operations` plugin in module
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -292,7 +292,7 @@ Fragment masking is enabled via the `fragmentMasking` config option.
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -362,7 +362,7 @@ By default, the data unmask function name is `useFragment`, which follows the Re
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -382,7 +382,7 @@ Similar to the `gql` module augmentation configuration it is also possible to ge
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'

@@ -148,7 +148,7 @@
 
   Example configuration:
 
-  ```yml
+  ```yaml
   config:
     # This was possible before
     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
@@ -249,7 +249,7 @@
 
   If you need the resolvers signature to support schema-stitching, please add to your config:
 
-  ```yml
+  ```yaml
   noSchemaStitching: false
   ```
 

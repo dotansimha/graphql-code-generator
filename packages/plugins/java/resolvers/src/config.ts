@@ -4,7 +4,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
@@ -20,7 +20,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * You can use a direct path to the package, or use `package#class` syntax to have it imported.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
@@ -40,7 +40,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * The default mapper is Java's `Object`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
@@ -55,7 +55,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the parent class name.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
@@ -70,7 +70,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the list type.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:

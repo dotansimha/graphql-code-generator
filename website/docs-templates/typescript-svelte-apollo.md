@@ -20,7 +20,7 @@ Path to the apollo client for this project (should point to a file with an apoll
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
   plugins:
@@ -40,7 +40,7 @@ By default, the plugin only generate observable queries, sometimes it may be use
 
 #### Usage Examples
 
-```yml
+```yaml
 generates:
 path/to/file.ts:
   plugins:

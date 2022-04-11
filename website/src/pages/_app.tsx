@@ -19,6 +19,7 @@ import '../../public/style.css';
 import Script from 'next/script';
 import React from 'react';
 import { Provider as MDXTabsCurrentTabContextProvider } from 'components/MDXTabsCurrentTabContext';
+import { MDXWarning } from 'components/MDXWarning';
 
 const MDXTabs = dynamic(() => import('components/MDXTabs/MDXTabs'));
 const MDXTab = dynamic(() => import('components/MDXTabs/MDXTab'));
@@ -29,6 +30,7 @@ ExtendComponents({
   },
   MDXTabs,
   MDXTab,
+  MDXWarning,
 });
 
 const styles: typeof chakraTheme['styles'] = {

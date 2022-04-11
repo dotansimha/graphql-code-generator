@@ -8,7 +8,7 @@ This plugin generates [`oclif`](https://npmjs.com/package/oclif) CLI commands.
 
 The, make sure you have `typescript` plugin as well in your configuration:
 
-```yml
+```yaml
 schema: http://localhost:4000
 documents: 'src/commands/**/*.graphql'
 generates:
@@ -108,7 +108,7 @@ export default handler
 First, follow the GraphQL-Code-Generator guide to install it, and make sure to also install
 `@graphql-codegen/typescript-oclif`. Then, change your `codegen.yml` file to look like this:
 
-```yml
+```yaml
 schema: <path-to-your-schema>
 documents: 'src/commands/**/*.graphql'
 generates:

@@ -9,7 +9,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @description Allow you to customize the namespace name.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   namespaceName: MyCompany.MyNamespace
    * ```
@@ -19,7 +19,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @description Defined the global value of `namedClient`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   namedClient: 'customName'
    * ```
@@ -30,7 +30,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   querySuffix: 'QueryService'
    * ```
@@ -41,7 +41,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   mutationSuffix: 'MutationService'
    * ```
@@ -52,7 +52,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'
    * ```
@@ -63,7 +63,7 @@ export interface CSharpOperationsRawPluginConfig extends RawClientSideBasePlugin
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   typesafeOperation: true
    * ```

@@ -81,7 +81,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
@@ -97,7 +97,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     contextType: MyContext
@@ -105,7 +105,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     contextType: ./my-types#MyContext
@@ -120,7 +120,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Field Context Types
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     fieldContextTypes:
@@ -139,7 +139,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom RootValue Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     rootValueType: MyRootValue
@@ -147,7 +147,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom RootValue Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     rootValueType: ./my-types#MyRootValue
@@ -164,7 +164,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Directive Context Extender
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     directiveContextTypes:
@@ -177,7 +177,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     mapperTypeSuffix: Model
@@ -192,7 +192,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     mappers:
@@ -209,7 +209,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Replace with any
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: any
@@ -217,7 +217,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom Base Object
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: ./my-file#BaseObject
@@ -227,7 +227,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * You can also specify a custom wrapper for the original type, without overriding the original generated types, use `{T}` to specify the identifier. (for flow, use `$Shape<{T}>`)
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: Partial<{T}>
@@ -235,7 +235,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Allow deep partial with `utility-types`
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   plugins:
    *     - 'typescript'
@@ -255,7 +255,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -267,7 +267,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -286,7 +286,7 @@ export interface RawResolversConfig extends RawConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -320,7 +320,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Disable enum prefixes
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     typesPrefix: I
    *     enumPrefix: false
