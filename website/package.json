@@ -76,6 +76,7 @@
     "@monaco-editor/react": "4.4.1",
     "@theguild/components": "1.10.3",
     "classnames": "2.3.1",
+    "date-fns": "2.28.0",
     "dedent": "0.7.0",
     "framer-motion": "6.2.9",
     "graphql": "16.3.0",
