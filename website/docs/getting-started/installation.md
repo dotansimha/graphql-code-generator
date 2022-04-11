@@ -9,7 +9,6 @@ Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in
 
 <PackageInstall packages={["graphql", "@graphql-codegen/cli"]} />
 
-
 <MDXWarning title="Global Installation">
 Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
 </MDXWarning>
