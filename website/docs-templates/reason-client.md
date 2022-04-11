@@ -10,7 +10,7 @@ A plugin for GraphQL Codegen to generate ReasonML types based on your GraphQL sc
 
 Set up your project per the GraphQL Codegen Docs, and specify this plugin in your codegen.yml:
 
-```yml
+```yaml
 schema: http://path.to.your.app
 generates:
   src/GraphQLTypes.re:

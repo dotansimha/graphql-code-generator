@@ -42,7 +42,7 @@ Steps to reproduce the behavior:
 
 3. My `codegen.yml` config file:
 
-```yml
+```yaml
 # Put your YML here
 ```
 

@@ -11,7 +11,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -26,7 +26,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

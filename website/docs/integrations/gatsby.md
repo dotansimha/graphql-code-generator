@@ -9,7 +9,7 @@ The codegen knows automatically to look for the import of the `graphql` tag for 
 
 Using the following config file should cover everything specific to Gatsby:
 
-```yml
+```yaml
 schema: http://localhost:8000/___graphql
 documents:
   - ./src/**/*.{ts,tsx}

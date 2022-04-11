@@ -66,7 +66,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## With Custom Values
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
@@ -78,7 +78,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## With Custom Values
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum:
@@ -86,14 +86,14 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    *
    * ## With External Enum
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum: ./my-file#MyCustomEnum
    * ```
    *
    * ## Import All Enums from a file
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues: ./my-file
    * ```
@@ -105,14 +105,14 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all declarations
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     declarationKind: 'interface'
    * ```
    *
    * ## Override only specific declarations
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     declarationKind:
    *       type: 'interface'
@@ -127,7 +127,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Disable enum prefixes
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     typesPrefix: I
    *     enumPrefix: false
@@ -141,7 +141,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Allow Promise
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -160,7 +160,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Enable wrapping fields
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -177,7 +177,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -194,7 +194,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Ignore enum values from schema
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -214,7 +214,7 @@ export interface RawTypesConfig extends RawConfig {
    * @default true
    *
    * @example Enable wrapping entire fields
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:
@@ -232,7 +232,7 @@ export interface RawTypesConfig extends RawConfig {
    * @default T | Promise<T> | (() => T | Promise<T>)
    *
    * @example Only allow values
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:
@@ -258,7 +258,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Custom Context Type
-   * ```yml
+   * ```yaml
    * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappings:
@@ -271,7 +271,7 @@ export interface RawTypesConfig extends RawConfig {
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappingTypeSuffix: Model

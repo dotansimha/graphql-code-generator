@@ -49,7 +49,7 @@ By default `apollo-server` will not work with generated resolvers signature.
 
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
-```yml
+```yaml
 generates:
   ./resolvers-types.ts:
     config:

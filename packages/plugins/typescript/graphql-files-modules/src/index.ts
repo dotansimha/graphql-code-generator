@@ -17,7 +17,7 @@ export interface TypeScriptFilesModulesPluginConfig {
    * between generated types.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates: src/api/user-service/queries.d.ts
    *  documents: src/api/user-service/queries.graphql
    *  plugins:

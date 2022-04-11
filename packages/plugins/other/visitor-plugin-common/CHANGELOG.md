@@ -105,7 +105,7 @@
 
   Please use this configuration option with care!
 
-  ```yml
+  ```yaml
   plugins:
     config:
       directiveArgumentAndInputFieldMappings:
@@ -146,7 +146,7 @@
 
   Example configuration:
 
-  ```yml
+  ```yaml
   config:
     # This was possible before
     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver

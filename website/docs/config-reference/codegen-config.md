@@ -23,7 +23,7 @@ In addition, you can also define a path to your config file with the `--config` 
 
 Here's an example for a possible config file:
 
-```yml
+```yaml
 schema: http://localhost:3000/graphql
 documents: ./src/**/*.graphql
 generates:
@@ -109,7 +109,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 You can use environment variables in your `codegen.yml` file:
 
-```yml
+```yaml
 schema: ${SCHEMA_PATH}
 documents: ./src/**/*.graphql
 generates:
@@ -123,7 +123,7 @@ You can load a `.env` file by adding the `-r dotenv/config` option to your CLI c
 
 You can specify a default value in case an environment variable is missing:
 
-```yml
+```yaml
 schema: ${SCHEMA_PATH:schema.graphql}
 ```
 

@@ -203,7 +203,7 @@ export type MyPluginConfig = {
    *
    * @exampleMarkdown
    * ## Change the name
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:

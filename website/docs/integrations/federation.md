@@ -7,7 +7,7 @@ The `typescript-resolvers` plugin also supports [Apollo Federation](https://apol
 
 To use it, add `federation: true` to your configuration:
 
-```yml
+```yaml
 generates:
   ./src/types.ts:
     plugins:

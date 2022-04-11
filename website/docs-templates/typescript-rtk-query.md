@@ -13,7 +13,7 @@ id: typescript-rtk-query
 
 ### Using `graphql-request`
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:

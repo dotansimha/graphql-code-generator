@@ -6,7 +6,7 @@ export interface RTKConfig {
    * @description Define where to import the base api to inject endpoints into
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./src/app/api/generated.ts:
    *     plugins:
@@ -21,10 +21,10 @@ export interface RTKConfig {
    * @name exportHooks
    * @description Whether to export React Hooks from the generated api. Enable only when using the `"@reduxjs/toolkit/query/react"` import of `createApi`
    * @default false
-   * 
+   *
 
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./src/app/api/generated.ts:
    *     plugins:
@@ -41,10 +41,10 @@ export interface RTKConfig {
    * @description Sets the `overrideExisting` option, for example to allow for hot module reloading when running graphql-codegen in watch mode.
    * Will directly be injected as code.
    * @default undefined
-   * 
+   *
 
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   ./src/app/api/generated.ts:
    *     plugins:

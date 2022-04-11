@@ -16,7 +16,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -35,7 +35,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -47,7 +47,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -66,7 +66,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -82,7 +82,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -99,7 +99,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -118,7 +118,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -143,7 +143,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @see https://github.com/dotansimha/graphql-code-generator/issues/3949
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * ./typings/api.ts:
    *   plugins:
@@ -166,7 +166,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *
    * @exampleMarkdown
    * ## Allow undefined
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -176,7 +176,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    *
    * ## Allow `null` in resolvers:
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
