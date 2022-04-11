@@ -35,9 +35,9 @@ generates:
 
 If you are looking for a reference file, an example for a [large configuration file can be seen here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
-:::tip For VSCode users
-Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
-:::
+> **For VSCode users**
+>
+> Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
 
 <p>&nbsp;</p>
 
