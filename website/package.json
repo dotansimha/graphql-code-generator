@@ -70,6 +70,7 @@
     "@graphql-codegen/typescript-vue-apollo": "3.2.9",
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.2.8",
     "@graphql-codegen/typescript-vue-urql": "2.2.9",
+    "@graphql-codegen/flutter-freezed-classes": "0.0.9",
     "@guild-docs/client": "1.4.0",
     "@guild-docs/server": "2.2.0",
     "@monaco-editor/react": "4.4.1",
