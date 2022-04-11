@@ -90,6 +90,6 @@ async function doSomething() {
 
 The return value should be of type `Promise<FileOutput[]>`.
 
-<MDXWarning>
+<MDXWarning title="Browser">
 This usage will not work in a browser environment because the `cli` package depends on NodeJS internals and the file system.
 </MDXWarning>
