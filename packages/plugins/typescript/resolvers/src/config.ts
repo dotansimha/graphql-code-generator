@@ -66,7 +66,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   customResolveInfo?: string;
   /**
-   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
+   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics `<TResult, TParent, TContext, TArgs>`
    * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
    *
    * @exampleMarkdown

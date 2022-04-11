@@ -5,9 +5,9 @@ import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-c
  */
 export interface RawGenericSdkPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * usingObservableFrom: "import Observable from 'zen-observable';"
+   * usingObservableFrom: `import Observable from 'zen-observable'`
    * OR
-   * usingObservableFrom: "import { Observable } from 'rxjs';"
+   * usingObservableFrom: `import { Observable } from 'rxjs'`
    */
   usingObservableFrom?: string;
 

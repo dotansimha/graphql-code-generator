@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "postinstall": "patch-package && husky install",
-    "clean": "rimraf node_modules packages/{*,plugins/*/*,presets/*,utils/*}/node_modules",
-    "prebuild": "rimraf packages/{*,plugins/*/*,presets/*,utils/*}/dist",
+    "clean": "rimraf \"{,!(node_modules)/**/}node_modules/\"",
+    "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\"",
     "build": "tsc --project tsconfig.json && bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "test": "jest --forceExit --no-watchman",
@@ -82,6 +82,7 @@
     "jest-junit": "13.1.0",
     "lint-staged": "12.3.7",
     "lodash": "4.17.21",
+    "patch-package": "6.4.7",
     "prettier": "2.6.2",
     "prettier-plugin-sh": "0.10.1",
     "prettier-plugin-svelte": "2.7.0",
@@ -120,8 +121,5 @@
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0"
-  },
-  "dependencies": {
-    "patch-package": "6.4.7"
   }
 }

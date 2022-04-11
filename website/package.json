@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-codegen/website",
+  "name": "website",
   "version": "1.17.7",
   "private": true,
   "scripts": {
@@ -70,8 +70,9 @@
     "@graphql-codegen/typescript-vue-apollo": "3.2.9",
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.2.8",
     "@graphql-codegen/typescript-vue-urql": "2.2.9",
-    "@guild-docs/client": "1.4.0",
-    "@guild-docs/server": "2.2.0",
+    "@guild-docs/client": "2.1.1",
+    "@guild-docs/server": "3.0.1",
+    "@mdx-js/react": "2.1.1",
     "@monaco-editor/react": "4.4.1",
     "@theguild/components": "1.10.3",
     "classnames": "2.3.1",
@@ -80,7 +81,7 @@
     "graphql": "16.3.0",
     "js-yaml": "4.1.0",
     "next": "12.1.4",
-    "next-i18next": "10.5.0",
+    "next-i18next": "11.0.0",
     "next-remote-watch": "1.0.0",
     "next-seo": "5.4.0",
     "node-polyfill-webpack-plugin": "1.1.4",
@@ -88,6 +89,8 @@
     "react-dom": "17.0.2",
     "react-markdown": "8.0.2",
     "react-select": "5.3.0",
+    "react-icons": "4.3.1",
+    "react-use": "17.3.2",
     "remark-admonitions": "1.2.1",
     "shiki": "0.10.1",
     "typescript-json-schema": "0.53.0"

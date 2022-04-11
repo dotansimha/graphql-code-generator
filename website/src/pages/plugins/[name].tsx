@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import Link from 'next/link';
 import Head from 'next/head';
 import { format } from 'date-fns';
 import tw, { styled } from 'twin.macro';

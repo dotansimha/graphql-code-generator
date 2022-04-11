@@ -193,7 +193,7 @@ const TweetFragment = gql(/* GraphQL */ `
 This is the code after the babel transformation:
 
 ```ts
-import { TweetFragmentDoc } from \\"./graphql\\";
+import { TweetFragmentDoc } from './graphql'
 
 const TweetFragment = TweetFragmentDoc
 ```
@@ -358,7 +358,7 @@ const Tweets = () => {
 
 ### Fragment Masking with custom unmask name
 
-By default the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
+By default, the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
 
 **codegen.yml**
 
