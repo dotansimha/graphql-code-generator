@@ -3,4 +3,4 @@
 "@graphql-codegen/visitor-plugin-common": patch
 ---
 
-Add @Deprecated support for Input
+Add @Deprecated support for input
