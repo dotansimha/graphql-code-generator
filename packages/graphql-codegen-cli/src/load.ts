@@ -20,6 +20,7 @@ export const defaultSchemaLoadOptions = {
   sort: true,
   convertExtensions: true,
   includeSources: true,
+  inputValueDeprecation: true,
 };
 
 export const defaultDocumentsLoadOptions = {
