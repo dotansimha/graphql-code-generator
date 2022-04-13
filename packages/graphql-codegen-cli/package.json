@@ -61,7 +61,7 @@
     "debounce": "^1.2.0",
     "dependency-graph": "^0.11.0",
     "detect-indent": "^6.0.0",
-    "glob": "^7.1.6",
+    "glob": "^8.0.0",
     "globby": "^11.0.4",
     "graphql-config": "^4.1.0",
     "inquirer": "^8.0.0",
