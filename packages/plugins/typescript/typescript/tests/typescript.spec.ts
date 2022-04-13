@@ -954,7 +954,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('input value @deprecated directive support', async () => {
+    it('#7766 - input value @deprecated directive support', async () => {
       const schema = buildSchema(`
       input MyInput {
         A: Int
