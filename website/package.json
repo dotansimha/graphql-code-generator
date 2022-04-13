@@ -15,7 +15,7 @@
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "16.11.26",
-    "@types/react": "17.0.44",
+    "@types/react": "18.0.3",
     "@types/react-dom": "17.0.15",
     "concurrently": "7.1.0",
     "esbuild-register": "3.3.2",
