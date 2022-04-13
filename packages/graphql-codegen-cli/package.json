@@ -78,7 +78,7 @@
     "tslib": "~2.3.0",
     "valid-url": "^1.0.9",
     "wrap-ansi": "^7.0.0",
-    "yaml": "^1.10.0",
+    "yaml": "^2.0.0",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
