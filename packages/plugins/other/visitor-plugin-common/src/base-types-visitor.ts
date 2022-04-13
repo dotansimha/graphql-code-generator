@@ -788,7 +788,7 @@ export class BaseTypesVisitor<
     return null;
   }
 
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode): string {
+  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
     let commentText: string = node.description as any;
     const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
     if (deprecationDirective) {
