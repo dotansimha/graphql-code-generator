@@ -4,6 +4,7 @@ import {
   LoadedFragment,
   getConfigValue,
   OMIT_TYPE,
+  REQUIRE_FIELDS_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
@@ -63,6 +64,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     }
 
     imports.push(OMIT_TYPE);
+    imports.push(REQUIRE_FIELDS_TYPE);
 
     return [...baseImports, ...imports];
   }
@@ -127,10 +129,15 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
       variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && variableDef.defaultValue == null
     );
 
+    const optionsTypeOptionalVariables = `Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>`;
+    const optionsTypeRequiredVariables = `RequireFields<${optionsTypeOptionalVariables}, 'variables'>`;
+
+    const optionsParameter = isVariablesRequired
+      ? `options: ${optionsTypeRequiredVariables}`
+      : `options?: ${optionsTypeOptionalVariables}`;
+
     return `
-export function use${operationName}(options${
-      isVariablesRequired ? '' : '?'
-    }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
+export function use${operationName}(${optionsParameter}) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
 };`;
   }

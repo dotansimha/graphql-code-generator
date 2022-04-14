@@ -581,7 +581,7 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-export function useRequiredArgQuery(options: Omit<Urql.UseQueryArgs<RequiredArgQueryVariables>, 'query'>) {
+export function useRequiredArgQuery(options: RequireFields<Omit<Urql.UseQueryArgs<RequiredArgQueryVariables>, 'query'>, 'variables'>) {
   return Urql.useQuery<RequiredArgQuery>({ query: RequiredArgDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
