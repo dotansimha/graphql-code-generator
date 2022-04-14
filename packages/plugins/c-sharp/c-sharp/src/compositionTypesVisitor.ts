@@ -64,7 +64,7 @@ export class CompositionTypeVisitor extends BaseVisitor {
     return mappings;
   }
 
-  protected UnionTypeDefinition(node: UnionTypeDefinitionNode): AllMappingForCompositionType {
+  public UnionTypeDefinition(node: UnionTypeDefinitionNode): AllMappingForCompositionType {
     const mappings = this.addRecordForUnionType(node.name, node.types || []);
 
     return mappings;

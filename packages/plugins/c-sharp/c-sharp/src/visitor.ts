@@ -509,8 +509,8 @@ ${recordMembers}
     if (this._parsedConfig.emitCompositionTypes && compositionInterfaces) {
       compositionInterfaces.forEach(i => {
         allInterfaces.push({
-          kind: 'NamedType',
-          name: { kind: 'Name', value: i },
+          kind: Kind.NAMED_TYPE,
+          name: { kind: Kind.NAME, value: i },
         });
       });
     }
@@ -605,10 +605,10 @@ ${classMembers}
     unionValues: ReadonlyArray<NamedTypeNode>
   ): string {
     const valuesAsEnumNodes: EnumValueDefinitionNode[] = unionValues.map(typeNode => ({
-      kind: 'EnumValueDefinition',
+      kind: Kind.ENUM_VALUE_DEFINITION,
       name: typeNode.name,
       description: {
-        kind: 'StringValue',
+        kind: Kind.STRING,
         value: typeNode.name.value,
         block: true,
       },
@@ -616,10 +616,10 @@ ${classMembers}
     }));
 
     const enumTypeNode: EnumTypeDefinitionNode = {
-      kind: 'EnumTypeDefinition',
+      kind: Kind.ENUM_TYPE_DEFINITION,
       name: { ...nameNode, value: nameNode.value + 'Kind' },
       description: {
-        kind: 'StringValue',
+        kind: Kind.STRING,
         value: `An enum representing the possible values of ${nameNode.value}`,
       },
       values: valuesAsEnumNodes,
