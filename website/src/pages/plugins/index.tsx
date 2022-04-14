@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { compareDesc } from 'date-fns';
-import { handlePushRoute, PackageInstall, RemoteGHMarkdown } from '@guild-docs/client';
+import { handlePushRoute } from '@guild-docs/client';
 import { buildMultipleMDX, CompiledMDX } from '@guild-docs/server';
 import { getPackagesData, PackageWithStats } from '@guild-docs/server/npm';
 import { MarketplaceSearch } from '@theguild/components';

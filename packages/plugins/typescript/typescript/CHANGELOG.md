@@ -134,7 +134,7 @@
 
   Please use this configuration option with care!
 
-  ```yml
+  ```yaml
   plugins:
     config:
       directiveArgumentAndInputFieldMappings:

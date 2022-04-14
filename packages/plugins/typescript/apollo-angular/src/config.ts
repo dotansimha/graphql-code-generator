@@ -15,7 +15,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default 2
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   apolloAngularVersion: 1
    * ```
@@ -25,7 +25,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   ngModule: ./path/to/module#MyModule
    * ```
@@ -35,7 +35,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `namedClient`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   namedClient: 'customName'
    * ```
@@ -45,7 +45,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `serviceName`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   serviceName: 'MySDK'
    * ```
@@ -55,7 +55,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `serviceProvidedInRoot`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   serviceProvidedInRoot: false
    * ```
@@ -65,7 +65,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Define the Injector of the SDK class.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   serviceProvidedIn: ./path/to/module#MyModule
    * ```
@@ -81,7 +81,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   querySuffix: 'QueryService'
    * ```
@@ -92,7 +92,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   mutationSuffix: 'MutationService'
    * ```
@@ -103,7 +103,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   subscriptionSuffix: 'SubscriptionService'
    * ```
@@ -119,7 +119,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default []
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   additionalDI
    *      - 'testService: TestService'
@@ -132,7 +132,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   addExplicitOverride: true
    * ```

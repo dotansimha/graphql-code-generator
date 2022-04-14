@@ -8,7 +8,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Customize the class members prefix. The default is empty (this might be a breaking change from the default that was _)
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
    *       - java
@@ -21,7 +21,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
@@ -35,7 +35,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum:
@@ -48,7 +48,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the parent class name.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/MyGeneratedTypes.java:
    *     plugins:
@@ -63,7 +63,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the list type
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Types.java:
    *     plugins:
@@ -78,7 +78,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * @description If true, will create empty constructor instead of args map
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/java/my-org/my-app/Types.java:
    *     plugins:

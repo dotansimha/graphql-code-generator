@@ -1,6 +1,6 @@
 ---
 id: angular
-title: "Guide: Angular"
+title: 'Guide: Angular'
 ---
 
 GraphQL Code Generator provides the `@graphql-codegen/typescript-apollo-angular` plugin that generates full-typed Apollo GraphQL services.
@@ -34,16 +34,16 @@ Most Apollo Client usage in Angular will look as follows:
 const GET_POSTS = gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
-`;
+`
 
 interface Post {
   id: string
@@ -55,36 +55,36 @@ interface Post {
   }
 }
 
-@Component({ /* ... */ })
+@Component({
+  /* ... */
+})
 class PostsComponent implements OnInit, OnDestroy {
-  posts: Post[];
+  posts: Post[]
 
-  private querySubscription: Subscription;
+  private querySubscription: Subscription
 
   ngOnInit() {
     this.querySubscription = this.apollo
       .watchQuery({
-        query: GET_POSTS,
+        query: GET_POSTS
       })
       .valueChanges.subscribe(({ data }) => {
-        this.posts = data.posts as Post[];
-      });
+        this.posts = data.posts as Post[]
+      })
   }
   ngOnDestroy() {
-    this.querySubscription.unsubscribe();
+    this.querySubscription.unsubscribe()
   }
 }
 ```
 
 Not typing or manually maintaining the data-types can lead to many issues:
 
+- **outdated typing** (regarding the current Schema)
 
-  - **outdated typing** (regarding the current Schema)
+- **typos**
 
-  - **typos**
-
-  - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
-
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-apollo-angular` plugin that generates typed Apollo services for each GraphQL operation.
 
@@ -94,7 +94,13 @@ Just a few configuration steps are required to get those Apollo services:
 
 **1. Install the `@graphql-codegen/typescript-apollo-angular` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-apollo-angular", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-apollo-angular',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
@@ -113,11 +119,11 @@ generates:
       - typescript-apollo-angular
 ```
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+>
+> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 
 <br />
 
@@ -128,7 +134,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -149,7 +155,9 @@ import { PostsGQL, PostsQuery } from './graphql'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-@Component({ /* ... */ })
+@Component({
+  /* ... */
+})
 export class PostsComponent {
   posts: Observable<PostsQuery['posts']>
 
@@ -164,6 +172,5 @@ export class PostsComponent {
 For more advanced configuration, please refer to the [plugin documentation](/plugins/typescript-apollo-angular).
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
-
 
 <p>&nbsp;</p>

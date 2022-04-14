@@ -13,7 +13,7 @@ Each hook has its arguments, and it passes them to your scripts using `argv`.
 
 Add your scripts to your `codegen.yml` file, and specify the scripts you wish to run, for example:
 
-```yml
+```yaml
 hooks:
   afterOneFileWrite:
     - prettier --write
@@ -21,7 +21,7 @@ hooks:
 
 Or, for specific output:
 
-```yml
+```yaml
 generates:
   ./src/types.ts:
     hooks:

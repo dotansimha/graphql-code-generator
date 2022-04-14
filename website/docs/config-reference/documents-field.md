@@ -15,7 +15,7 @@ You can specify either a `string` pointing to your documents or `string[]` point
 
 You can specify the `documents` field in your root level config:
 
-```yml
+```yaml
 schema: http://localhost:3000/graphql
 documents: 'src/**/*.graphql'
 generates:
@@ -29,7 +29,7 @@ generates:
 
 You can also specify the `documents` field in your generated file level config:
 
-```yml
+```yaml
 schema: http://server1.com/graphql
 generates:
   ./src/types1.ts:
@@ -45,7 +45,7 @@ GraphQL Code Generator has a built-in document scanner, which means you can spec
 
 You can tell it to find documents in TypeScript files:
 
-```yml
+```yaml
 schema: http://server1.com/graphql
 documents: 'src/**/!(*.d).{ts,tsx}'
 ```
@@ -58,13 +58,13 @@ The following can be specified as a single value or as an array with mixed value
 
 You can specify a `string` to point to a single file:
 
-```yml
+```yaml
 documents: my-query.graphql
 ```
 
 Or `string[]` to point to multiple files:
 
-```yml
+```yaml
 documents:
   - my-query.graphql
   - my-other-query.graphql
@@ -74,13 +74,13 @@ documents:
 
 You can specify a Glob expression in order to load multiple files:
 
-```yml
+```yaml
 documents: './src/**/*.graphql'
 ```
 
 You can also specify multiple Glob expressions as an array:
 
-```yml
+```yaml
 documents:
   - './src/dir1/*.graphql'
   - './src/dir2/*.graphql'
@@ -88,7 +88,7 @@ documents:
 
 You can specify files to exclude by prefixing the Glob expression with `!`:
 
-```yml
+```yaml
 documents:
   - './src/**/*.graphql'
   - '!*.generated.graphql'
@@ -98,7 +98,7 @@ documents:
 
 Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from it:
 
-```yml
+```yaml
 documents:
   - './src/*.jsx'
 ```
@@ -107,7 +107,7 @@ The codegen will try to load the file as an AST and look for exact GraphQL opera
 
 You can disable the `require` if it causes errors for you (for example, because of different module system):
 
-```yml
+```yaml
 documents:
   - './src/*.jsx':
     noRequire: true
@@ -119,7 +119,7 @@ documents:
 
 You can specify your GraphQL documents directly as an AST string in your config file. It's very useful for testing.
 
-```yml
+```yaml
 documents:
   - 'query { f1 }'
   - 'query { f2 }'
@@ -188,7 +188,7 @@ pluckConfig:
 
 Suppose your schema has a different or complicated way of loading. In that case, you can specify a custom loader with the `loader` field.
 
-```yml
+```yaml
 documents:
   - '**/*.graphql':
       loader: my-documents-loader.js

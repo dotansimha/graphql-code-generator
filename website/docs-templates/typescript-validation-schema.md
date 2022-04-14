@@ -10,7 +10,7 @@ A plugin for GraphQL Codegen to generate form validation schema (such as [yup](h
 
 Set up your project per the GraphQL Codegen Docs, and specify this plugin in your codegen.yml:
 
-```yml
+```yaml
 generates:
   path/to/graphql.ts:
     plugins:

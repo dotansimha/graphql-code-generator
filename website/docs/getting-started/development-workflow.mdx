@@ -44,7 +44,7 @@ You can either run it in a separate terminal session or use tools like [`concurr
 
 If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 :::shell `--watch` flag
     yarn graphql-codegen --watch "src/**/*.js"
 :::
@@ -53,7 +53,7 @@ Use this when you are loading your schema or documents from a single code file t
 
 By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead of in unusual cases where system support is unavailable.
 
-```yml
+```yaml
 watch: true
 # Passed directly through to chokidar's file watch configuration
 watchConfig:
@@ -67,7 +67,7 @@ If you are using a monorepo structure, with tools such as [Yarn Workspaces](http
 
 If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
 
-```yml
+```yaml
 schema: 'server/src/**/*.graphql'
 documents: 'client/src/**/*.graphql'
 generates:
@@ -78,4 +78,3 @@ generates:
     - typescript
     - typescript-resolvers
 ```
-

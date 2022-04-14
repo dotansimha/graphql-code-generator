@@ -4,6 +4,7 @@ title: Contributing
 ---
 
 When your new plugin is ready, you can either:
+
 - maintain it in your repo and npm package
 - contribute and make it part of the GraphQL Code Generator repo
 
@@ -202,7 +203,7 @@ export type MyPluginConfig = {
    *
    * @exampleMarkdown
    * ## Change the name
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:

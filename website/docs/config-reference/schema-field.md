@@ -13,7 +13,7 @@ The `schema` field should point to your `GraphQLSchema` - there are multiple way
 
 You can specify the `schema` field in your root level config, as follow:
 
-```yml
+```yaml
 schema: http://localhost:3000/graphql
 generates:
   ./src/types.ts:
@@ -25,7 +25,7 @@ generates:
 
 Or, you can specify it per-output file level. This way you can
 
-```yml
+```yaml
 generates:
   ./src/types1.ts:
     schema: http://server1.com/graphql
@@ -41,7 +41,7 @@ generates:
 
 You can also specify `schema` on both levels: root and output-file, and then GraphQL Code Generator will merge both schemas into one:
 
-```yml
+```yaml
 schema: http://localhost:3000/graphql
 generates:
   ./src/types.ts:
@@ -61,7 +61,7 @@ The following can be specified as a single value or an array with mixed values.
 
 You can specify a URL to load your `GraphQLSchema` from:
 
-```yml
+```yaml
 schema: http://localhost:3000/graphql
 ```
 
@@ -71,7 +71,7 @@ schema: http://localhost:3000/graphql
 
 You can also specify custom HTTP headers to be sent with the request:
 
-```yml
+```yaml
 schema:
   - http://localhost:3000/graphql:
       headers:
@@ -84,7 +84,7 @@ schema:
 
 You can specify a custom fetch function for the HTTP request, using the module name you wish to use:
 
-```yml
+```yaml
 schema:
   - http://localhost:3000/graphql:
       customFetch: 'my-custom-fetch'
@@ -94,7 +94,7 @@ schema:
 
 You can specify an HTTP method for the introspection query (the default value is `POST`).
 
-```yml
+```yaml
 schema:
   - http://localhost:3000/graphql:
       method: GET
@@ -104,7 +104,7 @@ schema:
 
 You can point to a local `.json` file that contains [GraphQL Introspection](https://graphql.org/learn/introspection) JSON.
 
-```yml
+```yaml
 schema: schema.json
 ```
 
@@ -112,19 +112,19 @@ schema: schema.json
 
 You can point to a single `.graphql` file that contains the AST string of your schema:
 
-```yml
+```yaml
 schema: schema.graphql
 ```
 
 Or, you can point to multiple files using a glob expression (codegen will merge the schema files for you):
 
-```yml
+```yaml
 schema: 'src/**/*.graphql'
 ```
 
 You can also specify multiple patterns:
 
-```yml
+```yaml
 schema:
   - 'src/dir1/**/*.graphql'
   - 'src/dir2/**/*.graphql'
@@ -132,7 +132,7 @@ schema:
 
 And, you can specify files to exclude/ignore, using the `!` sign:
 
-```yml
+```yaml
 schema:
   - './src/**/*.graphql'
   - '!*.generated.graphql'
@@ -148,7 +148,7 @@ By default, codegen skips `graphql-import` to load all files using glob expressi
 
 If you are using `graphql-import` syntax in your schema definitions, you can tell codegen to use those import statements:
 
-```yml
+```yaml
 schema:
   - 'src/dir1/**/*.graphql':
       skipGraphQLImport: false
@@ -158,7 +158,7 @@ schema:
 
 When enabled, converts all deprecated forms of GraphQL comments (marked with `#`) into a GraphQL description (marked with `"`) during the parsing phase.
 
-```yml
+```yaml
 schema:
   - 'src/dir1/**/*.graphql':
       commentDescriptions: true
@@ -168,7 +168,7 @@ schema:
 
 Set to true to assume the SDL is valid, and skip any SDL syntax validations.
 
-```yml
+```yaml
 schema:
   - 'src/dir1/**/*.graphql':
       assumeValidSDL: true
@@ -178,7 +178,7 @@ schema:
 
 You can use code files, and the codegen will try to extract the GraphQL schema from it, based on `gql` tag:
 
-```yml
+```yaml
 schema: './src/**/*.ts'
 ```
 
@@ -190,7 +190,7 @@ The codegen will try to load the file as an AST and look for exact GraphQL strin
 
 You can disable the `require` if it causes errors for you (for example, because of a different module system or missing dependency):
 
-```yml
+```yaml
 schema:
   - './src/**/*.ts':
       noRequire: true
@@ -200,7 +200,7 @@ schema:
 
 You can disable the AST lookup phase and tell codegen to skip and directly try to `require` each file:
 
-```yml
+```yaml
 schema:
   - './src/**/*.ts':
       noPluck: true
@@ -210,7 +210,7 @@ schema:
 
 Set this to `true` to tell codegen to skip AST validation.
 
-```yml
+```yaml
 schema:
   - './src/**/*.ts':
       assumeValid: true
@@ -220,7 +220,7 @@ schema:
 
 You can also specify a code file that exports your `GraphQLSchema` object as export `schema` or as default export.
 
-```yml
+```yaml
 schema: schema.js
 ```
 
@@ -244,7 +244,7 @@ module.exports = buildSchema(/* GraphQL */ `
 
 You can specify your schema directly as an AST string in your config file. It's handy for testing.
 
-```yml
+```yaml
 schema: 'type MyType { foo: String } type Query { myType: MyType }'
 ```
 
@@ -252,7 +252,7 @@ schema: 'type MyType { foo: String } type Query { myType: MyType }'
 
 You can load your schema file from a remote GitHub file, using the following syntax:
 
-```yml
+```yaml
 schema: github:user/repo#branchName:path/to/file.graphql
 ```
 
@@ -262,7 +262,7 @@ schema: github:user/repo#branchName:path/to/file.graphql
 
 You can load your schema file from a Git repository using the following syntax:
 
-```yml
+```yaml
 schema: git:branch:path/to/file.graphql
 ```
 
@@ -272,7 +272,7 @@ schema: git:branch:path/to/file.graphql
 
 You can load your schema from Apollo Engine with the following syntax:
 
-```yml
+```yaml
 schema:
   - apollo-engine:
       engine:
@@ -285,7 +285,7 @@ schema:
 
 If your schema has a different or complicated way of loading, you can point to a single code file that works for you.
 
-```yml
+```yaml
 schema:
   - http://localhost:3000/graphql:
       loader: ./my-url-loader.js
@@ -319,35 +319,32 @@ export const PUBLIC_TOKEN = '12345'
 Create custom loader file:
 
 ```ts
-import fetch from "cross-fetch";
-import { getIntrospectionQuery, buildClientSchema } from "graphql";
+import fetch from 'cross-fetch'
+import { getIntrospectionQuery, buildClientSchema } from 'graphql'
 
-import {
-  API_URL,
-  PUBLIC_TOKEN,
-} from "./config";
+import { API_URL, PUBLIC_TOKEN } from './config'
 
 export default async () => {
-  const introspectionQuery = getIntrospectionQuery();
+  const introspectionQuery = getIntrospectionQuery()
 
   const response = await fetch(API_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "Access-Token": PUBLIC_TOKEN,
+      'Content-Type': 'application/json',
+      'Access-Token': PUBLIC_TOKEN
     },
-    body: JSON.stringify({ query: introspectionQuery }),
-  });
+    body: JSON.stringify({ query: introspectionQuery })
+  })
 
-  const data = await response.json();
+  const data = await response.json()
 
-  return buildClientSchema(data.data);
-};
+  return buildClientSchema(data.data)
+}
 ```
 
 Add custom loader to your codegen config:
 
-```yml
+```yaml
 schema:
   - my-api:
       loader: ./codegen-loader.ts

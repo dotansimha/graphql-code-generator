@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/c-sharp",
-  "version": "4.2.8",
+  "version": "4.2.9",
   "description": "GraphQL Code Generator plugin for generating CSharp code based on a GraphQL schema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",

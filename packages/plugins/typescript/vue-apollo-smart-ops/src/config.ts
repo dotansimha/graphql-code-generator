@@ -19,7 +19,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -45,7 +45,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default vue-apollo-smart-ops
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -65,7 +65,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default ApolloError
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -86,7 +86,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default vue-apollo-smart-ops
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -110,7 +110,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -130,7 +130,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -152,7 +152,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -172,7 +172,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -193,7 +193,7 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

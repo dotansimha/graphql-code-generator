@@ -44,14 +44,14 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @exampleMarkdown
    * ## graphql.macro
    *
-   * ```yml
+   * ```yaml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
    *
    * ## Gatsby
    *
-   * ```yml
+   * ```yaml
    * config:
    *   gqlImport: gatsby#graphql
    * ```
@@ -136,13 +136,13 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: path/to/document-node-file
    * ```
    *
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: near-operation-file

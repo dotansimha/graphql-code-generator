@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-graphql-request",
-  "version": "4.4.3",
+  "version": "4.4.5",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK based on graphql-request and GraphQL operations",
   "repository": {
     "type": "git",
@@ -25,8 +25,8 @@
     "graphql-tag": "^2.0.0"
   },
   "devDependencies": {
-    "@graphql-tools/schema": "8.3.3",
-    "graphql-request": "4.1.0"
+    "@graphql-tools/schema": "8.3.7",
+    "graphql-request": "4.2.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

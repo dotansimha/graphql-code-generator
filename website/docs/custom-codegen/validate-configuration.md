@@ -6,12 +6,12 @@ title: Validate Plugin Configuration
 Each plugin can also provide a function to validate the configuration before executing it.
 
 You can use this function to:
+
 - test for other plugin's existence (for example, if your plugin requires another plugin to function correctly)
 - validate the name and path of the output file
 - validate the schema or documents
 
 And much more!
-
 
 To add your plugin validation method, export a function called `validate` from your plugin file:
 

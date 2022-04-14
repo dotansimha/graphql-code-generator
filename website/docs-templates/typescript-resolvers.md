@@ -12,9 +12,9 @@ id: typescript-resolvers
 
 ## Usage Example
 
-:::info Quick Start with `typescript-resolvers`
-You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
-:::
+> **Quick Start with `typescript-resolvers`**
+>
+> You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
 
 Run `graphql-codegen` as usual, with this new plugin:
 
@@ -49,7 +49,7 @@ By default `apollo-server` will not work with generated resolvers signature.
 
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
-```yml
+```yaml
 generates:
   ./resolvers-types.ts:
     config:

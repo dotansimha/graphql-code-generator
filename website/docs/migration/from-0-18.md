@@ -68,7 +68,7 @@ Also, make sure to update your YML config file:
 
 **Before**:
 
-```yml
+```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:
@@ -78,7 +78,7 @@ Also, make sure to update your YML config file:
 
 **After:**
 
-```yml
+```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:
@@ -89,7 +89,7 @@ And for client-side:
 
 **Before**:
 
-```yml
+```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:
@@ -99,7 +99,7 @@ And for client-side:
 
 **After:**
 
-```yml
+```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:
@@ -126,7 +126,7 @@ yarn add -D @graphql-codegen/typescript-compatibility
 
 Then, add it to your codegen configuration:
 
-```yml
+```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:

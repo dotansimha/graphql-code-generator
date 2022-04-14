@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "graphql-jit": "0.7.3",
-    "@graphql-tools/utils": "8.6.3"
+    "@graphql-tools/utils": "8.6.6"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

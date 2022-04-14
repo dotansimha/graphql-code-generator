@@ -42,7 +42,7 @@ export interface FragmentMatcherConfig {
    * @default es2015
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.json:
    *     plugins:
@@ -57,7 +57,7 @@ export interface FragmentMatcherConfig {
    * @default 3
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -72,7 +72,7 @@ export interface FragmentMatcherConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

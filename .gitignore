@@ -21,3 +21,5 @@ out.txt
 tsconfig.tsbuildinfo
 .yarn
 recompile.sh
+
+.next/

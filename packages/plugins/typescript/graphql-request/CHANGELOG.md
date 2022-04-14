@@ -1,5 +1,21 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.4.5
+
+### Patch Changes
+
+- 7fae9fbf4: fix(plugins/gql-request): remove unused `GraphQLError` import
+
+## 4.4.4
+
+### Patch Changes
+
+- 44cd9a85e: Fix rawRequest return type
+
+  The errors property from the return type has been removed, because it is never
+  returned by `graphql-request`. Instead, failed requests throw a `ClientError`.
+  Also, data is no longer optional, because it always exists for successful responses.
+
 ## 4.4.3
 
 ### Patch Changes

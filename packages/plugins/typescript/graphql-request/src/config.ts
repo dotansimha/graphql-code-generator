@@ -10,7 +10,7 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -28,7 +28,7 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * @default any
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   rawRequest: true
    *   extensionsType: unknown
