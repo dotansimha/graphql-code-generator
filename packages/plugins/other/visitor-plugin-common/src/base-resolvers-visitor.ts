@@ -431,7 +431,7 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
-      ...(additionalConfig || {}),
+      ...additionalConfig,
     } as TPluginConfig);
 
     autoBind(this);

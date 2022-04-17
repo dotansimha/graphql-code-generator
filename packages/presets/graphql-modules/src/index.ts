@@ -63,7 +63,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
       },
       config: {
-        ...(options.config || {}),
+        ...options.config,
         enumsAsTypes: true,
       },
       schemaAst: options.schemaAst!,

@@ -4,7 +4,7 @@
   "scripts": {
     "postinstall": "patch-package && husky install",
     "clean": "rimraf \"{,!(node_modules)/**/}node_modules/\"",
-    "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\"",
+    "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\" .bob/ tsconfig.tsbuildinfo",
     "build": "tsc --project tsconfig.json && bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "test": "jest --forceExit --no-watchman",
