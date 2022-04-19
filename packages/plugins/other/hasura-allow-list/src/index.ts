@@ -72,28 +72,32 @@ export const plugin: PluginFunction<HasuraAllowListPluginConfig> = async (
 ): Promise<Types.PluginOutput> => {
   const queries: { name: string; query: string }[] = [];
 
+  // find out all fragments across the documents
+  const allFragments = [
+    ...new Map(
+      documents.flatMap(document => {
+        // filter out anonymous fragments
+        const documentFragments = document.document.definitions.filter(
+          (definition): definition is FragmentDefinitionNode =>
+            definition.kind === Kind.FRAGMENT_DEFINITION && !!definition.name
+        );
+        return documentFragments.map(definition => [definition.name, definition]);
+      })
+    ).values(),
+  ];
+
   // each document (graphql file) is handled independently.
-  // any fragment required by an operation will need to be definied in the same file as the operation.
   for (const document of documents) {
     // filter out anonymous operations
     const documentOperations = document.document.definitions.filter(
       (definition): definition is OperationDefinitionNode =>
         definition.kind === Kind.OPERATION_DEFINITION && !!definition.name
     );
-    // filter out anonymous fragments
-    const documentFragments = document.document.definitions.filter(
-      (definition): definition is FragmentDefinitionNode =>
-        definition.kind === Kind.FRAGMENT_DEFINITION && !!definition.name
-    );
 
     // for each operation in the document
     for (const operation of documentOperations) {
       // get fragments required by the operations
-      const requiredFragmentDefinitions = getOperationFragmentsRecursively(
-        operation,
-        documentFragments,
-        document.location
-      );
+      const requiredFragmentDefinitions = getOperationFragmentsRecursively(operation, allFragments, document.location);
 
       // insert the operation and any fragments to our queries definition.
       // fragment order is preserved, and each fragment is separated by a new line
