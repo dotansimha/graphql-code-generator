@@ -64,7 +64,7 @@
     "dotenv": "16.0.0",
     "eslint": "8.14.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-config-standard": "16.0.3",
+    "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.0.0",
