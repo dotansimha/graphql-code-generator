@@ -131,6 +131,44 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content, config);
     });
 
+    it('Should not generate empty fragments when omitEmptyFragments is set to true', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            ... on TextNotification {
+              id
+            }
+          }
+        }
+      `);
+      const config = { skipTypename: true, omitEmptyFragments: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).not.toContain('{}');
+      await validate(content, config);
+    });
+
+    it('Should generate empty fragments when omitEmptyFragments is set to false', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            ... on TextNotification {
+              id
+            }
+          }
+        }
+      `);
+      const config = { skipTypename: true, omitEmptyFragments: false };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toContain('{}');
+      await validate(content, config);
+    });
+
     it('Should handle "namespacedImportName" and add it when specified', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
