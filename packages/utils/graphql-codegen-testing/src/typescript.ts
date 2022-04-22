@@ -83,17 +83,17 @@ export function validateTs(
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
       },
-      writeFile: function () {},
-      useCaseSensitiveFileNames: function () {
+      writeFile() {},
+      useCaseSensitiveFileNames() {
         return false;
       },
-      getCanonicalFileName: function (filename) {
+      getCanonicalFileName(filename) {
         return filename;
       },
-      getCurrentDirectory: function () {
+      getCurrentDirectory() {
         return '';
       },
-      getNewLine: function () {
+      getNewLine() {
         return '\n';
       },
     });
@@ -201,17 +201,17 @@ export function compileTs(
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
       },
-      writeFile: function () {},
-      useCaseSensitiveFileNames: function () {
+      writeFile() {},
+      useCaseSensitiveFileNames() {
         return false;
       },
-      getCanonicalFileName: function (filename) {
+      getCanonicalFileName(filename) {
         return filename;
       },
-      getCurrentDirectory: function () {
+      getCurrentDirectory() {
         return '';
       },
-      getNewLine: function () {
+      getNewLine() {
         return '\n';
       },
     });

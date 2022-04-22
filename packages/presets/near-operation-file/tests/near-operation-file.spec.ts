@@ -388,7 +388,7 @@ describe('near-operation-file preset', () => {
         documents: path.join(__dirname, 'fixtures/issue-6439.ts'),
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },
@@ -436,7 +436,7 @@ describe('near-operation-file preset', () => {
         documents: [path.join(__dirname, 'fixtures/issue-6520.ts')],
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },
@@ -469,7 +469,7 @@ describe('near-operation-file preset', () => {
         ],
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },

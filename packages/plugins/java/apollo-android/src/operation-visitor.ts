@@ -227,7 +227,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
             rawType: field.type,
             isObject: false,
             isFragment: false,
-            isList: isList,
+            isList,
             type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
@@ -921,12 +921,12 @@ ${indentMultiline(inner, 2)}
 
     const dataClasses = this.transformSelectionSet(
       {
-        className: className,
+        className,
         nonStaticClass: true,
         implements: ['GraphqlFragment'],
         selectionSet: node.selectionSet && node.selectionSet.selections ? node.selectionSet.selections : [],
         result: {},
-        schemaType: schemaType,
+        schemaType,
       },
       false
     );

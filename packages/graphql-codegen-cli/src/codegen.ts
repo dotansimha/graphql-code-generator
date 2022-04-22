@@ -245,8 +245,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           const outputSchemaAst = await context.loadSchema(schemaPointerMap);
                           const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
                           return {
-                            outputSchemaAst: outputSchemaAst,
-                            outputSchema: outputSchema,
+                            outputSchemaAst,
+                            outputSchema,
                           };
                         });
 
@@ -270,7 +270,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             return cache('documents', hash, async () => {
                               const documents = await context.loadDocuments(docs);
                               return {
-                                documents: documents,
+                                documents,
                               };
                             });
                           })

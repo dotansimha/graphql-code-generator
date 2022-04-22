@@ -251,7 +251,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [] };
       const combinedSource: Source = {
         rawSDL: '',
-        document: document,
+        document,
         location: record.documents[0].location,
       };
 
