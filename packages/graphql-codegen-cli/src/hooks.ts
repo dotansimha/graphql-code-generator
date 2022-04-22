@@ -19,7 +19,7 @@ function normalizeHooks(
 ): Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]> {
   const keys = Object.keys({
     ...DEFAULT_HOOKS,
-    ...(_hooks || {}),
+    ..._hooks,
   });
 
   return keys.reduce((prev: Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>, hookName: string) => {

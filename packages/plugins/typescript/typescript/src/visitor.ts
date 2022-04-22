@@ -71,7 +71,7 @@ export class TsVisitor<
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
       entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
-      ...(additionalConfig || {}),
+      ...additionalConfig,
     } as TParsedConfig);
 
     autoBind(this);

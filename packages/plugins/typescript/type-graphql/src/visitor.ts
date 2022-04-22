@@ -121,10 +121,10 @@ export class TypeGraphQLVisitor<
         arguments: 'ArgsType',
         field: 'Field',
         input: 'InputType',
-        ...(pluginConfig.decoratorName || {}),
+        ...pluginConfig.decoratorName,
       },
       decorateTypes: pluginConfig.decorateTypes || undefined,
-      ...(additionalConfig || {}),
+      ...additionalConfig,
     } as TParsedConfig);
     autoBind(this);
 
