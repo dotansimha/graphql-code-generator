@@ -18,7 +18,7 @@
     "@graphql-codegen/visitor-plugin-common": "2.7.4",
     "auto-bind": "~4.0.0",
     "change-case-all": "1.0.14",
-    "tslib": "~2.3.0"
+    "tslib": "~2.4.0"
   },
   "peerDependencies": {
     "@reduxjs/toolkit": "^1.6.0",
