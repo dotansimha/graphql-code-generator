@@ -73,7 +73,7 @@
     "@guild-docs/client": "2.1.1",
     "@guild-docs/server": "3.0.1",
     "@mdx-js/react": "2.1.1",
-    "@monaco-editor/react": "4.4.2",
+    "@monaco-editor/react": "4.4.4",
     "@theguild/components": "1.11.0",
     "classnames": "2.3.1",
     "date-fns": "2.28.0",
