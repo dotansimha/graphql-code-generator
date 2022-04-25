@@ -7,7 +7,7 @@ about: Create a bug report to help us improve
 
 _Progress of the issue based on the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow)_
 
-- [ ] 1. The issue provides a reproduction available on [Github](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template)
+- [ ] 1. The issue provides a reproduction available on [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template)
 
 > Make sure to fork this template and run `yarn generate` in the terminal.
 >
