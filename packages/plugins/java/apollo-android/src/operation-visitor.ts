@@ -32,11 +32,7 @@ import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
 import pluralize from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
-
-import { camelCase } from 'change-case-all';
-import { pascalCase } from 'change-case-all';
-
-const { singular, isPlural } = pluralize;
+import { camelCase, pascalCase } from 'change-case-all';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -195,8 +191,8 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         if (isObject) {
           let childClsName = this.convertName(field.name);
 
-          if (isList && isPlural(childClsName)) {
-            childClsName = singular(childClsName);
+          if (isList && pluralize.isPlural(childClsName)) {
+            childClsName = pluralize.singular(childClsName);
           }
 
           this.transformSelectionSet(

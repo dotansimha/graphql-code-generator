@@ -45,6 +45,9 @@
     "nock": "13.2.4",
     "tslib": "~2.4.0"
   },
+  "devDependencies": {
+    "@types/lz-string": "1.3.34"
+  },
   "publishConfig": {
     "directory": "dist",
     "access": "public"

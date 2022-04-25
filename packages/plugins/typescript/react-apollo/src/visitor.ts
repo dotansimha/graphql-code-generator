@@ -10,8 +10,7 @@ import { ReactApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase } from 'change-case-all';
-import { camelCase } from 'change-case-all';
+import { pascalCase, camelCase } from 'change-case-all';
 
 const APOLLO_CLIENT_3_UNIFIED_PACKAGE = `@apollo/client`;
 const GROUPED_APOLLO_CLIENT_3_IDENTIFIER = 'Apollo';
