@@ -3901,10 +3901,10 @@
     "@typescript-eslint/types" "5.20.0"
     eslint-visitor-keys "^3.0.0"
 
-"@urql/core@>=2.3.6", "@urql/core@^2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.4.3.tgz#af35355cd2e3eeef4657f91616098e7cba8154dc"
-  integrity sha512-FpapxUKF0nLdzRLoB1QsudDjeLXJhBwzkzl8bSOJ6Cnj7LRRKJ+dYdqHfqGykswB/ILrkZks2Isp4a4BhqyUow==
+"@urql/core@2.4.4", "@urql/core@>=2.3.6", "@urql/core@^2.4.3":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.4.4.tgz#29f1d03cc439134259761e70a78ae20302c3d7fe"
+  integrity sha512-TD+OS7jG1Ts6QkpU0TZ85i/vu40r71GF0QQFDhnWFtgkHcNwnpkIwWBMa72AR3j2imBTPpk61e/xb39uM/t37A==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     wonka "^4.0.14"
