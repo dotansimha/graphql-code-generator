@@ -23,14 +23,14 @@ Additionally, you can set `transformUnderscore` to `true` if you want to overrid
 
 ##### Override All Names
 
-```yml
+```yaml
 config:
   namingConvention: change-case-all#lowerCase
 ```
 
 ##### Upper-case enum values
 
-```yml
+```yaml
 config:
   namingConvention:
     typeNames: change-case-all#pascalCase
@@ -39,14 +39,14 @@ config:
 
 ##### Keep names as is
 
-```yml
+```yaml
 config:
   namingConvention: keep
 ```
 
 ##### Remove Underscores
 
-```yml
+```yaml
 config:
   namingConvention:
     typeNames: change-case-all#pascalCase
@@ -68,7 +68,7 @@ package-name#export-you-want-to-use
 
 For example, if you want to use `camelCase` from lodash, given that you have it already installed, you will do it like this:
 
-```yml
+```yaml
 config:
   namingConvention: lodash#camelCase
 ```
@@ -105,7 +105,7 @@ module.exports = FixedConstantCase
 
 Then, just provide the path to your custom naming module in the configuration:
 
-```yml
+```yaml
 config:
   namingConvention: ./my-naming-fn
 ```
@@ -113,7 +113,7 @@ config:
 This also applies when you want a specific custom naming convention per output.
 Specify your custom naming function on the output or outputs you want to apply:
 
-```yml
+```yaml
 config:
   namingConvention:
     typeNames: ./my-naming-fn

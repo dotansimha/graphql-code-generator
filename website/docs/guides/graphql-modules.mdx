@@ -1,8 +1,7 @@
 ---
 id: graphql-modules
-title: "Guide: GraphQL Modules"
+title: 'Guide: GraphQL Modules'
 ---
-
 
 GraphQL Code Generator's `@graphql-codegen/graphql-modules-preset` plugin helps to
 generate resolvers type for each module of a GraphQL Modules GraphQL API.
@@ -26,15 +25,19 @@ Just a few configuration steps are required to get the resolvers types generated
 
 **1. Install the `@graphql-codegen/graphql-modules-preset` plugin**
 
-<PackageInstall packages={["@graphql-codegen/graphql-modules-preset", "@graphql-codegen/typescript-resolvers", "@graphql-codegen/typescript"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/graphql-modules-preset',
+    '@graphql-codegen/typescript-resolvers',
+    '@graphql-codegen/typescript'
+  ]}
+/>
 
 <br />
 
 **2. Configure the plugin**
 
 Create or update your `codegen.yaml` file as follows:
-
-
 
 ```yaml
 schema: './src/modules/**/typedefs/*.graphql'
@@ -51,8 +54,6 @@ generates:
       - typescript-resolvers
 ```
 
-
-
 <br />
 
 **3. Run the codegen and update your code**
@@ -62,7 +63,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -86,15 +87,12 @@ export const resolvers: UsersModule.Resolvers = {
 }
 ```
 
-
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
 A complete article, written by Arda Tanrikulu from The Guild, is available on our blog: [Writing a GraphQL TypeScript project w/ GraphQL-Modules and GraphQL-Code-Generator](https://www.the-guild.dev/blog/graphql-typescript-modules-codegen).
 
 For more advanced configuration (models or context typing), please refer to the [plugin documentation](/plugins/graphql-modules-preset).
-

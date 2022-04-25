@@ -14,7 +14,7 @@ id: typescript-react-query
 
 By default, this plugin will generate a `fetcher` based on the environment global `fetch` definition.
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -48,7 +48,7 @@ export const MyComponent = () => {
 
 If you wish to avoid specifying `endpoint` and `fetchParams` on each hook usage, you can specify those in the `codegen.yml` file:
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -67,7 +67,7 @@ generates:
 
 And if you wish to have more control over the value, or even provide it in runtime, you can use environment variables:
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -83,7 +83,7 @@ generates:
 
 You can even use a custom variable from your code, and add custom imports with `add` plugin:
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -114,7 +114,7 @@ export const MyComponent = () => {
 
 If you are using `graphql-request`, you can set `fetcher` to `graphql-request`, and then the generated React Hook will expect you to pass the `GraphQLClient` instance (created by `graphql-request` library).
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -142,7 +142,7 @@ export const MyComponent = () => {
 
 If you wish to create a custom fetcher, you can provide your own function as a Mapper string (`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
 
-```yml
+```yaml
 schema: MY_SCHEMA_PATH
 documents: './src/**/*.graphql'
 generates:
@@ -159,8 +159,7 @@ generates:
 
 As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
 
-<!-- prettier-ignore -->
-```yml
+```yaml
 #...
 config:
   fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
@@ -262,7 +261,7 @@ export const useFetchData = <TData, TVariables>(
 
 If you wish to use infinite query for pagination or infinite scroll you can with the `addInfiniteQuery` config setting. This will however setup an infinite query for every request whether in reality it can do it or not.
 
-To use this you need to return an object of new queries and it blends them in to the query.
+To use this you need to return an object of new queries, and it blends them in to the query.
 
 #### Usage example (`addInfiniteQuery: true`)
 
@@ -271,17 +270,16 @@ with the following query
 ```graphql
 query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsStarting: Int) {
   cats(range: $catsRange, starting: $catsStarting) {
-      ...
-      }
+    # ...
+  }
   dogs(range: $dogsRange, starting: $dogsStarting) {
-    ...
-    }
+    # ...
+  }
 }
 ```
 
-<!-- prettier-ignore -->
 ```tsx
-import { useInfiniteMyQuery } from './generated';
+import { useInfiniteMyQuery } from './generated'
 
 export const MyComponent = () => {
   const { status, data, error, isFetching } = useInfiniteAnimalsQuery(
@@ -289,20 +287,20 @@ export const MyComponent = () => {
       catsRange: 5,
       catsStarting: 0,
       dogsRange: 10,
-      dogsStarting: 0,
+      dogsStarting: 0
     },
     {
-      getNextPageParam: (lastPage, allPages) => {
-        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1);
-        const totalDogs = lastPage.dogs.items?.length ?? 0;
+      getNextPageParam(lastPage, allPages) {
+        const totalLocal = (allPages.length ?? 0) * (queryParams.limit ?? 1)
+        const totalDogs = lastPage.dogs.items?.length ?? 0
         if (totalLocal < totalDogs) {
           return {
             catsStarting: totalLocal * 5,
-            dogsStarting: totalLocal * 10,
-          };
+            dogsStarting: totalLocal * 10
+          }
         }
-      },
+      }
     }
-  );
-};
+  )
+}
 ```

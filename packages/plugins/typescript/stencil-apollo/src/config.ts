@@ -11,7 +11,7 @@ export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginCon
    * @default functional
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:

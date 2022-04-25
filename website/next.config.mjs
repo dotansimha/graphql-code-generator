@@ -1,10 +1,15 @@
-const { register } = require('esbuild-register/dist/node');
-const { withGuildDocs } = require('@guild-docs/server');
-const { i18n } = require('./next-i18next.config');
+import { createRequire } from 'module';
+import { withGuildDocs } from '@guild-docs/server';
+import { register } from 'esbuild-register/dist/node.js';
+import { i18n } from './next-i18next.config.js';
+
+const require = createRequire(import.meta.url);
+
 register({ extensions: ['.ts', '.tsx'] });
+
 const { getRoutes } = require('./routes.ts');
 
-module.exports = withGuildDocs({
+export default withGuildDocs({
   i18n,
   getRoutes,
   eslint: {
@@ -75,6 +80,11 @@ module.exports = withGuildDocs({
       {
         source: '/docs/getting-started/naming-convention',
         destination: '/docs/config-reference/naming-convention',
+        permanent: true,
+      },
+      {
+        source: '/docs/getting-started/how-does-it-work',
+        destination: '/docs/advanced/how-does-it-work',
         permanent: true,
       },
     ];

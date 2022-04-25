@@ -6,9 +6,9 @@ id: flow-resolvers
 
 ## Usage Example
 
-:::info Quick Start with `flow-resolvers`
-You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
-:::
+> **Quick Start with `flow-resolvers`**
+>
+> You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
 
 ## Enum Resolvers
 

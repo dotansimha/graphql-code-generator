@@ -1384,8 +1384,7 @@
         {
           "kind": "OBJECT",
           "name": "__Schema",
-          "description":
-            "A GraphQL Introspection defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, the entry points for query, mutation, and subscription operations.",
+          "description": "A GraphQL Introspection defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, the entry points for query, mutation, and subscription operations.",
           "fields": [
             {
               "name": "types",
@@ -1463,8 +1462,7 @@
             },
             {
               "name": "subscriptionType",
-              "description":
-                "'If this server support subscription, the type that subscription operations will be rooted at.",
+              "description": "'If this server support subscription, the type that subscription operations will be rooted at.",
               "args": [],
               "type": {
                 "kind": "OBJECT",

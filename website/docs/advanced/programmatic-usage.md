@@ -59,13 +59,11 @@ fs.writeFile(path.join(__dirname, outputFile), output, () => {
 })
 ```
 
-:::info
-We are using this API in the live demo on the GraphQL Code Generator website. [The code is here](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
-:::
+> We are using this API in the live demo on the GraphQL Code Generator website. [The code is here](https://github.com/dotansimha/graphql-code-generator/blob/master/website/src/components/live-demo/generate.js).
 
-:::tip Loading schema and documents
-You can use one of the tools from [`@graphql-tools`](https://github.com/ardatan/graphql-tools) for file loading, schema merging, transformations and more.
-:::
+> **Loading schema and documents**
+>
+> You can use one of the tools from [`@graphql-tools`](https://github.com/ardatan/graphql-tools) for file loading, schema merging, transformations and more.
 
 ## Using the CLI instead of `core`
 
@@ -92,6 +90,6 @@ async function doSomething() {
 
 The return value should be of type `Promise<FileOutput[]>`.
 
-:::caution
+<MDXWarning title="Browser">
 This usage will not work in a browser environment because the `cli` package depends on NodeJS internals and the file system.
-:::
+</MDXWarning>

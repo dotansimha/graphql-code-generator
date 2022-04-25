@@ -2,7 +2,7 @@
 id: c-sharp-operations
 ---
 
-The `c-sharp-operations` plugin generates C# methods for the resolvers signature.
+The `c-sharp-operations` plugin generates C# methods for the resolvers' signature.
 
 It works with [GraphQL.Client](https://nuget.org/packages/GraphQL.Client) library and methods can be invoked through the `GraphQLHttpClient`.
 

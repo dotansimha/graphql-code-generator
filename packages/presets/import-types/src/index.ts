@@ -8,7 +8,7 @@ export type ImportTypesConfig = {
    * The key of the output is used a the base path for this file.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     preset: import-types
@@ -24,7 +24,7 @@ export type ImportTypesConfig = {
    * @default Types
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/:
    *     preset: import-types

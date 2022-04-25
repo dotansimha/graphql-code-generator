@@ -1,6 +1,6 @@
 ---
 id: front-end-typescript-only
-title: "Guide: TypeScript-only for front-end"
+title: 'Guide: TypeScript-only for front-end'
 ---
 
 Even while using another GraphQL Client (not listed in our guides) or willing only to use generated TypeScript types, GraphQL Code Generator still got you covered!
@@ -10,36 +10,34 @@ Even while using another GraphQL Client (not listed in our guides) or willing on
 Given the following example:
 
 ```tsx
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 const postsQueryDocument = gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
 
-
 const Posts = () => {
-  const { data } = useCustomFetchGraphQLData(postsQueryDocument);
+  const { data } = useCustomFetchGraphQLData(postsQueryDocument)
 }
 ```
 
 Using `@graphql-codegen/typescript-operations` would generate the TypeScript type definitions for only used Query, Mutation, Subscription and Fragment.
 
-
 Just a few configuration steps are required to get those TypeScript types generated:
 
 **1. Install the `@graphql-codegen/typescript-operations` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-operations", "@graphql-codegen/typescript"]} />
+<PackageInstall packages={['@graphql-codegen/typescript-operations', '@graphql-codegen/typescript']} />
 
 <br />
 
@@ -57,11 +55,11 @@ generates:
       - typescript-operations
 ```
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+>
+> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 
 <br />
 
@@ -72,7 +70,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -88,33 +86,30 @@ Running the following generates the `graphql/generated.tsx` file.
 We can now use the generated types as follows:
 
 ```tsx
-import gql from 'graphql-tag';
-import { PostsQuery } from '../graphql/generated.tsx';
+import gql from 'graphql-tag'
+import { PostsQuery } from '../graphql/generated.tsx'
 
 const postsQueryDocument = gql`
   query {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
 
-
 const Posts = () => {
-  const { data } = useCustomFetchGraphQLData(postsQueryDocument);
+  const { data } = useCustomFetchGraphQLData(postsQueryDocument)
 
   const result = data as PostsQuery
 }
 ```
 
-
 <p>&nbsp;</p>
-
 
 For more information on the `@graphql-codegen/typescript-operations` plugin configuration , please refer to its [documentation](/plugins/typescript-operations).

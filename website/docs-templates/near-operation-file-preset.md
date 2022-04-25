@@ -15,7 +15,7 @@ In order to use this preset, you need to add 2 outputs to your `codegen.yml` fil
 
 This following example generates operation typings and `react-apollo` component per each operation file, near the original file of the operation:
 
-```yml
+```yaml
 schema: src/schema.json
 documents: 'src/**/*.graphql'
 generates:

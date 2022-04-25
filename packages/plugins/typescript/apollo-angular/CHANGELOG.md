@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-apollo-angular
 
+## 3.4.7
+
+### Patch Changes
+
+- 37570539f: Fix addExplicitOverride for custom namedClient
+
 ## 3.4.6
 
 ### Patch Changes

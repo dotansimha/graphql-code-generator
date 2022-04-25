@@ -2,7 +2,7 @@
 id: java-resolvers
 ---
 
-The `java-resolvers` plugin creates Java `interface`s for the resolvers signature.
+The `java-resolvers` plugin creates Java `interface`s for the resolvers' signature.
 
 It works with `graphql-java` library, and it uses it's `DataFetcher` API.
 

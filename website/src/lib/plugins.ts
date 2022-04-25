@@ -26,6 +26,9 @@ export const ALL_TAGS = [
   'plugin',
   'preset',
   'hasura',
+  'validation',
+  'yup',
+  'zod',
 ] as const;
 
 export type Tags = typeof ALL_TAGS[number];

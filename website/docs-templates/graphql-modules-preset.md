@@ -6,13 +6,11 @@ The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScri
 
 The generates files will be generated based on each module definition, and based on the GraphQL schema defined in that specific module, allowing you to write type-safe resolvers, while keeping modules types boundaries.
 
-:::caution Usage Requirements
-
+<MDXWarning title="Usage Requirements">
 This preset generates code for `graphql-modules` @ `v1` / `v2` (previous versions are not supported) by default.
 
 If you are not using `graphql-modules`, you can set `useGraphQLModules: false` to disable this behaviour.
-
-:::
+</MDXWarning>
 
 ## Configuration
 

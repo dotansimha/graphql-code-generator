@@ -156,7 +156,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       const typeName = convertedName.endsWith('Input') ? convertedName : `${convertedName}Input`;
       result = {
         baseType: typeName,
-        typeName: typeName,
+        typeName,
         isScalar: false,
         isEnum: false,
         isArray,

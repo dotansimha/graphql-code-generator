@@ -31,7 +31,7 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 
 In order to use this preset, you need to add the following configuration to your `codegen.yml`:
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -193,7 +193,7 @@ const TweetFragment = gql(/* GraphQL */ `
 This is the code after the babel transformation:
 
 ```ts
-import { TweetFragmentDoc } from \\"./graphql\\";
+import { TweetFragmentDoc } from './graphql'
 
 const TweetFragment = TweetFragmentDoc
 ```
@@ -226,7 +226,7 @@ This can be easily achieved by running the `gql-tag-operations` plugin in module
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -284,7 +284,6 @@ const FooQuery = gql(/* GraphQL */ `
 
 You can find a [full `gql-tag-operations-urql` example of this in the GraphQL Code Generator GitHub repository](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/gql-tag-operations-urql).
 
-
 ## Fragment Masking
 
 Fragment masking is a powerful tool that allows building scalable UI components, where each component only has access to the data dependencies described by its fragments. The fragments of those components are then composed on a query operation. This pattern is also known as data masking in the context of relay. `gql-tag-operations-preset` allows using fragment masking with any GraphQL client.
@@ -293,7 +292,7 @@ Fragment masking is enabled via the `fragmentMasking` config option.
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -359,11 +358,11 @@ const Tweets = () => {
 
 ### Fragment Masking with custom unmask name
 
-By default the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
+By default, the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -374,7 +373,7 @@ generates:
     presetConfig:
       # enable fragment masking
       fragmentMasking:
-        unmaskFunctionName: "getFragment"
+        unmaskFunctionName: 'getFragment'
 ```
 
 ### Module augmentation with fragment masking
@@ -383,7 +382,7 @@ Similar to the `gql` module augmentation configuration it is also possible to ge
 
 **codegen.yml**
 
-```yml
+```yaml
 schema: src/path/to/your/schema.graphql
 documents:
   - 'src/**/*.ts'
@@ -393,8 +392,7 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       fragmentMasking:
-        augmentedModuleName: "@something/fragment"
+        augmentedModuleName: '@something/fragment'
 ```
-
 
 {@apiDocs}

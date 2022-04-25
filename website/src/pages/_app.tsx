@@ -5,13 +5,21 @@ import dynamic from 'next/dynamic';
 import { appWithTranslation } from 'next-i18next';
 import { extendTheme, theme as chakraTheme } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
-import { ExtendComponents, handlePushRoute, CombinedThemeProvider, DocsPage, AppSeoProps } from '@guild-docs/client';
+import {
+  ExtendComponents,
+  handlePushRoute,
+  CombinedThemeProvider,
+  DocsPage,
+  AppSeoProps,
+  useGoogleAnalytics,
+} from '@guild-docs/client';
 import { Header, Subheader, FooterExtended } from '@theguild/components';
 import 'remark-admonitions/styles/classic.css';
 import '../../public/style.css';
 import Script from 'next/script';
 import React from 'react';
 import { Provider as MDXTabsCurrentTabContextProvider } from 'components/MDXTabsCurrentTabContext';
+import { MDXWarning } from 'components/MDXWarning';
 
 const MDXTabs = dynamic(() => import('components/MDXTabs/MDXTabs'));
 const MDXTab = dynamic(() => import('components/MDXTabs/MDXTab'));
@@ -22,6 +30,7 @@ ExtendComponents({
   },
   MDXTabs,
   MDXTab,
+  MDXWarning,
 });
 
 const styles: typeof chakraTheme['styles'] = {
@@ -68,10 +77,13 @@ const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) };
 function AppContent(appProps: AppProps) {
   const { Component, pageProps, router } = appProps;
   const isDocs = router.asPath.startsWith('/docs');
+  const analytics = useGoogleAnalytics({ router, trackingId: 'G-0SE4YQR4K3' });
 
   return (
     <>
       <Script src="https://the-guild.dev/static/crisp.js" />
+      <Script {...analytics.loadScriptProps} />
+      <Script {...analytics.configScriptProps} />
       <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
       <Subheader
         activeLink={router.asPath}

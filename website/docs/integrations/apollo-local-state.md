@@ -31,7 +31,7 @@ type Todo {
 
 And then, you can merge this part of the schema with your remote schema by specifying it as part of your `schema` field:
 
-```yml
+```yaml
 schema:
   - http://my-remote-schema/graphql
   - my-client-schema.graphql

@@ -11,7 +11,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -28,7 +28,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -45,7 +45,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -62,7 +62,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -79,7 +79,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -123,7 +123,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default 3
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -140,7 +140,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -157,7 +157,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -175,7 +175,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

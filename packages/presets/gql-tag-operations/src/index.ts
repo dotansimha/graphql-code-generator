@@ -28,7 +28,7 @@ export type GqlTagConfig = {
    * E.g. `graphql-tag` or `@urql/core`.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   gql/:
    *     preset: gql-tag-operations-preset
@@ -40,7 +40,7 @@ export type GqlTagConfig = {
   /**
    * @description Fragment masking hides data from components and only allows accessing the data by using a unmasking function.
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   gql/:
    *     preset: gql-tag-operations-preset
@@ -50,7 +50,7 @@ export type GqlTagConfig = {
    *
    * When using the `augmentedModuleName` option, the unmask function will by default NOT be imported from the same module. It will still be generated to a `index.ts` file. You can, however, specify to resolve the unmasking function from an an augmented module by using the `augmentedModuleName` object sub-config.
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   gql/:
    *     preset: gql-tag-operations-preset

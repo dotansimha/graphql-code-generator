@@ -15,7 +15,7 @@ Differences can be measured in several seconds for every run on big projects.
 
 You can run it per each file:
 
-```yml
+```yaml
 hooks:
   afterOneFileWrite:
     - prettier --write
@@ -23,7 +23,7 @@ hooks:
 
 Or, for all files together:
 
-```yml
+```yaml
 hooks:
   afterAllFileWrite:
     - prettier --write
@@ -35,7 +35,7 @@ Consider this method if you're using `near-operation-file` preset as this has be
 
 You can run it per each file:
 
-```yml
+```yaml
 hooks:
   afterOneFileWrite:
     - tslint --fix
@@ -43,7 +43,7 @@ hooks:
 
 Or, for all files together:
 
-```yml
+```yaml
 hooks:
   afterAllFileWrite:
     - tslint --fix
@@ -51,7 +51,7 @@ hooks:
 
 ## ESLint
 
-```yml
+```yaml
 hooks:
   afterOneFileWrite:
     - eslint --fix
@@ -59,7 +59,7 @@ hooks:
 
 Or, for all files together:
 
-```yml
+```yaml
 hooks:
   afterAllFileWrite:
     - eslint --fix

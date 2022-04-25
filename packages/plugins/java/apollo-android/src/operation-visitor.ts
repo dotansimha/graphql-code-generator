@@ -143,7 +143,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   private createUniqueClassName(inUse: string[], name: string, count = 0): string {
     const possibleNewName = count === 0 ? name : `${name}${count}`;
 
-    while (inUse.includes(possibleNewName)) {
+    if (inUse.includes(possibleNewName)) {
       return this.createUniqueClassName(inUse, name, count + 1);
     }
 
@@ -227,7 +227,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
             rawType: field.type,
             isObject: false,
             isFragment: false,
-            isList: isList,
+            isList,
             type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
@@ -921,12 +921,12 @@ ${indentMultiline(inner, 2)}
 
     const dataClasses = this.transformSelectionSet(
       {
-        className: className,
+        className,
         nonStaticClass: true,
         implements: ['GraphqlFragment'],
         selectionSet: node.selectionSet && node.selectionSet.selections ? node.selectionSet.selections : [],
         result: {},
-        schemaType: schemaType,
+        schemaType,
       },
       false
     );

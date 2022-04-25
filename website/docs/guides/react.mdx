@@ -1,8 +1,7 @@
 ---
 id: react
-title: "Guide: React and GraphQL"
+title: 'Guide: React and GraphQL'
 ---
-
 
 GraphQL Code Generator provides typed code generation for React Query, URQL React, React Apollo Client, and other clients.
 
@@ -40,7 +39,7 @@ type Query {
 
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -49,8 +48,8 @@ type Query {
 Most React Query usage with GraphQL and TypeScript will look as follows:
 
 ```tsx
-import { useQuery } from "react-query";
-import { request, gql } from "graphql-request";
+import { useQuery } from 'react-query'
+import { request, gql } from 'graphql-request'
 
 interface PostQuery {
   posts: {
@@ -67,27 +66,22 @@ interface PostQuery {
 const postsQueryDocument = gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>("posts", async () => {
-    const {
-      posts,
-    } = await request(
-      endpoint,
-      postsQueryDocument
-    );
-    return posts;
-  });
+  const { data } = useQuery<PostQuery>('posts', async () => {
+    const { posts } = await request(endpoint, postsQueryDocument)
+    return posts
+  })
 
   // ...
 }
@@ -95,13 +89,11 @@ const Posts = () => {
 
 Not typing or manually maintaining the data-types can lead to many issues:
 
+- **outdated typing** (regarding the current Schema)
 
-  - **outdated typing** (regarding the current Schema)
+- **typos**
 
-  - **typos**
-
-  - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
-
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
 For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-react-query` plugin that generates a typed hook for each GraphQL operation.
 
@@ -111,7 +103,13 @@ Just a few configuration steps are required to get those typed hooks generated:
 
 **1. Install the `@graphql-codegen/typescript-react-query` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typescript-react-query", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-react-query',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
@@ -132,11 +130,11 @@ generates:
       fetcher: fetch
 ```
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+>
+> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 
 <br />
 
@@ -147,7 +145,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -164,23 +162,22 @@ We can now update our code as follows:
 
 ```tsx
 import gql from 'graphql-tag'
-import { useQuery } from "react-query";
-import { usePosts } from "../graphql/generated";
+import { useQuery } from 'react-query'
+import { usePosts } from '../graphql/generated'
 
 gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
-
 
 const Posts = () => {
   const { data } = usePosts()
@@ -197,10 +194,9 @@ For more advanced configuration (custom fetcher, infinite queries), please refer
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
-
 <p>&nbsp;</p>
 
-----
+---
 
 <p>&nbsp;</p>
 
@@ -218,14 +214,12 @@ While Apollo and URQL have their GraphQL Code Generator plugins that generate fu
 
 Given the following code example:
 
-
 <MDXTabs namespace={`guides-react-codetabs`}>
 
 <MDXTab label="React Apollo">
 
 ```tsx
-import { gql, useQuery } from '@apollo/client';
-
+import { gql, useQuery } from '@apollo/client'
 
 interface PostQuery {
   posts: {
@@ -242,19 +236,19 @@ interface PostQuery {
 const postsQueryDocument = gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
+  const { data } = useQuery<PostQuery>(postsQueryDocument)
 
   // ...
 }
@@ -265,7 +259,7 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { useQuery } from "urql";
+import { useQuery } from 'urql'
 
 interface PostQuery {
   posts: {
@@ -294,7 +288,7 @@ const postsQueryDocument = `
 `
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+  const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
 
   // ...
 }
@@ -304,21 +298,18 @@ const Posts = () => {
 
 </MDXTabs>
 
-
 installing and configuring the `@graphql-codegen/typed-document-node` plugin would allow the following refactoring:
-
 
 <MDXTabs namespace={`guides-react-codetabs`}>
 
 <MDXTab label="React Apollo">
 
 ```tsx
-import { useQuery } from '@apollo/client';
-import { postsQueryDocument } from './graphql/generated';
-
+import { useQuery } from '@apollo/client'
+import { postsQueryDocument } from './graphql/generated'
 
 const Posts = () => {
-  const { data } = useQuery(postsQueryDocument);
+  const { data } = useQuery(postsQueryDocument)
 
   // `result` is fully typed!
   // ...
@@ -330,11 +321,11 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { useQuery } from "urql";
-import { postsQueryDocument } from './graphql/generated';
+import { useQuery } from 'urql'
+import { postsQueryDocument } from './graphql/generated'
 
 const Posts = () => {
-  const [result] = useQuery({ query: postsQueryDocument});
+  const [result] = useQuery({ query: postsQueryDocument })
 
   // `result` is fully typed!
   // ...
@@ -344,7 +335,6 @@ const Posts = () => {
 </MDXTab>
 
 </MDXTabs>
-
 
 Just a few configuration steps are required to get those typed document nodes generated:
 
@@ -359,20 +349,26 @@ For this, create a colocated `.graphql` file for each GraphQL document, as follo
 
 query {
   posts {
+    id
+    title
+    author {
       id
-      title
-      author {
-        id
-        firstName
-        lastName
-      }
+      firstName
+      lastName
+    }
   }
 }
 ```
 
 **2. Install the `@graphql-codegen/typed-document-node` plugin**
 
-<PackageInstall packages={["@graphql-codegen/typed-document-node", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typed-document-node',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
@@ -391,11 +387,10 @@ generates:
       - typed-document-node
 ```
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+> `documents` is a glob expression to your `.graphql` files.
 
 <br />
 
@@ -406,7 +401,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -426,12 +421,11 @@ We can now update our code as follows:
 <MDXTab label="React Apollo">
 
 ```tsx
-import { useQuery } from '@apollo/client';
-import { postsQueryDocument } from './graphql/generated';
-
+import { useQuery } from '@apollo/client'
+import { postsQueryDocument } from './graphql/generated'
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
+  const { data } = useQuery<PostQuery>(postsQueryDocument)
 
   // `result` is fully typed!
   // ...
@@ -443,11 +437,11 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { useQuery } from "urql";
-import { postsQueryDocument } from './graphql/generated';
+import { useQuery } from 'urql'
+import { postsQueryDocument } from './graphql/generated'
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+  const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
 
   // `result` is fully typed!
   // ...
@@ -457,7 +451,6 @@ const Posts = () => {
 </MDXTab>
 
 </MDXTabs>
-
 
 <p>&nbsp;</p>
 
@@ -473,7 +466,6 @@ If you are curious about `@graphql-codegen/typed-document-node` inner workings, 
 
 GraphQL Code Generator also proposes two plugins (one for Apollo one for URQL) that generate fully-typed hooks.
 
-
 Given the following code example:
 
 <MDXTabs namespace={`guides-react-codetabs`}>
@@ -481,8 +473,7 @@ Given the following code example:
 <MDXTab label="React Apollo">
 
 ```tsx
-import { gql, useQuery } from '@apollo/client';
-
+import { gql, useQuery } from '@apollo/client'
 
 interface PostQuery {
   posts: {
@@ -499,19 +490,19 @@ interface PostQuery {
 const postsQueryDocument = gql`
   query Posts {
     posts {
+      id
+      title
+      author {
         id
-        title
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
+      }
     }
   }
 `
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>(postsQueryDocument);
+  const { data } = useQuery<PostQuery>(postsQueryDocument)
 
   // ...
 }
@@ -522,7 +513,7 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { useQuery } from "urql";
+import { useQuery } from 'urql'
 
 interface PostQuery {
   posts: {
@@ -551,7 +542,7 @@ const postsQueryDocument = `
 `
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument});
+  const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
 
   // ...
 }
@@ -561,21 +552,17 @@ const Posts = () => {
 
 </MDXTabs>
 
-
 installing and configuring the `@graphql-codegen/typescript-react-apollo` or `@graphql-codegen/typescript-urql` plugin would allow the following refactoring:
-
-
 
 <MDXTabs namespace={`guides-react-codetabs`}>
 
 <MDXTab label="React Apollo">
 
 ```tsx
-import { usePostsQuery } from './graphql/generated';
-
+import { usePostsQuery } from './graphql/generated'
 
 const Posts = () => {
-  const { data } = usePostsQuery();
+  const { data } = usePostsQuery()
 
   // `result` is fully typed!
   // ...
@@ -587,10 +574,10 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { usePostsQuery } from './graphql/generated';
+import { usePostsQuery } from './graphql/generated'
 
 const Posts = () => {
-  const [result] = usePostsQuery();
+  const [result] = usePostsQuery()
 
   // `result` is fully typed!
   // ...
@@ -608,25 +595,35 @@ However, keep in mind that hooks generation results in:
 - greater bundle size
 - an increase of the number of specific hooks in the given application
 
-
 Just a few configuration steps are required to get those typed hooks generated:
 
 **1. Install the `@graphql-codegen/typescript-react-apollo` or `@graphql-codegen/typescript-urql` plugin**
 
 For React Apollo:
 
-<PackageInstall packages={["@graphql-codegen/typescript-react-apollo", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-react-apollo',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 For URQL React:
 
-<PackageInstall packages={["@graphql-codegen/typescript-urql", "@graphql-codegen/typescript", "@graphql-codegen/typescript-operations"]} />
+<PackageInstall
+  packages={[
+    '@graphql-codegen/typescript-urql',
+    '@graphql-codegen/typescript',
+    '@graphql-codegen/typescript-operations'
+  ]}
+/>
 
 <br />
 
 **2. Configure the plugin**
 
 Create or update your `codegen.yaml` file as follows:
-
 
 <MDXTabs namespace={`guides-react-codetabs`}>
 
@@ -666,11 +663,11 @@ generates:
 
 </MDXTabs>
 
-:::tip `schema` and `documents` values
-`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
-
-`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
-:::
+> **`schema` and `documents` values**
+>
+> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+>
+> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
 
 <br />
 
@@ -681,7 +678,7 @@ Assuming that, as recommended, your `package.json` has the following script:
 ```json
 {
   "scripts": {
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -701,11 +698,10 @@ We can now update our code as follows:
 <MDXTab label="React Apollo">
 
 ```tsx
-import { usePostsQuery } from './graphql/generated';
-
+import { usePostsQuery } from './graphql/generated'
 
 const Posts = () => {
-  const { data } = usePostsQuery();
+  const { data } = usePostsQuery()
 
   // `result` is fully typed!
   // ...
@@ -717,10 +713,10 @@ const Posts = () => {
 <MDXTab label="URQL React">
 
 ```tsx
-import { usePostsQuery } from './graphql/generated';
+import { usePostsQuery } from './graphql/generated'
 
 const Posts = () => {
-  const [result] = usePostsQuery();
+  const [result] = usePostsQuery()
 
   // `result` is fully typed!
   // ...

@@ -20,7 +20,7 @@ yarn add @graphql-codegen/cli graphql @graphql-codegen/java-apollo-android
 
 Then, create `codegen.yml` with the following configuration:
 
-```yml
+```yaml
 schema: POINT_TO_YOUR_SCHEMA
 documents: POINT_TO_YOUR_GRAPHQL_OPERATIONS
 generates:

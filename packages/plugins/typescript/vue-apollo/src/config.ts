@@ -12,7 +12,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -29,7 +29,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default @vue/apollo-composable
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -46,7 +46,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default @vue/composition-api
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -64,7 +64,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

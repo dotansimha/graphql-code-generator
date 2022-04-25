@@ -6,7 +6,7 @@ export type ModulesConfig = {
    * The key of the output is used a base path for this file.
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
@@ -32,7 +32,7 @@ export type ModulesConfig = {
    * @default process.cwd()
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
@@ -51,7 +51,7 @@ export type ModulesConfig = {
    * @default Types
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
