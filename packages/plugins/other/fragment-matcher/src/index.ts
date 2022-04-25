@@ -107,7 +107,7 @@ export const plugin: PluginFunction = async (
 
   const apolloClientVersion = parseInt(config.apolloClientVersion as any);
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
-  const useExplicitTyping = config.useExplicitTyping;
+  const { useExplicitTyping } = config;
 
   const introspection = (await execute({
     schema: cleanSchema,

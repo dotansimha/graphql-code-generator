@@ -144,7 +144,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const importAllFragmentsFrom: FragmentImportFromFn | string | null =
       options.presetConfig.importAllFragmentsFrom || null;
 
-    const baseTypesPath = options.presetConfig.baseTypesPath;
+    const { baseTypesPath } = options.presetConfig;
 
     if (!baseTypesPath) {
       throw new Error(

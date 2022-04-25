@@ -23,7 +23,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const formatNamedField = this.config.formatNamedField;
+    const { formatNamedField } = this.config;
     const fieldObj = schemaType.getFields();
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
@@ -80,7 +80,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const formatNamedField = this.config.formatNamedField;
+    const { formatNamedField } = this.config;
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
