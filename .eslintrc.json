@@ -1,12 +1,8 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": ["@typescript-eslint", "import"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["import"],
   "rules": {
     "no-empty": "off",
     "no-console": "error",
@@ -31,7 +27,9 @@
     "no-lonely-if": "error",
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["**/*.test.ts", "**/*.spec.ts", "**/test/**/*.ts"] }
+      {
+        "devDependencies": ["**/*.test.ts", "**/*.spec.ts", "**/test/**/*.ts"]
+      }
     ]
   },
   "env": {
