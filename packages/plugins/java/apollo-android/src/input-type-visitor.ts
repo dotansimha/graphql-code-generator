@@ -107,15 +107,13 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
       this._imports.add(Imports.Nonnull);
 
       return `@Nonnull ${typeToUse} ${name}`;
+    } else if (wrapWith) {
+      return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
     } else {
-      if (wrapWith) {
-        return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
-      } else {
-        if (applyNullable) {
-          this._imports.add(Imports.Nullable);
-        }
-        return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
+      if (applyNullable) {
+        this._imports.add(Imports.Nullable);
       }
+      return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
     }
   }
 
