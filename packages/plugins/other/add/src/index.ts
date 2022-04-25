@@ -8,7 +8,7 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   config: AddPluginConfig
 ): Promise<Types.PluginOutput> => {
   const placement: AddPluginConfig['placement'] = config.placement || 'prepend';
-  const content = config.content;
+  const { content } = config;
 
   if (!VALID_PLACEMENTS.includes(placement)) {
     throw Error(

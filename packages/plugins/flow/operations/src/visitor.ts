@@ -65,7 +65,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
     const wrapOptional = (type: string) => `?${type}`;
 
-    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const { useFlowReadOnlyTypes } = this.config;
     const formatNamedField = (
       name: string,
       type: GraphQLOutputType | GraphQLNamedType | null,

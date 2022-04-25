@@ -85,7 +85,7 @@ describe('Introspection template', () => {
     });
 
     const introspection: IntrospectionQuery = JSON.parse(content);
-    const types = introspection.__schema.types;
+    const { types } = introspection.__schema;
     const queryType = types.find(
       type => type.name === introspection.__schema.queryType.name
     ) as IntrospectionObjectType;

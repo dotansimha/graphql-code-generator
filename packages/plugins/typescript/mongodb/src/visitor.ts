@@ -241,7 +241,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _addAdditionalFields(tree: FieldsTree, additioalFields: AdditionalField[] | null): void {
-    const avoidOptionals = this.config.avoidOptionals;
+    const { avoidOptionals } = this.config;
     if (!additioalFields || additioalFields.length === 0) {
       return;
     }

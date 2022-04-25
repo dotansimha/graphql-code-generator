@@ -385,7 +385,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const content = result[0].content;
+      const { content } = result[0];
 
       expect(content).toContain('Used graphql-tag'); // import gql from 'graphql-tag'
       expect(content).toContain('Used gatsby'); // import { graphql } from 'gatsby'
@@ -409,7 +409,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const content = result[0].content;
+      const { content } = result[0];
 
       expect(content).toContain('Used custom parser'); // import { parser } from 'custom-graphql-parser';
       expect(content).not.toContain('Used graphql-tag');

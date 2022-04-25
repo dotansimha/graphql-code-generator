@@ -293,7 +293,7 @@ export function buildScalars(
       .map(typeName => typeMap[typeName])
       .filter(type => isScalarType(type))
       .map((scalarType: GraphQLScalarType) => {
-        const name = scalarType.name;
+        const { name } = scalarType;
         if (typeof scalarsMapping === 'string') {
           const value = parseMapper(scalarsMapping + '#' + name, name);
           result[name] = value;
