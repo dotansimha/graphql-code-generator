@@ -47,7 +47,7 @@
     "@types/common-tags": "1.8.1",
     "@types/jest": "27.4.1",
     "@types/mkdirp": "1.0.2",
-    "@types/node": "16.11.31",
+    "@types/node": "16.11.32",
     "@types/react": "18.0.8",
     "@types/webpack-env": "1.16.4",
     "@typescript-eslint/eslint-plugin": "5.21.0",
@@ -94,7 +94,7 @@
     "svelte": "3.47.0",
     "ts-jest": "27.1.4",
     "tslib": "2.4.0",
-    "typescript": "4.6.3",
+    "typescript": "4.6.4",
     "urql": "2.2.0",
     "vue": "3.2.33",
     "vue-apollo-smart-ops": "0.1.0"
