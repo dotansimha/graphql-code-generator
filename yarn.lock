@@ -3776,10 +3776,10 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@16.11.32", "@types/node@^16.4.10", "@types/node@^16.9.2":
-  version "16.11.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.32.tgz#ff1a57f7c52dacb3537d22d230654390202774de"
-  integrity sha512-+fnfNvG5JQdC1uGZiTx+0QVtoOHcggy6+epx65JYroPGsE1uhp+vo5kioiGKsAkor6ocwHteU2EvO7N8vtOZtA==
+"@types/node@*", "@types/node@16.11.33", "@types/node@^16.4.10", "@types/node@^16.9.2":
+  version "16.11.33"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.33.tgz#566713b1b626f781c5c58fe3531307283e00720c"
+  integrity sha512-0PJ0vg+JyU0MIan58IOIFRtSvsb7Ri+7Wltx2qAg94eMOrpg4+uuP3aUHCpxXc1i0jCXiC+zIamSZh3l9AbcQA==
 
 "@types/node@^10.1.0":
   version "10.17.60"
@@ -12612,10 +12612,10 @@ react-player@2.9.0:
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
 
-react-query@3.38.0:
-  version "3.38.0"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.38.0.tgz#e7f4081e45ba47a4119e548ddcfd0fab18f0580e"
-  integrity sha512-VRbCTRrDfC5FsB70+JfZuxFRv9SAvkZ1h36MsN8+QaDN+NWB6s1vJndqpoLQnJqN0COTG2zsInMq0KFdYze6TA==
+react-query@3.38.1:
+  version "3.38.1"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.38.1.tgz#4892304dae7eca7fa0ab5c8ae3e9748f0fca2df9"
+  integrity sha512-CM9hsz6oib17hsBguGaMJr+a0swMzou2gvNHHjAusnXvkfTx6CTzx0Iwuplox1jI2j3WiY91BGrcIN6bp1n1Iw==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
