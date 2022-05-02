@@ -26,17 +26,28 @@ const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list
 const createUnmaskFunctionTypeDefinition = (
   unmaskFunctionName = defaultUnmaskFunctionName,
   opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
-) => `
-export function ${unmaskFunctionName}<TType>(
+) => `export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentNode<TType, any>,
   fragmentType: ${modifyType('FragmentType<DocumentNode<TType, any>>', opts)}
 ): ${modifyType('TType', opts)}`;
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
-  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: false, list: false }),
-  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: false }),
-  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: false, list: 'only-list' }),
-  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'only-list' }),
+  `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: false, list: false }
+  )}`,
+  `// return nullable if \`fragmentType\` is nullable\n${createUnmaskFunctionTypeDefinition(unmaskFunctionName, {
+    nullable: true,
+    list: false,
+  })}`,
+  `// return array of non-nullable if \`fragmentType\` is array of non-nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: false, list: 'only-list' }
+  )}`,
+  `// return array of nullable if \`fragmentType\` is array of nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: true, list: 'only-list' }
+  )}`,
 ];
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `

@@ -383,27 +383,26 @@ describe('gql-tag-operations-preset', () => {
             : never
           : never;
 
-
+        // return non-nullable if \`fragmentType\` is non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>>
         ): TType;
-
+        // return nullable if \`fragmentType\` is nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
         ): TType | null | undefined;
-
+        // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
         ): ReadonlyArray<TType>;
-
+        // return array of nullable if \`fragmentType\` is array of nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined
-
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
@@ -482,27 +481,26 @@ describe('gql-tag-operations-preset', () => {
             : never
           : never;
 
-
+        // return non-nullable if \`fragmentType\` is non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>>
         ): TType;
-
+        // return nullable if \`fragmentType\` is nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
         ): TType | null | undefined;
-
+        // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
         ): ReadonlyArray<TType>;
-
+        // return array of nullable if \`fragmentType\` is array of nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined
-
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
@@ -517,22 +515,26 @@ describe('gql-tag-operations-preset', () => {
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>>
       ): TType;
-
+      `);
+      expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
       ): TType | null | undefined;
-
+      `);
+      expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
       ): ReadonlyArray<TType>;
-
+      `);
+      expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
       ): ReadonlyArray<TType> | null | undefined
-
+      `);
+      expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
@@ -588,22 +590,22 @@ describe('gql-tag-operations-preset', () => {
           : never;
 
 
-
+        // return non-nullable if \`fragmentType\` is non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>>
         ): TType
-
+        // return nullable if \`fragmentType\` is nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
         ): TType | null | undefined
-
+        // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
         ): ReadonlyArray<TType>
-
+        // return array of nullable if \`fragmentType\` is array of nullable
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
