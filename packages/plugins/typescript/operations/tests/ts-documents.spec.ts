@@ -5558,6 +5558,89 @@ function test(q: GetEntityBrandDataQuery): void {
         `);
       });
     });
+
+    it('#7811 - generates $fragmentName for fragment subtypes for fragment masking', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Character {
+          name: String
+        }
+
+        type Jedi {
+          name: String
+          side: String
+        }
+
+        type Droid {
+          model: String
+        }
+
+        union People = Character | Jedi | Droid
+
+        type Query {
+          people: People!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        #graphql
+        query GetPeople {
+          people {
+            ...PeopleInfo
+          }
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment PeopleInfo on People {
+          ... on Character {
+            name
+          }
+
+          ... on Jedi {
+            side
+          }
+
+          ... on Droid {
+            model
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [
+          { location: '', document: query },
+          { location: '', document: fragment },
+        ],
+        { inlineFragmentTypes: 'mask' },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toMatchInlineSnapshot(`
+        "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type GetPeopleQuery = { __typename?: 'Query', people: (
+            { __typename?: 'Character' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
+          ) | (
+            { __typename?: 'Jedi' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
+          ) | (
+            { __typename?: 'Droid' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
+          ) };
+
+        type PeopleInfo_Character_Fragment = { __typename?: 'Character', name?: string | null } & { ' $fragmentName': 'PeopleInfo_Character_Fragment' };
+
+        type PeopleInfo_Jedi_Fragment = { __typename?: 'Jedi', side?: string | null } & { ' $fragmentName': 'PeopleInfo_Jedi_Fragment' };
+
+        type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model?: string | null } & { ' $fragmentName': 'PeopleInfo_Droid_Fragment' };
+
+        export type PeopleInfoFragment = PeopleInfo_Character_Fragment | PeopleInfo_Jedi_Fragment | PeopleInfo_Droid_Fragment;
+        "
+      `);
+    });
   });
 
   describe('conditional directives handling', () => {
