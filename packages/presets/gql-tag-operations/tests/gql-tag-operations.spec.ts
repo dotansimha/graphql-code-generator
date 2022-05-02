@@ -369,29 +369,49 @@ describe('gql-tag-operations-preset', () => {
             `);
       const fragmentMaskingFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(fragmentMaskingFile.content).toMatchInlineSnapshot(`
-              "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 
-              export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
-                infer TType,
-                any
-              >
-                ? TType extends { ' $fragmentName': infer TKey }
-                  ? TKey extends string
-                    ? { ' $fragmentRefs': { [key in TKey]: TType } }
-                    : never
-                  : never
-                : never;
+        export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+          infer TType,
+          any
+        >
+          ? TType extends { ' $fragmentName': infer TKey }
+            ? TKey extends string
+              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              : never
+            : never
+          : never;
 
 
-              export function useFragment<TType>(
-                _documentNode: DocumentNode<TType, any>,
-                fragmentType: FragmentType<DocumentNode<TType, any>>
-              ): TType {
-                return fragmentType as any
-              }
-              "
-            `);
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>>
+        ): TType;
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+        ): TType | null | undefined;
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+        ): ReadonlyArray<TType>;
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        ): TType | ReadonlyArray<TType> | null | undefined {
+          return fragmentType as any
+        }
+        "
+      `);
     });
 
     it('fragmentMasking: {}', async () => {
@@ -466,7 +486,27 @@ describe('gql-tag-operations-preset', () => {
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>>
-        ): TType {
+        ): TType;
+
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+        ): TType | null | undefined;
+
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+        ): ReadonlyArray<TType>;
+
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined
+
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        ): TType | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any
         }
         "
@@ -476,7 +516,27 @@ describe('gql-tag-operations-preset', () => {
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>>
-      ): TType {
+      ): TType;
+
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+      ): TType | null | undefined;
+
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+      ): ReadonlyArray<TType>;
+
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+      ): ReadonlyArray<TType> | null | undefined
+
+      export function iLikeTurtles<TType>(
+        _documentNode: DocumentNode<TType, any>,
+        fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+      ): TType | ReadonlyArray<TType> | null | undefined {
         return fragmentType as any
       }
       `);
@@ -533,6 +593,21 @@ describe('gql-tag-operations-preset', () => {
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>>
         ): TType
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+        ): TType | null | undefined
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+        ): ReadonlyArray<TType>
+
+        export function useFragment<TType>(
+          _documentNode: DocumentNode<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined
       }"
     `);
   });

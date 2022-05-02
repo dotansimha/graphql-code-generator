@@ -14,14 +14,34 @@ export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocume
 
 const defaultUnmaskFunctionName = 'useFragment';
 
-const createUnmaskFunctionTypeDefinition = (unmaskFunctionName = defaultUnmaskFunctionName) => `
+const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }) =>
+  `${
+    opts.list === 'only-list'
+      ? `ReadonlyArray<${rawType}>`
+      : opts.list === 'with-list'
+      ? `${rawType} | ReadonlyArray<${rawType}>`
+      : rawType
+  }${opts.nullable ? ' | null | undefined' : ''}`;
+
+const createUnmaskFunctionTypeDefinition = (
+  unmaskFunctionName = defaultUnmaskFunctionName,
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
+) => `
 export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentNode<TType, any>,
-  fragmentType: FragmentType<DocumentNode<TType, any>>
-): TType`;
+  fragmentType: ${modifyType('FragmentType<DocumentNode<TType, any>>', opts)}
+): ${modifyType('TType', opts)}`;
+
+const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
+  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: false, list: false }),
+  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: false }),
+  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: false, list: 'only-list' }),
+  createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'only-list' }),
+];
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinition(unmaskFunctionName)} {
+${createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join(';\n')}
+${createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' })} {
   return fragmentType as any
 }
 `;
@@ -45,7 +65,11 @@ export const plugin: PluginFunction<{
   return [
     documentNodeImport,
     `declare module "${augmentedModuleName}" {`,
-    [...fragmentTypeHelper.split(`\n`), `\n`, ...createUnmaskFunctionTypeDefinition(unmaskFunctionName).split(`\n`)]
+    [
+      ...fragmentTypeHelper.split(`\n`),
+      `\n`,
+      ...createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join('\n').split('\n'),
+    ]
       .map(line => (line === `\n` || line === '' ? line : `  ${line}`))
       .join(`\n`),
     `}`,
