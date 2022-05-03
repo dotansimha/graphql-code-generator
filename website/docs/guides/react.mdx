@@ -347,7 +347,8 @@ For this, create a colocated `.graphql` file for each GraphQL document, as follo
 ```graphql
 # postsQuery.graphql
 
-query {
+# 'Document' will be appended to the name of the query in the generated output
+query postsQuery {
   posts {
     id
     title
