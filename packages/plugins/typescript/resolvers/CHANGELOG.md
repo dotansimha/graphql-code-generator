@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/typescript@2.4.9
+
 ## 2.6.1
 
 ### Patch Changes

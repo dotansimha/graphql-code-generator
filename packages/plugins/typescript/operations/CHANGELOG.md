@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-operations
 
+## 2.3.6
+
+### Patch Changes
+
+- 9312920a4: Import type definitions of dependent fragments when `inlineFragmentType` is `mask`
+- 2966686e9: Generate $fragmentName for fragment subtypes for fragment masking
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/typescript@2.4.9
+
 ## 2.3.5
 
 ### Patch Changes

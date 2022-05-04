@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.5
+
+### Patch Changes
+
+- 2966686e9: Generate $fragmentName for fragment subtypes for fragment masking
+
 ## 2.7.4
 
 ### Patch Changes

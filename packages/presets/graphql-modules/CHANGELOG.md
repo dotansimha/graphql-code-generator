@@ -1,5 +1,12 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.3.9
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
 ## 2.3.8
 
 ### Patch Changes
