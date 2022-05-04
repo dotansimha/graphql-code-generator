@@ -14,14 +14,45 @@ export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocume
 
 const defaultUnmaskFunctionName = 'useFragment';
 
-const createUnmaskFunctionTypeDefinition = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-export function ${unmaskFunctionName}<TType>(
+const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }) =>
+  `${
+    opts.list === 'only-list'
+      ? `ReadonlyArray<${rawType}>`
+      : opts.list === 'with-list'
+      ? `${rawType} | ReadonlyArray<${rawType}>`
+      : rawType
+  }${opts.nullable ? ' | null | undefined' : ''}`;
+
+const createUnmaskFunctionTypeDefinition = (
+  unmaskFunctionName = defaultUnmaskFunctionName,
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
+) => `export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentNode<TType, any>,
-  fragmentType: FragmentType<DocumentNode<TType, any>>
-): TType`;
+  fragmentType: ${modifyType('FragmentType<DocumentNode<TType, any>>', opts)}
+): ${modifyType('TType', opts)}`;
+
+const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
+  `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: false, list: false }
+  )}`,
+  `// return nullable if \`fragmentType\` is nullable\n${createUnmaskFunctionTypeDefinition(unmaskFunctionName, {
+    nullable: true,
+    list: false,
+  })}`,
+  `// return array of non-nullable if \`fragmentType\` is array of non-nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: false, list: 'only-list' }
+  )}`,
+  `// return array of nullable if \`fragmentType\` is array of nullable\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: true, list: 'only-list' }
+  )}`,
+];
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinition(unmaskFunctionName)} {
+${createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join(';\n')}
+${createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' })} {
   return fragmentType as any
 }
 `;
@@ -45,7 +76,11 @@ export const plugin: PluginFunction<{
   return [
     documentNodeImport,
     `declare module "${augmentedModuleName}" {`,
-    [...fragmentTypeHelper.split(`\n`), `\n`, ...createUnmaskFunctionTypeDefinition(unmaskFunctionName).split(`\n`)]
+    [
+      ...fragmentTypeHelper.split(`\n`),
+      `\n`,
+      ...createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join('\n').split('\n'),
+    ]
       .map(line => (line === `\n` || line === '' ? line : `  ${line}`))
       .join(`\n`),
     `}`,

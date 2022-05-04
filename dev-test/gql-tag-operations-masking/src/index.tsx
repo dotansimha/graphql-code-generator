@@ -21,12 +21,18 @@ const TweetAuthorFragment = gql(/* GraphQL */ `
   }
 `);
 
-const TweetsQuery = gql(/* GraphQL */ `
-  query TweetsQuery {
+const TweetsFragment = gql(/* GraphQL */ `
+  fragment TweetsFragment on Query {
     Tweets {
       id
       ...TweetFragment
     }
+  }
+`);
+
+const TweetAppQuery = gql(/* GraphQL */ `
+  query TweetAppQuery {
+    ...TweetsFragment
   }
 `);
 
@@ -47,8 +53,14 @@ const TweetAuthor = (props: { tweet: FragmentType<typeof TweetAuthorFragment> })
   return <div>{tweet.author?.username}</div>;
 };
 
-const Tweets = () => {
-  const [query] = useQuery({ query: TweetsQuery });
+const Tweets = (props: { tweets: FragmentType<typeof TweetsFragment> | undefined }) => {
+  const tweets = useFragment(TweetsFragment, props.tweets);
 
-  return <ul>{query.data?.Tweets?.map(tweet => <Tweet key={tweet.id} tweet={tweet} />) ?? null}</ul>;
+  return <ul>{tweets?.Tweets?.map(tweet => <Tweet key={tweet.id} tweet={tweet} />) ?? null}</ul>;
+};
+
+const App = () => {
+  const [query] = useQuery({ query: TweetAppQuery });
+
+  return query.data == null ? null : <Tweets tweets={query.data} />;
 };
