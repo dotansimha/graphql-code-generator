@@ -5582,7 +5582,6 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
 
       const query = parse(/* GraphQL */ `
-        #graphql
         query GetPeople {
           people {
             ...PeopleInfo
