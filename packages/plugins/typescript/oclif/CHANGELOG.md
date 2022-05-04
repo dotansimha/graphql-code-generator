@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-oclif
 
+## 2.2.9
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
 ## 2.2.8
 
 ### Patch Changes

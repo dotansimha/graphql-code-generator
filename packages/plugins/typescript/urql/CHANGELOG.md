@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-urql
 
+## 3.5.8
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
 ## 3.5.7
 
 ### Patch Changes

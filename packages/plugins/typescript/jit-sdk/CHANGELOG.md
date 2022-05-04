@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-jit-sdk
 
+## 2.0.7
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
 ## 2.0.6
 
 ### Patch Changes

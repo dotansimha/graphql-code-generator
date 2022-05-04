@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 2.2.11
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
 ## 2.2.10
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.4.0
+
+### Minor Changes
+
+- 9d0840951: Allow `useFragment` to take arrays and nullable values as arguments
+
+### Patch Changes
+
+- Updated dependencies [9312920a4]
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/typescript-operations@2.3.6
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/gql-tag-operations@1.2.12
+  - @graphql-codegen/typed-document-node@2.2.9
+  - @graphql-codegen/typescript@2.4.9
+
 ## 1.3.0
 
 ### Minor Changes

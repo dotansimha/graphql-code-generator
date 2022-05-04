@@ -1,5 +1,13 @@
 # @graphql-codegen/java-apollo-android
 
+## 2.2.9
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/java-common@2.1.16
+
 ## 2.2.8
 
 ### Patch Changes
