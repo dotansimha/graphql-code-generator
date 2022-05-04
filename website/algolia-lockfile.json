@@ -1,0 +1,2382 @@
+[
+  {
+    "objectID": "code-generator-add",
+    "headings": ["Examples"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Examples",
+        "anchor": "examples"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/add",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Add",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-angular",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/angular",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "Angular"],
+    "source": "Code Generator",
+    "title": "Angular",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-apollo-client-helpers",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-apollo-client-helpers",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Apollo-Client Helpers",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-apollo-local-state",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/apollo-local-state",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "apollo-local-state"],
+    "source": "Code Generator",
+    "title": "apollo-local-state",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-c-operations",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/c-sharp-operations",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "C# Operations",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-codegen-config",
+    "headings": [
+      "Configuration file format",
+      "Configuration options",
+      "Environment Variables",
+      "CLI Flags",
+      "Debug Mode",
+      "Other ways to provide configuration"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Configuration file format",
+        "anchor": "configuration-file-format"
+      },
+      {
+        "children": [],
+        "title": "Configuration options",
+        "anchor": "configuration-options"
+      },
+      {
+        "children": [],
+        "title": "Environment Variables",
+        "anchor": "environment-variables"
+      },
+      {
+        "children": [],
+        "title": "CLI Flags",
+        "anchor": "cli-flags"
+      },
+      {
+        "children": [],
+        "title": "Debug Mode",
+        "anchor": "debug-mode"
+      },
+      {
+        "children": [],
+        "title": "Other ways to provide configuration",
+        "anchor": "other-ways-to-provide-configuration"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/codegen-config",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "codegen.yml"],
+    "source": "Code Generator",
+    "title": "codegen.yml",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-config-field",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/config-field",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "plugin config"],
+    "source": "Code Generator",
+    "title": "plugin config",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-contributing",
+    "headings": [
+      "1. Requirements",
+      "2. Fork and Clone",
+      "3. Install Dependencies",
+      "4. Make sure everything works",
+      "5. Add your plugin",
+      "6. Create your plugin",
+      "7. Test your plugin",
+      "8. Integration",
+      "9. Documentation",
+      "10. Website & Plugins Hub",
+      "10. Add it to the live demo (optional)"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "1. Requirements",
+        "anchor": "1-requirements"
+      },
+      {
+        "children": [],
+        "title": "2. Fork and Clone",
+        "anchor": "2-fork-and-clone"
+      },
+      {
+        "children": [],
+        "title": "3. Install Dependencies",
+        "anchor": "3-install-dependencies"
+      },
+      {
+        "children": [],
+        "title": "4. Make sure everything works",
+        "anchor": "4-make-sure-everything-works"
+      },
+      {
+        "children": [],
+        "title": "5. Add your plugin",
+        "anchor": "5-add-your-plugin"
+      },
+      {
+        "children": [],
+        "title": "6. Create your plugin",
+        "anchor": "6-create-your-plugin"
+      },
+      {
+        "children": [],
+        "title": "7. Test your plugin",
+        "anchor": "7-test-your-plugin"
+      },
+      {
+        "children": [],
+        "title": "8. Integration",
+        "anchor": "8-integration"
+      },
+      {
+        "children": [],
+        "title": "9. Documentation",
+        "anchor": "9-documentation"
+      },
+      {
+        "children": [],
+        "title": "10. Website & Plugins Hub",
+        "anchor": "10-website--plugins-hub"
+      },
+      {
+        "children": [],
+        "title": "10. Add it to the live demo (optional)",
+        "anchor": "10-add-it-to-the-live-demo-optional"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/contributing",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "Contributing"],
+    "source": "Code Generator",
+    "title": "Contributing",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-create-react-app",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/create-react-app",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "create-react-app"],
+    "source": "Code Generator",
+    "title": "create-react-app",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-development-workflow",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/getting-started/development-workflow",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Getting Started", "Development workflow"],
+    "source": "Code Generator",
+    "title": "Development workflow",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-documents-field",
+    "headings": ["How to use it?", "Available Formats", "GraphQL Tag Pluck", "Custom Document Loader"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Output-file level",
+                "anchor": "output-file-level"
+              },
+              {
+                "children": [],
+                "title": "Document Scanner",
+                "anchor": "document-scanner"
+              }
+            ],
+            "title": "Root-level",
+            "anchor": "root-level"
+          }
+        ],
+        "title": "How to use it?",
+        "anchor": "how-to-use-it"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Glob Expression",
+                "anchor": "glob-expression"
+              },
+              {
+                "children": [],
+                "title": "String",
+                "anchor": "string"
+              }
+            ],
+            "title": "Local File",
+            "anchor": "local-file"
+          }
+        ],
+        "title": "Available Formats",
+        "anchor": "available-formats"
+      },
+      {
+        "children": [],
+        "title": "GraphQL Tag Pluck",
+        "anchor": "graphql-tag-pluck"
+      },
+      {
+        "children": [],
+        "title": "Custom Document Loader",
+        "anchor": "custom-document-loader"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/documents-field",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "documents field"],
+    "source": "Code Generator",
+    "title": "documents field",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-extend-schema",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/extend-schema",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "Extend Schema"],
+    "source": "Code Generator",
+    "title": "Extend Schema",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-federation",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/federation",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "Apollo Federation"],
+    "source": "Code Generator",
+    "title": "Apollo Federation",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-flow-operations",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/flow-operations",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Flow Operations",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-flow-resolvers",
+    "headings": ["Usage Example", "Enum Resolvers"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Enum Resolvers",
+        "anchor": "enum-resolvers"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/flow-resolvers",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Flow Resolvers",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-fragment-matcher",
+    "headings": ["How to use?", "Usage with Apollo Client 3", "Usage with Apollo Client 2"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use?",
+        "anchor": "how-to-use"
+      },
+      {
+        "children": [],
+        "title": "Usage with Apollo Client 3",
+        "anchor": "usage-with-apollo-client-3"
+      },
+      {
+        "children": [],
+        "title": "Usage with Apollo Client 2",
+        "anchor": "usage-with-apollo-client-2"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/fragment-matcher",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Fragment Matcher",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-from-0-13",
+    "headings": ["What has changed?", "How to migrate?"],
+    "toc": [
+      {
+        "children": [],
+        "title": "What has changed?",
+        "anchor": "what-has-changed"
+      },
+      {
+        "children": [],
+        "title": "How to migrate?",
+        "anchor": "how-to-migrate"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/migration/from-0-13",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Migration Guides", "v0.13 -> v0.17"],
+    "source": "Code Generator",
+    "title": "v0.13 -> v0.17",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-from-0-18",
+    "headings": ["What has changed?", "How to migrate?", "Breaking Changes & Semver"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "New TypeScript Libraries",
+            "anchor": "new-typescript-libraries"
+          }
+        ],
+        "title": "What has changed?",
+        "anchor": "what-has-changed"
+      },
+      {
+        "children": [],
+        "title": "How to migrate?",
+        "anchor": "how-to-migrate"
+      },
+      {
+        "children": [],
+        "title": "Breaking Changes & Semver",
+        "anchor": "breaking-changes--semver"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/migration/from-0-18",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Migration Guides", "v0.18 -> v1.0"],
+    "source": "Code Generator",
+    "title": "v0.18 -> v1.0",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-front-end-typescript-only",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/front-end-typescript-only",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "TypeScript only (front-end)"],
+    "source": "Code Generator",
+    "title": "TypeScript only (front-end)",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-further-reading",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/further-reading",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "Further Reading"],
+    "source": "Code Generator",
+    "title": "Further Reading",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-gatsby",
+    "headings": ["Community Plugins"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Community Plugins",
+        "anchor": "community-plugins"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/gatsby",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "Gatsby"],
+    "source": "Code Generator",
+    "title": "Gatsby",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-generated-files-colocation",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/advanced/generated-files-colocation",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Advanced Usage", "Generated files colocation"],
+    "source": "Code Generator",
+    "title": "Generated files colocation",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-gql-tag-operations-preset",
+    "headings": [
+      "Getting Started",
+      "Improving bundle-size with the gql-tag-operations babel plugin",
+      "Using module augmentation for an existing `gql` function from a library",
+      "Fragment Masking"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Getting Started",
+        "anchor": "getting-started"
+      },
+      {
+        "children": [],
+        "title": "Improving bundle-size with the gql-tag-operations babel plugin",
+        "anchor": "improving-bundle-size-with-the-gql-tag-operations-babel-plugin"
+      },
+      {
+        "children": [],
+        "title": "Using module augmentation for an existing `gql` function from a library",
+        "anchor": "using-module-augmentation-for-an-existing-gql-function-from-a-library"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Module augmentation with fragment masking",
+                "anchor": "module-augmentation-with-fragment-masking"
+              },
+              {
+                "children": [],
+                "title": "Config API Reference",
+                "anchor": "config-api-reference"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-1"
+              }
+            ],
+            "title": "Fragment Masking with custom unmask name",
+            "anchor": "fragment-masking-with-custom-unmask-name"
+          }
+        ],
+        "title": "Fragment Masking",
+        "anchor": "fragment-masking"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/gql-tag-operations-preset",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "gql-tag-operations-preset",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-graphql-modules",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/graphql-modules",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "GraphQL Modules"],
+    "source": "Code Generator",
+    "title": "GraphQL Modules",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-graphql-modules-preset",
+    "headings": ["Configuration", "Usage Example", "Using without GraphQL-Modules"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Config API Reference",
+            "anchor": "config-api-reference"
+          }
+        ],
+        "title": "Configuration",
+        "anchor": "configuration"
+      },
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Using without GraphQL-Modules",
+        "anchor": "using-without-graphql-modules"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/graphql-modules-preset",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "graphql-modules-preset",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-graphql-server-apollo-yoga",
+    "headings": ["Video tutorial", "Guide"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Video tutorial",
+        "anchor": "video-tutorial"
+      },
+      {
+        "children": [],
+        "title": "Guide",
+        "anchor": "guide"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/graphql-server-apollo-yoga",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "Apollo Server / GraphQL Yoga"],
+    "source": "Code Generator",
+    "title": "Apollo Server / GraphQL Yoga",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-hasura-allow-list",
+    "headings": ["Examples"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Examples",
+        "anchor": "examples"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/hasura-allow-list",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Hasura Allow List",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-how-does-it-work",
+    "headings": ["Example with `@graphql-codegen/typescript`"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Example with `@graphql-codegen/typescript`",
+        "anchor": "example-with-graphql-codegentypescript"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/advanced/how-does-it-work",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Advanced Usage", "How does it work?"],
+    "source": "Code Generator",
+    "title": "How does it work?",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-import-types-preset",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/import-types-preset",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "import-types-preset",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-index",
+    "headings": ["The perfect GraphQL Developer Experience", "What's next?"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "To the back-end",
+                "anchor": "to-the-back-end"
+              }
+            ],
+            "title": "From the front-end",
+            "anchor": "from-the-front-end"
+          }
+        ],
+        "title": "The perfect GraphQL Developer Experience",
+        "anchor": "the-perfect-graphql-developer-experience"
+      },
+      {
+        "children": [],
+        "title": "What's next?",
+        "anchor": "whats-next"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/getting-started/index",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Getting Started", "Introduction"],
+    "source": "Code Generator",
+    "title": "Introduction",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-index",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/index",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "What are Plugins?"],
+    "source": "Code Generator",
+    "title": "What are Plugins?",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-installation",
+    "headings": ["Installing Codegen", "Setup"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Installing Codegen",
+        "anchor": "installing-codegen"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Manual Setup",
+                "anchor": "manual-setup"
+              }
+            ],
+            "title": "Initialization Wizard",
+            "anchor": "initialization-wizard"
+          }
+        ],
+        "title": "Setup",
+        "anchor": "setup"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/getting-started/installation",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Getting Started", "Installation"],
+    "source": "Code Generator",
+    "title": "Installation",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-introspection",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/introspection",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Introspection",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-java",
+    "headings": ["Prepare your environment", "How to use"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-1"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-2"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-3"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-4"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-5"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-6"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-7"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-8"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-9"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-10"
+              }
+            ],
+            "title": "Config API Reference",
+            "anchor": "config-api-reference"
+          }
+        ],
+        "title": "Prepare your environment",
+        "anchor": "prepare-your-environment"
+      },
+      {
+        "children": [],
+        "title": "How to use",
+        "anchor": "how-to-use"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/java",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Java",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-java-apollo-android",
+    "headings": ["Prepare your env", "Usage"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Prepare your env",
+        "anchor": "prepare-your-env"
+      },
+      {
+        "children": [],
+        "title": "Usage",
+        "anchor": "usage"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/java-apollo-android",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Java Apollo Android",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-java-resolvers",
+    "headings": ["Prepare your environment"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-1"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-2"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-3"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-4"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-5"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-6"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-7"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-8"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-9"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-10"
+              }
+            ],
+            "title": "Config API Reference",
+            "anchor": "config-api-reference"
+          }
+        ],
+        "title": "Prepare your environment",
+        "anchor": "prepare-your-environment"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/java-resolvers",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Java Resolvers",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-jsdoc",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/jsdoc",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "JSDoc",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-kotlin",
+    "headings": ["Prepare your environment"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-1"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-2"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-3"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-4"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-5"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-6"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-7"
+              },
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples-8"
+              }
+            ],
+            "title": "Config API Reference",
+            "anchor": "config-api-reference"
+          }
+        ],
+        "title": "Prepare your environment",
+        "anchor": "prepare-your-environment"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/kotlin",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Kotlin",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-lifecycle-hooks",
+    "headings": ["How to use?", "Root Level", "Output Level"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use?",
+        "anchor": "how-to-use"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "`onWatchTriggered`",
+                "anchor": "onwatchtriggered"
+              },
+              {
+                "children": [],
+                "title": "`onError`",
+                "anchor": "onerror"
+              },
+              {
+                "children": [],
+                "title": "`beforeAllFileWrite`",
+                "anchor": "beforeallfilewrite"
+              },
+              {
+                "children": [],
+                "title": "`beforeOneFileWrite`",
+                "anchor": "beforeonefilewrite"
+              },
+              {
+                "children": [],
+                "title": "`afterOneFileWrite`",
+                "anchor": "afteronefilewrite"
+              },
+              {
+                "children": [],
+                "title": "`afterAllFileWrite`",
+                "anchor": "afterallfilewrite"
+              },
+              {
+                "children": [],
+                "title": "`beforeDone`",
+                "anchor": "beforedone"
+              }
+            ],
+            "title": "`afterStart`",
+            "anchor": "afterstart"
+          }
+        ],
+        "title": "Root Level",
+        "anchor": "root-level"
+      },
+      {
+        "children": [],
+        "title": "Output Level",
+        "anchor": "output-level"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/lifecycle-hooks",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "Lifecycle Hooks"],
+    "source": "Code Generator",
+    "title": "Lifecycle Hooks",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-named-operations-object",
+    "headings": ["How to use?"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use?",
+        "anchor": "how-to-use"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/named-operations-object",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Named Operations Object",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-naming-convention",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/naming-convention",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "Naming Convention"],
+    "source": "Code Generator",
+    "title": "Naming Convention",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-near-operation-file-preset",
+    "headings": ["Example"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Example",
+        "anchor": "example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/near-operation-file-preset",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "near-operation-file-preset",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-plugin-structure",
+    "headings": [
+      "Basic Plugin",
+      "Using the `GraphQLSchema`",
+      "Using the documents",
+      "Add plugin configuration",
+      "Packing your Plugin"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Basic Plugin",
+        "anchor": "basic-plugin"
+      },
+      {
+        "children": [],
+        "title": "Using the `GraphQLSchema`",
+        "anchor": "using-the-graphqlschema"
+      },
+      {
+        "children": [],
+        "title": "Using the documents",
+        "anchor": "using-the-documents"
+      },
+      {
+        "children": [],
+        "title": "Add plugin configuration",
+        "anchor": "add-plugin-configuration"
+      },
+      {
+        "children": [],
+        "title": "Packing your Plugin",
+        "anchor": "packing-your-plugin"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/plugin-structure",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "Plugin structure"],
+    "source": "Code Generator",
+    "title": "Plugin structure",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-prettier",
+    "headings": ["Prettier", "TSLint", "ESLint"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Prettier",
+        "anchor": "prettier"
+      },
+      {
+        "children": [],
+        "title": "TSLint",
+        "anchor": "tslint"
+      },
+      {
+        "children": [],
+        "title": "ESLint",
+        "anchor": "eslint"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/prettier",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "Prettier"],
+    "source": "Code Generator",
+    "title": "Prettier",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-profiler",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/advanced/profiler",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Advanced Usage", "Profiler"],
+    "source": "Code Generator",
+    "title": "Profiler",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-programmatic-usage",
+    "headings": ["Using the CLI instead of `core`"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Using the CLI instead of `core`",
+        "anchor": "using-the-cli-instead-of-core"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/advanced/programmatic-usage",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Advanced Usage", "Programmatic Usage"],
+    "source": "Code Generator",
+    "title": "Programmatic Usage",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-react",
+    "headings": ["React Query", "Apollo and URQL"],
+    "toc": [
+      {
+        "children": [],
+        "title": "React Query",
+        "anchor": "react-query"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Typed hooks for Apollo and URQL",
+                "anchor": "typed-hooks-for-apollo-and-urql"
+              }
+            ],
+            "title": "Optimal configuration for Apollo and URQL",
+            "anchor": "optimal-configuration-for-apollo-and-urql"
+          }
+        ],
+        "title": "Apollo and URQL",
+        "anchor": "apollo-and-urql"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/react",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "React"],
+    "source": "Code Generator",
+    "title": "React",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-reason-client",
+    "headings": ["Examples", "Usage & Documentation"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Examples",
+        "anchor": "examples"
+      },
+      {
+        "children": [],
+        "title": "Usage & Documentation",
+        "anchor": "usage--documentation"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/reason-client",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Reason Client",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-relay-operation-optimizer",
+    "headings": ["List of Features", "Usage"],
+    "toc": [
+      {
+        "children": [],
+        "title": "List of Features",
+        "anchor": "list-of-features"
+      },
+      {
+        "children": [],
+        "title": "Usage",
+        "anchor": "usage"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/relay-operation-optimizer",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Relay Operation Optimizer",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-require-field",
+    "headings": ["How to use it?", "TypeScript Support", "Specifying from the command line"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use it?",
+        "anchor": "how-to-use-it"
+      },
+      {
+        "children": [],
+        "title": "TypeScript Support",
+        "anchor": "typescript-support"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "`dotenv` Integration",
+            "anchor": "dotenv-integration"
+          }
+        ],
+        "title": "Specifying from the command line",
+        "anchor": "specifying-from-the-command-line"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/require-field",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "require field"],
+    "source": "Code Generator",
+    "title": "require field",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-schema-ast",
+    "headings": ["Examples"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Examples",
+        "anchor": "examples"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/schema-ast",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Schema AST",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-schema-field",
+    "headings": ["How to use it?", "Available formats", "Custom Schema Loader"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Output-file level",
+                "anchor": "output-file-level"
+              },
+              {
+                "children": [],
+                "title": "Multiple schemas and client-side schema",
+                "anchor": "multiple-schemas-and-client-side-schema"
+              }
+            ],
+            "title": "Root-level",
+            "anchor": "root-level"
+          }
+        ],
+        "title": "How to use it?",
+        "anchor": "how-to-use-it"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "JSON",
+                "anchor": "json"
+              },
+              {
+                "children": [],
+                "title": "Local `.graphql` files",
+                "anchor": "local-graphql-files"
+              },
+              {
+                "children": [],
+                "title": "Code Files",
+                "anchor": "code-files"
+              },
+              {
+                "children": [],
+                "title": "JavaScript export",
+                "anchor": "javascript-export"
+              },
+              {
+                "children": [],
+                "title": "String",
+                "anchor": "string"
+              },
+              {
+                "children": [],
+                "title": "GitHub",
+                "anchor": "github"
+              },
+              {
+                "children": [],
+                "title": "Git",
+                "anchor": "git"
+              },
+              {
+                "children": [],
+                "title": "Apollo Engine",
+                "anchor": "apollo-engine"
+              }
+            ],
+            "title": "URL",
+            "anchor": "url"
+          }
+        ],
+        "title": "Available formats",
+        "anchor": "available-formats"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Loading API URL from TypeScript file example:",
+            "anchor": "loading-api-url-from-typescript-file-example"
+          }
+        ],
+        "title": "Custom Schema Loader",
+        "anchor": "custom-schema-loader"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/config-reference/schema-field",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "schema field"],
+    "source": "Code Generator",
+    "title": "schema field",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-svelte",
+    "headings": ["Svelte Apollo", "SvelteKit Native"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Svelte Apollo",
+        "anchor": "svelte-apollo"
+      },
+      {
+        "children": [],
+        "title": "SvelteKit Native",
+        "anchor": "sveltekit-native"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/svelte",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "Svelte / Kit"],
+    "source": "Code Generator",
+    "title": "Svelte / Kit",
+    "type": "Guide"
+  },
+  {
+    "objectID": "code-generator-time",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/time",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Time",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typeddocumentnode",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typed-document-node",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypedDocumentNode",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-apollo-angular",
+    "headings": ["How to use?"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use?",
+        "anchor": "how-to-use"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-apollo-angular",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Apollo Angular",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-apollo-nextjs",
+    "headings": ["Motivations", "API Reference"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Motivations",
+        "anchor": "motivations"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "`apolloImportFrom`",
+                "anchor": "apolloimportfrom"
+              },
+              {
+                "children": [],
+                "title": "`apolloCacheImportFrom`",
+                "anchor": "apollocacheimportfrom"
+              },
+              {
+                "children": [],
+                "title": "`apolloReactHooksImportFrom`",
+                "anchor": "apolloreacthooksimportfrom"
+              },
+              {
+                "children": [],
+                "title": "`reactApolloVersion`",
+                "anchor": "reactapolloversion"
+              },
+              {
+                "children": [],
+                "title": "`withHOC`",
+                "anchor": "withhoc"
+              },
+              {
+                "children": [],
+                "title": "`withHooks`",
+                "anchor": "withhooks"
+              },
+              {
+                "children": [],
+                "title": "`excludePatterns`",
+                "anchor": "excludepatterns"
+              },
+              {
+                "children": [],
+                "title": "`excludePatternsOptions`",
+                "anchor": "excludepatternsoptions"
+              },
+              {
+                "children": [],
+                "title": "`pre`",
+                "anchor": "pre"
+              },
+              {
+                "children": [],
+                "title": "`post`",
+                "anchor": "post"
+              },
+              {
+                "children": [],
+                "title": "`customImports`",
+                "anchor": "customimports"
+              },
+              {
+                "children": [],
+                "title": "`gqlImport`",
+                "anchor": "gqlimport"
+              },
+              {
+                "children": [],
+                "title": "`noExport`",
+                "anchor": "noexport"
+              },
+              {
+                "children": [],
+                "title": "`dedupeOperationSuffix`",
+                "anchor": "dedupeoperationsuffix"
+              },
+              {
+                "children": [],
+                "title": "`omitOperationSuffix`",
+                "anchor": "omitoperationsuffix"
+              },
+              {
+                "children": [],
+                "title": "`operationResultSuffix`",
+                "anchor": "operationresultsuffix"
+              },
+              {
+                "children": [],
+                "title": "`documentVariablePrefix`",
+                "anchor": "documentvariableprefix"
+              },
+              {
+                "children": [],
+                "title": "`documentVariableSuffix`",
+                "anchor": "documentvariablesuffix"
+              },
+              {
+                "children": [],
+                "title": "`fragmentVariablePrefix`",
+                "anchor": "fragmentvariableprefix"
+              },
+              {
+                "children": [],
+                "title": "`fragmentVariableSuffix`",
+                "anchor": "fragmentvariablesuffix"
+              },
+              {
+                "children": [],
+                "title": "`documentMode`",
+                "anchor": "documentmode"
+              },
+              {
+                "children": [],
+                "title": "`importOperationTypesFrom`",
+                "anchor": "importoperationtypesfrom"
+              },
+              {
+                "children": [],
+                "title": "`importDocumentNodeExternallyFrom`",
+                "anchor": "importdocumentnodeexternallyfrom"
+              },
+              {
+                "children": [],
+                "title": "`scalars`",
+                "anchor": "scalars"
+              },
+              {
+                "children": [],
+                "title": "`namingConvention`",
+                "anchor": "namingconvention"
+              },
+              {
+                "children": [],
+                "title": "`typesPrefix`",
+                "anchor": "typesprefix"
+              },
+              {
+                "children": [],
+                "title": "`skipTypename`",
+                "anchor": "skiptypename"
+              },
+              {
+                "children": [],
+                "title": "`nonOptionalTypename`",
+                "anchor": "nonoptionaltypename"
+              }
+            ],
+            "title": "`apolloReactCommonImportFrom`",
+            "anchor": "apolloreactcommonimportfrom"
+          }
+        ],
+        "title": "API Reference",
+        "anchor": "api-reference"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-apollo-next",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Typescript Apollo Nextjs",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-document-nodes",
+    "headings": ["Usage"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage",
+        "anchor": "usage"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-document-nodes",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript document nodes",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-generic-sdk",
+    "headings": ["Usage"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage",
+        "anchor": "usage"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-generic-sdk",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Generic SDK",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-graphql-files-modules",
+    "headings": ["Pre-Requirements", "Example"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Usage Examples",
+                "anchor": "usage-examples"
+              }
+            ],
+            "title": "Config API Reference",
+            "anchor": "config-api-reference"
+          }
+        ],
+        "title": "Pre-Requirements",
+        "anchor": "pre-requirements"
+      },
+      {
+        "children": [],
+        "title": "Example",
+        "anchor": "example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-graphql-files-modules",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript GraphQL Files Modules",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-graphql-request",
+    "headings": ["Usage Example", "Simple Request Middleware"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Examples of Middleware",
+            "anchor": "examples-of-middleware"
+          }
+        ],
+        "title": "Simple Request Middleware",
+        "anchor": "simple-request-middleware"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-graphql-request",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript GraphQL-Request",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-mongodb",
+    "headings": ["Usage Example", "Directives", "Example"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Directives",
+        "anchor": "directives"
+      },
+      {
+        "children": [],
+        "title": "Example",
+        "anchor": "example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-mongodb",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript MongoDB",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-msw",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-msw",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "typescript-msw",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-oclif",
+    "headings": ["Usage", "Advanced Features"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Step 2: Add GraphQL Documents",
+                "anchor": "step-2-add-graphql-documents"
+              },
+              {
+                "children": [],
+                "title": "Step 3: Add & Export a GraphQL Query Handler",
+                "anchor": "step-3-add--export-a-graphql-query-handler"
+              },
+              {
+                "children": [],
+                "title": "Step 4: Add & Configure GraphQL Codegen",
+                "anchor": "step-4-add--configure-graphql-codegen"
+              }
+            ],
+            "title": "Step 1: Generate the CLI scaffold",
+            "anchor": "step-1-generate-the-cli-scaffold"
+          }
+        ],
+        "title": "Usage",
+        "anchor": "usage"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Custom/Manually-maintained Commands",
+                "anchor": "custommanually-maintained-commands"
+              }
+            ],
+            "title": "Descriptions & Examples",
+            "anchor": "descriptions--examples"
+          }
+        ],
+        "title": "Advanced Features",
+        "anchor": "advanced-features"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-oclif",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript oclif",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-operations",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-operations",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Operations",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-react-apollo",
+    "headings": ["Usage Example"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Generate Data Component",
+                "anchor": "generate-data-component"
+              },
+              {
+                "children": [],
+                "title": "Generate HOC",
+                "anchor": "generate-hoc"
+              }
+            ],
+            "title": "With React Hooks",
+            "anchor": "with-react-hooks"
+          }
+        ],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-react-apollo",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript React Apollo",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-react-query",
+    "headings": ["Usage Examples"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Using `fetch` with Codegen configuration",
+                "anchor": "using-fetch-with-codegen-configuration"
+              },
+              {
+                "children": [],
+                "title": "Using `graphql-request`",
+                "anchor": "using-graphql-request"
+              },
+              {
+                "children": [],
+                "title": "Using Custom Fetcher",
+                "anchor": "using-custom-fetcher"
+              },
+              {
+                "children": [],
+                "title": "Using Infinite Query",
+                "anchor": "using-infinite-query"
+              }
+            ],
+            "title": "Using default `fetch`",
+            "anchor": "using-default-fetch"
+          }
+        ],
+        "title": "Usage Examples",
+        "anchor": "usage-examples-10"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-react-query",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript React-Query",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-resolvers",
+    "headings": [
+      "Usage Example",
+      "Integration with Apollo-Server",
+      "Use Your Model Types (`mappers`)",
+      "Enum Resolvers"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Integration with Apollo-Server",
+        "anchor": "integration-with-apollo-server"
+      },
+      {
+        "children": [],
+        "title": "Use Your Model Types (`mappers`)",
+        "anchor": "use-your-model-types-mappers"
+      },
+      {
+        "children": [],
+        "title": "Enum Resolvers",
+        "anchor": "enum-resolvers"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-resolvers",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Resolvers",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-rtk-query",
+    "headings": ["Usage Examples"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Extending generated code",
+                "anchor": "extending-generated-code"
+              }
+            ],
+            "title": "Using `graphql-request`",
+            "anchor": "using-graphql-request"
+          }
+        ],
+        "title": "Usage Examples",
+        "anchor": "usage-examples-3"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-rtk-query",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript RTK-Query",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-stencil-apollo",
+    "headings": ["Usage Example"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-stencil-apollo",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Stencil Apollo",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-svelte-apollo",
+    "headings": ["API Reference", "Usage Example"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "`asyncQuery`",
+                "anchor": "asyncquery"
+              }
+            ],
+            "title": "`clientPath`",
+            "anchor": "clientpath"
+          }
+        ],
+        "title": "API Reference",
+        "anchor": "api-reference"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "With Async Queries",
+                "anchor": "with-async-queries"
+              }
+            ],
+            "title": "With Observable queries",
+            "anchor": "with-observable-queries"
+          }
+        ],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-svelte-apollo",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Typescript Svelte Apollo",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-typegraphql",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-type-graphql",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript TypeGraphQL",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-urql",
+    "headings": ["Usage Example", "Configuration"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Configuration",
+        "anchor": "configuration"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-urql",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Urql",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-validation-schema",
+    "headings": ["Examples", "Usage & Documentation"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Examples",
+        "anchor": "examples"
+      },
+      {
+        "children": [],
+        "title": "Usage & Documentation",
+        "anchor": "usage--documentation"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-validation-schema",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Validation Schema",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-vue-apollo-composition-api",
+    "headings": ["Examples"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Queries",
+            "anchor": "queries"
+          }
+        ],
+        "title": "Examples",
+        "anchor": "examples"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-vue-apollo",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Vue Apollo Composition API",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-vue-apollo-smart-operations",
+    "headings": ["Examples"],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Queries",
+            "anchor": "queries"
+          }
+        ],
+        "title": "Examples",
+        "anchor": "examples"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-vue-apollo-smart-ops",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Vue Apollo Smart Operations",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-typescript-vue-urql",
+    "headings": ["Usage Example", "Configuration"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Usage Example",
+        "anchor": "usage-example"
+      },
+      {
+        "children": [],
+        "title": "Configuration",
+        "anchor": "configuration"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/typescript-vue-urql",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "TypeScript Vue Urql",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-urql-introspection-for-schema-awareness",
+    "headings": ["How to use?"],
+    "toc": [
+      {
+        "children": [],
+        "title": "How to use?",
+        "anchor": "how-to-use"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//plugins/urql-introspection",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Plugins"],
+    "source": "Code Generator",
+    "title": "Urql Introspection for Schema Awareness",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-using-visitor",
+    "headings": ["Basic Visitor", "Codegen and Visitors"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Basic Visitor",
+        "anchor": "basic-visitor"
+      },
+      {
+        "children": [],
+        "title": "Codegen and Visitors",
+        "anchor": "codegen-and-visitors"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/using-visitor",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "Using Visitor Pattern"],
+    "source": "Code Generator",
+    "title": "Using Visitor Pattern",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-validate-configuration",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/custom-codegen/validate-configuration",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Writing Plugins", "Validate Configuration"],
+    "source": "Code Generator",
+    "title": "Validate Configuration",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-vscode",
+    "headings": [],
+    "toc": [],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/integrations/vscode",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Integrations", "VSCode Extension"],
+    "source": "Code Generator",
+    "title": "VSCode Extension",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-vue",
+    "headings": ["Vue.js URQL", "Vue.js Apollo"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Vue.js URQL",
+        "anchor": "vuejs-urql"
+      },
+      {
+        "children": [],
+        "title": "Vue.js Apollo",
+        "anchor": "vuejs-apollo"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com//docs/guides/vue",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Guides", "Vue.js"],
+    "source": "Code Generator",
+    "title": "Vue.js",
+    "type": "Guide"
+  }
+]
