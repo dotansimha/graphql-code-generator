@@ -1,5 +1,8 @@
 import { executeCodegen } from '@graphql-codegen/cli';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
+import { readFile } from 'fs/promises';
 import path from 'path';
 import { preset } from '../src';
 
@@ -542,6 +545,86 @@ describe('gql-tag-operations-preset', () => {
         return fragmentType as any
       }
       `);
+    });
+
+    it('can accept null in useFragment', async () => {
+      const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: docPath,
+        generates: {
+          out1: {
+            preset,
+            plugins: [],
+            presetConfig: {
+              fragmentMasking: true,
+            },
+          },
+        },
+      });
+
+      const content = mergeOutputs([
+        ...result,
+        await readFile(docPath, 'utf8'),
+        `
+        function App(props: { data: FooQuery }) {
+          const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
+          return fragment == null ? "no data" : fragment.value;
+        }
+        `,
+      ]);
+      validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    });
+
+    it('can accept list in useFragment', async () => {
+      const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo!]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: docPath,
+        generates: {
+          out1: {
+            preset,
+            plugins: [],
+            presetConfig: {
+              fragmentMasking: true,
+            },
+          },
+        },
+      });
+
+      const content = mergeOutputs([
+        ...result,
+        await readFile(docPath, 'utf8'),
+        `
+        function App(props: { data: FoosQuery }) {
+          const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
+          return fragments == null ? "no data" : fragments.map(f => f.value);
+        }
+        `,
+      ]);
+      validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
     });
   });
 
