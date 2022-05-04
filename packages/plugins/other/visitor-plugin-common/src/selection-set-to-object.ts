@@ -609,7 +609,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             .export(this._config.exportFragmentSpreadSubTypes)
             .asKind('type')
             .withName(t.name)
-            .withContent(t.content).string
+            .withContent(
+              `${t.content}${this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName': '${t.name}' }` : ''}`
+            ).string
       ),
       new DeclarationBlock(declarationBlockConfig)
         .export()

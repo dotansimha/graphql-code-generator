@@ -544,6 +544,41 @@ describe('near-operation-file preset', () => {
         );
       }
     });
+
+    it('#7798 - importing type definitions of dependent fragments when `inlineFragmentType` is `mask`', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type User {
+              id: ID!
+              name: String!
+            }
+
+            type Query {
+              user(id: ID!): User!
+            }
+          `,
+        ],
+        documents: [
+          path.join(__dirname, 'fixtures/issue-7798-parent.ts'),
+          path.join(__dirname, 'fixtures/issue-7798-child.ts'),
+        ],
+        generates: {
+          'out1.ts': {
+            preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations'],
+            config: { inlineFragmentTypes: 'mask' },
+          },
+        },
+      });
+
+      const parentContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-7798-parent/)).content;
+      const imports = parentContent.match(/import.*UserNameFragment/g);
+      expect(imports).toHaveLength(1);
+    });
   });
 
   it('Should build the correct operation files paths', async () => {

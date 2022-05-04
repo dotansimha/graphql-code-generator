@@ -118,7 +118,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace && this.config.inlineFragmentTypes === 'combine'
+    return !this.config.globalNamespace &&
+      (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
       ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
       : [];
   }
