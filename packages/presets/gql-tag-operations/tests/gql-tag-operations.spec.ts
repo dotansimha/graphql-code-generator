@@ -2,7 +2,7 @@ import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { validateTs } from '@graphql-codegen/testing';
-import { readFile } from 'fs/promises';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { preset } from '../src';
 
@@ -576,7 +576,7 @@ describe('gql-tag-operations-preset', () => {
 
       const content = mergeOutputs([
         ...result,
-        await readFile(docPath, 'utf8'),
+        readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FooQuery }) {
           const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
@@ -616,7 +616,7 @@ describe('gql-tag-operations-preset', () => {
 
       const content = mergeOutputs([
         ...result,
-        await readFile(docPath, 'utf8'),
+        readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FoosQuery }) {
           const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
