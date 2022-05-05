@@ -35,6 +35,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   futureProofUnions: boolean;
   enumsAsConst: boolean;
   numericEnums: boolean;
+  onlyEnums: boolean;
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
@@ -66,6 +67,7 @@ export class TsVisitor<
       futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
       enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       numericEnums: getConfigValue(pluginConfig.numericEnums, false),
+      onlyEnums: getConfigValue(pluginConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
@@ -147,6 +149,8 @@ export class TsVisitor<
   }
 
   public getWrapperDefinitions(): string[] {
+    if (this.config.onlyEnums) return [];
+
     const definitions: string[] = [
       this.getMaybeValue(),
       this.getInputMaybeValue(),
@@ -166,6 +170,8 @@ export class TsVisitor<
   }
 
   public getExactDefinition(): string {
+    if (this.config.onlyEnums) return '';
+
     return `${this.getExportPrefix()}${EXACT_SIGNATURE}`;
   }
 
@@ -174,6 +180,8 @@ export class TsVisitor<
   }
 
   public getMakeMaybeDefinition(): string {
+    if (this.config.onlyEnums) return '';
+
     return `${this.getExportPrefix()}${MAKE_MAYBE_SIGNATURE}`;
   }
 
@@ -220,7 +228,8 @@ export class TsVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
+
     let withFutureAddedValue: string[] = [];
     if (this.config.futureProofUnions) {
       withFutureAddedValue = [
@@ -318,7 +327,9 @@ export class TsVisitor<
       this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
     ];
 
-    const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
+    const enumTypeName = this.convertName(node, {
+      useTypesPrefix: this.config.enumPrefix,
+    });
 
     if (this.config.enumsAsTypes) {
       return new DeclarationBlock(this._declarationBlockConfig)
@@ -354,7 +365,10 @@ export class TsVisitor<
               const enumValue: string | number = valueFromConfig ?? i;
               const comment = transformComment(enumOption.description as any as string, 1);
               const optionName = this.makeValidEnumIdentifier(
-                this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+                this.convertName(enumOption, {
+                  useTypesPrefix: false,
+                  transformUnderscore: true,
+                })
               );
               return comment + indent(optionName) + ` = ${enumValue}`;
             })
@@ -380,7 +394,10 @@ export class TsVisitor<
         .withBlock(
           node.values
             .map(enumOption => {
-              const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
+              const optionName = this.convertName(enumOption, {
+                useTypesPrefix: false,
+                transformUnderscore: true,
+              });
               const comment = transformComment(enumOption.description as any as string, 1);
               const name = enumOption.name as unknown as string;
               const enumValue: string | number = getValueFromConfig(name) ?? name;

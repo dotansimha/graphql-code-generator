@@ -134,6 +134,21 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsConst?: boolean;
   /**
+   * @description This will cause the generator to emit types for enums only.
+   * @default false
+   *
+   * @exampleMarkdown Override all definition types
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyEnums: true
+   * ```
+   */
+  onlyEnums?: boolean;
+  /**
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
    * Interacts well with `preResolveTypes: true`
    * @default false
