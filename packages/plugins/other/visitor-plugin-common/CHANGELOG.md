@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.7.6
+
+### Patch Changes
+
+- 9a5f31cb6: New option `onlyEnums` for Typescript
+
 ## 2.7.5
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/c-sharp",
-  "version": "4.2.10",
+  "version": "4.2.11",
   "description": "GraphQL Code Generator plugin for generating CSharp code based on a GraphQL schema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.4.0",
-    "@graphql-codegen/visitor-plugin-common": "2.7.5",
+    "@graphql-codegen/visitor-plugin-common": "2.7.6",
     "tslib": "~2.4.0",
     "unixify": "^1.0.0",
     "change-case-all": "1.0.14"
