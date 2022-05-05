@@ -13,7 +13,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const { getRoutes } = require('../routes.ts');
 const { packageList } = require('../src/lib/plugins.ts');
 
-
 getPackagesData({ packageList }).then(plugins => {
   indexToAlgolia({
     routes: [getRoutes()],
