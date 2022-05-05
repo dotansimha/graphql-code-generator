@@ -1,5 +1,12 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.2.13
+
+### Patch Changes
+
+- Updated dependencies [9a5f31cb6]
+  - @graphql-codegen/visitor-plugin-common@2.7.6
+
 ## 1.2.12
 
 ### Patch Changes
