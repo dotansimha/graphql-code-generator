@@ -557,7 +557,7 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyEnums) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]

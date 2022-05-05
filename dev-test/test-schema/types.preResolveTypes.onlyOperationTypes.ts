@@ -12,31 +12,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  allUsers: Array<Maybe<User>>;
-  /**
-   *  Generates a new answer for th
-   * guessing game
-   */
-  answer: Array<Scalars['Int']>;
-  testArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
-  testArr2: Array<Maybe<Scalars['String']>>;
-  testArr3: Array<Scalars['String']>;
-  userById?: Maybe<User>;
-};
-
-export type QueryUserByIdArgs = {
-  id: Scalars['Int'];
-};
-
-export type User = {
-  __typename?: 'User';
-  email: Scalars['String'];
-  id: Scalars['Int'];
-  name: Scalars['String'];
-};
-
 export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TestQuery = {
