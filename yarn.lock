@@ -4044,10 +4044,10 @@
     "@graphql-typed-document-node/core" "^3.1.1"
     wonka "^4.0.14"
 
-"@urql/exchange-graphcache@4.3.6":
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-4.3.6.tgz#fea25b8877a704a9d65bdd29578fa6e9fd31bfa5"
-  integrity sha512-RDEi1954lcnwBK2dwQGaxOInuebZrRliz2v7aAuQasj49N9bWYrlSkBfELG14EzOL7NI23IUaeLeaDN7MouDJg==
+"@urql/exchange-graphcache@4.4.0":
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-4.4.0.tgz#f0606501ab8d53713001e24dbd228cc2793e9066"
+  integrity sha512-vr89m7E09XLIGhksBcyrUK19+wttSzz2Ieg8Bkt5UkJ7h7YazO6marWUxwFA6n+3/R5Z5uWt5Wie8f3i+oScxg==
   dependencies:
     "@urql/core" ">=2.3.6"
     wonka "^4.0.14"
@@ -12555,10 +12555,10 @@ react-player@2.9.0:
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
 
-react-query@3.38.1:
-  version "3.38.1"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.38.1.tgz#4892304dae7eca7fa0ab5c8ae3e9748f0fca2df9"
-  integrity sha512-CM9hsz6oib17hsBguGaMJr+a0swMzou2gvNHHjAusnXvkfTx6CTzx0Iwuplox1jI2j3WiY91BGrcIN6bp1n1Iw==
+react-query@3.39.0:
+  version "3.39.0"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.0.tgz#0caca7b0da98e65008bbcd4df0d25618c2100050"
+  integrity sha512-Od0IkSuS79WJOhzWBx/ys0x13+7wFqgnn64vBqqAAnZ9whocVhl/y1padD5uuZ6EIkXbFbInax0qvY7zGM0thA==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
@@ -12583,10 +12583,10 @@ react-remove-scroll@2.4.1:
     use-callback-ref "^1.2.3"
     use-sidecar "^1.0.1"
 
-react-select@5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.3.1.tgz#2cb651b71493e494c56f6b4ce40011669b34bd95"
-  integrity sha512-Y195MmhDoDAj/8gTDyYZU1Raf7tmZd81wxM6RkFko4pqJ4Xv0/ilqUMtSn+GYkwmSlTWeMlzh+e+t7PJgtuXPw==
+react-select@5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.3.2.tgz#ecee0d5c59ed4acb7f567f7de3c75a488d93dacb"
+  integrity sha512-W6Irh7U6Ha7p5uQQ2ZnemoCQ8mcfgOtHfw3wuMzG6FAu0P+CYicgofSLOq97BhjMx8jS+h+wwWdCBeVVZ9VqlQ==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.4.0"
