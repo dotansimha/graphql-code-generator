@@ -2410,7 +2410,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
        type N_TextNotification_Fragment = { text: string, id: string };
- 
+
        type N_ImageNotification_Fragment = { id: string };
 
        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
@@ -2447,9 +2447,9 @@ describe('TypeScript Operations Plugin', () => {
         & { ' $fragmentRefs': { 'N_ImageNotification_Fragment': N_ImageNotification_Fragment } }
        )> };
 
-       type N_TextNotification_Fragment = { __typename?: 'TextNotification', id: string };
+       type N_TextNotification_Fragment = { __typename?: 'TextNotification', id: string } & { ' $fragmentName': 'N_TextNotification_Fragment' };
 
-       type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string };
+       type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string } & { ' $fragmentName': 'N_ImageNotification_Fragment' };
 
        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
      `);
