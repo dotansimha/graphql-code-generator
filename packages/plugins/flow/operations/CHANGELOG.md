@@ -1,5 +1,13 @@
 # @graphql-codegen/flow-operations
 
+## 2.2.11
+
+### Patch Changes
+
+- Updated dependencies [f1fb77bd4]
+  - @graphql-codegen/visitor-plugin-common@2.8.0
+  - @graphql-codegen/flow@2.2.11
+
 ## 2.2.10
 
 ### Patch Changes
