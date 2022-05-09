@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.8.0
+
+### Minor Changes
+
+- f1fb77bd4: feat: Add option to squash exactly similar fragment types
+
 ## 2.7.6
 
 ### Patch Changes
