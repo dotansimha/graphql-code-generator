@@ -4,7 +4,7 @@ on:
     paths:
       - 'website/**'
 jobs:
-  website-check:
+  algolia-records-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Use Node 18
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'yarn'
@@ -23,25 +23,28 @@ jobs:
         run: yarn build
 
       - name: Typecheck
-        run: yarn workspace website run build
+        run: yarn workspace website build
 
       - name: Algolia generate
-        run: yarn workspace website run algolia-sync
+        run: yarn workspace website algolia-sync
         env:
-          ALGOLIA_DRY_RUN: 1
+          ALGOLIA_DRY_RUN: true
           SITE_URL: https://www.graphql-code-generator.com/
 
+      - name: Prettier
+        run: yarn prettier
+
       - name: Diff
-        run: git diff --exit-code -- website/algolia-lockfile
+        run: git diff --exit-code -- website/algolia-lockfile.json
 
       - name: Compare
-        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile | grep "^-[^-]" && exit 1 || exit 0
+        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json | grep "^-[^-]" && exit 1 || exit 0
 
       - name: Diff to file
         if: always()
         id: diff_result
         run: |
-          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile)
+          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
