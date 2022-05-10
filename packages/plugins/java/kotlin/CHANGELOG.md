@@ -1,5 +1,21 @@
 # @graphql-codegen/kotlin
 
+## 2.2.12
+
+### Patch Changes
+
+- Updated dependencies [f1fb77bd4]
+  - @graphql-codegen/visitor-plugin-common@2.8.0
+  - @graphql-codegen/java-common@2.1.18
+
+## 2.2.11
+
+### Patch Changes
+
+- Updated dependencies [9a5f31cb6]
+  - @graphql-codegen/visitor-plugin-common@2.7.6
+  - @graphql-codegen/java-common@2.1.17
+
 ## 2.2.10
 
 ### Patch Changes
