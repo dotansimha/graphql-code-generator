@@ -2836,19 +2836,19 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@monaco-editor/loader@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.3.1.tgz#35d198fb13a983dd49e9e448a172b6a9da309411"
-  integrity sha512-LfpAO6e54SZQW0nnI1sWKO4XtAlNx3WHXYZixeVy0HhZ4txGPOok4rs2u4dSi2+iRWeL198cZ2FlFQKr8mH+cw==
+"@monaco-editor/loader@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.3.2.tgz#04effbb87052d19cd7d3c9d81c0635490f9bb6d8"
+  integrity sha512-BTDbpHl3e47r3AAtpfVFTlAi7WXv4UQ/xZmz8atKl4q7epQV5e7+JbigFDViWF71VBi4IIBdcWP57Hj+OWuc9g==
   dependencies:
     state-local "^1.0.6"
 
-"@monaco-editor/react@4.4.4":
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.4.4.tgz#8d6b0ac144e2b673f85408e30f1facafff9b7aab"
-  integrity sha512-yQsYnVkgP5RC5ZMoRVCXSBn4D4hLUOgoQK+AZJpVY57NDXmEb57OVaaYKh8/RTzxkpuLV278hKNw5DnuzlgQwg==
+"@monaco-editor/react@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.4.5.tgz#beabe491efeb2457441a00d1c7651c653697f65b"
+  integrity sha512-IImtzU7sRc66OOaQVCG+5PFHkSWnnhrUWGBuH6zNmH2h0YgmAhcjHZQc/6MY9JWEbUtVF1WPBMJ9u1XuFbRrVA==
   dependencies:
-    "@monaco-editor/loader" "^1.3.1"
+    "@monaco-editor/loader" "^1.3.2"
     prop-types "^15.7.2"
 
 "@n1ru4l/graphql-live-query@0.8.1":
