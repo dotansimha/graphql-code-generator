@@ -3703,10 +3703,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@27.5.0":
-  version "27.5.0"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.5.0.tgz#e04ed1824ca6b1dd0438997ba60f99a7405d4c7b"
-  integrity sha512-9RBFx7r4k+msyj/arpfaa0WOOEcaAZNmN+j80KFbFCoSqCJGHTz7YMAMGQW9Xmqm5w6l5c25vbSjMwlikJi5+g==
+"@types/jest@27.5.1":
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.5.1.tgz#2c8b6dc6ff85c33bcd07d0b62cb3d19ddfdb3ab9"
+  integrity sha512-fUy7YRpT+rHXto1YlL+J9rs0uLGyiqVt3ZOTQR+4ROc47yNl8WLdVLgUloBRhOxP1PZvguHl44T3H0wAWxahYQ==
   dependencies:
     jest-matcher-utils "^27.0.0"
     pretty-format "^27.0.0"
@@ -7768,15 +7768,15 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
   integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
-flow-bin@0.177.0:
-  version "0.177.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.177.0.tgz#dd537424dcbdd56f3cc85fd72330840a590e4711"
-  integrity sha512-hEm9VDf07iGcfjiCaxZAbpp/bRcgPf/Q3f7UucWpMotrM0MmyZ2hCBvhw53XCd3M7+fP8eyZKRvUWtrMqEC/Sg==
+flow-bin@0.178.0:
+  version "0.178.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.178.0.tgz#893f32bbb2bea09a5cf53446d99d4c791b2220b2"
+  integrity sha512-D1S8c/oaiHAeKaxNxdJJ6SxjxwetNRgPWc9PI1wCSNfB3o0gAJKE5ic2B84c2QmRcs6dMYw6b9GDelYpWsArfg==
 
-flow-parser@0.*, flow-parser@0.177.0:
-  version "0.177.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.177.0.tgz#653092470c8e79ed737cb38e3be1d1de0d25feac"
-  integrity sha512-Ac1OwHjSoUALrcnHTTD6oaEPITaxYmP34iiEEcuCxeeD+tOKR7/Toaw4RpJKcDmYxLX79ZP9E7z+Q8ze9pESbQ==
+flow-parser@0.*, flow-parser@0.178.0:
+  version "0.178.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.178.0.tgz#85d300e29b146b54cb79e277e092ffd401b05f0c"
+  integrity sha512-OviMR2Y/sMSyUzR1xLLAmQvmHXTsD1Sq69OTmP5AckVulld7sVNsCfwsw7t3uK00dO9A7k4fD+wodbzzaaEn5g==
 
 focus-lock@^0.9.1:
   version "0.9.2"
