@@ -67,16 +67,15 @@ type DecoratorOptions = { [key: string]: string };
 function formatDecoratorOptions(options: DecoratorOptions, isFirstArgument = true) {
   if (!Object.keys(options).length) {
     return '';
-  } else {
-    return (
-      (isFirstArgument ? '' : ', ') +
-      ('{ ' +
-        Object.entries(options)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(', ') +
-        ' }')
-    );
   }
+  return (
+    (isFirstArgument ? '' : ', ') +
+    ('{ ' +
+      Object.entries(options)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ') +
+      ' }')
+  );
 }
 
 const FIX_DECORATOR_SIGNATURE = `type FixDecorator<T> = T;`;
@@ -85,10 +84,10 @@ function getTypeGraphQLNullableValue(type: Type): string | undefined {
   if (type.isNullable) {
     if (type.isItemsNullable) {
       return "'itemsAndList'";
-    } else {
-      return 'true';
     }
-  } else if (type.isItemsNullable) {
+    return 'true';
+  }
+  if (type.isItemsNullable) {
     return "'items'";
   }
 
@@ -199,9 +198,8 @@ export class TypeGraphQLVisitor<
 
         if (this.hasTypeDecorators(name)) {
           return this.getArgumentsObjectTypeDefinition(node, name, field);
-        } else {
-          return this.typescriptVisitor.getArgumentsObjectTypeDefinition(node, name, field);
         }
+        return this.typescriptVisitor.getArgumentsObjectTypeDefinition(node, name, field);
       })
       .join('\n\n');
   }
@@ -329,12 +327,14 @@ export class TypeGraphQLVisitor<
         isItemsNullable: false,
         isScalar: SCALARS.includes(typeNode.name.value),
       };
-    } else if (typeNode.kind === 'NonNullType') {
+    }
+    if (typeNode.kind === 'NonNullType') {
       return {
         ...this.parseType(typeNode.type),
         isNullable: false,
       };
-    } else if (typeNode.kind === 'ListType') {
+    }
+    if (typeNode.kind === 'ListType') {
       return {
         ...this.parseType(typeNode.type),
         isArray: true,
@@ -353,15 +353,16 @@ export class TypeGraphQLVisitor<
       if (TYPE_GRAPHQL_SCALARS.includes(type)) {
         // This is a TypeGraphQL type
         return `TypeGraphQL.${type}`;
-      } else if (global[type]) {
+      }
+      if (global[type]) {
         // This is a JS native type
         return type;
-      } else if (this.scalars[type]) {
+      }
+      if (this.scalars[type]) {
         // This is a type specified in the configuration
         return this.scalars[type];
-      } else {
-        throw new Error(`Unknown scalar type ${type}`);
       }
+      throw new Error(`Unknown scalar type ${type}`);
     });
 
     return { type, isNullable, isArray, isScalar, isItemsNullable: isArray && isSingularTypeNullable };

@@ -12,13 +12,13 @@ export function buildPackageNameFromPath(path: string): string {
 export function wrapTypeWithModifiers(baseType: string, typeNode: TypeNode, listType = 'Iterable'): string {
   if (typeNode.kind === Kind.NON_NULL_TYPE) {
     return wrapTypeWithModifiers(baseType, typeNode.type, listType);
-  } else if (typeNode.kind === Kind.LIST_TYPE) {
+  }
+  if (typeNode.kind === Kind.LIST_TYPE) {
     const innerType = wrapTypeWithModifiers(baseType, typeNode.type, listType);
 
     return `${listType}<${innerType}>`;
-  } else {
-    return baseType;
   }
+  return baseType;
 }
 
 export function stripIndent(string: string) {

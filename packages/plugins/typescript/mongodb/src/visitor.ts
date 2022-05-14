@@ -288,7 +288,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
 
         if (entityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbTypeSuffix });
-        } else if (abstractEntityDirective) {
+        }
+        if (abstractEntityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbInterfaceSuffix });
         }
 

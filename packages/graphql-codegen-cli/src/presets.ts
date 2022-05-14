@@ -18,7 +18,8 @@ export async function getPresetByName(
 
       if (loaded && loaded.preset) {
         return loaded.preset;
-      } else if (loaded && loaded.default) {
+      }
+      if (loaded && loaded.default) {
         return loaded.default;
       }
 

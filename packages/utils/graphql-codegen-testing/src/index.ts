@@ -33,24 +33,23 @@ expect.extend({
    ${expected}`,
         pass: true,
       };
-    } else {
-      const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
-        expand: this.expand,
-      });
-      const hasExpect = diffString && diffString.includes('- Expect');
+    }
+    const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
+      expand: this.expand,
+    });
+    const hasExpect = diffString && diffString.includes('- Expect');
 
-      const message = hasExpect
-        ? `Difference:\n\n${diffString}`
-        : `expected 
+    const message = hasExpect
+      ? `Difference:\n\n${diffString}`
+      : `expected 
       ${received}
       to be a string containing (ignoring indents)
       ${expected}`;
 
-      return {
-        message: () => message,
-        pass: false,
-      };
-    }
+    return {
+      message: () => message,
+      pass: false,
+    };
   },
 });
 

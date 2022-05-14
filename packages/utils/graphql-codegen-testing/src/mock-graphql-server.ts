@@ -49,9 +49,8 @@ export function mockGraphQLServer({
       // We set the provided status and headers and just the send the payload back to the client
       result.headers.forEach(({ name, value }) => (headers[name] = value));
       return [result.status, result.payload, headers];
-    } else {
-      return [500, 'Not implemented'];
     }
+    return [500, 'Not implemented'];
   };
   switch (method) {
     case 'GET':

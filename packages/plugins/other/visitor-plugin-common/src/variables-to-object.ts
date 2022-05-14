@@ -38,7 +38,8 @@ export class OperationVariablesToObject {
       }
 
       return node.name.value;
-    } else if (node.variable) {
+    }
+    if (node.variable) {
       return node.variable.name.value;
     }
 

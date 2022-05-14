@@ -186,9 +186,8 @@ function getRootUpdatersConfig(schema: GraphQLSchema, convertName: ConvertFn, co
         });
 
         return updaters;
-      } else {
-        return null;
       }
+      return null;
     }
   );
   return {
@@ -222,9 +221,8 @@ function getOptimisticUpdatersConfig(
     });
 
     return optimistic;
-  } else {
-    return null;
   }
+  return null;
 }
 
 function getImports(config: UrqlGraphCacheConfig): string {

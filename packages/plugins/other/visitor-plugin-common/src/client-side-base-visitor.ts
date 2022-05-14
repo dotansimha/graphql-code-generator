@@ -281,14 +281,14 @@ export class ClientSideBaseVisitor<
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
           .join('\n');
-      } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-        return '';
-      } else {
-        if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
-          return '';
-        }
-        return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
+      if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+        return '';
+      }
+      if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
+        return '';
+      }
+      return `${fragments.map(name => '${' + name + '}').join('\n')}`;
     }
 
     return '';
@@ -313,7 +313,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+    }
+    if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       let gqlObj = gqlTag([doc]);
 
       if (this.config.optimizeDocumentNode) {
@@ -330,7 +331,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.string) {
+    }
+    if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';
     }
 

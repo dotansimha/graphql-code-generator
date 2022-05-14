@@ -29,13 +29,13 @@ const getParserForType = (type: NamedTypeNode): string | void => {
 const mapVariableTypeToOclifType = (type: NamedTypeNode): OclifFlagType => {
   if (type.name.value === 'Boolean') {
     return 'boolean';
-  } else if (['Float', 'Int'].includes(type.name.value)) {
+  }
+  if (['Float', 'Int'].includes(type.name.value)) {
     // A quirk of oclif is that "integer" allows for any `number`-typed response, and then
     //   we supply our own parsing function to make sure it's a float and not an integer
     return 'integer';
-  } else {
-    return 'string';
   }
+  return 'string';
 };
 
 // Retrieve the inner type if nested within List and/or NonNull

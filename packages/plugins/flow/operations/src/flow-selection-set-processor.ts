@@ -51,11 +51,11 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
   buildSelectionSetFromStrings(pieces: string[]): string {
     if (pieces.length === 0) {
       return null;
-    } else if (pieces.length === 1) {
-      return pieces[0];
-    } else {
-      return `({\n  ${pieces.map(t => indent(`...${t}`)).join(`,\n`)}\n})`;
     }
+    if (pieces.length === 1) {
+      return pieces[0];
+    }
+    return `({\n  ${pieces.map(t => indent(`...${t}`)).join(`,\n`)}\n})`;
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {

@@ -27,11 +27,11 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   buildSelectionSetFromStrings(pieces: string[]): string {
     if (pieces.length === 0) {
       return null;
-    } else if (pieces.length === 1) {
-      return pieces[0];
-    } else {
-      return `(\n  ${pieces.join(`\n  & `)}\n)`;
     }
+    if (pieces.length === 1) {
+      return pieces[0];
+    }
+    return `(\n  ${pieces.join(`\n  & `)}\n)`;
   }
 
   transformPrimitiveFields(

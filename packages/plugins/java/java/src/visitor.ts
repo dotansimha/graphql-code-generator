@@ -190,9 +190,8 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
         if (arg.name.value === 'interface' || arg.name.value === 'new') {
           // forcing prefix of _ since interface is a keyword in JAVA
           return indent(`private ${typeToUse.typeName} _${this.config.classMembersPrefix}${arg.name.value};`);
-        } else {
-          return indent(`private ${typeToUse.typeName} ${this.config.classMembersPrefix}${arg.name.value};`);
         }
+        return indent(`private ${typeToUse.typeName} ${this.config.classMembersPrefix}${arg.name.value};`);
       })
       .join('\n');
     const ctorSet = inputValueArray
@@ -218,12 +217,14 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 }`,
             3
           );
-        } else if (typeToUse.isScalar) {
+        }
+        if (typeToUse.isScalar) {
           return indent(
             `this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`,
             3
           );
-        } else if (typeToUse.isEnum) {
+        }
+        if (typeToUse.isEnum) {
           return indentMultiline(
             `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
   this.${this.config.classMembersPrefix}${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
@@ -232,18 +233,18 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 }`,
             3
           );
-        } else if (arg.name.value === 'interface') {
+        }
+        if (arg.name.value === 'interface') {
           // forcing prefix of _ since interface is a keyword in JAVA
           return indent(
             `this._${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
             3
           );
-        } else {
-          return indent(
-            `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
-            3
-          );
         }
+        return indent(
+          `this.${this.config.classMembersPrefix}${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+          3
+        );
       })
       .join('\n');
 
@@ -258,13 +259,12 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
               this.config.classMembersPrefix
             }${arg.name.value}; }`
           );
-        } else {
-          return indent(
-            `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this.${
-              this.config.classMembersPrefix
-            }${arg.name.value}; }`
-          );
         }
+        return indent(
+          `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this.${
+            this.config.classMembersPrefix
+          }${arg.name.value}; }`
+        );
       })
       .join('\n');
 
@@ -278,13 +278,12 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
               arg.name.value
             } = _${arg.name.value}; }`
           );
-        } else {
-          return indent(
-            `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} ${arg.name.value}) { this.${
-              arg.name.value
-            } = ${arg.name.value}; }`
-          );
         }
+        return indent(
+          `public void set${this.convertName(arg.name.value)}(${typeToUse.typeName} ${arg.name.value}) { this.${
+            arg.name.value
+          } = ${arg.name.value}; }`
+        );
       })
       .join('\n');
 
@@ -297,8 +296,8 @@ ${classMembers}
 ${getters}
 ${setters}
 }`;
-    } else {
-      return `public static class ${name} {
+    }
+    return `public static class ${name} {
 ${classMembers}
 
   public ${name}(Map<String, Object> args) {
@@ -310,7 +309,6 @@ ${ctorSet}
 ${getters}
 ${setters}
 }`;
-    }
   }
 
   FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {

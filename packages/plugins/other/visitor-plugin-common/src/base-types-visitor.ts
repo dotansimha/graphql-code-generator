@@ -783,7 +783,8 @@ export class BaseTypesVisitor<
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
-    } else if (this.config.enumValues[typeAsString]) {
+    }
+    if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
     }
 

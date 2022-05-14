@@ -92,9 +92,11 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   private createFetcher(raw: ReactQueryRawPluginConfig['fetcher']): FetcherRenderer {
     if (raw === 'fetch') {
       return new FetchFetcher(this);
-    } else if (typeof raw === 'object' && 'endpoint' in raw) {
+    }
+    if (typeof raw === 'object' && 'endpoint' in raw) {
       return new HardcodedFetchFetcher(this, raw);
-    } else if (raw === 'graphql-request') {
+    }
+    if (raw === 'graphql-request') {
       return new GraphQLRequestClientFetcher(this);
     }
 
@@ -210,7 +212,8 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         );
       }
       return query;
-    } else if (operationType === 'Mutation') {
+    }
+    if (operationType === 'Mutation') {
       let query = this.fetcher.generateMutationHook(
         node,
         documentVariableName,
@@ -233,7 +236,8 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         );
       }
       return query;
-    } else if (operationType === 'Subscription') {
+    }
+    if (operationType === 'Subscription') {
       // eslint-disable-next-line no-console
       console.warn(
         `Plugin "typescript-react-query" does not support GraphQL Subscriptions at the moment! Ignoring "${node.name.value}"...`

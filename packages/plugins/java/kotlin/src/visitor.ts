@@ -188,21 +188,22 @@ ${enumValues}
             } as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }${fallback}`,
             3
           );
-        } else if (typeToUse.isScalar) {
+        }
+        if (typeToUse.isScalar) {
           return indent(
             `args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable || fallback ? '?' : ''}${fallback}`,
             3
           );
-        } else if (typeToUse.nullable || fallback) {
+        }
+        if (typeToUse.nullable || fallback) {
           suppress = '@Suppress("UNCHECKED_CAST")\n  ';
           return indent(
             `args["${arg.name.value}"]?.let { ${typeToUse.typeName}(it as Map<String, Any>) }${fallback}`,
             3
           );
-        } else {
-          suppress = '@Suppress("UNCHECKED_CAST")\n  ';
-          return indent(`${typeToUse.typeName}(args["${arg.name.value}"] as Map<String, Any>)`, 3);
         }
+        suppress = '@Suppress("UNCHECKED_CAST")\n  ';
+        return indent(`${typeToUse.typeName}(args["${arg.name.value}"] as Map<String, Any>)`, 3);
       })
       .join(',\n');
 
@@ -242,11 +243,14 @@ ${classMembers}
         defaultValue.kind === 'BooleanValue'
       ) {
         return `${defaultValue.value}`;
-      } else if (defaultValue.kind === 'StringValue') {
+      }
+      if (defaultValue.kind === 'StringValue') {
         return `"""${defaultValue.value}""".trimIndent()`;
-      } else if (defaultValue.kind === 'EnumValue') {
+      }
+      if (defaultValue.kind === 'EnumValue') {
         return `${typeName}.${defaultValue.value}`;
-      } else if (defaultValue.kind === 'ListValue') {
+      }
+      if (defaultValue.kind === 'ListValue') {
         const list = defaultValue.values
           .map(value => {
             return this.initialValue(typeName, value);

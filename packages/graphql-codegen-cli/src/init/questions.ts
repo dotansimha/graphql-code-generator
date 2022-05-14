@@ -141,9 +141,9 @@ function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
 export function getOutputDefaultValue(answers: Answers) {
   if (answers.plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
     return 'src/generated/graphql.tsx';
-  } else if (answers.plugins.some(plugin => plugin.defaultExtension === '.ts')) {
-    return 'src/generated/graphql.ts';
-  } else {
-    return 'src/generated/graphql.js';
   }
+  if (answers.plugins.some(plugin => plugin.defaultExtension === '.ts')) {
+    return 'src/generated/graphql.ts';
+  }
+  return 'src/generated/graphql.js';
 }

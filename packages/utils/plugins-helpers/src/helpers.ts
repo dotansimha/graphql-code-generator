@@ -38,17 +38,18 @@ export function normalizeOutputParam(
       schema: [],
       plugins: isConfiguredOutput(config) ? config.plugins : config,
     };
-  } else if (isConfiguredOutput(config)) {
-    return config;
-  } else {
-    throw new Error(`Invalid "generates" config!`);
   }
+  if (isConfiguredOutput(config)) {
+    return config;
+  }
+  throw new Error(`Invalid "generates" config!`);
 }
 
 export function normalizeInstanceOrArray<T>(type: T | T[]): T[] {
   if (Array.isArray(type)) {
     return type;
-  } else if (!type) {
+  }
+  if (!type) {
     return [];
   }
 
@@ -58,13 +59,14 @@ export function normalizeInstanceOrArray<T>(type: T | T[]): T[] {
 export function normalizeConfig(config: Types.OutputConfig | Types.OutputConfig[]): Types.ConfiguredPlugin[] {
   if (typeof config === 'string') {
     return [{ [config]: {} }];
-  } else if (Array.isArray(config)) {
-    return config.map(plugin => (typeof plugin === 'string' ? { [plugin]: {} } : plugin));
-  } else if (typeof config === 'object') {
-    return Object.keys(config).reduce((prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }], []);
-  } else {
-    return [];
   }
+  if (Array.isArray(config)) {
+    return config.map(plugin => (typeof plugin === 'string' ? { [plugin]: {} } : plugin));
+  }
+  if (typeof config === 'object') {
+    return Object.keys(config).reduce((prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }], []);
+  }
+  return [];
 }
 
 export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
@@ -105,7 +107,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           const nextTypeName = (() => {
             if (parent.kind === Kind.FRAGMENT_DEFINITION) {
               return parent.typeCondition.name.value;
-            } else if (parent.kind === Kind.FIELD) {
+            }
+            if (parent.kind === Kind.FIELD) {
               const lastType = typesStack[typesStack.length - 1];
 
               if (!lastType) {
@@ -118,20 +121,22 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               }
 
               return getBaseType(field.type).name;
-            } else if (parent.kind === Kind.OPERATION_DEFINITION) {
+            }
+            if (parent.kind === Kind.OPERATION_DEFINITION) {
               if (parent.operation === 'query') {
                 return schema.getQueryType().name;
-              } else if (parent.operation === 'mutation') {
+              }
+              if (parent.operation === 'mutation') {
                 return schema.getMutationType().name;
-              } else if (parent.operation === 'subscription') {
+              }
+              if (parent.operation === 'subscription') {
                 return schema.getSubscriptionType().name;
               }
             } else if (parent.kind === Kind.INLINE_FRAGMENT) {
               if (parent.typeCondition) {
                 return parent.typeCondition.name.value;
-              } else {
-                return typesStack[typesStack.length - 1].name;
               }
+              return typesStack[typesStack.length - 1].name;
             }
 
             return null;
