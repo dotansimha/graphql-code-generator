@@ -107,14 +107,14 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
       this._imports.add(Imports.Nonnull);
 
       return `@Nonnull ${typeToUse} ${name}`;
-    } else if (wrapWith) {
-      return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
-    } else {
-      if (applyNullable) {
-        this._imports.add(Imports.Nullable);
-      }
-      return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
     }
+    if (wrapWith) {
+      return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
+    }
+    if (applyNullable) {
+      this._imports.add(Imports.Nullable);
+    }
+    return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
   }
 
   private buildFieldsMarshaller(field: InputValueDefinitionNode): string {
@@ -143,11 +143,10 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
 
     if (isNonNull) {
       return result;
-    } else {
-      return indentMultiline(`if(${field.name.value}.defined) {
+    }
+    return indentMultiline(`if(${field.name.value}.defined) {
 ${indentMultiline(result)}
 }`);
-    }
   }
 
   private buildMarshallerOverride(fields: ReadonlyArray<InputValueDefinitionNode>): string {

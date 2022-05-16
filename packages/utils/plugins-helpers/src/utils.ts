@@ -26,9 +26,8 @@ export function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | 
 export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
   if (isWrapperType(type)) {
     return getBaseType(type.ofType);
-  } else {
-    return type;
   }
+  return type;
 }
 
 export function removeNonNullWrapper(type: GraphQLOutputType): GraphQLOutputType {

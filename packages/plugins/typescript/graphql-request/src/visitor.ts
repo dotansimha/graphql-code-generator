@@ -118,15 +118,14 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       o.operationResultType
     }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
-        } else {
-          return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
-            o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+        }
+        return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
+          o.operationVariablesTypes
+        }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
   return withWrapper((wrappedRequestHeaders) => client.request<${
     o.operationResultType
   }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
-        }
       })
       .filter(Boolean)
       .map(s => indentMultiline(s, 2));

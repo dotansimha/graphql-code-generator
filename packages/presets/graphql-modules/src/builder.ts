@@ -249,7 +249,8 @@ export function buildModule(
         types.forEach(typeName => {
           if (k === 'enums') {
             return;
-          } else if (k === 'scalars') {
+          }
+          if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);

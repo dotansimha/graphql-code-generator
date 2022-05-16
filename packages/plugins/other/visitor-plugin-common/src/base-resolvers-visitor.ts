@@ -552,7 +552,8 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
-      } else if (isMapped && this.config.mappers[typeName].type) {
+      }
+      if (isMapped && this.config.mappers[typeName].type) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {

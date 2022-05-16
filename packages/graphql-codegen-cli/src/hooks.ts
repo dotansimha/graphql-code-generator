@@ -28,19 +28,20 @@ function normalizeHooks(
         ...prev,
         [hookName]: [_hooks[hookName]] as string[],
       };
-    } else if (typeof _hooks[hookName] === 'function') {
+    }
+    if (typeof _hooks[hookName] === 'function') {
       return {
         ...prev,
         [hookName]: [_hooks[hookName]],
       };
-    } else if (Array.isArray(_hooks[hookName])) {
+    }
+    if (Array.isArray(_hooks[hookName])) {
       return {
         ...prev,
         [hookName]: _hooks[hookName] as string[],
       };
-    } else {
-      return prev;
     }
+    return prev;
   }, {} as Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>);
 }
 

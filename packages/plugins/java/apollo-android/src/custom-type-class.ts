@@ -23,12 +23,11 @@ export class CustomTypeClassVisitor extends BaseJavaVisitor<VisitorConfig> {
         className: name,
         importFrom: Imports[name] || null,
       };
-    } else {
-      return {
-        className: name.substring(lastIndex + 1),
-        importFrom: name,
-      };
     }
+    return {
+      className: name.substring(lastIndex + 1),
+      importFrom: name,
+    };
   }
 
   public additionalContent(): string {

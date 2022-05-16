@@ -104,7 +104,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
-    } else if (isObjectType(parentType)) {
+    }
+    if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
@@ -335,77 +336,76 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       }, {} as Record<string, string[]>);
 
       return { grouped, mustAddEmptyObject };
-    } else {
-      // Accumulate a map of selected fields to the typenames that
-      // share the exact same selected fields. When we find multiple
-      // typenames with the same set of fields, we can collapse the
-      // generated type to the selected fields and a string literal
-      // union of the typenames.
-      //
-      // E.g. {
-      //        __typename: "foo" | "bar";
-      //        shared: string;
-      //      }
-      const grouped = possibleTypes.reduce<
-        Record<string, { fields: (string | NameAndType)[]; types: { name: string; type: string }[] }>
-      >((prev, type) => {
-        const typeName = type.name;
-        const schemaType = this._schema.getType(typeName);
-
-        if (!isObjectType(schemaType)) {
-          throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
-        }
-
-        const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
-
-        const { typeInfo, fields } = this.buildSelectionSet(schemaType, selectionNodes);
-
-        const key = this.selectionSetStringFromFields(fields);
-        prev[key] = {
-          fields,
-          types: [...(prev[key]?.types ?? []), typeInfo || { name: '', type: type.name }].filter(Boolean),
-        };
-
-        return prev;
-      }, {});
-
-      // For every distinct set of fields, create the corresponding
-      // string literal union of typenames.
-      const compacted = Object.keys(grouped).reduce<Record<string, string[]>>((acc, key) => {
-        const typeNames = grouped[key].types.map(t => t.type);
-        // Don't create very large string literal unions. TypeScript
-        // will stop comparing some nested union types types when
-        // they contain props with more than some number of string
-        // literal union members (testing with TS 4.5 stops working
-        // at 25 for a naive test case:
-        // https://www.typescriptlang.org/play?ts=4.5.4&ssl=29&ssc=10&pln=29&pc=1#code/C4TwDgpgBAKg9nAMgQwE4HNoF4BQV9QA+UA3ngRQJYB21EqAXDsQEQCMLzULATJ6wGZ+3ACzCWAVnEA2cQHZxADnEBOcWwAM6jl3Z9dbIQbEGpB2QYUHlBtbp5b7O1j30ujLky7Os4wABb0nAC+ODigkFAAQlBYUOT4xGQUVLT0TKzO3G7cHqLiPtwWrFasNqx2mY6ZWXrqeexe3GyF7MXNpc3lzZXZ1dm1ruI8DTxNvGahFEkJKTR0jLMpRNx+gaicy6E4APQ7AALAAM4AtJTo1HCoEDgANhDAUMgMsAgoGNikwQDcdw9QACMXjE4shfmEItAAGI0bCzGbLfDzdIGYbiBrjVrtFidFjdFi9dj9di1Ng5dgNNjjFrqbFsXFsfFsQkOYaDckjYbjNZBHDbPaHU7nS7XP6PZBsF4wuixL6-e6PAGS6KyiXfIA
-        const max_types = 20;
-        for (let i = 0; i < typeNames.length; i += max_types) {
-          const selectedTypes = typeNames.slice(i, i + max_types);
-          const typenameUnion = grouped[key].types[0].name
-            ? this._processor.transformTypenameField(selectedTypes.join(' | '), grouped[key].types[0].name)
-            : [];
-          const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
-
-          // The keys here will be used to generate intermediary
-          // fragment names. To avoid blowing up the type name on large
-          // unions, calculate a stable hash here instead.
-          //
-          // Also use fragment hashing if skipTypename is true, since we
-          // then don't have a typename for naming the fragment.
-          acc[
-            selectedTypes.length <= 3
-              ? selectedTypes.join('_')
-              : createHash('sha256')
-                  .update(selectedTypes.join() || transformedSet || '')
-                  .digest('base64')
-          ] = [transformedSet];
-        }
-        return acc;
-      }, {});
-
-      return { grouped: compacted, mustAddEmptyObject };
     }
+    // Accumulate a map of selected fields to the typenames that
+    // share the exact same selected fields. When we find multiple
+    // typenames with the same set of fields, we can collapse the
+    // generated type to the selected fields and a string literal
+    // union of the typenames.
+    //
+    // E.g. {
+    //        __typename: "foo" | "bar";
+    //        shared: string;
+    //      }
+    const grouped = possibleTypes.reduce<
+      Record<string, { fields: (string | NameAndType)[]; types: { name: string; type: string }[] }>
+    >((prev, type) => {
+      const typeName = type.name;
+      const schemaType = this._schema.getType(typeName);
+
+      if (!isObjectType(schemaType)) {
+        throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
+      }
+
+      const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+
+      const { typeInfo, fields } = this.buildSelectionSet(schemaType, selectionNodes);
+
+      const key = this.selectionSetStringFromFields(fields);
+      prev[key] = {
+        fields,
+        types: [...(prev[key]?.types ?? []), typeInfo || { name: '', type: type.name }].filter(Boolean),
+      };
+
+      return prev;
+    }, {});
+
+    // For every distinct set of fields, create the corresponding
+    // string literal union of typenames.
+    const compacted = Object.keys(grouped).reduce<Record<string, string[]>>((acc, key) => {
+      const typeNames = grouped[key].types.map(t => t.type);
+      // Don't create very large string literal unions. TypeScript
+      // will stop comparing some nested union types types when
+      // they contain props with more than some number of string
+      // literal union members (testing with TS 4.5 stops working
+      // at 25 for a naive test case:
+      // https://www.typescriptlang.org/play?ts=4.5.4&ssl=29&ssc=10&pln=29&pc=1#code/C4TwDgpgBAKg9nAMgQwE4HNoF4BQV9QA+UA3ngRQJYB21EqAXDsQEQCMLzULATJ6wGZ+3ACzCWAVnEA2cQHZxADnEBOcWwAM6jl3Z9dbIQbEGpB2QYUHlBtbp5b7O1j30ujLky7Os4wABb0nAC+ODigkFAAQlBYUOT4xGQUVLT0TKzO3G7cHqLiPtwWrFasNqx2mY6ZWXrqeexe3GyF7MXNpc3lzZXZ1dm1ruI8DTxNvGahFEkJKTR0jLMpRNx+gaicy6E4APQ7AALAAM4AtJTo1HCoEDgANhDAUMgMsAgoGNikwQDcdw9QACMXjE4shfmEItAAGI0bCzGbLfDzdIGYbiBrjVrtFidFjdFi9dj9di1Ng5dgNNjjFrqbFsXFsfFsQkOYaDckjYbjNZBHDbPaHU7nS7XP6PZBsF4wuixL6-e6PAGS6KyiXfIA
+      const max_types = 20;
+      for (let i = 0; i < typeNames.length; i += max_types) {
+        const selectedTypes = typeNames.slice(i, i + max_types);
+        const typenameUnion = grouped[key].types[0].name
+          ? this._processor.transformTypenameField(selectedTypes.join(' | '), grouped[key].types[0].name)
+          : [];
+        const transformedSet = this.selectionSetStringFromFields([...typenameUnion, ...grouped[key].fields]);
+
+        // The keys here will be used to generate intermediary
+        // fragment names. To avoid blowing up the type name on large
+        // unions, calculate a stable hash here instead.
+        //
+        // Also use fragment hashing if skipTypename is true, since we
+        // then don't have a typename for naming the fragment.
+        acc[
+          selectedTypes.length <= 3
+            ? selectedTypes.join('_')
+            : createHash('sha256')
+                .update(selectedTypes.join() || transformedSet || '')
+                .digest('base64')
+        ] = [transformedSet];
+      }
+      return acc;
+    }, {});
+
+    return { grouped: compacted, mustAddEmptyObject };
   }
 
   protected selectionSetStringFromFields(fields: (string | NameAndType)[]): string | null {
@@ -646,11 +646,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
           if (relevant.length === 0) {
             return null;
-          } else if (relevant.length === 1) {
-            return relevant[0];
-          } else {
-            return `( ${relevant.join(' & ')} )`;
           }
+          if (relevant.length === 1) {
+            return relevant[0];
+          }
+          return `( ${relevant.join(' & ')} )`;
         })
         .filter(Boolean)
         .join(' | ') + this.getEmptyObjectTypeString(mustAddEmptyObject)

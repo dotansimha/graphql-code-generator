@@ -36,11 +36,11 @@ export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
 export function quoteIfNeeded(array: string[], joinWith = ' & '): string {
   if (array.length === 0) {
     return '';
-  } else if (array.length === 1) {
-    return array[0];
-  } else {
-    return `(${array.join(joinWith)})`;
   }
+  if (array.length === 1) {
+    return array[0];
+  }
+  return `(${array.join(joinWith)})`;
 }
 
 export function block(array) {
@@ -51,9 +51,8 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
   if (skipNumericCheck) {
     if (typeof value === 'number') {
       return `${value}`;
-    } else {
-      return `'${value}'`;
     }
+    return `'${value}'`;
   }
 
   if (
@@ -418,9 +417,11 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
     return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
-  } else if (isObjectType(type)) {
+  }
+  if (isObjectType(type)) {
     return [type];
-  } else if (isAbstractType(type)) {
+  }
+  if (isAbstractType(type)) {
     return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
   }
 

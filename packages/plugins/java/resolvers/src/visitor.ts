@@ -66,7 +66,8 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   protected getTypeToUse(type: NamedTypeNode): string {
     if (this.scalars[type.name.value]) {
       return this.scalars[type.name.value];
-    } else if (this.config.mappers[type.name.value]) {
+    }
+    if (this.config.mappers[type.name.value]) {
       return this.config.mappers[type.name.value].type;
     }
 
@@ -125,9 +126,8 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 
       if (isInterface) {
         return `default public DataFetcher<${wrappedType}> ${node.name.value}() { return null; }`;
-      } else {
-        return `public DataFetcher<${wrappedType}> ${node.name.value}();`;
       }
+      return `public DataFetcher<${wrappedType}> ${node.name.value}();`;
     };
   }
 }

@@ -194,11 +194,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       this.imports.add(this.getApolloReactCommonImport(true));
 
       return `${this.getApolloReactCommonIdentifier()}.MutationFunction${typeArgs}`;
-    } else {
-      this.imports.add(this.getApolloReactHocImport(true));
-
-      return `ApolloReactHoc.DataValue${typeArgs}`;
     }
+    this.imports.add(this.getApolloReactHocImport(true));
+
+    return `ApolloReactHoc.DataValue${typeArgs}`;
   }
 
   private _buildMutationFn(
