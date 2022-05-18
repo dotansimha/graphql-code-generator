@@ -614,13 +614,13 @@ export class ClientSideBaseVisitor<
     });
 
     let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      // only generate exports for named queries
-      if (documentVariableName !== '') {
-        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
-          this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-        } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
-      }
+    if (
+      this.config.documentMode !== DocumentMode.external &&
+      documentVariableName !== '' // only generate exports for named queries
+    ) {
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
+        this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+      } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
     }
 
     const hasRequiredVariables = this.checkVariablesRequirements(node);

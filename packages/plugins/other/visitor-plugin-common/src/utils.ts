@@ -379,14 +379,17 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
         getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
     );
 
-    if (match) {
+    if (
+      match &&
       // recursively merge all selection sets
-      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        selection2 = {
-          ...selection2,
-          selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
-        };
-      }
+      match.kind === 'Field' &&
+      match.selectionSet &&
+      selection2.selectionSet
+    ) {
+      selection2 = {
+        ...selection2,
+        selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
+      };
     }
 
     newSelections.push(selection2);
@@ -437,6 +440,7 @@ type WrapModifiersOptions = {
   wrapOptional(type: string): string;
   wrapArray(type: string): string;
 };
+
 export function wrapTypeWithModifiers(
   baseType: string,
   type: GraphQLOutputType | GraphQLNamedType,
