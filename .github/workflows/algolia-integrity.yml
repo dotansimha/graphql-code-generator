@@ -34,11 +34,8 @@ jobs:
       - name: Prettier
         run: yarn prettier
 
-      - name: Diff
-        run: git diff --exit-code -- website/algolia-lockfile.json
-
       - name: Compare
-        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json | grep "^-[^-]" && exit 1 || exit 0
+        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json
 
       - name: Diff to file
         if: always()
