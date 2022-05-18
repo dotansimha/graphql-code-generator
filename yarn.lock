@@ -5044,10 +5044,10 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
-bob-the-bundler@1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.7.2.tgz#edbf1e1fd0df7d37ed9f61d0a8c4f51b345b9f81"
-  integrity sha512-8d6B9U9TjnpABvbs29PEeja13pnHo903taygnV28ThlqC4dyfDjVAaO7H6S4uTrs9sinmY5JV8lJlXuxivaTEQ==
+bob-the-bundler@1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-1.7.3.tgz#d89a341b82747a726c88a9c6afd6e0ebf8cd9fc3"
+  integrity sha512-cuuizaM1KpJGC5L+3omt51ZYSTtEdjZF+/fO0ATn3FPDWU8j8xecqQCz/NlyIl5ef457eNYwadt+IQkYzmos0g==
   dependencies:
     "@rollup/plugin-json" "4.1.0"
     "@rollup/plugin-node-resolve" "7.1.1"
@@ -14363,10 +14363,10 @@ ts-invariant@^0.4.0:
   dependencies:
     tslib "^1.9.3"
 
-ts-jest@27.1.4:
-  version "27.1.4"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-27.1.4.tgz#84d42cf0f4e7157a52e7c64b1492c46330943e00"
-  integrity sha512-qjkZlVPWVctAezwsOD1OPzbZ+k7zA5z3oxII4dGdZo5ggX/PL7kvwTM0pXTr10fAtbiVpJaL3bWd502zAhpgSQ==
+ts-jest@27.1.5:
+  version "27.1.5"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-27.1.5.tgz#0ddf1b163fbaae3d5b7504a1e65c914a95cff297"
+  integrity sha512-Xv6jBQPoBEvBq/5i2TeSG9tt/nqkbpcurrEG1b+2yfBrcJelOZF9Ml6dmyMh7bcW9JyFbRYpR5rxROSlBLTZHA==
   dependencies:
     bs-logger "0.x"
     fast-json-stable-stringify "2.x"
