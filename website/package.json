@@ -19,7 +19,7 @@
     "@types/node": "16.11.36",
     "@types/react": "18.0.9",
     "@types/react-dom": "17.0.17",
-    "concurrently": "7.2.0",
+    "concurrently": "7.2.1",
     "esbuild-register": "3.3.2",
     "eslint-config-next": "12.1.6",
     "jsonpath": "1.1.1",
