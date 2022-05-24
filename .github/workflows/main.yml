@@ -81,8 +81,11 @@ jobs:
           yarn run generate:examples
           git diff --exit-code -- dev-test/
   esm:
-    name: Testing ESM
+    name: Testing ESM with GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        graphql_version: [16, '17.0.0-alpha.1']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
