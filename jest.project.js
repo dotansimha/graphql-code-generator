@@ -22,6 +22,6 @@ module.exports = ({ dirname, projectMode = true }) => {
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
     testTimeout: 20000,
-    transformIgnorePatterns: ['node_modules/(?!graphql)'],
+    transformIgnorePatterns: [resolve(ROOT_DIR, 'node_modules/(?!graphql)')],
   };
 };
