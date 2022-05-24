@@ -1,6 +1,6 @@
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-const flow = require('./flow.js');
+const flow = require('./fixtures/flow.js');
 
 export function validateFlow(code: Types.PluginOutput) {
   const errors = flow.checkContent('temp.flow.js', mergeOutputs([code]));
