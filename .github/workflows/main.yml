@@ -105,6 +105,10 @@ jobs:
           CI: true
       - name: Test ESM
         run: node scripts/test-esm.mjs
+      - name: Test dev-tests
+        run: |
+          yarn run generate:examples:esm
+          git diff --exit-code -- dev-test/
   test:
     name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest

@@ -1,0 +1,13 @@
+diff --git a/node_modules/graphql-config/index.mjs b/node_modules/graphql-config/index.mjs
+index 74e25b7..3af27c8 100644
+--- a/node_modules/graphql-config/index.mjs
++++ b/node_modules/graphql-config/index.mjs
+@@ -238,7 +238,7 @@ function prepareCosmiconfig(moduleName, _a) {
+     return {
+         searchPlaces: searchPlaces.map(function (place) { return place.replace('#', moduleName); }),
+         loaders: {
+-            '.ts': loadTs,
++            '.ts': loadTs.default,
+             '.js': defaultLoaders['.js'],
+             '.json': loadJson,
+             '.yaml': loadYaml,
