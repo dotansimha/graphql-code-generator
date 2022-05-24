@@ -32,6 +32,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - name: Cache Yarn
+        id: yarn-cache
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
@@ -40,6 +41,7 @@ jobs:
             ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install && git checkout yarn.lock
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
