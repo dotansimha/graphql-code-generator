@@ -311,7 +311,16 @@ export class TsVisitor<
       realParent?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
       realParent.directives?.some(directive => directive.name.value === 'oneOf')
     ) {
-      return comment + indent(`{ ${inner} }`);
+      const fieldParts: Array<string> = [];
+      for (const field of realParent.fields ?? []) {
+        // Why the heck is node.name a string and not { value: string } at runtime ?!
+        if (field.name.value === (node.name as any as string)) {
+          fieldParts.push(inner);
+          continue;
+        }
+        fieldParts.push(`${field.name.value}?: never;`);
+      }
+      return comment + indent(`{ ${fieldParts.join(' ')} }`);
     }
 
     return comment + indent(inner);
