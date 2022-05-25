@@ -6441,4 +6441,105 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
   });
+
+  describe.only('autoSelectIds', () => {
+    it('works for simple field', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+
+        fragment UserFragment on User {
+          username
+        }
+      `);
+
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { autoSelectId: true },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', username: string, id: string } | null };
+
+      export type UserFragmentFragment = { __typename?: 'User', username: string, id: string };
+    `);
+    });
+
+    it('works for lists', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          ...QueryFragment
+        }
+
+        fragment QueryFragment on Query {
+          notifications {
+            createdAt
+          }
+        }
+      `);
+
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { autoSelectId: true },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification', createdAt: string, id: string } | { __typename?: 'ImageNotification', createdAt: string, id: string }> };
+
+        export type QueryFragmentFragment = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification', createdAt: string, id: string } | { __typename?: 'ImageNotification', createdAt: string, id: string }> };
+      `);
+    });
+
+    it('works for inline fragment spreads', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          ...QueryFragment
+        }
+
+        fragment QueryFragment on Query {
+          notifications {
+            createdAt
+
+            ... on TextNotification {
+              text
+            }
+
+            ... on ImageNotification {
+              imageUrl
+            }
+          }
+        }
+      `);
+
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { autoSelectId: true },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification', text: string, createdAt: string, id: string } | { __typename?: 'ImageNotification', imageUrl: string, createdAt: string, id: string }> };
+
+        export type QueryFragmentFragment = { __typename?: 'Query', notifications: Array<{ __typename?: 'TextNotification', text: string, createdAt: string, id: string } | { __typename?: 'ImageNotification', imageUrl: string, createdAt: string, id: string }> };
+        "
+      `);
+    });
+  });
 });
