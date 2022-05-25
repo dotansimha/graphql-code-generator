@@ -6322,6 +6322,90 @@ function test(q: GetEntityBrandDataQuery): void {
     });
   });
 
+  describe('@oneOf on output types', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      directive @oneOf on OBJECT
+
+      type Query {
+        foo: Foo!
+      }
+
+      type Foo @oneOf {
+        int: Int
+        boolean: Boolean
+      }
+    `);
+
+    it('correct output for type with single field', async () => {
+      const document = parse(/* GraphQL */ `
+        query Foo {
+          foo {
+            int
+            boolean
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        {
+          preResolveTypes: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type FooQuery = {
+          __typename?: 'Query',
+          foo:
+            { __typename?: 'Foo' }
+            & (
+              { int?: number | null }
+              | Record<'int', never>
+            )
+        };
+      `);
+    });
+
+    it('correct output for type with multiple field', async () => {
+      const document = parse(/* GraphQL */ `
+        query Foo {
+          foo {
+            int
+            boolean
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        {
+          preResolveTypes: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type FooQuery = {
+          __typename?: 'Query',
+          foo:
+            { __typename?: 'Foo' }
+            & (
+              { int?: number | null, boolean?: never }
+              | { int?: never, boolean?: boolean | null }
+              | Record<'int' | 'boolean', never>
+            )
+        };
+      `);
+    });
+  });
+
   it('handles unnamed queries', async () => {
     const ast = parse(/* GraphQL */ `
       query {
