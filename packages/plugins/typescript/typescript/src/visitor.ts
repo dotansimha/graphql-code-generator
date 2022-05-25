@@ -280,8 +280,15 @@ export class TsVisitor<
     );
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    key?: number | string,
+    parent?: any,
+    _path?: any,
+    ancestors?: any
+  ): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
+
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&
       (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
@@ -294,14 +301,19 @@ export class TsVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
-    return (
-      comment +
-      indent(
-        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
-          addOptionalSign ? '?' : ''
-        }: ${type}${this.getPunctuation(declarationKind)}`
-      )
-    );
+    const realParent = ancestors[ancestors.length - 1];
+    const inner = `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
+      addOptionalSign ? '?' : ''
+    }: ${type}${this.getPunctuation(declarationKind)}`;
+
+    if (
+      realParent?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
+      realParent.directives?.some(directive => directive.name.value === 'oneOf')
+    ) {
+      return comment + indent(`{ ${inner} }`);
+    }
+
+    return comment + indent(inner);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

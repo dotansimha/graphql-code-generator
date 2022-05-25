@@ -453,8 +453,22 @@ export class BaseTypesVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment(node.description as any as string)
+      .withContent(`\n` + node.fields.join('\n  |'));
+  }
+
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     if (this.config.onlyEnums) return '';
+
+    // Why the heck is directive.name a string and not { value: string } at runtime ?!
+    if (node.directives?.some(directive => (directive.name as any) === 'oneOf')) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
 
     return this.getInputObjectDeclarationBlock(node).string;
   }

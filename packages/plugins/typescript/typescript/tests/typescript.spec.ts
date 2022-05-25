@@ -2536,6 +2536,79 @@ describe('TypeScript', () => {
       `);
       validateTs(result);
     });
+
+    describe('@oneOf on input types', () => {
+      const oneOfDirectiveDefinition = /* GraphQL */ `
+        directive @oneOf on INPUT_OBJECT
+      `;
+
+      it('correct output for type with single field', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int?: InputMaybe<Scalars['Int']>; };
+        `);
+      });
+
+      it('correct output for type with multiple fields', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int?: InputMaybe<Scalars['Int']>; }
+            | { boolean?: InputMaybe<Scalars['Boolean']>; };
+        `);
+      });
+
+      it('correct output for type with non-optional fields', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int!
+            boolean: Boolean!
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; }
+            | { boolean: Scalars['Boolean']; };
+        `);
+      });
+    });
   });
 
   describe('Naming Convention & Types Prefix', () => {
