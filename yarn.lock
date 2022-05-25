@@ -2517,25 +2517,25 @@
     lodash "^4.17.21"
     remove-markdown "0.5.0"
 
-"@guild-docs/client@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-2.1.1.tgz#1a3b8df7c1fb1da2e9b507695cc7abb0a76221bd"
-  integrity sha512-ikdcOnjeLvwih+V+WvDCKwP6u8752mVtzK1zjm01H7O+EosmiHHgilHPER7lvvwf7DJ/tBjZJJfqTtvSSrw1zQ==
+"@guild-docs/client@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@guild-docs/client/-/client-3.1.0.tgz#1418fb607adeda5997053ec8b3aa7be6ccb6659e"
+  integrity sha512-Uc2dv+30qYPNEg02PZ1r5PGZSPkgM7C5mblKEMUArqJhM6bxpFJG5JBi248f//O/y07/x7oEZaRbLn4Ktn0MPw==
   dependencies:
-    "@guild-docs/mdx-remote" "^2.0.1"
-    "@guild-docs/types" "^2.0.0"
+    "@guild-docs/mdx-remote" "^2.0.2"
+    "@guild-docs/types" "^3.0.0"
     immer "9.0.12"
     mdx-mermaid "1.2.2"
     mermaid ">= 8.11.0 < 8.12.0"
     nprogress "0.2.0"
-    react-children-utilities "2.7.0"
-    react-intersection-observer "8.33.1"
+    react-children-utilities "2.7.1"
+    react-intersection-observer "8.34.0"
     react-sticky-box "1.0.2"
-    remove-markdown "0.3.0"
-    use-immer "0.6.0"
+    remove-markdown "0.5.0"
+    use-immer "0.7.0"
     zustand "3.7.2"
 
-"@guild-docs/mdx-remote@^2.0.1", "@guild-docs/mdx-remote@^2.0.2":
+"@guild-docs/mdx-remote@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@guild-docs/mdx-remote/-/mdx-remote-2.0.2.tgz#9c6b14399021a84f02978951dac9ea0fae644b1a"
   integrity sha512-g35B/Lo7s4l3HLcB9Z7jvTYrhMjCLMbfeS4i3rEhzhP54S0lvQ6gFTbVY25nDGZjZGMgMpkykY4Rk/p73UF2qQ==
@@ -2565,14 +2565,6 @@
     remark-emoji "3.0.2"
     tiny-lru "8.0.2"
     undici "5.0.0"
-
-"@guild-docs/types@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@guild-docs/types/-/types-2.0.0.tgz#95bf26641779301da4d27ec51528436de4576942"
-  integrity sha512-BeObMB7WokzcFO5quSWOOouJL96zneEzE0VS6rkZmg/bG/ukX0S6ODy4/UhxsWphxPYqQ68VAdM57WqTkdlamg==
-  dependencies:
-    "@mdx-js/mdx" "^2.1.0"
-    unified "^10.1.2"
 
 "@guild-docs/types@^3.0.0":
   version "3.0.0"
@@ -2857,7 +2849,7 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
-"@mdx-js/mdx@2.1.1", "@mdx-js/mdx@^2.1.0", "@mdx-js/mdx@^2.1.1":
+"@mdx-js/mdx@2.1.1", "@mdx-js/mdx@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-2.1.1.tgz#6d8b9b75456d7685a52c3812b1c3e4830c7458fb"
   integrity sha512-SXC18cChut3F2zkVXwsb2no0fzTQ1z6swjK13XwFbF5QU/SFQM0orAItPypSdL3GvqYyzVJtz8UofzJhPEQtMw==
@@ -12484,10 +12476,10 @@ rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-children-utilities@2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/react-children-utilities/-/react-children-utilities-2.7.0.tgz#cd6df6b15f47e422b82401b78e3d41e2367d3e9f"
-  integrity sha512-8vvGyL8+MTB/WZnTZKll3ph8rKhYQ3s0TOeojFcSi9yF8hMHwYmCS3y5RZyPxTg4/gGW6ev299ehV9DrNU8dow==
+react-children-utilities@2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/react-children-utilities/-/react-children-utilities-2.7.1.tgz#bf72e3b05f572fec75da66d003f3a22ab431841e"
+  integrity sha512-olV2IcUcARN/VrgYnijbxEtvc2P07BcmAWKdLI0txZgAqs8YODxbYu68GMDv/uretA1sVlPMCQXRgY0Msh4dmA==
 
 react-clientside-effect@^1.2.5:
   version "1.2.5"
@@ -12558,10 +12550,10 @@ react-instantsearch-dom@6.17.0:
     react-fast-compare "^3.0.0"
     react-instantsearch-core "^6.17.0"
 
-react-intersection-observer@8.33.1:
-  version "8.33.1"
-  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.33.1.tgz#8e6442cac7052ed63056e191b7539e423e7d5c64"
-  integrity sha512-3v+qaJvp3D1MlGHyM+KISVg/CMhPiOlO6FgPHcluqHkx4YFCLuyXNlQ/LE6UkbODXlQcLOppfX6UMxCEkUhDLw==
+react-intersection-observer@8.34.0:
+  version "8.34.0"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.34.0.tgz#6f6e67831c52e6233f6b6cc7eb55814820137c42"
+  integrity sha512-TYKh52Zc0Uptp5/b4N91XydfSGKubEhgZRtcg1rhTKABXijc4Sdr1uTp5lJ8TN27jwUsdXxjHXtHa0kPj704sw==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -13001,11 +12993,6 @@ remove-accents@0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.2.tgz#0a43d3aaae1e80db919e07ae254b285d9e1c7bb5"
   integrity sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=
-
-remove-markdown@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/remove-markdown/-/remove-markdown-0.3.0.tgz#5e4b667493a93579728f3d52ecc1db9ca505dc98"
-  integrity sha1-XktmdJOpNXlyjz1S7MHbnKUF3Jg=
 
 remove-markdown@0.5.0:
   version "0.5.0"
@@ -14975,10 +14962,10 @@ use-debounce@^7.0.1:
   resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-7.0.1.tgz#380e6191cc13ad29f8e2149a12b5c37cc2891190"
   integrity sha512-fOrzIw2wstbAJuv8PC9Vg4XgwyTLEOdq4y/Z3IhVl8DAE4svRcgyEUvrEXu+BMNgMoc3YND6qLT61kkgEKXh7Q==
 
-use-immer@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/use-immer/-/use-immer-0.6.0.tgz#ca6aa5ade93018e2c65cf128d19ada54fc23f70d"
-  integrity sha512-dFGRfvWCqPDTOt/S431ETYTg6+uxbpb7A1pptufwXVzGJY3RlXr38+3wyLNpc6SbbmAKjWl6+EP6uW74fkEsXQ==
+use-immer@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/use-immer/-/use-immer-0.7.0.tgz#e3bfbb806b5e3ff6e37441be74c306d91c1e0962"
+  integrity sha512-Re4hjrP3a/2ABZjAc0b7AK9s626bnO+H33RO2VUhiDZ2StBz5B663K6WNNlr4QtHWaGUmvLpwt3whFvvWuolQw==
 
 use-sidecar@^1.0.1, use-sidecar@^1.0.5:
   version "1.0.5"
