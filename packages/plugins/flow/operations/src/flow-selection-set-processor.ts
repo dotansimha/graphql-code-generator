@@ -75,6 +75,12 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
   ): ProcessResult {
+    const hasId = Boolean(schemaType.getFields()['id']);
+
+    if (hasId) {
+      fields.push({ isConditional: false, fieldName: 'id' });
+    }
+
     if (fields.length === 0) {
       return [];
     }

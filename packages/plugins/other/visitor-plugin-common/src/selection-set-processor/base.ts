@@ -15,6 +15,7 @@ export type SelectionSetProcessorConfig = {
   formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null, isConditional?: boolean): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
   avoidOptionals?: AvoidOptionalsConfig;
+  autoSelectId: boolean;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {

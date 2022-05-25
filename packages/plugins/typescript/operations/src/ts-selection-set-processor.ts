@@ -13,8 +13,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
   ): ProcessResult {
-    if (fields.length === 0) {
-      return [];
+    const hasId = Boolean(schemaType.getFields()['id']);
+
+    if (hasId) {
+      fields.push({ isConditional: false, fieldName: 'id' });
     }
 
     const parentName =

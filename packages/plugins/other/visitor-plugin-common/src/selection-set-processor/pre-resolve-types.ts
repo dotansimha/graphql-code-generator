@@ -10,6 +10,10 @@ import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } fr
 import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
+  constructor(config) {
+    super(config);
+  }
+
   transformTypenameField(type: string, name: string): ProcessResult {
     return [
       {
@@ -23,8 +27,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
   ): ProcessResult {
-    if (fields.length === 0) {
-      return [];
+    const hasId = Boolean(schemaType.getFields()['id']);
+
+    if (hasId) {
+      fields.push({ isConditional: false, fieldName: 'id' });
     }
 
     return fields.map(field => {

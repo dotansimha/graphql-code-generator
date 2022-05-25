@@ -24,6 +24,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
+  autoSelectId: boolean;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -82,10 +83,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
       avoidOptionals: this.config.avoidOptionals,
+      autoSelectId: this.config.autoSelectId,
     };
     const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
       processorConfig
     );
+
     this.setSelectionSetHandler(
       new SelectionSetToObject(
         processor,

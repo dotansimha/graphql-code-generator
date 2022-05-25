@@ -58,6 +58,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
   directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
+  autoSelectId: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {

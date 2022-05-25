@@ -187,4 +187,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   maybeValue?: string;
+
+  autoSelectId?: boolean;
 }
