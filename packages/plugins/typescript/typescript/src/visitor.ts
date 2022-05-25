@@ -24,6 +24,7 @@ import {
   isEnumType,
   UnionTypeDefinitionNode,
   GraphQLObjectType,
+  TypeDefinitionNode,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -284,8 +285,8 @@ export class TsVisitor<
     node: InputValueDefinitionNode,
     key?: number | string,
     parent?: any,
-    _path?: any,
-    ancestors?: any
+    _path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
   ): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
 
@@ -301,11 +302,11 @@ export class TsVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
-    const realParent = ancestors[ancestors.length - 1];
     const inner = `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
       addOptionalSign ? '?' : ''
     }: ${type}${this.getPunctuation(declarationKind)}`;
 
+    const realParent = ancestors?.[ancestors.length - 1];
     if (
       realParent?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
       realParent.directives?.some(directive => directive.name.value === 'oneOf')
