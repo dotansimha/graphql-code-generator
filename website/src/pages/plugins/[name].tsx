@@ -4,9 +4,9 @@ import Head from 'next/head';
 import { format } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import { Box, Center, Code, Container, Grid, SimpleGrid } from '@chakra-ui/react';
-import { PackageInstall, RemoteGHMarkdown } from '@guild-docs/client';
+import { PackageInstall, RemoteGHMarkdown, EditOnGitHubButton } from '@guild-docs/client';
 import { buildMDX, CompiledMDX } from '@guild-docs/server';
-import { getPackagesData, PackageWithStats } from '@guild-docs/server/npm';
+import { getPackagesData, PackageInfo, PackageWithStats } from '@guild-docs/server/npm';
 import { packageList } from '../../lib/plugins';
 
 export const SubTitle = styled.h2(() => [tw`mt-0 mb-4 font-bold text-lg md:text-xl`]);
@@ -81,6 +81,7 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
 
   const description = pluginData.stats?.description ? pluginData.stats.description : null;
   const title = `${pluginData.title} | GraphQL Codegen Plugin Hub`;
+  const repoInfo = extractRepositoryInformation(pluginData.stats);
 
   return (
     <>
@@ -148,6 +149,14 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
                   </div>
                 </>
               ) : null}
+              {repoInfo ? (
+                <EditOnGitHubButton
+                  repo={repoInfo.repo}
+                  branch={repoInfo.branch}
+                  baseDir={repoInfo.baseDir}
+                  sourceFilePath={repoInfo.sourceFilePath}
+                />
+              ) : null}
             </SimpleGrid>
           </Box>
         </Grid>
@@ -155,5 +164,37 @@ const PluginPageContent: FC<PluginPageProps> = ({ data }) => {
     </>
   );
 };
+
+/**
+ * TODO: document how people can configure their yoga plugin package.json so it properly processed.
+ */
+function extractRepositoryInformation(stats: PackageInfo | null | undefined) {
+  if (
+    stats?.repository == null ||
+    typeof stats.repository !== 'object' ||
+    !stats.repository.directory ||
+    !stats.repository.url
+  ) {
+    return null;
+  }
+
+  const parseRepoURLRegex = /git\+https:\/\/github\.com\/([A-Za-z0-9-]+\/[A-Za-z0-9-]+)\.git/;
+  const result = stats.repository.url.match(parseRepoURLRegex);
+
+  if (result === null) {
+    return null;
+  }
+
+  const [, repo] = result;
+
+  return {
+    repo,
+    baseDir: stats.repository.directory,
+    /** TODO: this should probably be more flexible. */
+    sourceFilePath: '',
+    /** TODO: this should probably be more flexible. */
+    branch: 'master',
+  };
+}
 
 export default PluginPageContent;
