@@ -516,5 +516,7 @@ export function isOneOfInputObjectType(
     ((namedType as unknown as Record<'isOneOf', boolean | undefined>).isOneOf ||
       namedType.astNode?.directives?.some(d => d.name.value === 'oneOf'));
 
+  isOneOfTypeCache.set(namedType, isOneOfType);
+
   return isOneOfType;
 }
