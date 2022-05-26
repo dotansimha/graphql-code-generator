@@ -466,7 +466,7 @@ export class BaseTypesVisitor<
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     if (this.config.onlyEnums) return '';
 
-    // Why the heck is directive.name a string and not { value: string } at runtime ?!
+    // Why the heck is node.name a string and not { value: string } at runtime ?!
     if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
       return this.getInputObjectOneOfDeclarationBlock(node).string;
     }
