@@ -2559,7 +2559,7 @@ describe('TypeScript', () => {
 
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int?: InputMaybe<Scalars['Int']>; };
+            { int: InputMaybe<Scalars['Int']>; };
         `);
       });
 
@@ -2581,8 +2581,8 @@ describe('TypeScript', () => {
 
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int?: InputMaybe<Scalars['Int']>; boolean?: never; }
-            | { int?: never; boolean?: InputMaybe<Scalars['Boolean']>; };
+            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
+            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
         `);
       });
 

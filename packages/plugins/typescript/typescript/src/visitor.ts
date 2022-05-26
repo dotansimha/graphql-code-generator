@@ -302,9 +302,11 @@ export class TsVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
-    const inner = `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
-      addOptionalSign ? '?' : ''
-    }: ${type}${this.getPunctuation(declarationKind)}`;
+    const buildFieldDefinition = (isOneOf = false) => {
+      return `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
+        addOptionalSign && !isOneOf ? '?' : ''
+      }: ${type}${this.getPunctuation(declarationKind)}`;
+    };
 
     const realParent = ancestors?.[ancestors.length - 1];
     if (
@@ -315,7 +317,7 @@ export class TsVisitor<
       for (const field of realParent.fields ?? []) {
         // Why the heck is node.name a string and not { value: string } at runtime ?!
         if (field.name.value === (node.name as any as string)) {
-          fieldParts.push(inner);
+          fieldParts.push(buildFieldDefinition(true));
           continue;
         }
         fieldParts.push(`${field.name.value}?: never;`);
@@ -323,7 +325,7 @@ export class TsVisitor<
       return comment + indent(`{ ${fieldParts.join(' ')} }`);
     }
 
-    return comment + indent(inner);
+    return comment + indent(buildFieldDefinition());
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
