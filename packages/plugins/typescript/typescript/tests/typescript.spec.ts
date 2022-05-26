@@ -2559,7 +2559,7 @@ describe('TypeScript', () => {
 
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int: InputMaybe<Scalars['Int']>; };
+            { int: Scalars['Int']; };
         `);
       });
 
@@ -2581,8 +2581,8 @@ describe('TypeScript', () => {
 
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
-            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
         `);
       });
 
@@ -2630,8 +2630,8 @@ describe('TypeScript', () => {
         const result = await plugin(schema, [], {}, { outputFile: '' });
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
-            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
         `);
       });
 
@@ -2655,8 +2655,8 @@ describe('TypeScript', () => {
         const result = await plugin(schema, [], {}, { outputFile: '' });
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
-            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
         `);
       });
     });

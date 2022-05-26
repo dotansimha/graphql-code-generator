@@ -304,10 +304,12 @@ export class TsVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
+    const readonlyPrefix = this.config.immutableTypes ? 'readonly ' : '';
+
     const buildFieldDefinition = (isOneOf = false) => {
-      return `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
-        addOptionalSign && !isOneOf ? '?' : ''
-      }: ${type}${this.getPunctuation(declarationKind)}`;
+      return `${readonlyPrefix}${node.name}${addOptionalSign && !isOneOf ? '?' : ''}: ${
+        isOneOf ? this.clearOptional(type) : type
+      }${this.getPunctuation(declarationKind)}`;
     };
 
     const realParentDef = ancestors?.[ancestors.length - 1];
@@ -327,7 +329,7 @@ export class TsVisitor<
             fieldParts.push(buildFieldDefinition(true));
             continue;
           }
-          fieldParts.push(`${fieldName}?: never;`);
+          fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
         }
         return comment + indent(`{ ${fieldParts.join(' ')} }`);
       }
