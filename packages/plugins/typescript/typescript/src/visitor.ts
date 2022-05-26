@@ -26,7 +26,6 @@ import {
   UnionTypeDefinitionNode,
   GraphQLObjectType,
   TypeDefinitionNode,
-  isInputObjectType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
