@@ -9,6 +9,7 @@ import {
   DeclarationKind,
   normalizeAvoidOptionals,
   AvoidOptionalsConfig,
+  isOneOfInputObjectType,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './config';
 import autoBind from 'auto-bind';
@@ -25,6 +26,7 @@ import {
   UnionTypeDefinitionNode,
   GraphQLObjectType,
   TypeDefinitionNode,
+  isInputObjectType,
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -308,21 +310,27 @@ export class TsVisitor<
       }: ${type}${this.getPunctuation(declarationKind)}`;
     };
 
-    const realParent = ancestors?.[ancestors.length - 1];
-    if (
-      realParent?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
-      realParent.directives?.some(directive => directive.name.value === 'oneOf')
-    ) {
-      const fieldParts: Array<string> = [];
-      for (const field of realParent.fields ?? []) {
-        // Why the heck is node.name a string and not { value: string } at runtime ?!
-        if (field.name.value === (node.name as any as string)) {
-          fieldParts.push(buildFieldDefinition(true));
-          continue;
+    const realParentDef = ancestors?.[ancestors.length - 1];
+    if (realParentDef) {
+      const parentType = this._schema.getType(realParentDef.name.value);
+
+      if (isOneOfInputObjectType(parentType)) {
+        if (originalFieldNode.type.kind === Kind.NON_NULL_TYPE) {
+          throw new Error(
+            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+          );
         }
-        fieldParts.push(`${field.name.value}?: never;`);
+        const fieldParts: Array<string> = [];
+        for (const fieldName of Object.keys(parentType.getFields())) {
+          // Why the heck is node.name a string and not { value: string } at runtime ?!
+          if (fieldName === (node.name as any as string)) {
+            fieldParts.push(buildFieldDefinition(true));
+            continue;
+          }
+          fieldParts.push(`${fieldName}?: never;`);
+        }
+        return comment + indent(`{ ${fieldParts.join(' ')} }`);
       }
-      return comment + indent(`{ ${fieldParts.join(' ')} }`);
     }
 
     return comment + indent(buildFieldDefinition());

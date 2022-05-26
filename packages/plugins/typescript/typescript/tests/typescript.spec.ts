@@ -2586,7 +2586,7 @@ describe('TypeScript', () => {
         `);
       });
 
-      it('correct output for type with non-optional fields', async () => {
+      it('raises exception for type with non-optional fields', async () => {
         const schema = buildSchema(
           /* GraphQL */ `
           input Input @oneOf {
@@ -2600,12 +2600,63 @@ describe('TypeScript', () => {
         `.concat(oneOfDirectiveDefinition)
         );
 
-        const result = await plugin(schema, [], {}, { outputFile: '' });
+        try {
+          await plugin(schema, [], {}, { outputFile: '' });
+          throw new Error('Plugin should have raised an exception.');
+        } catch (err) {
+          expect(err.message).toEqual(
+            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+          );
+        }
+      });
 
+      it('handles extensions properly', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          extend input Input {
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
         expect(result.content).toBeSimilarStringTo(`
           export type Input =
-            { int: Scalars['Int']; boolean?: never; }
-            | { int?: never; boolean: Scalars['Boolean']; };
+            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
+            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
+        `);
+      });
+
+      it('handles .isOneOf property on input object types properly', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const inputType: Record<'isOneOf', boolean> = schema.getType('Input') as any;
+        inputType.isOneOf = true;
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: InputMaybe<Scalars['Int']>; boolean?: never; }
+            | { int?: never; boolean: InputMaybe<Scalars['Boolean']>; };
         `);
       });
     });

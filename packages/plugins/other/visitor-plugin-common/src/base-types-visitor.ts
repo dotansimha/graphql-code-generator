@@ -40,6 +40,7 @@ import {
   wrapWithSingleQuotes,
   getConfigValue,
   buildScalarsFromConfig,
+  isOneOfInputObjectType,
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
@@ -466,7 +467,7 @@ export class BaseTypesVisitor<
     if (this.config.onlyEnums) return '';
 
     // Why the heck is directive.name a string and not { value: string } at runtime ?!
-    if (node.directives?.some(directive => (directive.name as any) === 'oneOf')) {
+    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
       return this.getInputObjectOneOfDeclarationBlock(node).string;
     }
 
