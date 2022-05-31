@@ -37,7 +37,7 @@
     ]
   },
   "devDependencies": {
-    "@apollo/client": "3.6.5",
+    "@apollo/client": "3.6.6",
     "@babel/core": "7.18.2",
     "@babel/preset-env": "7.18.2",
     "@babel/preset-typescript": "7.17.12",
@@ -47,8 +47,8 @@
     "@types/common-tags": "1.8.1",
     "@types/jest": "27.5.1",
     "@types/mkdirp": "1.0.2",
-    "@types/node": "16.11.36",
-    "@types/react": "18.0.9",
+    "@types/node": "16.11.38",
+    "@types/react": "18.0.10",
     "@types/webpack-env": "1.17.0",
     "@typescript-eslint/eslint-plugin": "5.27.0",
     "@typescript-eslint/parser": "5.27.0",
@@ -80,7 +80,7 @@
     "jest": "27.5.1",
     "jest-docblock": "27.5.1",
     "jest-junit": "13.2.0",
-    "lint-staged": "12.4.3",
+    "lint-staged": "12.5.0",
     "lodash": "4.17.21",
     "patch-package": "6.4.7",
     "prettier": "2.6.2",
