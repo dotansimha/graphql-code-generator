@@ -983,6 +983,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   describe('fetcher: fetch', () => {
     it('Should generate query and mutation correctly', async () => {
       const config = {
+        addInfiniteQuery: true,
         fetcher: 'fetch',
         typesPrefix: 'T',
       };
@@ -990,7 +991,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend).toContain(
-        `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
+        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
 
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
@@ -1006,6 +1007,21 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
         fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
         options
       );`);
+
+      expect(out.content).toBeSimilarStringTo(`export const useInfiniteTestQuery = <
+        TData = TTestQuery,
+        TError = unknown
+      >(
+        dataSource: { endpoint: string, fetchParams?: RequestInit },
+          pageParamKey: keyof TTestQueryVariables,
+          variables?: TTestQueryVariables,
+          options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+        ) =>
+        useInfiniteQuery<TTestQuery, TError, TData>(
+          variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+          (metaData) => fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+          options
+        );`);
 
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
           TError = unknown,

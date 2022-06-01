@@ -199,6 +199,21 @@ export const useTestQuery = <
       fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
       options
     );
+export const useInfiniteTestQuery = <
+      TData = TTestQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      pageParamKey: keyof TTestQueryVariables,
+      variables?: TTestQueryVariables,
+      options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TTestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => fetcher<TTestQuery, TTestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {
