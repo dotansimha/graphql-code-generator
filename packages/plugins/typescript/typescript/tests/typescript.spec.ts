@@ -637,6 +637,38 @@ describe('TypeScript', () => {
       expect(output).toContain(`SomethingElse = '99'`);
     });
 
+    it('#7898 - falsy enum value set on schema with enumsAsTypes set', async () => {
+      const testSchema = new GraphQLSchema({
+        types: [
+          new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLEnumType({
+                  name: 'MyEnum',
+                  values: {
+                    EnumValueName: {
+                      value: 0,
+                    },
+                  },
+                }),
+              },
+            },
+          }),
+        ],
+      });
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        { enumsAsTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain('EnumValueName');
+      expect(output).toContain('0');
+    });
+
     it('#6532 - numeric enum values with namingConvention', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
