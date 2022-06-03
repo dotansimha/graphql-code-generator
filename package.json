@@ -62,7 +62,7 @@
     "bob-the-bundler": "1.7.3",
     "chalk": "4.1.2",
     "dotenv": "16.0.1",
-    "eslint": "8.16.0",
+    "eslint": "8.17.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.26.0",
@@ -93,9 +93,9 @@
     "stencil-apollo": "0.1.6",
     "svelte": "3.48.0",
     "ts-jest": "27.1.5",
-    "ts-node": "10.8.0",
+    "ts-node": "10.8.1",
     "tslib": "2.4.0",
-    "typescript": "4.7.2",
+    "typescript": "4.7.3",
     "urql": "2.2.1",
     "vue": "3.2.36",
     "vue-apollo-smart-ops": "0.1.0"
@@ -122,6 +122,6 @@
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
-    "ts-node": "^"
+    "ts-node": "10.8.1"
   }
 }
