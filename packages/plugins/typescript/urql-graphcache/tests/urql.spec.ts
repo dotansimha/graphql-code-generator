@@ -193,4 +193,24 @@ import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast
     const result = mergeOutputs([await plugin(schema, [], {})]);
     expect(result).toMatchSnapshot();
   });
+
+  it('Should correctly output GraphCacheOptimisticUpdaters when there are no mutations', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      schema {
+        query: Query_Root
+      }
+
+      type Query_Root {
+        todos: [Todo]
+      }
+
+      type Todo {
+        id: ID
+        text: String
+        complete: Boolean
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [], {})]);
+    expect(result).toMatchSnapshot();
+  });
 });
