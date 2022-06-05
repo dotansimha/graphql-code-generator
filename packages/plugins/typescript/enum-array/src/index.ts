@@ -35,13 +35,11 @@ export const plugin: PluginFunction<EnumArrayPluginConfig> = (
   _documents: Types.DocumentFile[],
   config: EnumArrayPluginConfig
 ): Types.PluginOutput => {
-  const importFrom: EnumArrayPluginConfig['importFrom'] = config.importFrom;
-  const enums = getEnumTypeMap(schema);
-  const content = enums.map(buildArrayDefinition).join('\n');
-
   const result: Types.PluginOutput = { content };
-  if (importFrom) {
-    result['prepend'] = buildImportStatement(enums, importFrom);
+  if (config.importFrom) {
+    const enums = getEnumTypeMap(schema);
+    const content = enums.map(buildArrayDefinition).join('\n');
+    result['prepend'] = buildImportStatement(enums, config.importFrom);
   }
   return result;
 };
