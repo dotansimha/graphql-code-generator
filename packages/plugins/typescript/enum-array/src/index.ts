@@ -30,11 +30,11 @@ function buildImportStatement(enums: GraphQLEnumType[], importFrom: string): str
   return [`import { ${names.join(', ')} } from "${importFrom}";`];
 }
 
-export const plugin: PluginFunction<EnumArrayPluginConfig> = async (
+export const plugin: PluginFunction<EnumArrayPluginConfig> = (
   schema: GraphQLSchema,
   _documents: Types.DocumentFile[],
   config: EnumArrayPluginConfig
-): Promise<Types.PluginOutput> => {
+): Types.PluginOutput => {
   const importFrom: EnumArrayPluginConfig['importFrom'] = config.importFrom;
   const enums = getEnumTypeMap(schema);
   const content = enums.map(buildArrayDefinition).join('\n');
