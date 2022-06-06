@@ -40,6 +40,7 @@ import {
   wrapWithSingleQuotes,
   getConfigValue,
   buildScalarsFromConfig,
+  isOneOfInputObjectType,
 } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
@@ -453,8 +454,22 @@ export class BaseTypesVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment(node.description as any as string)
+      .withContent(`\n` + node.fields.join('\n  |'));
+  }
+
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     if (this.config.onlyEnums) return '';
+
+    // Why the heck is node.name a string and not { value: string } at runtime ?!
+    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
 
     return this.getInputObjectDeclarationBlock(node).string;
   }

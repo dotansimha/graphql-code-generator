@@ -19,6 +19,8 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
+  isInputObjectType,
+  GraphQLInputObjectType,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
@@ -494,4 +496,27 @@ function clearOptional(str: string): string {
 
 function stripTrailingSpaces(str: string): string {
   return str.replace(/ +\n/g, '\n');
+}
+
+const isOneOfTypeCache = new WeakMap<GraphQLNamedType, boolean>();
+export function isOneOfInputObjectType(
+  namedType: GraphQLNamedType | null | undefined
+): namedType is GraphQLInputObjectType {
+  if (!namedType) {
+    return false;
+  }
+  let isOneOfType = isOneOfTypeCache.get(namedType);
+
+  if (isOneOfType !== undefined) {
+    return isOneOfType;
+  }
+
+  isOneOfType =
+    isInputObjectType(namedType) &&
+    ((namedType as unknown as Record<'isOneOf', boolean | undefined>).isOneOf ||
+      namedType.astNode?.directives?.some(d => d.name.value === 'oneOf'));
+
+  isOneOfTypeCache.set(namedType, isOneOfType);
+
+  return isOneOfType;
 }
