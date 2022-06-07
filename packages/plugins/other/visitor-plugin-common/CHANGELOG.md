@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.9.0
+
+### Minor Changes
+
+- c3d7b7226: support the `@oneOf` directive on input types.
+
 ## 2.8.0
 
 ### Minor Changes

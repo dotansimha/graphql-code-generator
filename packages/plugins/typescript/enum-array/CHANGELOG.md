@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-enum-array
 
+## 2.1.2
+
+### Patch Changes
+
+- fe212a47a: chore: remove async from a plugin, as it's never was async
+
 ## 2.1.1
 
 ### Patch Changes

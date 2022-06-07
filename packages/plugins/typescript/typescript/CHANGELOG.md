@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript
 
+## 2.5.0
+
+### Minor Changes
+
+- c3d7b7226: support the `@oneOf` directive on input types.
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+
 ## 2.4.11
 
 ### Patch Changes
