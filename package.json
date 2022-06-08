@@ -47,7 +47,7 @@
     "@types/common-tags": "1.8.1",
     "@types/jest": "27.5.2",
     "@types/mkdirp": "1.0.2",
-    "@types/node": "16.11.38",
+    "@types/node": "16.11.39",
     "@types/react": "18.0.12",
     "@types/webpack-env": "1.17.0",
     "@typescript-eslint/eslint-plugin": "5.27.1",
