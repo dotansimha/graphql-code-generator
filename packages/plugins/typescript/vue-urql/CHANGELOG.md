@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-vue-urql
 
+## 2.2.14
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
 ## 2.2.13
 
 ### Patch Changes

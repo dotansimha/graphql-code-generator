@@ -1,5 +1,12 @@
 # @graphql-codegen/import-types-preset
 
+## 2.1.20
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
 ## 2.1.19
 
 ### Patch Changes
