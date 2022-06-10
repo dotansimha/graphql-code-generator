@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-msw
 
+## 1.0.12
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
 ## 1.0.11
 
 ### Patch Changes
