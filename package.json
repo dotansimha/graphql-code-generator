@@ -37,8 +37,8 @@
     ]
   },
   "devDependencies": {
-    "@apollo/client": "3.6.7",
-    "@babel/core": "7.18.2",
+    "@apollo/client": "3.6.8",
+    "@babel/core": "7.18.5",
     "@babel/preset-env": "7.18.2",
     "@babel/preset-typescript": "7.17.12",
     "@changesets/cli": "2.23.0",
@@ -50,8 +50,8 @@
     "@types/node": "16.11.39",
     "@types/react": "18.0.12",
     "@types/webpack-env": "1.17.0",
-    "@typescript-eslint/eslint-plugin": "5.27.1",
-    "@typescript-eslint/parser": "5.27.1",
+    "@typescript-eslint/eslint-plugin": "5.28.0",
+    "@typescript-eslint/parser": "5.28.0",
     "@urql/exchange-graphcache": "4.4.3",
     "@vue/apollo-composable": "4.0.0-alpha.17",
     "@vue/composition-api": "1.6.2",
