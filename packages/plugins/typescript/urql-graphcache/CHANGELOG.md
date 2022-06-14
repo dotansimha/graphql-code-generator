@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-urql-graphcache
 
+## 2.2.16
+
+### Patch Changes
+
+- b056cc831: Fixed a bug where the generated type file causes a type error when the GraphQL schema includes no mutations
+
 ## 2.2.15
 
 ### Patch Changes
