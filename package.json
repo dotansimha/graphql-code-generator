@@ -68,7 +68,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-n": "15.2.2",
     "eslint-plugin-promise": "6.0.0",
-    "eslint-plugin-react-hooks": "4.5.0",
+    "eslint-plugin-react-hooks": "4.6.0",
     "flow-bin": "0.180.0",
     "flow-parser": "0.180.0",
     "fs-extra": "10.1.0",
@@ -83,7 +83,7 @@
     "lint-staged": "13.0.1",
     "lodash": "4.17.21",
     "patch-package": "6.4.7",
-    "prettier": "2.6.2",
+    "prettier": "2.7.0",
     "prettier-plugin-sh": "0.11.0",
     "prettier-plugin-svelte": "2.7.0",
     "react": "17.0.2",
@@ -115,7 +115,7 @@
     ]
   },
   "resolutions": {
-    "prettier": "2.6.2",
+    "prettier": "2.7.0",
     "babel-jest": "27.5.1",
     "jest-runner": "27.5.1",
     "graphql": "16.5.0",
