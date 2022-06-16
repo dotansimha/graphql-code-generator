@@ -1,11 +1,8 @@
----
-id: development-workflow
-title: Development workflow
----
+# Development workflow
 
 GraphQL Code Generator should be integrated as part of your development workflow.
 
-### Scripts Integration
+## Scripts Integration
 
 If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your `package.json`, for example:
 
@@ -25,7 +22,7 @@ This way, the codegen generates the output according to your configuration befor
 
 It's also helpful to run the codegen during your continuous integration flow and ensure that your code continually compiles with the generated output; this way, you can detect breaking changes in your GraphQL schema and GraphQL documents.
 
-### Watch Mode
+## Watch Mode
 
 If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
 
@@ -44,10 +41,9 @@ You can either run it in a separate terminal session or use tools like [`concurr
 
 If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
 
-{/* prettier-ignore */}
-:::shell `--watch` flag
-    yarn graphql-codegen --watch "src/**/*.js"
-:::
+```sh
+yarn graphql-codegen --watch "src/**/*.js"
+```
 
 Use this when you are loading your schema or documents from a single code file that depends on other files internally because codegen can't tell that you're using those files automatically.
 
@@ -61,7 +57,7 @@ watchConfig:
   interval: 1000
 ```
 
-### Monorepo and Yarn Workspaces
+## Monorepo and Yarn Workspaces
 
 If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your monorepo.
 
