@@ -1,0 +1,42 @@
+import Callout from 'nextra-theme-docs/callout'
+
+# Checking schema
+
+Once you have published the schema, one of the next steps would be to check your local (or Pull Request) schema against the latest version.
+
+Hive will give you a list of all changes, sorted by criticality level (Breaking, Dangerous, Safe) and fail the check once breaking change is detected.
+
+## Requirements
+
+- An active [token](./tokens)
+- [Published schema](./publish-schema)
+
+## Using Hive CLI
+
+To check a schema, use `hive schema:check` command:
+
+```bash
+# Single GraphQL API
+hive schema:check schema.graphql
+# or
+hive schema:check "src/*.graphql"
+
+# Federation or Stitching
+hive schema:check --service reviews schema.graphql
+```
+
+<Callout emoji="💡">In case of Federation or Stitching it's mandatory to use `--service` flag.</Callout>
+
+## With `Usage` enabled
+
+When [Operations Monitoring](./monitoring) is enabled, Hive is able mark breaking changes as safe based on data collected by Hive Client.
+
+We call it Conditional Breaking Changes and the general idea is to let you decide when a breaking change is in fact breaking.
+
+![Conditional Breaking Changes](../../public/conditional-breaking-changes.png)
+
+## GitHub Integration
+
+In case you want to integrate GraphQL Hive with your GitHub repository, follow the [GitHub integration guide](./integrations#github).
+
+![GitHub Schema Check](../../public/github-schema-check.png)

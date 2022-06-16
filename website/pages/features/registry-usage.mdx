@@ -1,0 +1,140 @@
+# Using Registry
+
+## CDN Access
+
+With high-availability and multi-zone CDN service based on Cloudflare, Hive allows you to access the registry, through a secured external service, that's always up regardless of Hive services.
+
+To connect your GraphQL Gateway or any other tool with GraphQL Hive you need to generate an access key to our CDN.
+
+Go to the schema view of your target https://app.graphql-hive.com/:org/:project/:target and click "Connect".
+
+![Connect button](../../public/schema-view-connect-button.png)
+
+GraphQL Hive will now generate a unique key:
+
+![Connect to CDN modal](../../public/connect-to-cdn-modal.png)
+
+## Apollo Federation
+
+You're a programmer (or if you prefer a Software Engineer) so no need to explain the code snippet below. Just two things:
+
+- `HIVE_CDN_ENDPOINT` - the endpoint Hive generated for you in the previous step
+- `HIVE_CDN_KEY` - the access key
+
+The `experimental_pollInterval` value is up to you. Apollo Gateway uses 10s (10.000 ms) by default but we think it's better to fetch a supergraph more often.
+
+```typescript
+import { createSupergraphSDLFetcher } from '@graphql-hive/client'
+import { ApolloGateway } from '@apollo/gateway'
+import { ApolloServer } from 'apollo-server'
+
+const gateway = new ApolloGateway({
+  experimental_pollInterval: 10_000, // define the poll interval (in ms)
+  experimental_updateSupergraphSdl: createSupergraphFetcher({
+    endpoint: HIVE_CDN_ENDPOINT,
+    key: HIVE_CDN_KEY
+  })
+})
+
+const server = new ApolloServer({
+  gateway
+})
+
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`)
+})
+```
+
+## Schema Stitching
+
+Stitching could be done in many ways, that's why `@graphql-hive/client` provides generic functions, not something dedicated for stitching. Unfortunately the implementation of gateway + polling is up to you.
+
+Here's an example of how it could work
+
+```typescript
+import { createServicesFetcher } from '@graphql-hive/client'
+
+const fetchServices = createServicesFetcher({
+  endpoint: process.env.HIVE_CDN_ENDPOINT,
+  key: process.env.HIVE_CDN_KEY
+})
+
+startMyGraphQLGateway({
+  // a function that resolves a list of services to stitch them together
+  async stitchServices() {
+    const services = await fetchServices()
+
+    return services.map(service => {
+      return {
+        sdl: service.sdl,
+        url: service.url,
+        checksum: service.id // to check if service's schema was modified
+      }
+    })
+  },
+  pollingInSec: 10 // every 10s
+})
+```
+
+- `HIVE_CDN_ENDPOINT` - the endpoint Hive generated for you in the previous step
+- `HIVE_CDN_KEY` - the access key
+
+The `createServicesFetcher` factory function returns another function that is responsible for fetching a list of services from Hive's high-availability endpoint..
+
+The `startMyGraphQLGateway` represents your GraphQL gateway with built-in polling mechanism, in which the `stitchServices` method is called every 10 seconds.
+
+## Other tools
+
+Here's a list of available endpoints:
+
+### Federation
+
+- list of services - `<endpoint>/schema`
+- supergraph - `<endpoint>/supergraph`
+
+### Stitching
+
+- list of services - `<endpoint>/schema`
+
+### Single schema project
+
+- Schema Information `<endpoint>/schema`
+
+  Here's an example of how it could work via cURL for a single schema project:
+
+  ```bash
+  curl --request GET \
+    --url https://cdn.graphql-hive.com/asce7c12-753d-hive-bee-d7f2c803e232/schema \
+    --header 'X-Hive-CDN-Key: aabTxbEyC78NvSPQNO+qLrrRnBvODJJ8k4sL/2EtIwc=' \
+    --header 'Accept: application/json'
+  ```
+
+  Output:
+
+  ```json
+  {
+    "sdl": "<SDL-here>",
+    "date": "2021-08-20T15:16:40.024Z"
+  }
+  ```
+
+- Raw SDL `<endpoint>/sdl`
+
+  If you wish to get the raw SDL, without a wrapping JSON object, you can specify `/sdl` as suffix to your request.
+
+- Introspection JSON `<endpoint>/introspection`
+
+  If you wish to get the introspection JSON for your GraphQL schema, without a wrapping JSON object, you can specify `/introspection` as suffix to your request.
+  This could be useful for tools that need to get the introspection as-is, like GraphQL Codegen, or GraphQL-Config.
+
+- Metadata `<endpoint>/metadata`
+
+  To fetch metadata published along with your GraphQL schema (using `--metadata`), use `/metadata` endpoint
+
+  ```bash
+  curl --request GET \
+    --url https://cdn.graphql-hive.com/asce7c12-753d-hive-bee-d7f2c803e232/metadata \
+    --header 'X-Hive-CDN-Key: YOUR_KEY_HERE'
+  ```
+
+  The value returned is the value you stored, as JSON, with `Content-Type: application/json` header.

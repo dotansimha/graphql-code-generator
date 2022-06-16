@@ -1,0 +1,47 @@
+# Integrations
+
+![Integrations](../../public/integrations-view.png)
+
+## Slack
+
+If you want to communicate with Hive and receive notifications, click on the "Connect Slack" button and visit the [Alerts and Notifications](./alerts-notifications) chapter.
+
+## GitHub
+
+GraphQL Hive offers an seamless integration with your GitHub repository.
+
+![GitHub Schema Check](../../public/github-schema-check.png)
+
+### Install GraphQL Hive application
+
+Click on the "Connect GitHub" button and follow the intructions there. Remember to give an access to your repository.
+
+### Setting up CI/CD
+
+Use [`@graphql-hive/cli`](https://npmjs.com/package/@graphql-hive/cli) in your CI/CD pipeline to run a `schema:check` or `schema:publish`.
+
+### NPM
+
+Install [`@graphql-hive/cli`](https://www.npmjs.com/package/@graphql-hive/cli) package from NPM:
+
+```bash
+npm install @graphql-hive/cli
+yarn add @graphql-hive/cli
+```
+
+### Linux / MacOS
+
+Install latest version of GraphQL Hive CLI:
+
+```bash
+curl -sSL https://graphql-hive.com/install.sh | sh
+```
+
+### Example
+
+Here's an example for GitHub Actions:
+
+```yaml
+- name: Schema Check
+  run: hive schema:check packages/api/src/schema.graphql --github
+```
