@@ -1,7 +1,5 @@
 {
-  "getting-started": "Getting Started",
   "index": "Introduction",
-  "get-started": "Get Started",
-  "features": "Features",
-  "specs": "Specifications"
+  "getting-started": "Getting Started",
+  "guides": "Guides"
 }
