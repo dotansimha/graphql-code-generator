@@ -1,7 +1,7 @@
----
-id: index
-title: Introduction to GraphQL Code Generator
----
+import MDXTabs from '../../src/components/MDXTabs/MDXTabs'
+import MDXTab from '../../src/components/MDXTabs/MDXTab'
+
+# Introduction to GraphQL Code Generator
 
 GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack.
 
@@ -10,12 +10,6 @@ From back-end to front-end, GraphQL Code Generator automates the generation of:
 - **Typed Queries, Mutations and, Subscriptions** for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 - **Typed GraphQL resolvers**, for any Node.js (GraphQL Yoga, GraphQL Modules, TypeGraphQL or Apollo) or Java GraphQL server.
 - **Fully-typed Node.js SDKs, Apollo Android** support, and more!
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## The perfect GraphQL Developer Experience
 
@@ -44,17 +38,13 @@ type Query {
 
 The following sections showcase why GraphQL Code Generator is a game-changer for your GraphQL Stack.
 
-<p>&nbsp;</p>
-
 ---
-
-<p>&nbsp;</p>
 
 ### From the front-end
 
 Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
-<MDXTabs namespace={`getting-started-front-end-codetabs`}>
+<MDXTabs namespace="getting-started-front-end-codetabs">
 
 <MDXTab label="URQL React">
 
@@ -287,7 +277,7 @@ experience and stability of your stack.
 After [installing](/docs/getting-started/installation) and [configuring](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
 up-to-date as follows:
 
-<MDXTabs namespace={`getting-started-front-end-codetabs`}>
+<MDXTabs namespace="getting-started-front-end-codetabs">
 
 <MDXTab label="URQL React">
 
@@ -399,17 +389,11 @@ Now, with simple configuration and an npm/yarn script, a front-end developers be
 
 - **less boilerplate** (thanks to full code generation such as React hooks generation)
 
-<br />
-
 > **How does GraphQL Code Generator work?**
 >
 > More details on the inner working of GraphQL Code Generator are available on [this page](/docs/advanced/how-does-it-work).
 
-<p>&nbsp;</p>
-
 ---
-
-<p>&nbsp;</p>
 
 ### To the back-end
 
@@ -419,13 +403,11 @@ Most GraphQL API resolvers remain untyped or wrongly typed which, leads to multi
 
 - typos in the resolvers' function type signature
 
-<br />
-
 For this reason, GraphQL Code Generator provides multiple plugins that help you automate the generation of resolvers' typings.
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
-<MDXTabs namespace={`getting-started-back-end-codetabs`}>
+<MDXTabs namespace="getting-started-back-end-codetabs">
 
 <MDXTab label="Apollo Server">
 
@@ -510,8 +492,6 @@ export const resolvers: UsersModule.Resolvers = {
 </MDXTab>
 
 </MDXTabs>
-
-<p>&nbsp;</p>
 
 ## What's next?
 

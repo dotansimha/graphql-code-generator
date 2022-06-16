@@ -1,6 +1,6 @@
+import React, { Children, createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
 import { MDXTabsCurrentTabContext } from 'components/MDXTabsCurrentTabContext';
-import React, { Children, createContext, ReactNode, useCallback, useContext, useState } from 'react';
 
 // fetch active tabIndex across all instances of <MDXTabs> sharing the same namespace
 const useCurrentTab = (namespace: string): [number, (i: number) => void] => {

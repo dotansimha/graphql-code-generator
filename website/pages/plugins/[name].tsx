@@ -7,7 +7,7 @@ import { Box, Center, Code, Container, Grid, SimpleGrid } from '@chakra-ui/react
 import { PackageInstall, RemoteGHMarkdown, EditOnGitHubButton } from '@guild-docs/client';
 import { buildMDX, CompiledMDX } from '@guild-docs/server';
 import { getPackagesData, PackageInfo, PackageWithStats } from '@guild-docs/server/npm';
-import { packageList } from '../../lib/plugins';
+import { packageList } from '../../src/lib/plugins';
 
 export const SubTitle = styled.h2(() => [tw`mt-0 mb-4 font-bold text-lg md:text-xl`]);
 export const Title = styled.h2(() => [tw`mt-0 mb-4 font-bold text-xl md:text-2xl`]);
