@@ -1,0 +1,29 @@
+{
+  "index": {
+    "title": "Home",
+    "type": "page",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "docs": {
+    "title": "Docs",
+    "type": "page",
+    "theme": {
+      "toc": true
+    }
+  },
+  "plugin-hub": {
+    "title": "Plugin Hub",
+    "type": "page",
+    "theme": {
+      "toc": false
+    }
+  },
+  "contact-us-link": {
+    "title": "Contact Us",
+    "href": "https://the-guild.dev/contact",
+    "type": "page",
+    "newWindow": true
+  }
+}

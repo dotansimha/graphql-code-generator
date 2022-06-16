@@ -1,0 +1,745 @@
+diff --git a/node_modules/nextra-theme-docs/dist/index.js b/node_modules/nextra-theme-docs/dist/index.js
+index 0f5435d..6c71595 100644
+--- a/node_modules/nextra-theme-docs/dist/index.js
++++ b/node_modules/nextra-theme-docs/dist/index.js
+@@ -1024,7 +1024,7 @@ var Footer = ({ menu }) => {
+ var footer_default = Footer;
+ 
+ // src/misc/theme.tsx
+-import Link5 from "next/link";
++import NextLink2 from "next/link";
+ import React23, {
+   useEffect as useEffect4,
+   useRef as useRef4,
+@@ -1200,8 +1200,7 @@ var slugs = /* @__PURE__ */ new WeakMap();
+ if (typeof window !== "undefined") {
+   observer = observer || new IntersectionObserver((entries) => {
+     const headers = [];
+-    for (let i = 0; i < entries.length; i++) {
+-      const entry = entries[i];
++    for (const entry of entries) {
+       if (entry && entry.rootBounds && slugs.has(entry.target)) {
+         const [slug, index] = slugs.get(entry.target);
+         const aboveHalfViewport = entry.boundingClientRect.y + entry.boundingClientRect.height <= entry.rootBounds.y + entry.rootBounds.height;
+@@ -1241,34 +1240,21 @@ if (typeof window !== "undefined") {
+     threshold: [0, 1]
+   });
+ }
+-var HeaderLink = (_a) => {
++var createHeaderLink = (Tag) => function HeaderLink(_a) {
+   var _b = _a, {
+-    tag: Tag,
+     children,
+-    id,
+-    context,
+-    withObserver = true
++    id: slug
+   } = _b, props = __objRest(_b, [
+-    "tag",
+     "children",
+-    "id",
+-    "context",
+-    "withObserver"
++    "id"
+   ]);
+   setActiveAnchor = useActiveAnchorSet();
+   const obRef = useRef4(null);
+-  const slug = id;
+-  const anchor = /* @__PURE__ */ React23.createElement("span", {
+-    className: "subheading-anchor",
+-    id: slug,
+-    ref: obRef
+-  });
+-  const index = context.index++;
+   useEffect4(() => {
+     const ref = obRef;
+     if (!ref.current)
+       return;
+-    slugs.set(ref.current, [slug, index]);
++    slugs.set(ref.current, [slug, Number(Tag[1]) - 1]);
+     if (ref.current)
+       observer.observe(ref.current);
+     return () => {
+@@ -1281,7 +1267,11 @@ var HeaderLink = (_a) => {
+       });
+     };
+   }, []);
+-  return /* @__PURE__ */ React23.createElement(Tag, __spreadValues({}, props), anchor, /* @__PURE__ */ React23.createElement("a", {
++  return /* @__PURE__ */ React23.createElement(Tag, __spreadValues({}, props), /* @__PURE__ */ React23.createElement("span", {
++    className: "subheading-anchor",
++    id: slug,
++    ref: obRef
++  }), /* @__PURE__ */ React23.createElement("a", {
+     href: "#" + slug,
+     className: "anchor text-current no-underline no-outline"
+   }, children, /* @__PURE__ */ React23.createElement("span", {
+@@ -1289,57 +1279,26 @@ var HeaderLink = (_a) => {
+     "aria-hidden": true
+   }, "#")));
+ };
+-var H2 = (context) => (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
+-  return /* @__PURE__ */ React23.createElement(HeaderLink, __spreadValues({
+-    tag: "h2",
+-    context
+-  }, props), children);
+-};
+-var H3 = (context) => (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
+-  return /* @__PURE__ */ React23.createElement(HeaderLink, __spreadValues({
+-    tag: "h3",
+-    context
+-  }, props), children);
+-};
+-var H4 = (context) => (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
+-  return /* @__PURE__ */ React23.createElement(HeaderLink, __spreadValues({
+-    tag: "h4",
+-    context
+-  }, props), children);
+-};
+-var H5 = (context) => (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
+-  return /* @__PURE__ */ React23.createElement(HeaderLink, __spreadValues({
+-    tag: "h5",
+-    context
+-  }, props), children);
+-};
+-var H6 = (context) => (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
+-  return /* @__PURE__ */ React23.createElement(HeaderLink, __spreadValues({
+-    tag: "h6",
+-    context
+-  }, props), children);
+-};
+ var A = (_a) => {
+   var _b = _a, {
+-    children
++    children,
++    href
+   } = _b, props = __objRest(_b, [
+-    "children"
++    "children",
++    "href"
+   ]);
+-  const isExternal = props.href && props.href.startsWith("https://");
+-  if (isExternal) {
+-    return /* @__PURE__ */ React23.createElement("a", __spreadValues({
+-      target: "_blank",
+-      rel: "noreferrer"
+-    }, props), children);
++  if (!href) {
++    return null;
+   }
+-  return props.href ? /* @__PURE__ */ React23.createElement(Link5, {
+-    href: props.href
+-  }, /* @__PURE__ */ React23.createElement("a", __spreadValues({}, props), children)) : /* @__PURE__ */ React23.createElement(React23.Fragment, null);
++  const isExternal = href.startsWith("https://");
++  return isExternal ? /* @__PURE__ */ React23.createElement("a", __spreadValues({
++    target: "_blank",
++    rel: "noreferrer",
++    href
++  }, props), children) : /* @__PURE__ */ React23.createElement(NextLink2, {
++    href,
++    passHref: true
++  }, /* @__PURE__ */ React23.createElement("a", __spreadValues({}, props), children));
+ };
+ var Table = ({ children }) => {
+   return /* @__PURE__ */ React23.createElement("div", {
+@@ -1355,18 +1314,18 @@ var findSummary = (children) => {
+     var _a;
+     if (child && child.type === Summary) {
+       summary = summary || child;
+-    } else {
+-      let c = child;
+-      if (!summary && typeof child === "object" && child && child.type !== Details && "props" in child && child.props) {
+-        const result = findSummary(child.props.children);
+-        summary = summary || result[0];
+-        c = React23.cloneElement(child, __spreadProps(__spreadValues({}, child.props), {
+-          children: ((_a = result[1]) == null ? void 0 : _a.length) ? result[1] : void 0,
+-          key: index
+-        }));
+-      }
+-      restChildren.push(c);
++      return;
+     }
++    let c = child;
++    if (!summary && typeof child === "object" && child && child.type !== Details && "props" in child && child.props) {
++      const result = findSummary(child.props.children);
++      summary = summary || result[0];
++      c = React23.cloneElement(child, __spreadProps(__spreadValues({}, child.props), {
++        children: ((_a = result[1]) == null ? void 0 : _a.length) ? result[1] : void 0,
++        key: index
++      }));
++    }
++    restChildren.push(c);
+   });
+   return [summary, restChildren];
+ };
+@@ -1384,14 +1343,18 @@ var Details = (_a) => {
+   return /* @__PURE__ */ React23.createElement("details", __spreadValues(__spreadProps(__spreadValues({}, props), {
+     ref,
+     open: true
+-  }), openState ? { "data-open": "" } : null), /* @__PURE__ */ React23.createElement(DetailsContext.Provider, {
++  }), openState && { "data-open": "" }), /* @__PURE__ */ React23.createElement(DetailsContext.Provider, {
+     value: setOpen
+   }, summary), /* @__PURE__ */ React23.createElement(Collapse, {
+     open: openState
+   }, restChildren));
+ };
+ var Summary = (_a) => {
+-  var _b = _a, { children } = _b, props = __objRest(_b, ["children"]);
++  var _b = _a, {
++    children
++  } = _b, props = __objRest(_b, [
++    "children"
++  ]);
+   const setOpen = useContext3(DetailsContext);
+   return /* @__PURE__ */ React23.createElement("summary", __spreadProps(__spreadValues({}, props), {
+     onClick: (e) => {
+@@ -1400,12 +1363,12 @@ var Summary = (_a) => {
+     }
+   }), children);
+ };
+-var getComponents = (context) => ({
+-  h2: H2(context),
+-  h3: H3(context),
+-  h4: H4(context),
+-  h5: H5(context),
+-  h6: H6(context),
++var components = {
++  h2: createHeaderLink("h2"),
++  h3: createHeaderLink("h3"),
++  h4: createHeaderLink("h4"),
++  h5: createHeaderLink("h5"),
++  h6: createHeaderLink("h6"),
+   a: A,
+   table: Table,
+   details: Details,
+@@ -1416,10 +1379,12 @@ var getComponents = (context) => ({
+     Tabs,
+     Tab
+   }
+-});
+-var MDXTheme = ({ children }) => {
++};
++var MDXTheme = ({
++  children
++}) => {
+   return /* @__PURE__ */ React23.createElement(MDXProvider, {
+-    components: getComponents({ index: 0 })
++    components
+   }, children);
+ };
+ 
+@@ -1428,7 +1393,7 @@ import React24, { useState as useState5, useEffect as useEffect5, useMemo as use
+ import cn8 from "classnames";
+ import Slugger from "github-slugger";
+ import { useRouter as useRouter6 } from "next/router";
+-import Link6 from "next/link";
++import Link5 from "next/link";
+ import scrollIntoView from "scroll-into-view-if-needed";
+ 
+ // src/utils/get-heading-text.ts
+@@ -1487,7 +1452,7 @@ function FolderImpl({ item, anchors }) {
+   })));
+   return /* @__PURE__ */ React24.createElement("li", {
+     className: cn8({ open, active })
+-  }, item.withIndexPage ? /* @__PURE__ */ React24.createElement(Link6, {
++  }, item.withIndexPage ? /* @__PURE__ */ React24.createElement(Link5, {
+     href: item.route
+   }, link) : link, /* @__PURE__ */ React24.createElement(Collapse, {
+     open
+@@ -1536,7 +1501,7 @@ function File({ item, anchors, topLevel }) {
+       });
+       return /* @__PURE__ */ React24.createElement("li", {
+         className: active ? "active" : ""
+-      }, /* @__PURE__ */ React24.createElement(Link6, {
++      }, /* @__PURE__ */ React24.createElement(Link5, {
+         href: item.href || item.route
+       }, /* @__PURE__ */ React24.createElement("a", __spreadProps(__spreadValues({}, item.newWindow ? { target: "_blank", rel: "noopener noreferrer" } : {}), {
+         onClick: () => {
+@@ -1567,7 +1532,7 @@ function File({ item, anchors, topLevel }) {
+   }
+   return /* @__PURE__ */ React24.createElement("li", {
+     className: active ? "active" : ""
+-  }, /* @__PURE__ */ React24.createElement(Link6, {
++  }, /* @__PURE__ */ React24.createElement(Link5, {
+     href: item.href || item.route
+   }, /* @__PURE__ */ React24.createElement("a", __spreadProps(__spreadValues({}, item.newWindow ? { target: "_blank", rel: "noopener noreferrer" } : {}), {
+     onClick: () => {
+@@ -1901,7 +1866,7 @@ var default_config_default = defaultTheme;
+ // src/utils/normalize-pages.tsx
+ import getTitle from "title";
+ 
+-// src/misc/theme-context.tsx
++// src/misc/theme-context.ts
+ var theme_context_default = {
+   navbar: true,
+   sidebar: true,
+@@ -2164,7 +2129,7 @@ if (typeof window !== "undefined") {
+ 
+ // src/breadcrumb.tsx
+ import React27 from "react";
+-import Link7 from "next/link";
++import Link6 from "next/link";
+ import cn10 from "classnames";
+ function Breadcrumb({ activePath }) {
+   return /* @__PURE__ */ React27.createElement("div", {
+@@ -2183,7 +2148,7 @@ function Breadcrumb({ activePath }) {
+         "text-gray-600 dark:text-gray-400 active": isActive,
+         "text-ellipsis whitespace-nowrap overflow-hidden min-w-[24px]": !isActive
+       })
+-    }, isLink && !isActive ? /* @__PURE__ */ React27.createElement(Link7, {
++    }, isLink && !isActive ? /* @__PURE__ */ React27.createElement(Link6, {
+       href: item.route
+     }, /* @__PURE__ */ React27.createElement("a", {
+       className: "text-current no-underline"
+@@ -2270,7 +2235,6 @@ var Content = ({
+     directories
+   } = useDirectoryInfo(pageMap);
+   const filepath = route.slice(0, route.lastIndexOf("/") + 1);
+-  const filepathWithName = filepath + filename;
+   const title = meta.title || titleText || "Untitled";
+   const isRTL = useMemo3(() => {
+     if (!config.i18n)
+@@ -2318,21 +2282,21 @@ var Content = ({
+     className: "nextra-toc w-64 hidden xl:block text-sm px-4 order-last flex-shrink-0"
+   }) : /* @__PURE__ */ React28.createElement(ToC, {
+     headings: config.floatTOC ? headingArr : null,
+-    filepathWithName
++    filepathWithName: filepath + filename
+   }), /* @__PURE__ */ React28.createElement(Body, {
+     themeContext,
+-    breadcrumb: activeType === "page" ? null : themeContext.breadcrumb ? /* @__PURE__ */ React28.createElement(Breadcrumb, {
++    breadcrumb: activeType !== "page" && themeContext.breadcrumb && /* @__PURE__ */ React28.createElement(Breadcrumb, {
+       activePath
+-    }) : null,
+-    navLinks: activeType === "page" ? null : themeContext.pagination ? /* @__PURE__ */ React28.createElement(NavLinks, {
++    }),
++    navLinks: activeType !== "page" && themeContext.pagination && /* @__PURE__ */ React28.createElement(NavLinks, {
+       flatDirectories: flatDocsDirectories,
+       currentIndex: activeIndex,
+       isRTL
+-    }) : null,
++    }),
+     timestamp
+-  }, children)))), themeContext.footer && config.footer ? /* @__PURE__ */ React28.createElement(footer_default, {
++  }, children)))), themeContext.footer && config.footer && /* @__PURE__ */ React28.createElement(footer_default, {
+     menu: activeType === "page" || hideSidebar
+-  }) : null)));
++  }))));
+ };
+ var createLayout = (opts, _config) => {
+   const extendedConfig = Object.assign({}, default_config_default, _config);
+diff --git a/node_modules/nextra-theme-docs/dist/misc/theme.js b/node_modules/nextra-theme-docs/dist/misc/theme.js
+new file mode 100644
+index 0000000..945daa5
+--- /dev/null
++++ b/node_modules/nextra-theme-docs/dist/misc/theme.js
+@@ -0,0 +1,391 @@
++var __defProp = Object.defineProperty;
++var __defProps = Object.defineProperties;
++var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
++var __getOwnPropSymbols = Object.getOwnPropertySymbols;
++var __hasOwnProp = Object.prototype.hasOwnProperty;
++var __propIsEnum = Object.prototype.propertyIsEnumerable;
++var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
++var __spreadValues = (a, b) => {
++  for (var prop in b || (b = {}))
++    if (__hasOwnProp.call(b, prop))
++      __defNormalProp(a, prop, b[prop]);
++  if (__getOwnPropSymbols)
++    for (var prop of __getOwnPropSymbols(b)) {
++      if (__propIsEnum.call(b, prop))
++        __defNormalProp(a, prop, b[prop]);
++    }
++  return a;
++};
++var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
++var __objRest = (source, exclude) => {
++  var target = {};
++  for (var prop in source)
++    if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
++      target[prop] = source[prop];
++  if (source != null && __getOwnPropSymbols)
++    for (var prop of __getOwnPropSymbols(source)) {
++      if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
++        target[prop] = source[prop];
++    }
++  return target;
++};
++
++// src/misc/theme.tsx
++import NextLink from "next/link";
++import React6, {
++  useEffect as useEffect2,
++  useRef as useRef2,
++  useState as useState2,
++  useContext as useContext2
++} from "react";
++import "intersection-observer";
++
++// src/misc/active-anchor.tsx
++import React, { createContext, useContext, useState } from "react";
++var ActiveAnchorContext = createContext({});
++var ActiveAnchorSetterContext = createContext((s) => s);
++var useActiveAnchorSet = () => useContext(ActiveAnchorSetterContext);
++
++// src/misc/theme.tsx
++import { MDXProvider } from "@mdx-js/react";
++
++// src/components/collapse.tsx
++import React2, { useRef, useEffect } from "react";
++function Collapse({
++  children,
++  open
++}) {
++  const containerRef = useRef(null);
++  const innerRef = useRef(null);
++  const animationRef = useRef();
++  const initialRender = useRef(true);
++  const initialState = useRef(open);
++  useEffect(() => {
++    if (initialRender.current)
++      return;
++    if (animationRef.current) {
++      clearTimeout(animationRef.current);
++    }
++    if (open) {
++      const container = containerRef.current;
++      const inner = innerRef.current;
++      if (container && inner) {
++        const contentHeight = innerRef.current.clientHeight;
++        container.style.maxHeight = contentHeight + "px";
++        container.classList.remove("duration-500");
++        container.classList.add("duration-300");
++        inner.style.opacity = "1";
++        animationRef.current = setTimeout(() => {
++          const container2 = containerRef.current;
++          if (container2) {
++            container2.style.removeProperty("max-height");
++          }
++        }, 300);
++      }
++    } else {
++      const container = containerRef.current;
++      const inner = innerRef.current;
++      if (container && inner) {
++        const contentHeight = innerRef.current.clientHeight;
++        container.style.maxHeight = contentHeight + "px";
++        container.classList.remove("duration-300");
++        container.classList.add("duration-500");
++        inner.style.opacity = "0";
++        setTimeout(() => {
++          const container2 = containerRef.current;
++          if (container2) {
++            container2.style.maxHeight = "0px";
++          }
++        });
++      }
++    }
++  }, [open]);
++  useEffect(() => {
++    initialRender.current = false;
++  }, []);
++  return /* @__PURE__ */ React2.createElement("div", {
++    ref: containerRef,
++    className: "transition-all ease-in-out duration-300 overflow-hidden transform-gpu motion-reduce:transition-none",
++    style: {
++      maxHeight: initialState.current ? void 0 : 0
++    }
++  }, /* @__PURE__ */ React2.createElement("div", {
++    ref: innerRef,
++    className: "nextra-collapse-content transition-opacity ease-in-out duration-500 overflow-hidden transform-gpu motion-reduce:transition-none",
++    style: {
++      opacity: initialState.current ? 1 : 0
++    }
++  }, children));
++}
++
++// src/components/tabs.tsx
++import React3 from "react";
++import cn from "classnames";
++import { Tab as HeadlessTab } from "@headlessui/react";
++function Tabs({
++  items,
++  selectedIndex,
++  defaultIndex,
++  onChange,
++  children
++}) {
++  return /* @__PURE__ */ React3.createElement(HeadlessTab.Group, {
++    selectedIndex,
++    defaultIndex,
++    onChange
++  }, /* @__PURE__ */ React3.createElement("div", {
++    className: "p-2 -m-2 overscroll-x-contain overflow-x-auto overflow-y-hidden no-scrollbar"
++  }, /* @__PURE__ */ React3.createElement(HeadlessTab.List, {
++    className: "flex mt-4 pb-[1px] border-b border-gray-200 dark:border-neutral-800 w-max min-w-full"
++  }, items.map((item, index) => {
++    const disabled = !!(item && typeof item === "object" && "disabled" in item && item.disabled);
++    return /* @__PURE__ */ React3.createElement(HeadlessTab, {
++      key: index,
++      disabled,
++      className: ({ selected }) => cn("p-2 mr-2 leading-5 font-medium text-md transition-colors", "select-none border-b-2 mb-[-2px] focus:outline-none focus-visible:ring ring-offset-2 rounded-[1px]", selected ? "text-primary-500 border-primary-500" : "text-gray-600 dark:text-gray-200 hover:border-gray-200 dark:hover:border-neutral-800 border-transparent hover:text-black dark:hover:text-white", disabled ? "pointer-events-none text-gray-400 dark:text-neutral-600" : "")
++    }, item && typeof item === "object" && "label" in item ? item.label : item);
++  }))), /* @__PURE__ */ React3.createElement(HeadlessTab.Panels, null, children));
++}
++function Tab({ children }) {
++  return /* @__PURE__ */ React3.createElement(HeadlessTab.Panel, {
++    className: "focus:outline-none focus-visible:ring"
++  }, children);
++}
++
++// src/bleed.tsx
++import React4 from "react";
++import cn2 from "classnames";
++var Bleed = ({
++  full,
++  children
++}) => {
++  return /* @__PURE__ */ React4.createElement("div", {
++    className: cn2("bleed relative mt-6 -mx-6 md:-mx-8 2xl:-mx-24", { full })
++  }, children);
++};
++var bleed_default = Bleed;
++
++// src/callout.tsx
++import React5 from "react";
++var themes = {
++  default: "bg-orange-50 border border-orange-100 text-orange-800 dark:text-orange-300 dark:bg-orange-400 dark:border-orange-400 dark:bg-opacity-20 dark:border-opacity-30",
++  error: "bg-red-100 border border-red-200 text-red-900 dark:text-red-200 dark:bg-red-900 dark:bg-opacity-30 dark:border-opacity-30",
++  info: "bg-blue-100 border border-blue-200 text-blue-900 dark:text-blue-200 dark:bg-blue-900 dark:bg-opacity-30 dark:border-opacity-30",
++  warning: "bg-yellow-50 border border-yellow-100 text-yellow-900 dark:text-yellow-200 dark:bg-yellow-700 dark:bg-opacity-30"
++};
++var Callout = ({
++  children,
++  type = "default",
++  emoji = "\u{1F4A1}"
++}) => {
++  return /* @__PURE__ */ React5.createElement("div", {
++    className: `${themes[type]} flex rounded-lg nextra-callout mt-6`
++  }, /* @__PURE__ */ React5.createElement("div", {
++    className: "pl-3 pr-2 py-2 select-none text-xl",
++    style: {
++      fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'
++    }
++  }, emoji), /* @__PURE__ */ React5.createElement("div", {
++    className: "pr-4 py-2"
++  }, children));
++};
++var callout_default = Callout;
++
++// src/misc/theme.tsx
++var observer;
++var setActiveAnchor;
++var slugs = /* @__PURE__ */ new WeakMap();
++if (typeof window !== "undefined") {
++  observer = observer || new IntersectionObserver((entries) => {
++    const headers = [];
++    for (const entry of entries) {
++      if (entry && entry.rootBounds && slugs.has(entry.target)) {
++        const [slug, index] = slugs.get(entry.target);
++        const aboveHalfViewport = entry.boundingClientRect.y + entry.boundingClientRect.height <= entry.rootBounds.y + entry.rootBounds.height;
++        const insideHalfViewport = entry.intersectionRatio > 0;
++        headers.push([slug, index, aboveHalfViewport, insideHalfViewport]);
++      }
++    }
++    setActiveAnchor((f) => {
++      const ret = __spreadValues({}, f);
++      for (const header of headers) {
++        ret[header[0]] = {
++          index: header[1],
++          aboveHalfViewport: header[2],
++          insideHalfViewport: header[3]
++        };
++      }
++      let activeSlug = "";
++      let smallestIndexInViewport = Infinity;
++      let largestIndexAboveViewport = -1;
++      for (let s in ret) {
++        ret[s].isActive = false;
++        if (ret[s].insideHalfViewport && ret[s].index < smallestIndexInViewport) {
++          smallestIndexInViewport = ret[s].index;
++          activeSlug = s;
++        }
++        if (smallestIndexInViewport === Infinity && ret[s].aboveHalfViewport && ret[s].index > largestIndexAboveViewport) {
++          largestIndexAboveViewport = ret[s].index;
++          activeSlug = s;
++        }
++      }
++      if (ret[activeSlug])
++        ret[activeSlug].isActive = true;
++      return ret;
++    });
++  }, {
++    rootMargin: "0px 0px -50%",
++    threshold: [0, 1]
++  });
++}
++var createHeaderLink = (Tag) => function HeaderLink(_a) {
++  var _b = _a, {
++    children,
++    id: slug
++  } = _b, props = __objRest(_b, [
++    "children",
++    "id"
++  ]);
++  setActiveAnchor = useActiveAnchorSet();
++  const obRef = useRef2(null);
++  useEffect2(() => {
++    const ref = obRef;
++    if (!ref.current)
++      return;
++    slugs.set(ref.current, [slug, Number(Tag[1]) - 1]);
++    if (ref.current)
++      observer.observe(ref.current);
++    return () => {
++      observer.disconnect();
++      slugs.delete(ref.current);
++      setActiveAnchor((f) => {
++        const ret = __spreadValues({}, f);
++        delete ret[slug];
++        return ret;
++      });
++    };
++  }, []);
++  return /* @__PURE__ */ React6.createElement(Tag, __spreadValues({}, props), /* @__PURE__ */ React6.createElement("span", {
++    className: "subheading-anchor",
++    id: slug,
++    ref: obRef
++  }), /* @__PURE__ */ React6.createElement("a", {
++    href: "#" + slug,
++    className: "anchor text-current no-underline no-outline"
++  }, children, /* @__PURE__ */ React6.createElement("span", {
++    className: "anchor-icon",
++    "aria-hidden": true
++  }, "#")));
++};
++var A = (_a) => {
++  var _b = _a, {
++    children,
++    href
++  } = _b, props = __objRest(_b, [
++    "children",
++    "href"
++  ]);
++  if (!href) {
++    return null;
++  }
++  const isExternal = href.startsWith("https://");
++  return isExternal ? /* @__PURE__ */ React6.createElement("a", __spreadValues({
++    target: "_blank",
++    rel: "noreferrer",
++    href
++  }, props), children) : /* @__PURE__ */ React6.createElement(NextLink, {
++    href,
++    passHref: true
++  }, /* @__PURE__ */ React6.createElement("a", __spreadValues({}, props), children));
++};
++var Table = ({ children }) => {
++  return /* @__PURE__ */ React6.createElement("div", {
++    className: "table-container"
++  }, /* @__PURE__ */ React6.createElement("table", null, children));
++};
++var DetailsContext = React6.createContext(() => {
++});
++var findSummary = (children) => {
++  let summary = null;
++  let restChildren = [];
++  React6.Children.forEach(children, (child, index) => {
++    var _a;
++    if (child && child.type === Summary) {
++      summary = summary || child;
++      return;
++    }
++    let c = child;
++    if (!summary && typeof child === "object" && child && child.type !== Details && "props" in child && child.props) {
++      const result = findSummary(child.props.children);
++      summary = summary || result[0];
++      c = React6.cloneElement(child, __spreadProps(__spreadValues({}, child.props), {
++        children: ((_a = result[1]) == null ? void 0 : _a.length) ? result[1] : void 0,
++        key: index
++      }));
++    }
++    restChildren.push(c);
++  });
++  return [summary, restChildren];
++};
++var Details = (_a) => {
++  var _b = _a, {
++    children,
++    open
++  } = _b, props = __objRest(_b, [
++    "children",
++    "open"
++  ]);
++  const [openState, setOpen] = useState2(!!open);
++  const ref = useRef2(null);
++  const [summary, restChildren] = findSummary(children);
++  return /* @__PURE__ */ React6.createElement("details", __spreadValues(__spreadProps(__spreadValues({}, props), {
++    ref,
++    open: true
++  }), openState && { "data-open": "" }), /* @__PURE__ */ React6.createElement(DetailsContext.Provider, {
++    value: setOpen
++  }, summary), /* @__PURE__ */ React6.createElement(Collapse, {
++    open: openState
++  }, restChildren));
++};
++var Summary = (_a) => {
++  var _b = _a, {
++    children
++  } = _b, props = __objRest(_b, [
++    "children"
++  ]);
++  const setOpen = useContext2(DetailsContext);
++  return /* @__PURE__ */ React6.createElement("summary", __spreadProps(__spreadValues({}, props), {
++    onClick: (e) => {
++      e.preventDefault();
++      setOpen((v) => !v);
++    }
++  }), children);
++};
++var components = {
++  h2: createHeaderLink("h2"),
++  h3: createHeaderLink("h3"),
++  h4: createHeaderLink("h4"),
++  h5: createHeaderLink("h5"),
++  h6: createHeaderLink("h6"),
++  a: A,
++  table: Table,
++  details: Details,
++  summary: Summary,
++  Nextra: {
++    Bleed: bleed_default,
++    Callout: callout_default,
++    Tabs,
++    Tab
++  }
++};
++var MDXTheme = ({
++  children
++}) => {
++  return /* @__PURE__ */ React6.createElement(MDXProvider, {
++    components
++  }, children);
++};
++export {
++  MDXTheme,
++  components
++};
+diff --git a/node_modules/nextra-theme-docs/package.json b/node_modules/nextra-theme-docs/package.json
+index 98b2f56..7b4a40b 100644
+--- a/node_modules/nextra-theme-docs/package.json
++++ b/node_modules/nextra-theme-docs/package.json
+@@ -25,6 +25,9 @@
+     },
+     "./tabs": {
+       "import": "./dist/components/tabs.js"
++    },
++    "./theme": {
++      "import":"./dist/misc/theme.js"
+     }
+   },
+   "scripts": {

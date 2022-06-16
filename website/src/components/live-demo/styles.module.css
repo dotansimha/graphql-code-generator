@@ -38,16 +38,6 @@
   display: flex;
 }
 
-.container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: stretch;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-  margin-top: 3px;
-  font-size: 12px;
-}
-
 .column {
   align-self: stretch;
   flex-flow: column;

@@ -1,0 +1,313 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageCmd } from '@/components'
+
+# Guide: Vue.js
+
+GraphQL Code Generator provides typed code generation for URQL Vue.js and Apollo Vue.js.
+
+The plugins and available options vary depending on the target client; for this reason, you will find guides for each of them below:
+
+- [URQL Vue.js](#vuejs-urql)
+- [Apollo Vue.js](#vuejs-apollo)
+
+All the following guides query the schema below:
+
+```graphql filename="schema.graphql"
+type Author {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  posts(findTitle: String): [Post]
+}
+
+type Post {
+  id: Int!
+  title: String!
+  author: Author
+}
+
+type Query {
+  post(id: ID!): Post
+}
+```
+
+## Vue.js URQL
+
+Most Vue.js URQL usage with TypeScript will look as follows:
+
+```vue
+<template>
+  <ul v-if="data">
+    <!-- UI … -->
+  </ul>
+</template>
+
+<script lang="ts">
+import { useQuery } from '@urql/vue'
+
+interface PostQueryVariables {
+  id: string
+}
+
+export default {
+  setup() {
+    const result = useQuery({
+      query: `
+        query ($id: ID!) {
+          post(id: $id) {
+            id
+            title
+            author {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      `,
+      // we need to type variables manually
+      variables: { id: 1 } as PostQueryVariables
+    })
+
+    return {
+      from,
+      data: result.data
+    }
+  }
+}
+</script>
+```
+
+Not typing or manually maintaining the data-types can lead to many issues:
+
+- **outdated typing** (regarding the current Schema)
+
+- **typos**
+
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
+
+For this reason, GraphQL Code Generator is providing a `@graphql-codegen/typescript-vue-urql` plugin that generates fully-typed composition functions with:
+
+- typed URQL options
+- typed variables
+- typed result
+
+**1. Install the `@graphql-codegen/typescript-vue-urql` plugin**
+
+<PackageCmd
+  packages={[
+    '-D @graphql-codegen/typescript-vue-urql @graphql-codegen/typescript @graphql-codegen/typescript-operations'
+  ]}
+/>
+
+**2. Configure the plugin**
+
+Create or update your `codegen.yaml` file as follows:
+
+```yaml
+schema: http://my-graphql-api.com/graphql
+documents: './src/**/*.tsx'
+generates:
+  ./graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-urql
+```
+
+<Callout>
+**`schema` and `documents` values**
+
+`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+
+`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
+
+</Callout>
+
+**3. Run the codegen and update your code**
+
+Assuming that, as recommended, your `package.json` has the following script:
+
+```json filename="package.json"
+{
+  "scripts": {
+    "generate": "graphql-codegen"
+  }
+}
+```
+
+Running the following generates the `graphql/generated.tsx` file.
+
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+
+We can now update our code as follows:
+
+```vue
+<template>
+  <ul v-if="data">
+    <!-- UI … -->
+  </ul>
+</template>
+
+<script lang="ts">
+import { usePostQuery } from '../generated/graphql'
+
+export default {
+  setup() {
+    // `variables` option and `result` are typed!
+    const result = usePostQuery({
+      variables: { id: 1 }
+    })
+
+    return {
+      from,
+      data: result.data
+    }
+  }
+}
+</script>
+```
+
+For more advanced configuration, please refer to the [plugin documentation](/plugins/typescript-vue-urql).
+
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
+
+## Vue.js Apollo
+
+Most Vue.js Apollo usage with TypeScript will look as follows:
+
+```vue
+<template>
+  <div class="apollo">
+    <!-- UI … -->
+  </div>
+</template>
+
+<script lang="ts">
+interface PostQueryVariables {
+  id: string
+}
+
+export default {
+  apollo: {
+    post: {
+      query: gql`
+        query ($id: ID!) {
+          post(id: $id) {
+            id
+            title
+            author {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      `,
+      variables: {
+        id: 1
+      } as PostQueryVariables
+    }
+  },
+  data() {
+    return {
+      post: undefined
+    }
+  }
+}
+</script>
+```
+
+Not typing or manually maintaining the data-types can lead to many issues:
+
+- **outdated typing** (regarding the current Schema)
+
+- **typos**
+
+- **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
+
+For this reason, GraphQL Code Generator is providing a `@graphql-codegen/typescript-vue-apollo-smart-ops` plugin that generates fully-typed composition functions with:
+
+- typed URQL options
+- typed variables
+- typed result
+
+**1. Install the `@graphql-codegen/typescript-vue-apollo-smart-ops` plugin**
+
+<PackageCmd
+  packages={[
+    '-D @graphql-codegen/typescript-vue-apollo-smart-ops @graphql-codegen/typescript @graphql-codegen/typescript-operations'
+  ]}
+/>
+
+**2. Configure the plugin**
+
+Create or update your `codegen.yaml` file as follows:
+
+```yaml
+schema: http://my-graphql-api.com/graphql
+documents: './src/**/*.tsx'
+generates:
+  ./graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-apollo-smart-ops
+```
+
+<Callout>
+**`schema` and `documents` values**
+
+`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
+
+`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
+
+</Callout>
+
+**3. Run the codegen and update your code**
+
+Assuming that, as recommended, your `package.json` has the following script:
+
+```json filename="package.json"
+{
+  "scripts": {
+    "generate": "graphql-codegen"
+  }
+}
+```
+
+Running the following generates the `graphql/generated.tsx` file.
+
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+
+We can now update our code as follows:
+
+```vue
+<template>
+  <div class="apollo">
+    <!-- UI … -->
+  </div>
+</template>
+
+<script lang="ts">
+import { usePostQuery } from '../generated/graphql'
+
+export default {
+  apollo: usePostQuery({
+    // `variables` is properly typed!
+    variables: {
+      id: 1
+    }
+  }),
+  data() {
+    return {
+      post: undefined
+    }
+  }
+}
+</script>
+```
+
+For more advanced configuration, please refer to the [plugin documentation](/plugins/typescript-vue-apollo-smart-ops).
+
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

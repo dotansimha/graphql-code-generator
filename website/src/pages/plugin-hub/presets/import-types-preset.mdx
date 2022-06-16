@@ -1,0 +1,11 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('import-types-preset')
+
+<PackageHeader />
+
+This preset generates a file per each operation file, and allow to import types from another file.
+
+<PackageApiDocs />

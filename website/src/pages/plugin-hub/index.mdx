@@ -1,0 +1,35 @@
+import { buildMultipleMDX }  from '@guild-docs/server';
+import { getPackagesData }  from '@guild-docs/server/npm';
+import { PluginHub } from '@/components/plugin-hub';
+import { PACKAGES } from '@/lib/plugins';
+
+export const getStaticProps = async () => {
+  const pluginsData = await getPackagesData({ packageList: PACKAGES });
+
+  const data = await Promise.all(
+    pluginsData.map(async plugin => {
+      const [description, content] = await buildMultipleMDX([
+        `${plugin.stats?.version || ''}\n\n${plugin.stats?.description || ''}`,
+        plugin.readme || plugin.stats?.readme || '',
+      ]);
+
+      return {
+        ...plugin,
+        description,
+        content,
+      };
+    })
+  );
+
+  return {
+    props: {
+      // We add an `ssg` field to the page props,
+      // which will be provided to the Nextra `useSSG` hook.
+      ssg: { data },
+    },
+    // Revalidate at most once every 1 hour
+    revalidate: 60 * 60,
+  };
+};
+
+<PluginHub />

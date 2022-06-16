@@ -1,0 +1,15 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-generic-sdk')
+
+<PackageHeader hasOperationsNote />
+
+<Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
+
+<PackageApiDocs />
+
+## Usage
+
+You can find a usage [example for Apollo-Client here](https://gist.github.com/akozhemiakin/731b0c1e99eb89b01f80f08f9146b6b6).
