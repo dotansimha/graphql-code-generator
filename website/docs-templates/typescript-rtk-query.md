@@ -28,29 +28,26 @@ generates:
 
 The generated `src/app/api/generated.ts` would try to `import { api } from 'src/app/api/baseApi'`, so you have to create that file:
 
-```ts title="src/app/api/baseApi.ts"
+```ts title="src/app/api/baseApi.ts" highlight="7-10"
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query'
 import { GraphQLClient } from 'graphql-request'
 
 export const client = new GraphQLClient('/graphql')
-// highlight-start
+
 export const api = createApi({
   baseQuery: graphqlRequestBaseQuery({ client }),
   endpoints: () => ({})
 })
-// highlight-end
 ```
 
 From that point on, you can import the generated hooks from `src/app/api/generated.ts`:
 
-```ts title="src/components/MyComponent.ts"
+```ts title="src/components/MyComponent.ts" highlight="4"
 import { useMyQuery } from 'src/app/api/generated'
 
 export const MyComponent = () => {
-  // highlight-start
   const { data, isLoading } = useMyQuery({ page: 5 })
-  // highlight-end
 }
 ```
 
@@ -79,19 +76,17 @@ Make sure that this file is referenced from your code so that the enhanced endpo
 
 You can also use this to set an "authentication" header after a login mutation:
 
-```ts
+```ts highlight="7-10"
 import { api as generatedApi } from 'src/app/api/generated'
 import { client } from 'src/app/api/baseApi'
 
 export const api = generatedApi.enhanceEndpoints({
   endpoints: {
     Login: {
-      // highlight-start
       async onQueryStarted(arg, { queryFulfilled }) {
         const { data } = await queryFulfilled
         client.setHeader('authentication', `Bearer ${data.token}`)
       }
-      // highlight-end
     }
   }
 })
