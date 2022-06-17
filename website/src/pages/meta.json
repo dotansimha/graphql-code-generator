@@ -1,0 +1,15 @@
+{
+  "index": {
+    "title": "Introduction",
+    "type": "page",
+    "hidden": true,
+    "theme": {}
+  },
+  "docs": {
+    "title": "Docs",
+    "type": "page",
+    "theme": {
+      "toc": true
+    }
+  }
+}

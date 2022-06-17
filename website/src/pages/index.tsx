@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import dynamic from 'next/dynamic';
-import { FeatureList, HeroGradient, HeroIllustration } from '@theguild/components';
+import { HeroGradient, HeroIllustration } from '@theguild/components';
 import { handlePushRoute, NPMBadge } from '@guild-docs/client';
-import tw from 'twin.macro';
 
 const LiveDemo = dynamic(() => import('../components/live-demo/LiveDemo'), { ssr: false });
 
@@ -30,7 +29,7 @@ const IndexPage: FC = () => {
         }}
       />
 
-      <div css={[tw`hidden lg:block`]}>
+      <div className="hidden lg:block">
         <LiveDemo />
       </div>
 

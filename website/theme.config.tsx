@@ -40,12 +40,22 @@ export default {
   customSearch: null, // customizable, you can use algolia for example
   darkMode: true,
   footer: true,
-  footerText: `MIT ${new Date().getFullYear()} © The Guild.`,
+  footerText: (
+    <a
+      href="https://the-guild.dev"
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center no-underline text-current font-semibold"
+    >
+      <span className="mr-1">Powered by</span>
+      <span>The Guild</span>
+    </a>
+  ),
   footerEditLink: 'Edit this page on GitHub',
   logo: (
     <>
       <CodeGeneratorLogo />
-      <span>{SITE_NAME}</span>
+      <span className="ml-1">{SITE_NAME}</span>
     </>
   ),
   head: (
@@ -55,4 +65,5 @@ export default {
       <meta name="og:title" content={`${SITE_NAME}: documentation`} />
     </>
   ),
+  gitTimestamp: 'Last updated on',
 };
