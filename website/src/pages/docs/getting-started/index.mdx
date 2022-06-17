@@ -1,6 +1,3 @@
-import MDXTabs from '../../src/components/MDXTabs/MDXTabs'
-import MDXTab from '../../src/components/MDXTabs/MDXTab'
-
 # Introduction to GraphQL Code Generator
 
 GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack.
@@ -38,16 +35,12 @@ type Query {
 
 The following sections showcase why GraphQL Code Generator is a game-changer for your GraphQL Stack.
 
----
-
 ### From the front-end
 
 Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
-<MDXTabs namespace="getting-started-front-end-codetabs">
-
-<MDXTab label="URQL React">
-
+<Nextra.Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
+<Nextra.Tab>
 ```tsx
 import { useQuery } from 'urql'
 
@@ -83,11 +76,9 @@ const Posts = () => {
   // ...
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="React Query">
-
+<Nextra.Tab>
 ```tsx
 import { request, gql } from 'graphql-request'
 import { useQuery } from 'react-query'
@@ -127,11 +118,9 @@ const Posts = () => {
   // ...
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Vue Apollo">
-
+<Nextra.Tab>
 ```vue
 <template>
   <div class="apollo">
@@ -173,11 +162,9 @@ export default {
 }
 </script>
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Angular Apollo">
-
+<Nextra.Tab>
 ```tsx
 const GET_POSTS = gql`
   query Posts {
@@ -203,9 +190,7 @@ interface Post {
   }
 }
 
-@Component({
-  /* ... */
-})
+@Component({ /* ... */ })
 class PostsComponent implements OnInit, OnDestroy {
   posts: Post[]
 
@@ -225,11 +210,9 @@ class PostsComponent implements OnInit, OnDestroy {
   }
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Svelte Apollo">
-
+<Nextra.Tab>
 ```svelte
 <script lang="ts">
   import { query } from 'svelte-apollo'
@@ -255,10 +238,8 @@ class PostsComponent implements OnInit, OnDestroy {
   <!-- UI -->
 </ul>
 ```
-
-</MDXTab>
-
-</MDXTabs>
+</Nextra.Tab>
+</Nextra.Tabs>
 
 Manually maintaining the GraphQL operation types or the complete absence of types can lead to many issues:
 
@@ -277,10 +258,8 @@ experience and stability of your stack.
 After [installing](/docs/getting-started/installation) and [configuring](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
 up-to-date as follows:
 
-<MDXTabs namespace="getting-started-front-end-codetabs">
-
-<MDXTab label="URQL React">
-
+<Nextra.Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
+<Nextra.Tab>
 ```tsx
 import { useQuery } from 'urql'
 import { postsQueryDocument } from './graphql/generated'
@@ -292,11 +271,9 @@ const Posts = () => {
   // ...
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="React Query">
-
+<Nextra.Tab>
 ```tsx
 import { usePosts } from '../graphql/generated'
 
@@ -307,11 +284,9 @@ const Posts = () => {
   // ...
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Vue Apollo">
-
+<Nextra.Tab>
 ```vue
 <template>
   <div class="apollo">
@@ -337,20 +312,16 @@ export default {
 }
 </script>
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Angular Apollo">
-
+<Nextra.Tab>
 ```tsx
 import { PostsGQL, PostsQuery } from './graphql'
-//BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
+// BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-@Component({
-  /* ... */
-})
+@Component({/* ... */})
 export class PostsComponent {
   posts: Observable<PostsQuery['posts']>
 
@@ -359,11 +330,9 @@ export class PostsComponent {
   }
 }
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="Svelte Apollo">
-
+<Nextra.Tab>
 ```svelte
 <script lang="ts">
   import { Posts } from '../graphql/generated'
@@ -376,10 +345,8 @@ export class PostsComponent {
   <!-- UI -->
 </ul>
 ```
-
-</MDXTab>
-
-</MDXTabs>
+</Nextra.Tab>
+</Nextra.Tabs>
 
 Now, with simple configuration and an npm/yarn script, a front-end developers benefits from:
 
@@ -393,8 +360,6 @@ Now, with simple configuration and an npm/yarn script, a front-end developers be
 >
 > More details on the inner working of GraphQL Code Generator are available on [this page](/docs/advanced/how-does-it-work).
 
----
-
 ### To the back-end
 
 Most GraphQL API resolvers remain untyped or wrongly typed which, leads to multiple issues:
@@ -407,10 +372,8 @@ For this reason, GraphQL Code Generator provides multiple plugins that help you 
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
-<MDXTabs namespace="getting-started-back-end-codetabs">
-
-<MDXTab label="Apollo Server">
-
+<Nextra.Tabs items={['Apollo Server', 'GraphQL Yoga', 'GraphQL Modules']}>
+<Nextra.Tab>
 ```ts
 import { ApolloServer } from 'apollo-server'
 import { readFileSync } from 'fs'
@@ -432,11 +395,9 @@ server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="GraphQL Yoga">
-
+<Nextra.Tab>
 ```ts
 import { createServer } from '@graphql-yoga/node'
 import { readFileSync } from 'fs'
@@ -458,11 +419,9 @@ const server = createServer({
 
 server.start()
 ```
+</Nextra.Tab>
 
-</MDXTab>
-
-<MDXTab label="GraphQL Modules">
-
+<Nextra.Tab>
 Given the following structure:
 
 ```
@@ -480,18 +439,15 @@ Given the following structure:
 
 The User module resolvers would be:
 
-```tsx
-// src/modules/user/resolvers.ts
+```tsx filename="src/modules/user/resolvers.ts"
 import { UsersModule } from './generated-types/module-types'
 
 export const resolvers: UsersModule.Resolvers = {
   // Here, you can implement only the types and fields defined in your module!
 }
 ```
-
-</MDXTab>
-
-</MDXTabs>
+</Nextra.Tab>
+</Nextra.Tabs>
 
 ## What's next?
 
