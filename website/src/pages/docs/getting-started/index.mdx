@@ -1,3 +1,5 @@
+import { Tabs, Tab } from 'nextra-theme-docs/tabs'
+
 # Introduction to GraphQL Code Generator
 
 GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack.
@@ -39,8 +41,8 @@ The following sections showcase why GraphQL Code Generator is a game-changer for
 
 Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
-<Nextra.Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
-<Nextra.Tab>
+<Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
+<Tab>
 ```tsx
 import { useQuery } from 'urql'
 
@@ -76,9 +78,9 @@ const Posts = () => {
   // ...
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```tsx
 import { request, gql } from 'graphql-request'
 import { useQuery } from 'react-query'
@@ -118,9 +120,9 @@ const Posts = () => {
   // ...
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```vue
 <template>
   <div class="apollo">
@@ -162,9 +164,9 @@ export default {
 }
 </script>
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```tsx
 const GET_POSTS = gql`
   query Posts {
@@ -210,9 +212,9 @@ class PostsComponent implements OnInit, OnDestroy {
   }
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```svelte
 <script lang="ts">
   import { query } from 'svelte-apollo'
@@ -238,8 +240,8 @@ class PostsComponent implements OnInit, OnDestroy {
   <!-- UI -->
 </ul>
 ```
-</Nextra.Tab>
-</Nextra.Tabs>
+</Tab>
+</Tabs>
 
 Manually maintaining the GraphQL operation types or the complete absence of types can lead to many issues:
 
@@ -258,8 +260,8 @@ experience and stability of your stack.
 After [installing](/docs/getting-started/installation) and [configuring](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
 up-to-date as follows:
 
-<Nextra.Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
-<Nextra.Tab>
+<Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
+<Tab>
 ```tsx
 import { useQuery } from 'urql'
 import { postsQueryDocument } from './graphql/generated'
@@ -271,9 +273,9 @@ const Posts = () => {
   // ...
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```tsx
 import { usePosts } from '../graphql/generated'
 
@@ -284,9 +286,9 @@ const Posts = () => {
   // ...
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```vue
 <template>
   <div class="apollo">
@@ -312,9 +314,9 @@ export default {
 }
 </script>
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```tsx
 import { PostsGQL, PostsQuery } from './graphql'
 // BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
@@ -330,9 +332,9 @@ export class PostsComponent {
   }
 }
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```svelte
 <script lang="ts">
   import { Posts } from '../graphql/generated'
@@ -345,8 +347,8 @@ export class PostsComponent {
   <!-- UI -->
 </ul>
 ```
-</Nextra.Tab>
-</Nextra.Tabs>
+</Tab>
+</Tabs>
 
 Now, with simple configuration and an npm/yarn script, a front-end developers benefits from:
 
@@ -372,8 +374,8 @@ For this reason, GraphQL Code Generator provides multiple plugins that help you 
 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
-<Nextra.Tabs items={['Apollo Server', 'GraphQL Yoga', 'GraphQL Modules']}>
-<Nextra.Tab>
+<Tabs items={['Apollo Server', 'GraphQL Yoga', 'GraphQL Modules']}>
+<Tab>
 ```ts
 import { ApolloServer } from 'apollo-server'
 import { readFileSync } from 'fs'
@@ -395,9 +397,9 @@ server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 ```ts
 import { createServer } from '@graphql-yoga/node'
 import { readFileSync } from 'fs'
@@ -419,9 +421,9 @@ const server = createServer({
 
 server.start()
 ```
-</Nextra.Tab>
+</Tab>
 
-<Nextra.Tab>
+<Tab>
 Given the following structure:
 
 ```
@@ -446,8 +448,8 @@ export const resolvers: UsersModule.Resolvers = {
   // Here, you can implement only the types and fields defined in your module!
 }
 ```
-</Nextra.Tab>
-</Nextra.Tabs>
+</Tab>
+</Tabs>
 
 ## What's next?
 
