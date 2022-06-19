@@ -74,7 +74,7 @@
     "@graphql-codegen/typescript-vue-urql": "2.2.14",
     "@guild-docs/client": "3.1.0",
     "@guild-docs/server": "4.0.0",
-    "@mdx-js/react": "2.1.1",
+    "@mdx-js/react": "2.1.2",
     "@monaco-editor/react": "4.4.5",
     "@theguild/components": "1.11.8",
     "classnames": "2.3.1",
