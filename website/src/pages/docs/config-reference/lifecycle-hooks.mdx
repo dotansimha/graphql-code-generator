@@ -1,7 +1,6 @@
----
-id: lifecycle-hooks
-title: Lifecycle Hooks
----
+import Callout from 'nextra-theme-docs/callout'
+
+# Lifecycle Hooks
 
 The codegen allows specifying scripts it can run for you in certain events.
 
@@ -54,7 +53,9 @@ Executed after the codegen has created the output and before writing the files t
 
 Triggered with multiple arguments - paths for all relevant files.
 
-> Not all the files will be written to the file system, because this is triggered before checking if the file has changed since last execution.
+<Callout>
+Not all the files will be written to the file system, because this is triggered before checking if the file has changed since last execution.
+</Callout>
 
 ### `beforeOneFileWrite`
 
@@ -67,7 +68,9 @@ If the content of the file hasn't changed since the last execution - this hook w
 Triggered after a file is written to the file system. Executed with the path for the file.
 If the content of the file hasn't changed since the last execution - this hook won't be triggered.
 
-> This is a very useful hook; you can use it for integration with Prettier or other linters.
+<Callout>
+This is a very useful hook, you can use it for integration with Prettier or other linters.
+</Callout>
 
 ### `afterAllFileWrite`
 
