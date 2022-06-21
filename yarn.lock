@@ -7856,15 +7856,15 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
   integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
-flow-bin@0.180.0:
-  version "0.180.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.180.0.tgz#7a26f3a0cff61e386267e72ef7971d1af73e317a"
-  integrity sha512-jEZoIwOxzrtQ0erUu94nEzlqUoX7OAMeVs0CjO0rN6b7SDBhI5IysVRvGSQkkFWBJpy5VQ9lvzBYzq5Sq9vcmg==
+flow-bin@0.180.1:
+  version "0.180.1"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.180.1.tgz#1d266c1a5ef107b89a563ea863cec69cd1063876"
+  integrity sha512-3FQcef6z47wbK9OzppOwq6obNRs7weWOABunxMtFwgzC6tLnpA0nkSuVH5KwROHOfIISsSBiuqaDzvtuUQUyVQ==
 
-flow-parser@0.*, flow-parser@0.180.0:
-  version "0.180.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.180.0.tgz#05d49a88715ceca0457607499a018e2bf5908d72"
-  integrity sha512-kkzsuGAhckWgn/G+JfCyEa6BYslGrjlH4CJL0LZhdn9of9ukvi7SzVQSFsrEhuhh/zQUghfUEoaeZy1wjQXpUg==
+flow-parser@0.*, flow-parser@0.180.1:
+  version "0.180.1"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.180.1.tgz#af7fc15eaa57f52a0a1e57eccf913cf495a9b8cf"
+  integrity sha512-+zhnnWjpNomIrI/FL8inDMOQP3hniNxZlROBlaerzM+PqszgqaC2724kvU8ThkNWDMmgC5N8M1HemMPc3h4IBA==
 
 focus-lock@^0.9.1:
   version "0.9.2"
@@ -7937,10 +7937,10 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@6.3.11:
-  version "6.3.11"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-6.3.11.tgz#c304ce9728601ad9377d47d5d9264e43d741d470"
-  integrity sha512-xQLk+ZSklNs5QNCUmdWPpKMOuWiB8ZETsvcIOWw8xvri9K3TamuifgCI/B6XpaEDR0/V2ZQF2Wm+gUAZrXo+rw==
+framer-motion@6.3.12:
+  version "6.3.12"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-6.3.12.tgz#53c6a37da882a00e166731ca241b5234af8aabf7"
+  integrity sha512-JfBNDeZX/0J2XtjuGpCf5klissAVw1N4tKrVu23SzQ2ksuL2xu1Jm/CE11sYq9RvFEiN0qkMp+CylFpYLarFoQ==
   dependencies:
     framesync "6.0.1"
     hey-listen "^1.0.8"
