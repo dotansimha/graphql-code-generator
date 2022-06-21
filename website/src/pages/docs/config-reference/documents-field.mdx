@@ -1,7 +1,6 @@
----
-id: documents-field
-title: '`documents` field'
----
+import Callout from 'nextra-theme-docs/callout'
+
+# `documents` field
 
 The `documents` field should point to your GraphQL documents: `query`, `mutation`, `subscription`, and `fragment`.
 
@@ -94,7 +93,9 @@ documents:
   - '!*.generated.graphql'
 ```
 
-> All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
+<Callout>
+All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
+</Callout>
 
 Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from it:
 
@@ -113,7 +114,9 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/`query { ... }` ``). This can be configured with `pluckConfig` (see below).
+<Callout>
+Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL */ `query { ... }` ``). This can be configured with `pluckConfig` (see below).
+</Callout>
 
 - ### String
 
@@ -201,8 +204,10 @@ const { parse } = require('graphql')
 const { readFileSync } = require('fs')
 
 module.exports = (docString, config) => {
-  return parse(readFileSync(docString, { encoding: 'utf-8' }))
+  return parse(readFileSync(docString, 'utf8'))
 }
 ```
 
-> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. `pluginContext` is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.
+<Callout>
+The second parameter passed to the loader function is a config object that includes a `pluginContext` property. `pluginContext` is passed to any executed plugins, so it can be modified by the loader to pass any additional information to those plugins.
+</Callout>
