@@ -1,7 +1,6 @@
----
-id: config-field
-title: '`config` field'
----
+import Callout from 'nextra-theme-docs/callout'
+
+# `config` field
 
 The `config` field is used to pass configuration to Plugins.
 
@@ -36,7 +35,9 @@ generates:
       - plugin2
 ```
 
-> Output level configuration overrides root-level configuration.
+<Callout>
+Output level configuration overrides root-level configuration.
+</Callout>
 
 ### Plugin Level
 
@@ -52,4 +53,6 @@ generates:
         configKey: otherValue
 ```
 
-> Plugin level configuration overrides output-level and root-level configuration.
+<Callout>
+Plugin level configuration overrides output-level and root-level configuration.
+</Callout>
