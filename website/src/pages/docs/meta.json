@@ -1,4 +1,6 @@
 {
   "getting-started": "Getting Started",
-  "guides": "Guides"
+  "guides": "Guides",
+  "config-reference": "Config Reference",
+  "advanced": "Advanced Usage"
 }
