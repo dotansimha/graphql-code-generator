@@ -1,7 +1,4 @@
----
-id: naming-convention
-title: Naming Convention
----
+# Naming Convention
 
 GraphQL Code Generation provides a `namingConvention` option to control the naming convention of the different code elements generated (types, enum values, ...).
 
@@ -83,8 +80,7 @@ You need to provide a CJS module with a default export of a function that takes 
 
 The following example provides a workaround to a limitation of `change-case-all`:
 
-```js
-// my-naming-fn.js
+```js filename="my-naming-fn.js"
 // Fix for https://github.com/dotansimha/graphql-code-generator/issues/6040
 const { constantCase } = require('change-case-all')
 /**
