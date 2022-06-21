@@ -1,38 +1,26 @@
----
-id: graphql-server-apollo-yoga
-title: 'Guide: GraphQL Yoga, Apollo Server'
-type: Guide
----
+import Callout from 'nextra-theme-docs/callout'
+import { Tabs, Tab } from 'nextra-theme-docs/tabs'
+import { PackageCmd } from '../../../components/PackageCmd'
+
+# Guide: GraphQL Yoga, Apollo Server'
 
 GraphQL Code Generator's `@graphql-codegen/typescript-resolvers` plugin generates TypeScript types for your GraphQL API's resolvers.
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## Video tutorial
 
 [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator) is a great introduction to `@graphql-codegen/typescript-resolvers`:
 
 <iframe
-  width="100%"
-  height="400"
-  src="https://www.youtube.com/embed/tHMaNmqPIC4"
+  style={{ width: '100%', height: 400, marginTop: 24 }}
+  src="https://youtube.com/embed/tHMaNmqPIC4"
   title="YouTube video player"
-  frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowFullScreen
-></iframe>
+/>
 
-> [More weekly episodes are available in `graphql.wtf`](https://graphql.wtf/) by [Jamie Barton](https://twitter.com/notrab).
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
+<Callout>
+  [More weekly episodes are available in `graphql.wtf`](https://graphql.wtf) by [Jamie Barton](https://twitter.com/notrab).
+</Callout>
 
 ## Guide
 
@@ -44,19 +32,13 @@ Most GraphQL API resolvers remain untyped or wrongly typed, which leads to multi
 
 - typos in the resolvers' function type signature
 
-<br />
-
 For this reason, GraphQL Code Generator provides `@graphql-codegen/typescript-resolvers` that help automate the generation of resolvers' typings.
-
-<br />
 
 Just a few configuration steps are required to get the resolvers types generated:
 
 **1. Move your GraphQL Schema declaration in dedicated `.graphql` files**
 
-```graphql
-#schema.graphql
-
+```graphql filename="schema.graphql"
 type Author {
   id: Int!
   firstName: String!
@@ -77,18 +59,14 @@ type Query {
 
 **2. Install the `@graphql-codegen/typescript-resolvers` plugin**
 
-<PackageInstall packages={['@graphql-codegen/typescript-resolvers', '@graphql-codegen/typescript']} />
-
-<br />
+<PackageCmd packages={[{ name: '@graphql-codegen/typescript-resolvers @graphql-codegen/typescript', isDev: true }]} />
 
 **3. Configure the plugin**
 
 Create or update your `codegen.yaml` file as follows:
 
-<MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
-
-<MDXTab label="Apollo Server">
-
+<Tabs items={['Apollo Server', 'GraphQL Yoga']}>
+<Tab>
 ```yaml
 schema: schema.graphql
 generates:
@@ -99,11 +77,9 @@ generates:
       - typescript
       - typescript-resolvers
 ```
+</Tab>
 
-</MDXTab>
-
-<MDXTab label="GraphQL Yoga">
-
+<Tab>
 ```yaml
 schema: schema.graphql
 generates:
@@ -112,12 +88,8 @@ generates:
       - typescript
       - typescript-resolvers
 ```
-
-</MDXTab>
-
-</MDXTabs>
-
-<br />
+</Tab>
+</Tabs>
 
 **4. Run the codegen and update your code**
 
@@ -131,24 +103,17 @@ Assuming that, as recommended, your `package.json` has the following script:
 }
 ```
 
-<br />
-
 Running the following generates the `graphql/generated.tsx` file.
 
-<PackageRun scripts={['generate']} />
-
-<br />
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
 
 We can now write/migrate our GraphQL API implementation as follows:
 
-<MDXTabs namespace={`guides-apollo-server-graphql-yoga-codetabs`}>
-
-<MDXTab label="Apollo Server">
-
+<Tabs items={['Apollo Server', 'GraphQL Yoga']}>
+<Tab>
 ```ts
+import { readFileSync } from 'node:fs'
 import { ApolloServer } from 'apollo-server'
-import { readFileSync } from 'fs'
-
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -166,15 +131,12 @@ server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
 ```
+</Tab>
 
-</MDXTab>
-
-<MDXTab label="GraphQL Yoga">
-
+<Tab>
 ```ts
+import { readFileSync } from 'node:fs'
 import { createServer } from '@graphql-yoga/node'
-import { readFileSync } from 'fs'
-
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -185,24 +147,13 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = createServer({
-  typeDefs,
-  resolvers
-})
+const server = createServer({ typeDefs, resolvers })
 
 server.start()
 ```
+</Tab>
+</Tabs>
 
-</MDXTab>
-
-</MDXTabs>
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
-
-A complete tutorial, written by The Guild's CTO, Dotan Simha, is available on our blog: [Better Type Safety for your GraphQL resolvers with GraphQL Codegen](https://www.the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).
+A complete tutorial, written by The Guild's CTO, Dotan Simha, is available on our blog: [Better Type Safety for your GraphQL resolvers with GraphQL Codegen](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).
 
 For more advanced configuration (models or context typing), please refer to the [plugin documentation](/plugins/typescript-resolvers).
