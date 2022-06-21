@@ -1,22 +1,21 @@
----
-id: extend-schema
-title: How to extend the GraphQL Schema?
----
+# How to extend the GraphQL Schema?
 
 Each plugin can also specify `addToSchema` field, and to extend the `GraphQLSchema` with more types:
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin(schema, documents, config) {
     const typesMap = schema.getTypeMap()
 
     return Object.keys(typesMap).join('\n')
   },
-  addToSchema: `
-        type MyType { field: String }
+  addToSchema: /* GraphQL */ `
+    type MyType {
+      field: String
+    }
 
-        directive @myDirective on OBJECT
-    `
+    directive @myDirective on OBJECT
+  `
 }
 ```
 
@@ -26,7 +25,7 @@ For example, let's add a custom `@directive` that tells the codegen to ignore a 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config, info) => {
+  plugin(schema, documents, config, info) {
     const typesMap = schema.getTypeMap()
 
     return Object.keys(typesMap)
@@ -42,8 +41,8 @@ module.exports = {
       })
       .join('\n')
   },
-  addToSchema: `
-        directive @ignore on OBJECT
-    `
+  addToSchema: /* GraphQL */ `
+    directive @ignore on OBJECT
+  `
 }
 ```

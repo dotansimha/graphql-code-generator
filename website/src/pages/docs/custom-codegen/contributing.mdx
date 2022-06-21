@@ -1,7 +1,7 @@
----
-id: contributing
-title: Contributing
----
+import Callout from 'nextra-theme-docs/callout'
+import { PackageCmd } from '../../../components/PackageCmd'
+
+# Contributing
 
 When your new plugin is ready, you can either:
 
@@ -46,7 +46,9 @@ Now that you have a local copy of the project, start by installing the dependenc
 yarn
 ```
 
-> If you make changes, add libraries, or new packages, make sure to install the dependencies again, but always from the root directory, otherwise you'll break the monorepo structure.
+<Callout>
+If you make changes, add libraries, or new packages, make sure to install the dependencies again, but always from the root directory, otherwise you'll break the monorepo structure.
+</Callout>
 
 ## 4. Make sure everything works
 
@@ -79,7 +81,9 @@ Make sure to follow the following instructions:
   "version": "X.Y.Z",
 ```
 
-> The current version of the codegen is: ![Codegen version](https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799&label=)
+<Callout>
+The current version of the codegen is: ![Codegen version](https://img.shields.io/npm/v/@graphql-codegen/cli?color=%23e15799)
+</Callout>
 
 3. Make sure that you have the following `scripts` configured;
 
@@ -91,7 +95,9 @@ Make sure to follow the following instructions:
   },
 ```
 
-> This will make sure that your plugin is compatible with our build and test system.
+<Callout>
+This will make sure that your plugin is compatible with our build and test system.
+</Callout>
 
 4. Make sure your basic plugin dependencies are configured this way:
 
@@ -105,11 +111,13 @@ Make sure to follow the following instructions:
   },
 ```
 
-> `graphql` must be a devDependency in order to allow developers to choose their own version.
+<Callout>
+`graphql` must be a devDependency in order to allow developers to choose their own version.
 
-> `tslib` is required to compile plugins.
+`tslib` is required to compile plugins.
 
-> `@graphql-codegen/plugin-helpers` contains helpful types and utils. Make sure it has the same version as your package.
+`@graphql-codegen/plugin-helpers` contains helpful types and utils. Make sure it has the same version as your package.
+</Callout>
 
 Now that your plugin is configured, you need to make sure Yarn knows about it and links it to the monorepo, so rerun the following command, in the root directory:
 
@@ -137,11 +145,13 @@ export const plugin: PluginFunction<Partial<MyPluginConfig>, MyPluginConfig> = (
 }
 ```
 
-> `schema` is the merged `GraphQLSchema` object, from all sources. this will always be available for plugin.
+<Callout>
+`schema` is the merged `GraphQLSchema` object, from all sources. this will always be available for plugin.
 
-> `documents` is an array of GraphQL operations (query/mutation/subscription/fragment). This is optional, and you can use it only if your plugin needs it.
+`documents` is an array of GraphQL operations (query/mutation/subscription/fragment). This is optional, and you can use it only if your plugin needs it.
 
-> `config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
+`config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
+</Callout>
 
 You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Validate Configuration](./validate-configuration) and [Using Visitor](./using-visitor) sections.
 
@@ -189,9 +199,7 @@ In order to add it to the website, do the following:
 
 1. Add JSDoc annotations to your config object; it can also include a default value, examples, and type:
 
-````ts
-// packages/plugins/my-plugin/config.ts
-
+````ts filename="packages/plugins/my-plugin/config.ts"
 /**
  * My plugin is super cool!!!
  */
@@ -216,7 +224,7 @@ export type MyPluginConfig = {
 }
 ````
 
-Now, open `website/src/lib/plugins-docs.ts` and add a record to the `pluginsConfigurations` variable in that file, and point the file with the configuration annotation:
+2. Open `website/src/lib/plugins-docs.ts` and add a record to the `pluginsConfigurations` variable in that file, and point the file with the configuration annotation:
 
 ```ts
 export const pluginsConfigurations: PluginConfig[] = [
@@ -229,7 +237,9 @@ export const pluginsConfigurations: PluginConfig[] = [
 ]
 ```
 
-> Adding your plugin here will automatically include it in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action) and will generate markdown documentation automatically based on your TypeScript types.
+<Callout>
+Adding your plugin here will automatically include it in the generated `config.schema.json` that provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action) and will generate markdown documentation automatically based on your TypeScript types.
+</Callout>
 
 ## 10. Website & Plugins Hub
 
@@ -250,11 +260,11 @@ Go ahead to `website` directory and run the website using `yarn dev`.
 
 Your plugin page should be available in `http://localhost:3000/plugins/my-plugin`
 
-## 10. Add it to the live demo (optional)
+## 11. Add it to the live demo (optional)
 
 Our website has a live demo on the main page for most plugins, and you can add it there if you wish.
 
 To add a new example to the live demo, start by making sure that your plugin package is available for the website:
 
 1. Edit `website/package.json` and add your plugin package under `dependencies`.
-1. Add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.
+2. Add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.

@@ -1,7 +1,4 @@
----
-id: using-visitor
-title: Visitor Pattern
----
+# Visitor Pattern
 
 Most of the codegen's plugins are written with a design-pattern called [Visitor](https://en.wikipedia.org/wiki/Visitor_pattern).
 
@@ -55,7 +52,7 @@ const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-hel
 const { visit } = require('graphql')
 
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin(schema, documents, config) {
     const astNode = getCachedDocumentNodeFromSchema(schema) // Transforms the GraphQLSchema into ASTNode
     const visitor = {
       FieldDefinition(node) {
@@ -80,7 +77,7 @@ const { getCachedDocumentNodeFromSchema } = require('@graphql-codegen/plugin-hel
 const { visit } = require('graphql')
 
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin(schema, documents, config) {
     const astNode = getCachedDocumentNodeFromSchema(schema) // Transforms the GraphQLSchema into ASTNode
     const visitor = {
       FieldDefinition(node) {
@@ -112,12 +109,12 @@ For example, `BaseVisitor` is a class that contains a simple implementation and 
 
 [You can find an example for using it here](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/mongodb/src/visitor.ts#L38).
 
-- `BaseTypesVisitor` is a class that contains implementation for converting types, interfaces, unions, enums, and fields. It's the base implementation for [`flow`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/flow/flow/src/visitor.ts#L12) and [`typescript`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/typescript/src/visitor.ts#L18) plugins.
+- `BaseTypesVisitor` is a class that contains implementation for converting types, interfaces, unions, enums, and fields. It's the base implementation for [`flow`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/flow/flow/src/visitor.ts#L12) and [`typescript`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/typescript/src/visitor.ts#L18) plugins
 
 - `BaseResolversVisitor` is a class that contains implementation for generating a resolvers signature, it's the base implementation for [`flow-resolvers`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/flow/resolvers/src/visitor.ts#L10) and [`typescript-resolvers`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/resolvers/src/visitor.ts#L13)
 
 - `BaseDocumentsVisitor` is class that contains implementation for transforming GraphQL operations (query/mutation/subscription/fragment) with a recursive handler for selection-sets. It's the base implementation for [`flow-operations`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/flow/operations/src/visitor.ts#L14) and [`typescript-operations`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/operations/src/visitor.ts#L15)
 
-- `ClientSideBaseVisitor` is a class that contains implementation for creating client-side code for consuming GraphQL operations, it's in use by `typescript-apollo-angular`, `typescript-react-apollo`, `typescript-vue-apollo` and `typescript-apollo-stencil` plugins.
+- `ClientSideBaseVisitor` is a class that contains implementation for creating client-side code for consuming GraphQL operations, it's in use by `typescript-apollo-angular`, `typescript-react-apollo`, `typescript-vue-apollo` and `typescript-apollo-stencil` plugins
 
 To create a custom plugin, you can use the above classes as a base and extend it as you wish.
