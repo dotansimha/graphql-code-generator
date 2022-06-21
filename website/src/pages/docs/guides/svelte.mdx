@@ -1,25 +1,18 @@
----
-id: svelte
-title: 'Guide: Svelte / Kit'
-type: Guide
----
+import Callout from 'nextra-theme-docs/callout'
+import { PackageCmd } from '../../../components/PackageCmd'
+
+# Guide: Svelte / Kit
 
 GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit _native_, and other clients.
 
 Plugins and available options vary depending on the selected codegen; for this reason, you will find guides for each of them below:
 
-<br />
-
 - [Svelte Apollo](#svelte-apollo)
 - [SvelteKit Native](#sveltekit-native)
 
-<p>&nbsp;</p>
-
 All the following guides query the schema below:
 
-```graphql
-# schema.graphql
-
+```graphql filename="schema.graphql"
 type Author {
   id: Int!
   firstName: String!
@@ -37,12 +30,6 @@ type Query {
   posts: [Post]
 }
 ```
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## Svelte Apollo
 
@@ -79,11 +66,14 @@ Just a few configuration steps are required to get observable Apollo queries wit
 
 **1. Install the `graphql-codegen-svelte-apollo` plugin**
 
-<PackageInstall
-  packages={['graphql-codegen-svelte-apollo', '@graphql-codegen/typescript', '@graphql-codegen/typescript-operations']}
+<PackageCmd
+  packages={[
+    {
+      name: 'graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations',
+      isDev: true
+    }
+  ]}
 />
-
-<br />
 
 **2. Configure the plugin**
 
@@ -100,16 +90,17 @@ generates:
       - graphql-codegen-svelte-apollo
 ```
 
-> **`schema` and `documents` values**
->
-> `schema` can be:
->
-> - your target GraphQL API URL (`"/graphql"` included)
-> - your SDL file. (eg: `./src/schema.graphql`)
->
-> `documents` is a glob expression to your `.graphql`, `.gql` files.
+<Callout>
+**`schema` and `documents` values**
 
-<br />
+`schema` can be:
+
+- your target GraphQL API URL (`"/graphql"` included)
+- your SDL file. (eg: `./src/schema.graphql`)
+
+`documents` is a glob expression to your `.graphql`, `.gql` files.
+
+</Callout>
 
 **3. Run the codegen and update your code**
 
@@ -123,13 +114,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 }
 ```
 
-<br />
-
 Running the following generates the `graphql/generated.ts` file.
 
-<PackageRun scripts={['generate']} />
-
-<br />
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
 
 We can now update our code as follows:
 
@@ -145,17 +132,9 @@ We can now update our code as follows:
 {$posts.data}
 ```
 
-<p>&nbsp;</p>
-
 For more advanced configuration (ex: async queries), please refer to the [plugin documentation](/plugins/typescript-svelte-apollo) and the [GitHub repository README](https://github.com/ticruz38/graphql-codegen-svelte-apollo).
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## SvelteKit Native
 
@@ -167,9 +146,7 @@ Just a few configuration steps are required to get SvelteKit stores fully typed 
 
 **1. Install the plugin**
 
-<PackageInstall packages={['@kitql/graphql-codegen @kitql/client']} />
-
-<br />
+<PackageCmd packages={['@kitql/client', { name: '@kitql/graphql-codegen', isDev: true }]} />
 
 **2. Configure the plugin**
 
@@ -187,8 +164,6 @@ generates:
       - '@kitql/graphql-codegen'
 ```
 
-<br />
-
 **3. Run the codegen and update your code**
 
 Assuming that, as recommended, your `package.json` has the following script:
@@ -201,13 +176,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 }
 ```
 
-<br />
-
 Running the following generates the `graphql/generated.ts` file.
 
-<PackageRun scripts={['generate']} />
-
-<br />
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
 
 We can now update our code as follows:
 
@@ -226,10 +197,6 @@ We can now update our code as follows:
 {$PostsQueryStore.data}
 ```
 
-<p>&nbsp;</p>
-
 For more advanced configuration, please refer to the [KitQL documentation](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen).
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
-
-<p>&nbsp;</p>
