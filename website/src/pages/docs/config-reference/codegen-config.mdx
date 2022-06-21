@@ -1,7 +1,7 @@
----
-id: codegen-config
-title: codegen.yml
----
+import Callout from 'nextra-theme-docs/callout'
+import { PackageCmd } from '../../../components/PackageCmd'
+
+# codegen.yml
 
 The Plugin Hub lists dozens of plugins with their set of options and specific outputs.
 
@@ -11,13 +11,7 @@ The CLI automatically detects the defined config file and generates code accordi
 
 In addition, you can also define a path to your config file with the `--config` options, like so:
 
-<PackageRun scripts={['graphql-codegen --config ./path/to/config.yml']} />
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
+<PackageCmd packages={[{ name: 'graphql-codegen --config ./path/to/config.yml', cmd: 'run', isNpx: true }]} />
 
 ## Configuration file format
 
@@ -35,15 +29,11 @@ generates:
 
 If you are looking for a reference file, an example for a [large configuration file can be seen here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
-> **For VSCode users**
->
-> Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
+<Callout>
+**For VSCode users**
 
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
+Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
+</Callout>
 
 ## Configuration options
 
@@ -99,12 +89,6 @@ Here are the supported options that you can define in the config file (see [sour
 
   - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
 
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
-
 ## Environment Variables
 
 You can use environment variables in your `codegen.yml` file:
@@ -127,12 +111,6 @@ You can specify a default value in case an environment variable is missing:
 schema: ${SCHEMA_PATH:schema.graphql}
 ```
 
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
-
 ## CLI Flags
 
 The Codegen also supports several CLI flags that allow you to override the default behavior specified in your `.yml` config file:
@@ -151,23 +129,11 @@ The Codegen also supports several CLI flags that allow you to override the defau
 
 - **`--profile`** - Use the profiler to measure performance. _(see "Profiler" in "Advanced Usage")_
 
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
-
 ## Debug Mode
 
 You can set the `DEBUG` environment variable to `1` to print debug information.
 
 You can set the `VERBOSE` environment variable to `1` to print more information regarding the CLI output (`listr`).
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## Other ways to provide configuration
 
