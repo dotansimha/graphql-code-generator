@@ -1,7 +1,4 @@
----
-id: how-does-it-work
-title: How does GraphQL Code Generator work?
----
+# How does GraphQL Code Generator work?
 
 In order to generate code and types, GraphQL Code Generator relies on 2 main core concepts of GraphQL:
 
@@ -18,9 +15,7 @@ This process, applied to the `@graphql-codegen/typescript` plugin, is illustrate
 
 Given the following GraphQL schema:
 
-```graphql
-# schema.graphql
-
+```graphql filename="schema.graphql"
 scalar Date
 
 schema {
@@ -69,9 +64,7 @@ type ChatMessage implements Node {
 
 And the following operation (Query) on client-side:
 
-```graphql
-# operation.graphql
-
+```graphql filename="operation.graphql"
 query findUser($userId: ID!) {
   user(id: $userId) {
     ...UserFields
@@ -87,8 +80,7 @@ fragment UserFields on User {
 
 And with the following `codegen.yml` configuration file:
 
-```yaml
-# codegen.yml
+```yaml filename="codegen.yml"
 schema: http://localhost:3333
 generates:
   types-and-hooks.tsx:
@@ -207,5 +199,3 @@ export const useFindUserQuery = <
 ```
 
 Now our React components can use the type-safe `useFindUserQuery()` hook to query the GraphQL API.
-
-<p>&nbsp;</p>
