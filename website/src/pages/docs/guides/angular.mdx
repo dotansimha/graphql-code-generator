@@ -88,7 +88,7 @@ For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-
 
 Just a few configuration steps are required to get those Apollo services:
 
-**1. Install the `@graphql-codegen/typescript-apollo-angular` plugin**
+### Install
 
 <PackageCmd
   packages={[
@@ -99,7 +99,7 @@ Just a few configuration steps are required to get those Apollo services:
   ]}
 />
 
-**2. Configure the plugin**
+### Configure the plugin
 
 Create or update your `codegen.yaml` file as follows:
 
@@ -122,7 +122,7 @@ generates:
 `documents` is a glob expression to your `.graphql` or `.ts` files.
 </Callout>
 
-**3. Run the codegen and update your code**
+### Run the codegen and update your code
 
 Assuming that, as recommended, your `package.json` has the following script:
 
@@ -142,7 +142,7 @@ We can now update our code as follows:
 
 ```ts
 import { PostsGQL, PostsQuery } from './graphql'
-//BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
+// BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
