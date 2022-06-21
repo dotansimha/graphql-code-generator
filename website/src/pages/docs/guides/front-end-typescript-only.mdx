@@ -1,8 +1,7 @@
----
-id: front-end-typescript-only
-title: 'Guide: TypeScript-only for front-end'
-type: Guide
----
+import Callout from 'nextra-theme-docs/callout'
+import { PackageCmd } from '../../../components/PackageCmd'
+
+# Guide: TypeScript-only for front-end
 
 Even while using another GraphQL Client (not listed in our guides) or willing only to use generated TypeScript types, GraphQL Code Generator still got you covered!
 
@@ -36,13 +35,11 @@ Using `@graphql-codegen/typescript-operations` would generate the TypeScript typ
 
 Just a few configuration steps are required to get those TypeScript types generated:
 
-**1. Install the `@graphql-codegen/typescript-operations` plugin**
+## Install the `@graphql-codegen/typescript-operations` plugin
 
-<PackageInstall packages={['@graphql-codegen/typescript-operations', '@graphql-codegen/typescript']} />
+<PackageCmd packages={[{ name: '@graphql-codegen/typescript-operations @graphql-codegen/typescript', isDev: true }]} />
 
-<br />
-
-**2. Configure the plugin**
+## Configure the plugin
 
 Create or update your `codegen.yaml` file as follows:
 
@@ -56,15 +53,16 @@ generates:
       - typescript-operations
 ```
 
-> **`schema` and `documents` values**
->
-> `schema` needs to be your target GraphQL API URL (`"/graphql"` included).
->
-> `documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
+<Callout>
+**`schema` and `documents` values**
 
-<br />
+`schema` needs to be your target GraphQL API URL (`"/graphql"` included).
 
-**3. Run the codegen and update your code**
+`documents` is a glob expression to your `.graphql`, `.ts` or `.tsx` files.
+
+</Callout>
+
+## Run the codegen and update your code
 
 Assuming that, as recommended, your `package.json` has the following script:
 
@@ -76,13 +74,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 }
 ```
 
-<br />
-
 Running the following generates the `graphql/generated.tsx` file.
 
-<PackageRun scripts={['generate']} />
-
-<br />
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
 
 We can now use the generated types as follows:
 
@@ -111,6 +105,4 @@ const Posts = () => {
 }
 ```
 
-<p>&nbsp;</p>
-
-For more information on the `@graphql-codegen/typescript-operations` plugin configuration , please refer to its [documentation](/plugins/typescript-operations).
+For more information on the `@graphql-codegen/typescript-operations` plugin configuration, please refer to its [documentation](/plugins/typescript-operations).
