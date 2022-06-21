@@ -307,8 +307,8 @@ schema:
 Your custom loader should export a default function that returns `GraphQLSchema` object, or an identifier called `schema`. For example:
 
 ```js
+const { readFileSync } = require('node:fs')
 const { buildSchema } = require('graphql')
-const { readFileSync } = require('fs')
 
 module.exports = (schemaString, config) => {
   // Your logic for loading your GraphQLSchema

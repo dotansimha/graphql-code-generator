@@ -14,9 +14,7 @@ From back-end to front-end, GraphQL Code Generator automates the generation of:
 
 To illustrate how GraphQL Code Generator improves your developer experience, let's take a look at the front-end and back-end usage of the following schema:
 
-```graphql
-# schema.graphql
-
+```graphql filename="schema.graphql"
 type Author {
   id: Int!
   firstName: String!
@@ -377,9 +375,8 @@ Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers
 <Tabs items={['Apollo Server', 'GraphQL Yoga', 'GraphQL Modules']}>
 <Tab>
 ```ts
+import { readFileSync } from 'node:fs'
 import { ApolloServer } from 'apollo-server'
-import { readFileSync } from 'fs'
-
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -401,9 +398,8 @@ server.listen().then(({ url }) => {
 
 <Tab>
 ```ts
+import { readFileSync } from 'node:fs'
 import { createServer } from '@graphql-yoga/node'
-import { readFileSync } from 'fs'
-
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -414,10 +410,7 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = createServer({
-  typeDefs,
-  resolvers
-})
+const server = createServer({ typeDefs, resolvers })
 
 server.start()
 ```

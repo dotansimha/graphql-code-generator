@@ -1,15 +1,30 @@
 {
   "index": {
-    "title": "Introduction",
+    "title": "Home",
     "type": "page",
-    "hidden": true,
-    "theme": {}
+    "theme": {
+      "layout": "full"
+    }
   },
   "docs": {
-    "title": "Docs",
+    "title": "Docs & API",
     "type": "page",
     "theme": {
       "toc": true
     }
+  },
+  "plugins": {
+    "title": "Plugin Hub",
+    "type": "page",
+    "href": "/plugins",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "contact_us_link": {
+    "title": "Contact Us",
+    "href": "https://the-guild.dev/contact",
+    "type": "page",
+    "newWindow": true
   }
 }

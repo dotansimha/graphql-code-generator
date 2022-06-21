@@ -1,58 +1,103 @@
-code[class*='language-'],
-pre[class*='language-'] {
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code,
-code * {
-  font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;
+/*.docs-search > span {*/
+/*  width: 100%;*/
+/*}*/
 
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
+/*.algolia-autocomplete .algolia-docsearch-suggestion--category-header span {*/
+/*  display: inline-block;*/
+/*}*/
+/*.algolia-autocomplete .ds-dropdown-menu {*/
+/*  width: 500px;*/
+/*  min-width: 300px;*/
+/*  max-width: calc(100vw - 50px);*/
+/*}*/
 
-article {
-  width: 100%;
-  overflow-x: auto;
-}
+/*[data-reach-skip-link] {*/
+/*  @apply sr-only;*/
+/*}*/
 
-#__next {
-  font-family: TGCFont, sans-serif;
-}
+/*[data-reach-skip-link]:focus {*/
+/*  @apply not-sr-only fixed ml-6 top-0 bg-white text-lg px-6 py-2 mt-2 outline-none focus:ring z-50;*/
+/*}*/
 
-.admonition-heading .chakra-heading {
-  padding-top: 0;
-}
+/*.dark .invert-on-dark {*/
+/*  filter: invert(1) brightness(1.8);*/
+/*}*/
 
-.collapse-title {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-  font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;
-}
+/*body {*/
+/*  background: linear-gradient(*/
+/*          to bottom,*/
+/*          rgba(255, 255, 255, 0) 0%,*/
+/*          rgba(255, 255, 255, 1) 300px*/
+/*  ),*/
+/*  fixed 0 0 / 20px 20px radial-gradient(#d1d1d1 1px, transparent 0),*/
+/*  fixed 10px 10px / 20px 20px radial-gradient(#d1d1d1 1px, transparent 0);*/
+/*}*/
 
-.collapse-title > p {
-  display: inline-block;
-}
+/*.dark body {*/
+/*  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #111 300px),*/
+/*  fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0),*/
+/*  fixed 10px 10px / 20px 20px radial-gradient(#313131 1px, transparent 0);*/
+/*}*/
 
-details > *:last-child {
-  padding-bottom: 2rem;
-}
+/*code[class*='language-'],*/
+/*pre[class*='language-'] {*/
+/*  white-space: pre-wrap !important;*/
+/*  word-break: break-word !important;*/
+/*}*/
 
-.admonition {
-  margin-top: 10px;
-}
+/*code,*/
+/*code * {*/
+/*  font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;*/
 
-.admonition-heading h5 {
-  text-transform: none;
-}
+/*  margin-top: 0.2em;*/
+/*  margin-bottom: 0.2em;*/
+/*}*/
 
-.chakra-link {
-  color: #0070f3;
-  text-decoration: none;
-}
+/*article {*/
+/*  width: 100%;*/
+/*  overflow-x: auto;*/
+/*}*/
 
-.chakra-collapse a {
-  border-left-width: 0 !important;
-}
+/*#__next {*/
+/*  font-family: TGCFont, sans-serif;*/
+/*}*/
+
+/*.admonition-heading .chakra-heading {*/
+/*  padding-top: 0;*/
+/*}*/
+
+/*.collapse-title {*/
+/*  font-weight: bold;*/
+/*  margin-bottom: 0.5rem;*/
+/*  cursor: pointer;*/
+/*  font-family: 'SF Mono', 'Source Code Pro', Menlo, monospace !important;*/
+/*}*/
+
+/*.collapse-title > p {*/
+/*  display: inline-block;*/
+/*}*/
+
+/*details > *:last-child {*/
+/*  padding-bottom: 2rem;*/
+/*}*/
+
+/*.admonition {*/
+/*  margin-top: 10px;*/
+/*}*/
+
+/*.admonition-heading h5 {*/
+/*  text-transform: none;*/
+/*}*/
+
+/*.chakra-link {*/
+/*  color: #0070f3;*/
+/*  text-decoration: none;*/
+/*}*/
+
+/*.chakra-collapse a {*/
+/*  border-left-width: 0 !important;*/
+/*}*/

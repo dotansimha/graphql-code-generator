@@ -8,7 +8,7 @@ import { PackageCmd } from '../../../components/PackageCmd'
 
 This page covers the `@graphql-codegen/near-operation-file-preset` preset, which only applies to front-end projects.
 
-For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset ` with the `useGraphQLModules: false` flag](https://www.graphql-code-generator.com/plugins/graphql-modules-preset).
+For similar results on a back-end project, please refer to [`@graphql-codegen/graphql-modules-preset ` with the `useGraphQLModules: false` flag](https://graphql-code-generator.com/plugins/graphql-modules-preset).
 
 </Callout>
 
@@ -60,7 +60,7 @@ To use this preset, you need to add 2 outputs to your codegen.yml file:
 ```yaml
 schema: http://my-graphql-api.com/graphql
 # we are looking for operations in .tsx files,
-#   but not the generated ones.
+# but not the generated ones.
 documents: 'src/**/!(*.generated).{ts,tsx}'
 generates:
   src/types.ts:

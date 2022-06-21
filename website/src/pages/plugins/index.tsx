@@ -8,8 +8,8 @@ import { getPackagesData, PackageWithStats } from '@guild-docs/server/npm';
 import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
 
-import Markdown from '../../src/components/ui/Markdown';
-import { ALL_TAGS, packageList } from '../../src/lib/plugins';
+import Markdown from '../../components/ui/Markdown';
+import { ALL_TAGS, packageList } from '../../lib/plugins';
 
 type MarketplaceProps = {
   data: (PackageWithStats & {

@@ -200,8 +200,8 @@ documents:
 Your custom loader should export a default function that returns a `DocumentNode`. For example:
 
 ```js
+const { readFileSync } = require('node:fs')
 const { parse } = require('graphql')
-const { readFileSync } = require('fs')
 
 module.exports = (docString, config) => {
   return parse(readFileSync(docString, 'utf8'))

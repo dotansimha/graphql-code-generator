@@ -34,28 +34,31 @@ export default {
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/blob/master/website', // base URL for the docs repository
   nextLinks: true,
   prevLinks: true,
-  search: true,
-  unstable_flexsearch: true,
+  search: null,
+  unstable_flexsearch: null,
   floatTOC: true,
   customSearch: null, // customizable, you can use algolia for example
   darkMode: true,
-  footer: true,
-  footerText: (
-    <a
-      href="https://the-guild.dev"
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex items-center no-underline text-current font-semibold"
-    >
-      <span className="mr-1">Powered by</span>
-      <span>The Guild</span>
-    </a>
-  ),
+  footer: null,
+  // footerText: (
+  //   <a
+  //     href="https://the-guild.dev"
+  //     target="_blank"
+  //     rel="noreferrer"
+  //     className="inline-flex items-center no-underline text-current font-semibold"
+  //   >
+  //     <span className="mr-1">Powered by</span>
+  //     <span>The Guild</span>
+  //   </a>
+  // ),
   footerEditLink: 'Edit this page on GitHub',
   logo: (
     <>
       <CodeGeneratorLogo />
-      <span className="ml-1">{SITE_NAME}</span>
+      <div className="ml-1.5 flex flex-col">
+        <h1 className="font-medium">{SITE_NAME}</h1>
+        <h2 className="text-xs">Generate anything from GraphQL schema / operations</h2>
+      </div>
     </>
   ),
   head: (

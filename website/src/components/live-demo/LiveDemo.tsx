@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, Fragment } from 'react';
+import { useState, useEffect, Suspense, Fragment, ReactElement } from 'react';
 import { load } from 'js-yaml';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -49,7 +49,7 @@ const DEFAULT_EXAMPLE = {
   index: 0,
 } as const;
 
-export const LiveDemo = () => {
+export const LiveDemo = (): ReactElement => {
   const { isDarkTheme } = useThemeContext();
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
   const [schema, setSchema] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
@@ -82,7 +82,7 @@ export const LiveDemo = () => {
   // }
 
   return (
-    <>
+    <div className="hidden lg:block">
       <div className={classes.picker}>
         <h3>Choose Live Example: </h3>
         <div>
@@ -140,7 +140,7 @@ export const LiveDemo = () => {
           {/*<div className={classes.exampleDesc}>{description && <ReactMarkdown>{description}</ReactMarkdown>}</div>*/}
         </div>
       </div>
-      <div className={classes.container}>
+      <div className="flex border-y border-gray-300">
         <ErrorBoundary>
           <Suspense fallback={<Loading color={isDarkTheme ? '#fff' : '#000'} height="450px" />}>
             <LiveDemoEditors
@@ -157,7 +157,7 @@ export const LiveDemo = () => {
           </Suspense>
         </ErrorBoundary>
       </div>
-    </>
+    </div>
   );
 };
 
