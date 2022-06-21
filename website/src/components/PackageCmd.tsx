@@ -45,7 +45,6 @@ const Install: PackageMap = {
 type Command = {
   name: string;
   cmd: 'add' | 'run' | 'install';
-  isDev?: boolean;
   isNpx?: boolean;
 };
 
@@ -71,7 +70,7 @@ export const PackageCmd = ({ packages }: { packages: (string | Command)[] }) => 
                 case 'install':
                   return `${Install[pkgManager]}${pkg.name ? ` ${pkg.name}` : ''}`;
                 default:
-                  return `${Add[pkgManager]}${pkg.isDev ? ' -D' : ''} ${pkg.name}`;
+                  return `${Add[pkgManager]} ${pkg.name}`;
               }
             })
             .join('\n')}

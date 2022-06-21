@@ -67,12 +67,7 @@ Just a few configuration steps are required to get observable Apollo queries wit
 **1. Install the `graphql-codegen-svelte-apollo` plugin**
 
 <PackageCmd
-  packages={[
-    {
-      name: 'graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations',
-      isDev: true
-    }
-  ]}
+  packages={['-D graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations']}
 />
 
 **2. Configure the plugin**
@@ -146,7 +141,7 @@ Just a few configuration steps are required to get SvelteKit stores fully typed 
 
 **1. Install the plugin**
 
-<PackageCmd packages={['@kitql/client', { name: '@kitql/graphql-codegen', isDev: true }]} />
+<PackageCmd packages={['@kitql/client', '-D @kitql/graphql-codegen']} />
 
 **2. Configure the plugin**
 
