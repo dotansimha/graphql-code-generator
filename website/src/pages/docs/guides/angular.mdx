@@ -53,9 +53,7 @@ interface Post {
   }
 }
 
-@Component({
-  /* ... */
-})
+@Component({ /* … */ })
 class PostsComponent implements OnInit, OnDestroy {
   posts: Post[]
 
@@ -141,9 +139,7 @@ import { PostsGQL, PostsQuery } from './graphql'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-@Component({
-  /* ... */
-})
+@Component({ /* … */ })
 export class PostsComponent {
   posts: Observable<PostsQuery['posts']>
 

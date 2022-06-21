@@ -37,7 +37,7 @@ const Run: PackageMap = {
 };
 
 const Install: PackageMap = {
-  yarn: 'yarn install',
+  yarn: 'yarn',
   npm: 'npm install',
   pnpm: 'pnpm install',
 };

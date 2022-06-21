@@ -75,7 +75,7 @@ const postsQueryDocument = /* GraphQL */ `
 const Posts = () => {
   const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
 
-  // ...
+  // …
 }
 ```
 </Tab>
@@ -117,7 +117,7 @@ const Posts = () => {
     return posts
   })
 
-  // ...
+  // …
 }
 ```
 </Tab>
@@ -126,7 +126,7 @@ const Posts = () => {
 ```vue
 <template>
   <div class="apollo">
-    <!-- UI... -->
+    <!-- UI… -->
   </div>
 </template>
 
@@ -192,7 +192,7 @@ interface Post {
   }
 }
 
-@Component({ /* ... */ })
+@Component({ /* … */ })
 class PostsComponent implements OnInit, OnDestroy {
   posts: Post[]
 
@@ -270,7 +270,7 @@ const Posts = () => {
   const [result] = useQuery({ query: postsQueryDocument })
 
   // `result` is fully typed!
-  // ...
+  // …
 }
 ```
 </Tab>
@@ -283,7 +283,7 @@ const Posts = () => {
   const { data } = usePosts()
 
   // `data` is typed!
-  // ...
+  // …
 }
 ```
 </Tab>
@@ -292,7 +292,7 @@ const Posts = () => {
 ```vue
 <template>
   <div class="apollo">
-    <!-- UI... -->
+    <!-- UI… -->
   </div>
 </template>
 
@@ -323,7 +323,7 @@ import { PostsGQL, PostsQuery } from './graphql'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-@Component({/* ... */})
+@Component({/* … */})
 export class PostsComponent {
   posts: Observable<PostsQuery['posts']>
 
