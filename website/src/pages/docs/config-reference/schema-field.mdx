@@ -1,7 +1,6 @@
----
-id: schema-field
-title: '`schema` field'
----
+import Callout from 'nextra-theme-docs/callout'
+
+# `schema` field
 
 The `schema` field should point to your `GraphQLSchema` - there are multiple ways you can specify it and load your `GraphQLSchema`.
 
@@ -51,7 +50,9 @@ generates:
       - typescript-operations
 ```
 
-> It's also helpful if you have a remote schema from a server and a client-side schema available in your client-side.
+<Callout>
+It's also helpful if you have a remote schema from a server and a client-side schema available in your client-side.
+</Callout>
 
 ## Available formats
 
@@ -78,7 +79,9 @@ schema:
         Authorization: YOUR-TOKEN-HERE
 ```
 
-> Note that **spacing and indentation are important in YAML**; make sure it matches the examples above.
+<Callout>
+**Spacing and indentation are important in YAML**, make sure it matches the examples above.
+</Callout>
 
 ##### `customFetch`
 
@@ -138,7 +141,9 @@ schema:
   - '!*.generated.graphql'
 ```
 
-> All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
+<Callout>
+All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
+</Callout>
 
 #### Supported Configuration
 
@@ -238,7 +243,9 @@ module.exports = buildSchema(/* GraphQL */ `
 `)
 ```
 
-> You can also import from TypeScript files, but don't forget to specify [require field](./require-field).
+<Callout>
+You can also import from TypeScript files, but don't forget to specify [require field](./require-field).
+</Callout>
 
 ### String
 
@@ -256,7 +263,9 @@ You can load your schema file from a remote GitHub file, using the following syn
 schema: github:user/repo#branchName:path/to/file.graphql
 ```
 
-> You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
+<Callout>
+You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
+</Callout>
 
 ### Git
 
@@ -266,7 +275,9 @@ You can load your schema file from a Git repository using the following syntax:
 schema: git:branch:path/to/file.graphql
 ```
 
-> You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
+<Callout>
+You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.
+</Callout>
 
 ### Apollo Engine
 
@@ -301,11 +312,13 @@ const { readFileSync } = require('fs')
 
 module.exports = (schemaString, config) => {
   // Your logic for loading your GraphQLSchema
-  return buildSchema(readFileSync(schemaString, { encoding: 'utf-8' }))
+  return buildSchema(readFileSync(schemaString, 'utf8'))
 }
 ```
 
-> The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so the loader can modify them to pass any additional information to those plugins.
+<Callout>
+The second parameter passed to the loader function is a config object that includes a `pluginContext` property. This value is passed to any executed plugins, so the loader can modify them to pass any additional information to those plugins.
+</Callout>
 
 ### Loading API URL from TypeScript file example:
 
@@ -352,10 +365,10 @@ schema:
 
 Finally, make sure that you have installed `ts-node`, so TypeScript file can be transpiled before running codegen.
 
-In you'r `package.json` script, add `-r ts-node/register` argument to use `ts-node` transpiler.
+In your `package.json` script, add `-r ts-node/register` argument to use `ts-node` transpiler.
 
-```json
+```diff
   "scripts": {
-    "codegen": "graphql-codegen -r ts-node/register --config codegen.json"
++   "codegen": "graphql-codegen -r ts-node/register --config codegen.json"
   }
 ```
