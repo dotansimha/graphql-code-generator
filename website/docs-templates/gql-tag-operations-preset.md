@@ -84,8 +84,8 @@ const Tweets = () => {
   const [result] = useQuery({ query: TweetsQuery })
   const { data, fetching, error } = result
 
-  if (fetching) return <p>Loading...</p>
-  if (error) return <p>Oh no... {error.message}</p>
+  if (fetching) return <p>Loading…</p>
+  if (error) return <p>Oh no… {error.message}</p>
 
   return (
     <ul>
@@ -130,8 +130,8 @@ const Tweets = () => {
   const [result] = useQuery({ query: TweetsQuery })
   const { data, fetching, error } = result
 
-  if (fetching) return <p>Loading...</p>
-  if (error) return <p>Oh no... {error.message}</p>
+  if (fetching) return <p>Loading…</p>
+  if (error) return <p>Oh no… {error.message}</p>
 
   return (
     <ul>
@@ -339,8 +339,8 @@ const Tweets = () => {
   const [result] = useQuery({ query: TweetsQuery })
   const { data, fetching, error } = result
 
-  if (fetching) return <p>Loading...</p>
-  if (error) return <p>Oh no... {error.message}</p>
+  if (fetching) return <p>Loading…</p>
+  if (error) return <p>Oh no… {error.message}</p>
 
   return (
     <ul>

@@ -20,7 +20,7 @@ This plugin also generates less boilerplate code for your GraphQL operations.
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowFullScreen
-></iframe>
+/>
 
 ### Usage example
 

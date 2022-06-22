@@ -167,7 +167,7 @@ In your application code, you can import it from the generated file, and use the
 
 <ul>
   {#await AsyncTransactions({ address })}
-    Loading...
+    Loading…
   {:then transactions}
     {#each transactions || [] as transaction}
       <li>Sent transaction from {transaction.from} to {transaction.to}</li>

@@ -22,7 +22,7 @@ query MyFeed {
 Using `graphql-codegen` you can generate a file with Angular services that you can use when coding an Angular component:
 
 ```yaml
-# ...
+# …
 generates:
   path/to/output.ts:
     plugins:

@@ -116,14 +116,14 @@ generates:
       - typescript-resolvers
 ```
 
-```ts
-// in your enums.ts
+```ts filename="enums.ts"
 export enum ColorsCode {
   MY_RED = '#FF0000',
   MY_BLUE = '#0000FF'
 }
+```
 
-// in your resolvers.ts
+```ts filename="resolvers.ts"
 import { Resolvers } from './resolvers-types'
 import { ColorsCode } from './enums'
 

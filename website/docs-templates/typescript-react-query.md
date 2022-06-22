@@ -160,7 +160,7 @@ generates:
 As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
 
 ```yaml
-#...
+# …
 config:
   fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)
 ```
@@ -199,7 +199,7 @@ export const fetchData = <TData, TVariables>(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(options ?? {})
+        ...options
       },
       body: JSON.stringify({
         query,
@@ -210,7 +210,7 @@ export const fetchData = <TData, TVariables>(
     const json = await res.json()
 
     if (json.errors) {
-      const { message } = json.errors[0] || 'Error..'
+      const { message } = json.errors[0] || 'Error…'
       throw new Error(message)
     }
 
@@ -235,7 +235,7 @@ export const useFetchData = <TData, TVariables>(
       headers: {
         'Content-Type': 'application/json',
         ...headers,
-        ...(options ?? {})
+        ...options
       },
       body: JSON.stringify({
         query,
@@ -246,7 +246,7 @@ export const useFetchData = <TData, TVariables>(
     const json = await res.json()
 
     if (json.errors) {
-      const { message } = json.errors[0] || 'Error..'
+      const { message } = json.errors[0] || 'Error…'
       throw new Error(message)
     }
 
@@ -270,10 +270,10 @@ with the following query
 ```graphql
 query AnimalsQuery($catsRange: Int, $catsStarting: Int, $dogsRange: Int, $dogsStarting: Int) {
   cats(range: $catsRange, starting: $catsStarting) {
-    # ...
+    # …
   }
   dogs(range: $dogsRange, starting: $dogsStarting) {
-    # ...
+    # …
   }
 }
 ```

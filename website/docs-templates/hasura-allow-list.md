@@ -13,7 +13,7 @@ This can be useful to keep your allow list and front end code in sync.
 ## Examples
 
 ```yaml
-# ...
+# …
 generates:
   path/to/metadata/allow_list.yaml:
     plugins:

@@ -30,13 +30,13 @@ We can use the generated code like this:
 
 ```tsx
 <TestComponent variables={...}>
-  ...
+  …
 </TestComponent>
 ```
 
 Or if you prefer:
 
-```tsx
+```ts
 const [result] = useTestQuery(...)
 ```
 

@@ -30,6 +30,6 @@ We can use the generated code like this:
 
 ```tsx
 <TestComponent variables={...}>
-  ...
+  …
 </TestComponent>
 ```

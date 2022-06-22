@@ -45,14 +45,14 @@ generates:
       - flow-resolvers
 ```
 
-```ts
-// in your enums.js
+```ts filename="enums.ts"
 export enum ColorsCode {
   MY_RED = '#FF0000',
   MY_BLUE = '#0000FF'
 }
+```
 
-// in your resolvers.js
+```ts filename="resolvers.ts"
 import type { Resolvers } from './resolvers-types'
 import { ColorsCode } from './enums'
 

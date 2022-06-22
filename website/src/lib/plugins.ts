@@ -75,7 +75,7 @@ const PACKAGES: Package<Tags>[] = [
     identifier: 'graphql-modules-preset',
     title: 'graphql-modules-preset',
     npmPackage: '@graphql-codegen/graphql-modules-preset',
-    iconUrl: 'https://www.graphql-modules.com/img/just-logo.svg',
+    iconUrl: 'https://graphql-modules.com/img/just-logo.svg',
     tags: ['preset', 'utilities', 'resolvers'],
   },
   {

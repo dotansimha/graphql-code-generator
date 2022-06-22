@@ -51,7 +51,7 @@ import { useTest } from './generated-types'
 export const MyComponent: React.FC = () => {
   const { data, error, loading } = useTest()
 
-  return <div> ... </div>
+  return <div>…</div>
 }
 ```
 

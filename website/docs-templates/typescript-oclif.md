@@ -81,9 +81,7 @@ by the codegen.
 
 To get started quickly and easily, consider using the simple `graphql-request` as your handler:
 
-```ts
-// handler.ts
-
+```ts filename="handler.ts"
 import { GraphQLClient } from 'graphql-request'
 import { Command } from '@oclif/command'
 
@@ -149,7 +147,7 @@ necessary `oclif` command files. With that complete, follow the directions in th
 You can add descriptions and examples for your commands via `typescript-oclif` with the `@oclif`
 client-side directive, like so:
 
-```gql
+```graphql
 mutation CreateAuthor($name: String!)
 @oclif(
   description: "Create a new author"

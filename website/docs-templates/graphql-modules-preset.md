@@ -54,8 +54,7 @@ This will generate a file called `module-types.ts` under each module you have.
 
 To use the generates resolvers, you can use `Resolvers` signature and apply it to your resolvers object within the module:
 
-```ts
-// src/modules/user/resolvers.ts
+```ts filename="src/modules/user/resolvers.ts"
 import { MyModule } from './generated-types/module-types'
 
 export const resolvers: MyModule.Resolvers = {

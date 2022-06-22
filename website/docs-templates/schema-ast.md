@@ -7,7 +7,7 @@ id: schema-ast
 ## Examples
 
 ```yaml
-# ...
+# …
 schema:
   - 'http://localhost:3000/graphql'
   - './src/**/*.graphql'

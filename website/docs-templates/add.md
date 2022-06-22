@@ -11,7 +11,7 @@ You can use this plugin to add custom code, imports, comments and more to your o
 ## Examples
 
 ```yaml
-# ...
+# …
 generates:
   path/to/file.ts:
     plugins:
@@ -21,7 +21,7 @@ generates:
 ```
 
 ```yaml
-# ...
+# …
 generates:
   path/to/file.ts:
     plugins:

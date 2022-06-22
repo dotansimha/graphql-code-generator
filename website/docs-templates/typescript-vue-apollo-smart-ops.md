@@ -29,7 +29,7 @@ We can use the generated code like this:
 ```vue
 <template>
   <div>
-    <div v-if="loading > 0">Loading...</div>
+    <div v-if="loading > 0">Loading…</div>
     <ul v-else>
       <li v-for="message in messages">{{ message.id }}</li>
     </ul>

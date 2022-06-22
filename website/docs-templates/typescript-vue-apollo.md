@@ -33,7 +33,7 @@ We can use the generated code like this:
 ```vue
 <template>
   <div>
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading">Loading…</div>
     <div v-else>{{ result.feed.id }}</div>
   </div>
 </template>
@@ -70,7 +70,7 @@ We can use the generated code with `useResult` like this:
 ```vue
 <template>
   <div>
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading">Loading…</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else-if="allAccounts">
       <div v-for="account in allAccounts" :key="account.accountID">
