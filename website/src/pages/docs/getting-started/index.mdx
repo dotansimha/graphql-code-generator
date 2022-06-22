@@ -1,4 +1,5 @@
 import { Tabs, Tab } from 'nextra-theme-docs/tabs'
+import Callout from 'nextra-theme-docs/callout'
 
 # Introduction to GraphQL Code Generator
 
@@ -124,7 +125,7 @@ const Posts = () => {
 ```vue
 <template>
   <div class="apollo">
-    <!-- UI… -->
+    <!-- UI … -->
   </div>
 </template>
 
@@ -235,7 +236,7 @@ class PostsComponent implements OnInit, OnDestroy {
 </script>
 
 <ul>
-  <!-- UI -->
+  <!-- UI … -->
 </ul>
 ```
 </Tab>
@@ -290,7 +291,7 @@ const Posts = () => {
 ```vue
 <template>
   <div class="apollo">
-    <!-- UI… -->
+    <!-- UI … -->
   </div>
 </template>
 
@@ -321,7 +322,7 @@ import { PostsGQL, PostsQuery } from './graphql'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-@Component({/* … */})
+@Component({ /* … */ })
 export class PostsComponent {
   posts: Observable<PostsQuery['posts']>
 
@@ -342,7 +343,7 @@ export class PostsComponent {
 </script>
 
 <ul>
-  <!-- UI -->
+  <!-- UI … -->
 </ul>
 ```
 </Tab>
@@ -356,9 +357,11 @@ Now, with simple configuration and an npm/yarn script, a front-end developers be
 
 - **less boilerplate** (thanks to full code generation such as React hooks generation)
 
-> **How does GraphQL Code Generator work?**
->
-> More details on the inner working of GraphQL Code Generator are available on [this page](/docs/advanced/how-does-it-work).
+<Callout>
+**How does GraphQL Code Generator work?**
+
+More details on the inner working of GraphQL Code Generator are available on [this page](/docs/advanced/how-does-it-work).
+</Callout>
 
 ### To the back-end
 
@@ -389,7 +392,7 @@ const resolvers: Resolvers = {
 
 const server = new ApolloServer({ typeDefs, resolvers })
 
-// The `listen` method launches a web server.
+// The `listen` method launches a web server
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
