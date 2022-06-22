@@ -15,7 +15,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['.babelrc.js', '.eslintrc.js', 'next-i18next.config.js', 'next.config.js'],
+      files: ['.babelrc.js', '.eslintrc.js', 'next.config.js'],
       env: {
         node: true,
       },

@@ -150,9 +150,7 @@ export default {
           }
         }
       `,
-      variables: {
-        id: 1
-      } as PostQueryVariables
+      variables: { id: 1 } as PostQueryVariables
     }
   },
   data() {
@@ -199,9 +197,7 @@ class PostsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.querySubscription = this.apollo
-      .watchQuery({
-        query: GET_POSTS
-      })
+      .watchQuery({ query: GET_POSTS })
       .valueChanges.subscribe(({ data }) => {
         this.posts = data.posts as Post[]
       })
@@ -301,9 +297,7 @@ import { usePostQuery } from '../generated/graphql'
 export default {
   apollo: usePostQuery({
     // `variables` is properly typed!
-    variables: {
-      id: 1
-    }
+    variables: { id: 1 }
   }),
   data() {
     return {

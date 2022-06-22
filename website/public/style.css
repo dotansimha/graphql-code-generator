@@ -101,3 +101,8 @@
 /*.chakra-collapse a {*/
 /*  border-left-width: 0 !important;*/
 /*}*/
+
+#__next > header,
+#__next > footer {
+  @apply bg-transparent;
+}

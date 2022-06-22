@@ -7,7 +7,7 @@ import { Box, Center, Code, Container, Grid, SimpleGrid } from '@chakra-ui/react
 import { PackageInstall, RemoteGHMarkdown, EditOnGitHubButton } from '@guild-docs/client';
 import { buildMDX, CompiledMDX } from '@guild-docs/server';
 import { getPackagesData, PackageInfo, PackageWithStats } from '@guild-docs/server/npm';
-import { packageList } from '../../src/lib/plugins';
+import { packageList } from '../../lib/plugins';
 
 export const SubTitle = styled.h2(() => [tw`mt-0 mb-4 font-bold text-lg md:text-xl`]);
 export const Title = styled.h2(() => [tw`mt-0 mb-4 font-bold text-xl md:text-2xl`]);
@@ -57,13 +57,11 @@ export const getStaticPaths: GetStaticPaths<PluginPageParams> = async () => {
 
   return {
     fallback: 'blocking',
-    paths: plugins.map(({ identifier }) => {
-      return {
-        params: {
-          name: identifier,
-        },
-      };
-    }),
+    paths: plugins.map(({ identifier }) => ({
+      params: {
+        name: identifier,
+      },
+    })),
   };
 };
 
@@ -185,10 +183,8 @@ function extractRepositoryInformation(stats: PackageInfo | null | undefined) {
     return null;
   }
 
-  const [, repo] = result;
-
   return {
-    repo,
+    repo: result[1],
     baseDir: stats.repository.directory,
     /** TODO: this should probably be more flexible. */
     sourceFilePath: '',
