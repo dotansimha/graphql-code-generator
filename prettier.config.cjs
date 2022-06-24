@@ -17,5 +17,8 @@ module.exports = {
     'prettier-plugin-svelte',
     // for prettifying shellscript, Dockerfile, properties, gitignore, dotenv
     'prettier-plugin-sh',
+    // Sort classes in website
+    'prettier-plugin-tailwindcss',
   ],
+  tailwindConfig: './website/tailwind.config.cjs',
 };

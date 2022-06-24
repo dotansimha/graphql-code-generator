@@ -3,15 +3,7 @@ import { ReactElement } from 'react';
 const SITE_NAME = 'GraphQL Code Generator';
 
 const CodeGeneratorLogo = ({ className }: { className?: string }): ReactElement => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="50"
-    height="54"
-    viewBox="0 0 50 54"
-    fill="none"
-    className={className}
-    style={{ width: 36, height: 36 }} // TODO: Use Tailwind CSS classes to setup width and height
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="54" viewBox="0 0 50 54" fill="none" className={className}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -40,24 +32,13 @@ export default {
   customSearch: null, // customizable, you can use algolia for example
   darkMode: true,
   footer: null,
-  // footerText: (
-  //   <a
-  //     href="https://the-guild.dev"
-  //     target="_blank"
-  //     rel="noreferrer"
-  //     className="inline-flex items-center no-underline text-current font-semibold"
-  //   >
-  //     <span className="mr-1">Powered by</span>
-  //     <span>The Guild</span>
-  //   </a>
-  // ),
   footerEditLink: 'Edit this page on GitHub',
   logo: (
     <>
-      <CodeGeneratorLogo />
-      <div className="ml-1.5 flex flex-col">
-        <h1 className="font-medium">{SITE_NAME}</h1>
-        <h2 className="text-xs">Generate anything from GraphQL schema / operations</h2>
+      <CodeGeneratorLogo className="mr-1.5 h-9 w-9" />
+      <div>
+        <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
+        <h2 className="hidden text-xs sm:block">Generate anything from GraphQL schema / operations</h2>
       </div>
     </>
   ),
