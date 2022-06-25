@@ -210,7 +210,7 @@ export default {
   plugins: [
     // your other plugins such as typescript syntax stripping etc.
 
-    // make sure the artifactDirectory is the same as your generates path within the codegen.yml
+    // make sure the artifactDirectory is the same as your generates path within the `codegen.yml`
     [babelPlugin, { artifactDirectory: './src/gql' }]
   ]
 }

@@ -15,7 +15,7 @@ This plugin also generates less boilerplate code for your GraphQL operations.
 <iframe
   width="100%"
   height="400"
-  src="https://www.youtube.com/embed/cYIhx8dusa4"
+  src="https://youtube.com/embed/cYIhx8dusa4"
   title="Typed Document Node with GraphQL Code Generator"
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

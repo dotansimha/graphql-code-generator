@@ -20,7 +20,7 @@ You can test how relay-compiler affects your queries over on the [Relay Compiler
 
 ## Usage
 
-Set up your project per the GraphQL Codegen Docs, and add `flattenGeneratedTypes: true` in your codegen.yml:
+Set up your project per the GraphQL Codegen Docs, and add `flattenGeneratedTypes: true` in your `codegen.yml`:
 
 ```yaml
 overwrite: true
