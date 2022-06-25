@@ -19,8 +19,6 @@ export const PackageHeader = (): ReactElement => {
   return (
     <>
       <h2>{pluginData.title}</h2>
-      <h3>Installation</h3>
-      <PackageCmd packages={[`-D ${pluginData.npmPackage}`]} />
       <h3>Package Details</h3>
       <div className="table-container">
         <table>
@@ -62,6 +60,8 @@ export const PackageHeader = (): ReactElement => {
             </tr>
           </tbody>
         </table>
+        <h3>Installation</h3>
+        <PackageCmd packages={[`-D ${pluginData.npmPackage}`]} />
       </div>
     </>
   );

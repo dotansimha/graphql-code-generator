@@ -1,3 +1,10 @@
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('c-sharp-operations')
+
+<PackageHeader />
+
 The `c-sharp-operations` plugin generates C# methods for the resolvers' signature.
 
 It works with [GraphQL.Client](https://nuget.org/packages/GraphQL.Client) library and methods can be invoked through the `GraphQLHttpClient`.
@@ -13,6 +20,5 @@ using GraphQL.Client.Serializer.Newtonsoft;
   var response = await client.SendQueryAsync<Types.Query>(UsersGQL.Request());
 ```
 
-{@operationsNote}
-
-{@apiDocs}
+<OperationsNote />
+<PackageApiDocs />
