@@ -81,7 +81,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    *   config:
    *     addUnderscoreToArgsType: true
    * ```

@@ -1,0 +1,8 @@
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('flow-operations')
+
+<PackageHeader/>
+<OperationsNote/>
+<PackageApiDocs/>

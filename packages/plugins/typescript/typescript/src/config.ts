@@ -138,7 +138,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown Override all definition types
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

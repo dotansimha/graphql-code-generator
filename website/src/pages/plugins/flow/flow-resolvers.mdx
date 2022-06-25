@@ -1,12 +1,18 @@
-{@apiDocs}
+import Callout from 'nextra-theme-docs/callout'
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('flow-resolvers')
+
+<PackageHeader/>
 
 ## Usage Example
 
-<Nextra.Callout>
+<Callout>
 **Quick Start with `flow-resolvers`**
 
 You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
-</Nextra.Callout>
+</Callout>
 
 ## Enum Resolvers
 
@@ -94,3 +100,5 @@ generates:
       - flow
       - flow-resolvers
 ```
+
+<PackageApiDocs/>
