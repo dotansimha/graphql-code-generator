@@ -1,7 +1,3 @@
----
-id: typescript-stencil-apollo
----
-
 {@operationsNote}
 
 {@apiDocs}
@@ -32,4 +28,10 @@ We can use the generated code like this:
 <TestComponent variables={...}>
   …
 </TestComponent>
+```
+
+Or if you prefer:
+
+```ts
+const [result] = useTestQuery(...)
 ```
