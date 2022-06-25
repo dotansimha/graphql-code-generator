@@ -1,6 +1,12 @@
-This preset generates a file per each operation file.
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
 
-{@apiDocs}
+export const getStaticProps = getNpmInfo('near-operation-file-preset')
+
+<PackageHeader/>
+
+This preset generates a file per each operation file.
 
 ## Example
 
@@ -38,3 +44,5 @@ The `presetConfig` section contains a key for setting the output files extension
 <Nextra.Callout>
 Note: If you're loading your `documents` from files with the same extension as the generated files, make sure the glob you use excludes the generated files. For example, if your original glob was `src/**/*.{ts,tsx}`, use `src/**/!(*.generated).{ts,tsx}` instead.
 </Nextra.Callout>
+
+<PackageApiDocs/>

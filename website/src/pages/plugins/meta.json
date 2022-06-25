@@ -1,0 +1,6 @@
+{
+  "typescript": "TypeScript",
+  "presets": "Presets",
+  "c-sharp": "C-Sharp",
+  "flow": "Flow"
+}

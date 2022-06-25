@@ -1,3 +1,11 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('gql-tag-operations-preset')
+
+<PackageHeader/>
+
 This preset generates typings for your inline `gql` function usages, without having to manually specify import statements for the documents. All you need to do is import your `gql` function and run codegen in watch mode.
 
 Huge thanks to [Maël Nison](https://github.com/arcanis), who conceptualized the foundation for this preset [over here](https://github.com/arcanis/graphql-typescript-integration).
@@ -259,9 +267,9 @@ const FooQuery = gql(/* GraphQL */ `
 `)
 ```
 
-<Nextra.Callout>
+<Callout>
 In case you are using fragments you **MUST** use the gql-tag-operations babel plugin as otherwise the `gql` calls that reference global fragments will cause runtime errors, as the `gql` operation cannot find the global fragment. Unfortunately, it is also **NOT** possible to embed fragments with template string interpolation, as it breaks TypeScript type-inference.
-</Nextra.Callout>
+</Callout>
 
 ```ts
 import { gql } from 'urql'
@@ -346,9 +354,9 @@ const Tweets = () => {
 }
 ```
 
-<Nextra.Callout>
+<Callout>
 The default `useFragment` implementation does only data masking on a TypeScript type level. If you log the object, you can all properties, including the masked ones, are available on the object. For true runtime data masking, the GraphQL client must implement it. Currently, there is no client that does this (aside from relay which should best be used with relay-compiler).
-</Nextra.Callout>
+</Callout>
 
 ### Fragment Masking with custom unmask name
 
@@ -385,4 +393,4 @@ generates:
         augmentedModuleName: '@something/fragment'
 ```
 
-{@apiDocs}
+<PackageApiDocs />
