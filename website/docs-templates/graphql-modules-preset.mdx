@@ -1,16 +1,15 @@
----
-id: graphql-modules
----
-
 The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each directory that contains GraphQL SDL definitions.
 
 The generates files will be generated based on each module definition, and based on the GraphQL schema defined in that specific module, allowing you to write type-safe resolvers, while keeping modules types boundaries.
 
-<MDXWarning title="Usage Requirements">
+
+<Nextra.Callout type="warning" emoji="⚠️">
+**Usage Requirements**
+
 This preset generates code for `graphql-modules` @ `v1` / `v2` (previous versions are not supported) by default.
 
-If you are not using `graphql-modules`, you can set `useGraphQLModules: false` to disable this behaviour.
-</MDXWarning>
+If you are not using `graphql-modules`, you can set `useGraphQLModules: false{:yaml}` to disable this behaviour.
+</Nextra.Callout>
 
 ## Configuration
 
@@ -62,8 +61,10 @@ export const resolvers: MyModule.Resolvers = {
 }
 ```
 
-> You can find [an example project here](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/modules).
+<Nextra.Callout>
+You can find [an example project here](https://github.com/dotansimha/graphql-code-generator/tree/master/dev-test/modules).
+</Nextra.Callout>
 
 ## Using without GraphQL-Modules
 
-By default, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false` in your preset configuration to generate fully agnostic types that are based on folder structure only.
+By default, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false{:yaml}` in your preset configuration to generate fully agnostic types that are based on folder structure only.

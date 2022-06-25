@@ -1,7 +1,3 @@
----
-id: java-apollo-android
----
-
 {@apiDocs}
 
 ## Prepare your env
@@ -15,7 +11,8 @@ Run the following in your Android project:
 
 ```sh
 yarn init --yes
-yarn add @graphql-codegen/cli graphql @graphql-codegen/java-apollo-android
+yarn add graphql
+yarn add -D @graphql-codegen/cli @graphql-codegen/java-apollo-android
 ```
 
 Then, create `codegen.yml` with the following configuration:
@@ -34,7 +31,9 @@ generates:
       - java-apollo-android
 ```
 
-> Also, make sure to add `node_modules` to your `.gitignore` file.
+<Nextra.Callout>
+Also, make sure to add `node_modules` to your `.gitignore` file.
+</Nextra.Callout>
 
 To integrate with your Gradle build, you can add the following to your app Gradle file:
 
@@ -51,4 +50,4 @@ This will make sure to run and generate output before each time you build your p
 
 ## Usage
 
-You can find a [repository with a working example using AppSync](https://github.com/dotansimha/graphql-codegen-appsync-android-example)
+You can find a [repository with a working example using AppSync](https://github.com/dotansimha/graphql-codegen-appsync-android-example).

@@ -1,7 +1,3 @@
----
-id: named-operations-object
----
-
 This plugin generates an object containing a list of all your GraphQL operations and fragments. This is useful if you are using Apollo-Client and wish to have type validation when you are using `refetchQueries`.
 
 All operations and fragments are being exported by their name (so unnamed operations are being ignored), in the following structure:
@@ -19,7 +15,7 @@ export const namedOperations = {
 
 ## How to use?
 
-Include the plugin within your output (into an existing JS/TS file, or a new file), for example:
+Include the plugin within your output (into an existing `.js`/`.ts` file, or a new file), for example:
 
 ```yaml
 schema: YOUR_SCHEMA
