@@ -1,20 +1,26 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '../../../components'
+import { getNpmInfo } from '../../../lib/stats'
+
+export const getStaticProps = getNpmInfo('typescript-apollo-client-helpers')
+
+<PackageHeader />
+
 This plugin generates helpers for improving the integration of TypeScript and Apollo-Client, based on your schema.
 
-<Nextra.Callout>
-Note: this plugin generates code that intended for `apollo-client` @ `> v3` only.
-</Nextra.Callout>
+<Callout>Note: this plugin generates code that intended for `apollo-client` @ `> v3` only.</Callout>
 
 This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Client.
 
-<Nextra.Callout>
+<Callout>
 [You can read more about type-policies in Apollo Cache here](https://apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields)
-</Nextra.Callout>
+</Callout>
 
 ### How to use?
 
 Start by adding this plugin to your configuration:
 
-```yaml
+```yaml {5}
 schema: my-schema.graphql
 generates:
   apollo-helpers.ts:
@@ -24,7 +30,7 @@ generates:
 
 Then, use the generated TypeScript `type` as your signature for `typePolicies`:
 
-```ts
+```ts /StrictTypedTypePolicies/
 import { StrictTypedTypePolicies } from './apollo-helpers'
 
 const typePolicies: StrictTypedTypePolicies = {
@@ -48,4 +54,4 @@ const typePolicies: StrictTypedTypePolicies = {
 const cache = new InMemoryCache({ typePolicies })
 ```
 
-{@apiDocs}
+<PackageApiDocs />

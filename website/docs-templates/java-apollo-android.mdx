@@ -4,16 +4,12 @@
 
 To get started with these plugins and preset, make sure you have the following installed:
 
-- NodeJS (10 or later)
+- Node.js (10 or later)
 - NPM or Yarn
 
 Run the following in your Android project:
 
-```sh
-yarn init --yes
-yarn add graphql
-yarn add -D @graphql-codegen/cli @graphql-codegen/java-apollo-android
-```
+<PackageCmd packages={[{ cmd: 'init' }, 'graphql', '-D @graphql-codegen/cli @graphql-codegen/java-apollo-android']} />
 
 Then, create `codegen.yml` with the following configuration:
 
@@ -31,9 +27,7 @@ generates:
       - java-apollo-android
 ```
 
-<Nextra.Callout>
-Also, make sure to add `node_modules` to your `.gitignore` file.
-</Nextra.Callout>
+<Nextra.Callout>Also, make sure to add `node_modules` to your `.gitignore` file.</Nextra.Callout>
 
 To integrate with your Gradle build, you can add the following to your app Gradle file:
 

@@ -42,9 +42,15 @@ const Install: PackageMap = {
   pnpm: 'pnpm install',
 };
 
+const Init: PackageMap = {
+  yarn: 'yarn init --yes',
+  npm: 'npm init --yes',
+  pnpm: 'pnpm init',
+};
+
 type Command = {
   name: string;
-  cmd: 'add' | 'run' | 'install';
+  cmd: 'add' | 'run' | 'install' | 'init';
   isNpx?: boolean;
 };
 
@@ -69,6 +75,8 @@ export const PackageCmd = ({ packages }: { packages: (string | Command)[] }) => 
                   return `${pkgManager === 'npm' && pkg.isNpx ? 'npx' : Run[pkgManager]} ${pkg.name}`;
                 case 'install':
                   return `${Install[pkgManager]}${pkg.name ? ` ${pkg.name}` : ''}`;
+                case 'init':
+                  return Init[pkgManager]
                 default:
                   return `${Add[pkgManager]} ${pkg.name}`;
               }

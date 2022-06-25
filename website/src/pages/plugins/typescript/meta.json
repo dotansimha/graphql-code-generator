@@ -1,0 +1,4 @@
+{
+  "typescript-apollo-angular": "apollo-angular",
+  "typescript-apollo-client-helpers": "apollo-client-helpers"
+}
