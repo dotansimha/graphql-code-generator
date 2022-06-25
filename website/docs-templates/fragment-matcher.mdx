@@ -1,13 +1,9 @@
----
-id: fragment-matcher
----
-
 {@apiDocs}
 
 ## How to use?
 
-## Usage with Apollo Client 3
-
+<Nextra.Tabs items={['Usage with Apollo Client 3', 'Usage with Apollo Client 2']}>
+<Nextra.Tab>
 If you are using Apollo Client 3, update your codegen config accordingly, and then use it in your Apollo cache instance:
 
 ```ts
@@ -19,10 +15,12 @@ import generatedIntrospection from '../introspection-result'
 const cache = new InMemoryCache({ possibleTypes: generatedIntrospection.possibleTypes })
 ```
 
-> [Read more about fragment matcher and its usage on Apollo Client](https://apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually)
+<Nextra.Callout>
+[Read more about fragment matcher and its usage on Apollo Client](https://apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually).
+</Nextra.Callout>
+</Nextra.Tab>
 
-## Usage with Apollo Client 2
-
+<Nextra.Tab>
 If you are using version 2 of Apollo-Client, you need to specify the `apolloClientVersion: 2` configuration, and then use it like that:
 
 ```ts
@@ -37,3 +35,5 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 const cache = new InMemoryCache({ fragmentMatcher })
 ```
+</Nextra.Tab>
+</Nextra.Tabs>

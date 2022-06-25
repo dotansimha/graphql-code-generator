@@ -1,14 +1,12 @@
----
-id: flow-resolvers
----
-
 {@apiDocs}
 
 ## Usage Example
 
-> **Quick Start with `flow-resolvers`**
->
-> You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
+<Nextra.Callout>
+**Quick Start with `flow-resolvers`**
+
+You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
+</Nextra.Callout>
 
 ## Enum Resolvers
 
@@ -69,7 +67,7 @@ const resolvers: Resolvers = {
 
 You can also define the same with explicit enum values:
 
-```yaml
+```yaml {7-8}
 schema: schema.graphql
 generates:
   ./resolvers-types.js:
@@ -85,7 +83,7 @@ generates:
 
 Or, with `mappers`:
 
-```yaml
+```yaml {5-6}
 schema: schema.graphql
 generates:
   ./resolvers-types.js:
