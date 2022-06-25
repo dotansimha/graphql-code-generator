@@ -1,9 +1,16 @@
-{@apiDocs}
+import Callout from 'nextra-theme-docs/callout'
+import { Tabs, Tab } from 'nextra-theme-docs/tabs'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('fragment-matcher')
+
+<PackageHeader/>
 
 ## How to use?
 
-<Nextra.Tabs items={['Usage with Apollo Client 3', 'Usage with Apollo Client 2']}>
-<Nextra.Tab>
+<Tabs items={['Usage with Apollo Client 3', 'Usage with Apollo Client 2']}>
+<Tab>
 If you are using Apollo Client 3, update your codegen config accordingly, and then use it in your Apollo cache instance:
 
 ```ts
@@ -15,13 +22,13 @@ import generatedIntrospection from '../introspection-result'
 const cache = new InMemoryCache({ possibleTypes: generatedIntrospection.possibleTypes })
 ```
 
-<Nextra.Callout>
+<Callout>
 [Read more about fragment matcher and its usage on Apollo Client](https://apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually).
-</Nextra.Callout>
-</Nextra.Tab>
+</Callout>
+</Tab>
 
-<Nextra.Tab>
-If you are using version 2 of Apollo-Client, you need to specify the `apolloClientVersion: 2` configuration, and then use it like that:
+<Tab>
+If you are using version 2 of Apollo-Client, you need to specify the `apolloClientVersion: 2{:yaml}` configuration, and then use it like that:
 
 ```ts
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'
@@ -35,5 +42,8 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 const cache = new InMemoryCache({ fragmentMatcher })
 ```
-</Nextra.Tab>
-</Nextra.Tabs>
+
+</Tab>
+</Tabs>
+
+<PackageApiDocs/>

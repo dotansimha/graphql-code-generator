@@ -1,0 +1,7 @@
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('introspection')
+
+<PackageHeader/>
+<PackageApiDocs/>

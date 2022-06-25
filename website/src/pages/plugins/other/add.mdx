@@ -1,8 +1,13 @@
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/stats'
+
+export const getStaticProps = getNpmInfo('add')
+
+<PackageHeader/>
+
 `add` plugin adds custom text to your output file.
 
 You can use this plugin to add custom code, imports, comments and more to your output file.
-
-{@apiDocs}
 
 ## Examples
 
@@ -29,3 +34,5 @@ generates:
           content: '}'
       - typescript
 ```
+
+<PackageApiDocs/>
