@@ -1,7 +1,3 @@
----
-id: typescript-apollo-next
----
-
 {@operationsNote}
 
 This plugin generates:
@@ -14,7 +10,7 @@ It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphq
 
 ## Motivations
 
-Nextjs recently introduced `getServerSideProps` and `getStaticProps` which doesn't allow to use the HOC pattern adopted by the official apollo graphql plugin (based on `getInitialProps`). At the same time the SSR method offered by apollo client (`getDataFromTree`) enforces the React app to render multiple times in order to collect and fetch all the relevant queries.
+Next.js recently introduced `getServerSideProps` and `getStaticProps` which doesn't allow to use the HOC pattern adopted by the official apollo graphql plugin (based on `getInitialProps`). At the same time the SSR method offered by apollo client (`getDataFromTree`) enforces the React app to render multiple times in order to collect and fetch all the relevant queries.
 By declaring a top level query we can save rendering time and provide a simpler pattern which works with `getServerSideProps`. Note that this pattern requires each SSR query to run at top level. [Example](https://github.com/correttojs/graphql-codegen-apollo-next-ssr/tree/master/example)
 
 ## API Reference
@@ -362,7 +358,7 @@ type: `boolean`
 default: `false`
 
 Automatically adds `__typename` field to the generated types, even when they are not specified
-in the selection set, and makes it non-optional
+in the selection set, and makes it non-optional.
 
 #### Usage Examples
 

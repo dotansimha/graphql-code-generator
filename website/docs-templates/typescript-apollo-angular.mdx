@@ -1,7 +1,3 @@
----
-id: typescript-apollo-angular
----
-
 {@operationsNote}
 
 {@apiDocs}
@@ -35,7 +31,7 @@ Then, use it:
 
 ```ts
 import { MyFeedGQL, MyFeedQuery } from './graphql'
-//BE SURE TO USE Observable from rxjs and not from @apollo/client/core when using map
+// BE SURE TO USE Observable from rxjs and not from @apollo/client/core when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -59,9 +55,11 @@ export class FeedComponent {
 
 #### `@NgModule` directive
 
-All generated services are defined with `@Injectable({ providedIn: 'root' })` and in most cases you don't need to overwrite it, because providing a service to the root injector is highly recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation, to let the codegen know which injector should it use to create a service.
+All generated services are defined with `@Injectable({ providedIn: 'root' }){:ts}` and in most cases you don't need to overwrite it, because providing a service to the root injector is highly recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation, to let the codegen know which injector should it use to create a service.
 
-> You can't use multiple `@NgModule` directives in the same operation
+<Nextra.Callout>
+You can't use multiple `@NgModule` directives in the same operation
+</Nextra.Callout>
 
 ```graphql
 query feed {
@@ -76,7 +74,9 @@ query feed {
 
 Sometimes you end up with multiple Apollo clients, which means part of operations can't use the defaults. In order to customize that behavior you simply attach the `@namedClient` directive and the `typescript-apollo-angular` plugin takes care of the rest.
 
-> You can't use multiple `@namedClient` directives in the same operation
+<Nextra.Callout>
+You can't use multiple `@namedClient` directives in the same operation
+</Nextra.Callout>
 
 ```graphql
 query feed {
