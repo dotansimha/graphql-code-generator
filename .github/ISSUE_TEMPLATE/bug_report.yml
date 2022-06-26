@@ -10,7 +10,7 @@ body:
 
         After reading the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Check out and update the current state of this issue:
 
-        - [ ] 1. The issue provides a [minimal reproduction](https://stackoverflow.com/help/mcve) available on [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template).
+        - [ ] 1. The issue provides a [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example) available on [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template).
           - _Make sure to fork this template and run `yarn generate` in the terminal._
           - _Please make sure the Codegen and plugins version under `package.json` matches yours._
         - [ ] 2. A failing test has been provided
@@ -34,7 +34,7 @@ body:
         Note:
         - Your bug will may get fixed much faster if we can run your code and it doesn't have dependencies other than the `@graphql-codegen/*` npm related packages / dependencies.
         - To create a shareable code example you can use [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template). Please no localhost URLs.
-        - Please read these tips for providing a minimal example: https://stackoverflow.com/help/mcve.
+        - Please read these tips for providing a minimal example: https://stackoverflow.com/help/minimal-reproducible-example.
       placeholder: |
         e.g. https://codesandbox.io/...... OR Github Repo
     validations:
@@ -77,7 +77,23 @@ body:
       value: |
         - OS: [e.g. macOS, Windows, Linux]
         - NodeJS: [e.g. 18.5.0]
+        - `graphql` version: [e.g. 16.3.0]
         - `@graphql-codegen/*` version(s): [e.g. 2.6.2]
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Codegen Config File
+      description: Your local Codegen config file (YAML/JSON...)
+      placeholder: |
+        schema: schema.graphql
+        documents: document.graphql
+        generates:
+          types.ts:
+            plugins:
+              - typescript
+              - typescript-operations
     validations:
       required: true
   - type: textarea
