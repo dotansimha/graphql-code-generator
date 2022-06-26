@@ -12415,10 +12415,10 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier-plugin-sh@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.12.0.tgz#55a319702c40634633bc918204e9f38966fdcc5d"
-  integrity sha512-uxEfHUbGRpyh2ZIGmmnvQLffgo+QBvnDAyt9XkpfRcUHwZv/c8bfUI1axBW/aYUEJ6FJOZ9dTOIQeMVynoefcQ==
+prettier-plugin-sh@0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.12.2.tgz#657d979189df915fa8ec9127284eab3eb6a7fe84"
+  integrity sha512-72i9NDsfYR3l3lkiG5Slg5YMWeAo6BAC40ui6IIFaTNczvlwClRhcqRTGO7DnxoXZX80LRHv/T9131l0ng7ORw==
   dependencies:
     sh-syntax "^0.3.2"
     synckit "^0.7.1"
