@@ -31,7 +31,7 @@ export const EXAMPLES_ICONS = {
     src: '/assets/img/icons/mongodb.png',
   },
   nodejs: {
-    alt: 'NodeJS',
+    alt: 'Node.js',
     src: '/assets/img/icons/nodejs.svg',
   },
   react: {

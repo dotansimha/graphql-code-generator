@@ -1,6 +1,6 @@
 import Callout from 'nextra-theme-docs/callout'
 import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/stats'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
 export const getStaticProps = getNpmInfo('typescript-apollo-client-helpers')
 
@@ -30,7 +30,7 @@ generates:
 
 Then, use the generated TypeScript `type` as your signature for `typePolicies`:
 
-```ts /StrictTypedTypePolicies/
+```ts /StrictTypedTypePolicies/2
 import { StrictTypedTypePolicies } from './apollo-helpers'
 
 const typePolicies: StrictTypedTypePolicies = {

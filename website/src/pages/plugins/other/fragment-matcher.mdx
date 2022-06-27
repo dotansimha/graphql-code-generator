@@ -1,7 +1,7 @@
 import Callout from 'nextra-theme-docs/callout'
 import { Tabs, Tab } from 'nextra-theme-docs/tabs'
 import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/stats'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
 export const getStaticProps = getNpmInfo('fragment-matcher')
 

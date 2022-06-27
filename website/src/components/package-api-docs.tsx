@@ -15,7 +15,7 @@ export const PackageApiDocs = (): ReactElement => {
 export const PackageHeader = (): ReactElement => {
   // Get the data from SSG, and render it as a component.
   const { pluginData } = useSSG();
-  console.log(pluginData);
+
   return (
     <>
       <h2>{pluginData.title}</h2>

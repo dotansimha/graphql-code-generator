@@ -1,3 +1,31 @@
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('java-resolvers')
+
+<PackageHeader />
+
+The `java-resolvers` plugin creates Java `interface`s for the resolvers' signature.
+
+It works with `graphql-java` library, and it uses it's `DataFetcher` API.
+
+You can use this plugin to generate interfaces and later implement them, this way you can always tell if one of the fields is missing a resolvers:
+
+```java
+import com.my.app.generated.Resolvers;
+import com.my.app.models.User;
+import graphql.schema.DataFetcher;
+
+export class QueryResolvers implements Resolvers.Query {
+  public DataFetcher<String> id() {
+    return environment -> environment.<User>getSource().getId();
+  }
+}
+```
+
+## Prepare your environment
+
 To use the GraphQL Code Generator with Java, start by adding the [com.moowork.node](https://plugins.gradle.org/plugin/com.moowork.node) Gradle plugin to your `build.gradle`:
 
 ```
@@ -28,9 +56,9 @@ Then, create a `package.json` file in your project root, with the following cont
 }
 ```
 
-<Nextra.Callout>
+<Callout>
 Make sure to use the latest version of codegen and the plugins, and replace `RELEVANT_PLUGIN` with your plugin name.
-</Nextra.Callout>
+</Callout>
 
 Then, create `codegen.yml` file in your root directory, pointing to your schema, and add the plugins you need. For example:
 
@@ -51,3 +79,5 @@ node_modules
 Now, run `gradle yarn` to install the dependencies for the first time.
 
 Next time, the codegen will run automatically each time you run your Gradle build script.
+
+<PackageApiDocs />
