@@ -25,6 +25,6 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 
 export function useTestQuery(options?: Omit<Urql.UseQueryArgs<Operations.TestQueryVariables>, 'query'>) {
-  return Urql.useQuery<Operations.TestQuery>({ query: Operations.TestDocument, ...options });
+  return Urql.useQuery<Operations.TestQuery, Operations.TestQueryVariables>({ query: Operations.TestDocument, ...options });
 };"
 `;
