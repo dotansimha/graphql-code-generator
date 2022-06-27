@@ -1,0 +1,9 @@
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-operations')
+
+<PackageHeader />
+<OperationsNote />
+<PackageApiDocs />
+

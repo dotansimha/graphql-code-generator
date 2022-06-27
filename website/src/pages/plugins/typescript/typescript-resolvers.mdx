@@ -1,6 +1,15 @@
-<Nextra.Callout>
+import Callout from 'nextra-theme-docs/callout'
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-resolvers')
+
+<PackageHeader />
+<OperationsNote />
+
+<Callout>
 Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator) for a quick introduction to this plugin and its features:
-</Nextra.Callout>
+</Callout>
 
 <iframe
   style={{ width: '100%', height: 400, marginTop: 24 }}
@@ -10,19 +19,19 @@ Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-r
   allowFullScreen
 />
 
-<Nextra.Callout>
+<Callout>
 [More weekly episodes are available in `graphql.wtf`](https://graphql.wtf/) by [Jamie Barton](https://twitter.com/notrab).
-</Nextra.Callout>
+</Callout>
 
-{@apiDocs}
+<PackageApiDocs />
 
 ## Usage Example
 
-<Nextra.Callout>
+<Callout>
 **Quick Start with `typescript-resolvers`**
 
 You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
-</Nextra.Callout>
+</Callout>
 
 Run `graphql-codegen` as usual, with this new plugin:
 

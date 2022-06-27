@@ -1,10 +1,17 @@
-{@operationsNote}
+import Callout from 'nextra-theme-docs/callout'
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
-<Nextra.Callout>
+export const getStaticProps = getNpmInfo('typescript-msw')
+
+<PackageHeader />
+<OperationsNote />
+
+<Callout>
 Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
-</Nextra.Callout>
+</Callout>
 
-{@apiDocs}
+<PackageApiDocs />
 
 ### Usage
 
@@ -30,7 +37,7 @@ const worker = setupWorker(
 
     return res(
       ctx.data({
-        getUser: { name: 'John Doe', id: id }
+        getUser: { name: 'John Doe', id }
       })
     )
   })

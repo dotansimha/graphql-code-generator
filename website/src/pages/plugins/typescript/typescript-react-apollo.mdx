@@ -1,6 +1,12 @@
-{@operationsNote}
+import Callout from 'nextra-theme-docs/callout'
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
-{@apiDocs}
+export const getStaticProps = getNpmInfo('typescript-react-apollo')
+
+<PackageHeader />
+<OperationsNote />
+<PackageApiDocs />
 
 ## Usage Example
 
@@ -69,9 +75,9 @@ config:
   withHOC: true
 ```
 
-<Nextra.Callout>
+<Callout>
 Watch [Episode #29 of `graphql.wtf`](https://graphql.wtf/episodes/29-apollo-client-3-with-graphql-code-generator) for a quick introduction to using this plugin with GraphQL Code Generator:
-</Nextra.Callout>
+</Callout>
 
 <iframe
   style={{ width: '100%', height: 400, marginTop: 24 }}

@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import Editor from './Editor';
 import { basename } from 'path';
 import classes from './styles.module.css';
 import classnames from 'classnames';
 
-const CodegenOutput: FC = ({ outputArray, editorProps, error }) => {
+const CodegenOutput = ({ outputArray, editorProps, error }): ReactElement => {
   const [index, setIndex] = useState(0);
-  const editorContent = error ? error : outputArray && outputArray[index] ? outputArray[index].content : '';
+  const editorContent = error || outputArray?.[index].content || '';
 
   useEffect(() => {
     setIndex(0);

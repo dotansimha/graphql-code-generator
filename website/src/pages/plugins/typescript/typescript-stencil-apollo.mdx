@@ -1,6 +1,11 @@
-{@operationsNote}
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
-{@apiDocs}
+export const getStaticProps = getNpmInfo('typescript-stencil-apollo')
+
+<PackageHeader />
+<OperationsNote />
+<PackageApiDocs />
 
 ## Usage Example
 

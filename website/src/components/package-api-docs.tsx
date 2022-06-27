@@ -12,7 +12,7 @@ export const PackageApiDocs = (): ReactElement => {
   return <MDXRemote compiledSource={pluginData.compiledSource} components={components} />;
 };
 
-export const PackageHeader = (): ReactElement => {
+export const PackageHeader = ({ isDev = true }: { isDev: boolean }): ReactElement => {
   // Get the data from SSG, and render it as a component.
   const { pluginData } = useSSG();
 
@@ -61,7 +61,7 @@ export const PackageHeader = (): ReactElement => {
           </tbody>
         </table>
         <h3>Installation</h3>
-        <PackageCmd packages={[`-D ${pluginData.npmPackage}`]} />
+        <PackageCmd packages={[`${isDev ? '-D ' : ''}${pluginData.npmPackage}`]} />
       </div>
     </>
   );

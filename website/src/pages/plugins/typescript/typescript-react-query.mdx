@@ -1,12 +1,18 @@
-{@operationsNote}
+import Callout from 'nextra-theme-docs/callout'
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
-{@apiDocs}
+export const getStaticProps = getNpmInfo('typescript-react-query')
+
+<PackageHeader />
+<OperationsNote />
+<PackageApiDocs />
 
 ## Usage Examples
 
-<Nextra.Callout>
+<Callout>
 Note: all generated hooks are just wrappers around `react-query` original functions. This codegen plugin just burns the generated TypeScript types into the operation, and provides flexibility to choose your `fetcher`.
-</Nextra.Callout>
+</Callout>
 
 ### Using default `fetch`
 
@@ -253,9 +259,9 @@ export const useFetchData = <TData, TVariables>(
 }
 ```
 
-<Nextra.Callout>
+<Callout>
 Note: The return value is an async function, with no params, that returns a `Promise` with the actual data.
-</Nextra.Callout>
+</Callout>
 
 ### Using Infinite Query
 

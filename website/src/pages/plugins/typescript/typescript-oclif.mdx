@@ -1,8 +1,15 @@
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-oclif')
+
+<PackageHeader />
+<OperationsNote />
+<PackageApiDocs />
+
 This plugin generates [`oclif`](https://npmjs.com/package/oclif) CLI commands.
 
-{@operationsNote}
-
-The, make sure you have `typescript` plugin as well in your configuration:
+Then, make sure you have `typescript` plugin as well in your configuration:
 
 ```yaml
 schema: http://localhost:4000
