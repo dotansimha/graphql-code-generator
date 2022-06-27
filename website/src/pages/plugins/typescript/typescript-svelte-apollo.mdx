@@ -1,3 +1,10 @@
+import { PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-svelte-apollo')
+
+<PackageHeader />
+
 This plugin generates observable Apollo queries with Typescript typings.
 
 This is a community plugin, to report eventual issues or find more examples, refer to this [repository](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme)
@@ -16,7 +23,7 @@ Path to the apollo client for this project (should point to a file with an apoll
 
 #### Usage Examples
 
-```yaml
+```yaml {8}
 generates:
 path/to/file.ts:
   plugins:
@@ -36,7 +43,7 @@ By default, the plugin only generate observable queries, sometimes it may be use
 
 #### Usage Examples
 
-```yaml
+```yaml {9}
 generates:
 path/to/file.ts:
   plugins:

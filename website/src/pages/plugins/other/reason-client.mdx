@@ -1,4 +1,11 @@
-_Built and maintained by [kgoggin](https://github.com/kgoggin)_
+import { PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('reason-client')
+
+<PackageHeader />
+
+_Built and maintained by [kgoggin](https://github.com/kgoggin)_.
 
 A plugin for GraphQL Codegen to generate ReasonML types based on your GraphQL schema for use in a client application.
 

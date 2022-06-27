@@ -1,4 +1,11 @@
 {
+  "typescript-document-nodes": "document-nodes",
+  "typescript-graphql-files-modules":"graphql-files-modules",
+  "typescript-graphql-request": "graphql-request",
+  "typescript-validation-schema": "validation-schema",
+  "typescript-svelte-apollo":"svelte-apollo",
+  "typescript-apollo-next": "apollo-next",
+  "relay-operation-optimizer":"relay-operation-optimizer",
   "typescript-apollo-angular": "apollo-angular",
   "typescript-apollo-client-helpers": "apollo-client-helpers",
   "named-operations-object": "named-operations-object",

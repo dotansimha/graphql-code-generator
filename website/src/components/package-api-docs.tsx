@@ -34,23 +34,18 @@ export const PackageHeader = ({ isDev = true }: { isDev: boolean }): ReactElemen
             <tr>
               <td>Weekly Downloads</td>
               <td>
-                {/*{new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 }).format(*/}
-                {/*  pluginData.stats.weeklyNPMDownloads*/}
-                {/*)}*/}
                 <img alt="downloads" src={`https://badgen.net/npm/dw/${pluginData.npmPackage}`} />
               </td>
             </tr>
             <tr>
               <td>Version</td>
               <td>
-                {/*{pluginData.stats.version}*/}
                 <img alt="license" src={`https://badgen.net/npm/v/${pluginData.npmPackage}`} />
               </td>
             </tr>
             <tr>
               <td>License</td>
               <td>
-                {/*{pluginData.stats.license}*/}
                 <img alt="license" src={`https://badgen.net/npm/license/${pluginData.npmPackage}`} />
               </td>
             </tr>

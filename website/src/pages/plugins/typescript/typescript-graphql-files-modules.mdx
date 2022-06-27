@@ -1,14 +1,22 @@
-<Nextra.Callout>
+import Callout from 'nextra-theme-docs/callout'
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('typescript-graphql-files-modules')
+
+<PackageHeader />
+
+<Callout>
 **Webpack Integration**
 
 If you wish to have a simpler integration in a Webpack project, use [`graphql-let`](https://github.com/piglovesyou/graphql-let), it uses this plugin behind the scenes, and provides simpler developer experience.
-</Nextra.Callout>
+</Callout>
 
 ## Pre-Requirements
 
 To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack.
 
-{@apiDocs}
+<PackageApiDocs />
 
 ## Example
 
