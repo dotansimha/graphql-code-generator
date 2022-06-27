@@ -94,8 +94,6 @@ body:
             plugins:
               - typescript
               - typescript-operations
-    validations:
-      required: true
   - type: textarea
     id: additional
     attributes:
