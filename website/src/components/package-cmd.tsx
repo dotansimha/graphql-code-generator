@@ -4,13 +4,14 @@ import { Tabs, Tab } from 'nextra-theme-docs/tabs';
 const CodeTab = ({ children }: { children: ReactNode }): ReactElement => {
   return (
     <Tab>
+      {/* Unfortunately Nextra doesn't support import `.mdx` files in `.mdx`, so I copied generated code
+        * and exported as React component
+        */}
       <pre>
         <code data-language="sh" data-theme="default">
           <span
             className="line"
-            style={{
-              color: 'var(--shiki-color-text)',
-            }}
+            style={{ color: 'var(--shiki-color-text)' }}
           >
             {children}
           </span>

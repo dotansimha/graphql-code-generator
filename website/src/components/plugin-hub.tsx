@@ -1,15 +1,13 @@
 import { ReactElement, useMemo } from 'react';
-import { GetStaticProps } from 'next';
 import { useSSG } from 'nextra/ssg';
 import { compareDesc } from 'date-fns';
 import { handlePushRoute } from '@guild-docs/client';
-import { buildMultipleMDX, CompiledMDX } from '@guild-docs/server';
-import { getPackagesData, PackageWithStats } from '@guild-docs/server/npm';
+import { CompiledMDX } from '@guild-docs/server';
+import { PackageWithStats } from '@guild-docs/server/npm';
 import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
-
 import Markdown from '@/components/ui/Markdown';
-import { ALL_TAGS, PACKAGES } from '@/lib/plugins';
+import { ALL_TAGS } from '@/lib/plugins';
 
 type MarketplaceProps = {
   data: (PackageWithStats & {
@@ -18,38 +16,7 @@ type MarketplaceProps = {
   })[];
 };
 
-export const getStaticProps: GetStaticProps<{ ssg: MarketplaceProps }> = async () => {
-  const pluginsData = await getPackagesData({ packageList: PACKAGES });
-
-  const data = await Promise.all(
-    pluginsData.map(async plugin => {
-      const [description, content] = await buildMultipleMDX([
-        `${plugin.stats?.version || ''}\n\n${plugin.stats?.description || ''}`,
-        plugin.readme || plugin.stats?.readme || '',
-      ]);
-
-      return {
-        ...plugin,
-        description,
-        content,
-      };
-    })
-  );
-
-  return {
-    props: {
-      // We add an `ssg` field to the page props,
-      // which will be provided to the Nextra `useSSG` hook.
-      ssg: {
-        data,
-      },
-    },
-    // Revalidate at most once every 1 hour
-    revalidate: 60 * 60,
-  };
-};
-
-const PluginHubPage = (): ReactElement => {
+export const PluginHub = (): ReactElement => {
   const { data } = useSSG() as MarketplaceProps;
 
   const marketplaceItems: (IMarketplaceItemProps & { raw: PackageWithStats })[] = useMemo(
@@ -124,5 +91,3 @@ const PluginHubPage = (): ReactElement => {
     />
   );
 };
-
-export default PluginHubPage;

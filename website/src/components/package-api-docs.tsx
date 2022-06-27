@@ -20,6 +20,9 @@ export const PackageHeader = ({ isDev = true }: { isDev: boolean }): ReactElemen
     <>
       <h2>{pluginData.title}</h2>
       <h3>Package Details</h3>
+      {/* Unfortunately Nextra doesn't support import `.mdx` files in `.mdx`, so I copied generated code
+        * and exported as React component
+        */}
       <div className="table-container">
         <table>
           <tbody>
