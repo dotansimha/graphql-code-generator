@@ -10,16 +10,8 @@ export const getNpmInfo = (packageName: string) => async () => {
   });
   const generatedDocs = transformDocs();
 
-  const source = generatedDocs.docs[packageName] || pluginData.stats?.readme || '';
+  const source = generatedDocs.docs[packageName] || pluginData.stats?.readme?.replace('ERROR: No README data found!', '') || '';
   const mdx = await compileMdx(source, {
-    langs: [
-      {
-        id: 'yaml',
-        scopeName: 'source.yaml',
-        path: 'languages/yaml.tmLanguage.json',
-        aliases: ['yml', 'gitignore'], // TODO: fix languages for gql, yml, gitignore, dotenv
-      },
-    ],
     outputFormat: 'function-body',
     jsx: false,
   });

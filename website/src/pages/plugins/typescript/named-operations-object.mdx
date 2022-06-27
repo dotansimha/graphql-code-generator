@@ -1,3 +1,10 @@
+import { PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
+
+export const getStaticProps = getNpmInfo('named-operations-object')
+
+<PackageHeader />
+
 This plugin generates an object containing a list of all your GraphQL operations and fragments. This is useful if you are using Apollo-Client and wish to have type validation when you are using `refetchQueries`.
 
 All operations and fragments are being exported by their name (so unnamed operations are being ignored), in the following structure:
@@ -11,7 +18,7 @@ export const namedOperations = {
 }
 ```
 
-{@apiDocs}
+<PackageApiDocs />
 
 ## How to use?
 

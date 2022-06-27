@@ -14,7 +14,6 @@ export function generateDocs(schema: TJS.Definition, types: (PluginConfig | Pres
       content += `${subSchema.description}\n\n`;
     }
 
-    content += ``;
     if (apiDocs) {
       content += `### Config API Reference\n\n${apiDocs}`;
     }
@@ -31,7 +30,7 @@ function generateContentForSchema(schema: TJS.Definition): string {
       const prop = schema.properties![propName] as TJS.Definition;
 
       return `<details>
-  <summary className="collapse-title">
+  <summary className="flex items-center">
    ${propName}
   </summary>
 

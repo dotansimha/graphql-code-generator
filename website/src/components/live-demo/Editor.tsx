@@ -1,14 +1,19 @@
-import { FC } from 'react';
+import { ReactElement } from 'react';
 import { useThemeContext } from '@theguild/components';
 import MonacoEditor from '@monaco-editor/react';
-import { canUseDOM } from '../../utils';
+import { canUseDOM } from '@/utils';
 
-const Editor: FC<{ lang: string; value: string; readOnly?: boolean; onEdit: (value?: string) => void }> = ({
+const Editor = ({
   value,
   lang,
   readOnly,
   onEdit,
-}) => {
+}: {
+  lang: string;
+  value: string;
+  readOnly?: boolean;
+  onEdit: (value?: string) => void;
+}): ReactElement | null => {
   const { isDarkTheme } = useThemeContext();
 
   if (!canUseDOM) {
@@ -27,7 +32,7 @@ const Editor: FC<{ lang: string; value: string; readOnly?: boolean; onEdit: (val
           enabled: false,
         },
       }}
-      onChange={newValue => onEdit(newValue)}
+      onChange={onEdit}
     />
   );
 };

@@ -1,8 +1,14 @@
-{@operationsNote}
+import { OperationsNote, PackageApiDocs, PackageHeader } from '@/components'
+import { getNpmInfo } from '@/lib/get-npm-info'
 
-Instead of using this plugin, it is recommended that you use the [TypedDocumentNode plugin](typed-document-node.md) together with the [Vue Apollo library](https://apollo.vuejs.org).
+export const getStaticProps = getNpmInfo('typescript-vue-apollo')
 
-{@apiDocs}
+<PackageHeader />
+<OperationsNote />
+
+Instead of using this plugin, it is recommended that you use the [TypedDocumentNode plugin](./typed-document-node) together with the [Vue Apollo library](https://apollo.vuejs.org).
+
+<PackageApiDocs />
 
 ## Examples
 

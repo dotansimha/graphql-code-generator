@@ -1,4 +1,12 @@
 {
+  "named-operations-object": "named-operations-object",
+  "typed-document-node":"typed-document-node",
+  "typescript": "typescript",
+  "typescript-type-graphql":"type-graphql",
+  "typescript-urql": "urql",
+  "typescript-vue-apollo":"vue-apollo",
+  "typescript-vue-apollo-smart-ops": "vue-apollo-smart-ops",
+  "typescript-vue-urql":"vue-urql",
   "typescript-apollo-angular": "apollo-angular",
   "typescript-apollo-client-helpers": "apollo-client-helpers"
 }
