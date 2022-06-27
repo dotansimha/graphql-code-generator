@@ -9,7 +9,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
-import { ApolloAngularRawPluginConfig } from './config';
+import { ApolloAngularRawPluginConfig } from './config.js';
 import { camelCase } from 'change-case-all';
 import { Types } from '@graphql-codegen/plugin-helpers';
 

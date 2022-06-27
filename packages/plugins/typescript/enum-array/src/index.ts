@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLEnumType } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { EnumArrayPluginConfig } from './config';
+import { EnumArrayPluginConfig } from './config.js';
 
 function getEnumTypeMap(schema: GraphQLSchema): GraphQLEnumType[] {
   const typeMap = schema.getTypeMap();

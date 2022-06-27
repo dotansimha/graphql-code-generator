@@ -1,10 +1,10 @@
 import { Types, PluginFunction, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { FlowVisitor } from './visitor';
-import { FlowPluginConfig } from './config';
+import { FlowVisitor } from './visitor.js';
+import { FlowPluginConfig } from './config.js';
 
-export * from './visitor';
-export * from './flow-variables-to-object';
+export * from './visitor.js';
+export * from './flow-variables-to-object.js';
 
 export const plugin: PluginFunction<FlowPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,

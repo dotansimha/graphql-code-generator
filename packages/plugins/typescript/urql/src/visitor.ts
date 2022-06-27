@@ -6,7 +6,7 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlRawPluginConfig } from './config';
+import { UrqlRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 

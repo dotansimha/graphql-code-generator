@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
-import { RawGraphQLRequestPluginConfig } from './config';
+import { RawGraphQLRequestPluginConfig } from './config.js';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;

@@ -1,4 +1,4 @@
-import { api } from '../../packages/plugins/typescript/rtk-query/tests/baseApi';
+import { api } from '../../packages/plugins/typescript/rtk-query/tests/baseApi.js';
 module.hot?.accept();
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;

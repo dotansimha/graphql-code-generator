@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { validateJava } from '../../common/tests/validate-java';
+import { plugin } from '../src/index.js';
+import { validateJava } from '../../common/tests/validate-java.js';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 const OUTPUT_FILE = 'com/java/generated/resolvers.java';

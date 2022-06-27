@@ -29,25 +29,32 @@
     "@graphql-codegen/cli": "2.7.0",
     "@graphql-cli/common": "4.1.0"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
     },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+    "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
-  }
+  },
+  "type": "module"
 }

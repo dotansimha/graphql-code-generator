@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
   describe('with importFrom', () => {
@@ -18,7 +18,7 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], { importFrom: './generated-types' })) as Types.ComplexPluginOutput;
 
       expect(result.prepend).toBeSimilarStringTo(`
-        import { MyEnum } from "./generated-types";
+        import { MyEnum } from "./generated-types.js";
       `);
       expect(result.content).toBeSimilarStringTo(`
         const MY_ENUM: MyEnum[] = ['A', 'B'];

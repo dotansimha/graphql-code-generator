@@ -6,14 +6,18 @@ import {
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
-import { generateMutationKeyMaker, generateQueryKeyMaker, generateInfiniteQueryKeyMaker } from './variables-generator';
+import {
+  generateMutationKeyMaker,
+  generateQueryKeyMaker,
+  generateInfiniteQueryKeyMaker,
+} from './variables-generator.js';
 
-import { CustomMapperFetcher } from './fetcher-custom-mapper';
-import { FetchFetcher } from './fetcher-fetch';
-import { FetcherRenderer } from './fetcher';
-import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
-import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
-import { ReactQueryRawPluginConfig } from './config';
+import { CustomMapperFetcher } from './fetcher-custom-mapper.js';
+import { FetchFetcher } from './fetcher-fetch.js';
+import { FetcherRenderer } from './fetcher.js';
+import { GraphQLRequestClientFetcher } from './fetcher-graphql-request.js';
+import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded.js';
+import { ReactQueryRawPluginConfig } from './config.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';

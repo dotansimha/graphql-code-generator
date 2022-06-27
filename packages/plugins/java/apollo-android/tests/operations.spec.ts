@@ -1,8 +1,8 @@
 import '@graphql-codegen/testing';
 import { parse, buildSchema } from 'graphql';
-import { plugin } from '../src/plugin';
+import { plugin } from '../src/plugin.js';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { FileType } from '../src/file-type';
+import { FileType } from '../src/file-type.js';
 
 describe('Operations Visitor', () => {
   const schema = buildSchema(/* GraphQL */ `

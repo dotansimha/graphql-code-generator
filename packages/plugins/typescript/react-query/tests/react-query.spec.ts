@@ -1,9 +1,9 @@
 import { GraphQLSchema, buildClientSchema, buildSchema, parse } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-import { plugin } from '../src';
-import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { plugin as tsPlugin } from '../../typescript/src/index';
+import { plugin } from '../src/index.js';
+import { plugin as tsDocumentsPlugin } from '../../operations/src/index.js';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { validateTs } from '@graphql-codegen/testing';
 
 const validateTypeScript = async (
@@ -148,7 +148,7 @@ describe('React-Query', () => {
         `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
 
-      expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
+      expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file.js';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
           TError = unknown
@@ -241,7 +241,7 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(
         `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
-      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
+      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file.js';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
           TError = unknown
@@ -292,7 +292,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import type { customFetcher } from './my-file';`);
+      expect(out.prepend).toContain(`import type { customFetcher } from './my-file.js';`);
     });
 
     it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {

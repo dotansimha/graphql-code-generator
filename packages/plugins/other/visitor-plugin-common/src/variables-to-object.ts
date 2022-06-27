@@ -1,12 +1,12 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode, DirectiveNode } from 'graphql';
-import { indent, getBaseTypeNode } from './utils';
+import { indent, getBaseTypeNode } from './utils.js';
 import {
   NormalizedScalarsMap,
   ConvertNameFn,
   ParsedEnumValuesMap,
   ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types';
-import { BaseVisitorConvertOptions } from './base-visitor';
+} from './types.js';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
 import autoBind from 'auto-bind';
 
 export interface InterfaceOrVariable {

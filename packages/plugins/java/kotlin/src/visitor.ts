@@ -8,7 +8,7 @@ import {
   getBaseTypeNode,
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { KotlinResolversPluginRawConfig } from './config';
+import { KotlinResolversPluginRawConfig } from './config.js';
 import {
   EnumTypeDefinitionNode,
   EnumValueDefinitionNode,

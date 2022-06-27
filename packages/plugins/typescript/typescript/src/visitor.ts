@@ -11,7 +11,7 @@ import {
   AvoidOptionalsConfig,
   isOneOfInputObjectType,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptPluginConfig } from './config';
+import { TypeScriptPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,
@@ -27,7 +27,7 @@ import {
   GraphQLObjectType,
   TypeDefinitionNode,
 } from 'graphql';
-import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
+import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object.js';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;

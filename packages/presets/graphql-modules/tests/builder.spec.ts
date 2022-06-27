@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { parse } from 'graphql';
-import { buildModule } from '../src/builder';
+import { buildModule } from '../src/builder.js';
 
 const ROOT_TYPES = ['Query'];
 
@@ -155,7 +155,7 @@ test('should include import statement', () => {
   });
 
   expect(output).toBeSimilarStringTo(`
-    import * as core from "../types";
+    import * as core from "../types.js";
   `);
 });
 

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { indentString } from './indentString';
+import { indentString } from './indentString.js';
 import logSymbol from 'log-symbols';
 import ansiEscapes from 'ansi-escapes';
 import wrapAnsi from 'wrap-ansi';
@@ -7,7 +7,7 @@ import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '@graphql-codegen/plugin-helpers';
 import { Source } from 'graphql';
-import { debugLog, printLogs } from './debugging';
+import { debugLog, printLogs } from './debugging.js';
 import UpdateRenderer from 'listr-update-renderer';
 
 export class Renderer {

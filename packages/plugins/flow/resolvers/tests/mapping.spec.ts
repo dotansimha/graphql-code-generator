@@ -1,8 +1,8 @@
 import '@graphql-codegen/testing';
-import { schema } from '../../../typescript/resolvers/tests/common';
-import { plugin } from '../src';
+import { schema } from '../../../typescript/resolvers/tests/common.js';
+import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
-import { validateFlow as validate } from '../../flow/tests/validate-flow';
+import { validateFlow as validate } from '../../flow/tests/validate-flow.js';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('ResolversTypes', () => {
@@ -211,7 +211,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file.js';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -294,7 +294,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file.js';`);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
       arg: $ElementType<Scalars, 'Int'>,
@@ -534,7 +534,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyBaseType } from './my-file';`);
+    expect(result.prepend).toContain(`import { MyBaseType } from './my-file.js';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -707,7 +707,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
+    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper.js';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<$Diff<MyType, { unionChild: *  }> & { unionChild: ?$ElementType<ResolversTypes, 'ChildUnion'> }>>,

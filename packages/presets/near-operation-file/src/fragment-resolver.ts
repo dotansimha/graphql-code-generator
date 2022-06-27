@@ -11,8 +11,8 @@ import {
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode, FragmentDefinitionNode, GraphQLSchema, Kind, print } from 'graphql';
-import { DocumentImportResolverOptions } from './resolve-document-imports';
-import { extractExternalFragmentsInUse } from './utils';
+import { DocumentImportResolverOptions } from './resolve-document-imports.js';
+import { extractExternalFragmentsInUse } from './utils.js';
 
 export interface NearOperationFileParsedConfig extends ParsedConfig {
   importTypesNamespace?: string;

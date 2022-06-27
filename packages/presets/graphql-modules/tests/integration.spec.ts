@@ -113,7 +113,7 @@ describe('Integration', () => {
 
   test('each module-types should include a relative import to glob-types module', async () => {
     const output = await executeCodegen(options);
-    const importStatement = `import * as Types from "../global-types";`;
+    const importStatement = `import * as Types from "../global-types.js";`;
 
     expect(output.length).toBe(5);
     expect(output[1].content).toMatch(importStatement);

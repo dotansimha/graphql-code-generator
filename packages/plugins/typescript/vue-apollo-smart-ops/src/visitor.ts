@@ -9,7 +9,7 @@ import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { camelCase, pascalCase } from 'change-case-all';
-import { VueApolloSmartOpsRawPluginConfig } from './config';
+import { VueApolloSmartOpsRawPluginConfig } from './config.js';
 
 export interface VueApolloSmartOpsPluginConfig extends ClientSideBasePluginConfig {
   withSmartOperationFunctions: boolean;

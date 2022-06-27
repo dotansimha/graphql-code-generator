@@ -1,8 +1,8 @@
 import { ASTNode } from 'graphql';
 import { resolveExternalModuleAndFn } from '@graphql-codegen/plugin-helpers';
-import { NamingConventionMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { NamingConventionMap, NamingConvention, ConvertFn, ConvertOptions } from './types.js';
 import { pascalCase } from 'change-case-all';
-import { convertNameParts, getConfigValue } from './utils';
+import { convertNameParts, getConfigValue } from './utils.js';
 
 function getKind(node: ASTNode | string): keyof NamingConventionMap {
   if (typeof node === 'string') {

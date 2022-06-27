@@ -4,7 +4,7 @@ import '@graphql-codegen/testing';
 import { validateTs } from '@graphql-codegen/testing';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { preset } from '../src';
+import { preset } from '../src/index.js';
 
 describe('gql-tag-operations-preset', () => {
   it('can generate simple examples uppercase names', async () => {
@@ -30,13 +30,13 @@ describe('gql-tag-operations-preset', () => {
     expect(result).toHaveLength(3);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual('export * from "./gql"');
+    expect(indexFile.content).toEqual('export * from "./gql.js".js');
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
           "/* eslint-disable */
-          import * as graphql from './graphql';
+          import * as graphql from './graphql.js';
           import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
           const documents = {
@@ -85,13 +85,13 @@ describe('gql-tag-operations-preset', () => {
     expect(result).toHaveLength(3);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual('export * from "./gql"');
+    expect(indexFile.content).toEqual('export * from "./gql.js".js');
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
           "/* eslint-disable */
-          import * as graphql from './graphql';
+          import * as graphql from './graphql.js';
           import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
           const documents = {
@@ -139,7 +139,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as graphql from './graphql.js';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
@@ -188,7 +188,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as graphql from './graphql.js';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
@@ -283,7 +283,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as graphql from './graphql.js';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {

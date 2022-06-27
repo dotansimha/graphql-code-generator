@@ -9,7 +9,7 @@ import {
   FragmentDefinitionNode,
 } from 'graphql';
 import { join } from 'path';
-import { FileType } from './file-type';
+import { FileType } from './file-type.js';
 import { pascalCase } from 'change-case-all';
 
 const packageNameToDirectory = (packageName: string): string => {

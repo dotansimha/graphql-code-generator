@@ -4,7 +4,7 @@
 import { indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { StringValueNode, NameNode } from 'graphql';
-import { transformComment } from './utils';
+import { transformComment } from './utils.js';
 
 export type Access = 'private' | 'public' | 'protected';
 export type Kind = 'namespace' | 'class' | 'record' | 'interface' | 'enum';

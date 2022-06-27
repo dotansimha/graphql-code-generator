@@ -4,12 +4,12 @@ jest.mock('latest-version', () => {
 
 import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
-import { init } from '../src/init';
-import { Tags } from '../src/init/types';
-import { guessTargets } from '../src/init/targets';
-import { plugins } from '../src/init/plugins';
-import { bold } from '../src/init/helpers';
-import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions';
+import { init } from '../src/init/index.js';
+import { Tags } from '../src/init/types.js';
+import { guessTargets } from '../src/init/targets.js';
+import { plugins } from '../src/init/plugins.js';
+import { bold } from '../src/init/helpers.js';
+import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
 import { load } from 'js-yaml';
 
 jest.mock('fs');

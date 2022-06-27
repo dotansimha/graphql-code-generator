@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { UrqlGraphCacheConfig } from './config';
+import { UrqlGraphCacheConfig } from './config.js';
 import { convertFactory, ConvertFn } from '@graphql-codegen/visitor-plugin-common';
 
 type GraphQLFlatType = Exclude<TypeNode, GraphQLWrappingType>;

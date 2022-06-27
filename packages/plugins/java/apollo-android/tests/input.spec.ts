@@ -1,9 +1,9 @@
 import '@graphql-codegen/testing';
 import { buildSchema, Kind } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin } from '../src/plugin';
-import { validateJava } from '../../common/tests/validate-java';
-import { FileType } from '../src/file-type';
+import { plugin } from '../src/plugin.js';
+import { validateJava } from '../../common/tests/validate-java.js';
+import { FileType } from '../src/file-type.js';
 
 describe('java-apollo-android', () => {
   describe('Input Types', () => {

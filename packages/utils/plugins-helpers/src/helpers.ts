@@ -1,4 +1,4 @@
-import { Types } from './types';
+import { Types } from './types.js';
 import {
   FragmentDefinitionNode,
   visit,
@@ -18,7 +18,7 @@ import {
   SelectionSetNode,
   GraphQLObjectType,
 } from 'graphql';
-import { getBaseType } from './utils';
+import { getBaseType } from './utils.js';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);

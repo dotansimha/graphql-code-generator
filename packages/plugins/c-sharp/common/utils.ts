@@ -4,8 +4,8 @@
 import { Kind, TypeNode, StringValueNode } from 'graphql';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { csharpValueTypes } from './scalars';
-import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
+import { csharpValueTypes } from './scalars.js';
+import { ListTypeField, CSharpFieldType } from './c-sharp-field-types.js';
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment) {

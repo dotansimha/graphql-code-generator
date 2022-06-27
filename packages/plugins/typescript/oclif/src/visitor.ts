@@ -8,7 +8,7 @@ import autoBind from 'auto-bind';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
 
 import { Config, Info } from '.';
-import { getFlagConfigForVariableDefinition, omitOclifDirectives } from './utils';
+import { getFlagConfigForVariableDefinition, omitOclifDirectives } from './utils.js';
 
 interface Operation {
   node: OperationDefinitionNode;

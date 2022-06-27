@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse } from 'graphql';
 
 describe('graphql-codegen typescript-graphql-files-modules', () => {

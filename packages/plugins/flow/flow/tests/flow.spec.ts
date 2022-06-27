@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { validateFlow } from './validate-flow';
+import { plugin } from '../src/index.js';
+import { validateFlow } from './validate-flow.js';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Plugin', () => {
@@ -711,7 +711,7 @@ describe('Flow Plugin', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
-      expect(result.prepend).toContain(`import { type MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { type MyEnum } from './my-file.js';`);
 
       validateFlow(result);
     });
@@ -726,7 +726,7 @@ describe('Flow Plugin', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
-      expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file.js';`);
 
       validateFlow(result);
     });

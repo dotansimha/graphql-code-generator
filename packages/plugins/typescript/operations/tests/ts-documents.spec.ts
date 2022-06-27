@@ -1,7 +1,7 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { plugin as tsPlugin } from '../../typescript/src';
+import { plugin } from '../src/index.js';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {

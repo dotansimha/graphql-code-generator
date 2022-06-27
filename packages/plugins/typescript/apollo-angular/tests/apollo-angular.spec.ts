@@ -1,10 +1,10 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { gql } from 'graphql-tag';
-import { plugin, addToSchema } from '../src/index';
+import { plugin, addToSchema } from '../src/index.js';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index.js';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('Apollo Angular', () => {
@@ -427,14 +427,14 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import { AppModule } from './path/to/file';`);
+      expect(content.prepend).toContain(`import { AppModule } from './path/to/file.js';`);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: AppModule
         })
         export class MyFeedGQL
       `);
-      expect(content.prepend).toContain(`import { ExtraModule } from './extra';`);
+      expect(content.prepend).toContain(`import { ExtraModule } from './extra.js';`);
 
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({
@@ -727,7 +727,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule import
-      expect(content.prepend).toContain(`import { AppModule } from '../app.module';`);
+      expect(content.prepend).toContain(`import { AppModule } from '../app.module.js';`);
       // NgModule in `providedIn`
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({ providedIn: AppModule })

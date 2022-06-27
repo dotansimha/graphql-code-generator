@@ -4,7 +4,7 @@ import {
   getConfigValue,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
-import { StencilComponentType, StencilApolloRawPluginConfig } from './config';
+import { StencilComponentType, StencilApolloRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { paramCase, pascalCase } from 'change-case-all';

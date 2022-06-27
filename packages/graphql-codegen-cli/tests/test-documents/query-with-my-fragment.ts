@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { myFragment, myFragment2, myFragment3 } from './my-fragment';
+import { myFragment, myFragment2, myFragment3 } from './my-fragment.js';
 
 export const query = gql`
   query myQuery($a: String) {

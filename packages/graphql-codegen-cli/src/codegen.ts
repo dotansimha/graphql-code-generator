@@ -12,19 +12,19 @@ import { codegen } from '@graphql-codegen/core';
 
 import { AggregateError } from '@graphql-tools/utils';
 
-import { Renderer, ErrorRenderer } from './utils/listr-renderer';
+import { Renderer, ErrorRenderer } from './utils/listr-renderer.js';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
-import { getPluginByName } from './plugins';
-import { getPresetByName } from './presets';
-import { debugLog } from './utils/debugging';
-import { CodegenContext, ensureContext } from './config';
+import { getPluginByName } from './plugins.js';
+import { getPresetByName } from './presets.js';
+import { debugLog } from './utils/debugging.js';
+import { CodegenContext, ensureContext } from './config.js';
 import fs from 'fs';
 import path from 'path';
 import { cpus } from 'os';
 // eslint-disable-next-line
 import { createRequire } from 'module';
 import Listr from 'listr';
-import { isListrError } from './utils/cli-error';
+import { isListrError } from './utils/cli-error.js';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
