@@ -3,7 +3,7 @@
     "title": "Home",
     "type": "page",
     "theme": {
-      "layout": "full"
+      "layout": "raw"
     }
   },
   "docs": {
@@ -13,15 +13,14 @@
       "toc": true
     }
   },
-  "plugins": {
+  "plugin-hub": {
     "title": "Plugin Hub",
     "type": "page",
-    "href": "/plugins",
     "theme": {
-      "layout": "full"
+      "toc": false
     }
   },
-  "contact_us_link": {
+  "contact-us-link": {
     "title": "Contact Us",
     "href": "https://the-guild.dev/contact",
     "type": "page",

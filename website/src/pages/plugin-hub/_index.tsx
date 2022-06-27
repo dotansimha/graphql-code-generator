@@ -1,6 +1,6 @@
-import { FC, useMemo } from 'react';
-import type { GetStaticProps } from 'next';
-import Head from 'next/head';
+import { ReactElement, useMemo } from 'react';
+import { GetStaticProps } from 'next';
+import { useSSG } from 'nextra/ssg';
 import { compareDesc } from 'date-fns';
 import { handlePushRoute } from '@guild-docs/client';
 import { buildMultipleMDX, CompiledMDX } from '@guild-docs/server';
@@ -8,8 +8,8 @@ import { getPackagesData, PackageWithStats } from '@guild-docs/server/npm';
 import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
 
-import Markdown from '../../components/ui/Markdown';
-import { ALL_TAGS, packageList } from '../../lib/plugins';
+import Markdown from '@/components/ui/Markdown';
+import { ALL_TAGS, PACKAGES } from '@/lib/plugins';
 
 type MarketplaceProps = {
   data: (PackageWithStats & {
@@ -18,8 +18,8 @@ type MarketplaceProps = {
   })[];
 };
 
-export const getStaticProps: GetStaticProps<MarketplaceProps> = async () => {
-  const pluginsData = await getPackagesData({ packageList });
+export const getStaticProps: GetStaticProps<{ ssg: MarketplaceProps }> = async () => {
+  const pluginsData = await getPackagesData({ packageList: PACKAGES });
 
   const data = await Promise.all(
     pluginsData.map(async plugin => {
@@ -38,14 +38,20 @@ export const getStaticProps: GetStaticProps<MarketplaceProps> = async () => {
 
   return {
     props: {
-      data,
+      // We add an `ssg` field to the page props,
+      // which will be provided to the Nextra `useSSG` hook.
+      ssg: {
+        data,
+      },
     },
     // Revalidate at most once every 1 hour
     revalidate: 60 * 60,
   };
 };
 
-const Marketplace: FC<MarketplaceProps> = ({ data }) => {
+const PluginHubPage = (): ReactElement => {
+  const { data } = useSSG() as MarketplaceProps;
+
   const marketplaceItems: (IMarketplaceItemProps & { raw: PackageWithStats })[] = useMemo(
     () =>
       data.map<IMarketplaceItemProps & { raw: PackageWithStats }>(rawPlugin => {
@@ -93,38 +99,30 @@ const Marketplace: FC<MarketplaceProps> = ({ data }) => {
   );
 
   return (
-    <>
-      <Head>
-        <title>Plugin Hub</title>
-      </Head>
-      <MarketplaceSearch
-        title="Explore Plugin Hub"
-        tagsFilter={ALL_TAGS as any as string[]}
-        placeholder="Find plugins..."
-        wrapperProps={{
-          className: 'plugins-list',
-        }}
-        primaryList={{
-          title: 'Trending',
-          items: trendingItems,
-          placeholder: '0 items',
-          pagination: 10,
-        }}
-        secondaryList={{
-          title: 'Recently Updated',
-          items: recentlyUpdatedItems,
-          placeholder: '0 items',
-          pagination: 10,
-        }}
-        queryList={{
-          title: 'Search Results',
-          items: marketplaceItems,
-          placeholder: 'No results for {query}',
-          pagination: 10,
-        }}
-      />
-    </>
+    <MarketplaceSearch
+      title="Explore Plugin Hub"
+      tagsFilter={ALL_TAGS as any as string[]}
+      placeholder="Find plugins..."
+      primaryList={{
+        title: 'Trending',
+        items: trendingItems,
+        placeholder: '0 items',
+        pagination: 10,
+      }}
+      secondaryList={{
+        title: 'Recently Updated',
+        items: recentlyUpdatedItems,
+        placeholder: '0 items',
+        pagination: 10,
+      }}
+      queryList={{
+        title: 'Search Results',
+        items: marketplaceItems,
+        placeholder: 'No results for {query}',
+        pagination: 10,
+      }}
+    />
   );
 };
 
-export default Marketplace;
+export default PluginHubPage;

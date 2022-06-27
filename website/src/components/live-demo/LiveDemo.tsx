@@ -3,7 +3,6 @@ import { load } from 'js-yaml';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Select from 'react-select';
-// import ReactMarkdown from 'react-markdown';
 import { useThemeContext } from '@theguild/components';
 import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
@@ -82,7 +81,7 @@ export const LiveDemo = (): ReactElement => {
   // }
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden lg:!block">
       <div className={classes.picker}>
         <h3>Choose Live Example: </h3>
         <div>
@@ -136,8 +135,6 @@ export const LiveDemo = (): ReactElement => {
             defaultValue={groupedExamples[0].options[0]}
             options={groupedExamples}
           />
-          {/* TODO: Should I add this ? */}
-          {/*<div className={classes.exampleDesc}>{description && <ReactMarkdown>{description}</ReactMarkdown>}</div>*/}
         </div>
       </div>
       <div className="flex border-y border-gray-300">

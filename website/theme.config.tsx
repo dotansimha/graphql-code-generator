@@ -38,7 +38,7 @@ export default {
       <CodeGeneratorLogo className="mr-1.5 h-9 w-9" />
       <div>
         <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
-        <h2 className="hidden text-xs sm:block">Generate anything from GraphQL schema / operations</h2>
+        <h2 className="hidden text-xs sm:!block">Generate anything from GraphQL schema / operations</h2>
       </div>
     </>
   ),

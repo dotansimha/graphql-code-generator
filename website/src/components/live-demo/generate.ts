@@ -4,7 +4,7 @@ import { parse } from 'graphql';
 import type { GraphQLError } from 'graphql';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
-import { canUseDOM } from '../../utils';
+import { canUseDOM } from '@/utils';
 
 if (canUseDOM) {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function

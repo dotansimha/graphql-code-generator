@@ -1,7 +1,4 @@
 import type { Package } from '@guild-docs/server/npm';
-import { existsSync, readFileSync } from 'fs';
-import { transformDocs } from './transform';
-import { canUseDOM } from '@/utils';
 
 export const ALL_TAGS = [
   'typescript',
@@ -33,37 +30,7 @@ export const ALL_TAGS = [
 
 export type Tags = typeof ALL_TAGS[number];
 
-let generatedDocs: ReturnType<typeof transformDocs> | null = null;
-let staticMapping: Record<string, string> | null = null;
-
-function loadGeneratedReadme(options: { templateFile: string; pluginIdentifier: string }): string {
-  if (!generatedDocs) {
-    generatedDocs = transformDocs();
-  }
-
-  if (!staticMapping) {
-    staticMapping = {
-      '{@operationsNote}': readFileSync(`docs-templates/client-note.mdx`, 'utf8'),
-      '{@javaInstallation}': readFileSync(`docs-templates/java-installation.mdx`, 'utf8'),
-    };
-  }
-
-  let templateBase = '{@apiDocs}';
-
-  if (existsSync(options.templateFile)) {
-    templateBase = readFileSync(options.templateFile, 'utf8');
-  }
-
-  let out = templateBase.replace('{@apiDocs}', generatedDocs.docs[options.pluginIdentifier] || '');
-
-  for (const [key, value] of Object.entries(staticMapping)) {
-    out = out.replace(key, value);
-  }
-
-  return out;
-}
-
-const PACKAGES: Package<Tags>[] = [
+export const PACKAGES: Package<Tags>[] = [
   {
     identifier: 'add',
     title: 'Add',
@@ -394,13 +361,3 @@ const PACKAGES: Package<Tags>[] = [
     tags: ['plugin', 'urql', 'typescript'],
   },
 ];
-
-export const packageList = PACKAGES.map(p => ({
-  ...p,
-  readme: canUseDOM
-    ? ''
-    : loadGeneratedReadme({
-        pluginIdentifier: p.identifier,
-        templateFile: `docs-templates/${p.identifier}.mdx`,
-      }),
-}));
