@@ -25,6 +25,7 @@ export async function writeConfig(answers: Answers, config: Types.Config) {
 
 // Updates package.json (script and plugins as dependencies)
 export async function writePackage(answers: Answers, configLocation: string) {
+  // dynamic import because latest-version is pure ESM
   const getLatestVersion = (await import('latest-version')).default;
   // script
   const pkgPath = resolve(process.cwd(), 'package.json');
