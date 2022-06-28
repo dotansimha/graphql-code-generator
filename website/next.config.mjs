@@ -1,10 +1,18 @@
 import nextra from 'nextra';
+import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.tsx',
   unstable_staticImage: true,
 });
+
+const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
+  packageNames.map(packageName => ({
+    source: `/plugins/${packageName}`,
+    destination: `/plugin-hub/${category}/${packageName}`,
+  }))
+);
 
 export default withNextra({
   eslint: {
@@ -73,6 +81,7 @@ export default withNextra({
         source: '/docs/getting-started/how-does-it-work',
         destination: '/docs/advanced/how-does-it-work',
       },
+      ...PLUGINS_REDIRECTS,
     ].map(redirect => ({
       ...redirect,
       permanent: true,

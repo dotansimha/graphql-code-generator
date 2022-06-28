@@ -8,6 +8,7 @@ import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
 import Markdown from '@/components/ui/Markdown';
 import { ALL_TAGS } from '@/lib/plugins';
+import { CategoryToPackages } from '@/category-to-package.mjs';
 
 type MarketplaceProps = {
   data: (PackageWithStats & {
@@ -16,30 +17,33 @@ type MarketplaceProps = {
   })[];
 };
 
+const categoryEntries = Object.entries(CategoryToPackages);
+
 export const PluginHub = (): ReactElement => {
   const { data } = useSSG() as MarketplaceProps;
 
   const marketplaceItems: (IMarketplaceItemProps & { raw: PackageWithStats })[] = useMemo(
     () =>
-      data.map<IMarketplaceItemProps & { raw: PackageWithStats }>(rawPlugin => {
-        const linkHref = `/plugins/${rawPlugin.identifier}`;
+      data.map<IMarketplaceItemProps & { raw: PackageWithStats }>(plugin => {
+        const [category] = categoryEntries.find(([, packageNames]) => packageNames.includes(plugin.identifier)) || [];
+        const linkHref = `/plugin-hub/${category}/${plugin.identifier}`;
         return {
-          raw: rawPlugin,
-          tags: rawPlugin.tags,
-          title: rawPlugin.title,
+          raw: plugin,
+          tags: plugin.tags,
+          title: plugin.title,
           link: {
             href: linkHref,
-            title: `${rawPlugin.title} plugin details`,
+            title: `${plugin.title} plugin details`,
             onClick: ev => handlePushRoute(linkHref, ev),
           },
-          description: <Markdown content={rawPlugin.description} />,
-          update: rawPlugin.stats?.modifiedDate || new Date().toISOString(),
-          image: rawPlugin.iconUrl
+          description: <Markdown content={plugin.description} />,
+          update: plugin.stats?.modifiedDate || new Date().toISOString(),
+          image: plugin.iconUrl
             ? {
                 height: 60,
                 width: 60,
-                src: rawPlugin.iconUrl,
-                alt: rawPlugin.title,
+                src: plugin.iconUrl,
+                alt: plugin.title,
               }
             : undefined,
         };
