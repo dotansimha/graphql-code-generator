@@ -730,30 +730,24 @@ index 0000000..945daa5
 +  components
 +};
 diff --git a/node_modules/nextra-theme-docs/package.json b/node_modules/nextra-theme-docs/package.json
-index 98b2f56..7cef471 100644
+index 98b2f56..163fa6a 100644
 --- a/node_modules/nextra-theme-docs/package.json
 +++ b/node_modules/nextra-theme-docs/package.json
-@@ -14,18 +14,11 @@
+@@ -13,7 +13,6 @@
+   ],
    "types": "./dist/types.d.ts",
    "exports": {
-     "./style.css": "./style.css",
--    ".": {
--      "import": "./dist/index.js"
--    },
--    "./callout": {
--      "import": "./dist/callout.js"
--    },
--    "./bleed": {
--      "import": "./dist/bleed.js"
--    },
--    "./tabs": {
--      "import": "./dist/components/tabs.js"
--    }
-+    ".": "./dist/index.js",
-+    "./callout": "./dist/callout.js",
-+    "./bleed": "./dist/bleed.js",
-+    "./tabs": "./dist/components/tabs.js",
-+    "./theme": "./dist/misc/theme.js"
+-    "./style.css": "./style.css",
+     ".": {
+       "import": "./dist/index.js"
+     },
+@@ -25,6 +24,9 @@
+     },
+     "./tabs": {
+       "import": "./dist/components/tabs.js"
++    },
++    "./theme": {
++      "import":"./dist/misc/theme.js"
+     }
    },
    "scripts": {
-     "dev": "concurrently \"pnpm dev:layout\" \"pnpm dev:tailwind\"",
