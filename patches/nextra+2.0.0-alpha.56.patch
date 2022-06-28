@@ -1,0 +1,892 @@
+diff --git a/node_modules/nextra/context.js b/node_modules/nextra/context.js
+deleted file mode 100644
+index 77e9dd1..0000000
+--- a/node_modules/nextra/context.js
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./dist/context')
+diff --git a/node_modules/nextra/data.js b/node_modules/nextra/data.js
+deleted file mode 100755
+index 9016f08..0000000
+--- a/node_modules/nextra/data.js
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./dist/ssg')
+diff --git a/node_modules/nextra/dist/compile.mjs b/node_modules/nextra/dist/compile.mjs
+new file mode 100644
+index 0000000..e6ae1da
+--- /dev/null
++++ b/node_modules/nextra/dist/compile.mjs
+@@ -0,0 +1,565 @@
++var __defProp = Object.defineProperty;
++var __defProps = Object.defineProperties;
++var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
++var __getOwnPropSymbols = Object.getOwnPropertySymbols;
++var __hasOwnProp = Object.prototype.hasOwnProperty;
++var __propIsEnum = Object.prototype.propertyIsEnumerable;
++var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
++var __spreadValues = (a, b) => {
++  for (var prop in b || (b = {}))
++    if (__hasOwnProp.call(b, prop))
++      __defNormalProp(a, prop, b[prop]);
++  if (__getOwnPropSymbols)
++    for (var prop of __getOwnPropSymbols(b)) {
++      if (__propIsEnum.call(b, prop))
++        __defNormalProp(a, prop, b[prop]);
++    }
++  return a;
++};
++var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
++var __async = (__this, __arguments, generator) => {
++  return new Promise((resolve, reject) => {
++    var fulfilled = (value) => {
++      try {
++        step(generator.next(value));
++      } catch (e) {
++        reject(e);
++      }
++    };
++    var rejected = (value) => {
++      try {
++        step(generator.throw(value));
++      } catch (e) {
++        reject(e);
++      }
++    };
++    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
++    step((generator = generator.apply(__this, __arguments)).next());
++  });
++};
++
++// src/compile.ts
++import { createProcessor } from "@mdx-js/mdx";
++import remarkGfm from "remark-gfm";
++import rehypePrettyCode from "rehype-pretty-code";
++
++// src/mdx-plugins/static-image.js
++var relative = /^\.{1,2}\//;
++function visit(node, type2, handler) {
++  if (node.type === type2) {
++    handler(node);
++  }
++  if (node.children) {
++    node.children.forEach((n) => visit(n, type2, handler));
++  }
++}
++function ASTNodeImport(name2, from) {
++  return {
++    type: "mdxjsEsm",
++    value: `import ${name2} from "${from}"`,
++    data: {
++      estree: {
++        type: "Program",
++        body: [
++          {
++            type: "ImportDeclaration",
++            specifiers: [
++              {
++                type: "ImportDefaultSpecifier",
++                local: { type: "Identifier", name: name2 }
++              }
++            ],
++            source: {
++              type: "Literal",
++              value: from,
++              raw: `"${from}"`
++            }
++          }
++        ],
++        sourceType: "module"
++      }
++    }
++  };
++}
++function remarkStaticImage() {
++  return (tree, _file, done) => {
++    const importsToInject = [];
++    visit(tree, "image", visitor);
++    tree.children.unshift(...importsToInject);
++    tree.children.unshift(ASTNodeImport("$NextImageNextra", "next/image"));
++    done();
++    function visitor(node) {
++      const url = node.url;
++      if (url && relative.test(url)) {
++        const tempVariableName = `$nextraImage${importsToInject.length}`;
++        Object.assign(node, {
++          type: "mdxJsxFlowElement",
++          name: "$NextImageNextra",
++          attributes: [
++            {
++              type: "mdxJsxAttribute",
++              name: "alt",
++              value: node.alt || ""
++            },
++            {
++              type: "mdxJsxAttribute",
++              name: "placeholder",
++              value: "blur"
++            },
++            {
++              type: "mdxJsxAttribute",
++              name: "src",
++              value: {
++                type: "mdxJsxAttributeValueExpression",
++                value: tempVariableName,
++                data: {
++                  estree: {
++                    type: "Program",
++                    body: [
++                      {
++                        type: "ExpressionStatement",
++                        expression: {
++                          type: "Identifier",
++                          name: tempVariableName
++                        }
++                      }
++                    ],
++                    sourceType: "module"
++                  }
++                }
++              }
++            }
++          ],
++          children: []
++        });
++        importsToInject.push(ASTNodeImport(tempVariableName, url));
++      }
++    }
++  };
++}
++
++// src/mdx-plugins/remark.ts
++function visit2(node, tester, handler) {
++  if (tester(node)) {
++    handler(node);
++  }
++  if (node.children) {
++    node.children.forEach((n) => visit2(n, tester, handler));
++  }
++}
++function getFlattenedValue(node) {
++  return node.children.map((child) => "children" in child ? getFlattenedValue(child) : "value" in child ? child.value : "").join("");
++}
++function remarkHeadings() {
++  const data = this.data();
++  return (tree, _file, done) => {
++    visit2(tree, (node) => {
++      return node.type === "heading" || node.name === "summary" || node.name === "details";
++    }, (node) => {
++      if (node.type === "heading") {
++        const heading = __spreadProps(__spreadValues({}, node), {
++          value: getFlattenedValue(node)
++        });
++        const headingMeta = data.headingMeta;
++        if (node.depth === 1) {
++          headingMeta.hasH1 = true;
++          if (Array.isArray(node.children) && node.children.length === 1) {
++            const child = node.children[0];
++            if (child.type === "text") {
++              headingMeta.titleText = child.value;
++            }
++          }
++        }
++        headingMeta.headings.push(heading);
++      } else if (node.name === "summary" || node.name === "details") {
++        if (node.data) {
++          delete node.data._mdxExplicitJsx;
++        }
++      }
++    });
++    done();
++  };
++}
++
++// src/mdx-plugins/structurize.js
++import Slugger from "github-slugger";
++function cleanup(content) {
++  return content.trim().split("\n").map((line) => line.trim()).join("\n");
++}
++var structurize_default = (structurizedData, options) => {
++  if (typeof options === "boolean")
++    options = {};
++  options = Object.assign({ codeblocks: true }, options);
++  const slugger = new Slugger();
++  let activeSlug = "";
++  let skip = false;
++  let content = "";
++  return function stripMarkdown() {
++    return (node) => {
++      walk(node);
++      structurizedData[activeSlug] = cleanup(content);
++      return node;
++    };
++    function walk(node) {
++      let result = "";
++      const type2 = node.type;
++      if (type2 === "heading")
++        skip = true;
++      if (["code", "table", "blockquote", "list", "mdxJsxFlowElement"].includes(type2)) {
++        result += "\n";
++        if (!skip)
++          content += "\n";
++      }
++      if ("children" in node) {
++        for (let i = 0; i < node.children.length; i++) {
++          result += walk(node.children[i]);
++        }
++      } else if ([
++        options.codeblocks ? "code" : "",
++        "text",
++        "inlineCode",
++        "tableCell"
++      ].includes(type2)) {
++        result += node.value;
++        if (!skip)
++          content += node.value;
++      }
++      if ([
++        "code",
++        "table",
++        "blockquote",
++        "list",
++        "listItem",
++        "break",
++        "mdxJsxFlowElement"
++      ].includes(type2)) {
++        result += "\n";
++        if (!skip)
++          content += "\n";
++      }
++      if (["tableCell"].includes(type2)) {
++        result += "	";
++        if (!skip)
++          content += "	";
++      }
++      if (type2 === "heading")
++        skip = false;
++      if (type2 === "heading" && node.depth > 1) {
++        structurizedData[activeSlug] = cleanup(content);
++        content = "";
++        activeSlug = slugger.slug(result) + "#" + result;
++      }
++      return result;
++    }
++  };
++};
++
++// src/mdx-plugins/rehype-handler.js
++import Slugger2 from "github-slugger";
++function visit3(node, tagNames, handler) {
++  if (tagNames.includes(node.tagName)) {
++    handler(node);
++    return;
++  }
++  if (node.children) {
++    node.children.forEach((n) => visit3(n, tagNames, handler));
++  }
++}
++function parseMeta() {
++  return (tree) => {
++    visit3(tree, ["pre"], (node) => {
++      var _a, _b, _c;
++      if (Array.isArray(node.children) && node.children.length === 1 && node.children[0].tagName === "code" && typeof node.children[0].properties === "object") {
++        const meta = (_b = (_a = node.children[0].data) == null ? void 0 : _a.meta) != null ? _b : node.children[0].properties.metastring;
++        if (meta) {
++          const filename = (_c = meta.match(/filename="([^"]+)"/)) == null ? void 0 : _c[1];
++          if (filename) {
++            node.__nextra_filename__ = filename;
++          }
++        }
++      }
++    });
++  };
++}
++function attachMeta() {
++  return (tree) => {
++    const slugger = new Slugger2();
++    visit3(tree, ["div", "h2", "h3", "h4", "h5", "h6"], (node) => {
++      if (node.tagName === "div") {
++        if (!("data-rehype-pretty-code-fragment" in node.properties))
++          return;
++        node.properties["data-nextra-code"] = "";
++        if ("__nextra_filename__" in node) {
++          node.properties["data-filename"] = node.__nextra_filename__;
++        }
++      } else {
++        node.properties.id = node.properties.id || slugger.slug(getFlattenedValue(node));
++      }
++    });
++  };
++}
++
++// src/theme.json
++var name = "css-variables";
++var type = "light";
++var colors = {
++  "editor.foreground": "#000001",
++  "editor.background": "#000002"
++};
++var tokenColors = [
++  {
++    settings: {
++      foreground: "#000001"
++    }
++  },
++  {
++    scope: [
++      "markup.deleted",
++      "meta.diff.header.from-file",
++      "punctuation.definition.deleted"
++    ],
++    settings: {
++      foreground: "#ef6270"
++    }
++  },
++  {
++    scope: [
++      "markup.inserted",
++      "meta.diff.header.to-file",
++      "punctuation.definition.inserted"
++    ],
++    settings: {
++      foreground: "#4bb74a"
++    }
++  },
++  {
++    scope: [
++      "keyword.operator.accessor",
++      "meta.group.braces.round.function.arguments",
++      "meta.template.expression",
++      "markup.fenced_code meta.embedded.block"
++    ],
++    settings: {
++      foreground: "#000001"
++    }
++  },
++  {
++    scope: "emphasis",
++    settings: {
++      fontStyle: "italic"
++    }
++  },
++  {
++    scope: ["strong", "markup.heading.markdown", "markup.bold.markdown"],
++    settings: {
++      fontStyle: "bold"
++    }
++  },
++  {
++    scope: ["markup.italic.markdown"],
++    settings: {
++      fontStyle: "italic"
++    }
++  },
++  {
++    scope: "meta.link.inline.markdown",
++    settings: {
++      fontStyle: "underline",
++      foreground: "#000004"
++    }
++  },
++  {
++    scope: ["string", "markup.fenced_code", "markup.inline"],
++    settings: {
++      foreground: "#000005"
++    }
++  },
++  {
++    scope: ["comment", "string.quoted.docstring.multi"],
++    settings: {
++      foreground: "#000006"
++    }
++  },
++  {
++    scope: [
++      "constant.numeric",
++      "constant.language",
++      "constant.other.placeholder",
++      "constant.character.format.placeholder",
++      "variable.language.this",
++      "variable.other.object",
++      "variable.other.class",
++      "variable.other.constant",
++      "meta.property-name",
++      "meta.property-value",
++      "support"
++    ],
++    settings: {
++      foreground: "#000004"
++    }
++  },
++  {
++    scope: [
++      "keyword",
++      "storage.modifier",
++      "storage.type",
++      "storage.control.clojure",
++      "entity.name.function.clojure",
++      "entity.name.tag.yaml",
++      "support.function.node",
++      "support.type.property-name.json",
++      "punctuation.separator.key-value",
++      "punctuation.definition.template-expression"
++    ],
++    settings: {
++      foreground: "#000007"
++    }
++  },
++  {
++    scope: "variable.parameter.function",
++    settings: {
++      foreground: "#000008"
++    }
++  },
++  {
++    scope: [
++      "support.function",
++      "entity.name.type",
++      "entity.other.inherited-class",
++      "meta.function-call",
++      "meta.instance.constructor",
++      "entity.other.attribute-name",
++      "entity.name.function",
++      "constant.keyword.clojure"
++    ],
++    settings: {
++      foreground: "#000009"
++    }
++  },
++  {
++    scope: [
++      "entity.name.tag",
++      "string.quoted",
++      "string.regexp",
++      "string.interpolated",
++      "string.template",
++      "string.unquoted.plain.out.yaml",
++      "keyword.other.template"
++    ],
++    settings: {
++      foreground: "#000010"
++    }
++  },
++  {
++    scope: [
++      "punctuation.definition.arguments",
++      "punctuation.definition.dict",
++      "punctuation.separator",
++      "meta.function-call.arguments"
++    ],
++    settings: {
++      foreground: "#000011"
++    }
++  },
++  {
++    name: "[Custom] Markdown links",
++    scope: [
++      "markup.underline.link",
++      "punctuation.definition.metadata.markdown"
++    ],
++    settings: {
++      foreground: "#000012"
++    }
++  },
++  {
++    name: "[Custom] Markdown list",
++    scope: ["beginning.punctuation.definition.list.markdown"],
++    settings: {
++      foreground: "#000005"
++    }
++  },
++  {
++    name: "[Custom] Markdown punctuation definition brackets",
++    scope: [
++      "punctuation.definition.string.begin.markdown",
++      "punctuation.definition.string.end.markdown",
++      "string.other.link.title.markdown",
++      "string.other.link.description.markdown"
++    ],
++    settings: {
++      foreground: "#000007"
++    }
++  }
++];
++var theme_default = {
++  name,
++  type,
++  colors,
++  tokenColors
++};
++
++// src/compile.ts
++var createCompiler = (mdxOptions) => {
++  const compiler = createProcessor(mdxOptions);
++  compiler.data("headingMeta", {
++    hasH1: false,
++    headings: []
++  });
++  return compiler;
++};
++var addHighlightedClass = (node) => {
++  var _a;
++  (_a = node.properties).className || (_a.className = []);
++  node.properties.className.push("highlighted");
++};
++function compileMdx(_0) {
++  return __async(this, arguments, function* (source, mdxOptions = {}, nextraOptions = {
++    unstable_staticImage: false,
++    unstable_flexsearch: false
++  }, resourcePath) {
++    var _a;
++    let structurizedData = {};
++    const compiler = createCompiler({
++      jsx: (_a = mdxOptions.jsx) != null ? _a : true,
++      outputFormat: mdxOptions.outputFormat,
++      providerImportSource: "@mdx-js/react",
++      remarkPlugins: [
++        ...mdxOptions.remarkPlugins || [],
++        remarkGfm,
++        remarkHeadings,
++        ...nextraOptions.unstable_staticImage ? [remarkStaticImage] : [],
++        ...nextraOptions.unstable_flexsearch ? [structurize_default(structurizedData, nextraOptions.unstable_flexsearch)] : []
++      ].filter(Boolean),
++      rehypePlugins: [
++        ...mdxOptions.rehypePlugins || [],
++        parseMeta,
++        [
++          rehypePrettyCode,
++          {
++            theme: theme_default,
++            onVisitHighlightedLine: addHighlightedClass,
++            onVisitHighlightedWord: addHighlightedClass
++          }
++        ],
++        attachMeta
++      ].filter(Boolean)
++    });
++    try {
++      const result = yield compiler.process(source);
++      return __spreadProps(__spreadValues({
++        result: String(result)
++      }, compiler.data("headingMeta")), {
++        structurizedData
++      });
++    } catch (err) {
++      console.error(`
++Error compiling ${resourcePath}
++${err}
++`);
++      throw err;
++    }
++  });
++}
++export {
++  compileMdx
++};
+diff --git a/node_modules/nextra/dist/context.js b/node_modules/nextra/dist/context.cjs
+similarity index 100%
+rename from node_modules/nextra/dist/context.js
+rename to node_modules/nextra/dist/context.cjs
+diff --git a/node_modules/nextra/dist/index.js b/node_modules/nextra/dist/index.cjs
+similarity index 93%
+rename from node_modules/nextra/dist/index.js
+rename to node_modules/nextra/dist/index.cjs
+index d288128..71aacee 100644
+--- a/node_modules/nextra/dist/index.js
++++ b/node_modules/nextra/dist/index.cjs
+@@ -231,34 +231,30 @@ var NextraPlugin = class {
+   }
+ };
+ 
+-// src/index.js
+-var defaultExtensions = ["js", "jsx", "ts", "tsx"];
+-var markdownExtensions = ["md", "mdx"];
+-var markdownExtensionTest = /\.mdx?$/;
+-module.exports = (...args) => (nextConfig = {}) => {
++// src/index.ts
++var DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
++var MARKDOWN_EXTENSIONS = ["md", "mdx"];
++var MARKDOWN_EXTENSION_TEST = /\.mdx?$/;
++var nextra = (...args) => function withNextra(nextConfig) {
+   var _a, _b;
+   const nextraConfig = typeof args[0] === "string" ? {
+     theme: args[0],
+     themeConfig: args[1]
+   } : args[0];
++  const nextraPlugin = new NextraPlugin(nextraConfig);
+   const locales = ((_a = nextConfig.i18n) == null ? void 0 : _a.locales) || null;
+   const defaultLocale = ((_b = nextConfig.i18n) == null ? void 0 : _b.defaultLocale) || null;
+-  let pageExtensions = nextConfig.pageExtensions || [...defaultExtensions];
+-  pageExtensions = pageExtensions.concat(markdownExtensions);
++  const pageExtensions = nextConfig.pageExtensions || DEFAULT_EXTENSIONS;
+   if (locales) {
+     console.log("[Nextra] You have Next.js i18n enabled, read here (TODO: link) for the docs.");
+   }
+-  return Object.assign({}, nextConfig, {
+-    pageExtensions,
++  return __spreadProps(__spreadValues({}, nextConfig), {
++    pageExtensions: [...pageExtensions, ...MARKDOWN_EXTENSIONS],
+     webpack(config, options) {
+-      const nextra = new NextraPlugin(nextraConfig);
+-      if (!config.plugins) {
+-        config.plugins = [nextra];
+-      } else {
+-        config.plugins.push(nextra);
+-      }
++      config.plugins || (config.plugins = []);
++      config.plugins.push(nextraPlugin);
+       config.module.rules.push({
+-        test: markdownExtensionTest,
++        test: MARKDOWN_EXTENSION_TEST,
+         use: [
+           options.defaultLoaders.babel,
+           {
+@@ -274,3 +270,4 @@ module.exports = (...args) => (nextConfig = {}) => {
+     }
+   });
+ };
++module.exports = nextra;
+diff --git a/node_modules/nextra/dist/loader.mjs b/node_modules/nextra/dist/loader.mjs
+index 486c1fb..208fa21 100644
+--- a/node_modules/nextra/dist/loader.mjs
++++ b/node_modules/nextra/dist/loader.mjs
+@@ -599,29 +599,21 @@ var createCompiler = (mdxOptions) => {
+   });
+   return compiler;
+ };
+-var rehypePrettyCodeOptions = {
+-  theme: theme_default,
+-  onVisitHighlightedLine(node) {
+-    if (!node.properties.className) {
+-      node.properties.className = [];
+-    }
+-    node.properties.className.push("highlighted");
+-  },
+-  onVisitHighlightedWord(node) {
+-    if (!node.properties.className) {
+-      node.properties.className = [];
+-    }
+-    node.properties.className.push("highlighted");
+-  }
++var addHighlightedClass = (node) => {
++  var _a;
++  (_a = node.properties).className || (_a.className = []);
++  node.properties.className.push("highlighted");
+ };
+ function compileMdx(_0) {
+   return __async(this, arguments, function* (source, mdxOptions = {}, nextraOptions = {
+     unstable_staticImage: false,
+     unstable_flexsearch: false
+   }, resourcePath) {
++    var _a;
+     let structurizedData = {};
+     const compiler = createCompiler({
+-      jsx: true,
++      jsx: (_a = mdxOptions.jsx) != null ? _a : true,
++      outputFormat: mdxOptions.outputFormat,
+       providerImportSource: "@mdx-js/react",
+       remarkPlugins: [
+         ...mdxOptions.remarkPlugins || [],
+@@ -633,7 +625,14 @@ function compileMdx(_0) {
+       rehypePlugins: [
+         ...mdxOptions.rehypePlugins || [],
+         parseMeta,
+-        [rehypePrettyCode, rehypePrettyCodeOptions],
++        [
++          rehypePrettyCode,
++          {
++            theme: theme_default,
++            onVisitHighlightedLine: addHighlightedClass,
++            onVisitHighlightedWord: addHighlightedClass
++          }
++        ],
+         attachMeta
+       ].filter(Boolean)
+     });
+@@ -646,8 +645,8 @@ function compileMdx(_0) {
+       });
+     } catch (err) {
+       console.error(`
+-Error compiling ${resourcePath}`);
+-      console.error(`${err}
++Error compiling ${resourcePath}
++${err}
+ `);
+       throw err;
+     }
+@@ -827,16 +826,7 @@ function loader(context, source) {
+     if (!theme) {
+       throw new Error("No Nextra theme found!");
+     }
+-    let pageMapResult, fileMap;
+-    if (isProductionBuild) {
+-      const data2 = pageMapCache2.get();
+-      pageMapResult = data2.items;
+-      fileMap = data2.fileMap;
+-    } else {
+-      const data2 = yield collectFiles(pagesDir, "/");
+-      pageMapResult = data2.items;
+-      fileMap = data2.fileMap;
+-    }
++    const { items: pageMapResult, fileMap } = isProductionBuild ? pageMapCache2.get() : yield collectFiles(pagesDir, "/");
+     const [pageMap, route, title] = getPageMap(resourcePath, pageMapResult, fileMap, defaultLocale);
+     if (!isProductionBuild) {
+       context.addContextDependency(pagesDir);
+@@ -867,7 +857,7 @@ function loader(context, source) {
+     content = content.replace("export default MDXContent;", "");
+     if (unstable_flexsearch) {
+       if (extension2.test(filename) && data.searchable !== false) {
+-        yield addPage({
++        addPage({
+           fileLocale: fileLocale || "default",
+           route,
+           title,
+@@ -893,34 +883,45 @@ function loader(context, source) {
+       } catch (e) {
+       }
+     }
+-    const prefix = `import __nextra_withLayout__ from '${layout}'
++    const layoutConfigImport = layoutConfig ? `import __nextra_layoutConfig__ from '${layoutConfig}'` : "";
++    return `
++import __nextra_withLayout__ from '${layout}'
+ import { withSSG as __nextra_withSSG__ } from 'nextra/ssg'
+-${layoutConfig ? `import __nextra_layoutConfig__ from '${layoutConfig}'` : ""}
++${layoutConfigImport}
+ 
+ const __nextra_pageMap__ = ${JSON.stringify(pageMap)}
++
+ globalThis.__nextra_internal__ = {
+   pageMap: __nextra_pageMap__,
+-  route: ${JSON.stringify(route)},
++  route: ${JSON.stringify(route)}
+ }
+ 
+-    const __nextra_content__ = <MDXContent/>
+-    const NextraLayout = __nextra_withSSG__(__nextra_withLayout__({
+-      filename: "${slash2(filename)}",
+-      route: "${slash2(route)}",
+-      meta: ${JSON.stringify(data)},
+-      pageMap: __nextra_pageMap__,
+-      titleText: ${JSON.stringify(titleText)},
+-      headings: ${JSON.stringify(headings)},
+-      hasH1: ${JSON.stringify(hasH1)},
+-      ${timestamp ? `timestamp: ${timestamp},
++const NextraLayout = __nextra_withSSG__(__nextra_withLayout__({
++  filename: "${slash2(filename)}",
++  route: "${slash2(route)}",
++  meta: ${JSON.stringify(data)},
++  pageMap: __nextra_pageMap__,
++  titleText: ${JSON.stringify(titleText)},
++  headings: ${JSON.stringify(headings)},
++  hasH1: ${JSON.stringify(hasH1)},
++  ${timestamp ? `timestamp: ${timestamp},
+ ` : ""}
+-    }, ${layoutConfig ? "__nextra_layoutConfig__" : "null"}))
+-    `;
+-    const suffix = `export default function NextraPage (props) {
+-  return <NextraLayout {...props}>{__nextra_content__}</NextraLayout>
++}, ${layoutConfig ? "__nextra_layoutConfig__" : "null"}
++))
++
++${content}
++
++function NextraPage(props) {
++  return (
++    <NextraLayout {...props}>
++      <MDXContent />
++    </NextraLayout>
++  )
+ }
+-NextraPage.getLayout = NextraLayout.getLayout`;
+-    return prefix + "\n\n" + content + "\n\n" + suffix;
++NextraPage.getLayout = NextraLayout.getLayout
++
++export default NextraPage
++`.trimStart();
+   });
+ }
+ function syncLoader(source, callback) {
+diff --git a/node_modules/nextra/dist/locales.js b/node_modules/nextra/dist/locales.cjs
+similarity index 100%
+rename from node_modules/nextra/dist/locales.js
+rename to node_modules/nextra/dist/locales.cjs
+diff --git a/node_modules/nextra/dist/ssg.js b/node_modules/nextra/dist/ssg.cjs
+similarity index 100%
+rename from node_modules/nextra/dist/ssg.js
+rename to node_modules/nextra/dist/ssg.cjs
+diff --git a/node_modules/nextra/dist/types.d.ts b/node_modules/nextra/dist/types.d.ts
+index 9a63bef..3c6ecb6 100644
+--- a/node_modules/nextra/dist/types.d.ts
++++ b/node_modules/nextra/dist/types.d.ts
+@@ -1,6 +1,7 @@
+ import { Heading as MDASTHeading } from 'mdast';
+ import { ProcessorOptions } from '@mdx-js/mdx';
+ import { PageMapCache } from './plugin';
++import { NextConfig } from 'next';
+ export interface LoaderOptions {
+     theme: Theme;
+     themeConfig: string;
+@@ -8,7 +9,7 @@ export interface LoaderOptions {
+     defaultLocale: string;
+     unstable_staticImage: boolean;
+     unstable_flexsearch: boolean;
+-    mdxOptions: Pick<ProcessorOptions, 'rehypePlugins' | 'remarkPlugins'>;
++    mdxOptions: Pick<ProcessorOptions, 'rehypePlugins' | 'remarkPlugins' | 'jsx' | 'outputFormat'>;
+     pageMapCache: PageMapCache;
+ }
+ export interface PageMapItem {
+@@ -45,5 +46,5 @@ export declare type NextraConfig = {
+     unstable_flexsearch: boolean;
+     unstable_staticImage?: boolean;
+ };
+-export declare type withNextra = (...args: [NextraConfig] | [theme: Theme, themeConfig: string]) => (nextConfig: Record<string, any>) => {};
+-export default withNextra;
++export declare type Nextra = (...args: [NextraConfig] | [theme: Theme, themeConfig: string]) => (nextConfig: NextConfig) => NextConfig;
++export {};
+diff --git a/node_modules/nextra/index.js b/node_modules/nextra/index.js
+deleted file mode 100755
+index aae5903..0000000
+--- a/node_modules/nextra/index.js
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./dist/index')
+diff --git a/node_modules/nextra/locales.js b/node_modules/nextra/locales.js
+deleted file mode 100644
+index 0adc2a7..0000000
+--- a/node_modules/nextra/locales.js
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./dist/locales')
+diff --git a/node_modules/nextra/package.json b/node_modules/nextra/package.json
+index 47e2096..514f442 100644
+--- a/node_modules/nextra/package.json
++++ b/node_modules/nextra/package.json
+@@ -3,15 +3,12 @@
+   "version": "2.0.0-alpha.56",
+   "description": "Next.js and MDX based site generator.",
+   "main": "index.js",
+-  "files": [
+-    "dist/*",
+-    "index.js",
+-    "ssg.js",
+-    "data.js",
+-    "loader.js",
+-    "locales.js",
+-    "context.js"
+-  ],
++  "exports": {
++    ".": "./dist/index.cjs",
++    "./loader": "./loader.js",
++    "./compile": "./dist/compile.mjs",
++    "./ssg": "./dist/ssg.cjs"
++  },
+   "types": "./dist/types.d.ts",
+   "repository": "https://github.com/shuding/nextra",
+   "license": "MIT",
+diff --git a/node_modules/nextra/ssg.js b/node_modules/nextra/ssg.js
+deleted file mode 100755
+index 9016f08..0000000
+--- a/node_modules/nextra/ssg.js
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./dist/ssg')

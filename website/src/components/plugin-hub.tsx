@@ -8,7 +8,7 @@ import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
 import Markdown from '@/components/ui/Markdown';
 import { ALL_TAGS } from '@/lib/plugins';
-import { CategoryToPackages } from '@/category-to-package.mjs';
+import { CategoryToPackages } from '@/category-to-packages.mjs';
 
 type MarketplaceProps = {
   data: (PackageWithStats & {
