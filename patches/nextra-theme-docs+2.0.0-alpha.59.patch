@@ -730,18 +730,10 @@ index 0000000..945daa5
 +  components
 +};
 diff --git a/node_modules/nextra-theme-docs/package.json b/node_modules/nextra-theme-docs/package.json
-index 98b2f56..163fa6a 100644
+index 98b2f56..7b4a40b 100644
 --- a/node_modules/nextra-theme-docs/package.json
 +++ b/node_modules/nextra-theme-docs/package.json
-@@ -13,7 +13,6 @@
-   ],
-   "types": "./dist/types.d.ts",
-   "exports": {
--    "./style.css": "./style.css",
-     ".": {
-       "import": "./dist/index.js"
-     },
-@@ -25,6 +24,9 @@
+@@ -25,6 +25,9 @@
      },
      "./tabs": {
        "import": "./dist/components/tabs.js"

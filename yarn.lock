@@ -7251,10 +7251,10 @@ eslint-plugin-jsx-a11y@^6.5.1:
     language-tags "^1.0.5"
     minimatch "^3.0.4"
 
-eslint-plugin-n@15.2.2:
-  version "15.2.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-15.2.2.tgz#1ea682e57871c5ce6ba04c36e71df38466b68d34"
-  integrity sha512-MLjZVAv4TiCIoXqjibNqCJjLkGHfrOY3XZ0ZBLoW0OnS3o98PUBnzB/kfp8dCz/4A4Y18jjX50PRnqI4ACFY1Q==
+eslint-plugin-n@15.2.3:
+  version "15.2.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-15.2.3.tgz#b8850b90a8c27d3d880521ad90dbf537ac0a9830"
+  integrity sha512-H+KC7U5R+3IWTeRnACm/4wlqLvS1Q7M6t7BGhn89qXDkZan8HTAEv3ouIONA0ifDwc2YzPFmyPzHuNLddNK4jw==
   dependencies:
     builtins "^5.0.1"
     eslint-plugin-es "^4.1.0"
