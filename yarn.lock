@@ -3157,21 +3157,6 @@
     jscodeshift "^0.11.0"
     semver "^7.3.4"
 
-"@pnpm/network.ca-file@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@pnpm/network.ca-file/-/network.ca-file-1.0.1.tgz#16f88d057c68cd5419c1ef3dfa281296ea80b047"
-  integrity sha512-gkINruT2KUhZLTaiHxwCOh1O4NVnFT0wLjWFBHmTz9vpKag/C/noIMJXBxFe4F0mYpUVX2puLwAieLYFg2NvoA==
-  dependencies:
-    graceful-fs "4.2.10"
-
-"@pnpm/npm-conf@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@pnpm/npm-conf/-/npm-conf-1.0.4.tgz#e2c927a933f55e9211e12ef6cc4885ce915211ce"
-  integrity sha512-o5YFq/+ksEJMbSzzkaQDHlp00aonLDU5xNPVTRL12hTWBbVSSeWXxPukq75h+mvXnoOWT95vV2u1HSTw2C4XOw==
-  dependencies:
-    "@pnpm/network.ca-file" "^1.0.1"
-    config-chain "^1.1.11"
-
 "@popperjs/core@^2.9.3":
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.2.tgz#0798c03351f0dea1a5a4cabddf26a55a7cbee590"
@@ -5959,14 +5944,6 @@ concurrently@7.2.2:
     tree-kill "^1.2.2"
     yargs "^17.3.1"
 
-config-chain@^1.1.11:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/config-chain/-/config-chain-1.1.13.tgz#fad0795aa6a6cdaff9ed1b68e9dff94372c232f4"
-  integrity sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==
-  dependencies:
-    ini "^1.3.4"
-    proto-list "~1.2.1"
-
 consola@2.11.3:
   version "2.11.3"
   resolved "https://registry.yarnpkg.com/consola/-/consola-2.11.3.tgz#f7315836224c143ac5094b47fd4c816c2cd1560e"
@@ -7969,11 +7946,6 @@ foreach@^2.0.5:
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
   integrity sha1-C+4AUBiusmDQo6865ljdATbsG5k=
 
-form-data-encoder@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/form-data-encoder/-/form-data-encoder-1.7.1.tgz#ac80660e4f87ee0d3d3c3638b7da8278ddb8ec96"
-  integrity sha512-EFRDrsMm/kyqbTQocNvRXMLjc7Es2Vk+IQFx/YW7hkUH1eBl4J1fqiP34l74Yt0pFLCNpc06fkbVk00008mzjg==
-
 form-data@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
@@ -8310,7 +8282,7 @@ got@^11.8.2:
     p-cancelable "^2.0.0"
     responselike "^2.0.0"
 
-graceful-fs@4.2.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.9:
+graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
@@ -8898,7 +8870,7 @@ inherits@2.0.3:
   resolved "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
-ini@^1.3.4, ini@~1.3.0:
+ini@~1.3.0:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
@@ -10561,11 +10533,6 @@ lowercase-keys@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-2.0.0.tgz#2603e78b7b4b0006cbca2fbcc8a3202558ac9479"
   integrity sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==
-
-lowercase-keys@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-3.0.0.tgz#c5e7d442e37ead247ae9db117a9d0a467c89d4f2"
-  integrity sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==
 
 lru-cache@^4.0.1:
   version "4.1.5"
@@ -12513,11 +12480,6 @@ property-information@^6.0.0:
   resolved "https://registry.yarnpkg.com/property-information/-/property-information-6.0.1.tgz#7c668d9f2b9cb63bc3e105d8b8dfee7221a17800"
   integrity sha512-F4WUUAF7fMeF4/JUFHNBWDaKDXi2jbvqBW/y6o5wsf3j19wTZ7S60TmtB5HoBhtgw7NKQRMWuz5vk2PR0CygUg==
 
-proto-list@~1.2.1:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
-  integrity sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==
-
 proxy-addr@~2.0.5:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
@@ -12636,7 +12598,7 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-rc@1.2.8:
+rc@1.2.8, rc@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
   integrity sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==
@@ -13027,19 +12989,19 @@ regexpu-core@^5.1.0:
     unicode-match-property-ecmascript "^2.0.0"
     unicode-match-property-value-ecmascript "^2.0.0"
 
-registry-auth-token@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-5.0.1.tgz#5e6cd106e6c251135a046650c58476fc03e92833"
-  integrity sha512-UfxVOj8seK1yaIOiieV4FIP01vfBDLsY0H9sQzi9EbbUdJiuuBjJgLa1DpImXMNPnVkBD4eVxTEXcrZA6kfpJA==
-  dependencies:
-    "@pnpm/npm-conf" "^1.0.4"
-
-registry-url@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-6.0.1.tgz#056d9343680f2f64400032b1e199faa692286c58"
-  integrity sha512-+crtS5QjFRqFCoQmvGduwYWEBng99ZvmFvF+cUJkGYF1L1BfU8C6Zp9T7f5vPAwyLkUExpvK+ANVZmGU49qi4Q==
+registry-auth-token@^4.0.0:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-4.2.2.tgz#f02d49c3668884612ca031419491a13539e21fac"
+  integrity sha512-PC5ZysNb42zpFME6D/XlIgtNGdTl8bBOCw90xQLVMpzuuubJKYDWFAEuUNc+Cn8Z8724tg2SDhDRrkVEsqfDMg==
   dependencies:
     rc "1.2.8"
+
+registry-url@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-5.1.0.tgz#e98334b50d5434b81136b44ec638d9c2009c5009"
+  integrity sha512-8acYXXTI0AkQv6RAOjE3vOaIXZkT9wo4LOFbBKYQEEnnMNBpKqdUrI6S4NT0KPIo/WVvJ5tE/X5LF/TQUf0ekw==
+  dependencies:
+    rc "^1.2.8"
 
 regjsgen@^0.6.0:
   version "0.6.0"
