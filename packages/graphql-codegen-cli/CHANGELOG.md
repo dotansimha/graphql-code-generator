@@ -1,5 +1,12 @@
 # @graphql-codegen/cli
 
+## 2.6.3
+
+### Patch Changes
+
+- c1fe7758a: Remove unused deps
+- 52b41e90e: bump latest-version to patch vuln
+
 ## 2.6.2
 
 ### Patch Changes
