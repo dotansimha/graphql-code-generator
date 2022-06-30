@@ -408,7 +408,12 @@ export class TypeGraphQLVisitor<
 
     typeString = this.fixDecorator(type, typeString);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   InputValueDefinition(
@@ -451,7 +456,12 @@ export class TypeGraphQLVisitor<
       ? this.buildTypeString(type)
       : this.fixDecorator(type, rawType as string);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${nameString}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
