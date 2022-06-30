@@ -2,4 +2,4 @@
 '@graphql-codegen/cli': minor
 ---
 
-Remove unecessary browser check
+Remove unnecessary browser check
