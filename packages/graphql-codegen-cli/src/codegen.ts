@@ -37,6 +37,8 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
+type Ctx = { errors: any[] };
+
 function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
 
@@ -69,7 +71,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const cache = createCache();
 
-  function wrapTask(task: () => void | Promise<void>, source: string, taskName: string) {
+  function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
     return () => {
       return context.profiler.run(async () => {
         try {
@@ -78,6 +80,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           if (source && !(error instanceof GraphQLError)) {
             error.source = source;
           }
+          ctx.errors.push(error);
 
           throw error;
         }
@@ -172,7 +175,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const isTest = process.env.NODE_ENV === 'test';
 
-  const tasks = new Listr<unknown, typeof Renderer>(
+  const tasks = new Listr<Ctx, typeof Renderer>(
     [
       {
         title: 'Parse Configuration',
@@ -180,8 +183,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       },
       {
         title: 'Generate outputs',
-        task: (_, task) => {
-          const generateTasks: ListrTask[] = Object.keys(generates).map(filename => {
+        task: (ctx, task) => {
+          const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
             const hasPreset = !!outputConfig.preset;
 
@@ -233,7 +236,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           outputSchema = result.outputSchema;
                         },
                         filename,
-                        `Load GraphQL schemas: ${filename}`
+                        `Load GraphQL schemas: ${filename}`,
+                        ctx
                       ),
                     },
                     {
@@ -260,7 +264,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           }
                         },
                         filename,
-                        `Load GraphQL documents: ${filename}`
+                        `Load GraphQL documents: ${filename}`,
+                        ctx
                       ),
                     },
                     {
@@ -342,7 +347,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
                         },
                         filename,
-                        `Generate: ${filename}`
+                        `Generate: ${filename}`,
+                        ctx
                       ),
                     },
                   ],
@@ -368,13 +374,24 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       //   clearOutput: false,
       //   collapse: true,
       // },
+      ctx: { errors: [] },
       rendererSilent: isTest || config.silent,
       exitOnError: true,
     }
   );
 
   try {
-    await tasks.run();
+    const context = await tasks.run();
+
+    const errors = context.errors.map(subErr => {
+      return isDetailedError(subErr) ? `${subErr.details}` : subErr.message || subErr.toString();
+    });
+    const newErr = new AggregateError(context.errors, `${errors.join('\n\n')}`);
+    // Best-effort to all stack traces for debugging
+    newErr.stack = `${newErr.stack}\n\n${context.errors.map(subErr => subErr.stack).join('\n\n')}`;
+    if (errors.length > 0) {
+      throw newErr;
+    }
   } catch (err) {
     if (isListrError(err)) {
       const allErrs = err.errors.map(subErr =>

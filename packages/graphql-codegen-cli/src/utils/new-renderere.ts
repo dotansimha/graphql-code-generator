@@ -3,7 +3,7 @@
 import { EOL } from 'os';
 import cliWrap from 'wrap-ansi';
 import logUpdate from 'log-update';
-import { ListrContext, ListrRenderer, ListrTaskObject, figures, ListrEvent } from 'listr2';
+import { ListrContext, ListrRenderer, ListrTaskObject, figures } from 'listr2';
 import { indentString } from './indentString';
 import { isUnicodeSupported } from './is-unicode-supported';
 import { parseTaskTime } from './parse-time';
@@ -293,7 +293,6 @@ export class Renderer implements ListrRenderer {
     //         logUpdate.emit(`${chalk.red.bold(`${indentString(err.message, 2)}`)}\n${details}\n${chalk.grey(err.stack)}`);
     //       }
     //     }
-    logUpdate(chalk.redBright(err));
     clearInterval(this.id);
 
     if (this.id) {
@@ -605,7 +604,7 @@ export class Renderer implements ListrRenderer {
     } else if (task.hasRolledBack() && !data) {
       return chalk.red(figures.arrowLeft);
     } else if (task.hasFailed() && !data) {
-      return task.hasSubtasks() ? chalk.red(figures.pointer) : chalk.red(figures.cross);
+      return task.hasSubtasks() ? chalk.red(figures.pointer) : chalk.redBright(figures.cross);
     } else if (task.isSkipped() && !data && this.getSelfOrParentOption(task, 'collapseSkips') === false) {
       return chalk.yellow(figures.warning);
     } else if (task.isSkipped() && (data || this.getSelfOrParentOption(task, 'collapseSkips'))) {
