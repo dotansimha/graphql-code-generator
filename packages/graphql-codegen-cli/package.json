@@ -69,6 +69,7 @@
     "listr-update-renderer": "^0.5.0",
     "listr2": "^4.0.5",
     "log-symbols": "^4.0.0",
+    "log-update": "4.0.0",
     "mkdirp": "^1.0.4",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",

@@ -11,7 +11,7 @@ import {
 import { codegen } from '@graphql-codegen/core';
 
 import { AggregateError } from '@graphql-tools/utils';
-
+import { Renderer } from './utils/new-renderere';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
@@ -172,7 +172,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const isTest = process.env.NODE_ENV === 'test';
 
-  const tasks = new Listr<unknown>(
+  const tasks = new Listr<unknown, typeof Renderer>(
     [
       {
         title: 'Parse Configuration',
@@ -363,10 +363,11 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       },
     ],
     {
-      rendererOptions: {
-        clearOutput: false,
-        collapse: true,
-      },
+      renderer: Renderer,
+      // rendererOptions: {
+      //   clearOutput: false,
+      //   collapse: true,
+      // },
       rendererSilent: isTest || config.silent,
       exitOnError: true,
     }
