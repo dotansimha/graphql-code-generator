@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.6.4
+
+### Patch Changes
+
+- 92f714278: Revert "Upgrade latest version"
+
 ## 2.6.3
 
 ### Patch Changes
