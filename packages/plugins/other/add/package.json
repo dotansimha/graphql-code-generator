@@ -42,9 +42,6 @@
   "typescript": {
     "definition": "dist/typings/index.d.ts"
   },
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
   "publishConfig": {
     "directory": "dist",
     "access": "public"

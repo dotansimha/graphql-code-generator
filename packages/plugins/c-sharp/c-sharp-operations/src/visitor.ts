@@ -40,7 +40,7 @@ import {
   isValueType,
   wrapFieldType,
   CSharpDeclarationBlock,
-} from '../../common/common.js';
+} from '@graphql-codegen/c-sharp-common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;

@@ -5113,17 +5113,16 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
-bob-the-bundler@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-2.0.0.tgz#a0b5971e557d15f53c942e559a979542786677fc"
-  integrity sha512-3/qnKDSlUc/65hDgJLK/t7P2eWYKJF8Siz3Cu5mJRgMvtvYnbhKc5lbJyda/Y1sox1fnePHfBn+mFd/L/Z9KtA==
+bob-the-bundler@3.0.0-canary-2056140.0:
+  version "3.0.0-canary-2056140.0"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-3.0.0-canary-2056140.0.tgz#fa31195c98bf94f3bf919f66ad3d6dad08995faa"
+  integrity sha512-eLNkBSKVlVKq/SOfkI9pp7LXPBnTML5r6NhGq/aQQJUrvFg1yqMcvgYJOfHY1UkPhmk3oMmoSyZE1kNyMCh2xQ==
   dependencies:
     "@rollup/plugin-json" "^4.1.0"
     "@rollup/plugin-node-resolve" "^13.3.0"
     "@vercel/ncc" "^0.34.0"
     builtins "^5.0.1"
     consola "^2.15.3"
-    cosmiconfig "^7.0.1"
     cross-spawn "^7.0.3"
     dependency-graph "^0.11.0"
     fs-extra "^10.1.0"

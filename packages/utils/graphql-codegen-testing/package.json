@@ -25,9 +25,6 @@
   "typescript": {
     "definition": "dist/typings/index.d.ts"
   },
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
   "scripts": {
     "lint": "eslint **/*.ts",
     "prepack": "bob prepack"
@@ -58,5 +55,8 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "bob": {
+    "check": false
+  }
 }

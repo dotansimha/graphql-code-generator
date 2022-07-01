@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.3.2",
+    "@graphql-codegen/visitor-plugin-common": "^2.9.1",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
@@ -42,9 +43,6 @@
   "typings": "dist/typings/index.d.ts",
   "typescript": {
     "definition": "dist/typings/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
   },
   "publishConfig": {
     "directory": "dist",

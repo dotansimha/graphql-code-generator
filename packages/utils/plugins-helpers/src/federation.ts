@@ -14,7 +14,7 @@ import {
 import merge from 'lodash/merge.js';
 import { getBaseType } from './utils.js';
 import { MapperKind, mapSchema, astFromObjectType, getRootTypeNames } from '@graphql-tools/utils';
-import { oldVisit } from '.';
+import { oldVisit } from './index.js';
 
 /**
  * Federation Spec

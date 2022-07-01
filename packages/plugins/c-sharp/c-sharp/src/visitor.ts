@@ -36,7 +36,7 @@ import {
   convertSafeName,
   wrapFieldType,
   getListTypeField,
-} from '../../common/common.js';
+} from '@graphql-codegen/c-sharp-common';
 import { pascalCase } from 'change-case-all';
 import {
   JsonAttributesSource,
