@@ -16,7 +16,7 @@
     "prerelease": "yarn build",
     "release": "changeset publish",
     "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
-    "generate:examples": "node packages/graphql-codegen-cli/dist/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
+    "generate:examples": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env"
   },
   "workspaces": [
     "packages/*",
