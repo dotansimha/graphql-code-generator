@@ -104,7 +104,7 @@ describe('import-types preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from './types.js';\n`,
+            content: `import * as Types from './types';\n`,
           },
         },
       ])
@@ -130,7 +130,7 @@ describe('import-types preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import type * as Types from './types.js';\n`,
+            content: `import type * as Types from './types';\n`,
           },
         },
       ])
@@ -154,7 +154,7 @@ describe('import-types preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).toEqual(
-      expect.arrayContaining([{ add: { content: `import * as Types from './types.js';\n` } }])
+      expect.arrayContaining([{ add: { content: `import * as Types from './types';\n` } }])
     );
   });
 
@@ -184,7 +184,7 @@ describe('import-types preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).not.toEqual(
-      expect.arrayContaining([{ add: { content: `import * as Types from '../types.js';\n` } }])
+      expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
     );
   });
 

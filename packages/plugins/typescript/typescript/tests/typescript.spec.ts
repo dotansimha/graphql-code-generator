@@ -839,7 +839,7 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend[0]).toBe(`import MyEnum from './files.js';`);
+      expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
     });
 
     it('#4834 - enum members should be quoted if numeric', async () => {
@@ -925,7 +925,7 @@ describe('TypeScript', () => {
         },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
-      expect(result.prepend).toContain(`import { MyEnum } from './files.js';`);
+      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
       expect(result.content).toContain(`enum GQL_OtherEnum {`);
       expect(result.content).toContain(`a?: Maybe<MyEnum>;`);
       expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
@@ -1876,7 +1876,7 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend).toContain(`import { MyScalar } from '../../scalars.js';`);
+      expect(result.prepend).toContain(`import { MyScalar } from '../../scalars';`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
         ID: string;
@@ -1922,9 +1922,9 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       // It seems like we don't group imports...
-      expect(result.prepend).toContain(`import MyScalar from '../../scalars.js';`);
-      expect(result.prepend).toContain(`import { MyOtherScalar } from '../../scalars.js';`);
-      expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars.js';`);
+      expect(result.prepend).toContain(`import MyScalar from '../../scalars';`);
+      expect(result.prepend).toContain(`import { MyOtherScalar } from '../../scalars';`);
+      expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars';`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
         ID: string;
@@ -2530,7 +2530,7 @@ describe('TypeScript', () => {
         { outputFile: '' }
       );
 
-      expect(result.prepend).toContain("import { MyType as MyTypeModel } from './someModule.js';.js");
+      expect(result.prepend).toContain("import { MyType as MyTypeModel } from './someModule';");
       expect(result.content).toBeSimilarStringTo(`
       export type DirectiveArgumentAndInputFieldMappings = {
         AsNumber: MyTypeModel;
@@ -3258,7 +3258,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.prepend).toContain(`import { MyEnum } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
 
       validateTs(result);
     });
@@ -3275,7 +3275,7 @@ describe('TypeScript', () => {
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.content).toContain(`export { MyEnum }`);
       expect(result.prepend).toContain(`import MyEnum = NS.ETest;`);
-      expect(result.prepend).toContain(`import { NS } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { NS } from './my-file';`);
 
       validateTs(result);
     });
@@ -3292,7 +3292,7 @@ describe('TypeScript', () => {
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.prepend).toContain(`import MyEnum = NS.MyEnum;`);
-      expect(result.prepend).toContain(`import { NS } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { NS } from './my-file';`);
 
       validateTs(result);
     });
@@ -3307,7 +3307,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.prepend).toContain(`import { MyCustomEnum } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { MyCustomEnum } from './my-file';`);
       expect(result.prepend).toContain(`import MyEnum = MyCustomEnum;`);
       expect(result.content).toContain(`export { MyEnum };`);
 
@@ -3325,8 +3325,8 @@ describe('TypeScript', () => {
 
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.content).not.toContain(`export enum MyEnum2`);
-      expect(result.prepend).toContain(`import { MyEnum } from './my-file.js';`);
-      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
 
       validateTs(result);
     });

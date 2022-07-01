@@ -155,7 +155,7 @@ test('should include import statement', () => {
   });
 
   expect(output).toBeSimilarStringTo(`
-    import * as core from "../types.js";
+    import * as core from "../types";
   `);
 });
 

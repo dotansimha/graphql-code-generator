@@ -337,7 +337,7 @@ async function test() {
       })) as Types.ComplexPluginOutput;
       const output = await validate(result, config, docs, schema, '');
 
-      expect(output).toContain(`import * as Operations from './operations.js';`);
+      expect(output).toContain(`import * as Operations from './operations';`);
       expect(output).toContain(
         `(Operations.FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');`
       );

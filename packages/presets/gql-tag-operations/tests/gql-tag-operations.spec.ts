@@ -30,7 +30,7 @@ describe('gql-tag-operations-preset', () => {
     expect(result).toHaveLength(3);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual('export * from "./gql.js".js');
+    expect(indexFile.content).toEqual('export * from "./gql"');
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -85,7 +85,7 @@ describe('gql-tag-operations-preset', () => {
     expect(result).toHaveLength(3);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual('export * from "./gql.js".js');
+    expect(indexFile.content).toEqual('export * from "./gql"');
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');

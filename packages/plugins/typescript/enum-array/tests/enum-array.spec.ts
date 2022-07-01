@@ -18,7 +18,7 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], { importFrom: './generated-types' })) as Types.ComplexPluginOutput;
 
       expect(result.prepend).toBeSimilarStringTo(`
-        import { MyEnum } from "./generated-types.js";
+        import { MyEnum } from "./generated-types";
       `);
       expect(result.content).toBeSimilarStringTo(`
         const MY_ENUM: MyEnum[] = ['A', 'B'];

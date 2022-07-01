@@ -427,14 +427,14 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import { AppModule } from './path/to/file.js';`);
+      expect(content.prepend).toContain(`import { AppModule } from './path/to/file';`);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: AppModule
         })
         export class MyFeedGQL
       `);
-      expect(content.prepend).toContain(`import { ExtraModule } from './extra.js';`);
+      expect(content.prepend).toContain(`import { ExtraModule } from './extra';`);
 
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({
@@ -727,7 +727,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule import
-      expect(content.prepend).toContain(`import { AppModule } from '../app.module.js';`);
+      expect(content.prepend).toContain(`import { AppModule } from '../app.module';`);
       // NgModule in `providedIn`
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({ providedIn: AppModule })

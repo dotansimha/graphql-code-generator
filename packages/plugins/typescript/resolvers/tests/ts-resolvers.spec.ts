@@ -236,7 +236,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
     };
     const result = await plugin(schema, [], config, { outputFile: '' });
     expect(result.prepend).toContain(
-      "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts.js';.js"
+      "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts';"
     );
     expect(result.prepend).toContain('export { ResolverFnAuthenticated };');
     expect(result.content).toBeSimilarStringTo(`
@@ -481,7 +481,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       `
       );
 
-      expect(mergedOutput).toContain(`import { MyEnum } from './enums.js'`);
+      expect(mergedOutput).toContain(`import { MyEnum } from './enums'`);
       expect(mergedOutput).toContain(`export { MyEnum }`);
       expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).toContain('EnumResolverSignature');
@@ -895,7 +895,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -970,7 +970,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -1044,7 +1044,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import ContextType from './my-file.js';`);
+    expect(result.prepend).toContain(`import ContextType from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -1119,7 +1119,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import type { default as ContextType } from './my-file.js';`);
+    expect(result.prepend).toContain(`import type { default as ContextType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -1198,7 +1198,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { ContextTypeOne, ContextTypeTwo } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { ContextTypeOne, ContextTypeTwo } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -1227,7 +1227,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { AuthenticatedContext } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { AuthenticatedContext } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -1251,7 +1251,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomCtx, AuthenticatedContext } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyCustomCtx, AuthenticatedContext } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -1275,7 +1275,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { ContextTypeOne, AuthenticatedContext } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { ContextTypeOne, AuthenticatedContext } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -1318,7 +1318,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
-    expect(result.prepend).toContain(`import { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type.js';`);
+    expect(result.prepend).toContain(`import { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
     await validate(result, {}, testSchema);
   });
 
@@ -1334,7 +1334,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend).toContain(`import { MyResolverFn as ResolverFn } from './my-type.js';`);
+      expect(result.prepend).toContain(`import { MyResolverFn as ResolverFn } from './my-type';`);
       expect(result.prepend).toContain(`export { ResolverFn };`);
       await validate(result, {}, testSchema);
     });
@@ -1350,7 +1350,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend).toContain(`import { ResolverFn } from './my-type.js';`);
+      expect(result.prepend).toContain(`import { ResolverFn } from './my-type';`);
       expect(result.prepend).toContain(`export { ResolverFn };`);
       await validate(result, {}, testSchema);
     });
@@ -2356,8 +2356,8 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       expect(output.prepend.filter(t => t.includes('import')).length).toBe(2);
       expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
       expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
-      expect(tsContent.prepend.includes(`import { ProjectRole } from '../entities.js';`)).toBeTruthy();
-      expect(output.prepend.includes(`import { ProjectRole } from '../entities.js';`)).toBeFalsy();
+      expect(tsContent.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeTruthy();
+      expect(output.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeFalsy();
     });
 
     it('#3264 - enumValues is not being applied to directive resolver', async () => {

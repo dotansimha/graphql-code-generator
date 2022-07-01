@@ -299,7 +299,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper.js';`);
+    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
@@ -332,7 +332,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper.js';`);
+    expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<MyType>>;
@@ -438,7 +438,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyType as DatabaseMyType } from './my-type.js';`);
+    expect(result.prepend).toContain(`import { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<DatabaseMyType>;
@@ -472,7 +472,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type.js';`);
+    expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<DatabaseMyType>;
@@ -508,7 +508,7 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(
-      `import type { default as DatabaseMyOtherType, MyType as DatabaseMyType } from './my-type.js';`
+      `import type { default as DatabaseMyOtherType, MyType as DatabaseMyType } from './my-type';`
     );
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
@@ -719,7 +719,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -802,7 +802,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -1033,7 +1033,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyBaseType } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyBaseType } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyOtherType'] = ResolversParentTypes['MyOtherType']> = {
@@ -1195,7 +1195,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyNamespace } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
@@ -1247,7 +1247,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyNamespace } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
 
     expect(result.content).toContain(`<ContextType = MyNamespace.MyContextType>`);
     expect(result.content).not.toContain(`<ContextType = MyNamespace>`);
@@ -1264,7 +1264,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyNamespace } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
@@ -1316,7 +1316,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyNamespace } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
@@ -1370,7 +1370,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { MyNamespace } from './my-file.js';`);
+    expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {

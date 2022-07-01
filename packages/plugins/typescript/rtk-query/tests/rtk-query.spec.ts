@@ -41,7 +41,7 @@ describe('RTK Query', () => {
       }
     )) as Types.ComplexPluginOutput;
 
-    expect(content.prepend).toContain("import { api } from './baseApi.js';.js");
+    expect(content.prepend).toContain("import { api } from './baseApi';");
 
     expect(content.content).toMatchSnapshot();
   });
@@ -61,7 +61,7 @@ describe('RTK Query', () => {
       }
     )) as Types.ComplexPluginOutput;
 
-    expect(content.prepend).toContain("import { api } from './baseApi.js';.js");
+    expect(content.prepend).toContain("import { api } from './baseApi';");
 
     expect(content.content).toMatchSnapshot();
   });
@@ -82,7 +82,7 @@ describe('RTK Query', () => {
       }
     )) as Types.ComplexPluginOutput;
 
-    expect(content.prepend).toContain("import { api } from './baseApi.js';.js");
+    expect(content.prepend).toContain("import { api } from './baseApi';");
     expect(content.content).toContain('overrideExisting: module.hot?.status() === "apply",');
 
     expect(content.content).toMatchSnapshot();
@@ -103,7 +103,7 @@ describe('RTK Query', () => {
       }
     )) as Types.ComplexPluginOutput;
 
-    expect(content.prepend).not.toContain("import { api } from './baseApi.js';.js");
+    expect(content.prepend).not.toContain("import { api } from './baseApi';");
     expect(content.content).not.toContain('api.injectEndpoints');
 
     expect(content.content).toMatchSnapshot();

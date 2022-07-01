@@ -148,7 +148,7 @@ describe('React-Query', () => {
         `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
 
-      expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file.js';`);
+      expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
           TError = unknown
@@ -241,7 +241,7 @@ describe('React-Query', () => {
       expect(out.prepend).toContain(
         `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
       );
-      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file.js';`);
+      expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
           TData = TTestQuery,
           TError = unknown
@@ -292,7 +292,7 @@ describe('React-Query', () => {
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
-      expect(out.prepend).toContain(`import type { customFetcher } from './my-file.js';`);
+      expect(out.prepend).toContain(`import type { customFetcher } from './my-file';`);
     });
 
     it("Should generate fetcher field when exposeFetcher is true and the fetcher isn't a react hook", async () => {

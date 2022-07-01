@@ -156,7 +156,7 @@ describe('Flow Plugin', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-        /** 
+        /**
          * MyInput
          * multiline
          */
@@ -263,12 +263,12 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
         /** this is a */
-        A: 'A', 
+        A: 'A',
         /** this is b */
         B: 'B'
       });
-      
-      
+
+
       /** custom enum */
       export type MyEnum = $Values<typeof MyEnumValues>;`);
 
@@ -293,7 +293,7 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
-        A: 'A', 
+        A: 'A',
         B: 'B'
       });`);
       validateFlow(result);
@@ -388,7 +388,7 @@ describe('Flow Plugin', () => {
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
-        MyValue: 'My_Value', 
+        MyValue: 'My_Value',
         MyOtherValue: '_MyOtherValue'
       });
 
@@ -711,7 +711,7 @@ describe('Flow Plugin', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
-      expect(result.prepend).toContain(`import { type MyEnum } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { type MyEnum } from './my-file';`);
 
       validateFlow(result);
     });
@@ -726,7 +726,7 @@ describe('Flow Plugin', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
-      expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file.js';`);
+      expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
 
       validateFlow(result);
     });
@@ -842,7 +842,7 @@ describe('Flow Plugin', () => {
         type MyType {
           foo: MyOtherType!
         }
-        
+
         type MyOtherType {
           bar: String!
         }
@@ -864,7 +864,7 @@ describe('Flow Plugin', () => {
       type MyOtherType {
         bar: String!
       }
-      
+
       union MyUnion = MyType | MyOtherType
       `);
       const result = await plugin(schema, [], {}, { outputFile: '' });
