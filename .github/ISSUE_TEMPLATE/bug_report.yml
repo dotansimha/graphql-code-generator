@@ -1,0 +1,101 @@
+name: '🐛 Bug report'
+description: Create a report to help us improve
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue :pray:.
+
+        The issues on this repo are being tracked and monitored according to our [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Before submitting a new bug/issue, please check the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow)
+
+        After reading the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Check out and update the current state of this issue:
+
+        - [ ] 1. The issue provides a [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example) available on [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template).
+          - _Make sure to fork this template and run `yarn generate` in the terminal._
+          - _Please make sure the Codegen and plugins version under `package.json` matches yours._
+        - [ ] 2. A failing test has been provided
+        - [ ] 3. A local solution has been provided
+        - [ ] 4. A pull request is pending review
+
+        The more information you fill in, the better the community can help you.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: Provide a clear and concise description of the challenge you are running into.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Your Example Website or App
+      description: |
+        Which website or app were you using when the bug happened?
+        Note:
+        - Your bug will may get fixed much faster if we can run your code and it doesn't have dependencies other than the `@graphql-codegen/*` npm related packages / dependencies.
+        - To create a shareable code example you can use [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template). Please no localhost URLs.
+        - Please read these tips for providing a minimal example: https://stackoverflow.com/help/minimal-reproducible-example.
+      placeholder: |
+        e.g. https://codesandbox.io/...... OR Github Repo
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce the Bug or Issue
+      description: Describe the steps we have to take to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Provide a clear and concise description of what you expected to happen.
+      placeholder: |
+        As a user, I expected ___ behavior but i am seeing ___
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots_or_videos
+    attributes:
+      label: Screenshots or Videos
+      description: |
+        If applicable, add screenshots or a video to help explain your problem.
+        For more information on the supported file image/file types and the file size limits, please refer
+        to the following link: https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files
+      placeholder: |
+        You can drag your video or image files inside of this editor ↓
+  - type: textarea
+    id: platform
+    attributes:
+      label: Platform
+      value: |
+        - OS: [e.g. macOS, Windows, Linux]
+        - NodeJS: [e.g. 18.5.0]
+        - `graphql` version: [e.g. 16.3.0]
+        - `@graphql-codegen/*` version(s): [e.g. 2.6.2]
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Codegen Config File
+      description: Your local Codegen config file (YAML/JSON...)
+      placeholder: |
+        schema: schema.graphql
+        documents: document.graphql
+        generates:
+          types.ts:
+            plugins:
+              - typescript
+              - typescript-operations
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.

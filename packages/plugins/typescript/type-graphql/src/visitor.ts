@@ -415,12 +415,12 @@ export class TypeGraphQLVisitor<
     node: InputValueDefinitionNode,
     key?: number | string,
     parent?: any,
-    path?: any,
-    ancestors?: TypeDefinitionNode[]
+    path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
   ): string {
     const parentName = ancestors?.[ancestors.length - 1].name.value;
     if (parent && !this.hasTypeDecorators(parentName)) {
-      return this.typescriptVisitor.InputValueDefinition(node, key, parent);
+      return this.typescriptVisitor.InputValueDefinition(node, key, parent, path, ancestors);
     }
 
     const fieldDecorator = this.config.decoratorName.field;

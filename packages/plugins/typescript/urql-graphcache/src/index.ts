@@ -257,9 +257,8 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
 
       'export type GraphCacheResolvers = {\n' + resolvers.join(',\n') + '\n};',
 
-      'export type GraphCacheOptimisticUpdaters = {\n  ' +
-        (optimisticUpdaters ? optimisticUpdaters.join(',\n  ') : '{}') +
-        '\n};',
+      'export type GraphCacheOptimisticUpdaters = ' +
+        (optimisticUpdaters ? '{\n  ' + optimisticUpdaters.join(',\n  ') + '\n};' : '{};'),
 
       'export type GraphCacheUpdaters = {\n' +
         '  Mutation?: ' +
