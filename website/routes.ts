@@ -35,6 +35,7 @@ export function getRoutes(): IRoutes {
           ['require-field', 'require field'],
           ['naming-convention', 'Naming Convention'],
           ['lifecycle-hooks', 'Lifecycle Hooks'],
+          ['multiproject-config', 'Multi Project'],
         ],
       },
       'docs/advanced': {
