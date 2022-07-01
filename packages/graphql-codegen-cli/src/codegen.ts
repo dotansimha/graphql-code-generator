@@ -378,33 +378,20 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     }
   );
 
-  try {
-    const context = await tasks.run();
+  // All the errors throw in `listr2` are collected in context
+  // Running tasks doesn't throw anything
+  const executedContext = await tasks.run();
 
-    const errors = context.errors.map(subErr =>
+  if (executedContext.errors.length > 0) {
+    const errors = executedContext.errors.map(subErr =>
       isDetailedError(subErr)
         ? `${subErr.message} for "${subErr.source}"${subErr.details}`
         : subErr.message || subErr.toString()
     );
-    const newErr = new AggregateError(context.errors, `${errors.join('\n\n')}`);
+    const newErr = new AggregateError(executedContext.errors, `${errors.join('\n\n')}`);
     // Best-effort to all stack traces for debugging
-    newErr.stack = `${newErr.stack}\n\n${context.errors.map(subErr => subErr.stack).join('\n\n')}`;
-    if (errors.length > 0) {
-      throw newErr;
-    }
-  } catch (err) {
-    if (isListrError(err)) {
-      const allErrs = err.errors.map(subErr =>
-        isDetailedError(subErr)
-          ? `${subErr.message} for "${subErr.source}"${subErr.details}`
-          : subErr.message || subErr.toString()
-      );
-      const newErr = new AggregateError(err.errors, `${err.message} ${allErrs.join('\n\n')}`);
-      // Best-effort to all stack traces for debugging
-      newErr.stack = `${newErr.stack}\n\n${err.errors.map(subErr => subErr.stack).join('\n\n')}`;
-      throw newErr;
-    }
-    throw err;
+    newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
+    throw newErr;
   }
 
   return result;
