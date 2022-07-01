@@ -1,6 +1,6 @@
 ---
-"@graphql-codegen/typescript": patch
-"@graphql-codegen/visitor-plugin-common": patch
+"@graphql-codegen/typescript": minor
+"@graphql-codegen/visitor-plugin-common": minor
 ---
 
 Add @Deprecated support for input
