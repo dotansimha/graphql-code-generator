@@ -196,7 +196,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
-                const outputDocuments: Types.DocumentFile[] = [];
+                let outputDocuments: Types.DocumentFile[] = [];
                 const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
                 const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
                   outputConfig.documents
@@ -243,23 +243,25 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       task: wrapTask(
                         async () => {
                           debugLog(`[CLI] Loading Documents`);
-                          // get different cache for shared docs and output specific docs
-                          const results = await Promise.all(
-                            [rootDocuments, outputSpecificDocuments].map(docs => {
-                              const hash = JSON.stringify(docs);
-                              return cache('documents', hash, async () => {
-                                const documents = await context.loadDocuments(docs);
-                                return {
-                                  documents,
-                                };
-                              });
-                            })
-                          );
-
-                          const documents = results.flatMap(result => result.documents);
-                          if (documents.length > 0) {
-                            outputDocuments.push(...documents);
+                          const documentPointerMap: any = {};
+                          const allDocumentsDenormalizedPointers = [...rootDocuments, ...outputSpecificDocuments];
+                          for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
+                            if (typeof denormalizedPtr === 'string') {
+                              documentPointerMap[denormalizedPtr] = {};
+                            } else if (typeof denormalizedPtr === 'object') {
+                              Object.assign(documentPointerMap, denormalizedPtr);
+                            }
                           }
+
+                          const hash = JSON.stringify(documentPointerMap);
+                          const result = await cache('documents', hash, async () => {
+                            const documents = await context.loadDocuments(documentPointerMap);
+                            return {
+                              documents,
+                            };
+                          });
+
+                          outputDocuments = result.documents;
                         },
                         filename,
                         `Load GraphQL documents: ${filename}`,

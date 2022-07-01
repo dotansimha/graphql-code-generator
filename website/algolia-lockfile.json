@@ -1113,6 +1113,29 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-multiproject-config",
+    "headings": ["Configuration file format", "Command to generate files"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Configuration file format",
+        "anchor": "configuration-file-format"
+      },
+      {
+        "children": [],
+        "title": "Command to generate files",
+        "anchor": "command-to-generate-files"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com/docs/config-reference/multiproject-config",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Code Generator", "Config Reference", "Multi Project"],
+    "source": "Code Generator",
+    "title": "Multi Project",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-named-operations-object",
     "headings": ["How to use?"],
     "toc": [

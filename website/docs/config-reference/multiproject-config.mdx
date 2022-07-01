@@ -1,0 +1,62 @@
+---
+id: multiproject-config
+title: 'Multi Project'
+---
+
+In some cases, it's useful to have multiple projects in the same config file.
+
+For example, in a monorepo, the VSCode GraphQL plugin will automatically pick up the right config for the right folder.
+
+<p>&nbsp;</p>
+
+---
+
+<p>&nbsp;</p>
+
+## Configuration file format
+
+Here's an example for a possible config file `graphql.config.js`:
+
+```js
+/** @type {import('graphql-config').IGraphQLConfig } */
+module.exports = {
+  projects: {
+    prj1: {
+      schema: ['prj1/**/*.graphql'],
+      documents: ['prj1/**/*.gql'],
+      extensions: {
+        codegen: {
+          generates: {
+            'graphqlTypes.ts': {
+              plugins: ['typescript', 'typed-document-node']
+            }
+          }
+        }
+      }
+    },
+    prj2: {
+      schema: ['prj2/**/*.graphql'],
+      documents: ['prj2/**/*.gql'],
+      extensions: {
+        codegen: {
+          generates: {
+            'graphqlTypes.ts': {
+              plugins: ['typescript', 'typed-document-node']
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+<p>&nbsp;</p>
+
+## Command to generate files
+
+With the previous config, you can generate files with the following command:
+
+```bash
+graphql-codegen --config graphql.config.js -project prj1
+```
