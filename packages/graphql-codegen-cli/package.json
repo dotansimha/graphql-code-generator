@@ -118,6 +118,5 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module",
-  "bob": {}
+  "type": "module"
 }
