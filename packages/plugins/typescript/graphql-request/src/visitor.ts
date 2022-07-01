@@ -44,10 +44,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
-    if (this.config.rawRequest) {
-      if (this.config.documentMode !== DocumentMode.string) {
-        this._additionalImports.push(`import { print } from 'graphql'`);
-      }
+    if (this.config.rawRequest && this.config.documentMode !== DocumentMode.string) {
+      this._additionalImports.push(`import { print } from 'graphql'`);
     }
   }
 

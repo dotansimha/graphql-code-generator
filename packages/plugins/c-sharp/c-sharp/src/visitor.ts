@@ -144,12 +144,10 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       attributes.push(`[Obsolete("${deprecationReason}")]`);
     }
 
-    if (this._parsedConfig.emitJsonAttributes) {
-      if (node.kind === Kind.FIELD_DEFINITION) {
-        const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
-        if (jsonPropertyAttribute != null) {
-          attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
-        }
+    if (this._parsedConfig.emitJsonAttributes && node.kind === Kind.FIELD_DEFINITION) {
+      const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
+      if (jsonPropertyAttribute != null) {
+        attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
       }
     }
 
