@@ -381,9 +381,11 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   try {
     const context = await tasks.run();
 
-    const errors = context.errors.map(subErr => {
-      return isDetailedError(subErr) ? `${subErr.details}` : subErr.message || subErr.toString();
-    });
+    const errors = context.errors.map(subErr =>
+      isDetailedError(subErr)
+        ? `${subErr.message} for "${subErr.source}"${subErr.details}`
+        : subErr.message || subErr.toString()
+    );
     const newErr = new AggregateError(context.errors, `${errors.join('\n\n')}`);
     // Best-effort to all stack traces for debugging
     newErr.stack = `${newErr.stack}\n\n${context.errors.map(subErr => subErr.stack).join('\n\n')}`;
