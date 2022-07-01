@@ -954,6 +954,23 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('#7766 - input value @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      input MyInput {
+        A: Int
+        B: Int @deprecated(reason: "input value \`B\` has been deprecated.")
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        A?: InputMaybe<Scalars['Int']>;
+        /** @deprecated input value \`B\` has been deprecated. */
+        B?: InputMaybe<Scalars['Int']>;
+      };`);
+      validateTs(result);
+    });
+
     it('#1462 - Union of scalars and argument of directive', async () => {
       const schema = buildSchema(`
       union Any = String | Int | Float | ID
