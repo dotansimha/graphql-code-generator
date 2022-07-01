@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as TJS from 'typescript-json-schema';
-import { pluginsConfigurations, presetsConfigurations } from './plugins-docs.js';
-import { generateDocs } from './docs-generator.js';
+import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
+import { generateDocs } from './docs-generator';
 import tsConfig from '../../../tsconfig.json';
 
 const ROOT_FILE = '../packages/utils/plugins-helpers/src/types.ts';

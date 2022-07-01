@@ -2,7 +2,7 @@ import { join } from 'path';
 import { writeFile } from 'fs/promises';
 import { format, resolveConfig } from 'prettier';
 import jsonPath from 'jsonpath';
-import { transformDocs } from './src/lib/transform.js';
+import { transformDocs } from './src/lib/transform';
 
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
 const DEFAULT_JSDOC_KEY = 'default';

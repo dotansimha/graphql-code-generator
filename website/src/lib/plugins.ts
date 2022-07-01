@@ -1,7 +1,7 @@
 import type { Package } from '@guild-docs/server/npm';
 import { existsSync, readFileSync } from 'fs';
-import { transformDocs } from './transform.js';
-import { canUseDOM } from '../utils.js';
+import { transformDocs } from './transform';
+import { canUseDOM } from '../utils';
 
 export const ALL_TAGS = [
   'typescript',
