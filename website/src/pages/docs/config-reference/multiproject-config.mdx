@@ -1,17 +1,8 @@
----
-id: multiproject-config
-title: 'Multi Project'
----
+# Multi Project
 
 In some cases, it's useful to have multiple projects in the same config file.
 
 For example, in a monorepo, the VSCode GraphQL plugin will automatically pick up the right config for the right folder.
-
-<p>&nbsp;</p>
-
----
-
-<p>&nbsp;</p>
 
 ## Configuration file format
 
@@ -51,12 +42,10 @@ module.exports = {
 }
 ```
 
-<p>&nbsp;</p>
-
 ## Command to generate files
 
 With the previous config, you can generate files with the following command:
 
-```bash
+```sh
 graphql-codegen --config graphql.config.js -project prj1
 ```
