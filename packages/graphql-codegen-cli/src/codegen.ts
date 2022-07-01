@@ -22,7 +22,6 @@ import { cpus } from 'os';
 // eslint-disable-next-line
 import { createRequire } from 'module';
 import { Listr, ListrTask } from 'listr2';
-import { isListrError } from './utils/cli-error';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -36,7 +35,7 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
-type Ctx = { errors: any[] };
+type Ctx = { errors: DetailedError[] | Error[] };
 
 function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
