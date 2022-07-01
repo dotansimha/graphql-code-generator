@@ -108,6 +108,11 @@ jobs:
   test:
     name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest
+    needs:
+      - lint
+      - prettier-check
+      - dev-tests
+      - esm
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
