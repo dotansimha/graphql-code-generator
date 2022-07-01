@@ -7,6 +7,11 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/no-type-checking.ts:
+    schema: ./dev-test/test-schema/schema.graphql
+    plugins:
+      - typescript:
+          enableTsNoCheck: true
   ./dev-test/test-schema/flow-types.flow.js:
     schema: ./dev-test/test-schema/schema.json
     plugins:

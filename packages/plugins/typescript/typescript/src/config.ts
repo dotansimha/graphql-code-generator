@@ -338,4 +338,14 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   allowEnumStringTypes?: boolean;
+  /**
+   * @description Put `//@ts-nocheck` comment in generated files.
+   *
+   * @exampleMarkdown
+   * ```yaml
+   *   config:
+   *     enableTsNoCheck: true
+   * ```
+   */
+  enableTsNoCheck?: boolean;
 }

@@ -38,6 +38,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 
   return {
     prepend: [
+      config.enableTsNoCheck ? '// @ts-nocheck' : '',
       ...visitor.getEnumsImports(),
       ...visitor.getDirectiveArgumentAndInputFieldMappingsImports(),
       ...visitor.getScalarsImports(),

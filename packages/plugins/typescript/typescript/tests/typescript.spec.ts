@@ -1830,6 +1830,17 @@ describe('TypeScript', () => {
       `);
       validateTs(result);
     });
+
+    it('Should contain `// @ts-nocheck`', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        "My custom scalar"
+        scalar A
+      `);
+      const result = await plugin(schema, [], { enableTsNoCheck: true }, { outputFile: '' });
+
+      expect(result.prepend).toContain(`// @ts-nocheck`);
+      validateTs(result);
+    });
   });
 
   describe('Scalars', () => {
