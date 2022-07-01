@@ -7,18 +7,16 @@ import { DetailedError } from '@graphql-codegen/plugin-helpers';
 export async function runCli(cmd: string): Promise<any> {
   await ensureGraphQlPackage();
 
-  switch (cmd) {
-    case 'init':
-      return init();
-    default: {
-      return createContext().then(context => {
-        return generate(context).catch(async error => {
-          await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+  if (cmd === 'init') {
+    return init();
+  }
 
-          throw error;
-        });
-      });
-    }
+  const context = await createContext();
+  try {
+    return await generate(context);
+  } catch (error) {
+    await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+    throw error;
   }
 }
 
