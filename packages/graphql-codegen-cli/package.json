@@ -119,7 +119,5 @@
     "access": "public"
   },
   "type": "module",
-  "bob": {
-    "check": false
-  }
+  "bob": {}
 }
