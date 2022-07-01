@@ -22,6 +22,6 @@ module.exports = ({ dirname, projectMode = true }) => {
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
     testTimeout: 20000,
-    resolver: "bob-the-bundler/jest-resolver.js"
+    resolver: 'bob-the-bundler/jest-resolver.js',
   };
 };
