@@ -1,10 +1,9 @@
 import { load } from 'js-yaml';
 import { codegen } from '@graphql-codegen/core';
 import { parse } from 'graphql';
-import type { GraphQLError } from 'graphql';
-import { pluginLoaderMap, presetLoaderMap } from './plugins.js';
-import { normalizeConfig } from './utils.js';
-import { canUseDOM } from '../../utils.js';
+import { pluginLoaderMap, presetLoaderMap } from './plugins';
+import { normalizeConfig } from './utils';
+import { canUseDOM } from '../../utils';
 
 if (canUseDOM) {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function
@@ -86,7 +85,7 @@ export async function generate(config: string, schema: string, documents?: strin
     if (error.details) {
       return `
       ${error.message}:
-      
+
       ${error.details}
       `;
     }
@@ -94,7 +93,7 @@ export async function generate(config: string, schema: string, documents?: strin
     if (error.errors) {
       return error.errors
         .map(
-          subError => `${subError.message}: 
+          subError => `${subError.message}:
 ${subError.details}`
         )
         .join('\n');
