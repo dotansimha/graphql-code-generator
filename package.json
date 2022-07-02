@@ -93,7 +93,7 @@
     "stencil-apollo": "0.1.6",
     "svelte": "3.48.0",
     "ts-jest": "27.1.5",
-    "ts-node": "10.8.1",
+    "ts-node": "10.8.2",
     "tslib": "2.4.0",
     "typescript": "4.7.4",
     "urql": "2.2.2",
@@ -122,6 +122,6 @@
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
-    "ts-node": "10.8.1"
+    "ts-node": "10.8.2"
   }
 }
