@@ -11,12 +11,12 @@ indexToAlgolia({
   source: 'Code Generator',
   dryMode: process.env.ALGOLIA_DRY_RUN === 'true',
   domain: process.env.SITE_URL,
-  postProcessor: (objects) => objects.map(o => {
-    if (o.url.includes('plugin-hub/')) {
-      o.type = 'Plugin'
-    }
-    return o
-  }),
+  postProcessor: objects =>
+    objects.map(o => {
+      if (o.url.includes('plugin-hub/')) {
+        o.type = 'Plugin';
+      }
+      return o;
+    }),
   lockfilePath: resolve(__dirname, '../algolia-lockfile.json'),
 });
-
