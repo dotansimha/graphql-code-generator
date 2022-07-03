@@ -21,6 +21,9 @@ on:
 
 jobs:
   changes:
+    permissions:
+      contents: read  # for dorny/paths-filter to fetch a list of changed files
+      pull-requests: read  # for dorny/paths-filter to read pull requests
     name: Check Changeset
     runs-on: ubuntu-latest
     outputs:

@@ -3,8 +3,14 @@ on:
   pull_request:
     paths:
       - 'website/**'
+permissions:
+  contents: read
+
 jobs:
   algolia-records-check:
+    permissions:
+      contents: read  # for actions/checkout to fetch code
+      pull-requests: write  # for marocchino/sticky-pull-request-comment to create or update PR comment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
