@@ -153,7 +153,7 @@ export interface RawResolversConfig extends RawConfig {
    *     rootValueType: ./my-types#MyRootValue
    * ```
    */
-  directiveContextTypes?: Array<string>;
+  rootValueType?: string;
   /**
    * @description Use this to set a custom type for a specific field `context` decorated by a directive.
    * It will only affect the targeted resolvers.
@@ -172,7 +172,7 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    *
    */
-  rootValueType?: string;
+  directiveContextTypes?: Array<string>;
   /**
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
