@@ -59,6 +59,11 @@ jobs:
   dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        method:
+          - 'cjs'
+          - 'esm'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -79,9 +84,9 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test dev-tests
+      - name: Test dev-tests ${{matrix.method}}
         run: |
-          yarn run generate:examples
+          yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   esm:
     name: Testing ESM
