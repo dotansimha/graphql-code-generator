@@ -71,13 +71,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 17
-      # - name: Cache Yarn
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: '**/node_modules'
-      #     key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
-      #     restore-keys: |
-      #       ${{runner.os}}-17-16-yarn-
+      - name: Cache Yarn
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
+          restore-keys: |
+            ${{runner.os}}-17-16-yarn-
       - name: Install Dependencies
         run: yarn
       - name: Build

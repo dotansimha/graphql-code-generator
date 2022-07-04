@@ -2346,7 +2346,7 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/load@^7.3.0", "@graphql-tools/load@^7.5.5", "@graphql-tools/load@^7.7.0":
+"@graphql-tools/load@^7.5.5", "@graphql-tools/load@^7.7.0":
   version "7.7.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.7.0.tgz#668f70f09bc1c34b87c3267853cf73451897a22e"
   integrity sha512-6KX7Z8BtlFScDr0pIac92QZWlPGbHcpNMesX/6Y3Vsp3FeFnAYfzZldXZQcJoW7Yl+gHdFwYVq683wSH64kNrw==
