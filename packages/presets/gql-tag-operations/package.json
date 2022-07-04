@@ -27,7 +27,7 @@
     "@graphql-codegen/gql-tag-operations": "^1.2.12",
     "@graphql-codegen/plugin-helpers": "^2.3.2",
     "@graphql-codegen/visitor-plugin-common": "^2.7.5",
-    "@graphql-tools/utils": "^8.5.2",
+    "@graphql-tools/utils": "^8.8.0",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {

@@ -20,7 +20,7 @@
     "@graphql-codegen/add": "^3.1.1",
     "@graphql-codegen/plugin-helpers": "^2.4.0",
     "@graphql-codegen/visitor-plugin-common": "2.10.0",
-    "@graphql-tools/utils": "^8.5.2",
+    "@graphql-tools/utils": "^8.8.0",
     "parse-filepath": "^1.0.2",
     "tslib": "~2.4.0"
   },

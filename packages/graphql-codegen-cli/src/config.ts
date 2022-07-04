@@ -236,7 +236,7 @@ export function buildOptions() {
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs.options(buildOptions()).parse(argv) as any;
+  return yargs(argv).options(buildOptions()).parse(argv) as any;
 }
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
