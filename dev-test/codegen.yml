@@ -12,6 +12,17 @@ generates:
     plugins:
       - typescript:
           enableTsNoCheck: true
+  ./dev-test/star-wars-no-type-check:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    preset: near-operation-file
+    presetConfig:
+      extension: .tsx
+      folder: notypecheck/__generated__
+      baseTypesPath: types.d.ts
+    plugins:
+      - typescript:
+          enableTsNoCheck: true
   ./dev-test/test-schema/flow-types.flow.js:
     schema: ./dev-test/test-schema/schema.json
     plugins:
