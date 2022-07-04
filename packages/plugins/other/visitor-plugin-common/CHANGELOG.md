@@ -1,5 +1,16 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.10.0
+
+### Minor Changes
+
+- aa1e6eafd: Add @Deprecated support for input
+
+### Patch Changes
+
+- a42fcbfe4: docs: Swapping rootValueType with directiveContextTypes for correctness
+- 8b10f22be: Ensure falsy enum values are still mapped
+
 ## 2.9.1
 
 ### Patch Changes
