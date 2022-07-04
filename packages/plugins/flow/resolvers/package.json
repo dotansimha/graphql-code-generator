@@ -17,7 +17,7 @@
     "@graphql-codegen/flow": "^2.2.14",
     "@graphql-codegen/plugin-helpers": "^2.4.2",
     "@graphql-codegen/visitor-plugin-common": "2.10.0",
-    "@graphql-tools/utils": "^8.1.1",
+    "@graphql-tools/utils": "^8.8.0",
     "auto-bind": "~4.0.0",
     "tslib": "~2.4.0"
   },
