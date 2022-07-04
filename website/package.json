@@ -96,7 +96,7 @@
     "react-use": "17.4.0",
     "remark-admonitions": "1.2.1",
     "shiki": "0.10.1",
-    "typescript-json-schema": "0.53.1"
+    "typescript-json-schema": "0.54.0"
   },
   "babelMacros": {
     "twin": {
