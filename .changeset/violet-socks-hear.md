@@ -2,5 +2,5 @@
 '@graphql-codegen/cli': patch
 ---
 
-Bumps @graphql-tools/url-loader that has the latest cross-undici-fetch dependency to fix the bug happens when `undici@5.6.0` resolved an inner dependency and the user gets an error like `GET/HEAD requests cannot have 'body'`.
+Bumps `@graphql-tools/url-loader` to the latest `cross-undici-fetch` version that has pinned `undici` to `~5.5.0` in order to fix a bug/breaking-change introduced with `undici@5.6.0` that causes a `GET/HEAD requests cannot have 'body'` error.
 See https://github.com/ardatan/graphql-tools/pull/4559#issue-1292915844 for more details.
