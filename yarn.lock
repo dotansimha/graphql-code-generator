@@ -5062,10 +5062,10 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
-bob-the-bundler@3.0.0-canary-557500e.0:
-  version "3.0.0-canary-557500e.0"
-  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-3.0.0-canary-557500e.0.tgz#cd4d9b9f9668a159d7508c977cf272504fee40d5"
-  integrity sha512-WsSiTL17kTf8ZUUKOEeFG7bAvwp3rBQxmpI/nT4IM8FAdLR0t2Bl2Yg6gma803F947xEwBGz8dklI4goDQG5Ww==
+bob-the-bundler@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-3.0.0.tgz#72d809940a2a8a29c988b65aff6e4189677e505d"
+  integrity sha512-FK0fsnCSn6W43CxTLkJRAvD76HMlr0i//m+p4BrifE5JcNLZ7Ah7vWsdrqQjKUm9yqeIeoCUEuA7xSJZ3OtIkQ==
   dependencies:
     "@rollup/plugin-json" "^4.1.0"
     "@rollup/plugin-node-resolve" "^13.3.0"
