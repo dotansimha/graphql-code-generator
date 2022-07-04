@@ -7,7 +7,7 @@
     "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\" .bob/ tsconfig.tsbuildinfo",
     "build": "tsc --project tsconfig.json && bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "test": "jest --forceExit --no-watchman",
+    "test": "node --expose-gc ./node_modules/.bin/jest --forceExit --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --write --list-different .",
     "prettier:check": "prettier --check .",

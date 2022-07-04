@@ -20,6 +20,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: `${ROOT_DIR}/` }),
     cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
+    setupFilesAfterEnv: [`${ROOT_DIR}/dev-test/force-gc.js`],
     collectCoverage: false,
     testTimeout: 20000,
   };
