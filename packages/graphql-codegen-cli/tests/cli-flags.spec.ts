@@ -120,6 +120,34 @@ describe('CLI Flags', () => {
     expect(config.watch).toBeFalsy();
   });
 
+  it('Should overwrite ignoreNoDocuments config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        ignoreNoDocuments: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--ignore-no-documents=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.ignoreNoDocuments).toBeFalsy();
+  });
+
+  it('Should overwrite ignoreNoDocuments config using cli flags to true', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        ignoreNoDocuments: false
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--ignore-no-documents');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.ignoreNoDocuments).toBeTruthy();
+  });
+
   it('Should set --overwrite with new YML api', async () => {
     mockConfig(`
         schema: schema.graphql

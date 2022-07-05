@@ -58,16 +58,16 @@ export async function loadSchema(
 
         ${e.message || e}
         ${e.stack || ''}
-    
+
         GraphQL Code Generator supports:
           - ES Modules and CommonJS exports (export as default or named export "schema")
           - Introspection JSON File
           - URL of GraphQL endpoint
           - Multiple files with type definitions (glob expression)
           - String in config file
-    
+
         Try to use one of above options and run codegen again.
-    
+
       `
     );
   }
@@ -97,13 +97,17 @@ export async function loadDocuments(
     ignore.push(join(process.cwd(), generatePath));
   }
 
-  const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
-    ...defaultDocumentsLoadOptions,
-    ignore,
-    loaders,
-    ...config,
-    ...config.config,
-  });
-
-  return loadedFromToolkit;
+  try {
+    const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
+      ...defaultDocumentsLoadOptions,
+      ignore,
+      loaders,
+      ...config,
+      ...config.config,
+    });
+    return loadedFromToolkit;
+  } catch (error) {
+    if (config.ignoreNoDocuments) return [];
+    throw error;
+  }
 }
