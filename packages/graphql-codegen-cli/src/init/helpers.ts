@@ -4,7 +4,7 @@ import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import detectIndent from 'detect-indent';
 import { Answers } from './types.js';
-import getLatestVersion from 'latest-version';
+import { getLatestVersion } from '../utils/get-latest-version.js';
 
 // Parses config and writes it to a file
 export async function writeConfig(answers: Answers, config: Types.Config) {
