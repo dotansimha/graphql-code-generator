@@ -59,6 +59,11 @@ jobs:
   dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        method:
+          - 'cjs'
+          - 'esm'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -79,12 +84,12 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test dev-tests
+      - name: Test dev-tests ${{matrix.method}}
         run: |
-          yarn run generate:examples
+          yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   esm:
-    name: Testing ESM
+    name: Testing exports integrity
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -106,8 +111,8 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test ESM
-        run: node scripts/test-esm.mjs
+      - name: Test ESM & CJS integrity
+        run: yarn bob check
   test:
     name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest

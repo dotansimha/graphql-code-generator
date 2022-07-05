@@ -7,7 +7,7 @@ import {
   oldVisit,
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { FlowResolversVisitor } from './visitor';
+import { FlowResolversVisitor } from './visitor.js';
 
 /**
  * @description This plugin generates resolvers signature based on your `GraphQLSchema`.

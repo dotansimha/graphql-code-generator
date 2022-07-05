@@ -1,8 +1,8 @@
 import { useMonorepo } from '@graphql-codegen/testing';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print } from 'graphql';
+import { createContext, executeCodegen } from '../src/index.js';
 import { join } from 'path';
-import { createContext, executeCodegen } from '../src';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;

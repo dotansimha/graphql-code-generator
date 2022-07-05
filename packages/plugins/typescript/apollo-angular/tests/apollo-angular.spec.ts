@@ -1,10 +1,10 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { gql } from 'graphql-tag';
-import { plugin, addToSchema } from '../src/index';
+import { plugin, addToSchema } from '../src/index.js';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index.js';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('Apollo Angular', () => {

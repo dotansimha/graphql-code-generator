@@ -1,7 +1,7 @@
-import { NormalizedScalarsMap } from './types';
+import { NormalizedScalarsMap } from './types.js';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
-import { DeclarationBlock, DeclarationBlockConfig, getConfigValue, buildScalarsFromConfig } from './utils';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { DeclarationBlock, DeclarationBlockConfig, getConfigValue, buildScalarsFromConfig } from './utils.js';
 import {
   GraphQLSchema,
   FragmentDefinitionNode,
@@ -9,10 +9,10 @@ import {
   VariableDefinitionNode,
   OperationTypeNode,
 } from 'graphql';
-import { SelectionSetToObject } from './selection-set-to-object';
-import { OperationVariablesToObject } from './variables-to-object';
-import { BaseVisitor } from './base-visitor';
-import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
+import { SelectionSetToObject } from './selection-set-to-object.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { BaseVisitor } from './base-visitor.js';
+import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
 import { pascalCase } from 'change-case-all';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {

@@ -1,4 +1,4 @@
-import { cliError } from '../src/utils/cli-error';
+import { cliError } from '../src/utils/cli-error.js';
 
 describe('cliError', () => {
   let spyProcessExit: jest.SpyInstance;

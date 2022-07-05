@@ -1,7 +1,7 @@
-import { EnumValuesMap, ParsedEnumValuesMap } from './types';
+import { EnumValuesMap, ParsedEnumValuesMap } from './types.js';
 import { GraphQLSchema, isEnumType, GraphQLEnumType } from 'graphql';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
-import { parseMapper } from './mappers';
+import { parseMapper } from './mappers.js';
 
 function escapeString(str: string) {
   return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'");

@@ -4,7 +4,7 @@ import {
   getConfigValue,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
-import { MSWRawPluginConfig } from './config';
+import { MSWRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema, print } from 'graphql';
 import { pascalCase } from 'change-case-all';

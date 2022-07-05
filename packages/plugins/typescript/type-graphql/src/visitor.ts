@@ -1,5 +1,5 @@
 import { indent, DeclarationBlock, AvoidOptionalsConfig } from '@graphql-codegen/visitor-plugin-common';
-import { TypeGraphQLPluginConfig } from './config';
+import { TypeGraphQLPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,

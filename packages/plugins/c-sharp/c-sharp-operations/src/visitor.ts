@@ -28,7 +28,7 @@ import {
   FragmentSpreadNode,
   DirectiveNode,
 } from 'graphql';
-import { CSharpOperationsRawPluginConfig } from './config';
+import { CSharpOperationsRawPluginConfig } from './config.js';
 import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import {
   getListInnerTypeNode,
@@ -40,7 +40,7 @@ import {
   isValueType,
   wrapFieldType,
   CSharpDeclarationBlock,
-} from '../../common/common';
+} from '@graphql-codegen/c-sharp-common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;

@@ -1,6 +1,6 @@
 import { buildSchema, introspectionFromSchema, parse, IntrospectionQuery, IntrospectionObjectType } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('Introspection template', () => {
   it('should output a JSON file', async () => {

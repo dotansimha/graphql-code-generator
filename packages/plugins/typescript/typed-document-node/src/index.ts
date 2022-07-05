@@ -1,6 +1,6 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptTypedDocumentNodesConfig } from './config';
+import { TypeScriptTypedDocumentNodesConfig } from './config.js';
 import { extname } from 'path';
 import {
   LoadedFragment,
@@ -8,7 +8,7 @@ import {
   DocumentMode,
   optimizeOperations,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptDocumentNodesVisitor } from './visitor';
+import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   schema: GraphQLSchema,

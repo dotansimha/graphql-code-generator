@@ -3,7 +3,7 @@ import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import detectIndent from 'detect-indent';
-import { Answers } from './types';
+import { Answers } from './types.js';
 import getLatestVersion from 'latest-version';
 
 // Parses config and writes it to a file

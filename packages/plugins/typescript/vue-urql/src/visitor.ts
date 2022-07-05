@@ -6,7 +6,7 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { VueUrqlRawPluginConfig } from './config';
+import { VueUrqlRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'change-case-all';

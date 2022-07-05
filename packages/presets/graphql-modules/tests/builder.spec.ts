@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { parse } from 'graphql';
-import { buildModule } from '../src/builder';
+import { buildModule } from '../src/builder.js';
 
 const ROOT_TYPES = ['Query'];
 

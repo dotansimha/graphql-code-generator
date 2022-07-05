@@ -1,8 +1,8 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { FlowDocumentsVisitor } from './visitor';
+import { FlowDocumentsVisitor } from './visitor.js';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-import { FlowDocumentsPluginConfig } from './config';
+import { FlowDocumentsPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   schema: GraphQLSchema,

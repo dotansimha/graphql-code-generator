@@ -1,6 +1,6 @@
-import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor.js';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
+import { DEFAULT_SCALARS } from './scalars.js';
 import {
   NormalizedScalarsMap,
   EnumValuesMap,
@@ -8,7 +8,7 @@ import {
   DeclarationKind,
   ConvertOptions,
   AvoidOptionalsConfig,
-} from './types';
+} from './types.js';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
@@ -20,7 +20,7 @@ import {
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
   buildScalarsFromConfig,
-} from './utils';
+} from './utils.js';
 import {
   NameNode,
   ListTypeNode,
@@ -45,9 +45,9 @@ import {
   ASTNode,
 } from 'graphql';
 
-import { OperationVariablesToObject } from './variables-to-object';
-import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers';
-import { parseEnumValues } from './enum-values';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers.js';
+import { parseEnumValues } from './enum-values.js';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 

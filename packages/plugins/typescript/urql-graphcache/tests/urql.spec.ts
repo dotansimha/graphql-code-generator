@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('urql graphcache', () => {
   it('Should output the cache-generic correctly', async () => {

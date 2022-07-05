@@ -1,11 +1,11 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { InputTypeVisitor } from './input-type-visitor';
-import { BaseJavaVisitor } from './base-java-visitor';
-import { OperationVisitor } from './operation-visitor';
-import { FileType } from './file-type';
-import { CustomTypeClassVisitor } from './custom-type-class';
+import { InputTypeVisitor } from './input-type-visitor.js';
+import { BaseJavaVisitor } from './base-java-visitor.js';
+import { OperationVisitor } from './operation-visitor.js';
+import { FileType } from './file-type.js';
+import { CustomTypeClassVisitor } from './custom-type-class.js';
 
 /**
  * @description This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.

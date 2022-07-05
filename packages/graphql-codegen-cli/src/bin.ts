@@ -1,5 +1,6 @@
-import { runCli } from './cli';
-import { cliError } from './utils/cli-error';
+#!/usr/bin/env node
+import { runCli } from './cli.js';
+import { cliError } from './utils/cli-error.js';
 
 const [, , cmd] = process.argv;
 

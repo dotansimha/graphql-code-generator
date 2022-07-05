@@ -1,7 +1,7 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
-import { RawJitSdkPluginConfig } from '../src/config';
-import { plugin } from '../src/index';
+import { RawJitSdkPluginConfig } from '../src/config.js';
+import { plugin } from '../src/index.js';
 import { parse, buildClientSchema, GraphQLSchema, printSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';

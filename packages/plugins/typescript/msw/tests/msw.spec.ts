@@ -1,6 +1,6 @@
 import { pascalCase } from 'change-case-all';
 import { parse } from 'graphql';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('msw', () => {
   const queryName = 'User';

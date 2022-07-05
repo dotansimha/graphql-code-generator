@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
-import { plugin } from '../src/index';
-import { CSharpOperationsRawPluginConfig } from '../src/config';
+import { plugin } from '../src/index.js';
+import { CSharpOperationsRawPluginConfig } from '../src/config.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('C# Operations', () => {

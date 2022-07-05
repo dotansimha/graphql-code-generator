@@ -1,4 +1,4 @@
-import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor.js';
 import { indent, indentMultiline, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
@@ -26,12 +26,12 @@ import {
   FragmentDefinitionNode,
   GraphQLInterfaceType,
 } from 'graphql';
-import { JavaApolloAndroidPluginConfig } from './plugin';
-import { Imports } from './imports';
+import { JavaApolloAndroidPluginConfig } from './plugin.js';
+import { Imports } from './imports.js';
 import { createHash } from 'crypto';
-import { VisitorConfig } from './visitor-config';
+import { VisitorConfig } from './visitor-config.js';
 import pluralize from 'pluralize';
-import { visitFieldArguments } from './field-arguments';
+import { visitFieldArguments } from './field-arguments.js';
 import { camelCase, pascalCase } from 'change-case-all';
 
 export interface ChildField {

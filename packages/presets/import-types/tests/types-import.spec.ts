@@ -1,4 +1,4 @@
-import preset from '../src/index';
+import preset from '../src/index.js';
 import { parse } from 'graphql';
 
 const schemaDocumentNode = parse(/* GraphQL */ `

@@ -1,4 +1,4 @@
-import { AvoidOptionalsConfig } from './types';
+import { AvoidOptionalsConfig } from './types.js';
 
 export const DEFAULT_AVOID_OPTIONALS: AvoidOptionalsConfig = {
   object: false,

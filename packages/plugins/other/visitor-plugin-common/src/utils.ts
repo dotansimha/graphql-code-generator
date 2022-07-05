@@ -22,10 +22,10 @@ import {
   isInputObjectType,
   GraphQLInputObjectType,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
-import { DEFAULT_SCALARS } from './scalars';
-import { parseMapper } from './mappers';
-import { RawConfig } from './base-visitor';
+import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { parseMapper } from './mappers.js';
+import { RawConfig } from './base-visitor.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
