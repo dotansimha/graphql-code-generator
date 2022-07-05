@@ -1,5 +1,5 @@
 import path from 'path';
-import { resolveExternalModuleAndFn } from '../src/resolve-external-module-and-fn';
+import { resolveExternalModuleAndFn } from '../src/resolve-external-module-and-fn.js';
 
 describe.only('resolveExternalModuleAndFn', () => {
   describe('Issues', () => {

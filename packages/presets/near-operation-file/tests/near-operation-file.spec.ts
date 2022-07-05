@@ -3,7 +3,7 @@ import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-
 import { generateFragmentImportStatement } from '@graphql-codegen/visitor-plugin-common';
 import { buildASTSchema, buildSchema, parse } from 'graphql';
 import path from 'path';
-import { preset } from '../src/index';
+import { preset } from '../src/index.js';
 
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
@@ -830,7 +830,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).not.toEqual(
-      expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
+      expect.arrayContaining([{ add: { content: `import * as Types from '../types.js';\n` } }])
     );
   });
 

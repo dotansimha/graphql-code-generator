@@ -11,8 +11,8 @@ import {
 import { env } from 'string-env-interpolation';
 import yargs from 'yargs';
 import { GraphQLConfig } from 'graphql-config';
-import { findAndLoadGraphQLConfig } from './graphql-config';
-import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load';
+import { findAndLoadGraphQLConfig } from './graphql-config.js';
+import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load.js';
 import { GraphQLSchema, print, GraphQLSchemaExtensions } from 'graphql';
 import yaml from 'yaml';
 import { createRequire } from 'module';
@@ -236,7 +236,7 @@ export function buildOptions() {
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs.options(buildOptions()).parse(argv) as any;
+  return yargs(argv).options(buildOptions()).parse(argv) as any;
 }
 
 export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {

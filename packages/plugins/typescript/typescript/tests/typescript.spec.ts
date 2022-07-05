@@ -1,7 +1,7 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
   it('should expose Maybe', async () => {
@@ -637,6 +637,38 @@ describe('TypeScript', () => {
       expect(output).toContain(`SomethingElse = '99'`);
     });
 
+    it('#7898 - falsy enum value set on schema with enumsAsTypes set', async () => {
+      const testSchema = new GraphQLSchema({
+        types: [
+          new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLEnumType({
+                  name: 'MyEnum',
+                  values: {
+                    EnumValueName: {
+                      value: 0,
+                    },
+                  },
+                }),
+              },
+            },
+          }),
+        ],
+      });
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        { enumsAsTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain('EnumValueName');
+      expect(output).toContain('0');
+    });
+
     it('#6532 - numeric enum values with namingConvention', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
@@ -951,6 +983,23 @@ describe('TypeScript', () => {
         /** @deprecated Enum value \`B\` has been deprecated. */
         B = 'B'
       }`);
+      validateTs(result);
+    });
+
+    it('#7766 - input value @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      input MyInput {
+        A: Int
+        B: Int @deprecated(reason: "input value \`B\` has been deprecated.")
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        A?: InputMaybe<Scalars['Int']>;
+        /** @deprecated input value \`B\` has been deprecated. */
+        B?: InputMaybe<Scalars['Int']>;
+      };`);
       validateTs(result);
     });
 

@@ -8,7 +8,7 @@ import {
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
-import buildFragmentResolver from './fragment-resolver';
+import buildFragmentResolver from './fragment-resolver.js';
 import { Source } from '@graphql-tools/utils';
 
 export type FragmentRegistry = {

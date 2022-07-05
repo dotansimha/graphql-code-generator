@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 const OUTPUT_FILE = 'com/kotlin/generated/resolvers.kt';
 

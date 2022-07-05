@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
-import { grey } from './helpers';
-import { Tags, Answers } from './types';
-import { plugins } from './plugins';
+import { grey } from './helpers.js';
+import { Tags, Answers } from './types.js';
+import { plugins } from './plugins.js';
 
 export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.QuestionCollection {
   return [

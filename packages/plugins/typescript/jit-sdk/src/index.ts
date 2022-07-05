@@ -2,8 +2,8 @@ import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-code
 import { LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
 import { extname } from 'path';
-import { RawJitSdkPluginConfig } from './config';
-import { JitSdkVisitor } from './visitor';
+import { RawJitSdkPluginConfig } from './config.js';
+import { JitSdkVisitor } from './visitor.js';
 
 export const plugin: PluginFunction<RawJitSdkPluginConfig> = (
   schema: GraphQLSchema,

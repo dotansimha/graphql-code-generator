@@ -1059,41 +1059,41 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
-    feed?: GraphCacheResolver<WithTypename<Query>, QueryFeedArgs, Array<WithTypename<Entry> | string>>;
-    entry?: GraphCacheResolver<WithTypename<Query>, QueryEntryArgs, WithTypename<Entry> | string>;
     currentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>;
+    entry?: GraphCacheResolver<WithTypename<Query>, QueryEntryArgs, WithTypename<Entry> | string>;
+    feed?: GraphCacheResolver<WithTypename<Query>, QueryFeedArgs, Array<WithTypename<Entry> | string>>;
   };
   Comment?: {
+    content?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['String'] | string>;
+    createdAt?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['Float'] | string>;
     id?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['Int'] | string>;
     postedBy?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, WithTypename<User> | string>;
-    createdAt?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['Float'] | string>;
-    content?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['String'] | string>;
     repoName?: GraphCacheResolver<WithTypename<Comment>, Record<string, never>, Scalars['String'] | string>;
   };
   Entry?: {
-    repository?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, WithTypename<Repository> | string>;
-    postedBy?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, WithTypename<User> | string>;
-    createdAt?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Float'] | string>;
-    score?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Int'] | string>;
-    hotScore?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Float'] | string>;
-    comments?: GraphCacheResolver<WithTypename<Entry>, EntryCommentsArgs, Array<WithTypename<Comment> | string>>;
     commentCount?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Int'] | string>;
+    comments?: GraphCacheResolver<WithTypename<Entry>, EntryCommentsArgs, Array<WithTypename<Comment> | string>>;
+    createdAt?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Float'] | string>;
+    hotScore?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Float'] | string>;
     id?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Int'] | string>;
+    postedBy?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, WithTypename<User> | string>;
+    repository?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, WithTypename<Repository> | string>;
+    score?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, Scalars['Int'] | string>;
     vote?: GraphCacheResolver<WithTypename<Entry>, Record<string, never>, WithTypename<Vote> | string>;
   };
   Repository?: {
-    name?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
-    full_name?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
     description?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
+    full_name?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
     html_url?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
-    stargazers_count?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['Int'] | string>;
+    name?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['String'] | string>;
     open_issues_count?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['Int'] | string>;
     owner?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, WithTypename<User> | string>;
+    stargazers_count?: GraphCacheResolver<WithTypename<Repository>, Record<string, never>, Scalars['Int'] | string>;
   };
   User?: {
-    login?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>;
     avatar_url?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>;
     html_url?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>;
+    login?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>;
   };
   Vote?: {
     vote_value?: GraphCacheResolver<WithTypename<Vote>, Record<string, never>, Scalars['Int'] | string>;
@@ -1101,22 +1101,22 @@ export type GraphCacheResolvers = {
 };
 
 export type GraphCacheOptimisticUpdaters = {
+  submitComment?: GraphCacheOptimisticMutationResolver<MutationSubmitCommentArgs, Maybe<WithTypename<Comment>>>;
   submitRepository?: GraphCacheOptimisticMutationResolver<MutationSubmitRepositoryArgs, Maybe<WithTypename<Entry>>>;
   vote?: GraphCacheOptimisticMutationResolver<MutationVoteArgs, Maybe<WithTypename<Entry>>>;
-  submitComment?: GraphCacheOptimisticMutationResolver<MutationSubmitCommentArgs, Maybe<WithTypename<Comment>>>;
 };
 
 export type GraphCacheUpdaters = {
   Mutation?: {
+    submitComment?: GraphCacheUpdateResolver<
+      { submitComment: Maybe<WithTypename<Comment>> },
+      MutationSubmitCommentArgs
+    >;
     submitRepository?: GraphCacheUpdateResolver<
       { submitRepository: Maybe<WithTypename<Entry>> },
       MutationSubmitRepositoryArgs
     >;
     vote?: GraphCacheUpdateResolver<{ vote: Maybe<WithTypename<Entry>> }, MutationVoteArgs>;
-    submitComment?: GraphCacheUpdateResolver<
-      { submitComment: Maybe<WithTypename<Comment>> },
-      MutationSubmitCommentArgs
-    >;
   };
   Subscription?: {
     commentAdded?: GraphCacheUpdateResolver<

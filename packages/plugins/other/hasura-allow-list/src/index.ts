@@ -8,7 +8,7 @@ import {
   visit,
 } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { HasuraAllowListPluginConfig } from './config';
+import { HasuraAllowListPluginConfig } from './config.js';
 
 import yaml from 'yaml';
 

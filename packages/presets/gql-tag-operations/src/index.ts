@@ -5,10 +5,10 @@ import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operatio
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import { processSources } from './process-sources';
+import { processSources } from './process-sources.js';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelPlugin from './babel';
-import * as fragmentMaskingPlugin from './fragment-masking-plugin';
+import babelPlugin from './babel.js';
+import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 
 export type FragmentMaskingConfig = {
   /**

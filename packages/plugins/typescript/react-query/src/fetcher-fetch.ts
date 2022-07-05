@@ -3,11 +3,11 @@ import {
   generateMutationKey,
   generateQueryKey,
   generateQueryVariablesSignature,
-} from './variables-generator';
+} from './variables-generator.js';
 
-import { FetcherRenderer } from './fetcher';
+import { FetcherRenderer } from './fetcher.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class FetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}

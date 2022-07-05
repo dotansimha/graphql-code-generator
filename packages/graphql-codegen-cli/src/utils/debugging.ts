@@ -1,4 +1,4 @@
-import { getLogger } from './logger';
+import { getLogger } from './logger.js';
 
 let queue: Array<{
   message: string;

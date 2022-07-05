@@ -8,8 +8,8 @@ import {
   IntValueNode,
   FloatValueNode,
 } from 'graphql';
-import { ImportsSet } from './types';
-import { Imports } from './imports';
+import { ImportsSet } from './types.js';
+import { Imports } from './imports.js';
 import { oldVisit } from '@graphql-codegen/plugin-helpers';
 
 export function visitFieldArguments(selection: FieldNode, imports: ImportsSet): string {

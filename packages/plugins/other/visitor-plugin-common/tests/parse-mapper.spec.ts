@@ -1,4 +1,4 @@
-import { parseMapper, transformMappers } from '../src/mappers';
+import { parseMapper, transformMappers } from '../src/mappers.js';
 
 describe('parseMapper', () => {
   it('Should return the correct values for a simple named mapper', () => {

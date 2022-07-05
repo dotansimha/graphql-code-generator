@@ -11,17 +11,24 @@ import {
 import { codegen } from '@graphql-codegen/core';
 
 import { AggregateError } from '@graphql-tools/utils';
+
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
-import { getPluginByName } from './plugins';
-import { getPresetByName } from './presets';
-import { debugLog } from './utils/debugging';
-import { CodegenContext, ensureContext } from './config';
+import { getPluginByName } from './plugins.js';
+import { getPresetByName } from './presets.js';
+import { debugLog } from './utils/debugging.js';
+import { CodegenContext, ensureContext } from './config.js';
 import fs from 'fs';
 import path from 'path';
 import { cpus } from 'os';
-// eslint-disable-next-line
 import { createRequire } from 'module';
 import { Listr, ListrTask } from 'listr2';
+
+/**
+ * Poor mans ESM detection.
+ * Looking at this and you have a better method?
+ * Send a PR.
+ */
+const isESMModule = (typeof __dirname === 'string') === false;
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -30,8 +37,17 @@ const makeDefaultLoader = (from: string) => {
 
   const relativeRequire = createRequire(from);
 
-  return (mod: string) => {
-    return import(relativeRequire.resolve(mod));
+  return async (mod: string) => {
+    return import(
+      isESMModule
+        ? /**
+           * For ESM we currently have no "resolve path" solution
+           * as import.meta is unavailable in a CommonJS context
+           * and furthermore unavailable in stable Node.js.
+           **/
+          mod
+        : relativeRequire.resolve(mod)
+    );
   };
 };
 

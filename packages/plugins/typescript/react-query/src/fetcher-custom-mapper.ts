@@ -1,10 +1,10 @@
 import { ParsedMapper, buildMapperImport, parseMapper } from '@graphql-codegen/visitor-plugin-common';
-import { generateInfiniteQueryKey, generateMutationKey, generateQueryKey } from './variables-generator';
+import { generateInfiniteQueryKey, generateMutationKey, generateQueryKey } from './variables-generator.js';
 
-import { CustomFetch } from './config';
-import { FetcherRenderer } from './fetcher';
+import { CustomFetch } from './config.js';
+import { FetcherRenderer } from './fetcher.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class CustomMapperFetcher implements FetcherRenderer {
   private _mapper: ParsedMapper;

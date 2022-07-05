@@ -3,8 +3,8 @@ import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema, DocumentNode, Kind } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
-import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
+import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils.js';
+import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports.js';
 import {
   FragmentImport,
   getConfigValue,

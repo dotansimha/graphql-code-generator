@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { MSWVisitor } from './visitor';
+import { MSWVisitor } from './visitor.js';
 import { extname } from 'path';
-import { MSWRawPluginConfig } from './config';
+import { MSWRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<MSWRawPluginConfig, Types.ComplexPluginOutput> = (schema, documents, config) => {
   const allAst = concatAST(documents.map(v => v.document));

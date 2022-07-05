@@ -1,5 +1,5 @@
 import { ASTNode, FragmentDefinitionNode } from 'graphql';
-import { ParsedMapper } from './mappers';
+import { ParsedMapper } from './mappers.js';
 
 /**
  * A map between the GraphQL directive name and the identifier that should be used

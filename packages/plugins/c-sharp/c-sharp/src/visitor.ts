@@ -7,7 +7,7 @@ import {
   getBaseTypeNode,
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { CSharpResolversPluginRawConfig } from './config';
+import { CSharpResolversPluginRawConfig } from './config.js';
 import {
   GraphQLSchema,
   EnumTypeDefinitionNode,
@@ -36,13 +36,13 @@ import {
   convertSafeName,
   wrapFieldType,
   getListTypeField,
-} from '../../common/common';
+} from '@graphql-codegen/c-sharp-common';
 import { pascalCase } from 'change-case-all';
 import {
   JsonAttributesSource,
   JsonAttributesSourceConfiguration,
   getJsonAttributeSourceConfiguration,
-} from './json-attributes';
+} from './json-attributes.js';
 
 export interface CSharpResolverParsedConfig extends ParsedConfig {
   namespaceName: string;
@@ -144,12 +144,10 @@ export class CSharpResolversVisitor extends BaseVisitor<CSharpResolversPluginRaw
       attributes.push(`[Obsolete("${deprecationReason}")]`);
     }
 
-    if (this._parsedConfig.emitJsonAttributes) {
-      if (node.kind === Kind.FIELD_DEFINITION) {
-        const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
-        if (jsonPropertyAttribute != null) {
-          attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
-        }
+    if (this._parsedConfig.emitJsonAttributes && node.kind === Kind.FIELD_DEFINITION) {
+      const jsonPropertyAttribute = this.jsonAttributesConfiguration.propertyAttribute;
+      if (jsonPropertyAttribute != null) {
+        attributes.push(`[${jsonPropertyAttribute}("${node.name.value}")]`);
       }
     }
 

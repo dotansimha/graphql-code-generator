@@ -1,6 +1,6 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
-import type { Profiler } from './profiler';
+import type { Profiler } from './profiler.js';
 
 export namespace Types {
   export interface GenerateOptions {

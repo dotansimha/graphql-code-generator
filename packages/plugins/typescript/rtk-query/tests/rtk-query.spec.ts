@@ -1,4 +1,4 @@
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, buildClientSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { resolve, join } from 'path';

@@ -1,11 +1,11 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src';
-import { VueApolloRawPluginConfig } from '../src/config';
+import { plugin } from '../src/index.js';
+import { VueApolloRawPluginConfig } from '../src/config.js';
 import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { plugin as tsDocumentsPlugin } from '../../operations/src/index.js';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { extract } from 'jest-docblock';
 
@@ -1279,7 +1279,7 @@ query MyFeed {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql.js';`);
       expect(content.content).toBeSimilarStringTo(`export function useTestQuery`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1296,7 +1296,7 @@ query MyFeed {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql.js';`);
       expect(content.content).toBeSimilarStringTo(`export function useTestMutation`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1313,7 +1313,7 @@ query MyFeed {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql.js';`);
       expect(content.content).toBeSimilarStringTo(`export function useTestSubscription`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1330,7 +1330,7 @@ query MyFeed {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql.js';`);
       expect(content.content).toBeSimilarStringTo(`export function useTestOneQuery`);
       expect(content.content).toBeSimilarStringTo(`export function useTestTwoMutation`);
       expect(content.content).toBeSimilarStringTo(`export function useTestThreeSubscription`);

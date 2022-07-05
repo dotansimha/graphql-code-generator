@@ -1,6 +1,6 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { buildSchema, parse } from 'graphql';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('TypedDocumentNode', () => {
   it('Should not output imports when there are no operations at all', async () => {

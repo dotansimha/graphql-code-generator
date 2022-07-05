@@ -7,8 +7,8 @@ import {
   oldVisit,
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { TypeScriptResolversVisitor } from './visitor';
-import { TypeScriptResolversPluginConfig } from './config';
+import { TypeScriptResolversVisitor } from './visitor.js';
+import { TypeScriptResolversPluginConfig } from './config.js';
 
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 

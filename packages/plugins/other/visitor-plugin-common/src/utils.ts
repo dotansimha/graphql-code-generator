@@ -22,10 +22,10 @@ import {
   isInputObjectType,
   GraphQLInputObjectType,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
-import { DEFAULT_SCALARS } from './scalars';
-import { parseMapper } from './mappers';
-import { RawConfig } from './base-visitor';
+import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { parseMapper } from './mappers.js';
+import { RawConfig } from './base-visitor.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -381,14 +381,17 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
         getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
     );
 
-    if (match) {
+    if (
+      match &&
       // recursively merge all selection sets
-      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        selection2 = {
-          ...selection2,
-          selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
-        };
-      }
+      match.kind === 'Field' &&
+      match.selectionSet &&
+      selection2.selectionSet
+    ) {
+      selection2 = {
+        ...selection2,
+        selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
+      };
     }
 
     newSelections.push(selection2);
@@ -439,6 +442,7 @@ type WrapModifiersOptions = {
   wrapOptional(type: string): string;
   wrapArray(type: string): string;
 };
+
 export function wrapTypeWithModifiers(
   baseType: string,
   type: GraphQLOutputType | GraphQLNamedType,

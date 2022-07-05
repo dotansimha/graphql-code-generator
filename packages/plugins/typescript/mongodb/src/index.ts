@@ -8,8 +8,8 @@ import {
 import { GraphQLSchema } from 'graphql';
 import { extname } from 'path';
 import gql from 'graphql-tag';
-import { TsMongoVisitor } from './visitor';
-import { TypeScriptMongoPluginConfig, Directives } from './config';
+import { TsMongoVisitor } from './visitor.js';
+import { TypeScriptMongoPluginConfig, Directives } from './config.js';
 
 export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
   schema: GraphQLSchema,
