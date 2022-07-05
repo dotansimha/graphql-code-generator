@@ -14,8 +14,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman"
   },
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "bugs": {

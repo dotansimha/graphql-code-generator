@@ -9,8 +9,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../jest.config.js",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman --config ../../jest.config.js"
   },
   "keywords": [
     "gql",

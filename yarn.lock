@@ -4202,7 +4202,7 @@
     "@urql/core" ">=2.5.0"
     wonka "^4.0.14"
 
-"@urql/introspection@0.3.2":
+"@urql/introspection@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.2.tgz#18b737e17779cecb74e612a965ed5dc17b978355"
   integrity sha512-dbszrDgTyTM1ndvdTe4X7RUciVi2zXxjHhTIrWOSvU3FODX4+90uSVtdn5bXwTuwqM4bxVEc1ekaLYEUeiNLsg==

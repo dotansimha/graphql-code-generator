@@ -10,8 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../../jest.config.js",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
     "@graphql-codegen/flow": "^2.2.14",

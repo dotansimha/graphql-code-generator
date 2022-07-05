@@ -10,8 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../jest.config.js",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman --config ../../../jest.config.js"
   },
   "devDependencies": {
     "@types/parse-filepath": "1.0.0"
