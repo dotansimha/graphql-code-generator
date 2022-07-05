@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlVisitor } from './visitor';
+import { UrqlVisitor } from './visitor.js';
 import { extname } from 'path';
-import { VueUrqlRawPluginConfig } from './config';
+import { VueUrqlRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<VueUrqlRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,

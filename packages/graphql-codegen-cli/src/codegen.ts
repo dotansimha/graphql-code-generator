@@ -12,19 +12,25 @@ import { codegen } from '@graphql-codegen/core';
 
 import { AggregateError } from '@graphql-tools/utils';
 
-import { Renderer, ErrorRenderer } from './utils/listr-renderer';
+import { Renderer, ErrorRenderer } from './utils/listr-renderer.js';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
-import { getPluginByName } from './plugins';
-import { getPresetByName } from './presets';
-import { debugLog } from './utils/debugging';
-import { CodegenContext, ensureContext } from './config';
+import { getPluginByName } from './plugins.js';
+import { getPresetByName } from './presets.js';
+import { debugLog } from './utils/debugging.js';
+import { CodegenContext, ensureContext } from './config.js';
 import fs from 'fs';
 import path from 'path';
 import { cpus } from 'os';
-// eslint-disable-next-line
 import { createRequire } from 'module';
 import Listr from 'listr';
-import { isListrError } from './utils/cli-error';
+import { isListrError } from './utils/cli-error.js';
+
+/**
+ * Poor mans ESM detection.
+ * Looking at this and you have a better method?
+ * Send a PR.
+ */
+const isESMModule = (typeof __dirname === 'string') === false;
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -33,8 +39,17 @@ const makeDefaultLoader = (from: string) => {
 
   const relativeRequire = createRequire(from);
 
-  return (mod: string) => {
-    return import(relativeRequire.resolve(mod));
+  return async (mod: string) => {
+    return import(
+      isESMModule
+        ? /**
+           * For ESM we currently have no "resolve path" solution
+           * as import.meta is unavailable in a CommonJS context
+           * and furthermore unavailable in stable Node.js.
+           **/
+          mod
+        : relativeRequire.resolve(mod)
+    );
   };
 };
 
@@ -218,7 +233,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
               let outputSchemaAst: GraphQLSchema;
               let outputSchema: DocumentNode;
               const outputFileTemplateConfig = outputConfig.config || {};
-              const outputDocuments: Types.DocumentFile[] = [];
+              let outputDocuments: Types.DocumentFile[] = [];
               const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
               const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
 
@@ -245,8 +260,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           const outputSchemaAst = await context.loadSchema(schemaPointerMap);
                           const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
                           return {
-                            outputSchemaAst: outputSchemaAst,
-                            outputSchema: outputSchema,
+                            outputSchemaAst,
+                            outputSchema,
                           };
                         });
 
@@ -264,25 +279,25 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         debugLog(`[CLI] Loading Documents`);
 
                         // get different cache for shared docs and output specific docs
-                        const results = await Promise.all(
-                          [rootDocuments, outputSpecificDocuments].map(docs => {
-                            const hash = JSON.stringify(docs);
-                            return cache('documents', hash, async () => {
-                              const documents = await context.loadDocuments(docs);
-                              return {
-                                documents: documents,
-                              };
-                            });
-                          })
-                        );
-
-                        const documents: Types.DocumentFile[] = [];
-
-                        results.forEach(source => documents.push(...source.documents));
-
-                        if (documents.length > 0) {
-                          outputDocuments.push(...documents);
+                        const documentPointerMap: any = {};
+                        const allDocumentsUnnormalizedPointers = [...rootDocuments, ...outputSpecificDocuments];
+                        for (const unnormalizedPtr of allDocumentsUnnormalizedPointers) {
+                          if (typeof unnormalizedPtr === 'string') {
+                            documentPointerMap[unnormalizedPtr] = {};
+                          } else if (typeof unnormalizedPtr === 'object') {
+                            Object.assign(documentPointerMap, unnormalizedPtr);
+                          }
                         }
+
+                        const hash = JSON.stringify(documentPointerMap);
+                        const result = await cache('documents', hash, async () => {
+                          const documents = await context.loadDocuments(documentPointerMap);
+                          return {
+                            documents,
+                          };
+                        });
+
+                        outputDocuments = await result.documents;
                       },
                       filename,
                       `Load GraphQL documents: ${filename}`
@@ -321,7 +336,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         };
 
                         let outputs: Types.GenerateOptions[] = [];
-
                         if (hasPreset) {
                           outputs = await context.profiler.run(
                             async () =>

@@ -28,7 +28,7 @@ import {
   FragmentSpreadNode,
   DirectiveNode,
 } from 'graphql';
-import { CSharpOperationsRawPluginConfig } from './config';
+import { CSharpOperationsRawPluginConfig } from './config.js';
 import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-helpers';
 import {
   getListInnerTypeNode,
@@ -40,7 +40,7 @@ import {
   isValueType,
   wrapFieldType,
   CSharpDeclarationBlock,
-} from '../../common/common';
+} from '@graphql-codegen/c-sharp-common';
 
 const defaultSuffix = 'GQL';
 const R_NAME = /name:\s*"([^"]+)"/;
@@ -310,43 +310,42 @@ export class CSharpOperationsVisitor extends ClientSideBaseVisitor<
               `public ${responseTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
             ].join('\n') + '\n'
           );
-        } else {
-          const selectionBaseTypeName = `${responseType.baseType.type}Selection`;
-          const selectionType = Object.assign(new CSharpFieldType(responseType), {
-            baseType: { type: selectionBaseTypeName },
-          });
-          const selectionTypeName = wrapFieldType(
-            selectionType,
-            selectionType.listType,
-            'System.Collections.Generic.List'
-          );
-          const innerClassSchema = this._schemaAST.definitions.find(
-            d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === responseType.baseType.type
-          ) as ObjectTypeDefinitionNode;
-
-          const innerClassDefinition = new CSharpDeclarationBlock()
-            .access('public')
-            .asKind('class')
-            .withName(convertSafeName(selectionBaseTypeName))
-            .withBlock(
-              '\n' +
-                node.selectionSet.selections
-                  .map(s => {
-                    if (s.kind === Kind.INLINE_FRAGMENT) {
-                      throw new Error(`Unsupported kind; ${node.name} ${s.kind}`);
-                    }
-                    return this._getResponseFieldRecursive(s, innerClassSchema);
-                  })
-                  .join('\n')
-            ).string;
-          return indentMultiline(
-            [
-              innerClassDefinition,
-              `[JsonProperty("${node.name.value}")]`,
-              `public ${selectionTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
-            ].join('\n') + '\n'
-          );
         }
+        const selectionBaseTypeName = `${responseType.baseType.type}Selection`;
+        const selectionType = Object.assign(new CSharpFieldType(responseType), {
+          baseType: { type: selectionBaseTypeName },
+        });
+        const selectionTypeName = wrapFieldType(
+          selectionType,
+          selectionType.listType,
+          'System.Collections.Generic.List'
+        );
+        const innerClassSchema = this._schemaAST.definitions.find(
+          d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === responseType.baseType.type
+        ) as ObjectTypeDefinitionNode;
+
+        const innerClassDefinition = new CSharpDeclarationBlock()
+          .access('public')
+          .asKind('class')
+          .withName(convertSafeName(selectionBaseTypeName))
+          .withBlock(
+            '\n' +
+              node.selectionSet.selections
+                .map(s => {
+                  if (s.kind === Kind.INLINE_FRAGMENT) {
+                    throw new Error(`Unsupported kind; ${node.name} ${s.kind}`);
+                  }
+                  return this._getResponseFieldRecursive(s, innerClassSchema);
+                })
+                .join('\n')
+          ).string;
+        return indentMultiline(
+          [
+            innerClassDefinition,
+            `[JsonProperty("${node.name.value}")]`,
+            `public ${selectionTypeName} ${convertSafeName(node.name.value)} { get; set; }`,
+          ].join('\n') + '\n'
+        );
       }
       case Kind.FRAGMENT_SPREAD: {
         const fragmentSchema = this._fragments.find(f => f.name === node.name.value);

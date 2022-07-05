@@ -8,7 +8,7 @@ import {
   createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
-import { executePlugin } from './execute-plugin';
+import { executePlugin } from './execute-plugin.js';
 import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/schema';
@@ -20,7 +20,7 @@ import {
   prioritize,
   shouldValidateDocumentsAgainstSchema,
   shouldValidateDuplicateDocuments,
-} from './utils';
+} from './utils.js';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -145,7 +145,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
       if (typeof result === 'string') {
         return result || '';
-      } else if (isComplexPluginOutput(result)) {
+      }
+      if (isComplexPluginOutput(result)) {
         if (result.append && result.append.length > 0) {
           for (const item of result.append) {
             if (item) {
@@ -176,13 +177,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 function resolveCompareValue(a: string) {
   if (a.startsWith('/*') || a.startsWith('//') || a.startsWith(' *') || a.startsWith(' */') || a.startsWith('*/')) {
     return 0;
-  } else if (a.startsWith('package')) {
-    return 1;
-  } else if (a.startsWith('import')) {
-    return 2;
-  } else {
-    return 3;
   }
+  if (a.startsWith('package')) {
+    return 1;
+  }
+  if (a.startsWith('import')) {
+    return 2;
+  }
+  return 3;
 }
 
 export function sortPrependValues(values: string[]): string[] {

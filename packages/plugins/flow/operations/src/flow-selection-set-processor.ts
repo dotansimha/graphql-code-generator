@@ -23,7 +23,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const formatNamedField = this.config.formatNamedField;
+    const { formatNamedField } = this.config;
     const fieldObj = schemaType.getFields();
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
@@ -51,11 +51,11 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
   buildSelectionSetFromStrings(pieces: string[]): string {
     if (pieces.length === 0) {
       return null;
-    } else if (pieces.length === 1) {
-      return pieces[0];
-    } else {
-      return `({\n  ${pieces.map(t => indent(`...${t}`)).join(`,\n`)}\n})`;
     }
+    if (pieces.length === 1) {
+      return pieces[0];
+    }
+    return `({\n  ${pieces.map(t => indent(`...${t}`)).join(`,\n`)}\n})`;
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {
@@ -80,7 +80,7 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     }
 
     const useFlowExactObject = this.config.useFlowExactObjects;
-    const formatNamedField = this.config.formatNamedField;
+    const { formatNamedField } = this.config;
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {

@@ -1,16 +1,21 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
-import { DocsContent, DocsTOC, MDXPage } from '@guild-docs/client';
+import { DocsContent, DocsTOC, MDXPage, EditOnGitHubButton } from '@guild-docs/client';
 import { MDXPaths, MDXProps } from '@guild-docs/server';
 import { getRoutes } from '../../../routes';
 
-export default MDXPage(({ content, TOC, MetaHead, BottomNavigation }) => (
+export default MDXPage(({ content, TOC, MetaHead, sourceFilePath }) => (
   <>
     <Head>{MetaHead}</Head>
     <DocsContent>{content}</DocsContent>
     <DocsTOC>
       <TOC />
-      <BottomNavigation />
+      <EditOnGitHubButton
+        repo="dotansimha/graphql-code-generator"
+        branch="master"
+        baseDir="website"
+        sourceFilePath={sourceFilePath}
+      />
     </DocsTOC>
   </>
 ));

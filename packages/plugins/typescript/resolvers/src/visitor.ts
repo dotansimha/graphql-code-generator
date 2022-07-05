@@ -1,4 +1,4 @@
-import { TypeScriptResolversPluginConfig } from './config';
+import { TypeScriptResolversPluginConfig } from './config.js';
 import {
   FieldDefinitionNode,
   ListTypeNode,

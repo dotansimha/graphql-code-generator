@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-import { Tags } from './types';
+import { Tags } from './types.js';
 
 export async function guessTargets(): Promise<Record<Tags, boolean>> {
   const pkg = JSON.parse(

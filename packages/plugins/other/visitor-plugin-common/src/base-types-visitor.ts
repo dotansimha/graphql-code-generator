@@ -20,9 +20,9 @@ import {
   Kind,
   GraphQLEnumType,
 } from 'graphql';
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { DEFAULT_SCALARS } from './scalars';
-import { normalizeDeclarationKind } from './declaration-kinds';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { normalizeDeclarationKind } from './declaration-kinds.js';
 import {
   EnumValuesMap,
   NormalizedScalarsMap,
@@ -31,7 +31,7 @@ import {
   ParsedEnumValuesMap,
   DirectiveArgumentAndInputFieldMappings,
   ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types';
+} from './types.js';
 import {
   transformComment,
   DeclarationBlock,
@@ -40,15 +40,17 @@ import {
   wrapWithSingleQuotes,
   getConfigValue,
   buildScalarsFromConfig,
-} from './utils';
-import { OperationVariablesToObject } from './variables-to-object';
-import { parseEnumValues } from './enum-values';
-import { transformDirectiveArgumentAndInputFieldMappings } from './mappers';
+  isOneOfInputObjectType,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { parseEnumValues } from './enum-values.js';
+import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyEnums: boolean;
   onlyOperationTypes: boolean;
   enumPrefix: boolean;
   fieldWrapperValue: string;
@@ -170,6 +172,23 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   wrapFieldDefinitions?: boolean;
+  /**
+   * @description This will cause the generator to emit types for enums only
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyEnums: true
+   * ```
+   */
+  onlyEnums?: boolean;
   /**
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
    * @default false
@@ -294,6 +313,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues({
@@ -368,6 +388,7 @@ export class BaseTypesVisitor<
   }
 
   public get scalarsDefinition(): string {
+    if (this.config.onlyEnums) return '';
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
@@ -433,11 +454,29 @@ export class BaseTypesVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment(node.description as any as string)
+      .withContent(`\n` + node.fields.join('\n  |'));
+  }
+
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
+    // Why the heck is node.name a string and not { value: string } at runtime ?!
+    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
+
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
     const comment = transformComment(node.description as any as string, 1);
     const { input } = this._parsedConfig.declarationKind;
 
@@ -454,6 +493,8 @@ export class BaseTypesVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
     const comment = this.getNodeComment(node);
@@ -462,7 +503,7 @@ export class BaseTypesVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
@@ -531,7 +572,7 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -553,7 +594,7 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -651,7 +692,10 @@ export class BaseTypesVisitor<
     return values
       .map(enumOption => {
         const optionName = this.makeValidEnumIdentifier(
-          this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+          this.convertName(enumOption, {
+            useTypesPrefix: false,
+            transformUnderscore: true,
+          })
         );
         const comment = this.getNodeComment(enumOption);
         const schemaEnumValue =
@@ -704,6 +748,7 @@ export class BaseTypesVisitor<
     name: string,
     field: FieldDefinitionNode
   ): string {
+    if (this.config.onlyEnums) return '';
     return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 
@@ -753,7 +798,8 @@ export class BaseTypesVisitor<
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
-    } else if (this.config.enumValues[typeAsString]) {
+    }
+    if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
     }
 
@@ -788,7 +834,7 @@ export class BaseTypesVisitor<
     return null;
   }
 
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode): string {
+  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
     let commentText: string = node.description as any;
     const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
     if (deprecationDirective) {

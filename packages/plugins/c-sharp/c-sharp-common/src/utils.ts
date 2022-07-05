@@ -4,8 +4,8 @@
 import { Kind, TypeNode, StringValueNode } from 'graphql';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { csharpValueTypes } from './scalars';
-import { ListTypeField, CSharpFieldType } from './c-sharp-field-types';
+import { csharpValueTypes } from './scalars.js';
+import { ListTypeField, CSharpFieldType } from './c-sharp-field-types.js';
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment) {
@@ -39,33 +39,33 @@ export function getListTypeField(typeNode: TypeNode): ListTypeField | undefined 
       required: false,
       type: getListTypeField(typeNode.type),
     };
-  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
+  }
+  if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
     return Object.assign(getListTypeField(typeNode.type), {
       required: true,
     });
-  } else if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return getListTypeField(typeNode.type);
-  } else {
-    return undefined;
   }
+  if (typeNode.kind === Kind.NON_NULL_TYPE) {
+    return getListTypeField(typeNode.type);
+  }
+  return undefined;
 }
 
 export function getListTypeDepth(listType: ListTypeField): number {
   if (listType) {
     return getListTypeDepth(listType.type) + 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 export function getListInnerTypeNode(typeNode: TypeNode): TypeNode {
   if (typeNode.kind === Kind.LIST_TYPE) {
     return getListInnerTypeNode(typeNode.type);
-  } else if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
-    return getListInnerTypeNode(typeNode.type);
-  } else {
-    return typeNode;
   }
+  if (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE) {
+    return getListInnerTypeNode(typeNode.type);
+  }
+  return typeNode;
 }
 
 export function wrapFieldType(
@@ -76,7 +76,6 @@ export function wrapFieldType(
   if (listTypeField) {
     const innerType = wrapFieldType(fieldType, listTypeField.type, listType);
     return `${listType}<${innerType}>`;
-  } else {
-    return fieldType.innerTypeName;
   }
+  return fieldType.innerTypeName;
 }

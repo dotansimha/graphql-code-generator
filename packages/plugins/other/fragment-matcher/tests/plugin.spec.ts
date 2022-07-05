@@ -4,7 +4,7 @@ import { codegen } from '@graphql-codegen/core';
 import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
 
-import { plugin, validate } from '../src';
+import { plugin, validate } from '../src/index.js';
 
 const schema = buildASTSchema(gql`
   type Character {
@@ -211,7 +211,7 @@ describe('Fragment Matcher Plugin', () => {
             }[];
           };
         }
-        const result: IntrospectionResultData = ${introspection};  
+        const result: IntrospectionResultData = ${introspection};
         export default result;
       `;
 
@@ -247,7 +247,7 @@ describe('Fragment Matcher Plugin', () => {
         }
       }
 
-        const result: PossibleTypesResultData = ${apolloClient3Result};  
+        const result: PossibleTypesResultData = ${apolloClient3Result};
 
         export default result;
       `;
@@ -310,7 +310,7 @@ describe('Fragment Matcher Plugin', () => {
       );
       const output = `
         export type IntrospectionResultData = ${introspection};
-        const result: IntrospectionResultData = ${introspection};  
+        const result: IntrospectionResultData = ${introspection};
         export default result;
       `;
 
@@ -343,7 +343,7 @@ describe('Fragment Matcher Plugin', () => {
       );
       const output = `
         export type PossibleTypesResultData = ${apolloClient3Result};
-        const result: PossibleTypesResultData = ${apolloClient3Result};  
+        const result: PossibleTypesResultData = ${apolloClient3Result};
         export default result;
       `;
 

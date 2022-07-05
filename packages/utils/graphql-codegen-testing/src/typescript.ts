@@ -1,11 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import typescript from 'typescript';
-import { resolve, join, dirname } from 'path';
-import * as lzString from 'lz-string';
-
-import type { CompilerOptions, Diagnostic, ScriptTarget as ScriptTargetType } from 'typescript';
-
-const {
+import {
   ModuleResolutionKind,
   ScriptTarget,
   JsxEmit,
@@ -15,9 +9,12 @@ const {
   createCompilerHost,
   createProgram,
   ScriptKind,
-} = typescript;
-
-const { compressToEncodedURIComponent } = lzString;
+  CompilerOptions,
+  Diagnostic,
+  ScriptTarget as ScriptTargetType,
+} from 'typescript';
+import { resolve, join, dirname } from 'path';
+import { compressToEncodedURIComponent } from 'lz-string';
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
@@ -83,17 +80,17 @@ export function validateTs(
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
       },
-      writeFile: function () {},
-      useCaseSensitiveFileNames: function () {
+      writeFile() {},
+      useCaseSensitiveFileNames() {
         return false;
       },
-      getCanonicalFileName: function (filename) {
+      getCanonicalFileName(filename) {
         return filename;
       },
-      getCurrentDirectory: function () {
+      getCurrentDirectory() {
         return '';
       },
-      getNewLine: function () {
+      getNewLine() {
         return '\n';
       },
     });
@@ -201,17 +198,17 @@ export function compileTs(
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
       },
-      writeFile: function () {},
-      useCaseSensitiveFileNames: function () {
+      writeFile() {},
+      useCaseSensitiveFileNames() {
         return false;
       },
-      getCanonicalFileName: function (filename) {
+      getCanonicalFileName(filename) {
         return filename;
       },
-      getCurrentDirectory: function () {
+      getCurrentDirectory() {
         return '';
       },
-      getNewLine: function () {
+      getNewLine() {
         return '\n';
       },
     });

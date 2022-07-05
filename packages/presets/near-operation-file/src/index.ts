@@ -3,8 +3,8 @@ import type { Source } from '@graphql-tools/utils';
 import addPlugin from '@graphql-codegen/add';
 import { join } from 'path';
 import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema, DocumentNode, Kind } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils';
-import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports';
+import { appendExtensionToFilePath, defineFilepathSubfolder } from './utils.js';
+import { resolveDocumentImports, DocumentImportResolverOptions } from './resolve-document-imports.js';
 import {
   FragmentImport,
   getConfigValue,
@@ -144,7 +144,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const importAllFragmentsFrom: FragmentImportFromFn | string | null =
       options.presetConfig.importAllFragmentsFrom || null;
 
-    const baseTypesPath = options.presetConfig.baseTypesPath;
+    const { baseTypesPath } = options.presetConfig;
 
     if (!baseTypesPath) {
       throw new Error(
@@ -251,7 +251,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [] };
       const combinedSource: Source = {
         rawSDL: '',
-        document: document,
+        document,
         location: record.documents[0].location,
       };
 

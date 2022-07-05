@@ -6,12 +6,11 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { ReactApolloRawPluginConfig } from './config';
+import { ReactApolloRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase } from 'change-case-all';
-import { camelCase } from 'change-case-all';
+import { pascalCase, camelCase } from 'change-case-all';
 
 const APOLLO_CLIENT_3_UNIFIED_PACKAGE = `@apollo/client`;
 const GROUPED_APOLLO_CLIENT_3_IDENTIFIER = 'Apollo';
@@ -195,11 +194,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       this.imports.add(this.getApolloReactCommonImport(true));
 
       return `${this.getApolloReactCommonIdentifier()}.MutationFunction${typeArgs}`;
-    } else {
-      this.imports.add(this.getApolloReactHocImport(true));
-
-      return `ApolloReactHoc.DataValue${typeArgs}`;
     }
+    this.imports.add(this.getApolloReactHocImport(true));
+
+    return `ApolloReactHoc.DataValue${typeArgs}`;
   }
 
   private _buildMutationFn(

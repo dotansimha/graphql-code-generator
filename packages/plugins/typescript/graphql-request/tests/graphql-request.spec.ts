@@ -1,11 +1,11 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin, TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
-import { RawGraphQLRequestPluginConfig } from '../src/config';
+import { RawGraphQLRequestPluginConfig } from '../src/config.js';
 
 describe('graphql-request', () => {
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));

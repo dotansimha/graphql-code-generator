@@ -7,8 +7,8 @@ import {
   oldVisit,
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { TypeScriptResolversVisitor } from './visitor';
-import { TypeScriptResolversPluginConfig } from './config';
+import { TypeScriptResolversVisitor } from './visitor.js';
+import { TypeScriptResolversPluginConfig } from './config.js';
 
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -76,10 +76,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   }
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  const visitor = new TypeScriptResolversVisitor(
-    { ...config, directiveResolverMappings: directiveResolverMappings },
-    transformedSchema
-  );
+  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);

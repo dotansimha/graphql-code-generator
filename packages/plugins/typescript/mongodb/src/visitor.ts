@@ -1,4 +1,4 @@
-import { FieldsTree } from './fields-tree';
+import { FieldsTree } from './fields-tree.js';
 import {
   getBaseTypeNode,
   DeclarationBlock,
@@ -6,9 +6,10 @@ import {
   ParsedConfig,
   BaseVisitor,
   buildScalarsFromConfig,
+  wrapTypeNodeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { Directives, TypeScriptMongoPluginConfig } from './config';
+import { Directives, TypeScriptMongoPluginConfig } from './config.js';
 import {
   DirectiveNode,
   GraphQLSchema,
@@ -21,9 +22,9 @@ import {
   InterfaceTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { wrapTypeNodeWithModifiers } from '@graphql-codegen/visitor-plugin-common';
 
 type AdditionalField = { path: string; type: string };
+
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
   dbTypeSuffix: string;
   dbInterfaceSuffix: string;
@@ -240,7 +241,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _addAdditionalFields(tree: FieldsTree, additioalFields: AdditionalField[] | null): void {
-    const avoidOptionals = this.config.avoidOptionals;
+    const { avoidOptionals } = this.config;
     if (!additioalFields || additioalFields.length === 0) {
       return;
     }
@@ -287,7 +288,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
 
         if (entityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbTypeSuffix });
-        } else if (abstractEntityDirective) {
+        }
+        if (abstractEntityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbInterfaceSuffix });
         }
 

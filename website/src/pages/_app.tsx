@@ -21,6 +21,9 @@ import React from 'react';
 import { Provider as MDXTabsCurrentTabContextProvider } from 'components/MDXTabsCurrentTabContext';
 import { MDXWarning } from 'components/MDXWarning';
 
+import '@algolia/autocomplete-theme-classic';
+import '@theguild/components/dist/static/css/SearchBarV2.css';
+
 const MDXTabs = dynamic(() => import('components/MDXTabs/MDXTabs'));
 const MDXTab = dynamic(() => import('components/MDXTabs/MDXTab'));
 
@@ -84,7 +87,7 @@ function AppContent(appProps: AppProps) {
       <Script src="https://the-guild.dev/static/crisp.js" />
       <Script {...analytics.loadScriptProps} />
       <Script {...analytics.configScriptProps} />
-      <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
+      <Header accentColor={accentColor} activeLink="/open-source" themeSwitch searchBarProps={{ version: 'v2' }} />
       <Subheader
         activeLink={router.asPath}
         product={{

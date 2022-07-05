@@ -1,5 +1,61 @@
 # @graphql-codegen/typescript-operations
 
+## 2.4.3
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/typescript@2.6.0
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 2.4.2
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+  - @graphql-codegen/typescript@2.5.1
+
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+  - @graphql-codegen/typescript@2.5.0
+
+## 2.4.0
+
+### Minor Changes
+
+- f1fb77bd4: feat: Add option to squash exactly similar fragment types
+
+### Patch Changes
+
+- Updated dependencies [f1fb77bd4]
+  - @graphql-codegen/visitor-plugin-common@2.8.0
+  - @graphql-codegen/typescript@2.4.11
+
+## 2.3.7
+
+### Patch Changes
+
+- Updated dependencies [9a5f31cb6]
+  - @graphql-codegen/typescript@2.4.10
+  - @graphql-codegen/visitor-plugin-common@2.7.6
+
+## 2.3.6
+
+### Patch Changes
+
+- 9312920a4: Import type definitions of dependent fragments when `inlineFragmentType` is `mask`
+- 2966686e9: Generate $fragmentName for fragment subtypes for fragment masking
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/typescript@2.4.9
+
 ## 2.3.5
 
 ### Patch Changes

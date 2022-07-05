@@ -21,8 +21,8 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { FlowPluginConfig } from './config';
-import { FlowOperationVariablesToObject } from './flow-variables-to-object';
+import { FlowPluginConfig } from './config.js';
+import { FlowOperationVariablesToObject } from './flow-variables-to-object.js';
 
 export interface FlowPluginParsedConfig extends ParsedTypesConfig {
   useFlowExactObjects: boolean;

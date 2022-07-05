@@ -1,9 +1,9 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { concatAST, isScalarType } from 'graphql';
 import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
-import { buildModule } from './builder';
-import { ModulesConfig } from './config';
+import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils.js';
+import { buildModule } from './builder.js';
+import { ModulesConfig } from './config.js';
 import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
@@ -63,7 +63,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
       },
       config: {
-        ...(options.config || {}),
+        ...options.config,
         enumsAsTypes: true,
       },
       schemaAst: options.schemaAst!,

@@ -1,5 +1,31 @@
 # @graphql-codegen/cli
 
+## 2.7.0
+
+### Minor Changes
+
+- e050230c0: Remove unnecessary browser check
+
+### Patch Changes
+
+- dfd9f07dc: Fix/multi project
+- 2fb1d8b87: Remove unused `tryToBuildSchema` function
+- 4dce44263: Bumps `@graphql-tools/url-loader` to the latest `cross-undici-fetch` version that has pinned `undici` to `~5.5.0` in order to fix a bug/breaking-change introduced with `undici@5.6.0` that causes a `GET/HEAD requests cannot have 'body'` error.
+  See https://github.com/ardatan/graphql-tools/pull/4559#issue-1292915844 for more details.
+
+## 2.6.4
+
+### Patch Changes
+
+- 92f714278: Revert "Upgrade latest version"
+
+## 2.6.3
+
+### Patch Changes
+
+- c1fe7758a: Remove unused deps
+- 52b41e90e: bump latest-version to patch vuln
+
 ## 2.6.2
 
 ### Patch Changes

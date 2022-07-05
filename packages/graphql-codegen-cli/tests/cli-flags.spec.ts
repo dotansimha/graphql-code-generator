@@ -1,5 +1,5 @@
-import { TempDir } from './utils';
-import { createContext, parseArgv } from '../src/config';
+import { TempDir } from './utils.js';
+import { createContext, parseArgv } from '../src/config.js';
 
 const mockConfig = (str: string, file = './codegen.yml') => temp.createFile(file, str);
 const createArgv = (str = ''): string[] => {

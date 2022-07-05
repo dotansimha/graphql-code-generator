@@ -1,5 +1,5 @@
 import { getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
-import { JavaApolloAndroidPluginConfig } from './plugin';
+import { JavaApolloAndroidPluginConfig } from './plugin.js';
 import { JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import {
   InputObjectTypeDefinitionNode,
@@ -11,9 +11,9 @@ import {
   isEnumType,
   VariableDefinitionNode,
 } from 'graphql';
-import { Imports } from './imports';
-import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
-import { VisitorConfig } from './visitor-config';
+import { Imports } from './imports.js';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor.js';
+import { VisitorConfig } from './visitor-config.js';
 
 export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
@@ -107,16 +107,14 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
       this._imports.add(Imports.Nonnull);
 
       return `@Nonnull ${typeToUse} ${name}`;
-    } else {
-      if (wrapWith) {
-        return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
-      } else {
-        if (applyNullable) {
-          this._imports.add(Imports.Nullable);
-        }
-        return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
-      }
     }
+    if (wrapWith) {
+      return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
+    }
+    if (applyNullable) {
+      this._imports.add(Imports.Nullable);
+    }
+    return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
   }
 
   private buildFieldsMarshaller(field: InputValueDefinitionNode): string {
@@ -145,11 +143,10 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
 
     if (isNonNull) {
       return result;
-    } else {
-      return indentMultiline(`if(${field.name.value}.defined) {
+    }
+    return indentMultiline(`if(${field.name.value}.defined) {
 ${indentMultiline(result)}
 }`);
-    }
   }
 
   private buildMarshallerOverride(fields: ReadonlyArray<InputValueDefinitionNode>): string {

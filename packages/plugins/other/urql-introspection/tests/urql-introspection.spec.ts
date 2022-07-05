@@ -3,7 +3,7 @@ import { getIntrospectedSchema, minifyIntrospectionQuery } from '@urql/introspec
 
 import { buildSchema } from 'graphql';
 
-import { plugin, validate } from '../src';
+import { plugin, validate } from '../src/index.js';
 
 const schema = buildSchema(`
   type Character {
@@ -271,7 +271,7 @@ export default ${introspection} as unknown as IntrospectionQuery;`;
         input MyInput {
           foo: Int
         }
-        
+
         type Query {
           foo(myInput: MyInput): Int
         }

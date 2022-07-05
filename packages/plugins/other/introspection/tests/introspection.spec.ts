@@ -1,6 +1,6 @@
 import { buildSchema, introspectionFromSchema, parse, IntrospectionQuery, IntrospectionObjectType } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('Introspection template', () => {
   it('should output a JSON file', async () => {
@@ -85,7 +85,7 @@ describe('Introspection template', () => {
     });
 
     const introspection: IntrospectionQuery = JSON.parse(content);
-    const types = introspection.__schema.types;
+    const { types } = introspection.__schema;
     const queryType = types.find(
       type => type.name === introspection.__schema.queryType.name
     ) as IntrospectionObjectType;

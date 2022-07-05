@@ -35,6 +35,7 @@ export function getRoutes(): IRoutes {
           ['require-field', 'require field'],
           ['naming-convention', 'Naming Convention'],
           ['lifecycle-hooks', 'Lifecycle Hooks'],
+          ['multiproject-config', 'Multi Project'],
         ],
       },
       'docs/advanced': {
@@ -52,8 +53,8 @@ export function getRoutes(): IRoutes {
           ['vscode', 'VSCode Extension'],
           ['prettier', 'Prettier'],
           ['federation', 'Apollo Federation'],
-          'apollo-local-state',
-          'create-react-app',
+          ['apollo-local-state', 'apollo-local-state'],
+          ['create-react-app', 'create-react-app'],
           ['gatsby', 'Gatsby'],
         ],
       },

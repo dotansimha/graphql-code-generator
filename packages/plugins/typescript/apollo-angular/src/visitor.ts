@@ -9,7 +9,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
-import { ApolloAngularRawPluginConfig } from './config';
+import { ApolloAngularRawPluginConfig } from './config.js';
 import { camelCase } from 'change-case-all';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -246,7 +246,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   private _providedIn(operation: OperationDefinitionNode): string {
     if (this._operationHasDirective(operation, 'NgModule')) {
       return this._extractNgModule(operation).module;
-    } else if (this.config.ngModule) {
+    }
+    if (this.config.ngModule) {
       return this._parseNgModule(this.config.ngModule).module;
     }
 
@@ -256,11 +257,11 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
     if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file') {
       return `Operations.${documentVariableName}`;
-    } else if (this.config.importOperationTypesFrom) {
-      return `${this.config.importOperationTypesFrom}.${documentVariableName}`;
-    } else {
-      return documentVariableName;
     }
+    if (this.config.importOperationTypesFrom) {
+      return `${this.config.importOperationTypesFrom}.${documentVariableName}`;
+    }
+    return documentVariableName;
   }
 
   private _operationSuffix(operationType: string): string {

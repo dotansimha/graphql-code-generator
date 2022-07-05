@@ -115,13 +115,17 @@ export type TweetAuthorFragmentFragment = {
   author: { __typename?: 'User'; id: string; username?: string | null };
 } & { ' $fragmentName': 'TweetAuthorFragmentFragment' };
 
-export type TweetsQueryQueryVariables = Exact<{ [key: string]: never }>;
-
-export type TweetsQueryQuery = {
+export type TweetsFragmentFragment = {
   __typename?: 'Query';
   Tweets?: Array<
     { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs': { TweetFragmentFragment: TweetFragmentFragment } }
   > | null;
+} & { ' $fragmentName': 'TweetsFragmentFragment' };
+
+export type TweetAppQueryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type TweetAppQueryQuery = { __typename?: 'Query' } & {
+  ' $fragmentRefs': { TweetsFragmentFragment: TweetsFragmentFragment };
 };
 
 export const TweetAuthorFragmentFragmentDoc = {
@@ -170,13 +174,13 @@ export const TweetFragmentFragmentDoc = {
     ...TweetAuthorFragmentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<TweetFragmentFragment, unknown>;
-export const TweetsQueryDocument = {
+export const TweetsFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'TweetsQuery' },
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetsFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -196,4 +200,19 @@ export const TweetsQueryDocument = {
     },
     ...TweetFragmentFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<TweetsQueryQuery, TweetsQueryQueryVariables>;
+} as unknown as DocumentNode<TweetsFragmentFragment, unknown>;
+export const TweetAppQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'TweetAppQuery' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetsFragment' } }],
+      },
+    },
+    ...TweetsFragmentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<TweetAppQueryQuery, TweetAppQueryQueryVariables>;

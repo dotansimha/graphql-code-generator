@@ -1,5 +1,5 @@
 import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { parseEnumValues } from '../src/enum-values';
+import { parseEnumValues } from '../src/enum-values.js';
 
 describe('enumValues', () => {
   const schema = buildSchema(/* GraphQL */ `

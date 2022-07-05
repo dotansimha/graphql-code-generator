@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { AddPluginConfig, VALID_PLACEMENTS } from './config';
+import { AddPluginConfig, VALID_PLACEMENTS } from './config.js';
 
 export const plugin: PluginFunction<AddPluginConfig> = async (
   schema: GraphQLSchema,
@@ -8,7 +8,7 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   config: AddPluginConfig
 ): Promise<Types.PluginOutput> => {
   const placement: AddPluginConfig['placement'] = config.placement || 'prepend';
-  const content = config.content;
+  const { content } = config;
 
   if (!VALID_PLACEMENTS.includes(placement)) {
     throw Error(

@@ -1,24 +1,22 @@
-import { generate } from './generate-and-save';
-import { init } from './init';
-import { createContext } from './config';
-import { lifecycleHooks } from './hooks';
+import { generate } from './generate-and-save.js';
+import { init } from './init/index.js';
+import { createContext } from './config.js';
+import { lifecycleHooks } from './hooks.js';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 
 export async function runCli(cmd: string): Promise<any> {
   await ensureGraphQlPackage();
 
-  switch (cmd) {
-    case 'init':
-      return init();
-    default: {
-      return createContext().then(context => {
-        return generate(context).catch(async error => {
-          await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+  if (cmd === 'init') {
+    return init();
+  }
 
-          throw error;
-        });
-      });
-    }
+  const context = await createContext();
+  try {
+    return await generate(context);
+  } catch (error) {
+    await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+    throw error;
   }
 }
 

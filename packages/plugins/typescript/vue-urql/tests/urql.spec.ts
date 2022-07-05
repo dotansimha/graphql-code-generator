@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';

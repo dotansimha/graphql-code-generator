@@ -3,7 +3,7 @@ import { getCachedDocumentNodeFromSchema, Types } from '@graphql-codegen/plugin-
 import { generateFragmentImportStatement } from '@graphql-codegen/visitor-plugin-common';
 import { buildASTSchema, buildSchema, parse } from 'graphql';
 import path from 'path';
-import { preset } from '../src/index';
+import { preset } from '../src/index.js';
 
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
@@ -388,7 +388,7 @@ describe('near-operation-file preset', () => {
         documents: path.join(__dirname, 'fixtures/issue-6439.ts'),
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },
@@ -436,7 +436,7 @@ describe('near-operation-file preset', () => {
         documents: [path.join(__dirname, 'fixtures/issue-6520.ts')],
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },
@@ -469,7 +469,7 @@ describe('near-operation-file preset', () => {
         ],
         generates: {
           'out1.ts': {
-            preset: preset,
+            preset,
             presetConfig: {
               baseTypesPath: 'types.ts',
             },
@@ -543,6 +543,41 @@ describe('near-operation-file preset', () => {
           expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
         );
       }
+    });
+
+    it('#7798 - importing type definitions of dependent fragments when `inlineFragmentType` is `mask`', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type User {
+              id: ID!
+              name: String!
+            }
+
+            type Query {
+              user(id: ID!): User!
+            }
+          `,
+        ],
+        documents: [
+          path.join(__dirname, 'fixtures/issue-7798-parent.ts'),
+          path.join(__dirname, 'fixtures/issue-7798-child.ts'),
+        ],
+        generates: {
+          'out1.ts': {
+            preset,
+            presetConfig: {
+              baseTypesPath: 'types.ts',
+            },
+            plugins: ['typescript-operations'],
+            config: { inlineFragmentTypes: 'mask' },
+          },
+        },
+      });
+
+      const parentContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-7798-parent/)).content;
+      const imports = parentContent.match(/import.*UserNameFragment/g);
+      expect(imports).toHaveLength(1);
     });
   });
 
@@ -795,7 +830,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).not.toEqual(
-      expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
+      expect.arrayContaining([{ add: { content: `import * as Types from '../types.js';\n` } }])
     );
   });
 

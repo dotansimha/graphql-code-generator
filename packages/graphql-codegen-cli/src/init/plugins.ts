@@ -1,5 +1,5 @@
-import { italic } from './helpers';
-import { PluginOption, Tags } from './types';
+import { italic } from './helpers.js';
+import { PluginOption, Tags } from './types.js';
 
 export const plugins: Array<PluginOption> = [
   {

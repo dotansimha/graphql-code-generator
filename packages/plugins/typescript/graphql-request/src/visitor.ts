@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
-import { RawGraphQLRequestPluginConfig } from './config';
+import { RawGraphQLRequestPluginConfig } from './config.js';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
@@ -44,10 +44,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
-    if (this.config.rawRequest) {
-      if (this.config.documentMode !== DocumentMode.string) {
-        this._additionalImports.push(`import { print } from 'graphql'`);
-      }
+    if (this.config.rawRequest && this.config.documentMode !== DocumentMode.string) {
+      this._additionalImports.push(`import { print } from 'graphql'`);
     }
   }
 
@@ -118,15 +116,14 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       o.operationResultType
     }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
-        } else {
-          return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
-            o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+        }
+        return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
+          o.operationVariablesTypes
+        }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
   return withWrapper((wrappedRequestHeaders) => client.request<${
     o.operationResultType
   }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
-        }
       })
       .filter(Boolean)
       .map(s => indentMultiline(s, 2));

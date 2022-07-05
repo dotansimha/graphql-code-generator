@@ -1,6 +1,6 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { parse } from 'graphql';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('svelte urql operations store types', () => {
   it('Should ouput correct results based on operations only', async () => {

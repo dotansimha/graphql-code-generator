@@ -14,9 +14,9 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
-import { TypeScriptDocumentsPluginConfig } from './config';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
+import { TypeScriptDocumentsPluginConfig } from './config.js';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
+import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
@@ -40,6 +40,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
+        mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -118,7 +119,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace && this.config.inlineFragmentTypes === 'combine'
+    return !this.config.globalNamespace &&
+      (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
       ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
       : [];
   }

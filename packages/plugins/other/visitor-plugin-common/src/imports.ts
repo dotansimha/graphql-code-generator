@@ -67,9 +67,8 @@ function resolveImportPath(baseDir: string, outputPath: string, sourcePath: stri
     const absGeneratedFilePath = resolve(baseDir, outputPath);
     const absImportFilePath = resolve(baseDir, sourcePath);
     return resolveRelativeImport(absGeneratedFilePath, absImportFilePath);
-  } else {
-    return sourcePath.replace(`~`, '');
   }
+  return sourcePath.replace(`~`, '');
 }
 
 export function resolveRelativeImport(from: string, to: string): string {

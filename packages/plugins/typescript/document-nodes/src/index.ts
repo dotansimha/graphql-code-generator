@@ -5,7 +5,7 @@ import {
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
-import { TypeScriptDocumentNodesVisitor } from './visitor';
+import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 /**
  * @description This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.

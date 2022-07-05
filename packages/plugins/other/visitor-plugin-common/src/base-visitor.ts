@@ -7,12 +7,12 @@ import {
   LoadedFragment,
   NormalizedScalarsMap,
   DeclarationKind,
-} from './types';
-import { DeclarationBlockConfig } from './utils';
+} from './types.js';
+import { DeclarationBlockConfig } from './utils.js';
 import autoBind from 'auto-bind';
-import { convertFactory } from './naming';
+import { convertFactory } from './naming.js';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDeclaration, FragmentImport } from './imports';
+import { ImportDeclaration, FragmentImport } from './imports.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;

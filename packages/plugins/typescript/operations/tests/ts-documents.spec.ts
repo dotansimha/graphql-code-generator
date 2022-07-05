@@ -1,7 +1,7 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { plugin as tsPlugin } from '../../typescript/src';
+import { plugin } from '../src/index.js';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {
@@ -2212,6 +2212,247 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
+      await validate(content, config);
+    });
+
+    it('Should support merging identical fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type TestQuery = (
+          { notifications: Array<(
+            { id: string }
+            & { __typename?: 'TextNotification' | 'ImageNotification' }
+          )> }
+          & { __typename?: 'Query' }
+        );
+
+        export type NFragment = (
+          { id: string }
+          & { __typename?: 'TextNotification' | 'ImageNotification' }
+        );
+     `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for merged fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Notifiction {
+          id
+          ... on TextNotification {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        type N_TextNotification_Fragment = (
+          { text: string, id: string }
+          & { __typename?: 'TextNotification' }
+        );
+
+        type N_ImageNotification_Fragment = (
+          { id: string }
+          & { __typename?: 'ImageNotification' }
+        );
+
+        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for large merged fragment union types', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+        }
+
+        type A implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type B implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type C implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type D implements Node {
+          id: ID!
+          text: String!
+        }
+
+        type E implements Node {
+          id: ID!
+          text: String!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        fragment N on Node {
+          id
+          ... on A {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+         type N_A_Fragment = (
+           { text: string, id: string }
+           & { __typename?: 'A' }
+         );
+
+         type N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment = (
+           { id: string }
+           & { __typename?: 'B' | 'C' | 'D' | 'E' }
+         );
+
+         export type NFragment = N_A_Fragment | N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment;
+      `);
+      await validate(content, config);
+    });
+
+    it('Should not create empty types when merging fragment union types', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Query {
+          notifications {
+            ... on TextNotification {
+              text
+            }
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+       export type NFragment = (
+         { notifications: Array<(
+           { text: string }
+           & { __typename?: 'TextNotification' }
+         ) | { __typename?: 'ImageNotification' }> }
+         & { __typename?: 'Query' }
+       );
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support merging identical fragment union types with skipTypename', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type TestQuery = { notifications: Array<{ id: string }> };
+      `);
+      await validate(content, config);
+    });
+
+    it('Should support computing correct names for merged fragment union types with skipTypename', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment N on Notifiction {
+          id
+          ... on TextNotification {
+            text
+          }
+        }
+      `);
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+       type N_TextNotification_Fragment = { text: string, id: string };
+
+       type N_ImageNotification_Fragment = { id: string };
+
+       export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+      `);
+      await validate(content, config);
+    });
+
+    it('Ignores merging when enabled alongside inline fragment masking', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          notifications {
+            ...N
+          }
+        }
+
+        fragment N on Notifiction {
+          id
+        }
+      `);
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, inlineFragmentTypes: 'mask' } as const;
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+       export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+       export type TestQuery = { __typename?: 'Query', notifications: Array<(
+        { __typename?: 'TextNotification' }
+        & { ' $fragmentRefs': { 'N_TextNotification_Fragment': N_TextNotification_Fragment } }
+       ) | (
+        { __typename?: 'ImageNotification' }
+        & { ' $fragmentRefs': { 'N_ImageNotification_Fragment': N_ImageNotification_Fragment } }
+       )> };
+
+       type N_TextNotification_Fragment = { __typename?: 'TextNotification', id: string } & { ' $fragmentName': 'N_TextNotification_Fragment' };
+
+       type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string } & { ' $fragmentName': 'N_ImageNotification_Fragment' };
+
+       export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+     `);
       await validate(content, config);
     });
 
@@ -5557,6 +5798,88 @@ function test(q: GetEntityBrandDataQuery): void {
           );
         `);
       });
+    });
+
+    it('#7811 - generates $fragmentName for fragment subtypes for fragment masking', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Character {
+          name: String
+        }
+
+        type Jedi {
+          name: String
+          side: String
+        }
+
+        type Droid {
+          model: String
+        }
+
+        union People = Character | Jedi | Droid
+
+        type Query {
+          people: People!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query GetPeople {
+          people {
+            ...PeopleInfo
+          }
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment PeopleInfo on People {
+          ... on Character {
+            name
+          }
+
+          ... on Jedi {
+            side
+          }
+
+          ... on Droid {
+            model
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [
+          { location: '', document: query },
+          { location: '', document: fragment },
+        ],
+        { inlineFragmentTypes: 'mask' },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toMatchInlineSnapshot(`
+        "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type GetPeopleQuery = { __typename?: 'Query', people: (
+            { __typename?: 'Character' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
+          ) | (
+            { __typename?: 'Jedi' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
+          ) | (
+            { __typename?: 'Droid' }
+            & { ' $fragmentRefs': { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
+          ) };
+
+        type PeopleInfo_Character_Fragment = { __typename?: 'Character', name?: string | null } & { ' $fragmentName': 'PeopleInfo_Character_Fragment' };
+
+        type PeopleInfo_Jedi_Fragment = { __typename?: 'Jedi', side?: string | null } & { ' $fragmentName': 'PeopleInfo_Jedi_Fragment' };
+
+        type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model?: string | null } & { ' $fragmentName': 'PeopleInfo_Droid_Fragment' };
+
+        export type PeopleInfoFragment = PeopleInfo_Character_Fragment | PeopleInfo_Jedi_Fragment | PeopleInfo_Droid_Fragment;
+        "
+      `);
     });
   });
 

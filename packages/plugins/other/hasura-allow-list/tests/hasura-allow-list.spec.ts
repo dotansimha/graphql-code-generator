@@ -1,5 +1,5 @@
 import { parse } from 'graphql';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('Hasura allow list', () => {
   it('should generate a valid query_collections.yaml file', async () => {

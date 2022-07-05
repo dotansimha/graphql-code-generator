@@ -6,7 +6,7 @@ import {
 import autoBind from 'auto-bind';
 import { camelCase } from 'change-case-all';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
-import { RawGraphQLApolloPluginConfig } from './config';
+import { RawGraphQLApolloPluginConfig } from './config.js';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
@@ -72,7 +72,7 @@ export class GraphQLApolloVisitor extends ClientSideBaseVisitor<
 
   public get sdkContent(): string {
     const sdkOperations = this._operationsToInclude.map(x => {
-      const documentVariableName = x.documentVariableName;
+      const { documentVariableName } = x;
       const optionType = GraphQLApolloVisitor.getApolloOperationOptionType(x.operationType);
       const generics = [x.operationResultType, x.operationVariablesTypes];
 

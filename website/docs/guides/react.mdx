@@ -1,6 +1,7 @@
 ---
 id: react
 title: 'Guide: React and GraphQL'
+type: Guide
 ---
 
 GraphQL Code Generator provides typed code generation for React Query, URQL React, React Apollo Client, and other clients.
@@ -347,7 +348,8 @@ For this, create a colocated `.graphql` file for each GraphQL document, as follo
 ```graphql
 # postsQuery.graphql
 
-query {
+# 'Document' will be appended to the name of the query in the generated output
+query postsQuery {
   posts {
     id
     title

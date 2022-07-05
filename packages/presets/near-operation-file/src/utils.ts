@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { DocumentNode, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
-import { FragmentRegistry } from './fragment-resolver';
+import { FragmentRegistry } from './fragment-resolver.js';
 import parsePath from 'parse-filepath';
 import { oldVisit } from '@graphql-codegen/plugin-helpers';
 
@@ -36,21 +36,19 @@ export function extractExternalFragmentsInUse(
   oldVisit(documentNode, {
     enter: {
       FragmentSpread: (node: FragmentSpreadNode) => {
-        if (!ignoreList.has(node.name.value)) {
-          if (
-            result[node.name.value] === undefined ||
-            (result[node.name.value] !== undefined && level < result[node.name.value])
-          ) {
-            result[node.name.value] = level;
+        if (
+          !ignoreList.has(node.name.value) &&
+          (result[node.name.value] === undefined || level < result[node.name.value])
+        ) {
+          result[node.name.value] = level;
 
-            if (fragmentNameToFile[node.name.value]) {
-              extractExternalFragmentsInUse(
-                fragmentNameToFile[node.name.value].node,
-                fragmentNameToFile,
-                result,
-                level + 1
-              );
-            }
+          if (fragmentNameToFile[node.name.value]) {
+            extractExternalFragmentsInUse(
+              fragmentNameToFile[node.name.value].node,
+              fragmentNameToFile,
+              result,
+              level + 1
+            );
           }
         }
       },

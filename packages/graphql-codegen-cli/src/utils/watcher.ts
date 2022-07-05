@@ -1,15 +1,15 @@
-import { executeCodegen } from '../codegen';
+import { executeCodegen } from '../codegen.js';
 import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
 
 import isGlob from 'is-glob';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';
-import { debugLog } from './debugging';
-import { getLogger } from './logger';
+import { debugLog } from './debugging.js';
+import { getLogger } from './logger.js';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
-import { lifecycleHooks } from '../hooks';
-import { loadContext, CodegenContext } from '../config';
+import { lifecycleHooks } from '../hooks.js';
+import { loadContext, CodegenContext } from '../config.js';
 import { isValidPath } from '@graphql-tools/utils';
 
 function log(msg: string) {
