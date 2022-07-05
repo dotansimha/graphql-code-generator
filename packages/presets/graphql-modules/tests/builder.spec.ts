@@ -159,6 +159,22 @@ test('should include import statement', () => {
   `);
 });
 
+test('should include esm import statement', () => {
+  const output = buildModule('test', testDoc, {
+    importPath: '../types.js',
+    importNamespace: 'core',
+    encapsulate: 'none',
+    shouldDeclare: false,
+    rootTypes: ROOT_TYPES,
+    baseVisitor,
+    useGraphQLModules: true,
+  });
+
+  expect(output).toBeSimilarStringTo(`
+    import * as core from "../types.js";
+  `);
+});
+
 test('should work with naming conventions', () => {
   const output = buildModule('test', parse(`type query_root { test: ID! } schema { query: query_root }`), {
     importPath: '../types',
