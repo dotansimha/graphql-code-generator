@@ -6,7 +6,7 @@
 
 - Migrate to [`listr2`](https://listr2.kilic.dev)
 - Remove custom renderer for `listr`
-- Delete any unused dependencies
+- Remove unused dependencies
 
 ### Why
 
