@@ -152,10 +152,13 @@ export default function buildFragmentResolver<T>(
           (dedupeFragments &&
             ['OperationDefinition', 'FragmentDefinition'].includes(documentFileContent.definitions[0].kind))
         ) {
-          if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
-            fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;
-          } else {
-            fragmentFileImports[fragmentDetails.filePath].push(...fragmentDetails.imports);
+          if (fragmentDetails.filePath !== generatedFilePath) {
+            // don't emit imports to same location
+            if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
+              fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;
+            } else {
+              fragmentFileImports[fragmentDetails.filePath].push(...fragmentDetails.imports);
+            }
           }
         }
 

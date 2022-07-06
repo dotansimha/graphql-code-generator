@@ -92,7 +92,7 @@ describe('CLI Flags', () => {
     expect(config.overwrite).not.toBeTruthy();
   });
 
-  it('Should overwrite watch config using cli flags', async () => {
+  it('Should overwrite watch config using cli flag to true', async () => {
     mockConfig(`
         schema: schema.graphql
         watch: false
@@ -104,6 +104,20 @@ describe('CLI Flags', () => {
     const context = await createContext(parseArgv(args));
     const config = context.getConfig();
     expect(config.watch).toBeTruthy();
+  });
+
+  it('Should overwrite watch config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        watch: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--watch=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.watch).toBeFalsy();
   });
 
   it('Should set --overwrite with new YML api', async () => {

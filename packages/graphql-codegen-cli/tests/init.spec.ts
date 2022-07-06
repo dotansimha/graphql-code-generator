@@ -1,5 +1,5 @@
-jest.mock('latest-version', () => {
-  return () => Promise.resolve('1.0.0');
+jest.mock('../src/utils/get-latest-version.ts', () => {
+  return { getLatestVersion: () => Promise.resolve('1.0.0') };
 });
 
 import bddStdin from 'bdd-stdin';

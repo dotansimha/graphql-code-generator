@@ -265,7 +265,7 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     configFilePath: context.filepath,
   };
 
-  if (cliFlags.watch) {
+  if (cliFlags.watch !== undefined) {
     config.watch = cliFlags.watch;
   }
 

@@ -242,7 +242,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated';`
+        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated.js';`
       );
 
       // Try to flip the order of operations to see if it's still works
@@ -260,7 +260,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated';`
+        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated.js';`
       );
     });
 
@@ -306,7 +306,7 @@ describe('near-operation-file preset', () => {
         expect.arrayContaining([
           {
             add: {
-              content: `import * as Types from '../types';\n`,
+              content: `import * as Types from '../types.js';\n`,
             },
           },
           {
@@ -316,7 +316,7 @@ describe('near-operation-file preset', () => {
       );
 
       expect(getFragmentImportsFromResult(result)).toContain(
-        `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`
+        `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated.js';`
       );
     });
 
@@ -360,7 +360,7 @@ describe('near-operation-file preset', () => {
         expect.arrayContaining([
           {
             add: {
-              content: `import * as Types from '../types';\n`,
+              content: `import * as Types from '../types.js';\n`,
             },
           },
           {
@@ -370,7 +370,7 @@ describe('near-operation-file preset', () => {
       );
 
       expect(getFragmentImportsFromResult(result)).toContain(
-        `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`
+        `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated.js';`
       );
     });
 
@@ -398,7 +398,7 @@ describe('near-operation-file preset', () => {
       });
 
       expect(result[0].content).toMatchInlineSnapshot(`
-        "import * as Types from '../../../../../out1.ts/types';
+        "import * as Types from '../../../../../out1.ts/types.js';
 
         export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -540,7 +540,7 @@ describe('near-operation-file preset', () => {
 
       for (const o of result) {
         expect(o.plugins).toEqual(
-          expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
+          expect.arrayContaining([{ add: { content: `import * as Types from '../types.js';\n` } }])
         );
       }
     });
@@ -579,6 +579,48 @@ describe('near-operation-file preset', () => {
       const imports = parentContent.match(/import.*UserNameFragment/g);
       expect(imports).toHaveLength(1);
     });
+  });
+
+  it('should not add imports for fragments in the same location', async () => {
+    const location = '/some/deep/path/src/graphql/me-query.graphql';
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        dedupeOperationSuffix: true,
+      },
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          location,
+          document: parse(/* GraphQL */ `
+            query {
+              user {
+                id
+                ...UserFieldsFragment
+              }
+            }
+          `),
+        },
+        {
+          location,
+          document: parse(/* GraphQL */ `
+            fragment UserFieldsFragment on User {
+              id
+              username
+            }
+          `),
+        },
+      ],
+      plugins: [{ 'typescript-react-apollo': {} }],
+      pluginMap: { 'typescript-react-apollo': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result)).toEqual('');
   });
 
   it('Should build the correct operation files paths', async () => {
@@ -694,7 +736,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types';\n`,
+            content: `import * as Types from '../types.js';\n`,
           },
         },
       ])
@@ -749,7 +791,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types';\n`,
+            content: `import * as Types from '../types.js';\n`,
           },
         },
       ])
@@ -865,7 +907,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from './src/types';\n`,
+            content: `import * as Types from './src/types.js';\n`,
           },
         },
       ])
@@ -896,7 +938,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../../../types';\n`,
+            content: `import * as Types from '../../../types.js';\n`,
           },
         },
       ])
@@ -927,7 +969,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from './types';\n`,
+            content: `import * as Types from './types.js';\n`,
           },
         },
       ])
@@ -1020,7 +1062,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types';\n`,
+            content: `import * as Types from '../types.js';\n`,
           },
         },
         {
@@ -1030,7 +1072,7 @@ describe('near-operation-file preset', () => {
     );
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated.js';`
     );
   });
 
@@ -1112,7 +1154,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from '../../../user-fragment.generated';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from '../../../user-fragment.generated.js';`
     );
   });
 
@@ -1138,7 +1180,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated.js';`
     );
   });
 
@@ -1229,11 +1271,11 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment';`
+      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment.js';`
     );
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment';`
+      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment.js';`
     );
   });
 
@@ -1306,7 +1348,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result, 1)).toContain(
-      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author';`
+      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author.js';`
     );
   });
 });

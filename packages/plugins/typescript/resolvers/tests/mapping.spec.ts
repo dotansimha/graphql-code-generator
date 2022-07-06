@@ -706,6 +706,22 @@ describe('ResolversTypes', () => {
     spy.mockRestore();
   });
 
+  it('Should generate basic type resolvers with external mappers using a .js extension', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          MyOtherType: './my-file.js#MyCustomOtherType',
+        },
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file.js';`);
+  });
+
   it('Should generate basic type resolvers with external mappers', async () => {
     const result = (await plugin(
       schema,
