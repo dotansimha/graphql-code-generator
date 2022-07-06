@@ -79,7 +79,7 @@
     "@types/js-yaml": "4.0.5",
     "@types/mkdirp": "1.0.2",
     "bdd-stdin": "0.2.0",
-    "change-case-all": "^1.0.14",
+    "change-case-all": "1.0.14",
     "js-yaml": "4.1.0",
     "make-dir": "3.1.0",
     "prettier": "2.7.1"
