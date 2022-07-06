@@ -2908,10 +2908,10 @@
     "@motionone/utils" "^10.9.0"
     tslib "^2.3.1"
 
-"@motionone/dom@^10.11.0":
-  version "10.11.0"
-  resolved "https://registry.yarnpkg.com/@motionone/dom/-/dom-10.11.0.tgz#dc2e46b0e21044cc9ae89a994cd6725eac09e48b"
-  integrity sha512-ST56HBslkeoeDwqRFWafkD+JT5FEwlHqB2K2KGaQh6wo6zfKQ9xwjQcqgDiBv2gg6s8ycjHAdFS6dnMHQ5hXKw==
+"@motionone/dom@^10.11.1":
+  version "10.11.2"
+  resolved "https://registry.yarnpkg.com/@motionone/dom/-/dom-10.11.2.tgz#a5256e372a04593ba62949e00708173639496db2"
+  integrity sha512-0SX4acPV1srcnzi0ZKzeq/aqDq86Wwd2G2RiLbLhIGFB3zZB/rJ46yNW3AUhSPKEQLCL20J3e8V4hyfPdEZ5TA==
   dependencies:
     "@motionone/animation" "^10.10.1"
     "@motionone/generators" "^10.9.0"
@@ -7812,12 +7812,12 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@6.4.1:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-6.4.1.tgz#d351a96d80bea5736af4175e6307bc63bb4daed1"
-  integrity sha512-JiVnG3p0mO9yWxjNx3xxJaKP4hTWdm6oIbzfMJZEMtoOahSNoDTRZA/mFPzfVNj2foKwFPOLFv/lw8UUZjyUqA==
+framer-motion@6.4.2:
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-6.4.2.tgz#664a68a33633906cd2e6ec5ab6665753e46e0e19"
+  integrity sha512-SmrJbPTpvWGuAAYZMkjWsMc74wOREpXq9Lkq8lhm6IxvuJJitO7E0V5v1RulmTdNIrerJIUxvIZhrYSCb7UAgw==
   dependencies:
-    "@motionone/dom" "^10.11.0"
+    "@motionone/dom" "^10.11.1"
     framesync "6.0.1"
     hey-listen "^1.0.8"
     popmotion "11.0.3"
