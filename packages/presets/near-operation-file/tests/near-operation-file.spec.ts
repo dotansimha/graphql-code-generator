@@ -581,6 +581,48 @@ describe('near-operation-file preset', () => {
     });
   });
 
+  it('should not add imports for fragments in the same location', async () => {
+    const location = '/some/deep/path/src/graphql/me-query.graphql';
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {
+        dedupeOperationSuffix: true,
+      },
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          location,
+          document: parse(/* GraphQL */ `
+            query {
+              user {
+                id
+                ...UserFieldsFragment
+              }
+            }
+          `),
+        },
+        {
+          location,
+          document: parse(/* GraphQL */ `
+            fragment UserFieldsFragment on User {
+              id
+              username
+            }
+          `),
+        },
+      ],
+      plugins: [{ 'typescript-react-apollo': {} }],
+      pluginMap: { 'typescript-react-apollo': {} as any },
+    });
+
+    expect(getFragmentImportsFromResult(result)).toEqual('');
+  });
+
   it('Should build the correct operation files paths', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
