@@ -94,7 +94,7 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>,
     const returnType =
       mode === 'lookup'
         ? `(typeof documents)[${JSON.stringify(originalString)}]`
-        : `typeof import('./graphql').${operations[0].initialName}`;
+        : `typeof import('./graphql.js').${operations[0].initialName}`;
     lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
 
