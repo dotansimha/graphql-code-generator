@@ -58,7 +58,10 @@ export function generateImportStatement(statement: ImportDeclaration): string {
       : '*';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
-  return `${importStatement} ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+  const importExtension = importPath.startsWith('/') || importPath.startsWith('.') ? '.js' : '';
+  return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${
+    importAlias ? '\n' : ''
+  }`;
 }
 
 function resolveImportPath(baseDir: string, outputPath: string, sourcePath: string) {

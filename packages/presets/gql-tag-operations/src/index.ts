@@ -160,7 +160,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         },
         plugins: [
           {
-            [`add`]: { content: reexports.map(moduleName => `export * from "./${moduleName}"`).join('\n') },
+            [`add`]: { content: reexports.map(moduleName => `export * from "./${moduleName}.js"`).join('\n') },
           },
         ],
         schema: options.schema,
