@@ -7725,15 +7725,15 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.6.tgz#022e9218c637f9f3fc9c35ab9c9193f05add60b2"
   integrity sha512-0sQoMh9s0BYsm+12Huy/rkKxVu4R1+r96YX5cG44rHV0pQ6iC3Q+mkoMFaGWObMFYQxCVT+ssG1ksneA2MI9KQ==
 
-flow-bin@0.181.2:
-  version "0.181.2"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.181.2.tgz#8b53ecd01a40bc6a7097cfcfccccfcbd90b362e2"
-  integrity sha512-kNpk0WBz21TZrAv6QD62CmVpweqVEY0DpBzDGJuDENYbGKykn3K6V58ZksCXMqTpgybbDZV1hL86E1P8KnS1OA==
+flow-bin@0.182.0:
+  version "0.182.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.182.0.tgz#1dacbd72465743670412ada015d3182deda6f966"
+  integrity sha512-Ux90c2sMfoV/VVjOEFT2OHFJFnyfoIbTK/5AKAMnU4Skfru1G+FyS5YLu3XxQl0R6mpA9+rrFlPfYZq/5B+J3w==
 
-flow-parser@0.*, flow-parser@0.181.2:
-  version "0.181.2"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.181.2.tgz#2c98ae959f59d2895dce80a19513893f6783eb92"
-  integrity sha512-+QzNZEmhYNF9SHrKI8M2lzT07UGkJW6Zoeg7wP+aGkFxh0Mh/wx8eyS/lcwY9bd3B4azS6K50ZjyIjzMWpowGg==
+flow-parser@0.*, flow-parser@0.182.0:
+  version "0.182.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.182.0.tgz#badada9392caac8e2b47b621bc0b68b51232d9f2"
+  integrity sha512-Caoy6YFlh0jz+qWpMGuI2CEIDcQGa/YRRnQ5d8+jtj30weXApWDyTSN5gPNve9cQN73JKXE2LFnpZ5AOUI1bXA==
 
 focus-lock@^0.9.1:
   version "0.9.2"
