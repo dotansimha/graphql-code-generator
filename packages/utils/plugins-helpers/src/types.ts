@@ -434,6 +434,10 @@ export namespace Types {
       interval?: number;
     };
     /**
+     * @description A flag to suppress non-zero exit code when there are no documents to generate.
+     */
+    ignoreNoDocuments?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;

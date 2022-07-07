@@ -30,6 +30,7 @@ export type YamlCliFlags = {
   silent: boolean;
   errorsOnly: boolean;
   profile: boolean;
+  ignoreNoDocuments?: boolean;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -279,6 +280,11 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
 
   if (cliFlags.errorsOnly === true) {
     config.errorsOnly = cliFlags.errorsOnly;
+  }
+
+  if (cliFlags['ignore-no-documents'] !== undefined) {
+    // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
+    config.ignoreNoDocuments = cliFlags['ignore-no-documents'] === true;
   }
 
   if (cliFlags.project) {
