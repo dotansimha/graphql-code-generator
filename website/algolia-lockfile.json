@@ -1140,7 +1140,19 @@
     "headings": ["How to use?"],
     "toc": [
       {
-        "children": [],
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Refetch queries with input parameters",
+                "anchor": "refetch-queries-with-input-parameters"
+              }
+            ],
+            "title": "Refetch queries without input parameters",
+            "anchor": "refetch-queries-without-input-parameters"
+          }
+        ],
         "title": "How to use?",
         "anchor": "how-to-use"
       }
