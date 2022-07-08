@@ -1,5 +1,36 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to relative file imports for compliance with ESM module resolution. Since in CommonJS the `.js` extension is optional, this is not a breaking change.
+
+  If you have path configuration within your configuration, consider attaching `.js` if you are migrating to ESM.
+
+  ```yml
+  mappers:
+    MyOtherType: './my-file.js#MyCustomOtherType',
+  ```
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/add@3.2.0
+  - @graphql-codegen/gql-tag-operations@1.3.0
+  - @graphql-codegen/typescript-operations@2.5.0
+  - @graphql-codegen/typed-document-node@2.3.0
+  - @graphql-codegen/typescript@2.7.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 1.4.0
 
 ### Minor Changes

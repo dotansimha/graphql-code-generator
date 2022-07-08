@@ -1,5 +1,24 @@
 # @graphql-codegen/typescript-type-graphql
 
+## 2.3.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- 4f38d8461: Ensure optional fields are marked as optional in TypeScript
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/typescript@2.7.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 2.2.15
 
 ### Patch Changes

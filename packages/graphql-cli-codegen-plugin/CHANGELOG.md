@@ -1,5 +1,23 @@
 # @graphql-cli/codegen
 
+## 2.3.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [e7870ac28]
+- Updated dependencies [d84afec09]
+- Updated dependencies [dce40edeb]
+- Updated dependencies [8e44df58b]
+- Updated dependencies [2e86ecb65]
+  - @graphql-codegen/cli@2.8.0
+
 ## 2.2.6
 
 ### Patch Changes

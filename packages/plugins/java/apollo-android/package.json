@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java-apollo-android",
-  "version": "2.2.14",
+  "version": "2.3.0",
   "description": "GraphQL Code Generator plugin for generating Java classes for Apollo-Android",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/java-common": "^2.1.21",
-    "@graphql-codegen/plugin-helpers": "^2.4.0",
-    "@graphql-codegen/visitor-plugin-common": "2.10.0",
+    "@graphql-codegen/java-common": "^2.2.0",
+    "@graphql-codegen/plugin-helpers": "^2.5.0",
+    "@graphql-codegen/visitor-plugin-common": "2.11.0",
     "auto-bind": "~4.0.0",
     "change-case-all": "1.0.14",
     "pluralize": "^8.0.0",
