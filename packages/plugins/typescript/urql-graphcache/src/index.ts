@@ -243,7 +243,7 @@ export const plugin: PluginFunction<UrqlGraphCacheConfig, Types.ComplexPluginOut
   return {
     prepend: [imports],
     content: [
-      `export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };`,
+      `export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };`,
 
       keys,
 
