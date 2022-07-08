@@ -1,4 +1,4 @@
-import * as Types from '../types.d.js';
+import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 export type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction?: string | null; name: string };

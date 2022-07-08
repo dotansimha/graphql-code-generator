@@ -1,4 +1,4 @@
-import * as Types from '../types.d.js';
+import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
