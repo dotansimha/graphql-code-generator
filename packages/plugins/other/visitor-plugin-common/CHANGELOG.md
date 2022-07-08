@@ -1,5 +1,21 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.11.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to imports starting with either a `.` or `/` character.
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 2.10.0
 
 ### Minor Changes

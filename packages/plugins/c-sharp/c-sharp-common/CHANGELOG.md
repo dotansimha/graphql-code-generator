@@ -1,6 +1,6 @@
-# @graphql-codegen/hasura-allow-list
+# @graphql-codegen/c-sharp-common
 
-## 1.1.0
+## 0.1.0
 
 ### Minor Changes
 
@@ -10,18 +10,9 @@
 
 ### Patch Changes
 
+- Updated dependencies [68bb30e19]
 - Updated dependencies [d84afec09]
 - Updated dependencies [a4fe5006b]
 - Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
   - @graphql-codegen/plugin-helpers@2.5.0
-
-## 1.0.1
-
-### Patch Changes
-
-- 7198a3cd3: feat: hasura allow list plugin
-
-## 1.0.0
-
-Initial release. Generate a query_collections.yaml [hasura](https://hasura.io/docs/latest/graphql/cloud/security/allow-lists.html) metadata file based on your graphql queries. Allows automation of the process of keeping allow lists up to date with your front end application.
-Skips anonymous operations

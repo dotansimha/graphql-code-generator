@@ -1,5 +1,58 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.5.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+- 8e44df58b: Add new config option to not exit with non-zero exit code when there are no documents.
+
+  You can use this option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+  documents:
+    - 'src/**/*.graphql'
+  ignoreNoDocuments: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --ignore-no-documents
+  ```
+
+### Patch Changes
+
+- a4fe5006b: Fix TS type error on strictNullChecks: true
+
+  Fix the compiler error:
+
+  ```
+  node_modules/@graphql-codegen/plugin-helpers/oldVisit.d.ts:5:75 - error TS2339: Property 'enter' does not exist on type '{ readonly enter?: ASTVisitFn<NameNode> | undefined; readonly leave: ASTReducerFn<NameNode, unknown>; } | { readonly enter?: ASTVisitFn<DocumentNode> | undefined; readonly leave: ASTReducerFn<...>; } | ... 41 more ... | undefined'.
+
+  5     enter?: Partial<Record<keyof NewVisitor, NewVisitor[keyof NewVisitor]['enter']>>;
+                                                                              ~~~~~~~
+
+  node_modules/@graphql-codegen/plugin-helpers/oldVisit.d.ts:6:75 - error TS2339: Property 'leave' does not exist on type '{ readonly enter?: ASTVisitFn<NameNode> | undefined; readonly leave: ASTReducerFn<NameNode, unknown>; } | { readonly enter?: ASTVisitFn<DocumentNode> | undefined; readonly leave: ASTReducerFn<...>; } | ... 41 more ... | undefined'.
+
+  6     leave?: Partial<Record<keyof NewVisitor, NewVisitor[keyof NewVisitor]['leave']>>;
+                                                                              ~~~~~~~
+
+
+  Found 2 errors in the same file, starting at: node_modules/@graphql-codegen/plugin-helpers/oldVisit.d.ts:5
+  ```
+
+  Only happens when TS compiler options `strictNullChecks: true` and `skipLibCheck: false`.
+
+  `Partial<T>` includes `{}`, therefore `NewVisitor[keyof NewVisitor]` includes `undefined`, and indexing `undefined` is error.
+  Eliminate `undefined` by wrapping it inside `NonNullable<...>`.
+
+  Related #7519
+
 ## 2.4.2
 
 ### Patch Changes

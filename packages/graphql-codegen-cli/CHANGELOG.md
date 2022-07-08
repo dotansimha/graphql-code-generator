@@ -1,5 +1,63 @@
 # @graphql-codegen/cli
 
+## 2.8.0
+
+### Minor Changes
+
+- d84afec09: Add bin CLI command for running `graphql-code-generator` in ESM mode. You can now use `graphql-codegen-esm` instead of `graphql-codegen`.
+
+  GraphQL Code Generator will continue supporting both ESM and CommonJS in parallel.
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+- 8e44df58b: Add new config option to not exit with non-zero exit code when there are no documents.
+
+  You can use this option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+  documents:
+    - 'src/**/*.graphql'
+  ignoreNoDocuments: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --ignore-no-documents
+  ```
+
+### Patch Changes
+
+- e7870ac28: Fix security vulnerability by removing `latest-version` dependency.
+- dce40edeb: Allow to disable watch mode from CLI to overwrite the config. Now you can do:
+
+  ```bash
+  $ graphql-codegen --watch=false
+  ```
+
+- 2e86ecb65: ### Summary
+
+  - Migrate to [`listr2`](https://listr2.kilic.dev)
+  - Remove custom renderer for `listr`
+  - Remove unused dependencies
+
+  ### Why
+
+  [`listr`](https://github.com/SamVerschueren/listr) is not actively maintained and we have to maintain our custom renderer for it to display errors. Migrating to `listr2` it just works out of the almost similar to how it was working in past and is a actively maintained.
+
+  ### Dev notes
+
+  Big change for us is how errors were collected. In `listr` errors were thrown and were caught in the `end` function of our custom `listr` Renderer but with `listr2` we don't really get `Error` in `end` function always so instead we use the [context](https://listr2.kilic.dev/getting-started/the-concept-of-context) to collect errors from all the tasks and then show them after all the tasks are finished.
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/core@2.6.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 2.7.0
 
 ### Minor Changes
