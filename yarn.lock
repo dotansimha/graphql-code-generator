@@ -8097,10 +8097,10 @@ graphql-config@^4.1.0, graphql-config@^4.3.1:
     minimatch "4.2.1"
     string-env-interpolation "1.0.1"
 
-graphql-helix@1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.12.0.tgz#8a81e7c84489a0c6da968afdb54f9a979512baf9"
-  integrity sha512-wTu1m/ZFBCgzLPCg/dHO4cNy9JR5Sq/3RqDVblqrU3b/Yem7EXZtQMzG045tHqkCdbgcgQl+kIkXDur1yLfdtw==
+graphql-helix@1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/graphql-helix/-/graphql-helix-1.13.0.tgz#e64dad5ef5f622ef38c97fa033f56f3d953c0104"
+  integrity sha512-cqDKMoRywKjnL0ZWCTB0GOiBgsH6d3nU4JGDF6RuzAyd35tmalzKpSxkx3NNp4H5RvnKWnrukWzR51wUq277ng==
 
 graphql-jit@0.7.4:
   version "0.7.4"
