@@ -1,5 +1,17 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+  - @graphql-codegen/gql-tag-operations@1.3.1
+  - @graphql-codegen/typescript-operations@2.5.1
+  - @graphql-codegen/typed-document-node@2.3.1
+  - @graphql-codegen/typescript@2.7.1
+
 ## 1.5.0
 
 ### Minor Changes

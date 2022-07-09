@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.11.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+
 ## 2.11.0
 
 ### Minor Changes
