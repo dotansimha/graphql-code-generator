@@ -242,7 +242,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated.js';`
+        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated';`
       );
 
       // Try to flip the order of operations to see if it's still works
@@ -260,7 +260,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated.js';`
+        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated';`
       );
     });
 
@@ -306,7 +306,7 @@ describe('near-operation-file preset', () => {
         expect.arrayContaining([
           {
             add: {
-              content: `import * as Types from '../types.js';\n`,
+              content: `import * as Types from '../types';\n`,
             },
           },
           {
@@ -316,7 +316,7 @@ describe('near-operation-file preset', () => {
       );
 
       expect(getFragmentImportsFromResult(result)).toContain(
-        `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated.js';`
+        `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`
       );
     });
 
@@ -360,7 +360,7 @@ describe('near-operation-file preset', () => {
         expect.arrayContaining([
           {
             add: {
-              content: `import * as Types from '../types.js';\n`,
+              content: `import * as Types from '../types';\n`,
             },
           },
           {
@@ -370,7 +370,7 @@ describe('near-operation-file preset', () => {
       );
 
       expect(getFragmentImportsFromResult(result)).toContain(
-        `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated.js';`
+        `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`
       );
     });
 
@@ -398,7 +398,7 @@ describe('near-operation-file preset', () => {
       });
 
       expect(result[0].content).toMatchInlineSnapshot(`
-        "import * as Types from '../../../../../out1.ts/types.js';
+        "import * as Types from '../../../../../out1.ts/types';
 
         export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -540,7 +540,7 @@ describe('near-operation-file preset', () => {
 
       for (const o of result) {
         expect(o.plugins).toEqual(
-          expect.arrayContaining([{ add: { content: `import * as Types from '../types.js';\n` } }])
+          expect.arrayContaining([{ add: { content: `import * as Types from '../types';\n` } }])
         );
       }
     });
@@ -736,7 +736,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types.js';\n`,
+            content: `import * as Types from '../types';\n`,
           },
         },
       ])
@@ -791,7 +791,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types.js';\n`,
+            content: `import * as Types from '../types';\n`,
           },
         },
       ])
@@ -907,7 +907,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from './src/types.js';\n`,
+            content: `import * as Types from './src/types';\n`,
           },
         },
       ])
@@ -938,7 +938,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../../../types.js';\n`,
+            content: `import * as Types from '../../../types';\n`,
           },
         },
       ])
@@ -969,7 +969,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from './types.js';\n`,
+            content: `import * as Types from './types';\n`,
           },
         },
       ])
@@ -1062,7 +1062,7 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: {
-            content: `import * as Types from '../types.js';\n`,
+            content: `import * as Types from '../types';\n`,
           },
         },
         {
@@ -1072,7 +1072,7 @@ describe('near-operation-file preset', () => {
     );
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated.js';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`
     );
   });
 
@@ -1154,7 +1154,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from '../../../user-fragment.generated.js';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from '../../../user-fragment.generated';`
     );
   });
 
@@ -1180,7 +1180,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated.js';`
+      `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated';`
     );
   });
 
@@ -1271,11 +1271,11 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment.js';`
+      `import { MyGroupFragmentFragmentDoc, MyGroupFragmentFragment } from './fragments/MyGroupFragment';`
     );
 
     expect(getFragmentImportsFromResult(result)).toContain(
-      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment.js';`
+      `import { AnotherGroupFragmentFragmentDoc, AnotherGroupFragmentFragment } from './fragments/AnotherGroupFragment';`
     );
   });
 
@@ -1348,7 +1348,7 @@ describe('near-operation-file preset', () => {
     });
 
     expect(getFragmentImportsFromResult(result, 1)).toContain(
-      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author.js';`
+      `import { AuthorFragmentDoc, AuthorFragment, AddressFragmentDoc, AddressFragment } from './author';`
     );
   });
 });

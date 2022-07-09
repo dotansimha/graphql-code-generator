@@ -31,7 +31,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
     super(schema, fragments, rawConfig, {});
     this._info = info;
 
-    const { handlerPath = '../../handler.js' } = rawConfig;
+    const { handlerPath = '../../handler' } = rawConfig;
 
     // FIXME: This is taken in part from
     //  presets/near-operation-file/src/index.ts:139. How do I build a path relative to the outputFile in the same way?

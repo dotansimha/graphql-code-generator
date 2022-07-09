@@ -1,4 +1,4 @@
-import * as Types from '../types.d.js';
+import * as Types from '../types.d';
 
 import { gql } from '@apollo/client';
 export type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };
