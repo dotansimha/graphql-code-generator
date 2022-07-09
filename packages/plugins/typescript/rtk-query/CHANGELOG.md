@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-rtk-query
 
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+
 ## 2.3.0
 
 ### Minor Changes

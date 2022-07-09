@@ -1,5 +1,13 @@
 # @graphql-codegen/java
 
+## 3.3.1
+
+### Patch Changes
+
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+  - @graphql-codegen/java-common@2.2.1
+
 ## 3.3.0
 
 ### Minor Changes
