@@ -1,8 +1,8 @@
 import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types.js';
-import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
+import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType, DirectiveNode } from 'graphql';
 
-export type PrimitiveField = { isConditional: boolean; fieldName: string };
-export type PrimitiveAliasedFields = { alias: string; fieldName: string };
+export type PrimitiveField = { isConditional: boolean; fieldName: string; directives?: ReadonlyArray<DirectiveNode> };
+export type PrimitiveAliasedFields = { alias: string; fieldName: string; directives?: ReadonlyArray<DirectiveNode> };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
 export type ProcessResult = null | Array<NameAndType | string>;
@@ -12,8 +12,17 @@ export type SelectionSetProcessorConfig = {
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
-  formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null, isConditional?: boolean): string;
-  wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
+  formatNamedField(
+    name: string,
+    type?: GraphQLOutputType | GraphQLNamedType | null,
+    isConditional?: boolean,
+    directives?: ReadonlyArray<DirectiveNode>
+  ): string;
+  wrapTypeWithModifiers(
+    baseType: string,
+    type: GraphQLOutputType | GraphQLNamedType,
+    directives?: ReadonlyArray<DirectiveNode>
+  ): string;
   avoidOptionals?: AvoidOptionalsConfig;
 };
 

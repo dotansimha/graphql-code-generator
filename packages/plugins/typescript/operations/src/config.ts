@@ -187,4 +187,62 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   maybeValue?: string;
+  /**
+   * @description Change a field's type and/or nullability based on applied directives
+   *
+   * You can use both `module#type` and `module#namespace#type` syntax. Requires `preResolveTypes=true` and only works on FIELD directives.
+   *
+   * **WARNING:** Using this option only changes the type definitions.
+   *
+   * For actually ensuring that a type is correct at runtime you will have to use client or server-side transforms that apply those rules!
+   * Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+   *
+   * Please use this configuration option with care!
+   *
+   * @exampleMarkdown
+   * ## Directive field mappings
+   * ```yml
+   * plugins:
+   *   config:
+   *     directiveFieldMappings:
+   *       asString:
+   *         type: string
+   *       nonNull:
+   *         nullable: false
+   *         nullableEntries: "!$entries"
+   * ```
+   * ## Schema with custom directives
+   * ```graphqls
+   * directive @asString on FIELD
+   * directive @nonNull(entries: boolean) on FIELD
+   *
+   * type User {
+   *   id: Int
+   *   username: String
+   *   emails: [String]
+   * }
+   *
+   * ...
+   * ```
+   * ## Query that uses the custom directives
+   * ```graphql
+   * query {
+   *   me {
+   *     id @asString @nonNull
+   *     username @nonNull
+   *     emails @nonNull(entries: true)
+   *   }
+   * }
+   * ```
+   */
+  directiveFieldMappings?: {
+    [name: string]: {
+      /** Override field type (e.g. `boolean`, `./module#type`, `./module#namespace#type`) */
+      type?: string;
+      /** Override field nullability (boolean or expression that will resolve a directive arg into a boolean, e.g. `"!$field"`) */
+      nullable?: boolean | string;
+      /** Override list entry nullability (boolean or expression that will resolve a directive arg into a boolean, e.g. `"!$entries"`) */
+      nullableEntries?: boolean | string;
+    };
+  };
 }

@@ -529,12 +529,25 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
       linkFields.push({
-        alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
+        alias: field.alias
+          ? this._processor.config.formatNamedField(
+              field.alias.value,
+              selectedFieldType,
+              isConditional,
+              field.directives
+            )
+          : undefined,
+        name: this._processor.config.formatNamedField(
+          field.name.value,
+          selectedFieldType,
+          isConditional,
+          field.directives
+        ),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
-          selectedFieldType
+          selectedFieldType,
+          field.directives
         ),
       });
     }
@@ -558,6 +571,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         Array.from(primitiveFields.values()).map(field => ({
           isConditional: hasConditionalDirectives(field),
           fieldName: field.name.value,
+          directives: field.directives,
         }))
       ),
       ...this._processor.transformAliasesPrimitiveFields(
@@ -565,6 +579,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         Array.from(primitiveAliasFields.values()).map(field => ({
           alias: field.alias.value,
           fieldName: field.name.value,
+          directives: field.directives,
         }))
       ),
       ...this._processor.transformLinkFields(linkFields),

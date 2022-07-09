@@ -47,9 +47,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const name = this.config.formatNamedField(
         field.fieldName,
         useInnerType ? innerType : fieldObj.type,
-        field.isConditional
+        field.isConditional,
+        field.directives
       );
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type, field.directives);
 
       return {
         name,
@@ -84,8 +85,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
       }
 
-      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type);
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
+      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type, false, aliasedField.directives);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type, aliasedField.directives);
 
       return {
         name,
