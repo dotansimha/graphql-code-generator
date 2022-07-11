@@ -1,6 +1,7 @@
 hooks:
   afterAllFileWrite:
     - prettier --write
+emitLegacyCommonJSImports: false
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js

@@ -31,6 +31,7 @@ export type YamlCliFlags = {
   errorsOnly: boolean;
   profile: boolean;
   ignoreNoDocuments?: boolean;
+  emitLegacyCommonJSImports?: boolean;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -285,6 +286,11 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
   if (cliFlags['ignore-no-documents'] !== undefined) {
     // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
     config.ignoreNoDocuments = cliFlags['ignore-no-documents'] === true;
+  }
+
+  if (cliFlags['emit-legacy-common-js-imports'] !== undefined) {
+    // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
+    config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
   }
 
   if (cliFlags.project) {
