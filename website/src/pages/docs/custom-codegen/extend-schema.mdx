@@ -31,9 +31,9 @@ module.exports = {
     return Object.keys(typesMap)
       .filter(typeName => {
         const type = typesMap[typeName]
-        const astNode = type.astNode
+        const { astNode } = type
 
-        if (astNode && astNode.directives && astNode.directives.find(d => d.name.value === 'ignore')) {
+        if (astNode?.directives?.find(d => d.name.value === 'ignore')) {
           return false
         }
 

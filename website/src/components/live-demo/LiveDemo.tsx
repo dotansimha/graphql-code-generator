@@ -2,8 +2,8 @@ import { useState, useEffect, Suspense, Fragment, ReactElement } from 'react';
 import { load } from 'js-yaml';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 import Select from 'react-select';
-import { useThemeContext } from '@theguild/components';
 import { EXAMPLES, EXAMPLES_ICONS } from './examples';
 import { getMode } from './formatter';
 import { generate } from './generate';
@@ -49,7 +49,8 @@ const DEFAULT_EXAMPLE = {
 } as const;
 
 export const LiveDemo = (): ReactElement => {
-  const { isDarkTheme } = useThemeContext();
+  const { theme } = useTheme()
+  const isDarkTheme = theme === 'dark'
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
   const [schema, setSchema] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);

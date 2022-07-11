@@ -1,6 +1,10 @@
+---
+title: Plugins
+---
+
 import { buildMultipleMDX }  from '@guild-docs/server';
 import { getPackagesData }  from '@guild-docs/server/npm';
-import { PluginHub } from '@/components/plugin-hub';
+import { Plugins } from '@/components/plugins';
 import { PACKAGES } from '@/lib/plugins';
 
 export const getStaticProps = async () => {
@@ -24,7 +28,7 @@ export const getStaticProps = async () => {
   return {
     props: {
       // We add an `ssg` field to the page props,
-      // which will be provided to the Nextra `useSSG` hook.
+      // which will be provided to the Nextra's `useSSG` hook.
       ssg: { data },
     },
     // Revalidate at most once every 1 hour
@@ -32,4 +36,4 @@ export const getStaticProps = async () => {
   };
 };
 
-<PluginHub />
+<Plugins />

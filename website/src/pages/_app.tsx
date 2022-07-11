@@ -1,8 +1,9 @@
 import { ReactElement } from 'react';
 import Script from 'next/script';
 import { AppProps } from 'next/app';
+import { ThemeProvider } from 'next-themes';
 import { useGoogleAnalytics } from '@guild-docs/client';
-import { Header, FooterExtended, ThemeProvider } from '@theguild/components';
+import { Header, FooterExtended } from '@theguild/components';
 
 import 'nextra-theme-docs/style.css';
 import '../../public/style.css';
@@ -17,7 +18,7 @@ export default function App({ Component, pageProps, router }: AppProps): ReactEl
   const childComponent = <Component {...pageProps} />;
 
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class">
       <Script src="https://the-guild.dev/static/crisp.js" />
       <Script {...analytics.loadScriptProps} />
       <Script {...analytics.configScriptProps} />

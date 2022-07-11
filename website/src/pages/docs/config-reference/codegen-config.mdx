@@ -1,9 +1,9 @@
 import Callout from 'nextra-theme-docs/callout'
 import { PackageCmd } from '@/components'
 
-# codegen.yml
+# `codegen.yml` file
 
-The Plugin Hub lists dozens of plugins with their set of options and specific outputs.
+[The plugins' page](https://google.com) lists dozens of plugins with their set of options and specific outputs.
 
 GraphQL Code Generator relies on a configuration file named `codegen.yml` or `codegen.json` to manage all possible options, input, and output document types.
 
@@ -40,55 +40,55 @@ Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?i
 
 Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L92)):
 
-- [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array that specifies multiple schemas to generate code from. You can read more about the supported formats [here](./schema-field#available-formats).
+- [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array that specifies multiple schemas to generate code from. You can read more about the supported formats [here](./schema-field#available-formats)
 
-- [**`documents`**](./documents-field#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide these options with a string instead of an array if you're dealing with a single document. You can read more about the supported formats [here](./documents-field#available-formats).
+- [**`documents`**](./documents-field#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide these options with a string instead of an array if you're dealing with a single document. You can read more about the supported formats [here](./documents-field#available-formats)
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code, and the value represents a set of relevant options for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates, considered as plugins, can be specified in this section. A complete list of supported plugins is available [here](/plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](/docs/custom-codegen)).
+  - **`generates.plugins` (required)** - A list of plugins to use when generating the file. Templates, considered as plugins, can be specified in this section. A complete list of supported plugins is available [here](/plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](/docs/custom-codegen))
 
-  - **`generates.preset`** - A list of presets to use for the output. Presets are a way to dynamically create the list of output files based on the input schema. [`near-operation-file-preset`](/plugins/near-operation-file-preset) is a good example.
+  - **`generates.preset`** - A list of presets to use for the output. Presets are a way to dynamically create the list of output files based on the input schema. [`near-operation-file-preset`](/plugins/near-operation-file-preset) is a good example
 
-  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file.
+  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file
 
-  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, but applies only for the specific output file.
+  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, but applies only for the specific output file
 
-  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file.
+  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file
 
-  - **`generates.overwrite`** - Same as root `overwrite`, but applies only for the specific output file.
+  - **`generates.overwrite`** - Same as root `overwrite`, but applies only for the specific output file
 
-- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This option is essential if the code generator has to go through files that require other files in an unsupported format ([more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6)). Note that values specified in your `.yml` file get loaded after loading the `.yml` file.
+- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This option is essential if the code generator has to go through files that require other files in an unsupported format ([more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6)). Note that values specified in your `.yml` file get loaded after loading the `.yml` file
 
-- [**`config`**](./config-field#root-level) - Options we would like to provide to the specified plugins. The options may vary depending on what plugins you specified. Read the documentation of that specific plugin for more information. You can read more about passing configuration to plugins [here](./config-field).
+- [**`config`**](./config-field#root-level) - Options we would like to provide to the specified plugins. The options may vary depending on what plugins you specified. Read the documentation of that specific plugin for more information. You can read more about passing configuration to plugins [here](./config-field)
 
-- **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by default).
+- **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by default)
 
-- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch.
+- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch
 
-- **`silent`** - A flag to suppress printing errors when they occur.
+- **`silent`** - A flag to suppress printing errors when they occur
 
-- **`ignoreNoDocuments`** - A flag to not exit with non-zero exit code when there are no documents.
+- **`ignoreNoDocuments`** - A flag to not exit with non-zero exit code when there are no documents
 
-- **`errorsOnly`** - A flag to suppress printing anything except errors.
+- **`errorsOnly`** - A flag to suppress printing anything except errors
 
-- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. You can read more about lifecycle hooks [here](./lifecycle-hooks). You can specify this on your root configuration or on each output.
+- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. You can read more about lifecycle hooks [here](./lifecycle-hooks). You can specify this on your root configuration or on each output
 
-- **`pluginLoader`** - If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than `require`.
+- **`pluginLoader`** - If you are using the programmatic API in a browser environment, you can override this configuration to load your plugins in a way different than `require`
 
-- **`pluckConfig`** - Allows you to override the configuration for `graphql-tag-pluck`. This tool extracts your GraphQL operations from your code files.
+- **`pluckConfig`** - Allows you to override the configuration for `graphql-tag-pluck`. This tool extracts your GraphQL operations from your code files
 
-  - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` uses to track down your `gql` usages and imports. Use this if your code files import `gql` from another library or have a custom `gql` tag. `identifier` is the named export, so don't provide it if the tag function is imported as default.
+  - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` uses to track down your `gql` usages and imports. Use this if your code files import `gql` from another library or have a custom `gql` tag. `identifier` is the named export, so don't provide it if the tag function is imported as default
 
-  - **`pluckConfig.gqlMagicComment`** - Configures the magic GraphQL comments to look for. The default is `/* GraphQL */`).
+  - **`pluckConfig.gqlMagicComment`** - Configures the magic GraphQL comments to look for. The default is `/* GraphQL */`)
 
-  - **`pluckConfig.globalGqlIdentifierName`** - Overrides the name of the default GraphQL name identifier.
+  - **`pluckConfig.globalGqlIdentifierName`** - Overrides the name of the default GraphQL name identifier
 
 - **`skipDocumentsValidation`** - Allows to configure how to validate documents
 
   - **`skipDocumentsValidation.skipValidationAgainstSchema`** - A flag to disable the validation against the schema
 
-  - **`skipDocumentsValidation.ignoreRules`** - An array of rule names to ignore during the validation. You can find a list of the available rules [here](https://github.com/graphql/graphql-js/tree/main/src/validation/rules).
+  - **`skipDocumentsValidation.ignoreRules`** - An array of rule names to ignore during the validation. You can find a list of the available rules [here](https://github.com/graphql/graphql-js/tree/main/src/validation/rules)
 
   - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
 
@@ -96,7 +96,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 You can use environment variables in your `codegen.yml` file:
 
-```yaml {1}
+```yaml /${SCHEMA_PATH}/
 schema: ${SCHEMA_PATH}
 documents: ./src/**/*.graphql
 generates:

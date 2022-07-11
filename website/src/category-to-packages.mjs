@@ -1,5 +1,5 @@
 /*
-  Used to determine right category folder in plugin hub and for redirect legacy links in next.config#redirects
+  Used to determine right category folder in plugins and for redirect legacy links in next.config#redirects
  */
 export const CategoryToPackages = {
   'c-sharp': ['c-sharp-operations'],

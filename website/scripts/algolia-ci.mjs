@@ -13,7 +13,7 @@ indexToAlgolia({
   domain: process.env.SITE_URL,
   postProcessor: objects =>
     objects.map(o => {
-      if (o.url.includes('plugin-hub/')) {
+      if (o.url.includes('plugins/')) {
         o.type = 'Plugin';
       }
       return o;

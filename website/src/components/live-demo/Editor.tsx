@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { useThemeContext } from '@theguild/components';
+import { useTheme } from 'next-themes';
 import MonacoEditor from '@monaco-editor/react';
 import { canUseDOM } from '@/utils';
 
@@ -14,8 +14,7 @@ const Editor = ({
   readOnly?: boolean;
   onEdit: (value?: string) => void;
 }): ReactElement | null => {
-  const { isDarkTheme } = useThemeContext();
-
+  const { theme } = useTheme()
   if (!canUseDOM) {
     return null;
   }
@@ -24,7 +23,7 @@ const Editor = ({
     <MonacoEditor
       height="40vh"
       language={lang}
-      theme={isDarkTheme ? 'vs-dark' : 'vs'}
+      theme={theme === 'dark' ? 'vs-dark' : 'vs'}
       value={value}
       options={{
         readOnly,

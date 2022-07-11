@@ -6,7 +6,7 @@ GraphQL Code Generator should be integrated as part of your development workflow
 
 If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your `package.json`, for example:
 
-```json filename="package.json"
+```json filename="package.json" {6-7}
 {
   "scripts": {
     "dev": "nodemon app.js",
@@ -28,7 +28,7 @@ If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`
 
 You can either run it in a separate terminal session or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
 
-```json
+```json {3} /--watch/
 {
   "scripts": {
     "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
@@ -41,7 +41,7 @@ You can either run it in a separate terminal session or use tools like [`concurr
 
 If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
 
-```sh
+```sh /"src/**/*.js"/
 yarn graphql-codegen --watch "src/**/*.js"
 ```
 
@@ -63,7 +63,7 @@ If you are using a monorepo structure, with tools such as [Yarn Workspaces](http
 
 If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
 
-```yaml
+```yaml {4,7}
 schema: 'server/src/**/*.graphql'
 documents: 'client/src/**/*.graphql'
 generates:

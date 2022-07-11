@@ -13,7 +13,7 @@ export default {
   unstable_flexsearch: null,
   floatTOC: true,
   customSearch: null, // customizable, you can use algolia for example
-  darkMode: false,
+  darkMode: true,
   footer: null,
   footerEditLink: 'Edit this page on GitHub',
   logo: (

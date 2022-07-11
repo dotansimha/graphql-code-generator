@@ -1,5 +1,4 @@
 import Callout from 'nextra-theme-docs/callout'
-import { PackageCmd } from '@/components'
 
 # Contributing
 
@@ -26,7 +25,7 @@ GraphQL Code Generator uses the following stack to manage the source code:
 
 1. [TypeScript](https://typescriptlang.org) - for writing the code
 2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling, and development workflow
-3. [Jest](https://jestjs.io) - for running tests.
+3. [Jest](https://jestjs.io) - for running tests
 
 ## 2. Fork and Clone
 
@@ -73,13 +72,17 @@ Make sure to follow the following instructions:
 1. Make sure the package name starts with `@graphql-codegen/` prefix.
 
 ```json filename="package.json"
-  "name": "@graphql-codegen/MY_PLUGIN_NAME",
+{
+  "name": "@graphql-codegen/MY_PLUGIN_NAME"
+}
 ```
 
 2. Make sure that the version is aligned with all other existing packages.
 
 ```json filename="package.json"
-  "version": "X.Y.Z",
+{
+  "version": "X.Y.Z"
+}
 ```
 
 <Callout>
@@ -90,10 +93,11 @@ Make sure to follow the following instructions:
 3. Make sure that you have the following `scripts` configured;
 
 ```json filename="package.json"
+{
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
-  },
+  }
 ```
 
 <Callout>This will make sure that your plugin is compatible with our build and test system.</Callout>
@@ -101,13 +105,15 @@ Make sure to follow the following instructions:
 4. Make sure your basic plugin dependencies are configured this way:
 
 ```json filename="package.json"
+{
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "X.Y.Z",
     "tslib": "~1.11.1"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
-  },
+  }
+}
 ```
 
 <Callout>
@@ -148,7 +154,7 @@ export const plugin: PluginFunction<Partial<MyPluginConfig>, MyPluginConfig> = (
 <Callout>
 `schema` is the merged `GraphQLSchema` object, from all sources. this will always be available for plugin.
 
-`documents` is an array of GraphQL operations (query/mutation/subscription/fragment). This is optional, and you can use it only if your plugin needs it.
+`documents` is an array of GraphQL operations (`query`/`mutation`/`subscription`/`fragment`). This is optional, and you can use it only if your plugin needs it.
 
 `config` is the merged configuration passed in the `.yaml` configuration file of the codegen.
 
@@ -158,9 +164,9 @@ You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Val
 
 ## 7. Test your plugin
 
-To test your plugin, create a test file - `tests/plugin.spec.ts` with the following content;
+To test your plugin, create a test file - `tests/plugin.spec.ts` with the following content:
 
-```ts
+```ts filename="plugin.spec.ts"
 import { plugin } from '../src'
 
 describe('My Plugin', () => {
@@ -214,11 +220,11 @@ export type MyPluginConfig = {
    * ## Change the name
    * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - my-plugin
-   *  config:
-   *    name: Uri
+   *   path/to/file.ts:
+   *     plugins:
+   *       - my-plugin
+   *     config:
+   *       name: Uri
    * ```
    */
   name: string
@@ -230,9 +236,9 @@ export type MyPluginConfig = {
 ```ts
 export const pluginsConfigurations: PluginConfig[] = [
   {
-    file: '../packages/plugins/my-plugin/config.ts', // file where the Config interface/type is located
-    identifier: 'MyPluginConfig', // name of the Config interface/type
-    name: 'my-plugin' // name if you plugin package
+    file: '../packages/plugins/my-plugin/config.ts', // file where the config interface/type is located
+    identifier: 'MyPluginConfig', // name of the config interface/type
+    name: 'my-plugin' // name of your plugin package
   }
   // …
 ]
@@ -246,7 +252,7 @@ export const pluginsConfigurations: PluginConfig[] = [
 
 ## 10. Website & Plugins Hub
 
-To add your plugin to the website and [Plugin Hub](/plugins), add your plugin package information in `website/src/lib/plugins.ts`:
+To add your plugin to the website and [Plugins page](/plugins), add your plugin package information in `website/src/lib/plugins.ts`:
 
 ```ts
 const PACKAGES: Package<Tags>[] = [
@@ -256,7 +262,9 @@ const PACKAGES: Package<Tags>[] = [
     npmPackage: '@graphql-codegen/my-plugin', // name of the npm package
     iconUrl: '/assets/img/icons/codegen.svg', // you can specify a custom icon, or use codegen's
     tags: ['plugin', 'utilities'], // add tags for the search engine
-  },
+  }
+  // …
+]
 ```
 
 Go ahead to `website` directory and run the website using `yarn dev`.

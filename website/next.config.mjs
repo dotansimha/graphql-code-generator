@@ -10,7 +10,7 @@ const withNextra = nextra({
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
   packageNames.map(packageName => ({
     source: `/plugins/${packageName}`,
-    destination: `/plugin-hub/${category}/${packageName}`,
+    destination: `/plugins/${category}/${packageName}`,
   }))
 );
 
@@ -24,10 +24,6 @@ export default withNextra({
   },
   swcMinify: true,
   reactStrictMode: true,
-  experimental: {
-    concurrentFeatures: false,
-    // serverComponents: true,
-  },
   webpack(config) {
     config.resolve.fallback = {
       ...config.resolve.fallback,

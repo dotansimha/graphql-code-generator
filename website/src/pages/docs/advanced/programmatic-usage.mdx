@@ -56,7 +56,7 @@ Then, provide the config object to `codegen`:
 
 ```ts
 const output = await codegen(config)
-await fs.writeFile(path.join(__dirname, outputFile), output)
+await fs.writeFile(path.join(__dirname, outputFile), output, 'utf8')
 console.log('Outputs generated!')
 ```
 

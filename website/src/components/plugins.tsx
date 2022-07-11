@@ -19,14 +19,14 @@ type MarketplaceProps = {
 
 const categoryEntries = Object.entries(CategoryToPackages);
 
-export const PluginHub = (): ReactElement => {
+export const Plugins = (): ReactElement => {
   const { data } = useSSG() as MarketplaceProps;
 
   const marketplaceItems: (IMarketplaceItemProps & { raw: PackageWithStats })[] = useMemo(
     () =>
       data.map<IMarketplaceItemProps & { raw: PackageWithStats }>(plugin => {
         const [category] = categoryEntries.find(([, packageNames]) => packageNames.includes(plugin.identifier)) || [];
-        const linkHref = `/plugin-hub/${category}/${plugin.identifier}`;
+        const linkHref = `/plugins/${category}/${plugin.identifier}`;
         return {
           raw: plugin,
           tags: plugin.tags,
@@ -71,7 +71,7 @@ export const PluginHub = (): ReactElement => {
 
   return (
     <MarketplaceSearch
-      title="Explore Plugin Hub"
+      title="Explore Plugins"
       tagsFilter={ALL_TAGS}
       placeholder="Find plugins..."
       primaryList={{

@@ -13,8 +13,8 @@
       "toc": true
     }
   },
-  "plugin-hub": {
-    "title": "Plugin Hub",
+  "plugins": {
+    "title": "Plugins",
     "type": "page",
     "theme": {
       "toc": false
