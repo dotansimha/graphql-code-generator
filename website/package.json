@@ -93,6 +93,7 @@
     "react-icons": "4.4.0",
     "react-select": "5.4.0",
     "react-use": "17.4.0",
+    "rehype-mdx-title": "^1.0.0",
     "typescript-json-schema": "0.54.0"
   },
   "browserslist": {
