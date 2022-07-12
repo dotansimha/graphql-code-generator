@@ -28,7 +28,7 @@ export type NearOperationFileConfig = {
    * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {5}
    * generates:
    *   src/:
    *     preset: near-operation-file
@@ -45,7 +45,7 @@ export type NearOperationFileConfig = {
    * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   src/:
    *     preset: near-operation-file
@@ -62,7 +62,7 @@ export type NearOperationFileConfig = {
    * @default .generated.ts
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   src/:
    *     preset: near-operation-file
@@ -80,7 +80,7 @@ export type NearOperationFileConfig = {
    * @default process.cwd()
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   src/:
    *     preset: near-operation-file
@@ -97,7 +97,7 @@ export type NearOperationFileConfig = {
    * @default ''
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   src/:
    *     preset: near-operation-file
@@ -114,7 +114,7 @@ export type NearOperationFileConfig = {
    * @default Types
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   src/:
    *     preset: near-operation-file

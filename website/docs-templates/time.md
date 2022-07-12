@@ -1,5 +1,0 @@
----
-id: time
----
-
-{@apiDocs}
