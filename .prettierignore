@@ -9,7 +9,13 @@ CHANGELOG.md
 .husky/_/
 .changeset/*.md
 
-# temporarly ignore follow files because prettier-ignore comments don't work in mdx2
+# temporarily ignore follow files because prettier-ignore comments don't work in mdx2
 # see https://github.com/prettier/prettier/pull/12208
-website/docs/advanced/how-does-it-work.mdx
-website/docs/getting-started/development-workflow.mdx
+website/src/pages/docs/advanced/generated-files-colocation.mdx
+website/src/pages/docs/advanced/how-does-it-work.mdx
+website/src/pages/docs/config-reference/schema-field.mdx
+website/src/pages/docs/getting-started/index.mdx
+website/src/pages/docs/guides/graphql-server-apollo-yoga.mdx
+website/src/pages/docs/guides/react.mdx
+website/src/pages/plugins/index.mdx
+website/src/pages/plugins/presets/near-operation-file-preset.mdx

@@ -43,7 +43,7 @@ export function transformDocs() {
   );
 
   if (!schema.definitions) {
-    throw new Error(`Config-transform: "schema.definitions" is not defined`);
+    throw new Error('Config-transform: "schema.definitions" is not defined');
   }
 
   // This will make sure to add a nice auto complete for all built-in plugins and their configuration mapped

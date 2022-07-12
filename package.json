@@ -100,10 +100,7 @@
     "packages/**/src/**/*.{ts,tsx}": [
       "eslint --fix"
     ],
-    "**/*.{ts,tsx,graphql,yml}": [
-      "prettier --write"
-    ],
-    "**/*.json": [
+    "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
     "yarn.lock": [

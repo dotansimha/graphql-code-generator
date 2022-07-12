@@ -13,7 +13,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -28,7 +28,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6}
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -43,7 +43,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {7}
    * generates:
    *   path/to/file.ts:
    *     plugins:
