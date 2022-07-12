@@ -46,7 +46,7 @@ export interface RawConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   strictScalars: true
    * ```
@@ -57,7 +57,7 @@ export interface RawConfig {
    * @default any
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   defaultScalarType: unknown
    * ```
@@ -123,7 +123,7 @@ export interface RawConfig {
    * @description Prefixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   typesPrefix: I
    * ```
@@ -134,7 +134,7 @@ export interface RawConfig {
    * @description Suffixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   typesSuffix: I
    * ```
@@ -157,7 +157,7 @@ export interface RawConfig {
    * in the selection set, and makes it non-optional
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   nonOptionalTypename: true
    * ```
@@ -171,7 +171,7 @@ export interface RawConfig {
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
    * @example
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   useTypeImports: true
    * ```

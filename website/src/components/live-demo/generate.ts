@@ -3,7 +3,7 @@ import { codegen } from '@graphql-codegen/core';
 import { parse } from 'graphql';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
-import { canUseDOM } from '../../utils';
+import { canUseDOM } from '@/utils';
 
 if (canUseDOM) {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function
@@ -18,14 +18,14 @@ export async function generate(config: string, schema: string, documents?: strin
     const runConfigurations = [];
 
     for (const [filename, outputOptions] of Object.entries(generates)) {
-      const hasPreset = !!outputOptions.preset;
+      const hasPreset = Boolean(outputOptions.preset);
       const plugins = normalizeConfig(outputOptions.plugins || outputOptions);
       const outputConfig = outputOptions.config;
       const pluginMap = {};
 
       await Promise.all(
         plugins.map(async pluginElement => {
-          const pluginName = Object.keys(pluginElement)[0];
+          const [pluginName] = Object.keys(pluginElement);
           try {
             pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
           } catch (e) {
