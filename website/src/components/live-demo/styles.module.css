@@ -1,41 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
 
-.picker {
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-bottom: 5px;
-  margin: 30px auto 0 auto;
-  text-align: center;
-  width: 50%;
-}
-
-.exampleDesc {
-  font-size: 0.9em;
-  border-left: 10px #f1f1f1 solid;
-  padding-left: 10px;
-  margin-top: 10px;
-  text-align: left;
-}
-
 .react-monaco-editor-container,
 .monaco-editor {
   height: 400px;
-}
-
-.exampleTag {
-  background-color: gainsboro;
-  border-radius: 10px;
-  font-size: 11px;
-  padding: 3px 5px 3px 5px;
-  color: black !important;
-  margin-right: 3px;
-  margin-left: 3px;
-}
-
-.exampleTags {
-  padding-right: 20px;
-  float: right;
-  display: flex;
 }
 
 .column {

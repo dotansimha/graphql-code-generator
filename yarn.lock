@@ -3624,10 +3624,10 @@
   dependencies:
     tslib "^2.4.0"
 
-"@theguild/components@2.0.0-alpha-067b6c4.0":
-  version "2.0.0-alpha-067b6c4.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-067b6c4.0.tgz#8c45a5cafdf1e270d7adb79d9ca2135ad395e4aa"
-  integrity sha512-yXWUv3a7YWoWh+1/p66YrXbbuee1DBs0x6Fk4j1vFfMa5MfA0DN0sbZC762ubahafKPjNTiUbYABC8Ji0AuAFw==
+"@theguild/components@2.0.0-alpha-8c5e72a.0":
+  version "2.0.0-alpha-8c5e72a.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-8c5e72a.0.tgz#e34fe7905836c8d229e8a28b703d21d494c7568c"
+  integrity sha512-GDY5DM2xS6RvhbXJd/FsLp1jF6zTm/Q/xAnPklqvgBCuH8ND7CVCbrFNfiLnz6P83nlkCSV8xHeGo6SKy7/iXg==
   dependencies:
     "@algolia/autocomplete-js" "^1.6.2"
     "@algolia/autocomplete-plugin-algolia-insights" "^1.6.2"

@@ -14,7 +14,7 @@ const Editor = ({
   readOnly?: boolean;
   onEdit: (value?: string) => void;
 }): ReactElement | null => {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
   if (!canUseDOM) {
     return null;
   }

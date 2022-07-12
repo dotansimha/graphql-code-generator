@@ -1,9 +1,8 @@
 import { ReactElement } from 'react';
 import Script from 'next/script';
 import { AppProps } from 'next/app';
-import { ThemeProvider } from 'next-themes';
 import { useGoogleAnalytics } from '@guild-docs/client';
-import { Header, FooterExtended } from '@theguild/components';
+import { Header, ThemeProvider, FooterExtended } from '@theguild/components';
 
 import 'nextra-theme-docs/style.css';
 import '../../public/style.css';
