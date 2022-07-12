@@ -4,7 +4,9 @@ import { PackageCmd } from '@/components'
 
 GraphQL Code Generator CLI provides a flag that enables the profiler mode, as follows:
 
-<PackageCmd packages={[{ name: 'graphql-code-generator --config graphql-codegen.yml --profile', cmd: 'run', isNpx: true }]} />
+<PackageCmd
+  packages={[{ name: 'graphql-code-generator --config graphql-codegen.yml --profile', cmd: 'run', isNpx: true }]}
+/>
 
 GraphQL Code Generator operates as usual (generating your files) but also generates a `codegen-[timestamp].json` profile file.
 
