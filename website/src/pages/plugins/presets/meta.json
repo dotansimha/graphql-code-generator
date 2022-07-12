@@ -1,6 +1,0 @@
-{
-  "gql-tag-operations-preset": "gql-tag-operations",
-  "graphql-modules-preset": "graphql-modules",
-  "import-types-preset": "import-types",
-  "near-operation-file-preset": "near-operation-file"
-}

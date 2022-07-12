@@ -12,7 +12,7 @@ export interface IntrospectionPluginConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {6}
+   * ```yaml
    * generates:
    *   introspection.json:
    *     plugins:
