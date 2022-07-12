@@ -21,7 +21,7 @@ export interface UrqlIntrospectionConfig {
    * @default es2015
    *
    * @exampleMarkdown
-   * ```yaml {6}
+   * ```yaml
    * generates:
    *   path/to/file.json:
    *     plugins:

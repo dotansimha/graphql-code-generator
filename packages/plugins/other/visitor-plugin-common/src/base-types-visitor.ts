@@ -179,7 +179,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yaml
+   * ```yml
    * generates:
    *   path/to/file.ts:
    *     plugins:

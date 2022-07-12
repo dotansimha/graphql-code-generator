@@ -13,4 +13,15 @@ module.exports = {
     'react/jsx-curly-brace-presence': ['error', 'never'],
     'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
   },
+  overrides: [
+    {
+      files: ['.babelrc.js', '.eslintrc.js', 'next-i18next.config.js', 'next.config.js'],
+      env: {
+        node: true,
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+  ],
 };

@@ -1,0 +1,31 @@
+---
+id: profiler
+title: GraphQL Code Generator Profiler
+---
+
+GraphQL Code Generator CLI provides a flag that enables the profiler mode, as follows:
+
+<PackageRun scripts={['graphql-codegen --config graphql-codegen.yml --profile']} />
+
+GraphQL Code Generator operates as usual (generating your files) but also generates a `codegen-[timestamp].json` profile file.
+
+This profile file can be loaded into the Chrome Dev Tools as follows:
+
+1. Open a new Chrome tab (or other browsers) and open the Chrome Dev Tools
+
+2. Click on the "Performance" tab
+
+3. Load the `codegen-[timestamp].json` file as follows:
+
+![Profiler](/assets/docs/codegen-profile-1.png)
+
+4. You then have access to the graph view:
+
+![Profiler](/assets/docs/codegen-profile-2.png)
+
+The graph view shows the time spent on the main tasks of the codegen.
+
+Inspecting it allows you to identify:
+
+- if your configuration could benefit from excluding some documents from loading
+- if you are facing a bug that [should be reported](https://github.com/dotansimha/graphql-code-generator/issues)
