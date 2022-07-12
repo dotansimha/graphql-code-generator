@@ -6,7 +6,7 @@ export default {
   titleSuffix: ` – ${SITE_NAME}`,
   projectLink: 'https://github.com/dotansimha/graphql-code-generator', // GitHub link in the navbar
   github: null,
-  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/blob/master/website', // base URL for the docs repository
+  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website/src/pages', // base URL for the docs repository
   nextLinks: true,
   prevLinks: true,
   search: null,
