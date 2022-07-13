@@ -77,7 +77,7 @@
     "@guild-docs/client": "4.0.0-alpha-977f9d3.0",
     "@guild-docs/server": "4.0.0",
     "@monaco-editor/react": "4.4.5",
-    "@theguild/components": "2.0.0-alpha-8ba8df2.0",
+    "@theguild/components": "2.0.0-alpha-9d29815.0",
     "classnames": "2.3.1",
     "date-fns": "2.28.0",
     "dedent": "0.7.0",

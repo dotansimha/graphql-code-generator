@@ -3629,10 +3629,10 @@
   dependencies:
     tslib "^2.4.0"
 
-"@theguild/components@2.0.0-alpha-8ba8df2.0":
-  version "2.0.0-alpha-8ba8df2.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-8ba8df2.0.tgz#103efcb56fbf6d82b6c018d528d4de478f5958d4"
-  integrity sha512-cacNs8tWoIOATSTtXI3nK9b86F7feSmjJfyd85HnvAx1WnPj7i46efIEUOyM2b6o94OzKaS4wPNdHg9dig6xoQ==
+"@theguild/components@2.0.0-alpha-9d29815.0":
+  version "2.0.0-alpha-9d29815.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-9d29815.0.tgz#aedb830878297046aac0e6e4393f5d8e1bc51fdc"
+  integrity sha512-Ee5hGPEblHFSTIJtqeUPK0vWtx0FztNz5aPLsMP1EH+SCezabVntc2HdlinP3ahV3nAKz60rctew/exRBU//Lw==
   dependencies:
     "@algolia/autocomplete-js" "^1.6.2"
     "@algolia/autocomplete-plugin-algolia-insights" "^1.6.2"
@@ -3641,7 +3641,7 @@
     "@headlessui/react" "^1.6.6"
     "@radix-ui/react-navigation-menu" "^0.1.2"
     algoliasearch "^4.13.0"
-    clsx "^1.2.0"
+    clsx "^1.2.1"
     focus-trap-react "^9.0.0"
     nextra-theme-docs "2.0.0-alpha.59"
     react-instantsearch-dom "6.17.0"
@@ -5763,7 +5763,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-clsx@^1.2.0:
+clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==

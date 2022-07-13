@@ -48,7 +48,7 @@ index 0f5435d..0aa53c7
 +++ b/node_modules/nextra-theme-docs/dist/index.js
 @@ -51,7 +51,7 @@ var __async = (__this, __arguments, generator) => {
  };
- 
+
  // src/index.tsx
 -import React28, { useMemo as useMemo3, useState as useState7 } from "react";
 +import React32, { useMemo as useMemo3, useState as useState7 } from "react";
@@ -58,7 +58,7 @@ index 0f5435d..0aa53c7
 @@ -77,9 +77,21 @@ var renderComponent = (ComponentOrNode, props, functionOnly) => {
  };
  var render_component_default = renderComponent;
- 
+
 +// src/utils/use-mounted.ts
 +import { useEffect, useState } from "react";
 +var useMounted = () => {
@@ -76,7 +76,7 @@ index 0f5435d..0aa53c7
 +  newNextLinkBehavior: false
 +});
  var useConfig = () => React2.useContext(ThemeConfigContext);
- 
+
  // src/head.tsx
 @@ -87,8 +99,7 @@ function Head({ title, locale, meta }) {
    const config = useConfig();
@@ -90,7 +90,7 @@ index 0f5435d..0aa53c7
      href: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='.9em' font-size='90' text-anchor='middle'>${config.unstable_faviconGlyph}</text><style>text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";fill:black}@media(prefers-color-scheme:dark){text{fill:white}}</style></svg>`
 @@ -110,9 +121,44 @@ function Head({ title, locale, meta }) {
  }
- 
+
  // src/navbar.tsx
 -import React8 from "react";
 +import React17 from "react";
@@ -133,11 +133,11 @@ index 0f5435d..0aa53c7
 +
 +// src/navbar.tsx
  import { useRouter as useRouter3 } from "next/router";
- 
+
  // src/utils/get-fs-route.ts
 @@ -134,33 +180,30 @@ function useMenuContext() {
  }
- 
+
  // src/search.tsx
 -import React4, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 +import React5, { useMemo, useCallback, useRef, useState as useState2, useEffect as useEffect2 } from "react";
@@ -230,7 +230,7 @@ index 0f5435d..0aa53c7
        href: res.route,
 @@ -254,19 +297,204 @@ var Search = ({ directories = [] }) => {
  var search_default = Search;
- 
+
  // src/flexsearch.js
 -import React5, {
 +import React16, {
@@ -630,7 +630,7 @@ index 0f5435d..0aa53c7
      });
    }))));
  }
- 
+
 -// src/icons/github.tsx
 -import React6 from "react";
 -var Github = ({ height = 40 }) => {
@@ -807,14 +807,14 @@ index 0f5435d..0aa53c7
 -  })))))));
 +  })))));
  }
- 
+
  // src/footer.tsx
 -import React17 from "react";
 +import React21 from "react";
  import cn5 from "classnames";
 -import Link4 from "next/link";
  import { useRouter as useRouter5 } from "next/router";
- 
+
 -// src/icons/arrow-right.tsx
 -import React9 from "react";
 -var ArrowRight = (_a) => {
@@ -836,7 +836,7 @@ index 0f5435d..0aa53c7
 -import React13 from "react";
 +import React19 from "react";
  import { useRouter as useRouter4 } from "next/router";
- 
+
  // src/select.tsx
 -import React11 from "react";
 +import React18 from "react";
@@ -904,7 +904,7 @@ index 0f5435d..0aa53c7
 -  }));
 +  }, /* @__PURE__ */ React18.createElement(CheckIcon, null)) : null))))));
  }
- 
+
  // src/locale-switch.tsx
 @@ -852,7 +951,7 @@ function LocaleSwitch({ options }) {
    const router = useRouter4();
@@ -929,7 +929,7 @@ index 0f5435d..0aa53c7
        key: l.locale,
 @@ -872,100 +971,36 @@ function LocaleSwitch({ options }) {
  }
- 
+
  // src/theme-switch.tsx
 -import React16, { memo as memo2 } from "react";
 +import React20, { memo as memo2 } from "react";
@@ -1007,7 +1007,7 @@ index 0f5435d..0aa53c7
    });
  }
  var theme_switch_default = memo2(ThemeSwitch);
- 
+
  // src/footer.tsx
 -var NextLink = ({ route, title, isRTL }) => {
 -  return /* @__PURE__ */ React17.createElement(Link4, {
@@ -1121,7 +1121,7 @@ index 0f5435d..0aa53c7
    }))));
  };
  var footer_default = Footer;
- 
+
  // src/misc/theme.tsx
 -import Link5 from "next/link";
 -import React23, {
@@ -1134,7 +1134,7 @@ index 0f5435d..0aa53c7
    useContext as useContext3
  } from "react";
  import "intersection-observer";
- 
+
  // src/misc/active-anchor.tsx
 -import React18, { createContext as createContext2, useContext as useContext2, useState as useState3 } from "react";
 +import React22, { createContext as createContext2, useContext as useContext2, useState as useState4 } from "react";
@@ -1155,7 +1155,7 @@ index 0f5435d..0aa53c7
  };
 @@ -1052,7 +1092,7 @@ var ActiveAnchor = ({ children }) => {
  import { MDXProvider } from "@mdx-js/react";
- 
+
  // src/components/collapse.tsx
 -import React19, { useRef as useRef3, useEffect as useEffect3 } from "react";
 +import React23, { useRef as useRef3, useEffect as useEffect4 } from "react";
@@ -1193,7 +1193,7 @@ index 0f5435d..0aa53c7
      style: {
 @@ -1121,7 +1161,7 @@ function Collapse({
  }
- 
+
  // src/components/tabs.tsx
 -import React20 from "react";
 +import React24 from "react";
@@ -1232,7 +1232,7 @@ index 0f5435d..0aa53c7
      className: "focus:outline-none focus-visible:ring"
    }, children);
  }
- 
+
  // src/bleed.tsx
 -import React21 from "react";
 +import React25 from "react";
@@ -1247,7 +1247,7 @@ index 0f5435d..0aa53c7
    }, children);
  };
  var bleed_default = Bleed;
- 
+
  // src/callout.tsx
 -import React22 from "react";
 +import React26 from "react";
@@ -1507,7 +1507,7 @@ index 0f5435d..0aa53c7
 +    components
    }, children);
  };
- 
+
  // src/sidebar.tsx
 -import React24, { useState as useState5, useEffect as useEffect5, useMemo as useMemo2 } from "react";
 +import React28, { useState as useState6, useEffect as useEffect6, useMemo as useMemo2 } from "react";
@@ -1516,10 +1516,10 @@ index 0f5435d..0aa53c7
  import { useRouter as useRouter6 } from "next/router";
 -import Link6 from "next/link";
  import scrollIntoView from "scroll-into-view-if-needed";
- 
+
  // src/utils/get-heading-text.ts
 @@ -1438,7 +1421,7 @@ function getHeadingText(heading) {
- 
+
  // src/sidebar.tsx
  var TreeState = {};
 -var Folder = React24.memo(FolderImpl);
@@ -1787,7 +1787,7 @@ index 0f5435d..0aa53c7
      lite: !!config.i18n
    }))) : null)))));
  }
- 
+
  // src/toc.tsx
 -import React25 from "react";
 +import React29 from "react";
@@ -1906,7 +1906,7 @@ index 0f5435d..0aa53c7
      className: "pt-4 leading-4"
    }, render_component_default(config.tocExtraContent, { locale })) : null) : null));
  }
- 
+
  // src/misc/default.config.tsx
 -import React26 from "react";
 +import React30 from "react";
@@ -1969,7 +1969,7 @@ index 0f5435d..0aa53c7
 @@ -1901,7 +1872,7 @@ var default_config_default = defaultTheme;
  // src/utils/normalize-pages.tsx
  import getTitle from "title";
- 
+
 -// src/misc/theme-context.tsx
 +// src/misc/theme-context.ts
  var theme_context_default = {
@@ -1977,7 +1977,7 @@ index 0f5435d..0aa53c7
    sidebar: true,
 @@ -2163,31 +2134,29 @@ if (typeof window !== "undefined") {
  }
- 
+
  // src/breadcrumb.tsx
 -import React27 from "react";
 -import Link7 from "next/link";
@@ -2015,7 +2015,7 @@ index 0f5435d..0aa53c7
 +    }, item.title) : item.title));
    }));
  }
- 
+
 @@ -2215,9 +2184,9 @@ var Body = ({
    const config = useConfig();
    const { locale } = useRouter8();
@@ -2101,7 +2101,7 @@ index 0f5435d..0aa53c7
      asPopover: activeType === "page" || hideSidebar,
      includePlaceholder: themeContext.layout === "default"
 -  }), activeType === "page" || hideToc || themeContext.layout !== "default" ? themeContext.layout === "full" || themeContext.layout === "raw" ? null : /* @__PURE__ */ React28.createElement("div", {
-+  }), console.log("(activeType === 'page'", activeType === "page", "hideSidebar", hideSidebar), activeType === "page" || hideToc || themeContext.layout !== "default" ? themeContext.layout === "full" || themeContext.layout === "raw" ? null : /* @__PURE__ */ React32.createElement("div", {
++  }), activeType === "page" || hideToc || themeContext.layout !== "default" ? themeContext.layout === "full" || themeContext.layout === "raw" ? null : /* @__PURE__ */ React32.createElement("div", {
      className: "nextra-toc w-64 hidden xl:block text-sm px-4 order-last flex-shrink-0"
 -  }) : /* @__PURE__ */ React28.createElement(ToC, {
 +  }) : /* @__PURE__ */ React32.createElement(ToC, {
