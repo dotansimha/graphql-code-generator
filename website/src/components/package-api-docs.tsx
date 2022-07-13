@@ -1,9 +1,8 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
 import { components } from 'nextra-theme-docs/theme';
-import Callout from 'nextra-theme-docs/callout';
+import { Callout, PackageCmd } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
-import { PackageCmd } from './package-cmd';
 import { format } from 'date-fns';
 
 export const PackageApiDocs = (): ReactElement => {

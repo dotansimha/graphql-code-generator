@@ -2575,7 +2575,7 @@
     "@mdx-js/mdx" "^2.1.1"
     unified "^10.1.2"
 
-"@headlessui/react@^1.6.1":
+"@headlessui/react@^1.6.1", "@headlessui/react@^1.6.6":
   version "1.6.6"
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.6.6.tgz#3073c066b85535c9d28783da0a4d9288b5354d0c"
   integrity sha512-MFJtmj9Xh/hhBMhLccGbBoSk+sk61BlP6sJe4uQcVMtXZhCgGqd2GyIQzzmsdPdTEWGSF434CBi8mnhR6um46Q==
@@ -3629,19 +3629,21 @@
   dependencies:
     tslib "^2.4.0"
 
-"@theguild/components@2.0.0-alpha-8c5e72a.0":
-  version "2.0.0-alpha-8c5e72a.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-8c5e72a.0.tgz#e34fe7905836c8d229e8a28b703d21d494c7568c"
-  integrity sha512-GDY5DM2xS6RvhbXJd/FsLp1jF6zTm/Q/xAnPklqvgBCuH8ND7CVCbrFNfiLnz6P83nlkCSV8xHeGo6SKy7/iXg==
+"@theguild/components@2.0.0-alpha-9d29815.0":
+  version "2.0.0-alpha-9d29815.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.0-alpha-9d29815.0.tgz#aedb830878297046aac0e6e4393f5d8e1bc51fdc"
+  integrity sha512-Ee5hGPEblHFSTIJtqeUPK0vWtx0FztNz5aPLsMP1EH+SCezabVntc2HdlinP3ahV3nAKz60rctew/exRBU//Lw==
   dependencies:
     "@algolia/autocomplete-js" "^1.6.2"
     "@algolia/autocomplete-plugin-algolia-insights" "^1.6.2"
     "@algolia/autocomplete-plugin-query-suggestions" "^1.6.2"
     "@algolia/autocomplete-theme-classic" "^1.6.2"
+    "@headlessui/react" "^1.6.6"
     "@radix-ui/react-navigation-menu" "^0.1.2"
     algoliasearch "^4.13.0"
-    clsx "^1.2.0"
+    clsx "^1.2.1"
     focus-trap-react "^9.0.0"
+    nextra-theme-docs "2.0.0-alpha.59"
     react-instantsearch-dom "6.17.0"
     react-paginate "^8.1.3"
     react-player "^2.9.0"
@@ -5761,7 +5763,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-clsx@^1.2.0:
+clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -7742,7 +7744,7 @@ fast-shallow-equal@^1.0.0:
   resolved "https://registry.yarnpkg.com/fast-shallow-equal/-/fast-shallow-equal-1.0.0.tgz#d4dcaf6472440dcefa6f88b98e3251e27f25628b"
   integrity sha512-HPtaa38cPgWvaCFmRNhlc6NG7pv6NUHqjPgVAkWGoB9mQMwYB27/K0CvOM5Czy+qpT3e8XJ6Q4aPAnzpNpzNaw==
 
-fast-xml-parser@^4.0.9:
+fast-xml-parser@4.0.9:
   version "4.0.9"
   resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.0.9.tgz#3a81dab7b4952b8d38f0136d28bd055b80ed6512"
   integrity sha512-4G8EzDg2Nb1Qurs3f7BpFV4+jpMVsdgLVuG1Uv8O2OHJfVCg7gcA53obuKbmVqzd4Y7YXVBK05oJG7hzGIdyzg==
@@ -11340,7 +11342,7 @@ next-seo@5.4.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.4.0.tgz#37a7784b30b3f70cec3fa0d77f9dde5990822d24"
   integrity sha512-R9DhajPwJnR/lsF2hZ8cN8uqr5CVITsRrCG1AF5+ufcaybKYOvnH8sH9MaH4/hpkps3PQ9H71S7J7SPYixAYzQ==
 
-next-sitemap@^3.1.10:
+next-sitemap@3.1.10:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-3.1.10.tgz#876d0373330874e48c86a849eab94dc1bb439e17"
   integrity sha512-IslH1nxY5p/3+cdjFiXDFSfchUJ0R+Flvm/T/01y7xokA/hd4rnuU+Jh0ZEZ92j7zBgwPUp1KTg0B41zuSpVHw==
@@ -12997,7 +12999,7 @@ regjsparser@^0.8.2:
   dependencies:
     jsesc "~0.5.0"
 
-rehype-mdx-title@^1.0.0:
+rehype-mdx-title@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/rehype-mdx-title/-/rehype-mdx-title-1.0.0.tgz#292598b5ad8af2c2bd01b3674caea1a44bb60f63"
   integrity sha512-5B/53Y+KQHm4/nrE6pIIPc9Ie2fbPMCLs8WwMGYWWHr+5g3TkmEijRkr8TGYHULtc+C7bOoPR8LIF5DpGROIDg==

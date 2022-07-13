@@ -8,7 +8,7 @@ import { components } from 'nextra-theme-docs/theme';
 import createLayout from 'nextra-theme-docs';
 import themeConfig from '../../../theme.config';
 import { PACKAGES } from '@/lib/plugins';
-import { PackageCmd } from '@/components';
+import { PackageCmd } from '@theguild/components';
 
 interface PluginPageProps {
   data: (PackageWithStats & { compiledSource: string })[];
