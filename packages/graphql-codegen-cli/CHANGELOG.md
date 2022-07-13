@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.8.1
+
+### Patch Changes
+
+- 147e801bf: Add `tslib` as a dependency. See https://github.com/dotansimha/graphql-code-generator/issues/8075
+
 ## 2.8.0
 
 ### Minor Changes
