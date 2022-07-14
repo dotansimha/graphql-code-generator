@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -68,6 +68,7 @@
     "mkdirp": "^1.0.4",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
+    "tslib": "^2.4.0",
     "yaml": "^1.10.0",
     "yargs": "^17.0.0"
   },
