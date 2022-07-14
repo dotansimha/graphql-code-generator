@@ -183,8 +183,7 @@ export default function buildFragmentResolver<T>(
             path: fragmentsFilePath,
             identifiers,
           },
-          // @ts-expect-error config from CLI adds this property. Should be enabled by default.
-          emitLegacyCommonJSImports: presetOptions.presetConfig?.emitLegacyCommonJSImports,
+          emitLegacyCommonJSImports: presetOptions.config.emitLegacyCommonJSImports,
           typesImport,
         })
       ),

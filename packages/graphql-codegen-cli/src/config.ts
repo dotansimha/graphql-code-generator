@@ -445,3 +445,19 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
     })
   );
 }
+
+export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
+  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
+  // const outputConfig = config.generates[outputPath];
+
+  // if (!outputConfig) {
+  //   debugLog(`Couldn't find a config of ${outputPath}`);
+  //   return globalValue;
+  // }
+
+  // if (isConfiguredOutput(outputConfig) && typeof outputConfig.emitLegacyCommonJSImports === 'boolean') {
+  //   return outputConfig.emitLegacyCommonJSImports;
+  // }
+
+  return globalValue;
+}

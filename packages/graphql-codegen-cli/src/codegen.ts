@@ -16,7 +16,7 @@ import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog } from './utils/debugging.js';
-import { CodegenContext, ensureContext } from './config.js';
+import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
 import fs from 'fs';
 import path from 'path';
 import { cpus } from 'os';
@@ -315,6 +315,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
+                            emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, filename),
                           };
 
                           const outputs: Types.GenerateOptions[] = hasPreset
@@ -350,7 +351,10 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
-                              ...outputArgs,
+                              ...{
+                                ...outputArgs,
+                                emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
+                              },
                               cache,
                             });
                             result.push({

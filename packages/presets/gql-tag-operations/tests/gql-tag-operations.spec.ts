@@ -36,7 +36,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
           "/* eslint-disable */
-          import * as graphql from './graphql.js';
+          import * as graphql from './graphql';
           import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
           const documents = {
@@ -91,7 +91,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
           "/* eslint-disable */
-          import * as graphql from './graphql.js';
+          import * as graphql from './graphql';
           import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
           const documents = {
@@ -139,7 +139,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql.js';
+      import * as graphql from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
@@ -188,7 +188,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql.js';
+      import * as graphql from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
@@ -283,7 +283,7 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql.js';
+      import * as graphql from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {

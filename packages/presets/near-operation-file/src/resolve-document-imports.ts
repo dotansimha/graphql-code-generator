@@ -71,8 +71,7 @@ export function resolveDocumentImports<T>(
       if (isUsingTypes(externalFragmentsInjectedDocument, [], schemaObject)) {
         const schemaTypesImportStatement = generateImportStatement({
           baseDir,
-          // @ts-expect-error config from CLI adds this property. Should be enabled by default.
-          emitLegacyCommonJSImports: presetOptions.presetConfig?.emitLegacyCommonJSImports,
+          emitLegacyCommonJSImports: presetOptions.config.emitLegacyCommonJSImports,
           importSource: resolveImportSource(schemaTypesSource),
           baseOutputDir,
           outputPath: generatedFilePath,
