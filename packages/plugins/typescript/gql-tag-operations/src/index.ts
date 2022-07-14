@@ -32,7 +32,7 @@ export const plugin: PluginFunction<{
 
   if (augmentedModuleName == null) {
     return [
-      `import * as graphql from './graphql.js';\n`,
+      `import * as graphql from './graphql';\n`,
       `${
         useTypeImports ? 'import type' : 'import'
       } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
