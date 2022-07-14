@@ -71,6 +71,7 @@ export function resolveDocumentImports<T>(
       if (isUsingTypes(externalFragmentsInjectedDocument, [], schemaObject)) {
         const schemaTypesImportStatement = generateImportStatement({
           baseDir,
+          emitLegacyCommonJSImports: presetOptions.config.emitLegacyCommonJSImports,
           importSource: resolveImportSource(schemaTypesSource),
           baseOutputDir,
           outputPath: generatedFilePath,

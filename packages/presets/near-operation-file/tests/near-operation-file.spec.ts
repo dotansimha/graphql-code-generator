@@ -6,6 +6,14 @@ import path from 'path';
 import { preset } from '../src/index.js';
 
 describe('near-operation-file preset', () => {
+  const executePreset: typeof preset.buildGeneratesSection = options =>
+    preset.buildGeneratesSection({
+      ...options,
+      config: {
+        ...options.config,
+        emitLegacyCommonJSImports: true,
+      },
+    });
   const schemaDocumentNode = parse(/* GraphQL */ `
     type Query {
       user(id: String): User!
@@ -149,7 +157,7 @@ describe('near-operation-file preset', () => {
       ];
 
       expect(async () => {
-        await preset.buildGeneratesSection({
+        await executePreset({
           baseOutputDir: './src/',
           config: {},
           presetConfig: {
@@ -188,7 +196,7 @@ describe('near-operation-file preset', () => {
             number: Int!
           }
         `);
-        const result = await preset.buildGeneratesSection({
+        const result = await executePreset({
           baseOutputDir: './src/',
           config: {},
           presetConfig: {
@@ -265,7 +273,7 @@ describe('near-operation-file preset', () => {
     });
 
     it('#2365 - Should not add Fragment suffix to import identifier when dedupeOperationSuffix: true', async () => {
-      const result = await preset.buildGeneratesSection({
+      const result = await executePreset({
         baseOutputDir: './src/',
         config: {
           dedupeOperationSuffix: true,
@@ -321,7 +329,7 @@ describe('near-operation-file preset', () => {
     });
 
     it('#2365 - Should add Fragment suffix to import identifier when dedupeOperationSuffix not set', async () => {
-      const result = await preset.buildGeneratesSection({
+      const result = await executePreset({
         baseOutputDir: './src/',
         config: {},
         presetConfig: {
@@ -496,7 +504,7 @@ describe('near-operation-file preset', () => {
         }
       `);
 
-      const result = await preset.buildGeneratesSection({
+      const result = await executePreset({
         baseOutputDir: './src/',
         config: {
           dedupeOperationSuffix: true,
@@ -583,7 +591,7 @@ describe('near-operation-file preset', () => {
 
   it('should not add imports for fragments in the same location', async () => {
     const location = '/some/deep/path/src/graphql/me-query.graphql';
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {
         dedupeOperationSuffix: true,
@@ -624,7 +632,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should build the correct operation files paths', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -649,7 +657,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should build the correct operation files paths with a subfolder', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -674,7 +682,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should skip the duplicate documents validation', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -691,7 +699,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should allow to customize output extension', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -718,7 +726,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with the correct import', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -744,7 +752,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with the correct import when used with package name', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -770,7 +778,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -800,7 +808,7 @@ describe('near-operation-file preset', () => {
 
   it('should fail when multiple fragments with the same name but different definition are found', () => {
     expect(() =>
-      preset.buildGeneratesSection({
+      executePreset({
         baseOutputDir: './src/',
         config: {},
         presetConfig: {
@@ -828,7 +836,7 @@ describe('near-operation-file preset', () => {
 
   it('should NOT fail when multiple fragments with the same name and definition are found', () => {
     expect(() =>
-      preset.buildGeneratesSection({
+      executePreset({
         baseOutputDir: './src/',
         config: {},
         presetConfig: {
@@ -845,7 +853,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should NOT prepend the "add" plugin with Types import when selection set does not include direct fields', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -877,7 +885,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with Types import when arguments are used', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -915,7 +923,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with the correct import (long path)', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -946,7 +954,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should prepend the "add" plugin with the correct import (siblings)', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -977,7 +985,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should not generate an absolute path if the path starts with "~"', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1008,7 +1016,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should add "add" plugin to plugins map if its not there', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1026,7 +1034,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should add "namespacedImportName" to config', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1044,7 +1052,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should add import to external fragment when its in use', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1078,7 +1086,7 @@ describe('near-operation-file preset', () => {
 
   it('Should allow external fragments to be imported from packages with function', async () => {
     const spy = jest.fn();
-    await preset.buildGeneratesSection({
+    await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1099,7 +1107,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should allow external fragments to be imported from packages', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1133,7 +1141,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should add import to external fragment when its in use (long path)', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1159,7 +1167,7 @@ describe('near-operation-file preset', () => {
   });
 
   it('Should add import to external fragment when its in use (nested fragment)', async () => {
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
@@ -1252,7 +1260,7 @@ describe('near-operation-file preset', () => {
       },
     ];
 
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {
         skipTypename: true,
@@ -1331,7 +1339,7 @@ describe('near-operation-file preset', () => {
       },
     ];
 
-    const result = await preset.buildGeneratesSection({
+    const result = await executePreset({
       baseOutputDir: './src/',
       config: {
         dedupeFragments: true,

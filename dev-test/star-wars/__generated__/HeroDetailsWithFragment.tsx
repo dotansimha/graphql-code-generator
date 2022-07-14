@@ -1,7 +1,7 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
-import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
+import { HeroDetailsFragmentDoc } from './HeroDetailsFragment.js';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type HeroDetailsWithFragmentQueryVariables = Types.Exact<{

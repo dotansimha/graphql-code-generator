@@ -31,6 +31,7 @@ export type YamlCliFlags = {
   errorsOnly: boolean;
   profile: boolean;
   ignoreNoDocuments?: boolean;
+  emitLegacyCommonJSImports?: boolean;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -287,6 +288,11 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.ignoreNoDocuments = cliFlags['ignore-no-documents'] === true;
   }
 
+  if (cliFlags['emit-legacy-common-js-imports'] !== undefined) {
+    // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
+    config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
+  }
+
   if (cliFlags.project) {
     context.useProject(cliFlags.project);
   }
@@ -438,4 +444,20 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
       return doc;
     })
   );
+}
+
+export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
+  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
+  // const outputConfig = config.generates[outputPath];
+
+  // if (!outputConfig) {
+  //   debugLog(`Couldn't find a config of ${outputPath}`);
+  //   return globalValue;
+  // }
+
+  // if (isConfiguredOutput(outputConfig) && typeof outputConfig.emitLegacyCommonJSImports === 'boolean') {
+  //   return outputConfig.emitLegacyCommonJSImports;
+  // }
+
+  return globalValue;
 }
