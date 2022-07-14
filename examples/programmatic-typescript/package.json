@@ -17,7 +17,7 @@
     "@graphql-tools/load": "7.7.0",
     "@graphql-tools/schema": "8.5.0",
     "graphql": "16.5.0",
-    "graphql-tag": "^2.12.5",
+    "graphql-tag": "2.12.6",
     "prettier": "2.7.1"
   },
   "devDependencies": {
