@@ -56,7 +56,7 @@
     "apollo-server": "3.10.0",
     "auto-bind": "4.0.0",
     "babel-jest": "27.5.1",
-    "bob-the-bundler": "3.0.0",
+    "bob-the-bundler": "3.0.1",
     "chalk": "4.1.2",
     "dotenv": "16.0.1",
     "eslint": "8.19.0",
