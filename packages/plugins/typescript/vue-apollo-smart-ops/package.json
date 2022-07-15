@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-vue-apollo-smart-ops",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "GraphQL Code Generator plugin for generating typed Vue-Apollo Smart Query and mutation functions based on GraphQL operations",
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js --forceExit"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.5.0",
-    "@graphql-codegen/visitor-plugin-common": "2.11.1",
+    "@graphql-codegen/plugin-helpers": "^2.6.0",
+    "@graphql-codegen/visitor-plugin-common": "2.12.0",
     "auto-bind": "~4.0.0",
     "change-case-all": "1.0.14",
     "tslib": "~2.4.0"
