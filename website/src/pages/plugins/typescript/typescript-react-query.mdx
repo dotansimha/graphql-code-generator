@@ -314,3 +314,14 @@ export const MyComponent = () => {
   )
 }
 ```
+
+### Customizing Query Key
+
+To customize the query key used by react-query, the `@reactQueryKey` directive
+can be used:
+
+```graphql
+query MyQuery @reactQueryKey(key: ["query", "key", "prefix"]) {
+  # ...
+}
+```

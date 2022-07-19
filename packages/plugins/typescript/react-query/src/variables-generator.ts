@@ -1,4 +1,4 @@
-import { OperationDefinitionNode } from 'graphql';
+import { ListValueNode, OperationDefinitionNode, StringValueNode } from 'graphql';
 
 export function generateQueryVariablesSignature(
   hasRequiredVariables: boolean,
@@ -7,8 +7,14 @@ export function generateQueryVariablesSignature(
   return `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 }
 export function generateInfiniteQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
-  if (hasRequiredVariables) return `['${node.name.value}.infinite', variables]`;
-  return `variables === undefined ? ['${node.name.value}.infinite'] : ['${node.name.value}.infinite', variables]`;
+  const keyDirective = node.directives?.find(d => d.name.value == 'reactQueryKey');
+  const keyPrefix = keyDirective
+    ? (keyDirective.arguments[0].value as ListValueNode).values
+        .map((v: StringValueNode) => JSON.stringify(v.value))
+        .join(', ')
+    : `'${node.name.value}.infinite'`;
+  if (hasRequiredVariables) return `[${keyPrefix}, variables]`;
+  return `variables === undefined ? [${keyPrefix}] : [${keyPrefix}, variables]`;
 }
 
 export function generateInfiniteQueryKeyMaker(
@@ -25,8 +31,14 @@ export function generateInfiniteQueryKeyMaker(
 }
 
 export function generateQueryKey(node: OperationDefinitionNode, hasRequiredVariables: boolean): string {
-  if (hasRequiredVariables) return `['${node.name.value}', variables]`;
-  return `variables === undefined ? ['${node.name.value}'] : ['${node.name.value}', variables]`;
+  const keyDirective = node.directives?.find(d => d.name.value == 'reactQueryKey');
+  const keyPrefix = keyDirective
+    ? (keyDirective.arguments[0].value as ListValueNode).values
+        .map((v: StringValueNode) => JSON.stringify(v.value))
+        .join(', ')
+    : `'${node.name.value}'`;
+  if (hasRequiredVariables) return `[${keyPrefix}, variables]`;
+  return `variables === undefined ? [${keyPrefix}] : [${keyPrefix}, variables]`;
 }
 
 export function generateQueryKeyMaker(

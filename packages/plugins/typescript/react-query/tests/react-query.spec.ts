@@ -110,6 +110,13 @@ describe('React-Query', () => {
       }
     }
   `);
+  const namedDoc = parse(/* GraphQL */ `
+    query testWithKey @reactQueryKey(key: ["test", "query", "key"]) {
+      feed {
+        id
+      }
+    }
+  `);
   const docs = [
     {
       document: basicDoc,
@@ -123,7 +130,6 @@ describe('React-Query', () => {
       document: basicFragment,
     },
   ];
-
   it('should allow to override TError type', async () => {
     const config = {
       errorType: 'any',
@@ -1033,6 +1039,26 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       expect(out.content).toBeSimilarStringTo(
         `useTestQuery.fetcher = (dataSource: { endpoint: string, fetchParams?: RequestInit }, variables?: TestQueryVariables) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables);`
       );
+    });
+
+    it('Should use reactQueryKey directive for query key', async () => {
+      const config = {
+        fetcher: 'fetch',
+      };
+      const out = (await plugin(schema, [{ document: namedDoc }], config)) as Types.ComplexPluginOutput;
+      expect(out.content).toBeSimilarStringTo(`export const useTestWithKeyQuery = <
+      TData = TestWithKeyQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: TestWithKeyQueryVariables,
+      options?: UseQueryOptions<TestWithKeyQuery, TError, TData>
+    ) =>
+    useQuery<TestWithKeyQuery, TError, TData>(
+      variables === undefined ? ["test", "query", "key"] : ["test", "query", "key", variables],
+      fetcher<TestWithKeyQuery, TestWithKeyQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestWithKeyDocument, variables),
+      options
+    );`);
     });
 
     it(`tests for dedupeOperationSuffix`, async () => {

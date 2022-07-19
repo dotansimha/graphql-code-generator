@@ -41,6 +41,10 @@ export const plugin: PluginFunction<ReactQueryRawPluginConfig, Types.ComplexPlug
   };
 };
 
+export const addToSchema = /* GraphQL */ `
+  directive @reactQueryKey(key: [String]!) on QUERY
+`;
+
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
