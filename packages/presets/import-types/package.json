@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/import-types-preset",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "GraphQL Code Generator preset for importing types to operation file",
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@graphql-codegen/add": "^3.2.0",
-    "@graphql-codegen/plugin-helpers": "^2.5.0",
-    "@graphql-codegen/visitor-plugin-common": "2.11.1",
+    "@graphql-codegen/plugin-helpers": "^2.6.0",
+    "@graphql-codegen/visitor-plugin-common": "2.12.0",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
