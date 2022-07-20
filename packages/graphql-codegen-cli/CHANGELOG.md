@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.9.1
+
+### Patch Changes
+
+- e2cfc5c36: fix(cli): prevent duplicated error messages on fail (without watcher)
+
 ## 2.9.0
 
 ### Minor Changes
