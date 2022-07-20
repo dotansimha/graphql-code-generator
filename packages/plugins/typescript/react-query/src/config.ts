@@ -19,6 +19,7 @@ export interface ReactQueryRawPluginConfig
     | 'importOperationTypesFrom'
     | 'importDocumentNodeExternallyFrom'
     | 'useTypeImports'
+    | 'legacyMode'
   > {
   /**
    * @description Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetching layer, so you should provide it, or use a custom one.
@@ -91,4 +92,10 @@ export interface ReactQueryRawPluginConfig
    * @description Adds an Infinite Query along side the standard one
    */
   addInfiniteQuery?: boolean;
+
+  /**
+   * @default true
+   * @description If false, it will work with `@tanstack/react-query`, default value is true.
+   */
+  legacyMode?: boolean;
 }

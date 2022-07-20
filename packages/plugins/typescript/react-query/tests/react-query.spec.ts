@@ -540,6 +540,31 @@ describe('React-Query', () => {
         `useTestQuery.fetcher = (client: GraphQLClient, variables?: TestQueryVariables, headers?: RequestInit['headers']) => fetcher<TestQuery, TestQueryVariables>(client, TestDocument, variables, headers);`
       );
     });
+    it('support v4 syntax', async () => {
+      const config = {
+        useTypeImports: true,
+        legacyMode: false,
+      };
+
+      const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+      expect(out.prepend).toContain(
+        `import { useQuery, useMutation, type UseQueryOptions, type UseMutationOptions } from '@tanstack/react-query';`
+      );
+      expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
+          TData = TestQuery,
+          TError = unknown
+        >(
+          dataSource: { endpoint: string, fetchParams?: RequestInit },
+          variables?: TestQueryVariables,
+          options?: Omit<UseQueryOptions<TestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+        ) =>
+        useQuery<TestQuery, TError, TData>(
+          variables === undefined ? ['test'] : ['test', variables],
+          fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+          options
+        );`);
+    });
     it(`tests for dedupeOperationSuffix`, async () => {
       const ast = parse(/* GraphQL */ `
         query notificationsQuery {
