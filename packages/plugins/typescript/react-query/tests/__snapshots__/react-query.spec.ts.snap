@@ -295,7 +295,7 @@ export const useTestQuery = <
       TError = unknown
     >(
       variables?: TTestQueryVariables,
-      options?: UseQueryOptions<TTestQuery, TError, TData>
+      options?: Omit<UseQueryOptions<TTestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
@@ -342,7 +342,7 @@ export const useTestQuery = <
       TError = unknown
     >(
       variables?: TTestQueryVariables,
-      options?: UseQueryOptions<TTestQuery, TError, TData>
+      options?: Omit<UseQueryOptions<TTestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
@@ -436,7 +436,7 @@ export const useTestQuery = <
       TError = unknown
     >(
       variables?: TTestQueryVariables,
-      options?: UseQueryOptions<TTestQuery, TError, TData>
+      options?: Omit<UseQueryOptions<TTestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
@@ -483,7 +483,7 @@ export const useTestQuery = <
       TError = unknown
     >(
       variables?: TTestQueryVariables,
-      options?: UseQueryOptions<TTestQuery, TError, TData>
+      options?: Omit<UseQueryOptions<TTestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
     ) =>
     useQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],
