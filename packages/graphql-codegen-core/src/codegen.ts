@@ -120,6 +120,10 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           : {
               ...options.config,
               ...pluginConfig,
+              mappers: {
+                ...options.config.mappers,
+                ...pluginConfig.mappers,
+              },
             };
 
       const result = await profiler.run(
