@@ -1,11 +1,5 @@
 # @graphql-codegen/typescript-react-query
 
-## 3.7.0-alpha-1370c16b0.0
-
-### Minor Changes
-
-- 1370c16b0: Add LegacyMode option (Set this to false, if you using `@tanstack/react-query`)
-
 ## 3.6.2
 
 ### Patch Changes
