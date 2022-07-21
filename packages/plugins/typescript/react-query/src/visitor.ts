@@ -82,7 +82,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
       addInfiniteQuery: getConfigValue(rawConfig.addInfiniteQuery, false),
-      legacyMode: getConfigValue(rawConfig.legacyMode, true),
+      legacyMode: getConfigValue(rawConfig.legacyMode, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -118,10 +118,6 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
 
     if (!this.hasOperations) {
       return baseImports;
-    }
-
-    if (this.config.addInfiniteQuery) {
-      this.reactQueryOptionsIdentifiersInUse.add('QueryFunctionContext');
     }
 
     const hookAndTypeImports = [

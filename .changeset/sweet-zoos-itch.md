@@ -1,5 +1,10 @@
 ---
-'@graphql-codegen/typescript-react-query': minor
+'@graphql-codegen/typescript-react-query': major
 ---
 
-Add LegacyMode option (Set this to false, if you using `@tanstack/react-query`)
+Introduces breaking changes to support `react-query@4.0.0`:
+- react query package is now `@tanstack/react-query` -> import changes
+- hooks signatures typings changed
+- introduced a `legacyMode` flag (`false` by default)
+
+/!\ If you are using the 'react-query' package or `react-query < 4`, please set the `legacyMode` option to `true`. /!\

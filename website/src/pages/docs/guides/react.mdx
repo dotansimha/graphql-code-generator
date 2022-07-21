@@ -35,7 +35,7 @@ type Query {
 Most React Query usage with GraphQL and TypeScript will look as follows:
 
 ```tsx
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { request, gql } from 'graphql-request'
 
 interface PostQuery {
@@ -140,7 +140,7 @@ We can now update our code as follows:
 
 ```tsx
 import gql from 'graphql-tag'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { usePosts } from '../graphql/generated'
 
 gql`
