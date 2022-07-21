@@ -1,4 +1,11 @@
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  UseQueryOptions,
+  UseInfiniteQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -445,7 +452,7 @@ export const CommentDocument = `
 export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: CommentQueryVariables,
-  options?: UseQueryOptions<CommentQuery, TError, TData>
+  options?: Omit<UseQueryOptions<CommentQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) =>
   useQuery<CommentQuery, TError, TData>(
     ['Comment', variables],
@@ -457,6 +464,22 @@ export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
     ),
     options
   );
+export const useInfiniteCommentQuery = <TData = CommentQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof CommentQueryVariables,
+  variables: CommentQueryVariables,
+  options?: UseInfiniteQueryOptions<CommentQuery, TError, TData>
+) =>
+  useInfiniteQuery<CommentQuery, TError, TData>(
+    ['Comment.infinite', variables],
+    metaData =>
+      fetcher<CommentQuery, CommentQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CommentDocument, {
+        ...variables,
+        ...(metaData.pageParam ?? {}),
+      })(),
+    options
+  );
+
 export const CurrentUserForProfileDocument = `
     query CurrentUserForProfile {
   currentUser {
@@ -468,7 +491,7 @@ export const CurrentUserForProfileDocument = `
 export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables?: CurrentUserForProfileQueryVariables,
-  options?: UseQueryOptions<CurrentUserForProfileQuery, TError, TData>
+  options?: Omit<UseQueryOptions<CurrentUserForProfileQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) =>
   useQuery<CurrentUserForProfileQuery, TError, TData>(
     variables === undefined ? ['CurrentUserForProfile'] : ['CurrentUserForProfile', variables],
@@ -480,6 +503,24 @@ export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery
     ),
     options
   );
+export const useInfiniteCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof CurrentUserForProfileQueryVariables,
+  variables?: CurrentUserForProfileQueryVariables,
+  options?: UseInfiniteQueryOptions<CurrentUserForProfileQuery, TError, TData>
+) =>
+  useInfiniteQuery<CurrentUserForProfileQuery, TError, TData>(
+    variables === undefined ? ['CurrentUserForProfile.infinite'] : ['CurrentUserForProfile.infinite', variables],
+    metaData =>
+      fetcher<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        CurrentUserForProfileDocument,
+        { ...variables, ...(metaData.pageParam ?? {}) }
+      )(),
+    options
+  );
+
 export const FeedDocument = `
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -493,13 +534,29 @@ export const FeedDocument = `
 export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: FeedQueryVariables,
-  options?: UseQueryOptions<FeedQuery, TError, TData>
+  options?: Omit<UseQueryOptions<FeedQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) =>
   useQuery<FeedQuery, TError, TData>(
     ['Feed', variables],
     fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, variables),
     options
   );
+export const useInfiniteFeedQuery = <TData = FeedQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof FeedQueryVariables,
+  variables: FeedQueryVariables,
+  options?: UseInfiniteQueryOptions<FeedQuery, TError, TData>
+) =>
+  useInfiniteQuery<FeedQuery, TError, TData>(
+    ['Feed.infinite', variables],
+    metaData =>
+      fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, {
+        ...variables,
+        ...(metaData.pageParam ?? {}),
+      })(),
+    options
+  );
+
 export const SubmitRepositoryDocument = `
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
