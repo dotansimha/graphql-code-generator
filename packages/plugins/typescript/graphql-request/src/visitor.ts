@@ -13,6 +13,7 @@ import { RawGraphQLRequestPluginConfig } from './config.js';
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
   extensionsType: string;
+  generateIndividualOperations: boolean;
 }
 
 const additionalExportedTypes = `
@@ -36,6 +37,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     super(schema, fragments, rawConfig, {
       rawRequest: getConfigValue(rawConfig.rawRequest, false),
       extensionsType: getConfigValue(rawConfig.extensionsType, 'any'),
+      generateIndividualOperations: getConfigValue(rawConfig.generateIndividualOperations, false),
     });
 
     autoBind(this);
@@ -122,19 +124,27 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
       o.operationResultType
     }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
-        }
-        return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
-          o.operationVariablesTypes
-        }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+        } else if (this.config.generateIndividualOperations) {
+          return `export function ${operationName}(client: GraphQLClient, variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+  return client.request<${o.operationResultType}>(${docVarName}, variables, {...requestHeaders });}`;
+        } else {
+          return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
   return withWrapper((wrappedRequestHeaders) => client.request<${
     o.operationResultType
   }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
 }`;
+        }
       })
       .filter(Boolean)
-      .map(s => indentMultiline(s, 2));
+      .map(s => (this.config.generateIndividualOperations ? s : indentMultiline(s, 2)));
 
-    return `${additionalExportedTypes}
+    return this.config.generateIndividualOperations
+      ? `${allPossibleActions.join('\n')}`
+      : `${additionalExportedTypes}
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 ${extraVariables.join('\n')}

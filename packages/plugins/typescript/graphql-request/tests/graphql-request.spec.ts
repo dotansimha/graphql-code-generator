@@ -307,6 +307,35 @@ async function test() {
 
       expect(output).toMatchSnapshot();
     });
+
+    it('Should support generateIndividualOperations', async () => {
+      const config = { generateIndividualOperations: true };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+async function test() {
+  const Client = require('graphql-request').GraphQLClient;
+  const client = new Client('');
+
+  await feed(client);
+  await feed3(client);
+  await feed4(client);
+
+  const result = await feed2(client, { v: "1" });
+
+  if (result.feed) {
+    if (result.feed[0]) {
+      const id = result.feed[0].id
+    }
+  }
+}`;
+      const output = await validate(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
   });
 
   describe('issues', () => {
