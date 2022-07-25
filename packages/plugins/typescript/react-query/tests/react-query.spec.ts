@@ -75,7 +75,7 @@ export const useTestQuery = <
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
       variables?: TestQueryVariables,
-      options?: Omit<UseQueryOptions<TestQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+      options?: UseQueryOptions<TestQuery, TError, TData>
     ) =>
     useQuery<TestQuery, TError, TData>(
       variables === undefined ? ['test'] : ['test', variables],

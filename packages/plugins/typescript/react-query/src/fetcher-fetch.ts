@@ -79,9 +79,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
-    const options = this.visitor.config.legacyMode
-      ? `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`
-      : `options?: Omit<${hookConfig.query.options}<${operationResultType}, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>`;
+    const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
     return `export const use${operationName} = <
       TData = ${operationResultType},

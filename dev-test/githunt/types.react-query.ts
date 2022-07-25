@@ -452,7 +452,7 @@ export const CommentDocument = `
 export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: CommentQueryVariables,
-  options?: Omit<UseQueryOptions<CommentQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+  options?: UseQueryOptions<CommentQuery, TError, TData>
 ) =>
   useQuery<CommentQuery, TError, TData>(
     ['Comment', variables],
@@ -491,7 +491,7 @@ export const CurrentUserForProfileDocument = `
 export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables?: CurrentUserForProfileQueryVariables,
-  options?: Omit<UseQueryOptions<CurrentUserForProfileQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+  options?: UseQueryOptions<CurrentUserForProfileQuery, TError, TData>
 ) =>
   useQuery<CurrentUserForProfileQuery, TError, TData>(
     variables === undefined ? ['CurrentUserForProfile'] : ['CurrentUserForProfile', variables],
@@ -534,7 +534,7 @@ export const FeedDocument = `
 export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
   variables: FeedQueryVariables,
-  options?: Omit<UseQueryOptions<FeedQuery, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+  options?: UseQueryOptions<FeedQuery, TError, TData>
 ) =>
   useQuery<FeedQuery, TError, TData>(
     ['Feed', variables],

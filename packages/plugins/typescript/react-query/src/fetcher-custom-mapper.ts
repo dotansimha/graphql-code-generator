@@ -90,9 +90,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
     this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
-    const options = this.visitor.config.legacyMode
-      ? `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`
-      : `options?: Omit<${hookConfig.query.options}<${operationResultType}, TError, TData>, 'queryKey' | 'queryFn' | 'initialData'>`;
+    const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const impl = this._isReactHook
