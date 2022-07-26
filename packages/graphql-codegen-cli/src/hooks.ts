@@ -59,6 +59,7 @@ function execShellCommand(cmd: string): Promise<string> {
         if (error) {
           reject(error);
         } else {
+          debugLog(stdout || stderr);
           resolve(stdout || stderr);
         }
       }

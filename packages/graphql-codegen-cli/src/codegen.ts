@@ -15,7 +15,7 @@ import { AggregateError } from '@graphql-tools/utils';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
-import { debugLog } from './utils/debugging.js';
+import { debugLog, printLogs } from './utils/debugging.js';
 import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
 import fs from 'fs';
 import path from 'path';
@@ -414,6 +414,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
     throw newErr;
   }
+
+  printLogs();
 
   return result;
 }
