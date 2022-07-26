@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.10.0
+
+### Minor Changes
+
+- 273ad602f: Replace cross-undici-fetch with @whatwg-node/fetch to fix security vulnerability from undici
+
+### Patch Changes
+
+- cc18923d3: feat(hooks): forward hooks logs to debug logs
+
 ## 2.9.1
 
 ### Patch Changes
