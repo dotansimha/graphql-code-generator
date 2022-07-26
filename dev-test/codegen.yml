@@ -204,6 +204,8 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
+    config:
+      addInfiniteQuery: true
   ./dev-test/githunt/types.rtk-query.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
