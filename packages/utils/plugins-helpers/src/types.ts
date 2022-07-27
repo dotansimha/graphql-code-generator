@@ -446,6 +446,14 @@ export namespace Types {
      */
     silent?: boolean;
     /**
+     * @description A flag to output more detailed information about tasks
+     */
+    verbose?: boolean;
+    /**
+     * @description A flag to output debug logs
+     */
+    debug?: boolean;
+    /**
      * @description A flag to print only errors.
      */
     errorsOnly?: boolean;
