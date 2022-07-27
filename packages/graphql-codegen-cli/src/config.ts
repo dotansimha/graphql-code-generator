@@ -30,6 +30,7 @@ export type YamlCliFlags = {
   silent: boolean;
   errorsOnly: boolean;
   profile: boolean;
+  check?: boolean;
   verbose?: boolean;
   debug?: boolean;
   ignoreNoDocuments?: boolean;
@@ -323,6 +324,10 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     context.useProfiler();
   }
 
+  if (cliFlags.check === true) {
+    context.enableCheckMode();
+  }
+
   context.updateConfig(config);
 }
 
@@ -331,12 +336,14 @@ export class CodegenContext {
   private _graphqlConfig?: GraphQLConfig;
   private config: Types.Config;
   private _project?: string;
+  private _checkMode = false;
   private _pluginContext: { [key: string]: any } = {};
 
   cwd: string;
   filepath: string;
   profiler: Profiler;
   profilerOutput?: string;
+  checkModeStaleFiles = [];
 
   constructor({
     config,
@@ -385,6 +392,14 @@ export class CodegenContext {
       ...this.getConfig(),
       ...config,
     };
+  }
+
+  enableCheckMode() {
+    this._checkMode = true;
+  }
+
+  get checkMode() {
+    return this._checkMode;
   }
 
   useProfiler() {
