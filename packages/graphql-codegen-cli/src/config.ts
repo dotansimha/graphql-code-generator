@@ -293,6 +293,14 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.silent = cliFlags.silent;
   }
 
+  if (cliFlags.verbose === true) {
+    config.verbose = cliFlags.verbose;
+  }
+
+  if (cliFlags.debug === true) {
+    config.debug = cliFlags.debug;
+  }
+
   if (cliFlags.errorsOnly === true) {
     config.errorsOnly = cliFlags.errorsOnly;
   }
