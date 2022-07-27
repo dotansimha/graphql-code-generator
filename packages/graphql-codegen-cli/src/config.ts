@@ -30,6 +30,8 @@ export type YamlCliFlags = {
   silent: boolean;
   errorsOnly: boolean;
   profile: boolean;
+  verbose?: boolean;
+  debug?: boolean;
   ignoreNoDocuments?: boolean;
   emitLegacyCommonJSImports?: boolean;
 };
@@ -233,6 +235,18 @@ export function buildOptions() {
       alias: 'project',
       describe: 'Name of a project in GraphQL Config',
       type: 'string' as const,
+    },
+    v: {
+      alias: 'verbose',
+      describe: 'output more detailed information about performed tasks',
+      type: 'boolean' as const,
+      default: false,
+    },
+    d: {
+      alias: 'debug',
+      describe: 'Print debug logs to stdout',
+      type: 'boolean' as const,
+      default: false,
     },
   };
 }
