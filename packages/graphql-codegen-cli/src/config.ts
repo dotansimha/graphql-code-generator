@@ -30,7 +30,7 @@ export type YamlCliFlags = {
   silent: boolean;
   errorsOnly: boolean;
   profile: boolean;
-  check: boolean;
+  check?: boolean;
   verbose?: boolean;
   debug?: boolean;
   ignoreNoDocuments?: boolean;
