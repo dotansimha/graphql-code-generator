@@ -71,6 +71,7 @@
       "Configuration options",
       "Environment Variables",
       "CLI Flags",
+      "Dry-run mode",
       "Debug Mode",
       "Other ways to provide configuration"
     ],
@@ -94,6 +95,11 @@
         "children": [],
         "title": "CLI Flags",
         "anchor": "cli-flags"
+      },
+      {
+        "children": [],
+        "title": "Dry-run mode",
+        "anchor": "dry-run-mode"
       },
       {
         "children": [],
