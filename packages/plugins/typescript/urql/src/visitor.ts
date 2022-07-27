@@ -131,7 +131,7 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
 export function use${operationName}(options${
       isVariablesRequired ? '' : '?'
     }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
-  return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
+  return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options });
 };`;
   }
 
