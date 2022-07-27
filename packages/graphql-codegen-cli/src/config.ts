@@ -293,12 +293,12 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.silent = cliFlags.silent;
   }
 
-  if (cliFlags.verbose === true) {
-    config.verbose = cliFlags.verbose;
+  if (cliFlags.verbose === true || process.env.VERBOSE) {
+    config.verbose = true;
   }
 
-  if (cliFlags.debug === true) {
-    config.debug = cliFlags.debug;
+  if (cliFlags.debug === true || process.env.DEBUG) {
+    config.debug = true;
   }
 
   if (cliFlags.errorsOnly === true) {
