@@ -73,9 +73,9 @@ export async function generate(
 
             if (previousHash && currentHash === previousHash) {
               debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
-              context.checkModeStaleFiles.push(result.filename);
               return;
             } else if (context.checkMode) {
+              context.checkModeStaleFiles.push(result.filename);
               return; // skip updating file in dry mode
             }
 

@@ -17,7 +17,9 @@ export async function runCli(cmd: string): Promise<number> {
     await generate(context);
     if (context.checkMode && context.checkModeStaleFiles.length > 0) {
       // eslint-disable-next-line no-console
-      console.log(`The following files are stale were detected: ${context.checkModeStaleFiles.join('\n')}`);
+      console.log(
+        `The following stale files were detected:\n${context.checkModeStaleFiles.map(file => `  - ${file}\n`)}`
+      );
       return 1;
     }
     return 0;
