@@ -1,8 +1,8 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.prod.js b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
-index 734b9e4..ded4b38 100644
+index fa6dd7c..b69ab6b 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.prod.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
-@@ -359,7 +359,7 @@ const getLastJsonObjectFromString = str => {
+@@ -365,7 +365,7 @@ const getLastJsonObjectFromString = str => {
      }
    }
    return null;
@@ -12,10 +12,10 @@ index 734b9e4..ded4b38 100644
  function jsonParse(input) {
    try {
 diff --git a/node_modules/@changesets/cli/dist/cli.esm.js b/node_modules/@changesets/cli/dist/cli.esm.js
-index 910b72c..446f107 100644
+index 4e319be..4804e2f 100644
 --- a/node_modules/@changesets/cli/dist/cli.esm.js
 +++ b/node_modules/@changesets/cli/dist/cli.esm.js
-@@ -626,7 +626,7 @@ const getLastJsonObjectFromString = str => {
+@@ -633,7 +633,7 @@ const getLastJsonObjectFromString = str => {
    return null;
  };
  
