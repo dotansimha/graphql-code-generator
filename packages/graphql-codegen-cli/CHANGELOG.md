@@ -1,5 +1,17 @@
 # @graphql-codegen/cli
 
+## 2.11.0
+
+### Minor Changes
+
+- fd6be805b: feat(cli): add a dry-run mode with `--check` cli flag
+
+### Patch Changes
+
+- 6a2e328e6: feat(cli): `--verbose` and `--debug` flags
+- Updated dependencies [6a2e328e6]
+  - @graphql-codegen/plugin-helpers@2.6.1
+
 ## 2.10.0
 
 ### Minor Changes

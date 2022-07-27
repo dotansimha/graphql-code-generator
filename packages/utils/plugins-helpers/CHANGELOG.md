@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.6.1
+
+### Patch Changes
+
+- 6a2e328e6: feat(cli): `--verbose` and `--debug` flags
+
 ## 2.6.0
 
 ### Minor Changes
