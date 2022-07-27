@@ -135,6 +135,21 @@ The Codegen also supports several CLI flags that allow you to override the defau
 
 - **`--project` (`-p`)** - To generate only one project out of a [Multi Project](multiproject-config) config file.
 
+- **`--check`** - Enable dry-run mode (see below)
+
+## Dry-run mode
+
+Codegen can be run in dry-run mode to check if some new changes are detected:
+
+```bash
+yarn run codegen --check
+```
+
+When enabled, codegen will return the following exit code:
+
+- `0`: no changes were detected
+- `1`: some changes are missing in existing files
+
 ## Debug Mode
 
 You can set the `DEBUG` environment variable to `1` to print debug information.

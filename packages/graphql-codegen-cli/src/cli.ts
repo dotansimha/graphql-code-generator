@@ -4,18 +4,26 @@ import { createContext } from './config.js';
 import { lifecycleHooks } from './hooks.js';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 
-export async function runCli(cmd: string): Promise<any> {
+export async function runCli(cmd: string): Promise<number> {
   await ensureGraphQlPackage();
 
   if (cmd === 'init') {
-    return init();
+    init();
+    return 0;
   }
 
   const context = await createContext();
   try {
-    return await generate(context);
+    await generate(context);
+    if (context.checkMode && context.checkModeStaleFiles.length > 0) {
+      // eslint-disable-next-line no-console
+      console.log(`The following files are stale were detected: ${context.checkModeStaleFiles.join('\n')}`);
+      return 1;
+    }
+    return 0;
   } catch (error) {
     await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+    return 1;
   }
 }
 
