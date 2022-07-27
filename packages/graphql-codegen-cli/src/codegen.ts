@@ -189,7 +189,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   const isTest = process.env.NODE_ENV === 'test';
 
-  const tasks = new Listr<Ctx>(
+  const tasks = new Listr<Ctx, 'default' | 'verbose'>(
     [
       {
         title: 'Parse Configuration',
@@ -393,6 +393,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         clearOutput: false,
         collapse: true,
       },
+      renderer: config.verbose ? 'verbose' : 'default',
       ctx: { errors: [] },
       rendererSilent: isTest || config.silent,
       exitOnError: true,
@@ -415,7 +416,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     throw newErr;
   }
 
-  printLogs();
+  if (config.debug) {
+    printLogs();
+  }
 
   return result;
 }

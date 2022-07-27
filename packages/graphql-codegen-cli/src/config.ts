@@ -31,6 +31,8 @@ export type YamlCliFlags = {
   errorsOnly: boolean;
   profile: boolean;
   check: boolean;
+  verbose?: boolean;
+  debug?: boolean;
   ignoreNoDocuments?: boolean;
   emitLegacyCommonJSImports?: boolean;
 };
@@ -235,6 +237,18 @@ export function buildOptions() {
       describe: 'Name of a project in GraphQL Config',
       type: 'string' as const,
     },
+    v: {
+      alias: 'verbose',
+      describe: 'output more detailed information about performed tasks',
+      type: 'boolean' as const,
+      default: false,
+    },
+    d: {
+      alias: 'debug',
+      describe: 'Print debug logs to stdout',
+      type: 'boolean' as const,
+      default: false,
+    },
   };
 }
 
@@ -278,6 +292,14 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
 
   if (cliFlags.silent === true) {
     config.silent = cliFlags.silent;
+  }
+
+  if (cliFlags.verbose === true || process.env.VERBOSE) {
+    config.verbose = true;
+  }
+
+  if (cliFlags.debug === true || process.env.DEBUG) {
+    config.debug = true;
   }
 
   if (cliFlags.errorsOnly === true) {
