@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.11.1
+
+### Patch Changes
+
+- 20bf4b225: support for path containing "&" characters
+
 ## 2.11.0
 
 ### Minor Changes
