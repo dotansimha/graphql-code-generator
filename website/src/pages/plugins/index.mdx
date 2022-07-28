@@ -1,39 +1,50 @@
 ---
 title: Plugins
 ---
-
-import { buildMultipleMDX }  from '@guild-docs/server';
-import { getPackagesData }  from '@guild-docs/server/npm';
-import { Plugins } from '@/components/plugins';
-import { PACKAGES } from '@/lib/plugins';
+import { Plugins } from '@/components/plugins'
+import { PACKAGES } from '@/lib/plugins'
+import { CategoryToPackages } from '@/category-to-packages.mjs';
 
 export const getStaticProps = async () => {
-  const pluginsData = await getPackagesData({ packageList: PACKAGES });
-
-  const data = await Promise.all(
-    pluginsData.map(async plugin => {
-      const [description, content] = await buildMultipleMDX([
-        `${plugin.stats?.version || ''}\n\n${plugin.stats?.description || ''}`,
-        plugin.readme || plugin.stats?.readme || '',
-      ]);
-
+  const categoryEntries = Object.entries(CategoryToPackages);
+  const plugins = await Promise.all(
+    PACKAGES.map(async plugin => {
+      const encodedName = encodeURIComponent(plugin.npmPackage)
+      const [
+        {
+          readme,
+          time: { created, modified },
+          description
+        },
+        { downloads },
+      ] = await Promise.all([
+        fetch(`https://registry.npmjs.org/${encodedName}`).then(response => response.json()),
+        fetch(`https://api.npmjs.org/downloads/point/last-week/${encodedName}`).then(response => response.json())
+      ])
+      const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(plugin.identifier)) || []
+      const linkHref = `/plugins/${category}/${plugin.identifier}`
       return {
-        ...plugin,
+        title: plugin.title,
+        readme,
+        created,
+        modified,
         description,
-        content,
-      };
+        linkHref,
+        weeklyNPMDownloads: downloads,
+        iconUrl: plugin.iconUrl,
+        tags: plugin.tags,
+      }
     })
-  );
-
+  )
   return {
     props: {
       // We add an `ssg` field to the page props,
       // which will be provided to the Nextra's `useSSG` hook.
-      ssg: { data },
+      ssg: plugins
     },
     // Revalidate at most once every 1 hour
-    revalidate: 60 * 60,
-  };
-};
+    revalidate: 60 * 60
+  }
+}
 
 <Plugins />

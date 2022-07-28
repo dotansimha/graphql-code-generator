@@ -1,54 +1,49 @@
 import { ReactElement, useMemo } from 'react';
 import { useSSG } from 'nextra/ssg';
 import { compareDesc } from 'date-fns';
-import { handlePushRoute } from '@guild-docs/client';
-import { CompiledMDX } from '@guild-docs/server';
-import { PackageWithStats } from '@guild-docs/server/npm';
+import { handlePushRoute } from 'guild-docs';
 import { MarketplaceSearch } from '@theguild/components';
 import { IMarketplaceItemProps } from '@theguild/components/dist/types/components';
-import Markdown from '@/components/ui/Markdown';
 import { ALL_TAGS } from '@/lib/plugins';
-import { CategoryToPackages } from '@/category-to-packages.mjs';
 
-type MarketplaceProps = {
-  data: (PackageWithStats & {
-    description: CompiledMDX;
-    content: CompiledMDX;
-  })[];
+type PluginData = {
+  title: string;
+  readme: string;
+  created: string;
+  modified: string;
+  description: string;
+  linkHref: string;
+  weeklyNPMDownloads: number;
+  iconUrl: string;
+  tags: string[];
 };
 
-const categoryEntries = Object.entries(CategoryToPackages);
-
 export const Plugins = (): ReactElement => {
-  const { data } = useSSG() as MarketplaceProps;
+  const plugins = useSSG() as PluginData[];
 
-  const marketplaceItems: (IMarketplaceItemProps & { raw: PackageWithStats })[] = useMemo(
+  const marketplaceItems: IMarketplaceItemProps[] = useMemo(
     () =>
-      data.map<IMarketplaceItemProps & { raw: PackageWithStats }>(plugin => {
-        const [category] = categoryEntries.find(([, packageNames]) => packageNames.includes(plugin.identifier)) || [];
-        const linkHref = `/plugins/${category}/${plugin.identifier}`;
-        return {
-          raw: plugin,
-          tags: plugin.tags,
-          title: plugin.title,
-          link: {
-            href: linkHref,
-            title: `${plugin.title} plugin details`,
-            onClick: ev => handlePushRoute(linkHref, ev),
-          },
-          description: <Markdown content={plugin.description} />,
-          update: plugin.stats?.modifiedDate || new Date().toISOString(),
-          image: plugin.iconUrl
-            ? {
-                height: 60,
-                width: 60,
-                src: plugin.iconUrl,
-                alt: plugin.title,
-              }
-            : undefined,
-        };
-      }),
-    [data]
+      plugins.map(plugin => ({
+        title: plugin.title,
+        description: plugin.description,
+        tags: plugin.tags,
+        link: {
+          href: plugin.linkHref,
+          title: `${plugin.title} plugin details`,
+          onClick: ev => handlePushRoute(plugin.linkHref, ev),
+        },
+        update: plugin.modified || new Date().toISOString(),
+        image: plugin.iconUrl
+          ? {
+              height: 60,
+              width: 60,
+              src: plugin.iconUrl,
+              alt: plugin.title,
+            }
+          : undefined,
+        weeklyNPMDownloads: plugin.weeklyNPMDownloads,
+      })),
+    [plugins]
   );
 
   const recentlyUpdatedItems = useMemo(
@@ -59,10 +54,10 @@ export const Plugins = (): ReactElement => {
   const trendingItems = useMemo(
     () =>
       marketplaceItems
-        .filter(i => i.raw.stats?.weeklyNPMDownloads)
+        .filter(i => i.weeklyNPMDownloads)
         .sort((a, b) => {
-          const aMonthlyDownloads = a.raw.stats?.weeklyNPMDownloads || 0;
-          const bMonthlyDownloads = b.raw.stats?.weeklyNPMDownloads || 0;
+          const aMonthlyDownloads = a.weeklyNPMDownloads || 0;
+          const bMonthlyDownloads = b.weeklyNPMDownloads || 0;
 
           return bMonthlyDownloads - aMonthlyDownloads;
         }),

@@ -1,21 +1,18 @@
-import { getPackagesData } from '@guild-docs/server/npm';
 import { PACKAGES } from './plugins';
-import { transformDocs } from './transform';
 import { compileMdx } from 'nextra/compile';
+import { transformDocs } from './transform';
 
 export const getNpmInfo = (packageName: string) =>
   // Passing packageName for `getStaticProps` of mdx files in plugins directory
   async function getStaticProps() {
-    const [pluginData] = await getPackagesData({
-      idSpecific: packageName,
-      packageList: PACKAGES,
-    });
-    const generatedDocs = transformDocs();
+    const encodedName = encodeURIComponent(packageName);
+    const response = await fetch(`https://registry.npmjs.org/${encodedName}`);
+    const { readme, time } = await response.json();
 
-    const source =
-      generatedDocs.docs[packageName] ||
-      pluginData.stats?.readme?.replace('ERROR: No README data found!', '').replaceAll('```yml', '```yaml') ||
-      '';
+    const generatedDocs = transformDocs();
+    const source = generatedDocs.docs[packageName] || readme || '';
+
+    const { npmPackage, title } = PACKAGES.find(p => p.identifier === packageName) || {};
 
     const mdx = await compileMdx(source, {
       outputFormat: 'function-body',
@@ -27,10 +24,10 @@ export const getNpmInfo = (packageName: string) =>
         // We add an `ssg` field to the page props,
         // which will be provided to the Nextra `useSSG` hook.
         ssg: {
-          pluginData: {
-            ...pluginData,
-            compiledSource: mdx.result,
-          },
+          npmPackage,
+          title,
+          modified: time.modified,
+          compiledSource: mdx.result
         },
       },
       // The page will be considered as stale and regenerated every 24 hours.

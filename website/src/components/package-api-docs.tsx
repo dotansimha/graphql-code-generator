@@ -1,15 +1,14 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
-import { components } from 'nextra-theme-docs/theme';
 import { Callout, PackageCmd } from '@theguild/components';
+import { components } from 'nextra-theme-docs';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
 
 export const PackageApiDocs = (): ReactElement => {
   // Get the data from SSG, and render it as a component.
-  const { pluginData } = useSSG();
-
-  return <MDXRemote compiledSource={pluginData.compiledSource} components={components} />;
+  const { compiledSource } = useSSG();
+  return <MDXRemote compiledSource={compiledSource} components={components} />;
 };
 
 export const PackageHeader = ({
@@ -20,11 +19,11 @@ export const PackageHeader = ({
   hasOperationsNote?: boolean;
 }): ReactElement => {
   // Get the data from SSG, and render it as a component.
-  const { pluginData } = useSSG();
+  const { title, npmPackage, modified } = useSSG();
 
   return (
     <>
-      <h2>{pluginData.title}</h2>
+      <h2>{title}</h2>
       <h3>Package Details</h3>
       {/* Unfortunately Nextra doesn't support import `.mdx` files in `.mdx`, so I copied generated code
        * and exported as React component
@@ -35,37 +34,37 @@ export const PackageHeader = ({
             <tr>
               <td>Package</td>
               <td>
-                <a href={`https://npmjs.com/package/${pluginData.npmPackage}`} target="_blank" rel="noreferrer">
-                  <code>{pluginData.npmPackage}</code>
+                <a href={`https://npmjs.com/package/${npmPackage}`} target="_blank" rel="noreferrer">
+                  <code>{npmPackage}</code>
                 </a>
               </td>
             </tr>
             <tr>
               <td>Weekly Downloads</td>
               <td>
-                <img alt="downloads" src={`https://badgen.net/npm/dw/${pluginData.npmPackage}`} />
+                <img alt="downloads" src={`https://badgen.net/npm/dw/${npmPackage}`} />
               </td>
             </tr>
             <tr>
               <td>Version</td>
               <td>
-                <img alt="license" src={`https://badgen.net/npm/v/${pluginData.npmPackage}`} />
+                <img alt="license" src={`https://badgen.net/npm/v/${npmPackage}`} />
               </td>
             </tr>
             <tr>
               <td>License</td>
               <td>
-                <img alt="license" src={`https://badgen.net/npm/license/${pluginData.npmPackage}`} />
+                <img alt="license" src={`https://badgen.net/npm/license/${npmPackage}`} />
               </td>
             </tr>
             <tr>
               <td>Updated</td>
-              <td>{format(new Date(pluginData.stats.modifiedDate), 'MMM do, yyyy')}</td>
+              <td>{format(new Date(modified), 'MMM do, yyyy')}</td>
             </tr>
           </tbody>
         </table>
         <h3>Installation</h3>
-        <PackageCmd packages={[`${isDev ? '-D ' : ''}${pluginData.npmPackage}`]} />
+        <PackageCmd packages={[`${isDev ? '-D ' : ''}${npmPackage}`]} />
         {hasOperationsNote && (
           <Callout type="warning" emoji="⚠️">
             <p>

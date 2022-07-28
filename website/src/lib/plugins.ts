@@ -1,5 +1,3 @@
-import type { Package } from '@guild-docs/server/npm';
-
 export const ALL_TAGS = [
   'typescript',
   'csharp',
@@ -30,7 +28,13 @@ export const ALL_TAGS = [
 
 export type Tags = typeof ALL_TAGS[number];
 
-export const PACKAGES: Package<Tags>[] = [
+export const PACKAGES: {
+  identifier: string;
+  title: string;
+  npmPackage: string;
+  iconUrl: string;
+  tags: Tags[];
+}[] = [
   {
     identifier: 'add',
     title: 'Add',
@@ -145,7 +149,7 @@ export const PACKAGES: Package<Tags>[] = [
   },
   {
     identifier: 'near-operation-file-preset',
-    title: 'near-operation-file-preset',
+    title: 'Near Operation File Preset',
     npmPackage: '@graphql-codegen/near-operation-file-preset',
     iconUrl: '/assets/img/icons/codegen.svg',
     tags: ['preset', 'utilities'],
@@ -208,7 +212,7 @@ export const PACKAGES: Package<Tags>[] = [
   },
   {
     identifier: 'typescript-apollo-next',
-    title: 'Typescript Apollo Nextjs',
+    title: 'Typescript Apollo Next.js',
     npmPackage: 'graphql-codegen-apollo-next-ssr',
     iconUrl: '/assets/img/icons/apollo.svg',
     tags: ['plugin', 'typescript', 'apollo', 'next'],
@@ -250,7 +254,7 @@ export const PACKAGES: Package<Tags>[] = [
   },
   {
     identifier: 'typescript-msw',
-    title: 'typescript-msw',
+    title: 'TypeScript msw',
     npmPackage: '@graphql-codegen/typescript-msw',
     iconUrl: 'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg',
     tags: ['plugin', 'typescript', 'utilities'],
@@ -306,7 +310,7 @@ export const PACKAGES: Package<Tags>[] = [
   },
   {
     identifier: 'typescript-svelte-apollo',
-    title: 'Typescript Svelte Apollo',
+    title: 'TypeScript Svelte Apollo',
     npmPackage: 'graphql-codegen-svelte-apollo',
     iconUrl: '/assets/img/icons/apollo.svg',
     tags: ['plugin', 'typescript', 'svelte', 'apollo'],
