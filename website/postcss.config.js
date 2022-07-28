@@ -1,7 +1,1 @@
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-    ...(process.env.NODE_ENV === 'production' && { cssnano: {} }),
-  },
-};
+module.exports = require('@theguild/tailwind-config/postcss.config')
