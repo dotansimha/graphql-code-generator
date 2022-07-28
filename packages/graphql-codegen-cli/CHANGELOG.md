@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.11.2
+
+### Patch Changes
+
+- 8cd1526c4: chore(deps): update `@whatwg-node/fetch` to fix vulnerability
+
 ## 2.11.1
 
 ### Patch Changes
