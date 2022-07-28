@@ -13,7 +13,7 @@
     "@graphql-codegen/typescript": "*",
     "@graphql-codegen/typescript-operations": "*",
     "@graphql-codegen/typescript-resolvers": "*",
-    "@graphql-tools/graphql-file-loader": "7.4.0",
+    "@graphql-tools/graphql-file-loader": "7.5.0",
     "@graphql-tools/load": "7.7.0",
     "@graphql-tools/schema": "8.5.0",
     "graphql": "16.5.0",
