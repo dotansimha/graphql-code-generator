@@ -2,7 +2,7 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "postinstall": "patch-package && husky install",
+    "postinstall": "patch-package && husky install && yarn workspace website patch-package",
     "clean": "rimraf \"{,!(node_modules)/**/}node_modules/\"",
     "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\" .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",

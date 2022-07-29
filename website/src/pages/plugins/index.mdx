@@ -8,8 +8,8 @@ import { CategoryToPackages } from '@/category-to-packages.mjs';
 export const getStaticProps = async () => {
   const categoryEntries = Object.entries(CategoryToPackages);
   const plugins = await Promise.all(
-    PACKAGES.map(async plugin => {
-      const encodedName = encodeURIComponent(plugin.npmPackage)
+    PACKAGES.map(async ({ npmPackage, identifier, iconUrl, tags }) => {
+      const encodedName = encodeURIComponent(npmPackage)
       const [
         {
           readme,
@@ -21,18 +21,18 @@ export const getStaticProps = async () => {
         fetch(`https://registry.npmjs.org/${encodedName}`).then(response => response.json()),
         fetch(`https://api.npmjs.org/downloads/point/last-week/${encodedName}`).then(response => response.json())
       ])
-      const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(plugin.identifier)) || []
-      const linkHref = `/plugins/${category}/${plugin.identifier}`
+      const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || []
+      const linkHref = `/plugins/${category}/${identifier}`
       return {
-        title: plugin.title,
+        title: npmPackage,
         readme,
         created,
         modified,
         description,
         linkHref,
         weeklyNPMDownloads: downloads,
-        iconUrl: plugin.iconUrl,
-        tags: plugin.tags,
+        iconUrl,
+        tags,
       }
     })
   )
