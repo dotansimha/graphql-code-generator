@@ -19,12 +19,11 @@ export const PackageHeader = ({
   hasOperationsNote?: boolean;
 }): ReactElement => {
   // Get the data from SSG, and render it as a component.
-  const { title, npmPackage, modified } = useSSG();
+  const { npmPackage, modified } = useSSG();
 
   return (
     <>
-      <h2>{title}</h2>
-      <h3>Package Details</h3>
+      <h2>Plugin Details</h2>
       {/* Unfortunately Nextra doesn't support import `.mdx` files in `.mdx`, so I copied generated code
        * and exported as React component
        */}
@@ -32,7 +31,7 @@ export const PackageHeader = ({
         <table>
           <tbody>
             <tr>
-              <td>Package</td>
+              <td>Package name</td>
               <td>
                 <a href={`https://npmjs.com/package/${npmPackage}`} target="_blank" rel="noreferrer">
                   <code>{npmPackage}</code>

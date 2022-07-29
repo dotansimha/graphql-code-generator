@@ -32,7 +32,7 @@ export const Plugins = (): ReactElement => {
           title: `${plugin.title} plugin details`,
           onClick: ev => handlePushRoute(plugin.linkHref, ev),
         },
-        update: plugin.modified || new Date().toISOString(),
+        update: plugin.modified,
         image: plugin.iconUrl
           ? {
               height: 60,
