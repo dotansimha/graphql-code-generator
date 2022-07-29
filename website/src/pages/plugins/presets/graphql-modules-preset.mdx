@@ -3,12 +3,10 @@ title: graphql-modules-preset
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('graphql-modules-preset')
-
-<PackageHeader />
+<PluginHeader />
 
 The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each directory that contains GraphQL SDL definitions.
 
@@ -78,4 +76,4 @@ export const resolvers: MyModule.Resolvers = {
 
 By default, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false{:yaml}` in your preset configuration to generate fully agnostic types that are based on folder structure only.
 
-<PackageApiDocs />
+<PluginApiDocs />

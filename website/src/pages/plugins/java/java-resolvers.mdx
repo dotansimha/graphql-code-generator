@@ -3,12 +3,10 @@ title: java-resolvers
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('java-resolvers')
-
-<PackageHeader />
+<PluginHeader />
 
 The `java-resolvers` plugin creates Java `interface`s for the resolvers' signature.
 
@@ -84,4 +82,4 @@ Now, run `gradle yarn` to install the dependencies for the first time.
 
 Next time, the codegen will run automatically each time you run your Gradle build script.
 
-<PackageApiDocs />
+<PluginApiDocs />

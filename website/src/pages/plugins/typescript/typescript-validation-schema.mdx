@@ -2,12 +2,10 @@
 title: typescript-validation-schema
 ---
 
-import { PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-validation-schema')
-
-<PackageHeader />
+<PluginHeader />
 
 _Built and maintained by [Code-Hex](https://github.com/Code-Hex)_
 

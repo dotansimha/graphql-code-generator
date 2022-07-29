@@ -5,13 +5,7 @@ import { components } from 'nextra-theme-docs';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
 
-export const PackageApiDocs = (): ReactElement => {
-  // Get the data from SSG, and render it as a component.
-  const { compiledSource } = useSSG();
-  return <MDXRemote compiledSource={compiledSource} components={components} />;
-};
-
-export const PackageHeader = ({
+export const PluginHeader = ({
   isDev = true,
   hasOperationsNote = false,
 }: {
@@ -83,4 +77,10 @@ export const PackageHeader = ({
       </div>
     </>
   );
+};
+
+export const PluginApiDocs = (): ReactElement => {
+  // Get the data from SSG, and render it as a component.
+  const { compiledSource } = useSSG();
+  return <MDXRemote compiledSource={compiledSource} components={components} />;
 };

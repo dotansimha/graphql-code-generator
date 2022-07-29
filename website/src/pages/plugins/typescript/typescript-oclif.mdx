@@ -2,13 +2,11 @@
 title: typescript-oclif
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-oclif')
-
-<PackageHeader hasOperationsNote />
-<PackageApiDocs />
+<PluginHeader hasOperationsNote />
+<PluginApiDocs />
 
 This plugin generates [`oclif`](https://npmjs.com/package/oclif) CLI commands.
 

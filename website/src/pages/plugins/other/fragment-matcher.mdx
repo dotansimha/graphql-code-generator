@@ -3,12 +3,10 @@ title: fragment-matcher
 ---
 
 import { Callout, Tabs, Tab } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('fragment-matcher')
-
-<PackageHeader />
+<PluginHeader />
 
 ## How to use?
 
@@ -49,4 +47,4 @@ const cache = new InMemoryCache({ fragmentMatcher })
 </Tab>
 </Tabs>
 
-<PackageApiDocs />
+<PluginApiDocs />

@@ -2,12 +2,10 @@
 title: hasura-allow-list
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('hasura-allow-list')
-
-<PackageHeader />
+<PluginHeader />
 
 Generate hasura allow list metadata from graphql files
 
@@ -25,4 +23,4 @@ generates:
       - hasura-allow-list
 ```
 
-<PackageApiDocs />
+<PluginApiDocs />

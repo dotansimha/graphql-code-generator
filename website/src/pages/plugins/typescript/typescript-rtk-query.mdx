@@ -3,13 +3,11 @@ title: typescript-rtk-query
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-rtk-query')
-
-<PackageHeader hasOperationsNote />
-<PackageApiDocs />
+<PluginHeader hasOperationsNote />
+<PluginApiDocs />
 
 ## Usage Examples
 

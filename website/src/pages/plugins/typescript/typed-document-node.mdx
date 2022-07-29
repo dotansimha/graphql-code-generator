@@ -3,12 +3,10 @@ title: typed-document-node
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typed-document-node')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 These plugins generate a ready-to-use `TypedDocumentNode` (a combination of pre-compiled `DocumentNode` and the TypeScript signature it represents).
 

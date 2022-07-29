@@ -3,12 +3,10 @@ title: typescript-apollo-client-helpers
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-apollo-client-helpers')
-
-<PackageHeader />
+<PluginHeader />
 
 This plugin generates helpers for improving the integration of TypeScript and Apollo-Client, based on your schema.
 
@@ -59,4 +57,4 @@ const typePolicies: StrictTypedTypePolicies = {
 const cache = new InMemoryCache({ typePolicies })
 ```
 
-<PackageApiDocs />
+<PluginApiDocs />

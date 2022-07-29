@@ -3,12 +3,10 @@ title: flow-resolvers
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('flow-resolvers')
-
-<PackageHeader />
+<PluginHeader />
 
 <Callout>
 **Quick Start with `flow-resolvers`**
@@ -104,4 +102,4 @@ generates:
       - flow-resolvers
 ```
 
-<PackageApiDocs />
+<PluginApiDocs />

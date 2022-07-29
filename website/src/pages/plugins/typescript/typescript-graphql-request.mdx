@@ -3,16 +3,14 @@ title: typescript-graphql-request
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-graphql-request')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 <Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## Usage Example
 

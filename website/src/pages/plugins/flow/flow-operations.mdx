@@ -2,10 +2,8 @@
 title: flow-operations
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('flow-operations')
-
-<PackageHeader hasOperationsNote />
-<PackageApiDocs />
+<PluginHeader hasOperationsNote />
+<PluginApiDocs />

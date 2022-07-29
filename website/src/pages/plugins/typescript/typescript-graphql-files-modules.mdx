@@ -3,12 +3,10 @@ title: typescript-graphql-files-modules
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-graphql-files-modules')
-
-<PackageHeader />
+<PluginHeader />
 
 <Callout>
 **Webpack Integration**
@@ -21,7 +19,7 @@ If you wish to have a simpler integration in a Webpack project, use [`graphql-le
 
 To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack.
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## Example
 

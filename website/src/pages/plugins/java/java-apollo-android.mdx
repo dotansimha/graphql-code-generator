@@ -3,12 +3,10 @@ title: java-apollo-android
 ---
 
 import { Callout, PackageCmd } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('java-apollo-android')
-
-<PackageHeader />
+<PluginHeader />
 
 ## Prepare your env
 
@@ -56,4 +54,4 @@ This will make sure to run and generate output before each time you build your p
 
 You can find a [repository with a working example using AppSync](https://github.com/dotansimha/graphql-codegen-appsync-android-example).
 
-<PackageApiDocs />
+<PluginApiDocs />

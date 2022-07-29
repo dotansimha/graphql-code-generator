@@ -2,12 +2,10 @@
 title: typescript-apollo-next
 ---
 
-import { PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-apollo-next')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 This plugin generates:
 

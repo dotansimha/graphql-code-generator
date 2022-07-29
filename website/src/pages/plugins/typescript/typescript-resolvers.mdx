@@ -3,12 +3,10 @@ title: typescript-resolvers
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('typescript-resolvers')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 <Callout>
   Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator)
@@ -28,7 +26,7 @@ export const getStaticProps = getNpmInfo('typescript-resolvers')
   Barton](https://twitter.com/notrab).
 </Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## Usage Example
 

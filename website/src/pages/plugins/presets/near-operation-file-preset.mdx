@@ -3,12 +3,10 @@ title: near-operation-file-preset
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('near-operation-file-preset')
-
-<PackageHeader />
+<PluginHeader />
 
 This preset generates a file per each operation file.
 
@@ -49,4 +47,4 @@ The `presetConfig` section contains a key for setting the output files extension
 Note: If you're loading your `documents` from files with the same extension as the generated files, make sure the glob you use excludes the generated files. For example, if your original glob was `src/**/*.{ts,tsx}`, use `src/**/!(*.generated).{ts,tsx}` instead.
 </Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />

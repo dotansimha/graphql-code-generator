@@ -3,12 +3,10 @@ title: relay-operation-optimizer
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginHeader } from '@/components/plugin'
+export { getStaticProps } from '@/lib/plugin-get-static-props'
 
-export const getStaticProps = getNpmInfo('relay-operation-optimizer')
-
-<PackageHeader />
+<PluginHeader />
 
 _Built and maintained by [n1ru4l](https://github.com/n1ru4l)_.
 
