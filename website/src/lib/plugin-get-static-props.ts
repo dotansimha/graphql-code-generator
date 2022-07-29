@@ -8,7 +8,7 @@ import { parse } from 'node:path';
 // Module not found: Can't resolve 'fs'
 export const pluginGetStaticProps = (fileName: string) => async () => {
   const identifier = parse(fileName).name;
-  const plugin = PACKAGES.find(p => p.identifier === identifier);
+  const plugin = PACKAGES[identifier];
   if (!plugin) {
     throw new Error(`Unknown "${identifier}" plugin identifier`);
   }

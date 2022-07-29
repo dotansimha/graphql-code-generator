@@ -13,7 +13,7 @@ import { fetchNpmInfo } from '@/lib/fetch-npm-info';
 export const getStaticProps = async () => {
   const categoryEntries = Object.entries(CategoryToPackages);
   const plugins = await Promise.all(
-    PACKAGES.map(async ({ npmPackage, identifier, title, iconUrl, tags }) => {
+    Object.entries(PACKAGES).map(async ([identifier, { npmPackage, title, iconUrl, tags }]) => {
       const {
         readme,
         createdAt,

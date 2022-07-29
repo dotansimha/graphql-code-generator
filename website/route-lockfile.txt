@@ -14,7 +14,6 @@
 /docs/custom-codegen
 /docs/custom-codegen/contributing
 /docs/custom-codegen/extend-schema
-/docs/custom-codegen/index
 /docs/custom-codegen/plugin-structure
 /docs/custom-codegen/using-visitor
 /docs/custom-codegen/validate-configuration
@@ -25,7 +24,6 @@
 /docs/getting-started/development-workflow
 /docs/getting-started/documents-field -> /docs/config-reference/documents-field
 /docs/getting-started/how-does-it-work -> /docs/advanced/how-does-it-work
-/docs/getting-started/index
 /docs/getting-started/installation
 /docs/getting-started/lifecycle-hooks -> /docs/config-reference/lifecycle-hooks
 /docs/getting-started/naming-convention -> /docs/config-reference/naming-convention
@@ -48,50 +46,97 @@
 /docs/migration/from-0-13
 /docs/migration/from-0-18
 /plugins
-/plugins/add
-/plugins/c-sharp-operations
-/plugins/flow-operations
-/plugins/flow-resolvers
-/plugins/fragment-matcher
-/plugins/gql-tag-operations-preset
-/plugins/graphql-modules-preset
-/plugins/hasura-allow-list
-/plugins/import-types-preset
-/plugins/introspection
-/plugins/java
-/plugins/java-apollo-android
-/plugins/java-resolvers
-/plugins/jsdoc
-/plugins/kotlin
-/plugins/named-operations-object
-/plugins/near-operation-file-preset
-/plugins/reason-client
-/plugins/relay-operation-optimizer
-/plugins/schema-ast
-/plugins/time
-/plugins/typed-document-node
-/plugins/typescript
-/plugins/typescript-apollo-angular
-/plugins/typescript-apollo-client-helpers
-/plugins/typescript-apollo-next
-/plugins/typescript-document-nodes
-/plugins/typescript-generic-sdk
-/plugins/typescript-graphql-files-modules
-/plugins/typescript-graphql-request
-/plugins/typescript-mongodb
-/plugins/typescript-msw
-/plugins/typescript-oclif
-/plugins/typescript-operations
-/plugins/typescript-react-apollo
-/plugins/typescript-react-query
-/plugins/typescript-resolvers
-/plugins/typescript-rtk-query
-/plugins/typescript-stencil-apollo
-/plugins/typescript-svelte-apollo
-/plugins/typescript-type-graphql
-/plugins/typescript-urql
-/plugins/typescript-validation-schema
-/plugins/typescript-vue-apollo
-/plugins/typescript-vue-apollo-smart-ops
-/plugins/typescript-vue-urql
-/plugins/urql-introspection
+/plugins/add -> /plugins/other/add
+/plugins/c-sharp-operations -> /plugins/c-sharp/c-sharp-operations
+/plugins/c-sharp/c-sharp-operations
+/plugins/flow-operations -> /plugins/flow/flow-operations
+/plugins/flow-resolvers -> /plugins/flow/flow-resolvers
+/plugins/flow/flow-operations
+/plugins/flow/flow-resolvers
+/plugins/fragment-matcher -> /plugins/other/fragment-matcher
+/plugins/gql-tag-operations-preset -> /plugins/presets/gql-tag-operations-preset
+/plugins/graphql-modules-preset -> /plugins/presets/graphql-modules-preset
+/plugins/hasura-allow-list -> /plugins/other/hasura-allow-list
+/plugins/import-types-preset -> /plugins/presets/import-types-preset
+/plugins/introspection -> /plugins/other/introspection
+/plugins/java -> /plugins/java/java
+/plugins/java-apollo-android -> /plugins/java/java-apollo-android
+/plugins/java-resolvers -> /plugins/java/java-resolvers
+/plugins/java/java
+/plugins/java/java-apollo-android
+/plugins/java/java-resolvers
+/plugins/java/kotlin
+/plugins/jsdoc -> /plugins/other/jsdoc
+/plugins/kotlin -> /plugins/java/kotlin
+/plugins/named-operations-object -> /plugins/typescript/named-operations-object
+/plugins/near-operation-file-preset -> /plugins/presets/near-operation-file-preset
+/plugins/other/add
+/plugins/other/fragment-matcher
+/plugins/other/hasura-allow-list
+/plugins/other/introspection
+/plugins/other/jsdoc
+/plugins/other/reason-client
+/plugins/other/schema-ast
+/plugins/other/time
+/plugins/other/urql-introspection
+/plugins/presets/gql-tag-operations-preset
+/plugins/presets/graphql-modules-preset
+/plugins/presets/import-types-preset
+/plugins/presets/near-operation-file-preset
+/plugins/reason-client -> /plugins/other/reason-client
+/plugins/relay-operation-optimizer -> /plugins/typescript/relay-operation-optimizer
+/plugins/schema-ast -> /plugins/other/schema-ast
+/plugins/time -> /plugins/other/time
+/plugins/typed-document-node -> /plugins/typescript/typed-document-node
+/plugins/typescript -> /plugins/typescript/typescript
+/plugins/typescript-apollo-angular -> /plugins/typescript/typescript-apollo-angular
+/plugins/typescript-apollo-client-helpers -> /plugins/typescript/typescript-apollo-client-helpers
+/plugins/typescript-apollo-next -> /plugins/typescript/typescript-apollo-next
+/plugins/typescript-document-nodes -> /plugins/typescript/typescript-document-nodes
+/plugins/typescript-generic-sdk -> /plugins/typescript/typescript-generic-sdk
+/plugins/typescript-graphql-files-modules -> /plugins/typescript/typescript-graphql-files-modules
+/plugins/typescript-graphql-request -> /plugins/typescript/typescript-graphql-request
+/plugins/typescript-mongodb -> /plugins/typescript/typescript-mongodb
+/plugins/typescript-msw -> /plugins/typescript/typescript-msw
+/plugins/typescript-oclif -> /plugins/typescript/typescript-oclif
+/plugins/typescript-operations -> /plugins/typescript/typescript-operations
+/plugins/typescript-react-apollo -> /plugins/typescript/typescript-react-apollo
+/plugins/typescript-react-query -> /plugins/typescript/typescript-react-query
+/plugins/typescript-resolvers -> /plugins/typescript/typescript-resolvers
+/plugins/typescript-rtk-query -> /plugins/typescript/typescript-rtk-query
+/plugins/typescript-stencil-apollo -> /plugins/typescript/typescript-stencil-apollo
+/plugins/typescript-svelte-apollo -> /plugins/typescript/typescript-svelte-apollo
+/plugins/typescript-type-graphql -> /plugins/typescript/typescript-type-graphql
+/plugins/typescript-urql -> /plugins/typescript/typescript-urql
+/plugins/typescript-validation-schema -> /plugins/typescript/typescript-validation-schema
+/plugins/typescript-vue-apollo -> /plugins/typescript/typescript-vue-apollo
+/plugins/typescript-vue-apollo-smart-ops -> /plugins/typescript/typescript-vue-apollo-smart-ops
+/plugins/typescript-vue-urql -> /plugins/typescript/typescript-vue-urql
+/plugins/typescript/named-operations-object
+/plugins/typescript/relay-operation-optimizer
+/plugins/typescript/typed-document-node
+/plugins/typescript/typescript
+/plugins/typescript/typescript-apollo-angular
+/plugins/typescript/typescript-apollo-client-helpers
+/plugins/typescript/typescript-apollo-next
+/plugins/typescript/typescript-document-nodes
+/plugins/typescript/typescript-generic-sdk
+/plugins/typescript/typescript-graphql-files-modules
+/plugins/typescript/typescript-graphql-request
+/plugins/typescript/typescript-mongodb
+/plugins/typescript/typescript-msw
+/plugins/typescript/typescript-oclif
+/plugins/typescript/typescript-operations
+/plugins/typescript/typescript-react-apollo
+/plugins/typescript/typescript-react-query
+/plugins/typescript/typescript-resolvers
+/plugins/typescript/typescript-rtk-query
+/plugins/typescript/typescript-stencil-apollo
+/plugins/typescript/typescript-svelte-apollo
+/plugins/typescript/typescript-type-graphql
+/plugins/typescript/typescript-urql
+/plugins/typescript/typescript-validation-schema
+/plugins/typescript/typescript-vue-apollo
+/plugins/typescript/typescript-vue-apollo-smart-ops
+/plugins/typescript/typescript-vue-urql
+/plugins/urql-introspection -> /plugins/other/urql-introspection
