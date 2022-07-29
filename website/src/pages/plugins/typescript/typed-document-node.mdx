@@ -5,7 +5,7 @@ title: typed-document-node
 import { Callout } from '@theguild/components'
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename);
+export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader hasOperationsNote />
 
@@ -21,7 +21,7 @@ This plugin also generates less boilerplate code for your GraphQL operations.
 </Callout>
 
 <iframe
-  className="w-full mt-6 h-[400px]"
+  className="mt-6 h-[400px] w-full"
   src="https://youtube.com/embed/cYIhx8dusa4"
   title="Typed Document Node with GraphQL Code Generator"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
