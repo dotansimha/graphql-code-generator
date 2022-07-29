@@ -5,7 +5,7 @@ index 6fffd4e..693c324 100644
 @@ -100,4 +100,5 @@ declare const createLayout: (opts: DocsLayoutProps, config: DocsThemeConfig) =>
      getLayout(page: any): JSX.Element;
  };
- 
+
 +export declare const components: Record<string, any>;
  export { DocsThemeConfig, Meta, PageTheme, createLayout as default };
 diff --git a/node_modules/nextra-theme-docs/dist/index.js b/node_modules/nextra-theme-docs/dist/index.js

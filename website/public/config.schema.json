@@ -53,7 +53,13 @@
           "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
           "type": "boolean"
         },
+        "emitLegacyCommonJSImports": {
+          "description": "A flag to disable adding `.js` extension to the output file. Default: `true`.",
+          "type": "boolean"
+        },
         "silent": { "description": "A flag to suppress printing errors when they occur.", "type": "boolean" },
+        "verbose": { "description": "A flag to output more detailed information about tasks", "type": "boolean" },
+        "debug": { "description": "A flag to output debug logs", "type": "boolean" },
         "errorsOnly": { "description": "A flag to print only errors.", "type": "boolean" },
         "pluginLoader": {
           "$ref": "#/definitions/Types.PackageLoaderFn",
@@ -89,7 +95,7 @@
       }
     },
     "ReactQueryRawPluginConfig": {
-      "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.",
+      "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**",
       "type": "object",
       "properties": {
         "fetcher": {
@@ -122,6 +128,10 @@
         },
         "addInfiniteQuery": {
           "description": "Adds an Infinite Query along side the standard one\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "legacyMode": {
+          "description": "If false, it will work with `@tanstack/react-query`, default value is true.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "dedupeOperationSuffix": {
@@ -4127,11 +4137,11 @@
           "oneOf": [
             {
               "const": "typescript-react-query",
-              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-react-query",
-              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-rtk-query",
