@@ -15,10 +15,7 @@
   },
   "plugins": {
     "title": "Plugins",
-    "type": "page",
-    "theme": {
-      "toc": false
-    }
+    "type": "page"
   },
   "contact-us-link": {
     "title": "Contact Us",

@@ -1,9 +1,10 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
-import { Callout, PackageCmd } from '@theguild/components';
+import { PackageCmd } from '@theguild/components';
 import { components } from 'nextra-theme-docs';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
+import ClientNote from './client-note.mdx';
 
 export const PluginHeader = ({
   isDev = true,
@@ -58,22 +59,7 @@ export const PluginHeader = ({
         </table>
         <h3>Installation</h3>
         <PackageCmd packages={[`${isDev ? '-D ' : ''}${npmPackage}`]} />
-        {hasOperationsNote && (
-          <Callout type="warning" emoji="⚠️">
-            <p>
-              <strong>Usage Requirements</strong>
-            </p>
-            <p>
-              In order to use this GraphQL Codegen plugin, please make sure that you have GraphQL operations (
-              <code>query</code> / <code>mutation</code> / <code>subscription</code> and <code>fragment</code>) set as{' '}
-              <code>documents: …</code> in your <code>codegen.yml</code>.
-            </p>
-            <p>
-              Without loading your GraphQL operations (<code>query</code>, <code>mutation</code>,{' '}
-              <code>subscription</code> and <code>fragment</code>), you won't see any change in the generated output.
-            </p>
-          </Callout>
-        )}
+        {hasOperationsNote && <ClientNote />}
       </div>
     </>
   );

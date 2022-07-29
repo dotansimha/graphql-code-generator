@@ -2,8 +2,8 @@
 title: java-resolvers
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import JavaInstallation from '@/components/java-installation.mdx'
 export { getStaticProps } from '@/lib/plugin-get-static-props'
 
 <PluginHeader />
@@ -26,60 +26,5 @@ export class QueryResolvers implements Resolvers.Query {
 }
 ```
 
-## Prepare your environment
-
-To use the GraphQL Code Generator with Java, start by adding the [com.moowork.node](https://plugins.gradle.org/plugin/com.moowork.node) Gradle plugin to your `build.gradle`:
-
-```
-plugins {
-  id "com.moowork.node" version "1.3.1"
-}
-```
-
-Then, add the following in order to make sure you are running the code-generator on each build:
-
-```
-build.dependsOn yarn
-```
-
-Then, create a `package.json` file in your project root, with the following content:
-
-```json
-{
-  "name": "java-app",
-  "scripts": {
-    "postinstall": "graphql-codegen"
-  },
-  "dependencies": {
-    "graphql": "14.5.8",
-    "@graphql-codegen/cli": "1.7.0",
-    "@graphql-codegen/RELEVANT_PLUGIN": "1.7.0"
-  }
-}
-```
-
-<Callout>
-  Make sure to use the latest version of codegen and the plugins, and replace `RELEVANT_PLUGIN` with your plugin name.
-</Callout>
-
-Then, create `codegen.yml` file in your root directory, pointing to your schema, and add the plugins you need. For example:
-
-```yaml
-schema: src/main/resources/schema.graphqls
-generates:
-  src/main/java/com/my-name/my-app/generated/File.java:
-    - RELEVANT_PLUGIN # Replace with your plugin name
-```
-
-Also, make sure you add the following to your `.gitignore` file:
-
-```text
-yarn.lock
-node_modules
-```
-
-Now, run `gradle yarn` to install the dependencies for the first time.
-
-Next time, the codegen will run automatically each time you run your Gradle build script.
-
+<JavaInstallation/>
 <PluginApiDocs />
