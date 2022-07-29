@@ -4,7 +4,8 @@ title: java-resolvers
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import JavaInstallation from '@/components/java-installation.mdx'
-export { getStaticProps } from '@/lib/plugin-get-static-props'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename);
 
 <PluginHeader />
 

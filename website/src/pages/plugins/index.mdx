@@ -8,33 +8,29 @@ import { handlePushRoute } from 'guild-docs';
 import { MarketplaceSearch } from '@theguild/components';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { PACKAGES, ALL_TAGS } from '@/lib/plugins'
+import { fetchNpmInfo } from '@/lib/fetch-npm-info';
 
 export const getStaticProps = async () => {
   const categoryEntries = Object.entries(CategoryToPackages);
   const plugins = await Promise.all(
     PACKAGES.map(async ({ npmPackage, identifier, title, iconUrl, tags }) => {
-      const encodedName = encodeURIComponent(npmPackage)
-      const [
-        {
-          readme,
-          time: { created, modified },
-          description
-        },
-        { downloads },
-      ] = await Promise.all([
-        fetch(`https://registry.npmjs.org/${encodedName}`).then(response => response.json()),
-        fetch(`https://api.npmjs.org/downloads/point/last-week/${encodedName}`).then(response => response.json())
-      ])
+      const {
+        readme,
+        createdAt,
+        updatedAt,
+        description,
+        weeklyNPMDownloads,
+      } = await fetchNpmInfo(npmPackage)
       const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || []
-      const linkHref = `/plugins/${category}/${identifier}`
+
       return {
         title,
         readme,
-        created,
-        modified,
+        createdAt,
+        updatedAt,
         description,
-        linkHref,
-        weeklyNPMDownloads: downloads,
+        linkHref: `/plugins/${category}/${identifier}`,
+        weeklyNPMDownloads,
         iconUrl,
         tags,
       }
@@ -65,7 +61,7 @@ export const Plugins = () => {
           title: `${plugin.title} plugin details`,
           onClick: ev => handlePushRoute(plugin.linkHref, ev),
         },
-        update: plugin.modified,
+        update: plugin.updatedAt,
         image: plugin.iconUrl
           ? {
             height: 60,

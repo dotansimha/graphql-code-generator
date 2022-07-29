@@ -14,7 +14,7 @@ export const PluginHeader = ({
   hasOperationsNote?: boolean;
 }): ReactElement => {
   // Get the data from SSG, and render it as a component.
-  const { npmPackage, modified } = useSSG();
+  const { npmPackage, updatedAt } = useSSG();
 
   return (
     <>
@@ -53,7 +53,7 @@ export const PluginHeader = ({
             </tr>
             <tr>
               <td>Updated</td>
-              <td>{format(new Date(modified), 'MMM do, yyyy')}</td>
+              <td>{format(new Date(updatedAt), 'MMM do, yyyy')}</td>
             </tr>
           </tbody>
         </table>

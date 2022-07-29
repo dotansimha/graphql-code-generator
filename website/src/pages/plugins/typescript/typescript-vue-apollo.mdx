@@ -3,7 +3,8 @@ title: typescript-vue-apollo
 ---
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
-export { getStaticProps } from '@/lib/plugin-get-static-props'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename);
 
 <PluginHeader hasOperationsNote />
 
