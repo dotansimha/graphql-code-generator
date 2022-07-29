@@ -72,16 +72,16 @@ export const PACKAGES: {
   },
   {
     identifier: 'gql-tag-operations-preset',
-    title: 'gql-tag-operations-preset',
+    title: 'Gql Tag Operations Preset',
     npmPackage: '@graphql-codegen/gql-tag-operations-preset',
     iconUrl: '/assets/img/icons/codegen.svg',
     tags: ['preset', 'utilities', 'typescript'],
   },
   {
     identifier: 'graphql-modules-preset',
-    title: 'graphql-modules-preset',
+    title: 'GraphQL Modules Preset',
     npmPackage: '@graphql-codegen/graphql-modules-preset',
-    iconUrl: 'https://graphql-modules.com/img/just-logo.svg',
+    iconUrl: 'https://graphql-modules.com/assets/subheader-logo.svg',
     tags: ['preset', 'utilities', 'resolvers'],
   },
   {
@@ -93,7 +93,7 @@ export const PACKAGES: {
   },
   {
     identifier: 'import-types-preset',
-    title: 'import-types-preset',
+    title: 'Import Types Preset',
     npmPackage: '@graphql-codegen/import-types-preset',
     iconUrl: '/assets/img/icons/codegen.svg',
     tags: ['preset', 'utilities'],
@@ -219,7 +219,7 @@ export const PACKAGES: {
   },
   {
     identifier: 'typescript-document-nodes',
-    title: 'TypeScript document nodes',
+    title: 'TypeScript Document Nodes',
     npmPackage: '@graphql-codegen/typescript-document-nodes',
     iconUrl: '/assets/img/icons/typescript.svg',
     tags: ['plugin', 'typescript'],
@@ -254,14 +254,14 @@ export const PACKAGES: {
   },
   {
     identifier: 'typescript-msw',
-    title: 'TypeScript msw',
+    title: 'TypeScript Msw',
     npmPackage: '@graphql-codegen/typescript-msw',
     iconUrl: 'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg',
     tags: ['plugin', 'typescript', 'utilities'],
   },
   {
     identifier: 'typescript-oclif',
-    title: 'TypeScript oclif',
+    title: 'TypeScript Oclif',
     npmPackage: '@graphql-codegen/typescript-oclif',
     iconUrl: '/assets/img/icons/typescript.svg',
     tags: ['plugin', 'typescript'],
