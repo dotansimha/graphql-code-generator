@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.11.3
+
+### Patch Changes
+
+- b75ca4b48: Prevent cli from early returning when run init command.
+
 ## 2.11.2
 
 ### Patch Changes
