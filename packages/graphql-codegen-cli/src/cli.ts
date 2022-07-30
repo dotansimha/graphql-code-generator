@@ -8,7 +8,7 @@ export async function runCli(cmd: string): Promise<number> {
   await ensureGraphQlPackage();
 
   if (cmd === 'init') {
-    init();
+    await init();
     return 0;
   }
 
