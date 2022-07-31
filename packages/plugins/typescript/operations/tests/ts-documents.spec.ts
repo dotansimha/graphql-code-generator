@@ -6476,12 +6476,9 @@ function test(q: GetEntityBrandDataQuery): void {
     const config = {
       preResolveTypes: true,
       directiveFieldMappings: {
-        asString: { type: 'string' },
-        as: { type: '$type' },
-        nonNull: { nullable: false },
-        nonNullEntries: { nullableEntries: false },
-        required: { nullable: '!$field', nullableEntries: '!$entries' },
-        required2: { nullable: '!$field', nullableEntries: '!$entries' },
+        asString: { type: 'AsStringTransform' },
+        nonNull: { type: 'NonNullable' },
+        nonNullEntries: { type: 'NonNullable', entries: true },
       },
     };
 
@@ -6506,33 +6503,9 @@ function test(q: GetEntityBrandDataQuery): void {
       ).toBeSimilarStringTo(`
         {
           __typename?: 'User',
-          id: string,
-          favoriteNumber?: string | null,
-          ageAlias?: string | null
-        }
-      `);
-    });
-
-    it('changes the type based on a directive argument', async () => {
-      expect(
-        await runPlugin(/* GraphQL */ `
-          query {
-            me {
-              id @as(type: "boolean")
-              ageAlias: age @as(type: "boolean")
-              ...Numbers
-            }
-          }
-          fragment Numbers on User {
-            phoneNumber @as(type: "number")
-          }
-        `)
-      ).toBeSimilarStringTo(`
-        {
-          __typename?: 'User',
-          id: boolean,
-          phoneNumber?: number | null,
-          ageAlias?: boolean | null
+          id: AsStringTransform<number>,
+          favoriteNumber?: AsStringTransform<number | null>,
+          ageAlias?: AsStringTransform<number | null>
         }
       `);
     });
@@ -6557,51 +6530,13 @@ function test(q: GetEntityBrandDataQuery): void {
       ).toBeSimilarStringTo(`
         {
           __typename?: 'User',
-          username: string,
-          phoneNumber: string,
-          usernameAlias: string,
-          company: {
+          username?: NonNullable<string | null>,
+          phoneNumber?: NonNullable<string | null>,
+          usernameAlias?: NonNullable<string | null>,
+          company?: NonNullable<{
             __typename?: 'Company',
             name?: string | null
-          }
-        }
-      `);
-    });
-
-    it('changes the nullability based on a directive argument', async () => {
-      expect(
-        await runPlugin(/* GraphQL */ `
-          query {
-            me {
-              # make this non-nullable
-              username @required(field: true)
-              usernameAlias: username @required(field: true)
-              company @required(field: true) {
-                name
-              }
-              ...Numbers
-              # no effect, since the directive config explicitly keys off the "field" argument
-              emails @required
-              # non-nullable based on directive default for "field" argument
-              favoriteColors @required2(entries: false)
-            }
-          }
-          fragment Numbers on User {
-            phoneNumber @required(field: true)
-          }
-        `)
-      ).toBeSimilarStringTo(`
-        {
-          __typename?: 'User',
-          username: string,
-          emails?: Array<string | null> | null,
-          favoriteColors: Array<string | null>,
-          phoneNumber: string,
-          usernameAlias: string,
-          company: {
-            __typename?: 'Company',
-            name?: string | null
-          }
+          } | null>
         }
       `);
     });
@@ -6620,31 +6555,8 @@ function test(q: GetEntityBrandDataQuery): void {
       ).toBeSimilarStringTo(`
         {
           __typename?: 'User',
-          emails?: Array<string> | null,
-          emailsAlias?: Array<string> | null
-        }
-      `);
-    });
-
-    it('changes the list entry nullability based on a directive argument', async () => {
-      expect(
-        await runPlugin(/* GraphQL */ `
-          query {
-            me {
-              # list may be null but its entries may not
-              emails @required(entries: true)
-              emailsAlias: emails @required(entries: true)
-              # same, but rely on directive default for "entries" argument
-              favoriteColors @required2(field: false)
-            }
-          }
-        `)
-      ).toBeSimilarStringTo(`
-        {
-          __typename?: 'User',
-          emails?: Array<string> | null,
-          favoriteColors?: Array<string> | null,
-          emailsAlias?: Array<string> | null
+          emails?: Array<NonNullable<string | null>> | null,
+          emailsAlias?: Array<NonNullable<string | null>> | null
         }
       `);
     });
@@ -6654,15 +6566,14 @@ function test(q: GetEntityBrandDataQuery): void {
         await runPlugin(/* GraphQL */ `
           query {
             me {
-              # last one wins
-              id @as(type: "boolean") @asString
-              username @nonNull @as(type: "boolean")
-              emails @nonNull @required(entries: true)
+              id @asString
+              age @asString @nonNull
+              emails @nonNull @nonNullEntries
             }
           }
         `)
       ).toBeSimilarStringTo(`
-        { __typename?: 'User', id: string, username: boolean, emails: Array<string> }
+        { __typename?: 'User', id: AsStringTransform<number>, age?: NonNullable<AsStringTransform<number | null>>, emails?: NonNullable<Array<NonNullable<string | null>> | null> }
       `);
     });
   });

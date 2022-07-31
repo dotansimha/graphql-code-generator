@@ -188,7 +188,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
   maybeValue?: string;
   /**
-   * @description Change a field's type and/or nullability based on applied directives
+   * @description Change a field's type based on applied directives
    *
    * You can use both `module#type` and `module#namespace#type` syntax. Requires `preResolveTypes=true` and only works on FIELD directives.
    *
@@ -204,17 +204,22 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```yml
    * plugins:
    *   config:
+   *     # You cannot control optional(`?`) with `directiveFieldMapping`.
+   *     # Setting `avoidOptionals` is recommended when defining directives that change nullability, such as `@nonNull` or `@required`.
+   *     avoidOptionals:
+   *       field: true  #
    *     directiveFieldMappings:
-   *       asString:
-   *         type: string
-   *       nonNull:
-   *         nullable: false
-   *         nullableEntries: "!$entries"
+   *       asString: string
+   *       nonNull: NonNullable
+   *       nonNullEntries:
+   *         type: NonNullable
+   *         entries: true
    * ```
    * ## Schema with custom directives
    * ```graphqls
    * directive @asString on FIELD
-   * directive @nonNull(entries: boolean) on FIELD
+   * directive @nonNull on FIELD
+   * directive @nonNullEntries on FIELD
    *
    * type User {
    *   id: Int
@@ -230,19 +235,19 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *   me {
    *     id @asString @nonNull
    *     username @nonNull
-   *     emails @nonNull(entries: true)
+   *     emails @nonNullEntries
    *   }
    * }
    * ```
    */
   directiveFieldMappings?: {
-    [name: string]: {
-      /** Override field type (e.g. `boolean`, `./module#type`, `./module#namespace#type`) */
-      type?: string;
-      /** Override field nullability (boolean or expression that will resolve a directive arg into a boolean, e.g. `"!$field"`) */
-      nullable?: boolean | string;
-      /** Override list entry nullability (boolean or expression that will resolve a directive arg into a boolean, e.g. `"!$entries"`) */
-      nullableEntries?: boolean | string;
-    };
+    [name: string]:
+      | string
+      | {
+          /** Wrapper type (e.g. `NonNullable`, `./module#type`, `./module#namespace#type`) */
+          type: string;
+          /** Wrap list entry type with type type specified by `type` */
+          entries?: boolean;
+        };
   };
 }

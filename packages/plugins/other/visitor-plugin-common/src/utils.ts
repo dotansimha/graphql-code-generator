@@ -441,6 +441,8 @@ export function hasConditionalDirectives(field: FieldNode): boolean {
 type WrapModifiersOptions = {
   wrapOptional(type: string): string;
   wrapArray(type: string): string;
+  wrapType?(type: string): string;
+  wrapEntriesType?(type: string): string;
 };
 
 export function wrapTypeWithModifiers(
@@ -450,6 +452,7 @@ export function wrapTypeWithModifiers(
 ): string {
   let currentType = type;
   const modifiers: Array<(type: string) => string> = [];
+  if (options.wrapType) modifiers.push(options.wrapType);
   while (currentType) {
     if (isNonNullType(currentType)) {
       currentType = currentType.ofType;
@@ -459,6 +462,7 @@ export function wrapTypeWithModifiers(
 
     if (isListType(currentType)) {
       modifiers.push(options.wrapArray);
+      if (options.wrapEntriesType) modifiers.push(options.wrapEntriesType);
       currentType = currentType.ofType;
     } else {
       break;

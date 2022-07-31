@@ -15,18 +15,7 @@ import {
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import {
-  DirectiveNode,
-  GraphQLList,
-  GraphQLNamedType,
-  GraphQLNonNull,
-  GraphQLOutputType,
-  GraphQLSchema,
-  isEnumType,
-  isNonNullType,
-  isListType,
-  isNullableType,
-} from 'graphql';
+import { DirectiveNode, GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
@@ -41,10 +30,6 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
 }
 
 type DirectiveFieldMappings = TypeScriptDocumentsPluginConfig['directiveFieldMappings'];
-type NormalizedDirectiveFieldSetting = (ParsedMapper | {}) & Omit<DirectiveFieldMappings[number], 'type'>;
-function isFieldTypeMapping(mapping: NormalizedDirectiveFieldSetting): mapping is ParsedMapper {
-  return 'type' in mapping;
-}
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
@@ -91,12 +76,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       isConditional = false,
       directives: ReadonlyArray<DirectiveNode> = []
     ): string => {
-      const optional =
-        isConditional ||
-        (!this.config.avoidOptionals.field &&
-          !!type &&
-          !isNonNullType(type) &&
-          this._evaluateFieldDirectives(directives).nullable) !== false;
+      const optional = isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type)) !== false;
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 
@@ -107,13 +87,24 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       scalars: this.scalars,
       formatNamedField,
       wrapTypeWithModifiers: (baseType, type, directives = []) => {
-        const fieldOverrides = this._evaluateFieldDirectives(directives);
-        if (isFieldTypeMapping(fieldOverrides)) baseType = fieldOverrides.type;
-        if (fieldOverrides.nullableEntries === false && isListType(type))
-          type = new GraphQLList(new GraphQLNonNull(type.ofType));
-        if (fieldOverrides.nullable === false && isNullableType(type))
-          type = new GraphQLNonNull(type) as GraphQLOutputType | GraphQLNamedType;
-        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+        const [wrappers, entriesWrappers] = directives.reduce(
+          (result, directive) => {
+            const mapping = this.config.directiveFieldMappings[directive.name.value];
+            if (mapping == null) return result;
+            if (typeof mapping === 'string')
+              return [[...result[0], parseMapper(mapping, directive.name.value)], result[1]];
+            if (mapping.entries) return [result[0], [...result[1], parseMapper(mapping.type, directive.name.value)]];
+            return [[...result[0], parseMapper(mapping.type, directive.name.value)], result[1]];
+          },
+          [[] as ParsedMapper[], [] as ParsedMapper[]]
+        );
+
+        return wrapTypeWithModifiers(baseType, type, {
+          wrapOptional,
+          wrapArray,
+          wrapType: type => wrappers.reduce((t, w) => `${w.type}<${t}>`, type),
+          wrapEntriesType: type => entriesWrappers.reduce((t, w) => `${w.type}<${t}>`, type),
+        });
       },
       avoidOptionals: this.config.avoidOptionals,
     };
@@ -167,52 +158,5 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
 
     return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>`;
-  }
-
-  /** Evaluate a field's directive(s) to determine which type/nullability overrides to apply */
-  protected _evaluateFieldDirectives(directives: ReadonlyArray<DirectiveNode>): NormalizedDirectiveFieldSetting {
-    const mappings = this.config.directiveFieldMappings;
-    return Object.assign(
-      {},
-      ...directives.map(directive => {
-        let fieldSettings = { ...(mappings[directive.name.value] || {}) };
-        if (fieldSettings.type) {
-          const type =
-            this._maybeResolveDirectiveExpression(fieldSettings.type, directive, String) ?? fieldSettings.type;
-          if (type) {
-            fieldSettings = { ...fieldSettings, ...parseMapper(String(type), directive.name.value) };
-          }
-        }
-        ['nullable', 'nullableEntries'].forEach(key => {
-          let setting = fieldSettings[key];
-          if (typeof setting !== 'string') return;
-          setting = this._maybeResolveDirectiveExpression(setting, directive, arg =>
-            typeof arg === 'boolean' ? arg : undefined
-          );
-          if (typeof setting !== 'undefined') {
-            fieldSettings[key] = setting;
-          } else {
-            delete fieldSettings[key];
-          }
-        });
-        return fieldSettings;
-      })
-    );
-  }
-
-  /** Resolve a directive argument expression (e.g. "$argName") into a value (e.g. true) */
-  protected _maybeResolveDirectiveExpression<T>(
-    expression: string,
-    directive: DirectiveNode,
-    cast: (arg: any) => T | undefined
-  ): T | undefined {
-    if (!expression.match(/^!?\$\w+$/)) return undefined;
-    const [negate, argName] = expression.split('$');
-    const directiveDefinition = this.schema.getDirective(directive.name.value);
-    const defaultValue = directiveDefinition?.args.find(arg => arg.name === argName)?.defaultValue;
-    const valueNode = directive.arguments?.find(arg => arg.name.value === argName)?.value as { value: any };
-    const value = valueNode?.value ?? defaultValue;
-    if (typeof value === 'undefined') return undefined;
-    return cast(negate ? !value : value);
   }
 }
