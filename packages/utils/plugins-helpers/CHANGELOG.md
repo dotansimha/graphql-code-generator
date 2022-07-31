@@ -1,5 +1,32 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.6.1
+
+### Patch Changes
+
+- 6a2e328e6: feat(cli): `--verbose` and `--debug` flags
+
+## 2.6.0
+
+### Minor Changes
+
+- 2cbcbb371: Add new flag to emit legacy common js imports. Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+
+  You can use the option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+   documents:
+     - 'src/**/*.graphql'
+   emitLegacyCommonJSImports: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --emit-legacy-common-js-imports
+  ```
+
 ## 2.5.0
 
 ### Minor Changes

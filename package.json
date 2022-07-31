@@ -47,16 +47,16 @@
     "@types/node": "16.11.43",
     "@types/react": "18.0.15",
     "@types/webpack-env": "1.17.0",
-    "@typescript-eslint/eslint-plugin": "5.30.5",
-    "@typescript-eslint/parser": "5.30.5",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "@typescript-eslint/parser": "5.30.6",
     "@urql/exchange-graphcache": "4.4.3",
     "@vue/apollo-composable": "4.0.0-alpha.18",
     "@vue/composition-api": "1.7.0",
     "apollo-client": "2.6.10",
-    "apollo-server": "3.9.0",
+    "apollo-server": "3.10.0",
     "auto-bind": "4.0.0",
     "babel-jest": "27.5.1",
-    "bob-the-bundler": "3.0.0",
+    "bob-the-bundler": "3.0.1",
     "chalk": "4.1.2",
     "dotenv": "16.0.1",
     "eslint": "8.19.0",
@@ -69,7 +69,6 @@
     "flow-bin": "0.182.0",
     "flow-parser": "0.182.0",
     "fs-extra": "10.1.0",
-    "globby": "11.1.0",
     "graphql": "16.5.0",
     "graphql-tag": "2.12.6",
     "husky": "8.0.1",
@@ -84,7 +83,7 @@
     "prettier-plugin-svelte": "2.7.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-query": "3.39.1",
+    "@tanstack/react-query": "4.0.10",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
     "svelte": "3.49.0",
@@ -100,10 +99,7 @@
     "packages/**/src/**/*.{ts,tsx}": [
       "eslint --fix"
     ],
-    "**/*.{ts,tsx,graphql,yml}": [
-      "prettier --write"
-    ],
-    "**/*.json": [
+    "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
     "yarn.lock": [

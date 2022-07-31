@@ -445,7 +445,7 @@ export const CommentDocument = gql`
 `;
 
 export function useCommentQuery(options: Omit<Urql.UseQueryArgs<CommentQueryVariables>, 'query'>) {
-  return Urql.useQuery<CommentQuery>({ query: CommentDocument, ...options });
+  return Urql.useQuery<CommentQuery, CommentQueryVariables>({ query: CommentDocument, ...options });
 }
 export const CurrentUserForProfileDocument = gql`
   query CurrentUserForProfile {
@@ -459,7 +459,10 @@ export const CurrentUserForProfileDocument = gql`
 export function useCurrentUserForProfileQuery(
   options?: Omit<Urql.UseQueryArgs<CurrentUserForProfileQueryVariables>, 'query'>
 ) {
-  return Urql.useQuery<CurrentUserForProfileQuery>({ query: CurrentUserForProfileDocument, ...options });
+  return Urql.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>({
+    query: CurrentUserForProfileDocument,
+    ...options,
+  });
 }
 export const FeedDocument = gql`
   query Feed($type: FeedType!, $offset: Int, $limit: Int) {
@@ -474,7 +477,7 @@ export const FeedDocument = gql`
 `;
 
 export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'>) {
-  return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
+  return Urql.useQuery<FeedQuery, FeedQueryVariables>({ query: FeedDocument, ...options });
 }
 export const SubmitRepositoryDocument = gql`
   mutation submitRepository($repoFullName: String!) {

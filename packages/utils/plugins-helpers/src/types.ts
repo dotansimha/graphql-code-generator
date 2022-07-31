@@ -438,9 +438,21 @@ export namespace Types {
      */
     ignoreNoDocuments?: boolean;
     /**
+     * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
+     */
+    emitLegacyCommonJSImports?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
+    /**
+     * @description A flag to output more detailed information about tasks
+     */
+    verbose?: boolean;
+    /**
+     * @description A flag to output debug logs
+     */
+    debug?: boolean;
     /**
      * @description A flag to print only errors.
      */

@@ -5,8 +5,8 @@ import { cliError } from './utils/cli-error.js';
 const [, , cmd] = process.argv;
 
 runCli(cmd)
-  .then(() => {
-    process.exit(0);
+  .then(returnCode => {
+    process.exit(returnCode);
   })
   .catch(error => {
     cliError(error);

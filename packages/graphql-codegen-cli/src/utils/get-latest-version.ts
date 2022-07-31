@@ -1,4 +1,4 @@
-import { fetch } from 'cross-undici-fetch';
+import { fetch } from '@whatwg-node/fetch';
 
 /**
  * Fetches the version directly from the registry instead of depending on

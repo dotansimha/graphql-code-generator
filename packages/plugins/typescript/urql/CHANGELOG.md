@@ -1,5 +1,19 @@
 # @graphql-codegen/typescript-urql
 
+## 3.6.3
+
+### Patch Changes
+
+- ab66ba104: Add useQuery argument generic type
+
+## 3.6.2
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+
 ## 3.6.1
 
 ### Patch Changes

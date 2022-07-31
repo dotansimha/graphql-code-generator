@@ -25,21 +25,22 @@ export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
   augmentedModuleName?: string;
-}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName }, _info) => {
+  emitLegacyCommonJSImports?: boolean;
+}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName, emitLegacyCommonJSImports }, _info) => {
   if (!sourcesWithOperations) {
     return '';
   }
 
   if (augmentedModuleName == null) {
     return [
-      `import * as graphql from './graphql.js';\n`,
+      `import * as graphql from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
       `${
         useTypeImports ? 'import type' : 'import'
       } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
       `\n`,
       ...getDocumentRegistryChunk(sourcesWithOperations),
       `\n`,
-      ...getGqlOverloadChunk(sourcesWithOperations, 'lookup'),
+      ...getGqlOverloadChunk(sourcesWithOperations, 'lookup', emitLegacyCommonJSImports),
       `\n`,
       `export function gql(source: string): unknown;\n`,
       `export function gql(source: string) {\n`,
@@ -55,7 +56,7 @@ export const plugin: PluginFunction<{
     `declare module "${augmentedModuleName}" {`,
     [
       `\n`,
-      ...getGqlOverloadChunk(sourcesWithOperations, 'augmented'),
+      ...getGqlOverloadChunk(sourcesWithOperations, 'augmented', emitLegacyCommonJSImports),
       `export function gql(source: string): unknown;\n`,
       `\n`,
       ...documentTypePartial,
@@ -84,7 +85,11 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
 
 type Mode = 'lookup' | 'augmented';
 
-function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>, mode: Mode) {
+function getGqlOverloadChunk(
+  sourcesWithOperations: Array<SourceWithOperations>,
+  mode: Mode,
+  emitLegacyCommonJSImports?: boolean
+) {
   const lines = new Set<string>();
 
   // We intentionally don't use a <T extends keyof typeof documents> generic, because TS
@@ -94,7 +99,9 @@ function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>,
     const returnType =
       mode === 'lookup'
         ? `(typeof documents)[${JSON.stringify(originalString)}]`
-        : `typeof import('./graphql').${operations[0].initialName}`;
+        : emitLegacyCommonJSImports
+        ? `typeof import('./graphql').${operations[0].initialName}`
+        : `typeof import('./graphql.js').${operations[0].initialName}`;
     lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
 

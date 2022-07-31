@@ -134,6 +134,34 @@ describe('CLI Flags', () => {
     expect(config.ignoreNoDocuments).toBeFalsy();
   });
 
+  it('Should overwrite emitLegacyCommonJSImports config using cli flags to true', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        emitLegacyCommonJSImports: false
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--emit-legacy-common-js-imports');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.emitLegacyCommonJSImports).toBeTruthy();
+  });
+
+  it('Should overwrite emitLegacyCommonJSImports config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        emitLegacyCommonJSImports: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--emit-legacy-common-js-imports=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.emitLegacyCommonJSImports).toBeFalsy();
+  });
+
   it('Should overwrite ignoreNoDocuments config using cli flags to true', async () => {
     mockConfig(`
         schema: schema.graphql

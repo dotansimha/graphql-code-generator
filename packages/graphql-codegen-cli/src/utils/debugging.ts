@@ -6,21 +6,17 @@ let queue: Array<{
 }> = [];
 
 export function debugLog(message: string, ...meta: any[]) {
-  if (!process.env.GQL_CODEGEN_NODEBUG && process.env.DEBUG !== undefined) {
-    queue.push({
-      message,
-      meta,
-    });
-  }
+  queue.push({
+    message,
+    meta,
+  });
 }
 
 export function printLogs() {
-  if (!process.env.GQL_CODEGEN_NODEBUG && process.env.DEBUG !== undefined) {
-    queue.forEach(log => {
-      getLogger().info(log.message, ...log.meta);
-    });
-    resetLogs();
-  }
+  queue.forEach(log => {
+    getLogger().info(log.message, ...log.meta);
+  });
+  resetLogs();
 }
 
 export function resetLogs() {

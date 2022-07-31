@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.2
+
+### Patch Changes
+
+- bc4b7eb24: Bumping to release for https://github.com/dotansimha/graphql-code-generator/issues/8067
+
 ## 1.5.1
 
 ### Patch Changes
