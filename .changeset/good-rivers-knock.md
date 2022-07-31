@@ -3,4 +3,4 @@
 '@graphql-codegen/typescript-operations': minor
 ---
 
-Add ability to override operation field types/nullability via directives
+Add ability to override operation field types via directives
