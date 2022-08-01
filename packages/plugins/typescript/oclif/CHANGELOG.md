@@ -1,5 +1,70 @@
 # @graphql-codegen/typescript-oclif
 
+## 2.3.2
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 2.3.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+
+## 2.3.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to relative file imports for compliance with ESM module resolution. Since in CommonJS the `.js` extension is optional, this is not a breaking change.
+
+  If you have path configuration within your configuration, consider attaching `.js` if you are migrating to ESM.
+
+  ```yml
+  mappers:
+    MyOtherType: './my-file.js#MyCustomOtherType',
+  ```
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.2.14
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 2.2.13
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
+## 2.2.12
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+
 ## 2.2.11
 
 ### Patch Changes

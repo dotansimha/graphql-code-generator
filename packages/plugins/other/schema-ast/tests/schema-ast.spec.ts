@@ -1,4 +1,4 @@
-import { validate, plugin } from '../src/index';
+import { validate, plugin } from '../src/index.js';
 import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';

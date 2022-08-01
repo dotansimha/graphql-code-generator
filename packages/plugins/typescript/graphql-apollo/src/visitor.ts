@@ -6,7 +6,7 @@ import {
 import autoBind from 'auto-bind';
 import { camelCase } from 'change-case-all';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
-import { RawGraphQLApolloPluginConfig } from './config';
+import { RawGraphQLApolloPluginConfig } from './config.js';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;

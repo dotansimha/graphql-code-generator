@@ -7,7 +7,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
-import { RawJitSdkPluginConfig } from './config';
+import { RawJitSdkPluginConfig } from './config.js';
 
 export interface JitSdkPluginConfig extends ClientSideBasePluginConfig {}
 

@@ -1,7 +1,7 @@
 import { useMonorepo } from '@graphql-codegen/testing';
-import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { executeCodegen } from '../src';
+import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print } from 'graphql';
+import { createContext, executeCodegen } from '../src/index.js';
 import { join } from 'path';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -961,6 +961,7 @@ describe('Codegen Executor', () => {
       throw new Error('This should not throw as the invalid file is excluded via glob.');
     }
   });
+
   it('Should allow plugins to extend schema with custom root', async () => {
     try {
       const output = await executeCodegen({
@@ -1066,5 +1067,21 @@ describe('Codegen Executor', () => {
     } catch (error) {
       expect(error.message).toContain('Failed to load schema for "out1.graphql"');
     }
+  });
+
+  it('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
+    const prj1 = await createContext({
+      config: './tests/test-files/graphql.config.js',
+      project: 'prj1',
+      errorsOnly: true,
+      overwrite: true,
+      profile: true,
+      require: [],
+      silent: false,
+      watch: false,
+    });
+    const config = prj1.getConfig();
+    const output = await executeCodegen(config);
+    expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
 });

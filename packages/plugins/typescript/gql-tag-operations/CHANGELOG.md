@@ -1,5 +1,80 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.4.0
+
+### Minor Changes
+
+- 2cbcbb371: Add new flag to emit legacy common js imports. Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+
+  You can use the option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+   documents:
+     - 'src/**/*.graphql'
+   emitLegacyCommonJSImports: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --emit-legacy-common-js-imports
+  ```
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 1.3.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+
+## 1.3.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 1.2.17
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 1.2.16
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
+## 1.2.15
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+
 ## 1.2.14
 
 ### Patch Changes

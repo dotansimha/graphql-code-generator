@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLApolloVisitor } from './visitor';
+import { GraphQLApolloVisitor } from './visitor.js';
 import { extname } from 'path';
-import { RawGraphQLApolloPluginConfig } from './config';
+import { RawGraphQLApolloPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<RawGraphQLApolloPluginConfig> = (
   schema: GraphQLSchema,

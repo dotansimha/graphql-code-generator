@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { ReactApolloVisitor } from './visitor';
+import { ReactApolloVisitor } from './visitor.js';
 import { extname } from 'path';
-import { ReactApolloRawPluginConfig } from './config';
+import { ReactApolloRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,

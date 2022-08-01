@@ -6,7 +6,7 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlRawPluginConfig } from './config';
+import { UrqlRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 
@@ -131,7 +131,7 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
 export function use${operationName}(options${
       isVariablesRequired ? '' : '?'
     }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
-  return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
+  return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options });
 };`;
   }
 

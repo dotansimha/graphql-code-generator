@@ -1,5 +1,5 @@
 import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common';
-import { JsonAttributesSource } from './json-attributes';
+import { JsonAttributesSource } from './json-attributes.js';
 
 /**
  * @description This plugin generates C# `class` identifier for your schema types.

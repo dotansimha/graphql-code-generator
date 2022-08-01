@@ -1,6 +1,6 @@
 import { transformFileSync } from '@babel/core';
 import * as path from 'path';
-import babelPlugin from '../src/babel';
+import babelPlugin from '../src/babel.js';
 
 describe('gql-tag-operations-preset > babelPlugin', () => {
   test('can imports files in the same directory', () => {

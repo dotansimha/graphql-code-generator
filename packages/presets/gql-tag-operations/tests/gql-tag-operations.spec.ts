@@ -4,7 +4,7 @@ import '@graphql-codegen/testing';
 import { validateTs } from '@graphql-codegen/testing';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { preset } from '../src';
+import { preset } from '../src/index.js';
 
 describe('gql-tag-operations-preset', () => {
   it('can generate simple examples uppercase names', async () => {

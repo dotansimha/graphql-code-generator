@@ -1,9 +1,9 @@
 import { GraphQLSchema, buildClientSchema, buildSchema, parse } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-import { plugin } from '../src';
-import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { plugin as tsPlugin } from '../../typescript/src/index';
+import { plugin } from '../src/index.js';
+import { plugin as tsDocumentsPlugin } from '../../operations/src/index.js';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { validateTs } from '@graphql-codegen/testing';
 
 const validateTypeScript = async (
@@ -21,6 +21,102 @@ const validateTypeScript = async (
 };
 
 describe('React-Query', () => {
+  it('support v4 syntax', async () => {
+    const config = {
+      useTypeImports: true,
+      legacyMode: false,
+      addInfiniteQuery: true,
+    };
+
+    const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
+
+    expect(out.prepend).toEqual([
+      `import { useQuery, useInfiniteQuery, useMutation, type UseQueryOptions, type UseInfiniteQueryOptions, type UseMutationOptions } from '@tanstack/react-query';`,
+      `
+function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
+  return async (): Promise<TData> => {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      ...requestInit,
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0];
+
+      throw new Error(message);
+    }
+
+    return json.data;
+  }
+}`,
+    ]);
+    expect(out.content).toEqual(`
+export const TestDocument = \`
+    query test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+    \`;
+export const useTestQuery = <
+      TData = TestQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: TestQueryVariables,
+      options?: UseQueryOptions<TestQuery, TError, TData>
+    ) =>
+    useQuery<TestQuery, TError, TData>(
+      variables === undefined ? ['test'] : ['test', variables],
+      fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables),
+      options
+    );
+export const useInfiniteTestQuery = <
+      TData = TestQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      _pageParamKey: keyof TestQueryVariables,
+      variables?: TestQueryVariables,
+      options?: UseInfiniteQueryOptions<TestQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<TestQuery, TError, TData>(
+      variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
+      (metaData) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
+export const TestDocument = \`
+    mutation test($name: String) {
+  submitRepository(repoFullName: $name) {
+    id
+  }
+}
+    \`;
+export const useTestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<TestMutation, TError, TestMutationVariables, TContext>
+    ) =>
+    useMutation<TestMutation, TError, TestMutationVariables, TContext>(
+      ['test'],
+      (variables?: TestMutationVariables) => fetcher<TestMutation, TestMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, variables)(),
+      options
+    );`);
+  });
   it('Duplicated nested fragments are removed', async () => {
     const schema = buildSchema(/* GraphQL */ `
       schema {
@@ -140,12 +236,13 @@ describe('React-Query', () => {
         fetcher: './my-file#myCustomFetcher',
         typesPrefix: 'T',
         addInfiniteQuery: true,
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend).toContain(
-        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
+        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions } from 'react-query';`
       );
 
       expect(out.prepend).toContain(`import { myCustomFetcher } from './my-file';`);
@@ -192,6 +289,7 @@ describe('React-Query', () => {
       const config = {
         fetcher: 'myCustomFetcher',
         typesPrefix: 'T',
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
@@ -234,12 +332,13 @@ describe('React-Query', () => {
         },
         typesPrefix: 'T',
         addInfiniteQuery: true,
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend).toContain(
-        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions, QueryFunctionContext } from 'react-query';`
+        `import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions } from 'react-query';`
       );
       expect(out.prepend).toContain(`import { useCustomFetcher } from './my-file';`);
       expect(out.content).toBeSimilarStringTo(`export const useTestQuery = <
@@ -472,6 +571,7 @@ describe('React-Query', () => {
       const config = {
         fetcher: 'graphql-request',
         typesPrefix: 'T',
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
@@ -520,6 +620,7 @@ describe('React-Query', () => {
       const config = {
         fetcher: 'graphql-request',
         useTypeImports: true,
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
@@ -653,6 +754,7 @@ describe('React-Query', () => {
           endpoint: 'http://localhost:3000/graphql',
         },
         typesPrefix: 'T',
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
@@ -985,6 +1087,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       const config = {
         fetcher: 'fetch',
         typesPrefix: 'T',
+        legacyMode: true,
       };
 
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;

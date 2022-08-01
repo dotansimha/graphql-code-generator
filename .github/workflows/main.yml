@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+env:
+  NODE_OPTIONS: '--max_old_space_size=4096'
+
 jobs:
   lint:
     name: Linting Check
@@ -56,6 +59,11 @@ jobs:
   dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        method:
+          - 'cjs'
+          - 'esm'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,12 +84,12 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test dev-tests
+      - name: Test dev-tests ${{matrix.method}}
         run: |
-          yarn run generate:examples
+          yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   esm:
-    name: Testing ESM
+    name: Testing exports integrity
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -103,15 +111,20 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test ESM
-        run: node scripts/test-esm.mjs
+      - name: Test ESM & CJS integrity
+        run: yarn bob check
   test:
     name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest
+    needs:
+      - lint
+      - prettier-check
+      - dev-tests
+      - esm
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [12, 17]
+        node_version: [12, 14, 16, 18]
         graphql_version: [15, 16]
         include:
           - node-version: 12

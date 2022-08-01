@@ -1,5 +1,5 @@
 import '@graphql-codegen/testing';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 import { parse } from 'graphql';
 
 describe('named-operations-object', () => {

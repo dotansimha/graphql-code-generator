@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
-import { RawGenericSdkPluginConfig } from './config';
+import { RawGenericSdkPluginConfig } from './config.js';
 
 export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
   usingObservableFrom: string;

@@ -3,12 +3,12 @@ import {
   generateMutationKey,
   generateQueryKey,
   generateQueryVariablesSignature,
-} from './variables-generator';
+} from './variables-generator.js';
 
-import { FetcherRenderer } from './fetcher';
-import { HardcodedFetch } from './config';
+import { FetcherRenderer } from './fetcher.js';
+import { HardcodedFetch } from './config.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor, private config: HardcodedFetch) {}
@@ -77,7 +77,7 @@ ${this.getFetchParams()}
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      pageParamKey: keyof ${operationVariablesTypes},
+      _pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>

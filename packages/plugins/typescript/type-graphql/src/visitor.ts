@@ -1,5 +1,5 @@
 import { indent, DeclarationBlock, AvoidOptionalsConfig } from '@graphql-codegen/visitor-plugin-common';
-import { TypeGraphQLPluginConfig } from './config';
+import { TypeGraphQLPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,
@@ -408,19 +408,24 @@ export class TypeGraphQLVisitor<
 
     typeString = this.fixDecorator(type, typeString);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   InputValueDefinition(
     node: InputValueDefinitionNode,
     key?: number | string,
     parent?: any,
-    path?: any,
-    ancestors?: TypeDefinitionNode[]
+    path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
   ): string {
     const parentName = ancestors?.[ancestors.length - 1].name.value;
     if (parent && !this.hasTypeDecorators(parentName)) {
-      return this.typescriptVisitor.InputValueDefinition(node, key, parent);
+      return this.typescriptVisitor.InputValueDefinition(node, key, parent, path, ancestors);
     }
 
     const fieldDecorator = this.config.decoratorName.field;
@@ -451,7 +456,12 @@ export class TypeGraphQLVisitor<
       ? this.buildTypeString(type)
       : this.fixDecorator(type, rawType as string);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${nameString}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

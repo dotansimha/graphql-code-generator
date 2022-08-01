@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-vue-urql",
-  "version": "2.2.12",
+  "version": "2.3.2",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Vue-Urql composition functions based on GraphQL operations",
   "repository": {
     "type": "git",
@@ -10,12 +10,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../../jest.config.js",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.4.0",
-    "@graphql-codegen/visitor-plugin-common": "2.8.0",
+    "@graphql-codegen/plugin-helpers": "^2.6.0",
+    "@graphql-codegen/visitor-plugin-common": "2.12.0",
     "auto-bind": "~4.0.0",
     "change-case-all": "1.0.14",
     "tslib": "~2.4.0"
@@ -24,28 +23,32 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
     "graphql-tag": "^2.0.0"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
     },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+    "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
-  }
+  },
+  "type": "module"
 }

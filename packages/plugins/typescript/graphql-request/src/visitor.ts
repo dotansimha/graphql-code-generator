@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode, print } from 'graphql';
-import { RawGraphQLRequestPluginConfig } from './config';
+import { RawGraphQLRequestPluginConfig } from './config.js';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
@@ -23,6 +23,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
   RawGraphQLRequestPluginConfig,
   GraphQLRequestPluginConfig
 > {
+  private _externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -44,11 +45,11 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
     this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
 
-    if (this.config.rawRequest) {
-      if (this.config.documentMode !== DocumentMode.string) {
-        this._additionalImports.push(`import { print } from 'graphql'`);
-      }
+    if (this.config.rawRequest && this.config.documentMode !== DocumentMode.string) {
+      this._additionalImports.push(`import { print } from 'graphql'`);
     }
+
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
   }
 
   public OperationDefinition(node: OperationDefinitionNode) {
@@ -74,6 +75,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+
     this._operationsToInclude.push({
       node,
       documentVariableName,
