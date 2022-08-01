@@ -3,6 +3,9 @@ import type { Package } from '@guild-docs/server/npm';
 export const ALL_TAGS = [
   'typescript',
   'csharp',
+  'dart',
+  'flutter',
+  'freezed',
   'flow',
   'java',
   'utilities',
@@ -31,6 +34,13 @@ export const ALL_TAGS = [
 export type Tags = typeof ALL_TAGS[number];
 
 export const PACKAGES: Package<Tags>[] = [
+  {
+    identifier: 'flutter-freezed',
+    title: 'Flutter Freezed Classes',
+    npmPackage: '@graphql-codegen/flutter-freezed',
+    iconUrl: '/assets/img/icons/codegen.svg',
+    tags: ['plugin', 'dart', 'flutter', 'freezed'],
+  },
   {
     identifier: 'add',
     title: 'Add',

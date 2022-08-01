@@ -5,31 +5,20 @@ import {
   UnionTypeDefinitionNode,
 } from 'graphql';
 import { FreezedPluginConfig } from './config';
-import { FreezedFactoryBlockRepository, FreezedDeclarationBlock } from './freezed-declaration-block';
+import { FreezedFactoryBlockRepository, transformDefinition } from './utils';
 
-export const schemaVisitor = (schema: GraphQLSchema, config: FreezedPluginConfig) => {
+export const schemaVisitor = (_schema: GraphQLSchema, config: FreezedPluginConfig) => {
   const freezedFactoryBlockRepository = new FreezedFactoryBlockRepository();
   return {
     freezedFactoryBlockRepository,
 
     UnionTypeDefinition: (node: UnionTypeDefinitionNode) =>
-      isIgnoreType(config, node.name.value)
-        ? ''
-        : new FreezedDeclarationBlock(config, freezedFactoryBlockRepository, node),
+      transformDefinition(config, freezedFactoryBlockRepository, node),
 
     ObjectTypeDefinition: (node: ObjectTypeDefinitionNode) =>
-      isIgnoreType(config, node.name.value)
-        ? ''
-        : new FreezedDeclarationBlock(config, freezedFactoryBlockRepository, node),
+      transformDefinition(config, freezedFactoryBlockRepository, node),
 
     InputObjectTypeDefinition: (node: InputObjectTypeDefinitionNode) =>
-      isIgnoreType(config, node.name.value)
-        ? ''
-        : new FreezedDeclarationBlock(config, freezedFactoryBlockRepository, node),
+      transformDefinition(config, freezedFactoryBlockRepository, node),
   };
 };
-
-function isIgnoreType(config: FreezedPluginConfig, nodeName: string) {
-  // don't generate freezed classes for these types
-  return ['Query', 'Mutation', 'Subscription', ...(config.ignoreTypes ?? [])].includes(nodeName);
-}
