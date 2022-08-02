@@ -696,4 +696,60 @@ describe('gql-tag-operations-preset', () => {
       }"
     `);
   });
+
+  it('generates correct named imports for ESM', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+            c: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      generates: {
+        out1: {
+          preset,
+          plugins: [],
+        },
+      },
+      emitLegacyCommonJSImports: false,
+    });
+
+    expect(result).toHaveLength(3);
+    // index.ts (re-exports)
+    const indexFile = result.find(file => file.filename === 'out1/index.ts');
+    expect(indexFile.content).toEqual('export * from "./gql.js"');
+
+    // gql.ts
+    const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+    expect(gqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import * as graphql from './graphql.js';
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+        const documents = {
+            \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\": graphql.ADocument,
+            \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\": graphql.BDocument,
+            \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\": graphql.CFragmentDoc,
+        };
+
+        export function gql(source: \\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query A {\\\\n    a\\\\n  }\\\\n\\"];
+        export function gql(source: \\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  query B {\\\\n    b\\\\n  }\\\\n\\"];
+        export function gql(source: \\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"): (typeof documents)[\\"\\\\n  fragment C on Query {\\\\n    c\\\\n  }\\\\n\\"];
+
+        export function gql(source: string): unknown;
+        export function gql(source: string) {
+          return (documents as any)[source] ?? {};
+        }
+
+        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+      `);
+
+    // graphql.ts
+    const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
+    expect(graphqlFile).toBeDefined();
+  });
 });
