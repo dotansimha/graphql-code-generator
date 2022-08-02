@@ -1,5 +1,23 @@
 # @graphql-codegen/cli
 
+## 2.11.3
+
+### Patch Changes
+
+- b75ca4b48: Prevent cli from early returning when run init command.
+
+## 2.11.2
+
+### Patch Changes
+
+- 8cd1526c4: chore(deps): update `@whatwg-node/fetch` to fix vulnerability
+
+## 2.11.1
+
+### Patch Changes
+
+- 20bf4b225: support for path containing "&" characters
+
 ## 2.11.0
 
 ### Minor Changes

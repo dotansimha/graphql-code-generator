@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 2.5.0
+
+### Minor Changes
+
+- 1b0b00be3: fix(generic-sdk): fix Requester type when rawQuery is true
+
 ## 2.4.2
 
 ### Patch Changes
