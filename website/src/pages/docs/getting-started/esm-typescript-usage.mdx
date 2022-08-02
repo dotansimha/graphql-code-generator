@@ -5,7 +5,7 @@ title: ESM TypeScript Usage
 # ESM TypeScript Usage
 
 ESM is an important step in the JavaScript ecosystem because it allows static analysis of the depency tree.
-Forr bundlers such as Webpack this is a huge as it allows the complied bundle to only contain code that is required at runtime, which means smaller download size when loading code over the network.
+For bundlers such as Webpack this is a huge as it allows the complied bundle to only contain code that is required at runtime, which means smaller download size when loading code over the network.
 
 While ESM is a huge benefit for the whole JavaScript community, the adoption is not straight-foward.
 
@@ -15,7 +15,7 @@ If you are not interested in ESM you can easily skip this documentation.
 
 Let's show you how to use ESM with TypeScript.
 
-If you are impatient, you can find [a full runnable and ready to use example in the GraphQL Code Generator reporsitory](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
+If you are impatient, [checkout this example](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
 
 ## Codegen Configuration
 
@@ -56,7 +56,7 @@ For supporting ESM within your application you need to set `moduleResolution` to
 
 In order to instruct runtimes and tooling to interpret `.js` files as ESM you have to set the `type` property to `module` within the `package.json` of your application.
 
-Furthemore, you can use the ESM cli version of GraphQL Code Generator by utilizing the command `graphql-codegen-esm` over `graphql-codegen`.
+Furthemore, you can use the ESM CLI version of GraphQL Code Generator by utilizing the command `graphql-codegen-esm.
 This step, however, is fully optional.
 
 ```json filename="package.json" {14,18}
@@ -83,8 +83,8 @@ This step, however, is fully optional.
 
 ## Conclusion
 
-Supporting ESM and configuring GraphQL Code Generator and your project for ESM requires some worl, but isn't that hard.
-As mentioned before, you can find [a full runnable and ready to use example in the GraphQL Code Generator reporsitory](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
+Supporting ESM and configuring GraphQL Code Generator and your project for ESM requires some work, but isn't that hard.
+As mentioned before, you can checkout [an example in the GraphQL Code Generator reporsitory](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
 
 Here are also some useful additional resources:
 
