@@ -83,6 +83,7 @@ const schema = makeExecutableSchema({
       encoding: 'utf-8',
     }
   );
+  console.log('done generating.');
 })().catch(err => {
   console.error(err);
   process.exit(1);
