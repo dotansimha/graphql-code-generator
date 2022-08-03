@@ -77,8 +77,6 @@ export class FreezedDeclarationBlock {
   private getFreezedDecorator() {
     const use_unfreezed = () => {
       if (this._node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && this._freezedConfigValue.get('mutableInputs')) {
-        // eslint-disable-next-line no-console
-        console.log(`${this._node.name.value}:==> using @unfreezed`);
         return '@unfreezed';
       }
       return use_Freezed_or_freezed();
@@ -86,8 +84,6 @@ export class FreezedDeclarationBlock {
 
     const use_Freezed_or_freezed = () => {
       if (this._freezedConfigValue.get('immutable')) {
-        // eslint-disable-next-line no-console
-        console.log(`${this._node.name.value}:==> using either @Freezed or @freezed`);
         // if any of these options is not null, use the @Freezed() decorator passing in that option
         const copyWith = this._freezedConfigValue.get('copyWith');
         const equal = this._freezedConfigValue.get('equal');
@@ -95,8 +91,6 @@ export class FreezedDeclarationBlock {
         const unionKey = this._freezedConfigValue.get('unionKey');
         const unionValueCase = this._freezedConfigValue.get('unionValueCase');
         if (copyWith || equal || makeCollectionsUnmodifiable || unionKey || unionValueCase) {
-          // eslint-disable-next-line no-console
-          console.log(`${this._node.name.value}:==> using @Freezed`);
           return `@Freezed(\n
           ${copyWith ? indent(`copyWith: ${copyWith},\n`) : ''}
           ${equal ? indent(`equal: ${equal},\n`) : ''}
@@ -106,13 +100,9 @@ export class FreezedDeclarationBlock {
         )`;
         }
         // else fallback to the normal @freezed decorator
-        // eslint-disable-next-line no-console
-        console.log(`${this._node.name.value}:==> using @freezed`);
         return '@freezed';
       }
       // if not immutable, fallback to @unfreezed
-      // eslint-disable-next-line no-console
-      console.log(`${this._node.name.value}:==> fallback to @unfreezed`);
       return '@unfreezed';
     };
 
@@ -154,29 +144,15 @@ export class FreezedDeclarationBlock {
     const name = this._node.name.value;
     let namedConstructor: string = null;
     let factoryBlockKey: string = null;
-    let emptyConstructorBlock: string = null;
 
     // append private empty constructor
     if (this._freezedConfigValue.get('privateEmptyConstructor')) {
-      emptyConstructorBlock = indent(`const ${this._name}._();\n`);
-      shape += emptyConstructorBlock;
-    }
-
-    // decide to append a newline character after private empty constructor
-    if (emptyConstructorBlock !== null) {
-      shape += '\n';
-      emptyConstructorBlock = null;
+      shape += indent(`const ${this._name}._();\n\n`);
     }
 
     // decide whether to append an empty Union constructor
     if (this._freezedConfigValue.get('defaultUnionConstructor') && this._node.kind === Kind.UNION_TYPE_DEFINITION) {
-      emptyConstructorBlock = indent(`const factory ${this._name}() = _${this._name};\n`);
-      shape += emptyConstructorBlock;
-    }
-
-    // decide to append a newline character after empty default Union constructor
-    if (emptyConstructorBlock !== null) {
-      shape += '\n';
+      shape += indent(`const factory ${this._name}() = _${this._name};\n\n`);
     }
 
     // append tokens which will be used to retrieve the factory blocks
@@ -219,7 +195,11 @@ export class FreezedDeclarationBlock {
     block += this._comment;
 
     // append the decorators
-    block += this._decorators.map(d => `${d}\n`);
+    block += this._decorators.join('\n');
+
+    if (this._decorators !== []) {
+      block += '\n';
+    }
 
     // append start of class definition
     block += `class ${this._name} with _$${this._name} {\n`;

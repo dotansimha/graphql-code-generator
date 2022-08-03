@@ -80,7 +80,6 @@ export class FreezedParameterBlock {
         this._field
       ),
     ];
-
     return this;
   }
 
@@ -107,7 +106,7 @@ export class FreezedParameterBlock {
     shape += this._comment;
 
     // append the decorators
-    shape += this._decorators.map(d => indent(`${d}\n`, 2));
+    shape += this._decorators.map(d => indent(`${d}\n`, 2)).join('');
 
     // append required for non-nullable types
     shape += indent(this._required ? 'required ' : '', 2);

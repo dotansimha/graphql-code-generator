@@ -122,7 +122,7 @@ export class FreezedFactoryBlock {
     block += this._comment;
 
     // append the decorators
-    block += this._decorators.map(d => indent(`${d}\n`));
+    block += this._decorators.map(d => indent(`${d}\n`)).join('');
 
     block += indent('');
 

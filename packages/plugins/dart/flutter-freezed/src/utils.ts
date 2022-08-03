@@ -222,8 +222,6 @@ export class FreezedConfigValue {
    * or else fallback to the global FreezedConfig value
    */
   get(option: OptionName) {
-    // eslint-disable-next-line no-console
-    console.log('typeName:==>', this._typeName);
     return getFreezedConfigValue(option, this._config, this._typeName);
   }
 }
