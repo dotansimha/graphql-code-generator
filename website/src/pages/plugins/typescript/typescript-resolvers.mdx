@@ -193,11 +193,11 @@ generates:
 
 ## Defined shared mappers across configurations
 
-In some case, you might want to share some common `mappers` between many output file configuration.
+In some case, you might want to share some common `mappers` between many output file configurations.
 
 To do so, you can leverage the YAML references features as follow:
 
-```yaml
+```yaml filename="codegen.yml" {4,5}
 schema: 'schema.graphql'
 documents: src/*.ts
 
