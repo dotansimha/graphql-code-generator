@@ -120,7 +120,101 @@ describe('flutter-freezed: utils & helpers', () => {
 
     const result = plugin(starWarsSchema, [], config);
 
-    expect(result).toBe('hi');
+    expect(result).toBe(`@freezed
+@JsonSerializable(explicitToJson: true)
+class Starship with _$Starship {
+  const Starship._();
+
+  const factory Starship({
+    required String id,
+    required String name,
+    double? length,
+  }) = _Starship;
+
+  factory Starship.fromJson(Map<String, Object?> json) => _StarshipFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class MovieCharacter with _$MovieCharacter {
+  const MovieCharacter._();
+
+  const factory MovieCharacter({
+    required String name,
+    required List<Episode?> appearsIn,
+  }) = _MovieCharacter;
+
+  factory MovieCharacter.fromJson(Map<String, Object?> json) => _MovieCharacterFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class Human with _$Human {
+  const Human._();
+
+  const factory Human({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    List<Starship?>? starships,
+    int? totalCredits,
+  }) = _Human;
+
+  factory Human.fromJson(Map<String, Object?> json) => _HumanFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class Droid with _$Droid {
+  const Droid._();
+
+  const factory Droid({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    String? primaryFunction,
+  }) = _Droid;
+
+  factory Droid.fromJson(Map<String, Object?> json) => _DroidFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class SearchResult with _$SearchResult {
+  const SearchResult._();
+
+  const factory SearchResult() = _SearchResult;
+
+  const factory SearchResult.human({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    List<Starship?>? starships,
+    int? totalCredits,
+  }) = Human;
+
+  @FreezedUnionValue('BestDroid')
+  const factory SearchResult.droid({
+    @NanoId(size: 16, alphabets: NanoId.ALPHA_NUMERIC)
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    String? primaryFunction,
+  }) = Droid;
+
+  const factory SearchResult.starship({
+    required String id,
+    required String name,
+    double? length,
+  }) = Starship;
+
+  factory SearchResult.fromJson(Map<String, Object?> json) => _SearchResultFromJson(json);
+}
+`);
   });
 });
 

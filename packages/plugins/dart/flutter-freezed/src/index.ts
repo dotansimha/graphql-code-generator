@@ -23,13 +23,16 @@ export const plugin: PluginFunction<FreezedPluginConfig> = (
     (def: any) => def instanceof FreezedDeclarationBlock
   );
 
-  return generated
-    .map(freezedDeclarationBlock =>
-      freezedDeclarationBlock.toString().replaceAll(/==>factory==>.+/gm, s => {
-        const pattern = s.replace('==>factory==>', '').trim();
-        const [key, appliesOn, name, typeName] = pattern.split('==>');
-        return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName ?? null).toString();
-      })
-    )
-    .join('');
+  return (
+    generated
+      .map(freezedDeclarationBlock =>
+        freezedDeclarationBlock.toString().replaceAll(/==>factory==>.+/gm, s => {
+          const pattern = s.replace('==>factory==>', '').trim();
+          const [key, appliesOn, name, typeName] = pattern.split('==>');
+          return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName ?? null).toString();
+        })
+      )
+      .join('')
+      .trim() + '\n'
+  );
 };

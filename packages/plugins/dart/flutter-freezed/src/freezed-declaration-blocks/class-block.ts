@@ -213,7 +213,7 @@ export class FreezedDeclarationBlock {
     }
 
     //append end of class definition
-    block += '}\n\n\n';
+    block += '}\n\n';
 
     this._block = block;
 
