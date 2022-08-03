@@ -7,8 +7,8 @@ Introduce `mergeMappers` config flags will allows to reuse mappers across genera
 ```yml
 schema: "schema.graphql"
 documents: src/*.ts
+mergeMappers: true
 config:
-    mergeMappers: true
     mappers:
       ID: IDType
 generates:
