@@ -315,7 +315,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
-                            ...(rootConfig.mergeMappers
+                            ...(config.mergeMappers
                               ? {
                                   mappers: {
                                     ...(rootConfig.mappers || {}),
