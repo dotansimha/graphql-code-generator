@@ -2034,7 +2034,8 @@
       "Usage Example",
       "Integration with Apollo-Server",
       "Use Your Model Types (`mappers`)",
-      "Enum Resolvers"
+      "Enum Resolvers",
+      "Defined shared mappers across configurations"
     ],
     "toc": [
       {
@@ -2056,6 +2057,11 @@
         "children": [],
         "title": "Enum Resolvers",
         "anchor": "enum-resolvers"
+      },
+      {
+        "children": [],
+        "title": "Defined shared mappers across configurations",
+        "anchor": "defined-shared-mappers-across-configurations"
       }
     ],
     "content": "-",
