@@ -465,6 +465,39 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-getting-started-esm-typescript-usage",
+    "headings": ["Codegen Configuration", "TypeScript Compiler Options", "Package adjustments", "Conclusion"],
+    "toc": [
+      {
+        "children": [],
+        "title": "Codegen Configuration",
+        "anchor": "codegen-configuration"
+      },
+      {
+        "children": [],
+        "title": "TypeScript Compiler Options",
+        "anchor": "typescript-compiler-options"
+      },
+      {
+        "children": [],
+        "title": "Package adjustments",
+        "anchor": "package-adjustments"
+      },
+      {
+        "children": [],
+        "title": "Conclusion",
+        "anchor": "conclusion"
+      }
+    ],
+    "content": "-",
+    "url": "https://www.graphql-code-generator.com/docs/getting-started/esm-typescript-usage",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Docs", "Getting Started"],
+    "source": "Code Generator",
+    "title": "ESM TypeScript usage",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-getting-started-index",
     "headings": ["The perfect GraphQL Developer Experience", "What's next?"],
     "toc": [

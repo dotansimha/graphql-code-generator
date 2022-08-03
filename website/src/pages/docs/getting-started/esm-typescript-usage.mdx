@@ -1,0 +1,93 @@
+---
+title: ESM TypeScript Usage
+---
+
+# ESM TypeScript Usage
+
+ESM is an important step in the JavaScript ecosystem because it allows static analysis of the depency tree.
+For bundlers such as Webpack, this is huge as it allows the compiled bundle only to contain code that is required at runtime, which means a smaller download size when loading code over the network.
+
+While ESM is a huge benefit for the whole JavaScript community, the adoption is not straight-foward.
+
+**Note:** ESM adoption in the JavaScript ecosystem is still in progress, if you choose to use ESM in your application (especially Node.js), you might hit a lot of pitfalls and incompatibility issues within libraries.
+
+If you are not interested in ESM you can easily skip this documentation.
+
+Let's show you how to use ESM with TypeScript.
+
+If you are impatient, [checkout this example](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
+
+## Codegen Configuration
+
+One quirk of ESM is that named imports, such as `./foo` or `../something/from/here` now require adding a `.js` at the end of the import statement.
+For these examples the correct ESM counterpart is `./foo.js` and `../something/from/here.js`.
+
+In order to instruct GraphQL Code Generator to generatse such imports whenever a named import is generated you need to set the `emitLegacyCommonJSImports` option to `false`.
+
+```yaml filename="codegen.yml" {5}
+schema: https://swapi-graphql.netlify.app/.netlify/functions/index
+documents:
+  - 'src/**/*.ts'
+  - '!src/gql/**/*'
+emitLegacyCommonJSImports: false
+generates:
+  ./src/gql/:
+    preset: gql-tag-operations-preset
+```
+
+## TypeScript Compiler Options
+
+TypeScript introduced a new module resolution algorithm for ESM in version 4.7.
+For supporting ESM within your application you need to set `moduleResolution` to `node16` and the (output) `module` type to `node16` (see tsconfig.json).
+
+```ts {4,5}
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "moduleResolution": "node16",
+    "module": "node16",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"]
+}
+```
+
+## Package adjustments
+
+In order to instruct runtimes and tooling to interpret `.js` files as ESM you have to set the `type` property to `module` within the `package.json` of your application.
+
+Furthemore, you can use the ESM CLI version of GraphQL Code Generator by utilizing the command `graphql-codegen-esm.
+This step, however, is fully optional.
+
+```json filename="package.json" {14,18}
+{
+  "name": "example-typescript-esm",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.11.3",
+    "@graphql-codegen/gql-tag-operations-preset": "1.5.2"
+  },
+  "dependencies": {
+    "@graphql-typed-document-node/core": "3.1.1",
+    "graphql": "16.5.0"
+  },
+  "scripts": {
+    "codegen": "graphql-codegen-esm --config codegen.yml",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "type": "module"
+}
+```
+
+## Conclusion
+
+Supporting ESM and configuring GraphQL Code Generator and your project for ESM requires some work, but isn't that hard.
+As mentioned before, you can checkout [an example in the GraphQL Code Generator reporsitory](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/typescript-esm).
+
+Here are also some useful additional resources:
+
+- [ECMAScript Module Support in Node.js - TypeScript 4.7 Changelog](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+- [package.json type module - Node.js documentation](https://nodejs.org/api/packages.html#type)
+- [Named Imports - import MDN documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#named_import)
