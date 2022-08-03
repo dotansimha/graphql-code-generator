@@ -190,3 +190,41 @@ generates:
       - typescript
       - typescript-resolvers
 ```
+
+## Defined shared mappers across configurations
+
+In some case, you might want to share some common `mappers` between many output file configuration.
+
+To do so, you can leverage the YAML references features as follow:
+
+```yaml
+schema: 'schema.graphql'
+documents: src/*.ts
+
+shared_mappers: &shared_mappers
+  ID: IDType
+
+generates:
+  resolvers-types-1.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      mappers:
+        <<: *shared_mappers
+        String: StringType
+  resolvers-types-2.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      mappers:
+        <<: *shared_mappers
+        String: StringType
+```
+
+The above configuration will provide the ID type mapping to both `resolvers-types-1.ts` and `resolvers-types-2.ts` files.
+
+The complete example is available here: [codegen-repros/reusable-mappers](https://github.com/charlypoly/codegen-repros/blob/master/reusable-mappers/codegen.yml)
+
+You can also achieve a similar reusable mappers configuration by providing a TypeScript or JavaScript file configuration.
