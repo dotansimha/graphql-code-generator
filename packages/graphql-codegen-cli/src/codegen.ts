@@ -315,12 +315,16 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
-                            mappers: {
-                              ...(rootConfig.mappers || {}),
-                              ...(typeof outputFileTemplateConfig === 'string'
-                                ? {}
-                                : outputFileTemplateConfig.mappers || {}),
-                            },
+                            ...(rootConfig.mergeMappers
+                              ? {
+                                  mappers: {
+                                    ...(rootConfig.mappers || {}),
+                                    ...(typeof outputFileTemplateConfig === 'string'
+                                      ? {}
+                                      : outputFileTemplateConfig.mappers || {}),
+                                  },
+                                }
+                              : {}),
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, filename),
                           };
 

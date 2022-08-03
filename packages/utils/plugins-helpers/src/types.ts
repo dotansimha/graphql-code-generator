@@ -442,6 +442,10 @@ export namespace Types {
      */
     emitLegacyCommonJSImports?: boolean;
     /**
+     * @description A flag to enable merging root-level `mappers` with output-level `mappers`
+     */
+    mergeMappers?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
