@@ -1,8 +1,15 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from 'graphql';
+import { Kind, ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from 'graphql';
 import { camelCase } from 'change-case-all';
 import { FreezedPluginConfig } from '../config';
-import { FieldType, FreezedConfigValue, NodeType } from '../utils';
+import {
+  getCustomDecorators,
+  transformCustomDecorators,
+  FieldType,
+  FreezedConfigValue,
+  NodeType,
+  ApplyDecoratorOn,
+} from '../utils';
 import { DART_SCALARS } from '../scalars';
 
 export class FreezedParameterBlock {
@@ -11,12 +18,6 @@ export class FreezedParameterBlock {
 
   /** a list of decorators to copy paste to the generator */
   _decorators: string[] = [];
-
-  /** default value TODO: */
-  // _defaultValue?: string = null;
-
-  /** mark the property as deprecated TODO: */
-  // _deprecated?: boolean = null;
 
   /** mark the property as required */
   _required?: boolean = null;
@@ -36,10 +37,17 @@ export class FreezedParameterBlock {
 
   private _freezedConfigValue: FreezedConfigValue;
 
-  constructor(private _config: FreezedPluginConfig, private _node: NodeType, private _field: FieldType) {
+  constructor(
+    private _config: FreezedPluginConfig,
+    private _appliesOn: ApplyDecoratorOn[],
+    private _node: NodeType,
+    private _field: FieldType
+  ) {
     this._config = _config;
+    this._appliesOn = _appliesOn;
     this._node = _node;
     this._field = _field;
+
     this._freezedConfigValue = new FreezedConfigValue(_config, _node.name.value);
   }
 
@@ -58,19 +66,21 @@ export class FreezedParameterBlock {
   }
 
   private setDecorators(): FreezedParameterBlock {
-    // TODO: Get decorators from field directives or config
-    // create a function that will take in a this._field.directives[0] and transform it if it was mapped in the directiveMap config option
     const name = this._field.name.value;
-    // const d = this._field.directives
-    // const defaultDecorator = this._defaultValue !== null ? `@Default(${this._defaultValue})` : '';
-    // const deprecatedDecorator = this._deprecated ? '@deprecated' : '';
-    let jsonKeyNameDecorator = '';
-    if (this._freezedConfigValue.get('alwaysUseJsonKeyName') || name !== camelCase(name)) {
-      jsonKeyNameDecorator = `@JsonKey(name: '${name}')`;
-    }
-    // this._decorators = [...this._decorators, defaultDecorator, deprecatedDecorator, jsonKeyNameDecorator,]
 
-    this._decorators = [jsonKeyNameDecorator].filter(d => d !== '');
+    if (this._freezedConfigValue.get('alwaysUseJsonKeyName') || name !== camelCase(name)) {
+      this._decorators = [...this._decorators, `@JsonKey(name: '${name}')`];
+    }
+
+    this._decorators = [
+      ...this._decorators,
+      ...transformCustomDecorators(
+        getCustomDecorators(this._config, this._appliesOn, this._node.name.value, name),
+        this._node,
+        this._field
+      ),
+    ];
+
     return this;
   }
 

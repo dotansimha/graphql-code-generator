@@ -1,3 +1,5 @@
+import { CustomDecorator } from './utils';
+
 export interface FreezedConfig {
   /**
    * @name alwaysUseJsonKeyName
@@ -54,6 +56,36 @@ export interface FreezedConfig {
    */
 
   copyWith?: boolean;
+
+  /**
+   * @name customDecorators
+   * @description maps GraphQL directives to freezed decorators. Arguments of the directive are passed using template strings: $1 is the first argument, $2 is the second... All `mapsToFreezedAs` values except `custom` are parsed so use the name of the directive without the `@` symbol as the key of the customDecorators. With the `custom` value, whatever you use as the key of the custom directive is used just as it is, and the arguments spread into a parenthesis ()
+   * @default {}
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   flutter_app/lib/data/models/app_models.dart
+   *     plugins:
+   *       - flutter-freezed
+   *     config:
+   *       customDecorators: {
+   *          'default' : {
+   *             mapsToFreezedAs: '@Default',
+   *             arguments: ['$0'],
+   *          },
+   *          'deprecated' : {
+   *             mapsToFreezedAs: '@deprecated',
+   *          },
+   *      'readonly' : {
+   *          mapsToFreezedAs: 'final',
+   *       },
+   *       }
+   *
+   * ```
+   */
+
+  customDecorators?: CustomDecorator; // TODO:
 
   /**
    * @name defaultUnionConstructor
@@ -244,30 +276,58 @@ export interface FreezedConfig {
 }
 
 export interface FieldConfig {
-  final: boolean;
-  defaultValue: any;
-  decorators: string[];
+  // TODO: apply it on the parameter block
+
+  /** marks a field as final */
+
+  final?: boolean;
+
+  /** marks a field as deprecated */
+
+  deprecated?: boolean;
+
+  /** annotate a field with a @Default(value: defaultValue) decorator */
+
+  defaultValue?: any;
+  /**
+   * @name customDecorators
+   * @description specific directives to apply to the field. All `mapsToFreezedAs` values except `custom` are parsed so use the name of the directive without the `@` symbol as the key of the customDecorators. With the `custom` value, whatever you use as the key of the custom directive is used just as it is, and the arguments spread into a parenthesis ()
+   * @default null
+   * @exampleMarkdown
+   * ```yml
+   * customDecorators: {
+   *    'default' : {
+   *        mapsToFreezedAs: '@Default',
+   *        arguments: ['$0'],
+   *      },
+   *      'deprecated' : {
+   *          mapsToFreezedAs: '@deprecated',
+   *       },
+   *      'readonly' : {
+   *          mapsToFreezedAs: 'final',
+   *       },
+   *      '@HiveField' : {
+   *          mapsToFreezedAs: 'custom',
+   *          arguments: ['1'],
+   *       }, # custom are used just as it given
+   * }
+   * ```
+   */
+
+  customDecorators?: CustomDecorator; // TODO:
 }
 
 export interface TypeSpecificFreezedConfig {
+  /** marks a type as deprecated */
+
+  deprecated?: boolean; // TODO: apply on the class and factory block
+
+  /** overrides the `globalFreezedConfig` for this type */
+
   config?: FreezedConfig;
-  fields?: Record<string, FieldConfig>;
-}
 
-export interface DirectiveMap {
-  /**
-   * @name: directiveName
-   * @description the name of the directive
-   */
-  directiveName: string;
-
-  /**
-   * @name: mapToFreezeAs
-   * @description how should Freezed handle this directive. E/g: `final` would mark any field with this directive as `final`. `defaultValue` would decorate any parameter with this directive with `@Default(value: directiveArguments[0])`
-   * @default 'other'
-   */
-
-  mapToFreezeAs?: 'defaultValue' | 'deprecated' | 'final' | 'other';
+  /** configure fields for this type */
+  fields?: Record<string, FieldConfig>; // TODO: apply on the class and factory block
 }
 
 export interface FreezedPluginConfig /* extends TypeScriptPluginConfig */ {
@@ -293,25 +353,6 @@ export interface FreezedPluginConfig /* extends TypeScriptPluginConfig */ {
    */
 
   customScalars?: { [name: string]: string };
-
-  /**
-   * @name directiveMap
-   * @description maps GraphQL directives to freezed decorators
-   * @default []
-   *
-   * @exampleMarkdown
-   * ```yml
-   * generates:
-   *   flutter_app/lib/data/models/app_models.dart
-   *     plugins:
-   *       - flutter-freezed
-   *     config:
-   *       directiveMap: []
-   *
-   * ```
-   */
-
-  directiveMap?: DirectiveMap[]; // TODO: directives can have a name, and one or many values
 
   /**
    * @name fileName

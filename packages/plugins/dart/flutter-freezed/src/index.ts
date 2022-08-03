@@ -27,8 +27,8 @@ export const plugin: PluginFunction<FreezedPluginConfig> = (
     .map(freezedDeclarationBlock =>
       freezedDeclarationBlock.toString().replaceAll(/==>factory==>.+/gm, s => {
         const pattern = s.replace('==>factory==>', '').trim();
-        const [key, name, typeName] = pattern.split('==>');
-        return freezedFactoryBlockRepository.retrieve(key, name, typeName ?? null).toString();
+        const [key, appliesOn, name, typeName] = pattern.split('==>');
+        return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName ?? null).toString();
       })
     )
     .join('');

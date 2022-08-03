@@ -10,7 +10,12 @@ import {
 } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
 import { FreezedPluginConfig } from '../config';
-import { FreezedConfigValue, FreezedFactoryBlockRepository } from '../utils';
+import {
+  getCustomDecorators,
+  transformCustomDecorators,
+  FreezedConfigValue,
+  FreezedFactoryBlockRepository,
+} from '../utils';
 import { FreezedFactoryBlock } from './factory-block';
 
 export type NodeType = ObjectTypeDefinitionNode | InputObjectTypeDefinitionNode | UnionTypeDefinitionNode;
@@ -43,10 +48,10 @@ export class FreezedDeclarationBlock {
     this._config = _config;
     this._freezedFactoryBlockRepository = _freezedFactoryBlockRepository;
     this._node = _node;
-    this._freezedConfigValue = new FreezedConfigValue(_config, _node.name.value);
   }
 
   public init(): FreezedDeclarationBlock {
+    this._freezedConfigValue = new FreezedConfigValue(this._config, this._node.name.value);
     this.setComment().setDecorators().setName().setFactoryBlocks().setShape().setBlock();
     return this;
   }
@@ -62,45 +67,57 @@ export class FreezedDeclarationBlock {
   }
 
   private setDecorators(): FreezedDeclarationBlock {
-    // TODO: Get decorators from field directives or config
-    // TODO: handle this decorators @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.pascal)
-
-    // const d = this._field.directives
-    // const defaultDecorator = this._defaultValue !== null ? `@Default(${this._defaultValue})` : '';
-    // const deprecatedDecorator = this._deprecated ? '@deprecated' : '';
-    // determine which Freezed decorator to use
-    const freezedDecorator: string = this.setFreezedDecorator();
-
-    // this._decorators = [...this._decorators, defaultDecorator, deprecatedDecorator, jsonKeyNameDecorator,]
-
-    this._decorators = [freezedDecorator];
+    this._decorators = [
+      this.getFreezedDecorator(),
+      ...transformCustomDecorators(getCustomDecorators(this._config, ['class'], this._node.name.value), this._node),
+    ];
     return this;
   }
 
-  private setFreezedDecorator() {
-    if (this._node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && this._freezedConfigValue.get('mutableInputs')) {
-      return '@unfreezed';
-    } else if (this._freezedConfigValue.get('immutable')) {
-      // if any of these options is not null, use the @Freezed() decorator passing in that option
-      const copyWith = this._freezedConfigValue.get('copyWith');
-      const equal = this._freezedConfigValue.get('equal');
-      const makeCollectionsUnmodifiable = this._freezedConfigValue.get('makeCollectionsUnmodifiable');
-      const unionKey = this._freezedConfigValue.get('unionKey');
-      const unionValueCase = this._freezedConfigValue.get('unionValueCase');
-      if (copyWith || equal || makeCollectionsUnmodifiable || unionKey || unionValueCase) {
-        return `@Freezed(\n
+  private getFreezedDecorator() {
+    const use_unfreezed = () => {
+      if (this._node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && this._freezedConfigValue.get('mutableInputs')) {
+        // eslint-disable-next-line no-console
+        console.log(`${this._node.name.value}:==> using @unfreezed`);
+        return '@unfreezed';
+      }
+      return use_Freezed_or_freezed();
+    };
+
+    const use_Freezed_or_freezed = () => {
+      if (this._freezedConfigValue.get('immutable')) {
+        // eslint-disable-next-line no-console
+        console.log(`${this._node.name.value}:==> using either @Freezed or @freezed`);
+        // if any of these options is not null, use the @Freezed() decorator passing in that option
+        const copyWith = this._freezedConfigValue.get('copyWith');
+        const equal = this._freezedConfigValue.get('equal');
+        const makeCollectionsUnmodifiable = this._freezedConfigValue.get('makeCollectionsUnmodifiable');
+        const unionKey = this._freezedConfigValue.get('unionKey');
+        const unionValueCase = this._freezedConfigValue.get('unionValueCase');
+        if (copyWith || equal || makeCollectionsUnmodifiable || unionKey || unionValueCase) {
+          // eslint-disable-next-line no-console
+          console.log(`${this._node.name.value}:==> using @Freezed`);
+          return `@Freezed(\n
           ${copyWith ? indent(`copyWith: ${copyWith},\n`) : ''}
           ${equal ? indent(`equal: ${equal},\n`) : ''}
           ${makeCollectionsUnmodifiable ? indent(`makeCollectionsUnmodifiable: ${makeCollectionsUnmodifiable},\n`) : ''}
           ${unionKey ? indent(`unionKey: ${unionKey},\n`) : ''}
           ${unionValueCase ? indent(`unionValueCase: ${unionValueCase},\n`) : ''}
         )`;
+        }
+        // else fallback to the normal @freezed decorator
+        // eslint-disable-next-line no-console
+        console.log(`${this._node.name.value}:==> using @freezed`);
+        return '@freezed';
       }
-      // else fallback to the normal @freezed decorator
-      return '@freezed';
-    }
-    // if not immutable
-    return '@unfreezed';
+      // if not immutable, fallback to @unfreezed
+      // eslint-disable-next-line no-console
+      console.log(`${this._node.name.value}:==> fallback to @unfreezed`);
+      return '@unfreezed';
+    };
+
+    // this is the start of the pipeline of decisions to determine which Freezed decorator to use
+    return use_unfreezed();
   }
 
   private setName(): FreezedDeclarationBlock {
@@ -110,7 +127,7 @@ export class FreezedDeclarationBlock {
 
   private setFactoryBlocks(): FreezedDeclarationBlock {
     if (this._node.kind === Kind.UNION_TYPE_DEFINITION) {
-      this._factoryBlocks = this._node.types?.map((type: NamedTypeNode) =>
+      this._factoryBlocks = this._node.types?.map((_type: NamedTypeNode) =>
         new FreezedFactoryBlock(this._config, this._node).init()
       );
     } else {
@@ -121,7 +138,7 @@ export class FreezedDeclarationBlock {
         when we are merging inputs or generating freezed union/sealed classes
         for GraphQL union types
       */
-      this._factoryBlocks = this._node.fields?.map((field: FieldDefinitionNode | InputValueDefinitionNode) =>
+      this._factoryBlocks = this._node.fields?.map((_field: FieldDefinitionNode | InputValueDefinitionNode) =>
         this._freezedFactoryBlockRepository.register(
           this._node.name.value,
           new FreezedFactoryBlock(this._config, this._node).init()
@@ -168,12 +185,12 @@ export class FreezedDeclarationBlock {
       this._node.types.forEach(type => {
         namedConstructor = type.name.value;
         factoryBlockKey = namedConstructor;
-        shape += `==>factory==>${factoryBlockKey}==>${name}==>${namedConstructor}\n`;
+        shape += `==>factory==>${factoryBlockKey}==>${'union_factory'}==>${name}==>${namedConstructor}\n`;
       });
     } else {
       factoryBlockKey = name;
       // replace token for the ObjectType & InputType to be replaced with the default Freezed constructor
-      shape += `==>factory==>${factoryBlockKey}==>${name}\n`;
+      shape += `==>factory==>${factoryBlockKey}==>${'class_factory'}==>${name}\n`;
 
       const mergeInputs = this._freezedConfigValue.get('mergeInputs') as string[];
 
@@ -182,7 +199,7 @@ export class FreezedDeclarationBlock {
         mergeInputs.forEach(input => {
           namedConstructor = camelCase(input.split('$').join('_'));
           factoryBlockKey = input.replace('$', name);
-          shape += `==>factory==>${factoryBlockKey}==>${name}==>${namedConstructor}\n`;
+          shape += `==>factory==>${factoryBlockKey}==>${'union_factory'}==>${name}==>${namedConstructor}\n`;
         });
       }
     }

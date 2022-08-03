@@ -3,18 +3,20 @@ import { FieldDefinitionNode, InputValueDefinitionNode, Kind } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
 import { FreezedParameterBlock } from './parameter-block';
 import { FreezedPluginConfig } from '../config';
-import { FreezedConfigValue, NodeType } from '../utils';
+import {
+  ApplyDecoratorOn,
+  FreezedConfigValue,
+  getCustomDecorators,
+  NodeType,
+  transformCustomDecorators,
+} from '../utils';
 
 export class FreezedFactoryBlock {
   /** document the constructor */
   _comment = '';
 
   /** a list of decorators to copy paste to the generator */
-  // TODO:  handle this decorator @FreezedUnionValue('SpecialCase')
-  // _decorators: string[] = [];
-
-  /** mark the factory constrictor as deprecated */
-  // _deprecated?: boolean = null;
+  _decorators: string[] = [];
 
   /** the key of the original type name */
   _key: string = null;
@@ -52,7 +54,7 @@ export class FreezedFactoryBlock {
 
   public init(): FreezedFactoryBlock {
     /*
-      setName() and setType() will be called
+      setDecorators(), setName() and setType() will be called
       when the factory is retrieved from the repository
     */
     this.setComment().setParameters().setShape().setBlock();
@@ -63,8 +65,18 @@ export class FreezedFactoryBlock {
     const comment = this._node.description?.value;
 
     if (comment && comment !== null && comment !== '') {
-      this._comment = `/// ${comment} `;
+      this._comment = indent(`/// ${comment} \n`);
     }
+    return this;
+  }
+
+  setDecorators(appliesOn: string, nodeName: string): FreezedFactoryBlock {
+    this._decorators = [
+      ...transformCustomDecorators(
+        getCustomDecorators(this._config, appliesOn.split(',') as ApplyDecoratorOn[], nodeName),
+        this._node
+      ),
+    ];
     return this;
   }
 
@@ -86,9 +98,13 @@ export class FreezedFactoryBlock {
   }
 
   private setParameters(): FreezedFactoryBlock {
+    const appliesOn: ApplyDecoratorOn[] = this._namedConstructor
+      ? ['union_factory_parameter']
+      : ['class_factory_parameter'];
+
     if (this._node.kind !== Kind.UNION_TYPE_DEFINITION) {
       this._parameters = this._node.fields.map((field: FieldDefinitionNode | InputValueDefinitionNode) =>
-        new FreezedParameterBlock(this._config, this._node, field).init()
+        new FreezedParameterBlock(this._config, appliesOn, this._node, field).init()
       );
     }
     return this;
@@ -100,7 +116,15 @@ export class FreezedFactoryBlock {
   }
 
   private setBlock(): FreezedFactoryBlock {
-    let block = indent('');
+    let block = '';
+
+    //append comment
+    block += this._comment;
+
+    // append the decorators
+    block += this._decorators.map(d => indent(`${d}\n`));
+
+    block += indent('');
 
     // decide if to use const or not
     if (this._freezedConfigValue.get('immutable')) {
