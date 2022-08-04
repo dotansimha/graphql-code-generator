@@ -218,7 +218,7 @@ export interface RawConfig {
    * @description Emit legacy common js imports.
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
    */
-   emitLegacyCommonJSImports?: boolean
+  emitLegacyCommonJSImports?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -239,7 +239,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
-      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
+      emitLegacyCommonJSImports:
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       ...((additionalConfig || {}) as any),
     };
 
