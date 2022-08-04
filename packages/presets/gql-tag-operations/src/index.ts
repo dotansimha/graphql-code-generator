@@ -5,10 +5,10 @@ import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operatio
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import { processSources } from './process-sources';
+import { processSources } from './process-sources.js';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelPlugin from './babel';
-import * as fragmentMaskingPlugin from './fragment-masking-plugin';
+import babelPlugin from './babel.js';
+import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 
 export type FragmentMaskingConfig = {
   /**
@@ -28,7 +28,7 @@ export type GqlTagConfig = {
    * E.g. `graphql-tag` or `@urql/core`.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {5}
    * generates:
    *   gql/:
    *     preset: gql-tag-operations-preset
@@ -50,7 +50,7 @@ export type GqlTagConfig = {
    *
    * When using the `augmentedModuleName` option, the unmask function will by default NOT be imported from the same module. It will still be generated to a `index.ts` file. You can, however, specify to resolve the unmasking function from an an augmented module by using the `augmentedModuleName` object sub-config.
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {6-7}
    * generates:
    *   gql/:
    *     preset: gql-tag-operations-preset
@@ -109,9 +109,9 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       { [`gen-dts`]: { sourcesWithOperations } },
     ];
 
-    let gqlArtifactFileExtension = 'd.ts';
+    let gqlArtifactFileExtension = '.d.ts';
     if (options.presetConfig.augmentedModuleName == null) {
-      gqlArtifactFileExtension = 'ts';
+      gqlArtifactFileExtension = '.ts';
       reexports.push('gql');
     }
 
@@ -123,15 +123,15 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
     if (isMaskingFragments === true) {
-      let fragmentMaskingArtifactFileExtension = 'd.ts';
+      let fragmentMaskingArtifactFileExtension = '.d.ts';
 
       if (fragmentMaskingConfig.augmentedModuleName == null) {
         reexports.push('fragment-masking');
-        fragmentMaskingArtifactFileExtension = 'ts';
+        fragmentMaskingArtifactFileExtension = '.ts';
       }
 
       fragmentMaskingFileGenerateConfig = {
-        filename: `${options.baseOutputDir}/fragment-masking.${fragmentMaskingArtifactFileExtension}`,
+        filename: `${options.baseOutputDir}/fragment-masking${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
           [`fragment-masking`]: fragmentMaskingPlugin,
         },
@@ -152,6 +152,8 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
 
+    const reexportsExtension = options.config.emitLegacyCommonJSImports ? '' : '.js';
+
     if (reexports.length) {
       indexFileGenerateConfig = {
         filename: `${options.baseOutputDir}/index.ts`,
@@ -160,7 +162,9 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         },
         plugins: [
           {
-            [`add`]: { content: reexports.map(moduleName => `export * from "./${moduleName}"`).join('\n') },
+            [`add`]: {
+              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}"`).join('\n'),
+            },
           },
         ],
         schema: options.schema,
@@ -179,7 +183,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         documents: sources,
       },
       {
-        filename: `${options.baseOutputDir}/gql.${gqlArtifactFileExtension}`,
+        filename: `${options.baseOutputDir}/gql${gqlArtifactFileExtension}`,
         plugins: genDtsPlugins,
         pluginMap,
         schema: options.schema,

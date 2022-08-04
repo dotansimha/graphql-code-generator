@@ -15,12 +15,13 @@ module.exports = ({ dirname, projectMode = true }) => {
     rootDir: dirname,
     restoreMocks: true,
     reporters: ['default'],
-    modulePathIgnorePatterns: ['dist'],
+    modulePathIgnorePatterns: ['dist', '.bob'],
     moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: `${ROOT_DIR}/` }),
     cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
     testTimeout: 20000,
     transformIgnorePatterns: ['/node_modules/(?!(graphql)/)', '/packages/plugins/flow/flow/tests/fixtures/'],
+    resolver: 'bob-the-bundler/jest-resolver.js',
   };
 };

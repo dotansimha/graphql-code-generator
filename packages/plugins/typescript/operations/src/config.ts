@@ -137,7 +137,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * It will allow you to get everything with one import:
    *
    * ```ts
-   * import { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql'
+   * import { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql.js'
    * ```
    * @default false
    * @see https://github.com/dotansimha/graphql-code-generator/issues/3949

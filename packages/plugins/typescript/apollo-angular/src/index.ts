@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode, parse } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { ApolloAngularVisitor } from './visitor';
+import { ApolloAngularVisitor } from './visitor.js';
 import { extname } from 'path';
-import { ApolloAngularRawPluginConfig } from './config';
+import { ApolloAngularRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,

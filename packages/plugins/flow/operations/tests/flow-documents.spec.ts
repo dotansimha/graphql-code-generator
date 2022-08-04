@@ -1,8 +1,8 @@
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { validateFlow } from '../../flow/tests/validate-flow';
+import { plugin } from '../src/index.js';
+import { validateFlow } from '../../flow/tests/validate-flow.js';
 
 describe('Flow Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));

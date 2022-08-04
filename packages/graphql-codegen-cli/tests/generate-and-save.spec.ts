@@ -1,6 +1,6 @@
 import { useMonorepo } from '@graphql-codegen/testing';
-import { generate } from '../src/generate-and-save';
-import * as fs from '../src/utils/file-system';
+import { generate } from '../src/generate-and-save.js';
+import * as fs from '../src/utils/file-system.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { dirname, join } from 'path';
 import makeDir from 'make-dir';

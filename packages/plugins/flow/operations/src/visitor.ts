@@ -1,4 +1,4 @@
-import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
+import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor.js';
 import {
   GraphQLSchema,
   isEnumType,
@@ -7,7 +7,7 @@ import {
   GraphQLNamedType,
   SelectionSetNode,
 } from 'graphql';
-import { FlowDocumentsPluginConfig } from './config';
+import { FlowDocumentsPluginConfig } from './config.js';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
   wrapTypeWithModifiers,

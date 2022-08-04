@@ -1,6 +1,7 @@
 hooks:
   afterAllFileWrite:
     - prettier --write
+emitLegacyCommonJSImports: false
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
@@ -203,6 +204,8 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
+    config:
+      addInfiniteQuery: true
   ./dev-test/githunt/types.rtk-query.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

@@ -116,3 +116,39 @@ Array [
   "import { graphql, ResponseResolver, GraphQLRequest, GraphQLContext } from 'msw'",
 ]
 `;
+
+exports[`msw Should use the "importOperationTypesFrom" setting: content with types configured via importOperationTypesFrom 1`] = `
+"
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQuery((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUserQuery = (resolver: ResponseResolver<GraphQLRequest<Types.UserQueryVariables>, GraphQLContext<Types.UserQuery>, any>) =>
+  graphql.query<Types.UserQuery, Types.UserQueryVariables>(
+    'User',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutation((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutation = (resolver: ResponseResolver<GraphQLRequest<Types.UpdateUserMutationVariables>, GraphQLContext<Types.UpdateUserMutation>, any>) =>
+  graphql.mutation<Types.UpdateUserMutation, Types.UpdateUserMutationVariables>(
+    'UpdateUser',
+    resolver
+  )
+"
+`;

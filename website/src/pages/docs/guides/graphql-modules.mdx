@@ -1,0 +1,80 @@
+import { PackageCmd } from '@theguild/components'
+
+# Guide: GraphQL Modules
+
+GraphQL Code Generator's `@graphql-codegen/graphql-modules-preset` plugin helps to
+generate resolvers type for each module of a GraphQL Modules GraphQL API.
+
+Given the following GraphQL API structure using GraphQL Modules:
+
+```
+- src/
+  - modules/
+    - user/
+      - resolvers.ts
+      - typedefs/
+        - user.graphql
+    - product/
+      - resolvers.ts
+      - typedefs/
+        - product.graphql
+```
+
+Just a few configuration steps are required to get the resolvers types generated:
+
+### Install
+
+<PackageCmd
+  packages={[
+    '-D @graphql-codegen/graphql-modules-preset @graphql-codegen/typescript-resolvers @graphql-codegen/typescript'
+  ]}
+/>
+
+### Configure the plugin
+
+Create or update your `codegen.yaml` file as follows:
+
+```yaml
+schema: './src/modules/**/typedefs/*.graphql'
+generates:
+  ./server/src/modules/:
+    preset: graphql-modules
+    presetConfig:
+      baseTypesPath: ../generated-types/graphql.ts # Where to create the complete schema types
+      filename: generated-types/module-types.ts # Where to create each module types
+    plugins:
+      - add:
+          content: '/* eslint-disable */'
+      - typescript
+      - typescript-resolvers
+```
+
+### Run the codegen and update your code
+
+Assuming that, as recommended, your `package.json` has the following script:
+
+```json filename="package.json"
+{
+  "scripts": {
+    "generate": "graphql-codegen"
+  }
+}
+```
+
+Running the following generates the `graphql/generated.tsx` file.
+
+<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+
+The User module resolvers would be:
+
+```tsx filename="src/modules/user/resolvers.ts"
+import { UsersModule } from './generated-types/module-types'
+
+export const resolvers: UsersModule.Resolvers = {
+  // Here, you can implement only the types and fields defined in your module!
+}
+```
+
+A complete article, written by Arda Tanrikulu from The Guild, is available on our blog: [Writing a GraphQL TypeScript project w/ GraphQL-Modules and GraphQL-Code-Generator](https://the-guild.dev/blog/graphql-typescript-modules-codegen).
+
+For more advanced configuration (models or context typing), please refer to the [plugin documentation](/plugins/graphql-modules-preset).

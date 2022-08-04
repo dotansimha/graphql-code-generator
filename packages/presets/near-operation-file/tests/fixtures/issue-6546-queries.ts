@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { userFields, usernameFragment } from './issue-6546-fragments';
+import { userFields, usernameFragment } from './issue-6546-fragments.js';
 
 export const limitedUserFieldsQuery = gql`
   query user {

@@ -14,9 +14,9 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
-import { TypeScriptDocumentsPluginConfig } from './config';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
+import { TypeScriptDocumentsPluginConfig } from './config.js';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
+import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;

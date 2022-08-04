@@ -1,10 +1,10 @@
 import { Types, PluginFunction, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { TypeGraphQLVisitor } from './visitor';
+import { TypeGraphQLVisitor } from './visitor.js';
 import { TsIntrospectionVisitor, includeIntrospectionTypesDefinitions } from '@graphql-codegen/typescript';
-import { TypeGraphQLPluginConfig } from './config';
+import { TypeGraphQLPluginConfig } from './config.js';
 
-export * from './visitor';
+export * from './visitor.js';
 
 const TYPE_GRAPHQL_IMPORT = `import * as TypeGraphQL from 'type-graphql';\nexport { TypeGraphQL };`;
 const isDefinitionInterface = (definition: string) => definition.includes('@TypeGraphQL.InterfaceType()');

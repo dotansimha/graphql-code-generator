@@ -1,4 +1,4 @@
-import { convertFactory } from '../src/naming';
+import { convertFactory } from '../src/naming.js';
 
 describe('convertFactory', () => {
   it('Should use pascal case by default', () => {

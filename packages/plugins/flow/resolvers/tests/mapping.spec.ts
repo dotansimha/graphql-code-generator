@@ -1,8 +1,8 @@
 import '@graphql-codegen/testing';
-import { schema } from '../../../typescript/resolvers/tests/common';
-import { plugin } from '../src';
+import { schema } from '../../../typescript/resolvers/tests/common.js';
+import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
-import { validateFlow as validate } from '../../flow/tests/validate-flow';
+import { validateFlow as validate } from '../../flow/tests/validate-flow.js';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('ResolversTypes', () => {

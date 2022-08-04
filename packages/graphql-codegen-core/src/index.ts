@@ -1,2 +1,2 @@
-export { codegen } from './codegen';
-export { executePlugin, ExecutePluginOptions } from './execute-plugin';
+export { codegen } from './codegen.js';
+export { executePlugin, ExecutePluginOptions } from './execute-plugin.js';

@@ -5,7 +5,7 @@ import {
   PrimitiveAliasedFields,
   SelectionSetProcessorConfig,
   PrimitiveField,
-} from './base';
+} from './base.js';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 

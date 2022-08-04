@@ -1,4 +1,4 @@
-import { FieldsTree } from './fields-tree';
+import { FieldsTree } from './fields-tree.js';
 import {
   getBaseTypeNode,
   DeclarationBlock,
@@ -9,7 +9,7 @@ import {
   wrapTypeNodeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { Directives, TypeScriptMongoPluginConfig } from './config';
+import { Directives, TypeScriptMongoPluginConfig } from './config.js';
 import {
   DirectiveNode,
   GraphQLSchema,

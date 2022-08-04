@@ -4,7 +4,7 @@ import {
   getConfigValue,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
-import { MSWRawPluginConfig } from './config';
+import { MSWRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema, print } from 'graphql';
 import { pascalCase } from 'change-case-all';
@@ -17,6 +17,7 @@ export interface MSWPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPluginConfig> {
+  private _externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -29,6 +30,8 @@ export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPlu
     super(schema, fragments, rawConfig, { link: getConfigValue(rawConfig.link, undefined) });
 
     autoBind(this);
+
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
   }
 
   public getImports(): string[] {
@@ -82,7 +85,16 @@ export const ${handlerName} = (resolver: ResponseResolver<GraphQLRequest<${opera
     return [endpoint, ...operations].join('\n');
   }
 
-  buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) {
+  buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ) {
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+
     if (node.name == null) {
       throw new Error("Plugin 'msw' cannot generate mocks for unnamed operation.\n\n" + print(node));
     } else {

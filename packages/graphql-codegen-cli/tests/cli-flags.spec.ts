@@ -1,5 +1,5 @@
-import { TempDir } from './utils';
-import { createContext, parseArgv } from '../src/config';
+import { TempDir } from './utils.js';
+import { createContext, parseArgv } from '../src/config.js';
 
 const mockConfig = (str: string, file = './codegen.yml') => temp.createFile(file, str);
 const createArgv = (str = ''): string[] => {
@@ -92,7 +92,7 @@ describe('CLI Flags', () => {
     expect(config.overwrite).not.toBeTruthy();
   });
 
-  it('Should overwrite watch config using cli flags', async () => {
+  it('Should overwrite watch config using cli flag to true', async () => {
     mockConfig(`
         schema: schema.graphql
         watch: false
@@ -104,6 +104,76 @@ describe('CLI Flags', () => {
     const context = await createContext(parseArgv(args));
     const config = context.getConfig();
     expect(config.watch).toBeTruthy();
+  });
+
+  it('Should overwrite watch config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        watch: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--watch=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.watch).toBeFalsy();
+  });
+
+  it('Should overwrite ignoreNoDocuments config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        ignoreNoDocuments: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--ignore-no-documents=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.ignoreNoDocuments).toBeFalsy();
+  });
+
+  it('Should overwrite emitLegacyCommonJSImports config using cli flags to true', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        emitLegacyCommonJSImports: false
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--emit-legacy-common-js-imports');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.emitLegacyCommonJSImports).toBeTruthy();
+  });
+
+  it('Should overwrite emitLegacyCommonJSImports config using cli flags to false', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        emitLegacyCommonJSImports: true
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--emit-legacy-common-js-imports=false');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.emitLegacyCommonJSImports).toBeFalsy();
+  });
+
+  it('Should overwrite ignoreNoDocuments config using cli flags to true', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        ignoreNoDocuments: false
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--ignore-no-documents');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.ignoreNoDocuments).toBeTruthy();
   });
 
   it('Should set --overwrite with new YML api', async () => {

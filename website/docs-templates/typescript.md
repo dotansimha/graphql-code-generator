@@ -1,5 +1,0 @@
----
-id: typescript
----
-
-{@apiDocs}

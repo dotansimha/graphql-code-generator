@@ -49,6 +49,10 @@
           "type": "object",
           "properties": { "usePolling": { "type": "boolean" }, "interval": { "type": "number" } }
         },
+        "ignoreNoDocuments": {
+          "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
+          "type": "boolean"
+        },
         "silent": { "description": "A flag to suppress printing errors when they occur.", "type": "boolean" },
         "errorsOnly": { "description": "A flag to print only errors.", "type": "boolean" },
         "pluginLoader": {
@@ -91,13 +95,7 @@
         "fetcher": {
           "description": "Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetching layer, so you should provide it, or use a custom one.\n\nThe following options are available to use:\n\n- 'fetch' - requires you to specify endpoint and headers on each call, and uses `fetch` to do the actual http call.\n- `{ endpoint: string, fetchParams: RequestInit }`: hardcode your endpoint and fetch options into the generated output, using the environment `fetch` method. You can also use `process.env.MY_VAR` as endpoint or header value.\n- `file#identifier` - You can use custom fetcher method that should implement the exported `ReactQueryFetcher` interface. Example: `./my-fetcher#myCustomFetcher`.\n- `graphql-request`: Will generate each hook with `client` argument, where you should pass your own `GraphQLClient` (created from `graphql-request`).",
           "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "endpoint": { "type": "string" },
-                "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record<string,any>" }, { "type": "string" }] }
-              }
-            },
+            { "$ref": "#/definitions/HardcodedFetch" },
             { "type": "object", "properties": { "func": { "type": "string" }, "isReactHook": { "type": "boolean" } } },
             { "type": "string" }
           ]
@@ -415,6 +413,10 @@
           "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "onlyEnums": {
+          "description": "This will cause the generator to emit types for enums only.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "onlyOperationTypes": {
           "description": "This will cause the generator to emit types for operations only (basically only enums and scalars).\nInteracts well with `preResolveTypes: true`\nDefault value: \"false\"",
           "type": "boolean"
@@ -562,7 +564,7 @@
         "globalNamespace": { "type": "boolean" },
         "addOperationExport": {
           "type": "boolean",
-          "description": "Add const export of the operation name to output file. Pay attention that the file should be `d.ts`.\nYou can combine it with `near-operation-file preset` and therefore the types will be generated along with graphql file. Then you need to set extension in `presetConfig` to be `.gql.d.ts` and by that you can import `gql` file in `ts` files.\nIt will allow you to get everything with one import:\n\n```ts\nimport { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql'\n```\nDefault value: \"false\""
+          "description": "Add const export of the operation name to output file. Pay attention that the file should be `d.ts`.\nYou can combine it with `near-operation-file preset` and therefore the types will be generated along with graphql file. Then you need to set extension in `presetConfig` to be `.gql.d.ts` and by that you can import `gql` file in `ts` files.\nIt will allow you to get everything with one import:\n\n```ts\nimport { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql.js'\n```\nDefault value: \"false\""
         },
         "maybeValue": {
           "description": "Allow to override the type value of `Maybe`.\nDefault value: \"T | null\"",
@@ -596,6 +598,10 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "mergeFragmentTypes": {
+          "description": "If set to true, merge equal fragment interfaces.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -621,6 +627,10 @@
         },
         "wrapFieldDefinitions": {
           "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "onlyEnums": {
+          "description": "This will cause the generator to emit types for enums only\nDefault value: \"false\"",
           "type": "boolean"
         },
         "onlyOperationTypes": {
@@ -949,6 +959,10 @@
         },
         "enumsAsConst": {
           "description": "Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "onlyEnums": {
+          "description": "This will cause the generator to emit types for enums only.\nDefault value: \"false\"",
           "type": "boolean"
         },
         "onlyOperationTypes": {
@@ -1315,7 +1329,7 @@
           "type": "string"
         },
         "directiveResolverMappings": {
-          "$ref": "#/definitions/Record",
+          "$ref": "#/definitions/Record_1",
           "description": "Map the usage of a directive into using a specific resolver."
         },
         "allowParentTypeOverride": {
@@ -1342,13 +1356,13 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
+        "rootValueType": {
+          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
+          "type": "string"
+        },
         "directiveContextTypes": {
           "$ref": "#/definitions/Array_1",
-          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax."
-        },
-        "rootValueType": {
-          "description": "Use this to set a custom type for a specific field `context` decorated by a directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`\n\nContextTypeName should by a generic Type that take the context or field context type as only type parameter.",
-          "type": "string"
+          "description": "Use this to set a custom type for a specific field `context` decorated by a directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`\n\nContextTypeName should by a generic Type that take the context or field context type as only type parameter."
         },
         "mapperTypeSuffix": {
           "description": "Adds a suffix to the imported names to prevent name clashes.",
@@ -2765,6 +2779,10 @@
           "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "onlyEnums": {
+          "description": "This will cause the generator to emit types for enums only\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "onlyOperationTypes": {
           "description": "This will cause the generator to emit types for operations only (basically only enums and scalars)\nDefault value: \"false\"",
           "type": "boolean"
@@ -2829,8 +2847,8 @@
         }
       }
     },
-    "RawFlowResolversConfig": {
-      "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.",
+    "FlowResolversPluginConfig": {
+      "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "addUnderscoreToArgsType": {
@@ -2845,13 +2863,13 @@
           "$ref": "#/definitions/Array_1",
           "description": "Use this to set a custom type for a specific field `context`.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`"
         },
+        "rootValueType": {
+          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.",
+          "type": "string"
+        },
         "directiveContextTypes": {
           "$ref": "#/definitions/Array_1",
-          "description": "Use this configuration to set a custom type for the `rootValue`, and it will\naffect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.\nIf you wish to use an external type and import it from another file, you can use `add` plugin\nand add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax."
-        },
-        "rootValueType": {
-          "description": "Use this to set a custom type for a specific field `context` decorated by a directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`\n\nContextTypeName should by a generic Type that take the context or field context type as only type parameter.",
-          "type": "string"
+          "description": "Use this to set a custom type for a specific field `context` decorated by a directive.\nIt will only affect the targeted resolvers.\nYou can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`\n\nContextTypeName should by a generic Type that take the context or field context type as only type parameter."
         },
         "mapperTypeSuffix": {
           "description": "Adds a suffix to the imported names to prevent name clashes.",
@@ -3003,6 +3021,10 @@
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "mergeFragmentTypes": {
+          "description": "If set to true, merge equal fragment interfaces.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -3028,6 +3050,10 @@
         },
         "wrapFieldDefinitions": {
           "description": "Set to `true` in order to wrap field definitions with `FieldWrapper`.\nThis is useful to allow return types such as Promises and functions.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "onlyEnums": {
+          "description": "This will cause the generator to emit types for enums only\nDefault value: \"false\"",
           "type": "boolean"
         },
         "onlyOperationTypes": {
@@ -3122,7 +3148,7 @@
       }
     },
     "FragmentMatcherConfig": {
-      "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.",
+      "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.",
       "type": "object",
       "properties": {
         "module": {
@@ -3226,7 +3252,7 @@
         },
         "importAllFragmentsFrom": {
           "description": "Overrides all external fragments import types by using a specific file path or a package name.\n\nIf you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.",
-          "type": ["string", "object"]
+          "anyOf": [{ "$ref": "#/definitions/FragmentImportFromFn" }, { "type": "string" }]
         },
         "extension": {
           "description": "Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)\nDefault value: \".generated.ts\"",
@@ -3268,22 +3294,7 @@
         },
         "fragmentMasking": {
           "description": "Fragment masking hides data from components and only allows accessing the data by using a unmasking function.",
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "augmentedModuleName": {
-                  "description": "The module name from which a augmented module should be imported from.",
-                  "type": "string"
-                },
-                "unmaskFunctionName": {
-                  "description": "Name of the function that should be used for unmasking a masked fragment property.\nDefault value: \"`'useFragment'`\"",
-                  "type": "string"
-                }
-              }
-            },
-            { "type": "boolean" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/FragmentMaskingConfig" }, { "type": "boolean" }]
         }
       }
     },
@@ -3447,10 +3458,7 @@
         },
         "preset": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
-          "anyOf": [
-            { "type": "object", "properties": { "buildGeneratesSection": { "type": "object" } } },
-            { "type": "string" }
-          ]
+          "anyOf": [{ "$ref": "#/definitions/Types.OutputPreset" }, { "type": "string" }]
         },
         "presetConfig": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
@@ -3632,7 +3640,7 @@
         },
         {
           "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "flow-resolvers" } } } },
-          "then": { "properties": { "config": { "$ref": "#/definitions/RawFlowResolversConfig" } } }
+          "then": { "properties": { "config": { "$ref": "#/definitions/FlowResolversPluginConfig" } } }
         },
         {
           "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "flow-operations" } } } },
@@ -3656,7 +3664,9 @@
         }
       ]
     },
-    "__type_1": {
+    "__type_1": { "type": "object", "properties": { "buildGeneratesSection": { "type": "object" } } },
+    "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
+    "__type_2": {
       "type": "object",
       "properties": {
         "afterStart": {
@@ -3694,9 +3704,18 @@
       }
     },
     "T_1": {
-      "anyOf": [{ "type": "array", "items": { "type": ["string", "object"] } }, { "type": ["string", "object"] }]
+      "anyOf": [
+        { "$ref": "#/definitions/Types.HookFunction" },
+        {
+          "type": "array",
+          "items": { "anyOf": [{ "$ref": "#/definitions/Types.HookFunction" }, { "type": "string" }] }
+        },
+        { "type": "string" }
+      ]
     },
-    "Partial": { "$ref": "#/definitions/__type_1" },
+    "__type_3": { "type": "object" },
+    "Types.HookFunction": { "$ref": "#/definitions/__type_3" },
+    "Partial": { "$ref": "#/definitions/__type_2" },
     "Types.ConfiguredPlugin": {
       "type": "object",
       "additionalProperties": { "$ref": "#/definitions/Types.PluginConfig" },
@@ -3732,7 +3751,7 @@
         "java": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
         "kotlin": { "$ref": "#/definitions/KotlinResolversPluginRawConfig" },
         "flow": { "$ref": "#/definitions/FlowPluginConfig" },
-        "flow-resolvers": { "$ref": "#/definitions/RawFlowResolversConfig" },
+        "flow-resolvers": { "$ref": "#/definitions/FlowResolversPluginConfig" },
         "flow-operations": { "$ref": "#/definitions/FlowDocumentsPluginConfig" },
         "introspection": { "$ref": "#/definitions/IntrospectionPluginConfig" },
         "fragment-matcher": { "$ref": "#/definitions/FragmentMatcherConfig" },
@@ -3740,8 +3759,8 @@
         "hasura-allow-list": { "$ref": "#/definitions/HasuraAllowListPluginConfig" }
       }
     },
-    "__type_2": { "type": "object" },
-    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_2" },
+    "__type_4": { "type": "object" },
+    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_4" },
     "Array": {
       "type": "array",
       "items": {
@@ -3752,20 +3771,35 @@
         }
       }
     },
-    "Record<string,any>": { "type": "object" },
+    "__type_5": {
+      "type": "object",
+      "properties": {
+        "endpoint": { "type": "string" },
+        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record" }, { "type": "string" }] }
+      }
+    },
+    "__type_6": { "type": "object" },
+    "Record": { "$ref": "#/definitions/__type_6" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_5" },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
     },
     "NamingConvention": {
-      "anyOf": [{ "$ref": "#/definitions/NamingConventionMap" }, { "type": ["string", "object"] }]
+      "anyOf": [
+        { "$ref": "#/definitions/NamingConventionFn" },
+        { "$ref": "#/definitions/NamingConventionMap" },
+        { "type": "string" }
+      ]
     },
+    "__type_7": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_7" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "enumValues": { "type": ["string", "object"] },
-        "typeNames": { "type": ["string", "object"] },
+        "enumValues": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn" }, { "type": "string" }] },
+        "typeNames": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn" }, { "type": "string" }] },
         "transformUnderscore": { "type": "boolean" }
       }
     },
@@ -3817,14 +3851,14 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_3": {
+    "__type_8": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_3" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_8" },
     "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
-    "__type_4": {
+    "__type_9": {
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -3834,12 +3868,28 @@
         "arguments": { "type": "string" }
       }
     },
-    "Partial_1": { "$ref": "#/definitions/__type_4" },
-    "__type_5": { "type": "object" },
-    "Record": { "$ref": "#/definitions/__type_5" },
+    "Partial_1": { "$ref": "#/definitions/__type_9" },
+    "__type_10": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_10" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
     "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
     "FileType": { "enum": [0, 1, 2, 3], "type": "number" },
+    "__type_11": { "type": "object" },
+    "FragmentImportFromFn": { "$ref": "#/definitions/__type_11" },
+    "__type_12": {
+      "type": "object",
+      "properties": {
+        "augmentedModuleName": {
+          "description": "The module name from which a augmented module should be imported from.",
+          "type": "string"
+        },
+        "unmaskFunctionName": {
+          "description": "Name of the function that should be used for unmasking a masked fragment property.\nDefault value: \"`'useFragment'`\"",
+          "type": "string"
+        }
+      }
+    },
+    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_12" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {
@@ -4040,10 +4090,10 @@
             },
             "flow": { "additionalProperties": false, "$ref": "#/definitions/FlowPluginConfig" },
             "@graphql-codegen/flow": { "additionalProperties": false, "$ref": "#/definitions/FlowPluginConfig" },
-            "flow-resolvers": { "additionalProperties": false, "$ref": "#/definitions/RawFlowResolversConfig" },
+            "flow-resolvers": { "additionalProperties": false, "$ref": "#/definitions/FlowResolversPluginConfig" },
             "@graphql-codegen/flow-resolvers": {
               "additionalProperties": false,
-              "$ref": "#/definitions/RawFlowResolversConfig"
+              "$ref": "#/definitions/FlowResolversPluginConfig"
             },
             "flow-operations": { "additionalProperties": false, "$ref": "#/definitions/FlowDocumentsPluginConfig" },
             "@graphql-codegen/flow-operations": {
@@ -4325,11 +4375,11 @@
             },
             {
               "const": "flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-operations",
@@ -4349,11 +4399,11 @@
             },
             {
               "const": "fragment-matcher",
-              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/fragment-matcher",
-              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in `apollo-client` documentation: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces.\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "urql-introspection",

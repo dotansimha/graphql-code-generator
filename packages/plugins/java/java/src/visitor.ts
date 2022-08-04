@@ -7,7 +7,7 @@ import {
   getBaseTypeNode,
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { JavaResolversPluginRawConfig } from './config';
+import { JavaResolversPluginRawConfig } from './config.js';
 import {
   GraphQLSchema,
   EnumTypeDefinitionNode,

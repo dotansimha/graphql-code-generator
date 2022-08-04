@@ -1,6 +1,5 @@
 import type { CompiledMDX } from '@guild-docs/server';
-import type { ComponentProps } from 'react';
-import { FC } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
 import { Link } from '@chakra-ui/react';
 import { MDX } from '@guild-docs/client';
 
@@ -20,7 +19,7 @@ const extraComponents = {
   },
 };
 
-const Markdown: FC<{ content: CompiledMDX }> = ({ content }) => {
+const Markdown = ({ content }: { content: CompiledMDX }): ReactElement => {
   return <MDX mdx={content.mdx} extraComponents={extraComponents} />;
 };
 

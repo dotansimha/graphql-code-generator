@@ -9,8 +9,9 @@ import {
   DeclarationKind,
   normalizeAvoidOptionals,
   AvoidOptionalsConfig,
+  isOneOfInputObjectType,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptPluginConfig } from './config';
+import { TypeScriptPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,
@@ -24,8 +25,9 @@ import {
   isEnumType,
   UnionTypeDefinitionNode,
   GraphQLObjectType,
+  TypeDefinitionNode,
 } from 'graphql';
-import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
+import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object.js';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
@@ -280,13 +282,20 @@ export class TsVisitor<
     );
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    key?: number | string,
+    parent?: any,
+    _path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
+  ): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
+
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&
       (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
         (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
-    const comment = transformComment(node.description as any as string, 1);
+    const comment = this.getNodeComment(node);
     const declarationKind = this.config.declarationKind.type;
 
     let type: string = node.type as any as string;
@@ -294,14 +303,38 @@ export class TsVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
-    return (
-      comment +
-      indent(
-        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
-          addOptionalSign ? '?' : ''
-        }: ${type}${this.getPunctuation(declarationKind)}`
-      )
-    );
+    const readonlyPrefix = this.config.immutableTypes ? 'readonly ' : '';
+
+    const buildFieldDefinition = (isOneOf = false) => {
+      return `${readonlyPrefix}${node.name}${addOptionalSign && !isOneOf ? '?' : ''}: ${
+        isOneOf ? this.clearOptional(type) : type
+      }${this.getPunctuation(declarationKind)}`;
+    };
+
+    const realParentDef = ancestors?.[ancestors.length - 1];
+    if (realParentDef) {
+      const parentType = this._schema.getType(realParentDef.name.value);
+
+      if (isOneOfInputObjectType(parentType)) {
+        if (originalFieldNode.type.kind === Kind.NON_NULL_TYPE) {
+          throw new Error(
+            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+          );
+        }
+        const fieldParts: Array<string> = [];
+        for (const fieldName of Object.keys(parentType.getFields())) {
+          // Why the heck is node.name a string and not { value: string } at runtime ?!
+          if (fieldName === (node.name as any as string)) {
+            fieldParts.push(buildFieldDefinition(true));
+            continue;
+          }
+          fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
+        }
+        return comment + indent(`{ ${fieldParts.join(' ')} }`);
+      }
+    }
+
+    return comment + indent(buildFieldDefinition());
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

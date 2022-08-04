@@ -27,11 +27,11 @@ import {
   DeclarationBlock,
   mergeSelectionSets,
   hasConditionalDirectives,
-} from './utils';
-import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
-import { BaseVisitorConvertOptions } from './base-visitor';
+} from './utils.js';
+import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types.js';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
-import { ParsedDocumentsConfig } from './base-documents-visitor';
+import { ParsedDocumentsConfig } from './base-documents-visitor.js';
 import {
   LinkField,
   PrimitiveAliasedFields,
@@ -39,7 +39,7 @@ import {
   BaseSelectionSetProcessor,
   ProcessResult,
   NameAndType,
-} from './selection-set-processor/base';
+} from './selection-set-processor/base.js';
 import autoBind from 'auto-bind';
 import { getRootTypes } from '@graphql-tools/utils';
 import { createHash } from 'crypto';

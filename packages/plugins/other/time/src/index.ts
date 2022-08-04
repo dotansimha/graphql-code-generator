@@ -2,7 +2,7 @@ import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import moment from 'moment';
 import { extname } from 'path';
-import { TimePluginConfig } from './config';
+import { TimePluginConfig } from './config.js';
 
 export const plugin: PluginFunction<TimePluginConfig> = async (
   schema: GraphQLSchema,

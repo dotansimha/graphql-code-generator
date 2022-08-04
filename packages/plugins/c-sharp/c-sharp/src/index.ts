@@ -1,7 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
-import { CSharpResolversVisitor } from './visitor';
-import { CSharpResolversPluginRawConfig } from './config';
+import { CSharpResolversVisitor } from './visitor.js';
+import { CSharpResolversPluginRawConfig } from './config.js';
 
 export const plugin: PluginFunction<CSharpResolversPluginRawConfig> = async (
   schema: GraphQLSchema,

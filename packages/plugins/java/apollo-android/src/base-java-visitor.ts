@@ -1,7 +1,7 @@
-import { Imports } from './imports';
+import { Imports } from './imports.js';
 import { BaseVisitor, getBaseTypeNode, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
-import { JavaApolloAndroidPluginConfig } from './plugin';
+import { JavaApolloAndroidPluginConfig } from './plugin.js';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
 import {
   GraphQLSchema,
@@ -16,8 +16,8 @@ import {
   GraphQLInterfaceType,
   GraphQLObjectType,
 } from 'graphql';
-import { VisitorConfig } from './visitor-config';
-import { ImportsSet, TransformedType } from './types';
+import { VisitorConfig } from './visitor-config.js';
+import { ImportsSet, TransformedType } from './types.js';
 
 export const SCALAR_TO_WRITER_METHOD = {
   ID: 'writeString',

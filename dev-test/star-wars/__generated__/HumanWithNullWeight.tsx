@@ -1,7 +1,7 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
-import { HumanFieldsFragmentDoc } from './HumanFields';
+import { HumanFieldsFragmentDoc } from './HumanFields.js';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type HumanWithNullHeightQueryVariables = Types.Exact<{ [key: string]: never }>;

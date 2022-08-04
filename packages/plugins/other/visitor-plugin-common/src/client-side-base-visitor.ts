@@ -1,4 +1,4 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import autoBind from 'auto-bind';
 import {
   FragmentDefinitionNode,
@@ -11,11 +11,11 @@ import {
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue, buildScalarsFromConfig } from './utils';
-import { LoadedFragment, ParsedImport } from './types';
+import { getConfigValue, buildScalarsFromConfig } from './utils.js';
+import { LoadedFragment, ParsedImport } from './types.js';
 import { basename, extname } from 'path';
 import { pascalCase } from 'change-case-all';
-import { generateFragmentImportStatement } from './imports';
+import { generateFragmentImportStatement } from './imports.js';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
 gqlTag.enableExperimentalFragmentVariables();
@@ -484,7 +484,7 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
+              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}.js';`
             );
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
@@ -614,13 +614,13 @@ export class ClientSideBaseVisitor<
     });
 
     let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      // only generate exports for named queries
-      if (documentVariableName !== '') {
-        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
-          this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-        } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
-      }
+    if (
+      this.config.documentMode !== DocumentMode.external &&
+      documentVariableName !== '' // only generate exports for named queries
+    ) {
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
+        this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+      } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
     }
 
     const hasRequiredVariables = this.checkVariablesRequirements(node);
