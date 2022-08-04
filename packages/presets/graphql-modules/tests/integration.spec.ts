@@ -167,8 +167,6 @@ describe('Integration', () => {
 
     expect(usersModuleOutput).toBeDefined();
 
-    console.log(usersModuleOutput.content);
-
     // Only Query related properties should be required
     expect(usersModuleOutput.content).toBeSimilarStringTo(`
       export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;
