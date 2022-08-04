@@ -2847,8 +2847,8 @@
         }
       }
     },
-    "RawFlowResolversConfig": {
-      "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.",
+    "FlowResolversPluginConfig": {
+      "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.",
       "type": "object",
       "properties": {
         "addUnderscoreToArgsType": {
@@ -3640,7 +3640,7 @@
         },
         {
           "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "flow-resolvers" } } } },
-          "then": { "properties": { "config": { "$ref": "#/definitions/RawFlowResolversConfig" } } }
+          "then": { "properties": { "config": { "$ref": "#/definitions/FlowResolversPluginConfig" } } }
         },
         {
           "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "flow-operations" } } } },
@@ -3751,7 +3751,7 @@
         "java": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
         "kotlin": { "$ref": "#/definitions/KotlinResolversPluginRawConfig" },
         "flow": { "$ref": "#/definitions/FlowPluginConfig" },
-        "flow-resolvers": { "$ref": "#/definitions/RawFlowResolversConfig" },
+        "flow-resolvers": { "$ref": "#/definitions/FlowResolversPluginConfig" },
         "flow-operations": { "$ref": "#/definitions/FlowDocumentsPluginConfig" },
         "introspection": { "$ref": "#/definitions/IntrospectionPluginConfig" },
         "fragment-matcher": { "$ref": "#/definitions/FragmentMatcherConfig" },
@@ -4090,10 +4090,10 @@
             },
             "flow": { "additionalProperties": false, "$ref": "#/definitions/FlowPluginConfig" },
             "@graphql-codegen/flow": { "additionalProperties": false, "$ref": "#/definitions/FlowPluginConfig" },
-            "flow-resolvers": { "additionalProperties": false, "$ref": "#/definitions/RawFlowResolversConfig" },
+            "flow-resolvers": { "additionalProperties": false, "$ref": "#/definitions/FlowResolversPluginConfig" },
             "@graphql-codegen/flow-resolvers": {
               "additionalProperties": false,
-              "$ref": "#/definitions/RawFlowResolversConfig"
+              "$ref": "#/definitions/FlowResolversPluginConfig"
             },
             "flow-operations": { "additionalProperties": false, "$ref": "#/definitions/FlowDocumentsPluginConfig" },
             "@graphql-codegen/flow-operations": {
@@ -4375,11 +4375,11 @@
             },
             {
               "const": "flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-operations",
