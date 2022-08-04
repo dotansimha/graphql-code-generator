@@ -1,23 +1,23 @@
-export * from './types';
-export * from './utils';
-export * from './mappers';
-export * from './naming';
-export * from './scalars';
-export * from './enum-values';
-export * from './declaration-kinds';
-export * from './avoid-optionals';
-export * from './imports';
+export * from './types.js';
+export * from './utils.js';
+export * from './mappers.js';
+export * from './naming.js';
+export * from './scalars.js';
+export * from './enum-values.js';
+export * from './declaration-kinds.js';
+export * from './avoid-optionals.js';
+export * from './imports.js';
 
-export * from './base-visitor';
-export * from './base-types-visitor';
-export * from './base-documents-visitor';
-export * from './base-resolvers-visitor';
-export * from './client-side-base-visitor';
+export * from './base-visitor.js';
+export * from './base-types-visitor.js';
+export * from './base-documents-visitor.js';
+export * from './base-resolvers-visitor.js';
+export * from './client-side-base-visitor.js';
 
-export * from './variables-to-object';
-export * from './selection-set-to-object';
+export * from './variables-to-object.js';
+export * from './selection-set-to-object.js';
 
-export * from './selection-set-processor/base';
-export * from './selection-set-processor/pre-resolve-types';
+export * from './selection-set-processor/base.js';
+export * from './selection-set-processor/pre-resolve-types.js';
 
-export * from './optimize-operations';
+export * from './optimize-operations.js';

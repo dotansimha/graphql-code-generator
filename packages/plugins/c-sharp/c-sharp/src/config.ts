@@ -1,5 +1,5 @@
 import { RawConfig, EnumValuesMap } from '@graphql-codegen/visitor-plugin-common';
-import { JsonAttributesSource } from './json-attributes';
+import { JsonAttributesSource } from './json-attributes.js';
 
 /**
  * @description This plugin generates C# `class` identifier for your schema types.
@@ -9,7 +9,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * @exampleMarkdown
    * ## With Custom Values
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum:
@@ -22,7 +22,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the namespace name.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/MyTypes.cs:
    *     plugins:
@@ -37,7 +37,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the parent class name.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/MyGeneratedTypes.cs:
    *     plugins:
@@ -52,7 +52,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the list type
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:
    *     plugins:
@@ -68,7 +68,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Emit C# 9.0+ records instead of classes
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:
    *     plugins:
@@ -84,7 +84,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Should JSON attributes be emitted for produced types and properties ot not
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:
    *     plugins:
@@ -100,7 +100,7 @@ export interface CSharpResolversPluginRawConfig extends RawConfig {
    * @description Library that should be used to emit JSON attributes. Ignored when `emitJsonAttributes` is `false` or not specified
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/c-sharp/my-org/my-app/Types.cs:
    *     plugins:

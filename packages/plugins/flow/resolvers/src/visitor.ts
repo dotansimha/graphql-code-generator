@@ -17,7 +17,7 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
-import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
+import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types.js';
 
 export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = $ObjMap<T, () => AllowedValues>;';

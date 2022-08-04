@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as graphql from './graphql';
+import * as graphql from './graphql.js';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
@@ -7,7 +7,9 @@ const documents = {
     graphql.TweetFragmentFragmentDoc,
   '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n':
     graphql.TweetAuthorFragmentFragmentDoc,
-  '\n  query TweetsQuery {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n': graphql.TweetsQueryDocument,
+  '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n':
+    graphql.TweetsFragmentFragmentDoc,
+  '\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n': graphql.TweetAppQueryDocument,
 };
 
 export function gql(
@@ -17,8 +19,11 @@ export function gql(
   source: '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'
 ): typeof documents['\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'];
 export function gql(
-  source: '\n  query TweetsQuery {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'
-): typeof documents['\n  query TweetsQuery {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'];
+  source: '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'
+): typeof documents['\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'];
+export function gql(
+  source: '\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n'
+): typeof documents['\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

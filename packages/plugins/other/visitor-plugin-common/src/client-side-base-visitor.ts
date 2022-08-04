@@ -1,4 +1,4 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import autoBind from 'auto-bind';
 import {
   FragmentDefinitionNode,
@@ -11,11 +11,11 @@ import {
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue, buildScalarsFromConfig } from './utils';
-import { LoadedFragment, ParsedImport } from './types';
+import { getConfigValue, buildScalarsFromConfig } from './utils.js';
+import { LoadedFragment, ParsedImport } from './types.js';
 import { basename, extname } from 'path';
 import { pascalCase } from 'change-case-all';
-import { generateFragmentImportStatement } from './imports';
+import { generateFragmentImportStatement } from './imports.js';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
 gqlTag.enableExperimentalFragmentVariables();
@@ -44,14 +44,14 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @exampleMarkdown
    * ## graphql.macro
    *
-   * ```yml
+   * ```yaml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
    *
    * ## Gatsby
    *
-   * ```yml
+   * ```yaml
    * config:
    *   gqlImport: gatsby#graphql
    * ```
@@ -136,13 +136,13 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: path/to/document-node-file
    * ```
    *
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: near-operation-file
@@ -281,14 +281,14 @@ export class ClientSideBaseVisitor<
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
           .join('\n');
-      } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-        return '';
-      } else {
-        if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
-          return '';
-        }
-        return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
+      if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+        return '';
+      }
+      if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
+        return '';
+      }
+      return `${fragments.map(name => '${' + name + '}').join('\n')}`;
     }
 
     return '';
@@ -313,7 +313,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+    }
+    if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       let gqlObj = gqlTag([doc]);
 
       if (this.config.optimizeDocumentNode) {
@@ -330,7 +331,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.string) {
+    }
+    if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';
     }
 
@@ -482,7 +484,7 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
+              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}.js';`
             );
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
@@ -612,13 +614,13 @@ export class ClientSideBaseVisitor<
     });
 
     let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      // only generate exports for named queries
-      if (documentVariableName !== '') {
-        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
-          this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-        } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
-      }
+    if (
+      this.config.documentMode !== DocumentMode.external &&
+      documentVariableName !== '' // only generate exports for named queries
+    ) {
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
+        this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+      } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
     }
 
     const hasRequiredVariables = this.checkVariablesRequirements(node);

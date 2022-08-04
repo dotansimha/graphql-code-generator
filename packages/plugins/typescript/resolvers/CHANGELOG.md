@@ -1,5 +1,91 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.7.2
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+  - @graphql-codegen/typescript@2.7.2
+
+## 2.7.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+  - @graphql-codegen/typescript@2.7.1
+
+## 2.7.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/typescript@2.7.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.6.7
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/typescript@2.6.0
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 2.6.6
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+  - @graphql-codegen/typescript@2.5.1
+
+## 2.6.5
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+  - @graphql-codegen/typescript@2.5.0
+
+## 2.6.4
+
+### Patch Changes
+
+- Updated dependencies [f1fb77bd4]
+  - @graphql-codegen/visitor-plugin-common@2.8.0
+  - @graphql-codegen/typescript@2.4.11
+
+## 2.6.3
+
+### Patch Changes
+
+- Updated dependencies [9a5f31cb6]
+  - @graphql-codegen/typescript@2.4.10
+  - @graphql-codegen/visitor-plugin-common@2.7.6
+
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+  - @graphql-codegen/typescript@2.4.9
+
 ## 2.6.1
 
 ### Patch Changes
@@ -148,7 +234,7 @@
 
   Example configuration:
 
-  ```yml
+  ```yaml
   config:
     # This was possible before
     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
@@ -249,7 +335,7 @@
 
   If you need the resolvers signature to support schema-stitching, please add to your config:
 
-  ```yml
+  ```yaml
   noSchemaStitching: false
   ```
 

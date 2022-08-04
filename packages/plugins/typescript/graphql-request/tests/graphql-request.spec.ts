@@ -1,11 +1,11 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin, TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
-import { RawGraphQLRequestPluginConfig } from '../src/config';
+import { RawGraphQLRequestPluginConfig } from '../src/config.js';
 
 describe('graphql-request', () => {
   const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -347,6 +347,20 @@ async function test() {
       expect(output).toContain(
         `(Operations.Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');`
       );
+    });
+
+    it('#7114 - honor importOperationTypesFrom', async () => {
+      const config = { importOperationTypesFrom: 'Types' };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+      const output = await validate(result, config, docs, schema, '');
+
+      expect(output).toContain(`Types.FeedQuery`);
+      expect(output).toContain(`Types.Feed2Query`);
+      expect(output).toContain(`Types.Feed3Query`);
+      expect(output).toContain(`Types.Feed4Query`);
     });
   });
 });

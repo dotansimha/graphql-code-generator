@@ -3,7 +3,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { parse } from 'graphql';
 import * as TypeScriptPlugin from '@graphql-codegen/typescript';
 import * as TypeScriptOperationsPlugin from '@graphql-codegen/typescript-operations';
-import * as GraphQLApolloPlugin from '../src';
+import * as GraphQLApolloPlugin from '../src/index.js';
 import { remove, writeFile } from 'fs-extra';
 import { join } from 'path';
 import { mockGraphQLServer } from '@graphql-codegen/testing';

@@ -1,6 +1,7 @@
 hooks:
   afterAllFileWrite:
     - prettier --write
+emitLegacyCommonJSImports: false
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
@@ -98,6 +99,13 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/githunt/types.onlyEnums.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      onlyEnums: true
+    plugins:
+      - typescript
   ./dev-test/githunt/types.preResolveTypes.onlyOperationTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -196,6 +204,8 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
+    config:
+      addInfiniteQuery: true
   ./dev-test/githunt/types.rtk-query.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -293,6 +303,13 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars/types.OnlyEnums.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      onlyEnums: true
+    plugins:
+      - typescript
   ./dev-test/star-wars/types.preResolveTypes.onlyOperationTypes.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -414,6 +431,12 @@ generates:
   ./dev-test/gql-tag-operations-masking/gql:
     schema: ./dev-test/gql-tag-operations-masking/schema.graphql
     documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true
+  ./dev-test/gql-tag-operations-masking-star-wars/gql:
+    schema: ./dev-test/gql-tag-operations-masking-star-wars/schema.json
+    documents: './dev-test/gql-tag-operations-masking-star-wars/src/**/*.tsx'
     preset: gql-tag-operations-preset
     presetConfig:
       fragmentMasking: true

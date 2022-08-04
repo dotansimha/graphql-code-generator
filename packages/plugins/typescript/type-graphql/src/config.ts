@@ -1,4 +1,4 @@
-import { DecoratorConfig } from './visitor';
+import { DecoratorConfig } from './visitor.js';
 import { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 
 export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
@@ -14,7 +14,7 @@ export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
    * @description Specifies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.
    * @type string[]
    * @example Decorate only type User
-   * ```yml
+   * ```yaml
    * generates:
    *   types.ts:
    *     plugins:

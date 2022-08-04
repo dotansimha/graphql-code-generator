@@ -1,0 +1,97 @@
+
+/docs/advanced/generated-files-colocation
+/docs/advanced/how-does-it-work
+/docs/advanced/profiler
+/docs/advanced/programmatic-usage
+/docs/config-reference/codegen-config
+/docs/config-reference/config-field
+/docs/config-reference/documents-field
+/docs/config-reference/lifecycle-hooks
+/docs/config-reference/multiproject-config
+/docs/config-reference/naming-convention
+/docs/config-reference/require-field
+/docs/config-reference/schema-field
+/docs/custom-codegen
+/docs/custom-codegen/contributing
+/docs/custom-codegen/extend-schema
+/docs/custom-codegen/index
+/docs/custom-codegen/plugin-structure
+/docs/custom-codegen/using-visitor
+/docs/custom-codegen/validate-configuration
+/docs/getting-started
+/docs/getting-started/codegen-config -> /docs/config-reference/codegen-config
+/docs/getting-started/config-field -> /docs/config-reference/config-field
+/docs/getting-started/config-reference/codegen-config -> /docs/config-reference/codegen-config
+/docs/getting-started/development-workflow
+/docs/getting-started/documents-field -> /docs/config-reference/documents-field
+/docs/getting-started/how-does-it-work -> /docs/advanced/how-does-it-work
+/docs/getting-started/index
+/docs/getting-started/installation
+/docs/getting-started/lifecycle-hooks -> /docs/config-reference/lifecycle-hooks
+/docs/getting-started/naming-convention -> /docs/config-reference/naming-convention
+/docs/getting-started/require-field -> /docs/config-reference/require-field
+/docs/getting-started/schema-field -> /docs/config-reference/schema-field
+/docs/guides/angular
+/docs/guides/front-end-typescript-only
+/docs/guides/further-reading
+/docs/guides/graphql-modules
+/docs/guides/graphql-server-apollo-yoga
+/docs/guides/react
+/docs/guides/svelte
+/docs/guides/vue
+/docs/integrations/apollo-local-state
+/docs/integrations/create-react-app
+/docs/integrations/federation
+/docs/integrations/gatsby
+/docs/integrations/prettier
+/docs/integrations/vscode
+/docs/migration/from-0-13
+/docs/migration/from-0-18
+/plugins
+/plugins/add
+/plugins/c-sharp-operations
+/plugins/flow-operations
+/plugins/flow-resolvers
+/plugins/fragment-matcher
+/plugins/gql-tag-operations-preset
+/plugins/graphql-modules-preset
+/plugins/hasura-allow-list
+/plugins/import-types-preset
+/plugins/introspection
+/plugins/java
+/plugins/java-apollo-android
+/plugins/java-resolvers
+/plugins/jsdoc
+/plugins/kotlin
+/plugins/named-operations-object
+/plugins/near-operation-file-preset
+/plugins/reason-client
+/plugins/relay-operation-optimizer
+/plugins/schema-ast
+/plugins/time
+/plugins/typed-document-node
+/plugins/typescript
+/plugins/typescript-apollo-angular
+/plugins/typescript-apollo-client-helpers
+/plugins/typescript-apollo-next
+/plugins/typescript-document-nodes
+/plugins/typescript-generic-sdk
+/plugins/typescript-graphql-files-modules
+/plugins/typescript-graphql-request
+/plugins/typescript-mongodb
+/plugins/typescript-msw
+/plugins/typescript-oclif
+/plugins/typescript-operations
+/plugins/typescript-react-apollo
+/plugins/typescript-react-query
+/plugins/typescript-resolvers
+/plugins/typescript-rtk-query
+/plugins/typescript-stencil-apollo
+/plugins/typescript-svelte-apollo
+/plugins/typescript-type-graphql
+/plugins/typescript-urql
+/plugins/typescript-validation-schema
+/plugins/typescript-vue-apollo
+/plugins/typescript-vue-apollo-smart-ops
+/plugins/typescript-vue-urql
+/plugins/urql-introspection

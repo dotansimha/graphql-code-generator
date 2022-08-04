@@ -74,7 +74,7 @@ function getRelativeImportPath(state: PluginPass, artifactDirectory: string, fil
     throw new Error('Babel state is missing expected file name');
   }
 
-  const filename = state.file.opts.filename;
+  const { filename } = state.file.opts;
 
   const relative = path.relative(path.dirname(filename), path.resolve(artifactDirectory));
 

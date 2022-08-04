@@ -7,6 +7,7 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
+  emitLegacyCommonJSImports: boolean;
 };
 
 export type ImportSource<T = string> = {
@@ -56,9 +57,14 @@ export function generateImportStatement(statement: ImportDeclaration): string {
     importSource.identifiers && importSource.identifiers.length
       ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
       : '*';
+  const importExtension =
+    importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
-  return `${importStatement} ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+  return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${
+    importAlias ? '\n' : ''
+  }`;
+  // return `${importStatement} ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
 }
 
 function resolveImportPath(baseDir: string, outputPath: string, sourcePath: string) {
@@ -67,9 +73,8 @@ function resolveImportPath(baseDir: string, outputPath: string, sourcePath: stri
     const absGeneratedFilePath = resolve(baseDir, outputPath);
     const absImportFilePath = resolve(baseDir, sourcePath);
     return resolveRelativeImport(absGeneratedFilePath, absImportFilePath);
-  } else {
-    return sourcePath.replace(`~`, '');
   }
+  return sourcePath.replace(`~`, '');
 }
 
 export function resolveRelativeImport(from: string, to: string): string {

@@ -21,22 +21,21 @@ export class FlowOperationVariablesToObject extends OperationVariablesToObject {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
 
       return this.clearOptional(type);
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
+    }
+    if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
       const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return `?Array<${innerType}>${listInputCoercionExtension}`;
-    } else {
-      return `?${baseType}`;
     }
+    return `?${baseType}`;
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
     if (hasDefaultValue || isNonNullType) {
       return fieldName;
-    } else {
-      return `${fieldName}?`;
     }
+    return `${fieldName}?`;
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {

@@ -1,7 +1,7 @@
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
-import { schema, validate } from './common';
-import { plugin } from '../src';
+import { schema, validate } from './common.js';
+import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
 
 describe('ResolversTypes', () => {

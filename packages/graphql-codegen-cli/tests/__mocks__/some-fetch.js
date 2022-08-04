@@ -1,4 +1,6 @@
-const { promises: { readFile } } = require('fs');
+const {
+  promises: { readFile },
+} = require('fs');
 const { join } = require('path');
 const { buildSchema, graphql, introspectionQuery } = require('graphql');
 
@@ -9,7 +11,7 @@ module.exports = {
     global.CUSTOM_FETCH_FN_CALLED = true;
     return {
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
       async text() {
         return JSON.stringify(await graphql(schema, introspectionQuery));

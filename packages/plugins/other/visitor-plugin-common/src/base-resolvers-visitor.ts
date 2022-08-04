@@ -1,6 +1,6 @@
-import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor.js';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
+import { DEFAULT_SCALARS } from './scalars.js';
 import {
   NormalizedScalarsMap,
   EnumValuesMap,
@@ -8,7 +8,7 @@ import {
   DeclarationKind,
   ConvertOptions,
   AvoidOptionalsConfig,
-} from './types';
+} from './types.js';
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
@@ -20,7 +20,7 @@ import {
   REQUIRE_FIELDS_TYPE,
   wrapTypeWithModifiers,
   buildScalarsFromConfig,
-} from './utils';
+} from './utils.js';
 import {
   NameNode,
   ListTypeNode,
@@ -45,9 +45,9 @@ import {
   ASTNode,
 } from 'graphql';
 
-import { OperationVariablesToObject } from './variables-to-object';
-import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers';
-import { parseEnumValues } from './enum-values';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers.js';
+import { parseEnumValues } from './enum-values.js';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 
@@ -81,7 +81,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
@@ -97,7 +97,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     contextType: MyContext
@@ -105,7 +105,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     contextType: ./my-types#MyContext
@@ -120,7 +120,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Field Context Types
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     fieldContextTypes:
@@ -139,7 +139,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom RootValue Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     rootValueType: MyRootValue
@@ -147,13 +147,13 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom RootValue Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     rootValueType: ./my-types#MyRootValue
    * ```
    */
-  directiveContextTypes?: Array<string>;
+  rootValueType?: string;
   /**
    * @description Use this to set a custom type for a specific field `context` decorated by a directive.
    * It will only affect the targeted resolvers.
@@ -164,7 +164,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Directive Context Extender
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     directiveContextTypes:
@@ -172,12 +172,12 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    *
    */
-  rootValueType?: string;
+  directiveContextTypes?: Array<string>;
   /**
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     mapperTypeSuffix: Model
@@ -192,7 +192,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Custom Context Type
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     mappers:
@@ -209,7 +209,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Replace with any
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: any
@@ -217,7 +217,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Custom Base Object
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: ./my-file#BaseObject
@@ -225,9 +225,9 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Wrap default types with Partial
    *
-   * You can also specify a custom wrapper for the original type, without overriding the original generated types, use "{T}" to specify the identifier. (for flow, use `$Shape<{T}>`)
+   * You can also specify a custom wrapper for the original type, without overriding the original generated types, use `{T}` to specify the identifier. (for flow, use `$Shape<{T}>`)
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   config:
    *     defaultMapper: Partial<{T}>
@@ -235,7 +235,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Allow deep partial with `utility-types`
    *
-   * ```yml
+   * ```yaml
    * plugins
    *   plugins:
    *     - 'typescript'
@@ -255,7 +255,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -267,7 +267,7 @@ export interface RawResolversConfig extends RawConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -286,7 +286,7 @@ export interface RawResolversConfig extends RawConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -320,7 +320,7 @@ export interface RawResolversConfig extends RawConfig {
    * @exampleMarkdown
    * ## Disable enum prefixes
    *
-   * ```yml
+   * ```yaml
    *   config:
    *     typesPrefix: I
    *     enumPrefix: false
@@ -431,7 +431,7 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
-      ...(additionalConfig || {}),
+      ...additionalConfig,
     } as TPluginConfig);
 
     autoBind(this);
@@ -552,7 +552,8 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
-      } else if (isMapped && this.config.mappers[typeName].type) {
+      }
+      if (isMapped && this.config.mappers[typeName].type) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
@@ -974,7 +975,7 @@ export class BaseResolversVisitor<
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
-      if (this._federation.skipField({ fieldNode: original, parentType: parentType })) {
+      if (this._federation.skipField({ fieldNode: original, parentType })) {
         return null;
       }
 

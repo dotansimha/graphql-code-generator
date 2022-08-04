@@ -7,7 +7,7 @@ export type ApolloClientHelpersConfig = {
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   useTypeImports: true
    * ```

@@ -29,7 +29,7 @@ GraphQL Code Generator lets you setup everything by simply running the following
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file, and a lot more.
 
-If you wish to [manually setup codegen, follow these instructions]((https://graphql-code-generator.com/docs/getting-started/installation)).
+If you wish to [manually setup codegen, follow these instructions](https://graphql-code-generator.com/docs/getting-started/installation).
 
 ### Links
 
@@ -48,7 +48,6 @@ For a contribution guide specific to this project, please refer to: http://graph
 ### Code of Conduct
 
 Help us keep GraphQL Codegenerator open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
-
 
 ### License
 

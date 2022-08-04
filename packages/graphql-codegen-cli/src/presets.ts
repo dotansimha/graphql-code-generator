@@ -18,13 +18,19 @@ export async function getPresetByName(
 
       if (loaded && loaded.preset) {
         return loaded.preset;
-      } else if (loaded && loaded.default) {
+      }
+      if (loaded && loaded.default) {
         return loaded.default;
       }
 
       return loaded as Types.OutputPreset;
     } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
+      if (
+        /** CJS Error code */
+        err.code !== 'MODULE_NOT_FOUND' &&
+        /** ESM Error code */
+        err.code !== 'ERR_MODULE_NOT_FOUND'
+      ) {
         throw new DetailedError(
           `Unable to load preset matching ${name}`,
           `

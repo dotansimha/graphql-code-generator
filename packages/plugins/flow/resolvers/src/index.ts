@@ -7,7 +7,7 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import { FlowResolversPluginConfig } from './config';
-import { FlowResolversVisitor } from './visitor';
+import { FlowResolversVisitor } from './visitor.js';
 
 export const plugin: PluginFunction<FlowResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,

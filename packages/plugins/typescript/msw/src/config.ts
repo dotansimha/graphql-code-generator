@@ -10,7 +10,7 @@ export interface MSWConfig {
    * @see https://mswjs.io/docs/api/graphql/link
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     link:
    *       name: stripe

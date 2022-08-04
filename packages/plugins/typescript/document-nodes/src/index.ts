@@ -5,7 +5,7 @@ import {
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
-import { TypeScriptDocumentNodesVisitor } from './visitor';
+import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 /**
  * @description This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.
@@ -26,13 +26,13 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    *
    * @exampleMarkdown
    * ## Override All Names
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention: change-case-all#lowerCase
    * ```
    *
    * ## Upper-case enum values
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention:
    *     typeNames: change-case-all#pascalCase
@@ -40,13 +40,13 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * ```
    *
    * ## Keep name as-is
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention: keep
    * ```
    *
    * ## Remove Underscores
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention:
    *     typeNames: change-case-all#pascalCase
@@ -59,7 +59,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @description Adds prefix to the name
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * documents: src/api/user-service/queries.graphql
    * generates:
    *   src/api/user-service/queries.ts:
@@ -75,7 +75,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @description Adds suffix to the name
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * documents: src/api/user-service/queries.graphql
    * generates:
    *   src/api/user-service/queries.ts:

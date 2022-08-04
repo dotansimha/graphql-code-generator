@@ -2,6 +2,7 @@ import { oneLine, stripIndent } from 'common-tags';
 import { resolve } from 'path';
 import { existsSync } from 'fs';
 import { diff } from 'jest-diff';
+import { expect } from '@jest/globals';
 
 declare global {
   // eslint-disable-next-line no-redeclare
@@ -27,30 +28,29 @@ expect.extend({
     if (compareStrings(strippedReceived, strippedExpected)) {
       return {
         message: () =>
-          `expected 
+          `expected
    ${received}
    not to be a string containing (ignoring indents)
    ${expected}`,
         pass: true,
       };
-    } else {
-      const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
-        expand: this.expand,
-      });
-      const hasExpect = diffString && diffString.includes('- Expect');
+    }
+    const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
+      expand: this.expand,
+    });
+    const hasExpect = diffString && diffString.includes('- Expect');
 
-      const message = hasExpect
-        ? `Difference:\n\n${diffString}`
-        : `expected 
+    const message = hasExpect
+      ? `Difference:\n\n${diffString}`
+      : `expected
       ${received}
       to be a string containing (ignoring indents)
       ${expected}`;
 
-      return {
-        message: () => message,
-        pass: false,
-      };
-    }
+    return {
+      message: () => message,
+      pass: false,
+    };
   },
 });
 
@@ -90,5 +90,5 @@ export function useMonorepo({ dirname }: { dirname: string }) {
   };
 }
 
-export * from './typescript';
-export * from './mock-graphql-server';
+export * from './typescript.js';
+export * from './mock-graphql-server.js';

@@ -26,7 +26,7 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {8}
    * schema:
    *   - './src/schema.graphql'
    * generates:
@@ -43,7 +43,7 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {8}
    * schema:
    *   - './src/schema.graphql'
    * generates:
@@ -60,7 +60,7 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {7}
    * schema: http://localhost:3000/graphql
    * generates:
    *   schema.graphql:

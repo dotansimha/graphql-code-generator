@@ -1,4 +1,4 @@
-import { NormalizedScalarsMap } from './types';
+import { NormalizedScalarsMap } from './types.js';
 
 export const DEFAULT_SCALARS: NormalizedScalarsMap = {
   ID: 'string',

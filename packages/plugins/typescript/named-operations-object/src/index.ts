@@ -8,7 +8,7 @@ export interface NamedOperationsObjectPluginConfig {
    * @default namedOperations
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:

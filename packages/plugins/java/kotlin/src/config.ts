@@ -4,7 +4,7 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * @description Customize the Java package name. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/kotlin/my-org/my-app/Resolvers.kt:
    *     plugins:
@@ -18,7 +18,7 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum:
@@ -31,7 +31,7 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * @description Allow you to customize the list type
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/kotlin/my-org/my-app/Types.kt:
    *     plugins:
@@ -46,7 +46,7 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * @description Allow you to enable generation for the types
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/kotlin/my-org/my-app/Types.kt:
    *     plugins:
@@ -61,7 +61,7 @@ export interface KotlinResolversPluginRawConfig extends RawConfig {
    * @description Allow you to omit JvmStatic annotation
    *
    * @exampleMarkdoWn
-   * ```yml
+   * ```yaml
    * generates:
    *   src/main/kotlin/my-org/my-app/Types.kt:
    *     plugins:

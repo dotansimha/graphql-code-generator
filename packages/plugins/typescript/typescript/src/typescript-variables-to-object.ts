@@ -51,16 +51,16 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
 
       return this.clearOptional(type);
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
+    }
+    if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
       const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return this.wrapMaybe(
         `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
       );
-    } else {
-      return this.wrapMaybe(baseType);
     }
+    return this.wrapMaybe(baseType);
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {

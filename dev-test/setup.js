@@ -1,3 +1,3 @@
-process.on('unhandledRejection', (err) => {
-    fail(err);
+process.on('unhandledRejection', err => {
+  fail(err);
 });

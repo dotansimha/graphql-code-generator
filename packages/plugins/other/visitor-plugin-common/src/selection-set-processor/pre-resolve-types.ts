@@ -5,7 +5,7 @@ import {
   PrimitiveAliasedFields,
   SelectionSetProcessorConfig,
   PrimitiveField,
-} from './base';
+} from './base.js';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
 import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 
@@ -73,25 +73,24 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           name,
           type: `'${schemaType.name}'`,
         };
-      } else {
-        const fieldObj = schemaType.getFields()[aliasedField.fieldName];
-        const baseType = getBaseType(fieldObj.type);
-        let typeToUse = this.config.scalars[baseType.name] || baseType.name;
-
-        if (isEnumType(baseType)) {
-          typeToUse =
-            (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
-            this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
-        }
-
-        const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type);
-        const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
-
-        return {
-          name,
-          type: wrappedType,
-        };
       }
+      const fieldObj = schemaType.getFields()[aliasedField.fieldName];
+      const baseType = getBaseType(fieldObj.type);
+      let typeToUse = this.config.scalars[baseType.name] || baseType.name;
+
+      if (isEnumType(baseType)) {
+        typeToUse =
+          (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+      }
+
+      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
+
+      return {
+        name,
+        type: wrappedType,
+      };
     });
   }
 

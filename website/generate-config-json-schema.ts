@@ -1,12 +1,14 @@
 import { join } from 'path';
 import { writeFile } from 'fs/promises';
-import { format } from 'prettier';
+import { format, resolveConfig } from 'prettier';
 import jsonPath from 'jsonpath';
 import { transformDocs } from './src/lib/transform';
 
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
 const DEFAULT_JSDOC_KEY = 'default';
-const OUT_DIR = './public';
+const OUT_PATH = join(__dirname, 'public/config.schema.json');
+
+const prettierOptions = resolveConfig.sync(__dirname);
 
 async function generate(): Promise<void> {
   const { schema } = transformDocs();
@@ -25,8 +27,8 @@ async function generate(): Promise<void> {
     }
     return v;
   });
-  const prettifiedSchema = format(JSON.stringify(schema), { parser: 'json' });
-  await writeFile(join(OUT_DIR, './config.schema.json'), prettifiedSchema);
+  const prettifiedSchema = format(JSON.stringify(schema), { ...prettierOptions, parser: 'json' });
+  await writeFile(OUT_PATH, prettifiedSchema);
 }
 
 generate()

@@ -1,7 +1,7 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLRequestVisitor } from './visitor';
+import { GraphQLRequestVisitor } from './visitor.js';
 import { extname } from 'path';
 
 export interface Config extends RawClientSideBasePluginConfig {

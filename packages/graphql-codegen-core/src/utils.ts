@@ -68,7 +68,8 @@ const federationDirectives = ['key', 'requires', 'provides', 'external'];
 export function hasFederationSpec(schemaOrAST: GraphQLSchema | DocumentNode) {
   if (isSchema(schemaOrAST)) {
     return federationDirectives.some(directive => schemaOrAST.getDirective(directive));
-  } else if (isDocumentNode(schemaOrAST)) {
+  }
+  if (isDocumentNode(schemaOrAST)) {
     return schemaOrAST.definitions.some(
       def => def.kind === Kind.DIRECTIVE_DEFINITION && federationDirectives.includes(def.name.value)
     );

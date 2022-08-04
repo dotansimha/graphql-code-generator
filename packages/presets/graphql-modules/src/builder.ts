@@ -26,8 +26,8 @@ import {
   createObject,
   collectUsedTypes,
   indent,
-} from './utils';
-import { ModulesConfig } from './config';
+} from './utils.js';
+import { ModulesConfig } from './config.js';
 import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
@@ -249,7 +249,8 @@ export function buildModule(
         types.forEach(typeName => {
           if (k === 'enums') {
             return;
-          } else if (k === 'scalars') {
+          }
+          if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             lines.push(`${typeName}?: ${encapsulateTypeName(typeName)}Resolvers;`);

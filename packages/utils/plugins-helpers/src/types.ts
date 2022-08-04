@@ -1,6 +1,6 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
-import type { Profiler } from './profiler';
+import type { Profiler } from './profiler.js';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -434,9 +434,25 @@ export namespace Types {
       interval?: number;
     };
     /**
+     * @description A flag to suppress non-zero exit code when there are no documents to generate.
+     */
+    ignoreNoDocuments?: boolean;
+    /**
+     * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
+     */
+    emitLegacyCommonJSImports?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
+    /**
+     * @description A flag to output more detailed information about tasks
+     */
+    verbose?: boolean;
+    /**
+     * @description A flag to output debug logs
+     */
+    debug?: boolean;
     /**
      * @description A flag to print only errors.
      */

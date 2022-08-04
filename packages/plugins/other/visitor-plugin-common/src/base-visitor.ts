@@ -7,12 +7,12 @@ import {
   LoadedFragment,
   NormalizedScalarsMap,
   DeclarationKind,
-} from './types';
-import { DeclarationBlockConfig } from './utils';
+} from './types.js';
+import { DeclarationBlockConfig } from './utils.js';
 import autoBind from 'auto-bind';
-import { convertFactory } from './naming';
+import { convertFactory } from './naming.js';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDeclaration, FragmentImport } from './imports';
+import { ImportDeclaration, FragmentImport } from './imports.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -46,7 +46,7 @@ export interface RawConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    * config:
    *   strictScalars: true
    * ```
@@ -57,7 +57,7 @@ export interface RawConfig {
    * @default any
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    * config:
    *   defaultScalarType: unknown
    * ```
@@ -67,7 +67,7 @@ export interface RawConfig {
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   scalars:
    *     DateTime: Date
@@ -90,13 +90,13 @@ export interface RawConfig {
    *
    * @exampleMarkdown
    * ## Override All Names
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention: change-case-all#lowerCase
    * ```
    *
    * ## Upper-case enum values
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention:
    *     typeNames: change-case-all#pascalCase
@@ -104,13 +104,13 @@ export interface RawConfig {
    * ```
    *
    * ## Keep names as is
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention: keep
    * ```
    *
    * ## Remove Underscores
-   * ```yml
+   * ```yaml
    * config:
    *   namingConvention:
    *     typeNames: change-case-all#pascalCase
@@ -123,7 +123,7 @@ export interface RawConfig {
    * @description Prefixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    * config:
    *   typesPrefix: I
    * ```
@@ -134,7 +134,7 @@ export interface RawConfig {
    * @description Suffixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    * config:
    *   typesSuffix: I
    * ```
@@ -145,7 +145,7 @@ export interface RawConfig {
    * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   skipTypename: true
    * ```
@@ -157,7 +157,7 @@ export interface RawConfig {
    * in the selection set, and makes it non-optional
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {2}
    * config:
    *   nonOptionalTypename: true
    * ```
@@ -171,7 +171,7 @@ export interface RawConfig {
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
    * @example
-   * ```yml
+   * ```yaml {2}
    * config:
    *   useTypeImports: true
    * ```

@@ -1,7 +1,7 @@
 import { GraphQLSchema, introspectionFromSchema } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
-import { getConfigValue } from '../../visitor-plugin-common/src/utils';
+import { getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates a GraphQL introspection file based on your GraphQL schema.
@@ -12,7 +12,7 @@ export interface IntrospectionPluginConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {6}
    * generates:
    *   introspection.json:
    *     plugins:

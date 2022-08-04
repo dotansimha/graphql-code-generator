@@ -21,7 +21,7 @@ export interface UrqlIntrospectionConfig {
    * @default es2015
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {6}
    * generates:
    *   path/to/file.json:
    *     plugins:
@@ -40,7 +40,7 @@ export interface UrqlIntrospectionConfig {
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   useTypeImports: true
    * ```
@@ -53,7 +53,7 @@ export interface UrqlIntrospectionConfig {
    * @description Includes scalar names (instead of an `Any` replacement) in the output when enabled.
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   includeScalars: true
    * ```
@@ -66,7 +66,7 @@ export interface UrqlIntrospectionConfig {
    * @description Includes enums (instead of an `Any` replacement) in the output when enabled.
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   includeEnums: true
    * ```
@@ -79,7 +79,7 @@ export interface UrqlIntrospectionConfig {
    * @description Includes all input objects (instead of an `Any` replacement) in the output when enabled.
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   includeInputs: true
    * ```
@@ -92,7 +92,7 @@ export interface UrqlIntrospectionConfig {
    * @description Includes all directives in the output when enabled.
    *
    * @example
-   * ```yml
+   * ```yaml
    * config:
    *   includeDirectives: true
    * ```

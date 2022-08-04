@@ -1,4 +1,4 @@
-import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor.js';
 import { indent, indentMultiline, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
@@ -26,17 +26,13 @@ import {
   FragmentDefinitionNode,
   GraphQLInterfaceType,
 } from 'graphql';
-import { JavaApolloAndroidPluginConfig } from './plugin';
-import { Imports } from './imports';
+import { JavaApolloAndroidPluginConfig } from './plugin.js';
+import { Imports } from './imports.js';
 import { createHash } from 'crypto';
-import { VisitorConfig } from './visitor-config';
+import { VisitorConfig } from './visitor-config.js';
 import pluralize from 'pluralize';
-import { visitFieldArguments } from './field-arguments';
-
-import { camelCase } from 'change-case-all';
-import { pascalCase } from 'change-case-all';
-
-const { singular, isPlural } = pluralize;
+import { visitFieldArguments } from './field-arguments.js';
+import { camelCase, pascalCase } from 'change-case-all';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -131,19 +127,20 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   private getRootType(operation: string): GraphQLObjectType {
     if (operation === 'query') {
       return this._schema.getQueryType();
-    } else if (operation === 'mutation') {
-      return this._schema.getMutationType();
-    } else if (operation === 'subscription') {
-      return this._schema.getSubscriptionType();
-    } else {
-      return null;
     }
+    if (operation === 'mutation') {
+      return this._schema.getMutationType();
+    }
+    if (operation === 'subscription') {
+      return this._schema.getSubscriptionType();
+    }
+    return null;
   }
 
   private createUniqueClassName(inUse: string[], name: string, count = 0): string {
     const possibleNewName = count === 0 ? name : `${name}${count}`;
 
-    while (inUse.includes(possibleNewName)) {
+    if (inUse.includes(possibleNewName)) {
       return this.createUniqueClassName(inUse, name, count + 1);
     }
 
@@ -195,8 +192,8 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         if (isObject) {
           let childClsName = this.convertName(field.name);
 
-          if (isList && isPlural(childClsName)) {
-            childClsName = singular(childClsName);
+          if (isList && pluralize.isPlural(childClsName)) {
+            childClsName = pluralize.singular(childClsName);
           }
 
           this.transformSelectionSet(
@@ -227,7 +224,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
             rawType: field.type,
             isObject: false,
             isFragment: false,
-            isList: isList,
+            isList,
             type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
@@ -757,20 +754,22 @@ ${childFields
     if (isScalarType(baseType)) {
       if (baseType.name === 'String') {
         return { fn: `readString` };
-      } else if (baseType.name === 'Int') {
-        return { fn: `readInt` };
-      } else if (baseType.name === 'Float') {
-        return { fn: `readDouble` };
-      } else if (baseType.name === 'Boolean') {
-        return { fn: `readBoolean` };
-      } else {
-        return { fn: `readCustomType`, custom: true };
       }
-    } else if (isEnumType(baseType)) {
-      return { fn: `readString` };
-    } else {
-      return { fn: `readObject`, object: baseType.name };
+      if (baseType.name === 'Int') {
+        return { fn: `readInt` };
+      }
+      if (baseType.name === 'Float') {
+        return { fn: `readDouble` };
+      }
+      if (baseType.name === 'Boolean') {
+        return { fn: `readBoolean` };
+      }
+      return { fn: `readCustomType`, custom: true };
     }
+    if (isEnumType(baseType)) {
+      return { fn: `readString` };
+    }
+    return { fn: `readObject`, object: baseType.name };
   }
 
   private buildMapperClass(parentClassName: string, childFields: ChildField[]): JavaDeclarationBlock {
@@ -808,7 +807,8 @@ ${indentMultiline(inner, 2)}
             return fragmentsFieldMapper.map(reader, conditionalType);
           }
         });`;
-      } else if (f.isList) {
+      }
+      if (f.isList) {
         const listReader = readerFn.object
           ? `return listItemReader.${readerFn.fn}(new ResponseReader.ObjectReader<Item>() {
           @Override
@@ -820,18 +820,18 @@ ${indentMultiline(inner, 2)}
         const wrappedList = wrapList(f, f.rawType, listReader);
 
         return `${varDec} reader.readList($responseFields[${index}], ${wrappedList});`;
-      } else if (readerFn.object) {
+      }
+      if (readerFn.object) {
         return `${varDec} reader.readObject($responseFields[${index}], new ResponseReader.ObjectReader<${f.className}>() {
           @Override
           public ${f.className} read(ResponseReader reader) {
             return ${f.fieldName}FieldMapper.map(reader);
           }
         });`;
-      } else {
-        return `${varDec} reader.${readerFn.fn}(${
-          readerFn.custom ? '(ResponseField.CustomTypeField) ' : ''
-        }$responseFields[${index}]);`;
       }
+      return `${varDec} reader.${readerFn.fn}(${
+        readerFn.custom ? '(ResponseField.CustomTypeField) ' : ''
+      }$responseFields[${index}]);`;
     });
 
     const mapperImpl = [
@@ -881,26 +881,30 @@ ${indentMultiline(inner, 2)}
   private _resolveResponseFieldMethodForBaseType(baseType: GraphQLOutputType): { fn: string; custom?: boolean } {
     if (isListType(baseType)) {
       return { fn: `forList` };
-    } else if (isNonNullType(baseType)) {
+    }
+    if (isNonNullType(baseType)) {
       return this._resolveResponseFieldMethodForBaseType(baseType.ofType);
-    } else if (isScalarType(baseType)) {
+    }
+    if (isScalarType(baseType)) {
       if (baseType.name === 'String') {
         return { fn: `forString` };
-      } else if (baseType.name === 'Int') {
-        return { fn: `forInt` };
-      } else if (baseType.name === 'Float') {
-        return { fn: `forDouble` };
-      } else if (baseType.name === 'Boolean') {
-        return { fn: `forBoolean` };
-      } else {
-        this._imports.add(`${this.config.typePackage}.CustomType`);
-        return { fn: `forCustomType`, custom: true };
       }
-    } else if (isEnumType(baseType)) {
-      return { fn: `forEnum` };
-    } else {
-      return { fn: `forObject` };
+      if (baseType.name === 'Int') {
+        return { fn: `forInt` };
+      }
+      if (baseType.name === 'Float') {
+        return { fn: `forDouble` };
+      }
+      if (baseType.name === 'Boolean') {
+        return { fn: `forBoolean` };
+      }
+      this._imports.add(`${this.config.typePackage}.CustomType`);
+      return { fn: `forCustomType`, custom: true };
     }
+    if (isEnumType(baseType)) {
+      return { fn: `forEnum` };
+    }
+    return { fn: `forObject` };
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
@@ -921,12 +925,12 @@ ${indentMultiline(inner, 2)}
 
     const dataClasses = this.transformSelectionSet(
       {
-        className: className,
+        className,
         nonStaticClass: true,
         implements: ['GraphqlFragment'],
         selectionSet: node.selectionSet && node.selectionSet.selections ? node.selectionSet.selections : [],
         result: {},
-        schemaType: schemaType,
+        schemaType,
       },
       false
     );
@@ -1177,11 +1181,14 @@ ${variables
       }
 
       return { name: 'writeCustom', checkNull: false, useMarshaller: false, castTo: 'ResponseField.CustomTypeField' };
-    } else if (isInputObjectType(schemaType)) {
+    }
+    if (isInputObjectType(schemaType)) {
       return { name: 'writeObject', checkNull: true, useMarshaller: true };
-    } else if (isEnumType(schemaType)) {
+    }
+    if (isEnumType(schemaType)) {
       return { name: 'writeString', checkNull: false, useMarshaller: false };
-    } else if (isObjectType(schemaType) || isInterfaceType(schemaType)) {
+    }
+    if (isObjectType(schemaType) || isInterfaceType(schemaType)) {
       return { name: 'writeObject', checkNull: true, useMarshaller: true };
     }
 

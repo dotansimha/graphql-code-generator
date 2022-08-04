@@ -14,7 +14,7 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { loadDocuments } from '@graphql-tools/load';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-import type { Resolvers } from './gql.generated';
+import type { Resolvers } from './gql.generated.js';
 
 const schema = makeExecutableSchema({
   typeDefs: gql`
@@ -83,6 +83,7 @@ const schema = makeExecutableSchema({
       encoding: 'utf-8',
     }
   );
+  console.log('done generating.');
 })().catch(err => {
   console.error(err);
   process.exit(1);

@@ -1,9 +1,9 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, Types, getCachedDocumentNodeFromSchema, oldVisit } from '@graphql-codegen/plugin-helpers';
-import { KotlinResolversVisitor } from './visitor';
+import { KotlinResolversVisitor } from './visitor.js';
 import { buildPackageNameFromPath } from '@graphql-codegen/java-common';
 import { dirname, normalize } from 'path';
-import { KotlinResolversPluginRawConfig } from './config';
+import { KotlinResolversPluginRawConfig } from './config.js';
 
 export const plugin: PluginFunction<KotlinResolversPluginRawConfig> = async (
   schema: GraphQLSchema,

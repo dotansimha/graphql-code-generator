@@ -15,7 +15,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -26,7 +26,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -45,7 +45,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -60,7 +60,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -75,7 +75,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -91,7 +91,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -108,7 +108,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -123,7 +123,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -134,13 +134,27 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsConst?: boolean;
   /**
+   * @description This will cause the generator to emit types for enums only.
+   * @default false
+   *
+   * @exampleMarkdown Override all definition types
+   * ```yaml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyEnums: true
+   * ```
+   */
+  onlyEnums?: boolean;
+  /**
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
    * Interacts well with `preResolveTypes: true`
    * @default false
    *
    * @exampleMarkdown Override all definition types
-   * <!-- TODO: this block loses indentation during generation docs, find why and fix -->
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -155,7 +169,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -172,7 +186,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Allow undefined
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -183,7 +197,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * ## Allow `null` in resolvers:
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -203,7 +217,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *
    * @exampleMarkdown
    * ## Allow undefined
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -213,7 +227,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    *
    * ## Allow `null` in resolvers:
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -232,7 +246,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Disable all export from a file
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -249,7 +263,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Disable description generation
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -266,7 +280,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -286,7 +300,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @example Enable wrapping entire fields
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -304,7 +318,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default T | Promise<T> | (() => T | Promise<T>)
    *
    * @example Only allow values
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -318,7 +332,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description Allow using enum string values directly.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     allowEnumStringTypes: true
    * ```

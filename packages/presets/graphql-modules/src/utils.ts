@@ -79,11 +79,12 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
       if (node.arguments) {
         node.arguments.forEach(findRelated);
       }
-    } else if (node.kind === Kind.NAMED_TYPE) {
+    } else if (
+      node.kind === Kind.NAMED_TYPE &&
       // Named type
-      if (!isGraphQLPrimitive(node.name.value)) {
-        markAsUsed(node.name.value);
-      }
+      !isGraphQLPrimitive(node.name.value)
+    ) {
+      markAsUsed(node.name.value);
     }
   }
 

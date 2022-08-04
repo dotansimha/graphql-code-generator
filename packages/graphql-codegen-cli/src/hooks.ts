@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { debugLog } from './utils/debugging';
+import { debugLog } from './utils/debugging.js';
 import { exec } from 'child_process';
 import { delimiter, sep } from 'path';
 
@@ -19,7 +19,7 @@ function normalizeHooks(
 ): Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]> {
   const keys = Object.keys({
     ...DEFAULT_HOOKS,
-    ...(_hooks || {}),
+    ..._hooks,
   });
 
   return keys.reduce((prev: Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>, hookName: string) => {
@@ -28,19 +28,20 @@ function normalizeHooks(
         ...prev,
         [hookName]: [_hooks[hookName]] as string[],
       };
-    } else if (typeof _hooks[hookName] === 'function') {
+    }
+    if (typeof _hooks[hookName] === 'function') {
       return {
         ...prev,
         [hookName]: [_hooks[hookName]],
       };
-    } else if (Array.isArray(_hooks[hookName])) {
+    }
+    if (Array.isArray(_hooks[hookName])) {
       return {
         ...prev,
         [hookName]: _hooks[hookName] as string[],
       };
-    } else {
-      return prev;
     }
+    return prev;
   }, {} as Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>);
 }
 
@@ -58,6 +59,7 @@ function execShellCommand(cmd: string): Promise<string> {
         if (error) {
           reject(error);
         } else {
+          debugLog(stdout || stderr);
           resolve(stdout || stderr);
         }
       }

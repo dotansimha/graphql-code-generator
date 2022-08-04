@@ -6,5 +6,5 @@
   "access": "restricted",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["@graphql-codegen/testing", "@graphql-codegen/website", "example-*"]
+  "ignore": ["@graphql-codegen/testing", "website", "example-*"]
 }

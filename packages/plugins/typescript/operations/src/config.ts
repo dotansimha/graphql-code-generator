@@ -8,7 +8,7 @@ import { RawDocumentsConfig, AvoidOptionalsConfig } from '@graphql-codegen/visit
  */
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
-   * @description The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}
+   * @description The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d)
    * allows arrays and a single primitive value for list input. This allows to
    * deactivate that behavior to only accept arrays instead of single values. If
    * set to `false`, the definition: `query foo(bar: [Int!]!): Foo` will output
@@ -16,7 +16,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -35,7 +35,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -47,7 +47,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *
    * ## Override only specific definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -66,7 +66,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -82,7 +82,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -99,7 +99,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -118,7 +118,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -137,13 +137,13 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * It will allow you to get everything with one import:
    *
    * ```ts
-   * import { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql'
+   * import { GetClient, GetClientQuery, GetClientQueryVariables } from './GetClient.gql.js'
    * ```
    * @default false
    * @see https://github.com/dotansimha/graphql-code-generator/issues/3949
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * ./typings/api.ts:
    *   plugins:
@@ -166,7 +166,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *
    * @exampleMarkdown
    * ## Allow undefined
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:
@@ -176,7 +176,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    *
    * ## Allow `null` in resolvers:
-   * ```yml
+   * ```yaml
    * generates:
    *  path/to/file.ts:
    *    plugins:

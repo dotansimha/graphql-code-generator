@@ -13,7 +13,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -31,7 +31,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    * @default true
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -54,7 +54,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default "graphql#GraphQLResolveInfo"
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -66,13 +66,13 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   customResolveInfo?: string;
   /**
-   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
+   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics `<TResult, TParent, TContext, TArgs>`
    * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
    *
    * @exampleMarkdown
    * ## Custom Signature
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -84,7 +84,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    * ## With Graphile
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -106,7 +106,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   /**
    * @description Map the usage of a directive into using a specific resolver.
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
    *     directiveResolverMappings:
@@ -120,7 +120,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     allowParentTypeOverride: true
    * ```
@@ -131,7 +131,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     optionalInfoArgument: true
    * ```
@@ -142,7 +142,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Set to `true` in order to allow the Resolver type to be callable
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *  config:
    *    makeResolverTypeCallable: true
    * ```

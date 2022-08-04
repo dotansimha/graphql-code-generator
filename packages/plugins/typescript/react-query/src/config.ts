@@ -7,6 +7,9 @@ export type CustomFetch = { func: string; isReactHook?: boolean } | string;
  * @description This plugin generates `React-Query` Hooks with TypeScript typings.
  *
  * It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+ *
+ * > **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**
+ *
  */
 export interface ReactQueryRawPluginConfig
   extends Omit<
@@ -19,6 +22,7 @@ export interface ReactQueryRawPluginConfig
     | 'importOperationTypesFrom'
     | 'importDocumentNodeExternallyFrom'
     | 'useTypeImports'
+    | 'legacyMode'
   > {
   /**
    * @description Customize the fetcher you wish to use in the generated file. React-Query is agnostic to the data-fetching layer, so you should provide it, or use a custom one.
@@ -37,7 +41,6 @@ export interface ReactQueryRawPluginConfig
    * @description For each generate query hook adds `document` field with a
    * corresponding GraphQL query. Useful for `queryClient.fetchQuery`.
    * @exampleMarkdown
-   * <!-- prettier-ignore -->
    * ```ts
    * queryClient.fetchQuery(
    *   useUserDetailsQuery.getKey(variables),
@@ -92,4 +95,10 @@ export interface ReactQueryRawPluginConfig
    * @description Adds an Infinite Query along side the standard one
    */
   addInfiniteQuery?: boolean;
+
+  /**
+   * @default true
+   * @description If false, it will work with `@tanstack/react-query`, default value is true.
+   */
+  legacyMode?: boolean;
 }

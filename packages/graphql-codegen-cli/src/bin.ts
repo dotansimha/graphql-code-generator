@@ -1,11 +1,12 @@
-import { runCli } from './cli';
-import { cliError } from './utils/cli-error';
+#!/usr/bin/env node
+import { runCli } from './cli.js';
+import { cliError } from './utils/cli-error.js';
 
 const [, , cmd] = process.argv;
 
 runCli(cmd)
-  .then(() => {
-    process.exit(0);
+  .then(returnCode => {
+    process.exit(returnCode);
   })
   .catch(error => {
     cliError(error);

@@ -19,11 +19,13 @@ import {
   isListType,
   isAbstractType,
   GraphQLOutputType,
+  isInputObjectType,
+  GraphQLInputObjectType,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
-import { DEFAULT_SCALARS } from './scalars';
-import { parseMapper } from './mappers';
-import { RawConfig } from './base-visitor';
+import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { parseMapper } from './mappers.js';
+import { RawConfig } from './base-visitor.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -36,11 +38,11 @@ export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
 export function quoteIfNeeded(array: string[], joinWith = ' & '): string {
   if (array.length === 0) {
     return '';
-  } else if (array.length === 1) {
-    return array[0];
-  } else {
-    return `(${array.join(joinWith)})`;
   }
+  if (array.length === 1) {
+    return array[0];
+  }
+  return `(${array.join(joinWith)})`;
 }
 
 export function block(array) {
@@ -51,9 +53,8 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
   if (skipNumericCheck) {
     if (typeof value === 'number') {
       return `${value}`;
-    } else {
-      return `'${value}'`;
     }
+    return `'${value}'`;
   }
 
   if (
@@ -293,7 +294,7 @@ export function buildScalars(
       .map(typeName => typeMap[typeName])
       .filter(type => isScalarType(type))
       .map((scalarType: GraphQLScalarType) => {
-        const name = scalarType.name;
+        const { name } = scalarType;
         if (typeof scalarsMapping === 'string') {
           const value = parseMapper(scalarsMapping + '#' + name, name);
           result[name] = value;
@@ -380,14 +381,17 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
         getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
     );
 
-    if (match) {
+    if (
+      match &&
       // recursively merge all selection sets
-      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        selection2 = {
-          ...selection2,
-          selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
-        };
-      }
+      match.kind === 'Field' &&
+      match.selectionSet &&
+      selection2.selectionSet
+    ) {
+      selection2 = {
+        ...selection2,
+        selectionSet: mergeSelectionSets(match.selectionSet, selection2.selectionSet),
+      };
     }
 
     newSelections.push(selection2);
@@ -418,9 +422,11 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
     return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
-  } else if (isObjectType(type)) {
+  }
+  if (isObjectType(type)) {
     return [type];
-  } else if (isAbstractType(type)) {
+  }
+  if (isAbstractType(type)) {
     return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
   }
 
@@ -436,6 +442,7 @@ type WrapModifiersOptions = {
   wrapOptional(type: string): string;
   wrapArray(type: string): string;
 };
+
 export function wrapTypeWithModifiers(
   baseType: string,
   type: GraphQLOutputType | GraphQLNamedType,
@@ -493,4 +500,27 @@ function clearOptional(str: string): string {
 
 function stripTrailingSpaces(str: string): string {
   return str.replace(/ +\n/g, '\n');
+}
+
+const isOneOfTypeCache = new WeakMap<GraphQLNamedType, boolean>();
+export function isOneOfInputObjectType(
+  namedType: GraphQLNamedType | null | undefined
+): namedType is GraphQLInputObjectType {
+  if (!namedType) {
+    return false;
+  }
+  let isOneOfType = isOneOfTypeCache.get(namedType);
+
+  if (isOneOfType !== undefined) {
+    return isOneOfType;
+  }
+
+  isOneOfType =
+    isInputObjectType(namedType) &&
+    ((namedType as unknown as Record<'isOneOf', boolean | undefined>).isOneOf ||
+      namedType.astNode?.directives?.some(d => d.name.value === 'oneOf'));
+
+  isOneOfTypeCache.set(namedType, isOneOfType);
+
+  return isOneOfType;
 }

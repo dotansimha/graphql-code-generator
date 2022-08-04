@@ -2,29 +2,31 @@
   "name": "@graphql-codegen/testing",
   "version": "1.17.7",
   "description": "GraphQL Codegen Testing Utils",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
     },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+    "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "scripts": {
-    "lint": "eslint **/*.ts",
-    "prepack": "bob prepack"
+    "lint": "eslint **/*.ts"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",
@@ -38,15 +40,22 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.4.2",
+    "@graphql-codegen/plugin-helpers": "^2.6.1",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
-    "graphql-helix": "1.12.0",
-    "nock": "13.2.4",
-    "tslib": "~2.3.0"
+    "graphql-helix": "1.13.0",
+    "nock": "13.2.8",
+    "tslib": "~2.4.0"
+  },
+  "devDependencies": {
+    "@types/lz-string": "1.3.34"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
+  },
+  "type": "module",
+  "bob": {
+    "check": false
   }
 }
