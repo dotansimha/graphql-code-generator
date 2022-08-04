@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.5.0
+
+### Minor Changes
+
+- [#6796](https://github.com/dotansimha/graphql-code-generator/pull/6796) [`8b6e8e664`](https://github.com/dotansimha/graphql-code-generator/commit/8b6e8e6648f2d95cc40873cfc008a545d8a9c46f) Thanks [@kamilkisiela](https://github.com/kamilkisiela)! - Introduce requireRootResolvers flag
+
 ## 2.4.2
 
 ### Patch Changes
