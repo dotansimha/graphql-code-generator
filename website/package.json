@@ -43,7 +43,7 @@
     "@graphql-codegen/core": "2.6.0",
     "@graphql-codegen/flow": "2.3.2",
     "@graphql-codegen/flow-operations": "2.3.2",
-    "@graphql-codegen/flow-resolvers": "2.3.2",
+    "@graphql-codegen/flow-resolvers": "2.4.0",
     "@graphql-codegen/fragment-matcher": "3.3.0",
     "@graphql-codegen/import-types-preset": "2.2.2",
     "@graphql-codegen/introspection": "2.2.0",
