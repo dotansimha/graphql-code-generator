@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.11.4
+
+### Patch Changes
+
+- 2c6934084: experiment with new cool toys
+
 ## 2.11.3
 
 ### Patch Changes
