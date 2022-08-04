@@ -35,6 +35,7 @@ jobs:
           commit: 'chore(release): update monorepo packages versions'
           title: 'Upcoming Release Changes'
           createGithubReleases: aggregate
+          githubReleaseName: 'Release ${{ steps.vars.outputs.sha_short }} (from ${{ steps.vars.outputs.branch }})'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
