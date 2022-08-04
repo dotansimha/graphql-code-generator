@@ -1,3 +1,5 @@
+import { Callout } from '@theguild/components'
+
 # Prettier & Linters
 
 The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other linters, to apply your custom code style and formatting rules.
@@ -9,6 +11,15 @@ Differences can be measured in several seconds for every run on big projects.
 [You can read the complete documentation of lifecycle hooks here](/docs/config-reference/lifecycle-hooks)
 
 ## Prettier
+
+<Callout type="warning" emoji="⚠️">
+
+**Using `--check` dry-run mode with prettyfied generated files**
+
+Because the [`--check` dry-run mode](/docs/config-reference/codegen-config#dry-run-mode) is comparing local files with in-memory generated content, projects that runs Prettier on files generated with codegen will always end-up returning
+all files as stale.
+
+</Callout>
 
 You can run it per each file:
 
