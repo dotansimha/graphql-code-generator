@@ -1,0 +1,11 @@
+schema: https://swapi-graphql.netlify.app/.netlify/functions/index
+documents:
+  - 'src/**/*.tsx'
+  - '!src/gql/**/*'
+emitLegacyCommonJSImports: false
+generates:
+  ./src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      # define which module you want to import your gql function from
+      augmentedModuleName: '@apollo/client'
