@@ -7,4 +7,4 @@ import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
  *
  * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
  */
-export interface FlowResolversPluginConfig extends RawResolversConfig { }
+export interface FlowResolversPluginConfig extends RawResolversConfig {}
