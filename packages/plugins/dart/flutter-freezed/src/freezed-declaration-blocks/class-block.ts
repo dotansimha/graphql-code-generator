@@ -28,16 +28,17 @@ export class FreezedDeclarationBlock {
   _decorators: string[] = [];
 
   /** the name of the class */
-  _name: string = null;
+  _name: string | undefined;
 
   /** a list of default constructor and named Constructors used create a Freezed union/sealed class */
   _factoryBlocks: FreezedFactoryBlock[] = [];
 
   /** the shape is the content of the block */
-  _shape: string = null;
+  _shape: string | undefined;
 
   /** the block is the final structure that is generated */
-  _block: string = null;
+  _block: string | undefined;
+
   private _freezedConfigValue: FreezedConfigValue;
 
   constructor(
@@ -48,10 +49,10 @@ export class FreezedDeclarationBlock {
     this._config = _config;
     this._freezedFactoryBlockRepository = _freezedFactoryBlockRepository;
     this._node = _node;
+    this._freezedConfigValue = new FreezedConfigValue(this._config, this._node.name.value);
   }
 
   public init(): FreezedDeclarationBlock {
-    this._freezedConfigValue = new FreezedConfigValue(this._config, this._node.name.value);
     this.setComment().setDecorators().setName().setFactoryBlocks().setShape().setBlock();
     return this;
   }
@@ -117,9 +118,8 @@ export class FreezedDeclarationBlock {
 
   private setFactoryBlocks(): FreezedDeclarationBlock {
     if (this._node.kind === Kind.UNION_TYPE_DEFINITION) {
-      this._factoryBlocks = this._node.types?.map((_type: NamedTypeNode) =>
-        new FreezedFactoryBlock(this._config, this._node).init()
-      );
+      this._factoryBlocks =
+        this._node.types?.map((_type: NamedTypeNode) => new FreezedFactoryBlock(this._config, this._node).init()) ?? [];
     } else {
       /*
         for `ObjectTypeDefinitionNode` and `InputObjectTypeDefinitionNode` nodes,
@@ -128,12 +128,13 @@ export class FreezedDeclarationBlock {
         when we are merging inputs or generating freezed union/sealed classes
         for GraphQL union types
       */
-      this._factoryBlocks = this._node.fields?.map((_field: FieldDefinitionNode | InputValueDefinitionNode) =>
-        this._freezedFactoryBlockRepository.register(
-          this._node.name.value,
-          new FreezedFactoryBlock(this._config, this._node).init()
-        )
-      );
+      this._factoryBlocks =
+        this._node.fields?.map((_field: FieldDefinitionNode | InputValueDefinitionNode) =>
+          this._freezedFactoryBlockRepository.register(
+            this._node.name.value,
+            new FreezedFactoryBlock(this._config, this._node).init()
+          )
+        ) ?? [];
     }
     return this;
   }
@@ -142,8 +143,8 @@ export class FreezedDeclarationBlock {
     let shape = '';
     // some helper variables
     const name = this._node.name.value;
-    let namedConstructor: string = null;
-    let factoryBlockKey: string = null;
+    let namedConstructor: string | undefined;
+    let factoryBlockKey: string | undefined;
 
     // append private empty constructor
     if (this._freezedConfigValue.get('privateEmptyConstructor')) {
@@ -158,7 +159,7 @@ export class FreezedDeclarationBlock {
     // append tokens which will be used to retrieve the factory blocks
     // from the FreezedFactoryBlockRepository
     if (this._node.kind === Kind.UNION_TYPE_DEFINITION) {
-      this._node.types.forEach(type => {
+      this._node?.types?.forEach(type => {
         namedConstructor = type.name.value;
         factoryBlockKey = namedConstructor;
         shape += `==>factory==>${factoryBlockKey}==>${'union_factory'}==>${name}==>${namedConstructor}\n`;
@@ -222,7 +223,7 @@ export class FreezedDeclarationBlock {
 
   /** returns the block */
   public toString(): string {
-    if (this._block === null) {
+    if (!this._block) {
       throw new Error('setShape must be called before calling toString()');
     }
     return this._block;

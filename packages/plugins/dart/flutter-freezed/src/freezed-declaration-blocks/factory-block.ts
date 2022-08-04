@@ -19,13 +19,13 @@ export class FreezedFactoryBlock {
   _decorators: string[] = [];
 
   /** the key of the original type name */
-  _key: string = null;
+  _key: string | undefined;
 
   /** the name of the class */
-  _name: string = null;
+  _name: string | undefined;
 
   /** the namedConstructor is used for GraphQL Union types or if mergeInput is true */
-  _namedConstructor?: string = null;
+  _namedConstructor: string | undefined;
 
   /** a list of interfaces to implements */
   // _implements: string[] = [];
@@ -39,10 +39,10 @@ export class FreezedFactoryBlock {
   _parameters: FreezedParameterBlock[] = [];
 
   /** the shape is the content of the block */
-  _shape: string = null;
+  _shape: string | undefined;
 
   /** the block is the final structure that is generated */
-  _block: string = null;
+  _block: string | undefined;
 
   private _freezedConfigValue: FreezedConfigValue;
 
@@ -90,7 +90,7 @@ export class FreezedFactoryBlock {
     return this;
   }
 
-  setNamedConstructor(namedConstructor: string = null): FreezedFactoryBlock {
+  setNamedConstructor(namedConstructor: string | undefined): FreezedFactoryBlock {
     if (namedConstructor) {
       this._namedConstructor = camelCase(namedConstructor);
     }
@@ -103,9 +103,10 @@ export class FreezedFactoryBlock {
       : ['class_factory_parameter'];
 
     if (this._node.kind !== Kind.UNION_TYPE_DEFINITION) {
-      this._parameters = this._node.fields.map((field: FieldDefinitionNode | InputValueDefinitionNode) =>
-        new FreezedParameterBlock(this._config, appliesOn, this._node, field).init()
-      );
+      this._parameters =
+        this._node?.fields?.map((field: FieldDefinitionNode | InputValueDefinitionNode) =>
+          new FreezedParameterBlock(this._config, appliesOn, this._node, field).init()
+        ) ?? [];
     }
     return this;
   }
@@ -149,7 +150,7 @@ export class FreezedFactoryBlock {
     block += indent(`}) = `);
 
     // but first decide whether prefix the key with an underscore
-    if (this._namedConstructor === null) {
+    if (!this._namedConstructor) {
       block += '_';
     }
 
@@ -163,7 +164,7 @@ export class FreezedFactoryBlock {
 
   /** returns the block */
   public toString(): string {
-    if (this._block === null) {
+    if (!this._block) {
       throw new Error('FreezedFactoryBlock: setShape must be called before calling toString()');
     }
     return this._block;

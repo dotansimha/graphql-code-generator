@@ -20,20 +20,20 @@ export class FreezedParameterBlock {
   _decorators: string[] = [];
 
   /** mark the property as required */
-  _required?: boolean = null;
+  _required: boolean | undefined;
 
   /** mark the property as required */
   // _type?: ParameterType = 'named';
-  _type: string = null;
+  _type: string | undefined;
 
   /** the name of the property */
-  _name: string = null;
+  _name: string | undefined;
 
   /** the shape is the content of the block */
-  _shape: string = null;
+  _shape: string | undefined;
 
   /** the block is the final structure that is generated */
-  _block: string = null;
+  _block: string | undefined;
 
   private _freezedConfigValue: FreezedConfigValue;
 
@@ -150,7 +150,7 @@ export class FreezedParameterBlock {
   private isNamedType = (type?: TypeNode): type is NamedTypeNode => type?.kind === 'NamedType';
 
   private scalar(_scalar: string): string {
-    if (this._config.customScalars[_scalar]) {
+    if (this._config?.customScalars?.[_scalar]) {
       return this._config.customScalars[_scalar];
     }
     if (DART_SCALARS[_scalar]) {
@@ -161,7 +161,7 @@ export class FreezedParameterBlock {
 
   /** returns the block */
   public toString(): string {
-    if (this._block === null) {
+    if (!this._block) {
       throw new Error('FreezedParameterBlock: setShape must be called before calling toString()');
     }
     return this._block;

@@ -65,7 +65,7 @@ export function transformDefinition(
   node: NodeType
 ) {
   // ignore these...
-  if (['Query', 'Mutation', 'Subscription', ...config.ignoreTypes].includes(node.name.value)) {
+  if (['Query', 'Mutation', 'Subscription', ...(config?.ignoreTypes ?? [])].includes(node.name.value)) {
     return '';
   }
 
@@ -77,7 +77,11 @@ export function transformDefinition(
  * for a specific type if given typeName
  * or else fallback to the global FreezedConfig value
  */
-export function getFreezedConfigValue(option: OptionName, config: FreezedPluginConfig, typeName: string = null) {
+export function getFreezedConfigValue(
+  option: OptionName,
+  config: FreezedPluginConfig,
+  typeName?: string | undefined
+): any {
   if (typeName) {
     return config?.typeSpecificFreezedConfig?.[typeName]?.config?.[option] ?? getFreezedConfigValue(option, config);
   }
@@ -90,8 +94,8 @@ export function getFreezedConfigValue(option: OptionName, config: FreezedPluginC
 export function getCustomDecorators(
   config: FreezedPluginConfig,
   appliesOn: ApplyDecoratorOn[],
-  nodeName: string = null,
-  fieldName: string = null
+  nodeName?: string | undefined,
+  fieldName?: string | undefined
 ): CustomDecorator {
   const filteredCustomDecorators: CustomDecorator = {};
   const globalCustomDecorators = config?.globalFreezedConfig?.customDecorators ?? {};
@@ -103,7 +107,7 @@ export function getCustomDecorators(
     customDecorators = { ...customDecorators, ...typeSpecificCustomDecorators };
 
     if (fieldName) {
-      const fieldSpecificCustomDecorators = typeConfig?.fields[fieldName]?.customDecorators ?? {};
+      const fieldSpecificCustomDecorators = typeConfig?.fields?.[fieldName]?.customDecorators ?? {};
       customDecorators = { ...customDecorators, ...fieldSpecificCustomDecorators };
     }
   }
@@ -121,8 +125,8 @@ export function getCustomDecorators(
 
 export function transformCustomDecorators(
   customDecorators: CustomDecorator,
-  node: NodeType = null,
-  field: FieldType = null
+  node?: NodeType | undefined,
+  field?: FieldType | undefined
 ): string[] {
   let result: string[] = [];
 
@@ -185,10 +189,10 @@ function directiveToString(directive: ConstDirectiveNode, customDecorators: Cust
     // if the args is not empty
     if (args !== []) {
       // returns "@directiveName(argName: argValue, argName: argValue ...)"
-      return `@${directive.name.value}(${args.join(', ')})`;
+      return `@${directive.name.value}(${args?.join(', ')})`;
     }
   } else if (value.mapsToFreezedAs === '@Default') {
-    const defaultValue = directive?.arguments[argToInt(value?.arguments[0])];
+    const defaultValue = directive?.arguments?.[argToInt(value?.arguments?.[0] ?? '0')];
     if (defaultValue) {
       return `@Default(value: ${defaultValue})`;
     }
@@ -211,7 +215,7 @@ function argToInt(arg: string) {
  * or else fallback to the global FreezedConfig value
  */
 export class FreezedConfigValue {
-  constructor(private _config: FreezedPluginConfig, private _typeName: string = null) {
+  constructor(private _config: FreezedPluginConfig, private _typeName: string | undefined) {
     this._config = _config;
     this._typeName = _typeName;
   }
@@ -250,7 +254,7 @@ export class FreezedImportBlock {
    * if modular is set to, returns the value of fileName from the config
    */
   getFileName(fileName?: string) {
-    return this._config.modular ? this._config.fileName : fileName.replace('.dart', '');
+    return this._config.modular ? this._config.fileName : fileName?.replace('.dart', '');
   }
 }
 
@@ -266,7 +270,7 @@ export class FreezedFactoryBlockRepository {
     return value;
   }
 
-  retrieve(key: string, appliesOn: string, name: string, typeName: string = null): FreezedFactoryBlock {
+  retrieve(key: string, appliesOn: string, name: string, typeName: string | undefined): FreezedFactoryBlock {
     return this._store[key]
       .setDecorators(appliesOn, key)
       .setKey(key)
