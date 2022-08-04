@@ -8,9 +8,10 @@ import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-com
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
-    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const { baseOutputDir } = options;
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
+    const requireRootResolvers = getConfigValue(options?.presetConfig.requireRootResolvers, false);
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -102,6 +103,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importNamespace: importTypesNamespace,
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'namespace',
+                requireRootResolvers,
                 shouldDeclare,
                 schema,
                 baseVisitor,
