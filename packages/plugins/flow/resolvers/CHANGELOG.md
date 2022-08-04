@@ -1,5 +1,11 @@
 # @graphql-codegen/flow-resolvers
 
+## 2.4.0
+
+### Minor Changes
+
+- da252a6f3: Expose plugin config type definition as same convension as typescript-resolvers
+
 ## 2.3.2
 
 ### Patch Changes
