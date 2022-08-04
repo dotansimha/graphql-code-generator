@@ -27,6 +27,13 @@ jobs:
       - name: Install Dependencies using Yarn
         run: yarn install && git checkout yarn.lock
 
+      - name: set version variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: dotansimha/changesets-action@262e957f99be29087d2b13afa32a5d579bf1d080
