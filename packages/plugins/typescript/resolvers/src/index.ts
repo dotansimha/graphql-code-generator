@@ -4,10 +4,11 @@ import {
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
-import { TypeScriptResolversVisitor } from './visitor';
-import { TypeScriptResolversPluginConfig } from './config';
+import { GraphQLSchema } from 'graphql';
+import { TypeScriptResolversVisitor } from './visitor.js';
+import { TypeScriptResolversPluginConfig } from './config.js';
 
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -58,27 +59,30 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
             }} from '${parsedMapper.source}';`
           );
         }
-        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
+        prepend.push(`export${config.useTypeImports ? ' type' : ''} { ${resolverFnName} };`);
       } else {
         defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
       }
-      defsToInclude.push(resolverWithResolve);
-      defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+
+      if (config.makeResolverTypeCallable) {
+        defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
+      } else {
+        defsToInclude.push(resolverWithResolve);
+        defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+      }
+
       directiveResolverMappings[directiveName] = resolverTypeName;
     }
   }
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  const visitor = new TypeScriptResolversVisitor(
-    { ...config, directiveResolverMappings: directiveResolverMappings },
-    transformedSchema
-  );
+  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
 
   // runs visitor
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const optionalSignForInfoArg = visitor.config.optionalInfoArgument ? '?' : '';
   const legacyStitchingResolverType = `
@@ -88,7 +92,7 @@ export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
 };`;
   const newStitchingResolverType = `
 export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
+  selectionSet: string | ((fieldNode: FieldNode) => SelectionSetNode);
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
   const stitchingResolverType = `export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;`;
@@ -123,10 +127,17 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
     `);
   }
 
-  defsToInclude.push(resolverWithResolve);
+  if (!config.makeResolverTypeCallable) {
+    defsToInclude.push(resolverWithResolve);
+  }
+
   if (noSchemaStitching) {
-    // Resolver = ResolverFn | ResolverWithResolve;
-    defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+    const defs = config.makeResolverTypeCallable
+      ? // Resolver = ResolverFn
+        `${resolverType} ${resolverFnUsage};`
+      : // Resolver = ResolverFn | ResolverWithResolve
+        `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`;
+    defsToInclude.push(defs);
   } else {
     // StitchingResolver
     // Resolver =
@@ -140,10 +151,11 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         stitchingResolverType,
         resolverType,
         `  | ${resolverFnUsage}`,
-        `  | ${resolverWithResolveUsage}`,
+        config.makeResolverTypeCallable ? `` : `  | ${resolverWithResolveUsage}`,
         `  | ${stitchingResolverUsage};`,
       ].join('\n')
     );
+    imports.push('SelectionSetNode', 'FieldNode');
   }
 
   if (config.customResolverFn) {
@@ -185,7 +197,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info${optionalSignForInfoArg}: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,

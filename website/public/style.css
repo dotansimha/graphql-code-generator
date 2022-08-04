@@ -1,0 +1,7 @@
+@tailwind components;
+@tailwind utilities;
+
+/* quick fix for menu on mobile */
+.nextra-sidebar-search {
+  display: none;
+}

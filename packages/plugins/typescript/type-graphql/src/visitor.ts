@@ -1,5 +1,5 @@
 import { indent, DeclarationBlock, AvoidOptionalsConfig } from '@graphql-codegen/visitor-plugin-common';
-import { TypeGraphQLPluginConfig } from './config';
+import { TypeGraphQLPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
   FieldDefinitionNode,
@@ -67,16 +67,15 @@ type DecoratorOptions = { [key: string]: string };
 function formatDecoratorOptions(options: DecoratorOptions, isFirstArgument = true) {
   if (!Object.keys(options).length) {
     return '';
-  } else {
-    return (
-      (isFirstArgument ? '' : ', ') +
-      ('{ ' +
-        Object.entries(options)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(', ') +
-        ' }')
-    );
   }
+  return (
+    (isFirstArgument ? '' : ', ') +
+    ('{ ' +
+      Object.entries(options)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ') +
+      ' }')
+  );
 }
 
 const FIX_DECORATOR_SIGNATURE = `type FixDecorator<T> = T;`;
@@ -85,10 +84,10 @@ function getTypeGraphQLNullableValue(type: Type): string | undefined {
   if (type.isNullable) {
     if (type.isItemsNullable) {
       return "'itemsAndList'";
-    } else {
-      return 'true';
     }
-  } else if (type.isItemsNullable) {
+    return 'true';
+  }
+  if (type.isItemsNullable) {
     return "'items'";
   }
 
@@ -121,10 +120,10 @@ export class TypeGraphQLVisitor<
         arguments: 'ArgsType',
         field: 'Field',
         input: 'InputType',
-        ...(pluginConfig.decoratorName || {}),
+        ...pluginConfig.decoratorName,
       },
       decorateTypes: pluginConfig.decorateTypes || undefined,
-      ...(additionalConfig || {}),
+      ...additionalConfig,
     } as TParsedConfig);
     autoBind(this);
 
@@ -142,7 +141,10 @@ export class TypeGraphQLVisitor<
         null,
         enumNames,
         this.config.enumPrefix,
-        this.config.enumValues
+        this.config.enumValues,
+        undefined,
+        undefined,
+        'Maybe'
       )
     );
     this.setDeclarationBlockConfig({
@@ -162,7 +164,7 @@ export class TypeGraphQLVisitor<
 
     if (node.description) {
       // Add description as TypeGraphQL description instead of comment
-      decoratorOptions.description = escapeString((node.description as unknown) as string);
+      decoratorOptions.description = escapeString(node.description as unknown as string);
       (node as any).description = undefined;
     }
 
@@ -175,6 +177,10 @@ export class TypeGraphQLVisitor<
 
   public getFixDecoratorDefinition(): string {
     return `${this.getExportPrefix()}${FIX_DECORATOR_SIGNATURE}`;
+  }
+
+  getMaybeWrapper() {
+    return 'Maybe';
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode): string {
@@ -192,16 +198,15 @@ export class TypeGraphQLVisitor<
 
         if (this.hasTypeDecorators(name)) {
           return this.getArgumentsObjectTypeDefinition(node, name, field);
-        } else {
-          return this.typescriptVisitor.getArgumentsObjectTypeDefinition(node, name, field);
         }
+        return this.typescriptVisitor.getArgumentsObjectTypeDefinition(node, name, field);
       })
       .join('\n\n');
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    const isGraphQLType = GRAPHQL_TYPES.includes((node.name as unknown) as string);
-    if (!isGraphQLType && !this.hasTypeDecorators((node.name as unknown) as string)) {
+    const isGraphQLType = GRAPHQL_TYPES.includes(node.name as unknown as string);
+    if (!isGraphQLType && !this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.ObjectTypeDefinition(node, key, parent);
     }
 
@@ -232,7 +237,7 @@ export class TypeGraphQLVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.InputObjectTypeDefinition(node);
     }
 
@@ -279,7 +284,7 @@ export class TypeGraphQLVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.InterfaceTypeDefinition(node, key, parent);
     }
 
@@ -322,12 +327,14 @@ export class TypeGraphQLVisitor<
         isItemsNullable: false,
         isScalar: SCALARS.includes(typeNode.name.value),
       };
-    } else if (typeNode.kind === 'NonNullType') {
+    }
+    if (typeNode.kind === 'NonNullType') {
       return {
         ...this.parseType(typeNode.type),
         isNullable: false,
       };
-    } else if (typeNode.kind === 'ListType') {
+    }
+    if (typeNode.kind === 'ListType') {
       return {
         ...this.parseType(typeNode.type),
         isArray: true,
@@ -346,15 +353,16 @@ export class TypeGraphQLVisitor<
       if (TYPE_GRAPHQL_SCALARS.includes(type)) {
         // This is a TypeGraphQL type
         return `TypeGraphQL.${type}`;
-      } else if (global[type]) {
+      }
+      if (global[type]) {
         // This is a JS native type
         return type;
-      } else if (this.scalars[type]) {
+      }
+      if (this.scalars[type]) {
         // This is a type specified in the configuration
         return this.scalars[type];
-      } else {
-        throw new Error(`Unknown scalar type ${type}`);
       }
+      throw new Error(`Unknown scalar type ${type}`);
     });
 
     return { type, isNullable, isArray, isScalar, isItemsNullable: isArray && isSingularTypeNullable };
@@ -377,7 +385,7 @@ export class TypeGraphQLVisitor<
     }
 
     const fieldDecorator = this.config.decoratorName.field;
-    let typeString = (node.type as any) as string;
+    let typeString = node.type as any as string;
 
     const type = this.parseType(typeString);
 
@@ -400,19 +408,24 @@ export class TypeGraphQLVisitor<
 
     typeString = this.fixDecorator(type, typeString);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   InputValueDefinition(
     node: InputValueDefinitionNode,
     key?: number | string,
     parent?: any,
-    path?: any,
-    ancestors?: TypeDefinitionNode[]
+    path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
   ): string {
     const parentName = ancestors?.[ancestors.length - 1].name.value;
     if (parent && !this.hasTypeDecorators(parentName)) {
-      return this.typescriptVisitor.InputValueDefinition(node, key, parent);
+      return this.typescriptVisitor.InputValueDefinition(node, key, parent, path, ancestors);
     }
 
     const fieldDecorator = this.config.decoratorName.field;
@@ -443,11 +456,16 @@ export class TypeGraphQLVisitor<
       ? this.buildTypeString(type)
       : this.fixDecorator(type, rawType as string);
 
-    return decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);
+    return (
+      decorator +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${nameString}${type.isNullable ? '?' : '!'}: ${typeString};`
+      )
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    if (!this.hasTypeDecorators((node.name as unknown) as string)) {
+    if (!this.hasTypeDecorators(node.name as unknown as string)) {
       return this.typescriptVisitor.EnumTypeDefinition(node);
     }
 

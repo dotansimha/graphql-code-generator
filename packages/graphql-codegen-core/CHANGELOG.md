@@ -1,5 +1,74 @@
 # @graphql-codegen/core
 
+## 2.6.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.5.1
+
+### Patch Changes
+
+- cb9adeb96: Cache validation of documents
+- Updated dependencies [cb9adeb96]
+  - @graphql-codegen/plugin-helpers@2.4.1
+
+## 2.5.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.4.0
+
+### Minor Changes
+
+- b61dc57cf: feat(core): add graphql@16 in peer dependencies
+
+### Patch Changes
+
+- 8643b3bf3: Add GraphQL 16 as a peerDependency
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.3.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.2.0
+
+### Minor Changes
+
+- 7c60e5acc: feat(core): ability to skip some specific validation rules with skipDocumentsValidation option
+
+### Patch Changes
+
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.1.0
 
 ### Minor Changes

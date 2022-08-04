@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
@@ -552,13 +552,61 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
+export function useFeedQuery(options?: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'>) {
+  return Urql.useQuery<FeedQuery, FeedQueryVariables>({ query: FeedDocument, ...options });
 };`);
 
       expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation() {
   return Urql.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument);
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate hooks for query with required arguments', async () => {
+      const documents = parse(/* GraphQL */ `
+        query RequiredArg($feedType: FeedType!, $limit: Int = 10) {
+          feed(type: $feedType, limit: $limit) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false },
+        { outputFile: 'graphql.tsx' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useRequiredArgQuery(options: Omit<Urql.UseQueryArgs<RequiredArgQueryVariables>, 'query'>) {
+  return Urql.useQuery<RequiredArgQuery, RequiredArgQueryVariables>({ query: RequiredArgDocument, ...options });
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate hooks for query with default value arguments', async () => {
+      const documents = parse(/* GraphQL */ `
+        query DefaultValueArg($feedType: FeedType! = "HOT", $limit: Int) {
+          feed(type: $feedType, limit: $limit) {
+            id
+          }
+        }
+      `);
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false },
+        { outputFile: 'graphql.tsx' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useDefaultValueArgQuery(options?: Omit<Urql.UseQueryArgs<DefaultValueArgQueryVariables>, 'query'>) {
+  return Urql.useQuery<DefaultValueArgQuery, DefaultValueArgQueryVariables>({ query: DefaultValueArgDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -635,6 +683,31 @@ export function useSubmitRepositoryMutation() {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toContain(`export function useTest(`);
+    });
+
+    it('should respect dedupeOperationSuffix for hooks', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query testQuery {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, dedupeOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export function useTestQuery(`);
     });
 
     it('should output warning if documentMode = external and importDocumentNodeExternallyFrom is not set', async () => {
@@ -740,7 +813,13 @@ export function useSubmitRepositoryMutation() {
       expect(content.content).toContain('Operations.TestQuery');
       expect(content.content).toContain('Operations.TestQueryVariables');
 
+      expect(content.content).not.toContain('Urql.UseOperations');
+      expect(content.content).toContain('Urql.UseQueryArgs');
+      expect(content.content).toContain('Urql.useQuery');
+
       await validateTypeScript(content, schema, docs, {});
+
+      expect(mergeOutputs([content])).toMatchSnapshot();
     });
   });
 });

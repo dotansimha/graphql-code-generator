@@ -1,37 +1,27 @@
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import {
   Types,
   PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema } from 'graphql';
-import { FlowResolversVisitor } from './visitor';
+import { GraphQLSchema } from 'graphql';
+import { FlowResolversPluginConfig } from './config';
+import { FlowResolversVisitor } from './visitor.js';
 
-/**
- * @description This plugin generates resolvers signature based on your `GraphQLSchema`.
- *
- * It generates types for your entire schema: types, input types, enum, interface, scalar and union.
- *
- * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
- */
-export interface RawFlowResolversConfig extends RawResolversConfig {}
-
-export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<FlowResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawFlowResolversConfig
+  config: FlowResolversPluginConfig
 ) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
-
-  const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = oldVisit(astNode, { leave: visitor });
 
   const defsToInclude: string[] = [visitor.getResolverTypeWrapperSignature()];
 
@@ -112,8 +102,10 @@ ${defsToInclude.join('\n')}
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
 
   if (hasScalars()) {
-    imports.push('type GraphQLScalarTypeConfig');
+    imports.push('type GraphQLScalarType', 'type GraphQLScalarTypeConfig');
   }
+
+  const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
   if (showUnusedMappers && unusedMappers.length) {
     // eslint-disable-next-line no-console

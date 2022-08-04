@@ -3,10 +3,10 @@ export type ModulesConfig = {
    * @name baseTypesPath
    * @type string
    * @description Required, should point to the base schema types file.
-   * The key of the output is used a the base path for this file.
+   * The key of the output is used a base path for this file.
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
@@ -20,7 +20,7 @@ export type ModulesConfig = {
   /**
    * @name importBaseTypesFrom
    * @type string
-   * @description Overrides the package import for the base types. Use this if you are within a monorepo and you wish
+   * @description Overrides the package import for the base types. Use this if you are within a monorepo, and you wish
    * to import the base types directly from a different package, and not from a relative path.
    *
    */
@@ -32,7 +32,7 @@ export type ModulesConfig = {
    * @default process.cwd()
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
@@ -51,7 +51,7 @@ export type ModulesConfig = {
    * @default Types
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules
@@ -68,18 +68,6 @@ export type ModulesConfig = {
    * @type string
    * @description Required, sets the file name for the generated files.
    *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    filename: types.ts
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
    */
   filename: string;
   /**
@@ -92,18 +80,6 @@ export type ModulesConfig = {
    * `prefix`: will prefix all types from a specific module with the module name.
    * `none`: will skip encapsulation, and generate type as-is.
    *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    filename: types.ts
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
    */
   encapsulateModuleTypes: 'prefix' | 'namespace' | 'none';
   /**
@@ -126,4 +102,13 @@ export type ModulesConfig = {
    * ```
    */
   requireRootResolvers?: boolean;
+  /**
+   * @name useGraphQLModules
+   * @type boolean
+   * @default true
+   * @description By default, the generated types will generate some code specific to `graphql-modules` library.
+   *
+   * If you are not using GraphQL-Modules, you can disable this feature by setting this to `false`.
+   */
+  useGraphQLModules?: boolean;
 };

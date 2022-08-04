@@ -67,6 +67,7 @@
       ],
       "@graphql-codegen/c-sharp": ["packages/plugins/c-sharp/c-sharp/src/index.ts"],
       "@graphql-codegen/c-sharp-apollo": ["packages/plugins/c-sharp/apollo-dot-net/src/index.ts"],
+      "@graphql-codegen/c-sharp-common": ["packages/plugins/c-sharp/c-sharp-common/src/index.ts"],
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],
       "@graphql-codegen/near-operation-file-preset": ["packages/presets/near-operation-file/src/index.ts"],
       "@graphql-codegen/gql-tag-operations-preset": ["packages/presets/gql-tag-operations-preset/src/index.ts"],
@@ -76,6 +77,7 @@
         "packages/plugins/typescript/apollo-client-helpers/src/index.ts"
       ],
       "@graphql-codegen/typescript-react-query": ["packages/plugins/typescript/react-query/src/index.ts"],
+      "@graphql-codegen/typescript-msw": ["packages/plugins/typescript/msw/src/index.ts"],
       "@graphql-cli/codegen": ["packages/graphql-cli-codegen-plugin/src/index.ts"]
     }
   },

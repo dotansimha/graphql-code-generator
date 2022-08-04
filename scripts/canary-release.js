@@ -3,11 +3,11 @@ const semver = require('semver');
 const cp = require('child_process');
 const { basename } = require('path');
 
-const { read: readConfig } = require("@changesets/config");
-const readChangesets = require("@changesets/read").default;
-const assembleReleasePlan = require("@changesets/assemble-release-plan").default;
-const applyReleasePlan = require("@changesets/apply-release-plan").default;
-const { getPackages } = require("@manypkg/get-packages");
+const { read: readConfig } = require('@changesets/config');
+const readChangesets = require('@changesets/read').default;
+const assembleReleasePlan = require('@changesets/assemble-release-plan').default;
+const applyReleasePlan = require('@changesets/apply-release-plan').default;
+const { getPackages } = require('@manypkg/get-packages');
 
 function getNewVersion(version, type) {
   let npmVersionSuffix = process.env.NPM_VERSION_SUFFIX;
@@ -19,8 +19,15 @@ function getNewVersion(version, type) {
 }
 
 function getRelevantChangesets(baseBranch) {
-  const comparePoint = cp.spawnSync('git', ['merge-base', `origin/${baseBranch}`, 'HEAD']).stdout.toString().trim();
-  const listModifiedFiles = cp.spawnSync('git', ['diff', '--name-only', comparePoint]).stdout.toString().trim().split('\n');
+  const comparePoint = cp
+    .spawnSync('git', ['merge-base', `origin/${baseBranch}`, 'HEAD'])
+    .stdout.toString()
+    .trim();
+  const listModifiedFiles = cp
+    .spawnSync('git', ['diff', '--name-only', comparePoint])
+    .stdout.toString()
+    .trim()
+    .split('\n');
 
   return listModifiedFiles.filter(f => f.startsWith('.changeset')).map(f => basename(f, '.md'));
 }
@@ -30,8 +37,8 @@ async function updateVersions() {
   const packages = await getPackages(cwd);
   const config = await readConfig(cwd, packages);
   const modifiedChangesets = getRelevantChangesets(config.baseBranch);
-  const allChangesets = await readChangesets(cwd)
-  const changesets  =
+  const allChangesets = await readChangesets(cwd);
+  const changesets =
     process.env.ON_DEMAND === 'yes'
       ? allChangesets
       : allChangesets.filter(change => modifiedChangesets.includes(change.id));
@@ -66,9 +73,11 @@ async function updateVersions() {
   }
 }
 
-updateVersions().then(() => {
-  console.info(`Done!`)
-}).catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+updateVersions()
+  .then(() => {
+    console.info(`Done!`);
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });

@@ -19,31 +19,52 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
 >
   ? TType
   : never;
-`;
+`.split(`\n`);
 
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
-}> = (_, __, { sourcesWithOperations, useTypeImports }, _info) => {
+  augmentedModuleName?: string;
+  emitLegacyCommonJSImports?: boolean;
+}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName, emitLegacyCommonJSImports }, _info) => {
   if (!sourcesWithOperations) {
     return '';
   }
+
+  if (augmentedModuleName == null) {
+    return [
+      `import * as graphql from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
+      `${
+        useTypeImports ? 'import type' : 'import'
+      } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
+      `\n`,
+      ...getDocumentRegistryChunk(sourcesWithOperations),
+      `\n`,
+      ...getGqlOverloadChunk(sourcesWithOperations, 'lookup', emitLegacyCommonJSImports),
+      `\n`,
+      `export function gql(source: string): unknown;\n`,
+      `export function gql(source: string) {\n`,
+      `  return (documents as any)[source] ?? {};\n`,
+      `}\n`,
+      `\n`,
+      ...documentTypePartial,
+    ].join(``);
+  }
+
   return [
-    `import * as graphql from './graphql';\n`,
-    `${
-      useTypeImports ? 'import type' : 'import'
-    } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
-    `\n`,
-    ...getDocumentRegistryChunk(sourcesWithOperations),
-    `\n`,
-    ...getGqlOverloadChunk(sourcesWithOperations),
-    `\n`,
-    `export function gql(source: string): unknown;\n`,
-    `export function gql(source: string) {\n`,
-    `  return (documents as any)[source] ?? {};\n`,
-    `}\n`,
-    documentTypePartial,
-  ].join(``);
+    `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
+    `declare module "${augmentedModuleName}" {`,
+    [
+      `\n`,
+      ...getGqlOverloadChunk(sourcesWithOperations, 'augmented', emitLegacyCommonJSImports),
+      `export function gql(source: string): unknown;\n`,
+      `\n`,
+      ...documentTypePartial,
+    ]
+      .map(line => (line === `\n` ? line : `  ${line}`))
+      .join(``),
+    `}`,
+  ].join(`\n`);
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
@@ -62,18 +83,26 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   return lines;
 }
 
-function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>) {
+type Mode = 'lookup' | 'augmented';
+
+function getGqlOverloadChunk(
+  sourcesWithOperations: Array<SourceWithOperations>,
+  mode: Mode,
+  emitLegacyCommonJSImports?: boolean
+) {
   const lines = new Set<string>();
 
   // We intentionally don't use a <T extends keyof typeof documents> generic, because TS
   // would print very long `gql` function signatures (duplicating the source).
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    lines.add(
-      `export function gql(source: ${JSON.stringify(originalString)}): (typeof documents)[${JSON.stringify(
-        originalString
-      )}];\n`
-    );
+    const returnType =
+      mode === 'lookup'
+        ? `(typeof documents)[${JSON.stringify(originalString)}]`
+        : emitLegacyCommonJSImports
+        ? `typeof import('./graphql').${operations[0].initialName}`
+        : `typeof import('./graphql.js').${operations[0].initialName}`;
+    lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
 
   return lines;

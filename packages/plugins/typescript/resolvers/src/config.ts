@@ -2,7 +2,7 @@ import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.
- * You can use this plugin a to generate simple resolvers signature based on your GraphQL types, or you can change it's behavior be providing custom model types (mappers).
+ * You can use this plugin to generate simple resolvers signature based on your GraphQL types, or you can change its behavior be providing custom model types (mappers).
  *
  * You can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen
  *
@@ -13,32 +13,32 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    useIndexSignature: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       useIndexSignature: true
    * ```
    */
   useIndexSignature?: boolean;
   /**
    * @description Disables/Enables Schema Stitching support.
-   * By defualt, the resolver signature does not include the support for schema-stitching.
+   * By default, the resolver signature does not include the support for schema-stitching.
    * Set to `false` to enable that.
    *
    * @default true
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    noSchemaStitching: false
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       noSchemaStitching: false
    * ```
    */
   noSchemaStitching?: boolean;
@@ -54,57 +54,59 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default "graphql#GraphQLResolveInfo"
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    customResolveInfo: ./my-types#MyResolveInfo
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       customResolveInfo: ./my-types#MyResolveInfo
    * ```
    */
   customResolveInfo?: string;
   /**
-   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
+   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics `<TResult, TParent, TContext, TArgs>`
    * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
    *
    * @exampleMarkdown
    * ## Custom Signature
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    customResolverFn: ./my-types#MyResolveFn
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       customResolverFn: ./my-types#MyResolveFn
    * ```
    *
    * ## With Graphile
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - add:
-   *        content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    customResolverFn: |
-   *      (
-   *        parent: TParent,
-   *        args: TArgs,
-   *        context: TContext,
-   *        info: GraphQLResolveInfo & { graphile: GraphileHelpers<TParent> }
-   *      ) => Promise<TResult> | TResult;
+   *   path/to/file.ts:
+   *     plugins:
+   *       - add:
+   *           content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   *       - typescript
+   *       - typescript-resolvers
+   *     config:
+   *       customResolverFn: |
+   *         (
+   *           parent: TParent,
+   *           args: TArgs,
+   *           context: TContext,
+   *           info: GraphQLResolveInfo & { graphile: GraphileHelpers<TParent> }
+   *         ) => Promise<TResult> | TResult;
    * ```
    */
   customResolverFn?: string;
   /**
    * @description Map the usage of a directive into using a specific resolver.
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
    *     directiveResolverMappings:
@@ -118,7 +120,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     allowParentTypeOverride: true
    * ```
@@ -129,11 +131,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    *   config:
    *     optionalInfoArgument: true
    * ```
    *
    */
   optionalInfoArgument?: boolean;
+  /**
+   * @description Set to `true` in order to allow the Resolver type to be callable
+   *
+   * @exampleMarkdown
+   * ```yaml
+   *  config:
+   *    makeResolverTypeCallable: true
+   * ```
+   */
+  makeResolverTypeCallable?: boolean;
 }

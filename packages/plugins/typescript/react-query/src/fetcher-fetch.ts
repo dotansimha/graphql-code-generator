@@ -1,7 +1,13 @@
+import {
+  generateInfiniteQueryKey,
+  generateMutationKey,
+  generateQueryKey,
+  generateQueryVariablesSignature,
+} from './variables-generator.js';
+
+import { FetcherRenderer } from './fetcher.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
-import { FetcherRenderer } from './fetcher';
-import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class FetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}
@@ -29,6 +35,37 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
 }`;
   }
 
+  generateInfiniteQueryHook(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const hookConfig = this.visitor.queryMethodMap;
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+
+    const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
+
+    return `export const useInfinite${operationName} = <
+      TData = ${operationResultType},
+      TError = ${this.visitor.config.errorType}
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      _pageParamKey: keyof ${operationVariablesTypes},
+      ${variables},
+      ${options}
+    ) =>
+    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+      ${generateInfiniteQueryKey(node, hasRequiredVariables)},
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );`;
+  }
+
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -39,8 +76,8 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
@@ -64,12 +101,13 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.mutation.options);
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 
@@ -81,6 +119,7 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       ${options}
     ) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateMutationKey(node)},
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, variables)(),
       options
     );`;

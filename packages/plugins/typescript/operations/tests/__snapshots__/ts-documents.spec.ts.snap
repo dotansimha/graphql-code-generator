@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TypeScript Operations Plugin Config should include fragment variable definitions when experimentalFragmentVariables is set 1`] = `
-"export type TextNotificationFragmentFragment = { __typename?: 'TextNotification', text?: string | null | undefined };
+"export type TextNotificationFragmentFragment = { __typename?: 'TextNotification', text?: string };
 
 
 export type TextNotificationFragmentFragmentVariables = Exact<{
@@ -17,25 +17,25 @@ exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interf
 }>;
 
 
-export type GetEntityBrandDataQuery = { __typename?: 'Query', node: { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined } | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined } | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined } | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined } };
+export type GetEntityBrandDataQuery = { __typename?: 'Query', node: { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null } | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null } | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null } | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null } };
 
-type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined };
+type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
 
-type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined };
+type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
 
-type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined };
+type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
 
-type EntityBrandData_User_Fragment = { __typename?: 'User', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null | undefined, description: string } | null | undefined };
+type EntityBrandData_User_Fragment = { __typename?: 'User', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
 
 export type EntityBrandDataFragment = EntityBrandData_Company_Fragment | EntityBrandData_Theater_Fragment | EntityBrandData_Movie_Fragment | EntityBrandData_User_Fragment;
 
-type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined };
+type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined };
+type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined };
+type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null | undefined, updatedBy?: { __typename?: 'User', id: string, name: string } | null | undefined };
+type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
 
 export type ElementMetadataFragment = ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment | ElementMetadata_User_Fragment;
 "
@@ -65,6 +65,7 @@ export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: 
 
 exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 2`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -331,6 +332,7 @@ export type UserQueryQuery = (
 
 exports[`TypeScript Operations Plugin Union & Interfaces #4216 - handle fragments against unions and interfaces with flattenGeneratedTypes 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -446,6 +448,7 @@ export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fr
 
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -538,6 +541,7 @@ export type UserQueryQuery = (
 
 exports[`TypeScript Operations Plugin Union & Interfaces Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };

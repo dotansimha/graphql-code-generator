@@ -4,8 +4,9 @@ import {
   LoadedFragment,
   getConfigValue,
   OMIT_TYPE,
+  DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { VueUrqlRawPluginConfig } from './config';
+import { VueUrqlRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'change-case-all';
@@ -16,11 +17,29 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<VueUrqlRawPluginConfig, UrqlPluginConfig> {
+  private _externalImportPrefix = '';
+
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: VueUrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
       withComposition: getConfigValue(rawConfig.withComposition, true),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, '@urql/vue'),
     });
+
+    if (this.config.importOperationTypesFrom) {
+      this._externalImportPrefix = `${this.config.importOperationTypesFrom}.`;
+
+      if (this.config.documentMode !== DocumentMode.external || !this.config.importDocumentNodeExternallyFrom) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '"importOperationTypesFrom" should be used with "documentMode=external" and "importDocumentNodeExternallyFrom"'
+        );
+      }
+
+      if (this.config.importOperationTypesFrom !== 'Operations') {
+        // eslint-disable-next-line no-console
+        console.warn('importOperationTypesFrom only works correctly when left empty or set to "Operations"');
+      }
+    }
 
     autoBind(this);
   }
@@ -82,13 +101,17 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<n
     operationResultType: string,
     operationVariablesTypes: string
   ): string {
+    const documentVariablePrefixed = this._externalImportPrefix + documentVariableName;
+    const operationResultTypePrefixed = this._externalImportPrefix + operationResultType;
+    const operationVariablesTypesPrefixed = this._externalImportPrefix + operationVariablesTypes;
+
     const composition = this.config.withComposition
       ? this._buildCompositionFn(
           node,
           operationType,
-          documentVariableName,
-          operationResultType,
-          operationVariablesTypes
+          documentVariablePrefixed,
+          operationResultTypePrefixed,
+          operationVariablesTypesPrefixed
         )
       : null;
 

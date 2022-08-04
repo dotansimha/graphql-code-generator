@@ -3,5 +3,5 @@ module.exports = {
     return `
       Should have the Extension type: '${schema.getType('Extension')}'
     `;
-  }
+  },
 };

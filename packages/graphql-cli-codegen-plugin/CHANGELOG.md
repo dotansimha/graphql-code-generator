@@ -1,5 +1,178 @@
 # @graphql-cli/codegen
 
+## 2.3.8
+
+### Patch Changes
+
+- Updated dependencies [b75ca4b48]
+  - @graphql-codegen/cli@2.11.3
+
+## 2.3.7
+
+### Patch Changes
+
+- Updated dependencies [8cd1526c4]
+  - @graphql-codegen/cli@2.11.2
+
+## 2.3.6
+
+### Patch Changes
+
+- Updated dependencies [20bf4b225]
+  - @graphql-codegen/cli@2.11.1
+
+## 2.3.5
+
+### Patch Changes
+
+- Updated dependencies [6a2e328e6]
+- Updated dependencies [fd6be805b]
+  - @graphql-codegen/cli@2.11.0
+
+## 2.3.4
+
+### Patch Changes
+
+- Updated dependencies [273ad602f]
+- Updated dependencies [cc18923d3]
+  - @graphql-codegen/cli@2.10.0
+
+## 2.3.3
+
+### Patch Changes
+
+- Updated dependencies [e2cfc5c36]
+  - @graphql-codegen/cli@2.9.1
+
+## 2.3.2
+
+### Patch Changes
+
+- Updated dependencies [32c1560f1]
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/cli@2.9.0
+
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies [147e801bf]
+  - @graphql-codegen/cli@2.8.1
+
+## 2.3.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [e7870ac28]
+- Updated dependencies [d84afec09]
+- Updated dependencies [dce40edeb]
+- Updated dependencies [8e44df58b]
+- Updated dependencies [2e86ecb65]
+  - @graphql-codegen/cli@2.8.0
+
+## 2.2.6
+
+### Patch Changes
+
+- Updated dependencies [e050230c0]
+- Updated dependencies [dfd9f07dc]
+- Updated dependencies [2fb1d8b87]
+- Updated dependencies [4dce44263]
+  - @graphql-codegen/cli@2.7.0
+
+## 2.2.5
+
+### Patch Changes
+
+- Updated dependencies [92f714278]
+  - @graphql-codegen/cli@2.6.4
+
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [c1fe7758a]
+- Updated dependencies [52b41e90e]
+  - @graphql-codegen/cli@2.6.3
+
+## 2.2.3
+
+### Patch Changes
+
+- Updated dependencies [1e3d37a34]
+  - @graphql-codegen/cli@2.6.2
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [cb9adeb96]
+  - @graphql-codegen/cli@2.6.1
+
+## 2.2.1
+
+### Patch Changes
+
+- Updated dependencies [35566a02c]
+- Updated dependencies [acc62e548]
+- Updated dependencies [35566a02c]
+  - @graphql-codegen/cli@2.6.0
+
+## 2.2.0
+
+### Minor Changes
+
+- 754a33715: Performance Profiler --profile
+
+### Patch Changes
+
+- Updated dependencies [f13d3554e]
+- Updated dependencies [754a33715]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/cli@2.5.0
+
+## 2.1.7
+
+### Patch Changes
+
+- Updated dependencies [4c42e2a71]
+  - @graphql-codegen/cli@2.4.0
+
+## 2.1.6
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/cli@2.3.1
+
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [50c1d3247]
+- Updated dependencies [04e2d833b]
+  - @graphql-codegen/cli@2.3.0
+
+## 2.1.4
+
+### Patch Changes
+
+- @graphql-codegen/cli@2.2.2
+
+## 2.1.3
+
+### Patch Changes
+
+- @graphql-codegen/cli@2.2.1
+
 ## 2.1.2
 
 ### Patch Changes

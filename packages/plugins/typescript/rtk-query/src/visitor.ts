@@ -7,7 +7,7 @@ import {
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 
 import { pascalCase } from 'change-case-all';
-import { RTKQueryPluginConfig, RTKQueryRawPluginConfig } from './config';
+import { RTKQueryPluginConfig, RTKQueryRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -53,6 +53,10 @@ export class RTKQueryVisitor extends ClientSideBaseVisitor<RTKQueryRawPluginConf
   }
 
   public getInjectCall() {
+    if (!this.hasOperations) {
+      return '';
+    }
+
     return (
       `
 const injectedRtkApi = api.injectEndpoints({

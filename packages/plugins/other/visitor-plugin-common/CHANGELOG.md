@@ -1,5 +1,183 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.12.0
+
+### Minor Changes
+
+- 2cbcbb371: Add new flag to emit legacy common js imports. Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+
+  You can use the option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+   documents:
+     - 'src/**/*.graphql'
+   emitLegacyCommonJSImports: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --emit-legacy-common-js-imports
+  ```
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 2.11.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+
+## 2.11.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to imports starting with either a `.` or `/` character.
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.10.0
+
+### Minor Changes
+
+- aa1e6eafd: Add @Deprecated support for input
+
+### Patch Changes
+
+- a42fcbfe4: docs: Swapping rootValueType with directiveContextTypes for correctness
+- 8b10f22be: Ensure falsy enum values are still mapped
+
+## 2.9.1
+
+### Patch Changes
+
+- d16bebacb: Update @graphql-tools/relay-operation-optimizer package;
+
+  - Previously that package used relay-compiler@12 which has graphql v15 as a peer dependency and it was causing peer dependency warnings if user installs a different version of `graphql` package. Now we forked and released v12 under a different name and removed version range for `graphql` in `peerDependencies` of `relay-compiler`
+
+## 2.9.0
+
+### Minor Changes
+
+- c3d7b7226: support the `@oneOf` directive on input types.
+
+## 2.8.0
+
+### Minor Changes
+
+- f1fb77bd4: feat: Add option to squash exactly similar fragment types
+
+## 2.7.6
+
+### Patch Changes
+
+- 9a5f31cb6: New option `onlyEnums` for Typescript
+
+## 2.7.5
+
+### Patch Changes
+
+- 2966686e9: Generate $fragmentName for fragment subtypes for fragment masking
+
+## 2.7.4
+
+### Patch Changes
+
+- 337fd4f77: WP: [typescript-resolvers] Add directiveContextTypes option
+
+## 2.7.3
+
+### Patch Changes
+
+- 54718c039: Improve @Deprecated Enum Type developer experience
+
+## 2.7.2
+
+### Patch Changes
+
+- 11d05e361: fix(resolvers): fix conflict between `typesPrefix: true` and `enumPrefix: false`
+
+## 2.7.1
+
+### Patch Changes
+
+- fd55e2039: fix incorrect type generation when using the inlineFragmentTypes 'combine' option that resulted in generating masked fragment output.
+
+## 2.7.0
+
+### Minor Changes
+
+- 1479233df: Add new `inlineFragmentTypes` mode `'mask'`, which allows generating masked fragment types.
+
+## 2.6.0
+
+### Minor Changes
+
+- bef4376d5: fix: RequireFields generic making all other fields optional
+
+### Patch Changes
+
+- c8ef37ae0: fix(typescript-resolvers): Fix optional field types
+- be7cb3a82: Performance work: resolvers plugins, documents loading
+- Updated dependencies [754a33715]
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.5.2
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.5.1
+
+### Patch Changes
+
+- a9f1f1594: Use maybeValue as default output for optionals on preResolveTypes: true
+- 9ea6621ec: add missing ListType method parameters
+
+## 2.5.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.4.0
+
+### Minor Changes
+
+- ad02cb9b8: Fixed an issue where ResolversParentTypes referenced non-existing fields of ResolversParentTypes when the corresponding type was a mapped enum.
+
+## 2.3.0
+
+### Minor Changes
+
+- b9e85adae: feat(visitor-plugin-common): support custom scalar type from extensions
+
+### Patch Changes
+
+- 3c2c847be: Fix dedupleFragments option for typescript-react-query (and possibly others)
+- Updated dependencies [7c60e5acc]
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.2.1
 
 ### Patch Changes
@@ -18,7 +196,7 @@
 
   Please use this configuration option with care!
 
-  ```yml
+  ```yaml
   plugins:
     config:
       directiveArgumentAndInputFieldMappings:
@@ -59,7 +237,7 @@
 
   Example configuration:
 
-  ```yml
+  ```yaml
   config:
     # This was possible before
     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver

@@ -1,5 +1,5 @@
 import { ASTNode, FragmentDefinitionNode } from 'graphql';
-import { ParsedMapper } from './mappers';
+import { ParsedMapper } from './mappers.js';
 
 /**
  * A map between the GraphQL directive name and the identifier that should be used
@@ -95,6 +95,7 @@ export interface AvoidOptionalsConfig {
   object?: boolean;
   inputValue?: boolean;
   defaultValue?: boolean;
+  resolvers?: boolean;
 }
 
 export interface ParsedImport {

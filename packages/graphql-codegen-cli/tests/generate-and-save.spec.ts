@@ -1,6 +1,6 @@
 import { useMonorepo } from '@graphql-codegen/testing';
-import { generate } from '../src/generate-and-save';
-import * as fs from '../src/utils/file-system';
+import { generate } from '../src/generate-and-save.js';
+import * as fs from '../src/utils/file-system.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { dirname, join } from 'path';
 import makeDir from 'make-dir';
@@ -21,7 +21,7 @@ describe('generate-and-save', () => {
 
   test('allow to specify overwrite for specific output (should write file)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
 
     const output = await generate(
       {
@@ -47,10 +47,10 @@ describe('generate-and-save', () => {
 
   test('allow to specify overwrite for specific output (should not write file)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation(async file => file === filename);
 
     const output = await generate(
       {
@@ -78,7 +78,7 @@ describe('generate-and-save', () => {
 
   test('should use global overwrite option and write a file', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
 
     const output = await generate(
       {
@@ -103,10 +103,10 @@ describe('generate-and-save', () => {
 
   test('should use global overwrite option and not write a file', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation(async file => file === filename);
 
     const output = await generate(
       {
@@ -133,12 +133,12 @@ describe('generate-and-save', () => {
 
   test('should overwrite a file by default', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
-    const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
-    readSpy.mockImplementation(_f => '');
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
+    const readSpy = jest.spyOn(fs, 'readFile').mockImplementation();
+    readSpy.mockImplementation(async _f => '');
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(file => file === filename);
+    fileExistsSpy.mockImplementation(async file => file === filename);
 
     const output = await generate(
       {
@@ -197,7 +197,7 @@ describe('generate-and-save', () => {
   });
   test('should extract a document from the gql tag (imported from apollo-server)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
 
     const output = await generate(
       {

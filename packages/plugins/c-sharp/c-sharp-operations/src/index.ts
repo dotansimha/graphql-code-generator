@@ -3,13 +3,14 @@ import {
   PluginValidateFn,
   PluginFunction,
   getCachedDocumentNodeFromSchema,
+  oldVisit,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { CSharpOperationsVisitor } from './visitor';
+import { CSharpOperationsVisitor } from './visitor.js';
 import { extname } from 'path';
 import gql from 'graphql-tag';
-import { CSharpOperationsRawPluginConfig } from './config';
+import { CSharpOperationsRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<CSharpOperationsRawPluginConfig> = (
   schema: GraphQLSchema,
@@ -31,7 +32,7 @@ export const plugin: PluginFunction<CSharpOperationsRawPluginConfig> = (
   ];
 
   const visitor = new CSharpOperationsVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
   const imports = visitor.getCSharpImports();
   const openNameSpace = `namespace ${visitor.config.namespaceName} {`;
   return {

@@ -1,9 +1,9 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlVisitor } from './visitor';
+import { UrqlVisitor } from './visitor.js';
 import { extname } from 'path';
-import { UrqlRawPluginConfig } from './config';
+import { UrqlRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -22,8 +22,8 @@ export const plugin: PluginFunction<UrqlRawPluginConfig, Types.ComplexPluginOutp
     ),
     ...(config.externalFragments || []),
   ];
-  const visitor = new UrqlVisitor(schema, allFragments, config) as any;
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitor = new UrqlVisitor(schema, allFragments, config);
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),
@@ -41,10 +41,8 @@ export const validate: PluginValidateFn<any> = async (
     if (extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "typescript-urql" requires extension to be ".tsx" when withComponent: true is set!`);
     }
-  } else {
-    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "typescript-urql" requires extension to be ".ts" or ".tsx"!`);
-    }
+  } else if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+    throw new Error(`Plugin "typescript-urql" requires extension to be ".ts" or ".tsx"!`);
   }
 };
 

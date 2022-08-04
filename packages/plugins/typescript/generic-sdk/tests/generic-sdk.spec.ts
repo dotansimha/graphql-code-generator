@@ -1,7 +1,7 @@
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
-import { RawGenericSdkPluginConfig } from '../src/config';
-import { plugin } from '../src/index';
+import { RawGenericSdkPluginConfig } from '../src/config.js';
+import { plugin } from '../src/index.js';
 import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
@@ -138,6 +138,36 @@ async function test() {
     }
   }
 }`;
+      const output = await validate(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
+
+    it('Should support rawRequest', async () => {
+      const config = { rawRequest: true };
+      const docs = [{ filePath: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+        async function rawRequestTest() {
+          const requester = <R, V> (doc: string, vars: V): Promise<ExecutionResult<R>> => Promise.resolve({} as unknown as ExecutionResult<R>);
+          const sdk = getSdk(requester);
+
+          await sdk.feed();
+          await sdk.feed3();
+          await sdk.feed4();
+
+          const result = await sdk.feed2({ v: "1" });
+
+          if (result.data.feed) {
+            if (result.data.feed[0]) {
+              const id = result.data.feed[0].id
+            }
+          }
+        }
+      `;
       const output = await validate(result, config, docs, schema, usage);
 
       expect(output).toMatchSnapshot();

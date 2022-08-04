@@ -1,4 +1,4 @@
-import { TypeScriptResolversPluginConfig } from './config';
+import { TypeScriptResolversPluginConfig } from './config.js';
 import {
   FieldDefinitionNode,
   ListTypeNode,
@@ -74,9 +74,8 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
-      declarationKind
-    )}`;
+    const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
+    return `${schemaTypeName}${avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
   private clearOptional(str: string): string {
@@ -118,7 +117,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{ ${(node.values || [])
-      .map(v => `${(v.name as any) as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .map(v => `${v.name as any as string}${this.config.avoidOptionals ? '' : '?'}: any`)
       .join(', ')} }`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
@@ -132,7 +131,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   ): string {
     return `{ ${(node.values || [])
       .map(v => {
-        const valueName = (v.name as any) as string;
+        const valueName = v.name as any as string;
         const mappedValue = valuesMapping[valueName];
 
         return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;

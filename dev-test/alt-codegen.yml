@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'test-schema/schema.graphql'
+documents:
+  - 'src/**/*.graphql'
+
+generates:
+  test-schema/schema.ts:
+    - typescript:
+        declarationKind: interface
+    - typescript-operations:
+        declarationKind: interface
+        defaultScalarType: unknown

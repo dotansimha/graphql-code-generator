@@ -87,6 +87,30 @@ describe('Integration', () => {
     expect(output[4].content).toMatch(importStatement);
   });
 
+  test('should allow to disable graphql-modules', async () => {
+    const output = await executeCodegen({
+      generates: {
+        './tests/test-files/modules': {
+          schema: './tests/test-files/modules/*/types/*.graphql',
+          plugins: ['typescript', 'typescript-resolvers'],
+          preset: 'graphql-modules',
+          presetConfig: {
+            importBaseTypesFrom: '@types',
+            baseTypesPath: 'global-types.ts',
+            filename: 'module-types.ts',
+            encapsulateModuleTypes: 'none',
+            useGraphQLModules: false,
+          },
+        },
+      },
+    });
+
+    for (const record of output) {
+      expect(record).not.toContain(`graphql-modules`);
+      expect(record).not.toContain(`gm.`);
+    }
+  });
+
   test('each module-types should include a relative import to glob-types module', async () => {
     const output = await executeCodegen(options);
     const importStatement = `import * as Types from "../global-types";`;
@@ -134,6 +158,7 @@ describe('Integration', () => {
     optionsCopy.generates['./tests/test-files/modules'].presetConfig = {
       ...optionsCopy.generates['./tests/test-files/modules'].presetConfig,
       requireRootResolvers: true,
+      useGraphQLModules: false,
     };
 
     const output = await executeCodegen(optionsCopy);
@@ -141,6 +166,8 @@ describe('Integration', () => {
     const usersModuleOutput = output.find(o => o.filename.includes('users'))!;
 
     expect(usersModuleOutput).toBeDefined();
+
+    console.log(usersModuleOutput.content);
 
     // Only Query related properties should be required
     expect(usersModuleOutput.content).toBeSimilarStringTo(`

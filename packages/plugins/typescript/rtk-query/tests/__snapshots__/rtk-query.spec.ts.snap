@@ -1,71 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RTK Query Without hooks 1`] = `
-"
-export const CommentDocument = \`
-    query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
-  currentUser {
-    login
-    html_url
-  }
-  entry(repoFullName: $repoFullName) {
-    id
-    postedBy {
-      login
-      html_url
-    }
-    createdAt
-    comments(limit: $limit, offset: $offset) {
-      ...CommentsPageComment
-    }
-    commentCount
-    repository {
-      full_name
-      html_url
-      ... on Repository {
-        description
-        open_issues_count
-        stargazers_count
-      }
-    }
-  }
-}
-    \${CommentsPageCommentFragmentDoc}\`;
-export const FeedDocument = \`
-    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-  currentUser {
-    login
-  }
-  feed(type: $type, offset: $offset, limit: $limit) {
-    ...FeedEntry
-  }
-}
-    \${FeedEntryFragmentDoc}\`;
-export const SubmitRepositoryDocument = \`
-    mutation submitRepository($repoFullName: String!) {
-  submitRepository(repoFullName: $repoFullName) {
-    createdAt
+exports[`RTK Query For fragment 1`] = `
+"export const VoteButtonsFragmentDoc = \`
+    fragment VoteButtons on Entry {
+  score
+  vote {
+    vote_value
   }
 }
     \`;
-
-const injectedRtkApi = api.injectEndpoints({
-  endpoints: (build) => ({
-    Comment: build.query<CommentQuery, CommentQueryVariables>({
-      query: (variables) => ({ document: CommentDocument, variables })
-    }),
-    Feed: build.query<FeedQuery, FeedQueryVariables>({
-      query: (variables) => ({ document: FeedDocument, variables })
-    }),
-    submitRepository: build.mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>({
-      query: (variables) => ({ document: SubmitRepositoryDocument, variables })
-    }),
-  }),
-});
-
-export { injectedRtkApi as api };
-
-
 "
 `;
 
@@ -189,6 +132,75 @@ export const SubmitRepositoryDocument = \`
 
 const injectedRtkApi = api.injectEndpoints({
   overrideExisting: module.hot?.status() === \\"apply\\",
+  endpoints: (build) => ({
+    Comment: build.query<CommentQuery, CommentQueryVariables>({
+      query: (variables) => ({ document: CommentDocument, variables })
+    }),
+    Feed: build.query<FeedQuery, FeedQueryVariables>({
+      query: (variables) => ({ document: FeedDocument, variables })
+    }),
+    submitRepository: build.mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>({
+      query: (variables) => ({ document: SubmitRepositoryDocument, variables })
+    }),
+  }),
+});
+
+export { injectedRtkApi as api };
+
+
+"
+`;
+
+exports[`RTK Query Without hooks 1`] = `
+"
+export const CommentDocument = \`
+    query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+  currentUser {
+    login
+    html_url
+  }
+  entry(repoFullName: $repoFullName) {
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    comments(limit: $limit, offset: $offset) {
+      ...CommentsPageComment
+    }
+    commentCount
+    repository {
+      full_name
+      html_url
+      ... on Repository {
+        description
+        open_issues_count
+        stargazers_count
+      }
+    }
+  }
+}
+    \${CommentsPageCommentFragmentDoc}\`;
+export const FeedDocument = \`
+    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+  currentUser {
+    login
+  }
+  feed(type: $type, offset: $offset, limit: $limit) {
+    ...FeedEntry
+  }
+}
+    \${FeedEntryFragmentDoc}\`;
+export const SubmitRepositoryDocument = \`
+    mutation submitRepository($repoFullName: String!) {
+  submitRepository(repoFullName: $repoFullName) {
+    createdAt
+  }
+}
+    \`;
+
+const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
     Comment: build.query<CommentQuery, CommentQueryVariables>({
       query: (variables) => ({ document: CommentDocument, variables })

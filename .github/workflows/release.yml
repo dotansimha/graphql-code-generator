@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Configure Git Credentials
@@ -24,25 +24,25 @@ jobs:
           git checkout master
           git reset --hard
       - name: Use Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.8.0'
+          node-version: 17
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - name: Cache Yarn
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-16.8.0-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-16.8.0-yarn-
+            ${{ runner.os }}-17-16-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install && git checkout yarn.lock
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           publish: yarn release
           commit: 'chore(release): update monorepo packages versions'

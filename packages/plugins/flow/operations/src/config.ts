@@ -5,7 +5,7 @@ import { RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
  *
  * It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
  *
- * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
+ * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.
  */
 export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   /**
@@ -13,13 +13,13 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {6}
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowExactObjects: false
+   *   path/to/file.ts:
+   *     plugins:
+   *       - flow
+   *     config:
+   *       useFlowExactObjects: false
    * ```
    */
   useFlowExactObjects?: boolean;
@@ -28,13 +28,13 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {6}
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowReadOnlyTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - flow
+   *     config:
+   *       useFlowReadOnlyTypes: true
    * ```
    */
   useFlowReadOnlyTypes?: boolean;
@@ -43,14 +43,14 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {7}
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *  config:
-   *    flattenGeneratedTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - typescript-operations
+   *     config:
+   *       flattenGeneratedTypes: true
    * ```
    */
   flattenGeneratedTypes?: boolean;

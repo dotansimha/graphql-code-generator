@@ -45,7 +45,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
   const mappedDocuments = documents.map(document => document.document).filter(document => document !== undefined);
   const ast = concatAST([parsedSchema, ...(mappedDocuments as Array<DocumentNode>)]);
 
-  const schemaTypes: Array<string> = visit(ast, {
+  const schemaTypes = visit(ast, {
     Document: {
       leave(node) {
         return node.definitions;
@@ -209,7 +209,7 @@ export const plugin: PluginFunction<RawDocumentsConfig> = (schema, documents) =>
         return null;
       },
     },
-  });
+  }) as unknown as string[];
 
   return schemaTypes.join('\n\n');
 };

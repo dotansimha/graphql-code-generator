@@ -1,7 +1,9 @@
-export { resolveExternalModuleAndFn } from './resolve-external-module-and-fn';
-export * from './types';
-export * from './utils';
-export * from './helpers';
-export * from './federation';
-export * from './errors';
-export * from './getCachedDocumentNodeFromSchema';
+export { resolveExternalModuleAndFn } from './resolve-external-module-and-fn.js';
+export * from './types.js';
+export * from './utils.js';
+export * from './helpers.js';
+export * from './federation.js';
+export * from './errors.js';
+export * from './getCachedDocumentNodeFromSchema.js';
+export * from './oldVisit.js';
+export * from './profiler.js';

@@ -1,10 +1,10 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroAndFriendsNamesQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
 }>;
 
 export type HeroAndFriendsNamesQuery = {
@@ -13,21 +13,14 @@ export type HeroAndFriendsNamesQuery = {
     | {
         __typename?: 'Droid';
         name: string;
-        friends?:
-          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
-          | null
-          | undefined;
+        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?:
-          | Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null | undefined>
-          | null
-          | undefined;
+        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
       }
-    | null
-    | undefined;
+    | null;
 };
 
 export const HeroAndFriendsNamesDocument = gql`

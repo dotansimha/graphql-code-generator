@@ -1,5 +1,213 @@
 # @graphql-codegen/near-operation-file-preset
 
+## 2.4.0
+
+### Minor Changes
+
+- 2cbcbb371: Add new flag to emit legacy common js imports. Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+
+  You can use the option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+   documents:
+     - 'src/**/*.graphql'
+   emitLegacyCommonJSImports: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --emit-legacy-common-js-imports
+  ```
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 2.3.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+
+## 2.3.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to relative file imports for compliance with ESM module resolution. Since in CommonJS the `.js` extension is optional, this is not a breaking change.
+
+  If you have path configuration within your configuration, consider attaching `.js` if you are migrating to ESM.
+
+  ```yml
+  mappers:
+    MyOtherType: './my-file.js#MyCustomOtherType',
+  ```
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- 1de927e6f: Don't emit imports to the same location, resulting in name clashes.
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/add@3.2.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.2.15
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 2.2.14
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
+## 2.2.13
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+
+## 2.2.12
+
+### Patch Changes
+
+- Updated dependencies [f1fb77bd4]
+  - @graphql-codegen/visitor-plugin-common@2.8.0
+
+## 2.2.11
+
+### Patch Changes
+
+- Updated dependencies [9a5f31cb6]
+  - @graphql-codegen/visitor-plugin-common@2.7.6
+
+## 2.2.10
+
+### Patch Changes
+
+- Updated dependencies [2966686e9]
+  - @graphql-codegen/visitor-plugin-common@2.7.5
+
+## 2.2.9
+
+### Patch Changes
+
+- Updated dependencies [337fd4f77]
+  - @graphql-codegen/visitor-plugin-common@2.7.4
+
+## 2.2.8
+
+### Patch Changes
+
+- Updated dependencies [54718c039]
+  - @graphql-codegen/visitor-plugin-common@2.7.3
+
+## 2.2.7
+
+### Patch Changes
+
+- 84da6289c: [near-operation-file-preset] Importing root types when a fragment spread a fragment without any field
+- Updated dependencies [11d05e361]
+  - @graphql-codegen/visitor-plugin-common@2.7.2
+
+## 2.2.6
+
+### Patch Changes
+
+- Updated dependencies [fd55e2039]
+  - @graphql-codegen/visitor-plugin-common@2.7.1
+
+## 2.2.5
+
+### Patch Changes
+
+- Updated dependencies [1479233df]
+  - @graphql-codegen/visitor-plugin-common@2.7.0
+
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [c8ef37ae0]
+- Updated dependencies [754a33715]
+- Updated dependencies [bef4376d5]
+- Updated dependencies [be7cb3a82]
+  - @graphql-codegen/visitor-plugin-common@2.6.0
+  - @graphql-codegen/plugin-helpers@2.4.0
+
+## 2.2.3
+
+### Patch Changes
+
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [8643b3bf3]
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/add@3.1.1
+  - @graphql-codegen/visitor-plugin-common@2.5.2
+  - @graphql-codegen/plugin-helpers@2.3.2
+
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [a9f1f1594]
+- Updated dependencies [9ea6621ec]
+  - @graphql-codegen/visitor-plugin-common@2.5.1
+
+## 2.2.1
+
+### Patch Changes
+
+- 6c898efe5: list all dependencies used by the package in the package.json
+
+## 2.2.0
+
+### Minor Changes
+
+- 97ddb487a: feat: GraphQL v16 compatibility
+
+### Patch Changes
+
+- Updated dependencies [97ddb487a]
+  - @graphql-codegen/visitor-plugin-common@2.5.0
+  - @graphql-codegen/plugin-helpers@2.3.0
+
+## 2.1.6
+
+### Patch Changes
+
+- Updated dependencies [ad02cb9b8]
+  - @graphql-codegen/visitor-plugin-common@2.4.0
+
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [b9e85adae]
+- Updated dependencies [7c60e5acc]
+- Updated dependencies [3c2c847be]
+  - @graphql-codegen/visitor-plugin-common@2.3.0
+  - @graphql-codegen/plugin-helpers@2.2.0
+
 ## 2.1.4
 
 ### Patch Changes

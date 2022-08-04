@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msw Should generate JSDoc documentation with variables and selection from the operations themselves: content with variables and selection JSDoc documentation 1`] = `
+"
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQuery((req, res, ctx) => {
+ *   const { id, offset, limit } = req.variables;
+ *   return res(
+ *     ctx.data({ name, phone, country })
+ *   )
+ * })
+ */
+export const mockUserQuery = (resolver: ResponseResolver<GraphQLRequest<UserQueryVariables>, GraphQLContext<UserQuery>, any>) =>
+  graphql.query<UserQuery, UserQueryVariables>(
+    'User',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutation((req, res, ctx) => {
+ *   const { id, offset, limit } = req.variables;
+ *   return res(
+ *     ctx.data({ name, phone, country })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutation = (resolver: ResponseResolver<GraphQLRequest<UpdateUserMutationVariables>, GraphQLContext<UpdateUserMutation>, any>) =>
+  graphql.mutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    'UpdateUser',
+    resolver
+  )
+"
+`;
+
+exports[`msw Should generate a link with an endpoint when passed a link variable: content with a link/endpoint 1`] = `
+"const api = graphql.link('http://localhost:3000/graphql')
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQueryApi((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUserQueryApi = (resolver: ResponseResolver<GraphQLRequest<UserQueryVariables>, GraphQLContext<UserQuery>, any>) =>
+  api.query<UserQuery, UserQueryVariables>(
+    'User',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutationApi((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutationApi = (resolver: ResponseResolver<GraphQLRequest<UpdateUserMutationVariables>, GraphQLContext<UpdateUserMutation>, any>) =>
+  api.mutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    'UpdateUser',
+    resolver
+  )
+"
+`;
+
+exports[`msw Should generate mocks based on queries and mutations: content 1`] = `
+"
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQuery((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUserQuery = (resolver: ResponseResolver<GraphQLRequest<UserQueryVariables>, GraphQLContext<UserQuery>, any>) =>
+  graphql.query<UserQuery, UserQueryVariables>(
+    'User',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutation((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutation = (resolver: ResponseResolver<GraphQLRequest<UpdateUserMutationVariables>, GraphQLContext<UpdateUserMutation>, any>) =>
+  graphql.mutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    'UpdateUser',
+    resolver
+  )
+"
+`;
+
+exports[`msw Should generate mocks based on queries and mutations: imports 1`] = `
+Array [
+  "import { graphql, ResponseResolver, GraphQLRequest, GraphQLContext } from 'msw'",
+]
+`;
+
+exports[`msw Should use the "importOperationTypesFrom" setting: content with types configured via importOperationTypesFrom 1`] = `
+"
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQuery((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUserQuery = (resolver: ResponseResolver<GraphQLRequest<Types.UserQueryVariables>, GraphQLContext<Types.UserQuery>, any>) =>
+  graphql.query<Types.UserQuery, Types.UserQueryVariables>(
+    'User',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutation((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutation = (resolver: ResponseResolver<GraphQLRequest<Types.UpdateUserMutationVariables>, GraphQLContext<Types.UpdateUserMutation>, any>) =>
+  graphql.mutation<Types.UpdateUserMutation, Types.UpdateUserMutationVariables>(
+    'UpdateUser',
+    resolver
+  )
+"
+`;

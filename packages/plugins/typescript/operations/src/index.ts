@@ -1,17 +1,21 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptDocumentsVisitor } from './visitor';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
+import { TypeScriptDocumentsVisitor } from './visitor.js';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptDocumentsPluginConfig } from './config';
+import { TypeScriptDocumentsPluginConfig } from './config.js';
 
-export { TypeScriptDocumentsPluginConfig } from './config';
+export { TypeScriptDocumentsPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
-  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
+  const documents = config.flattenGeneratedTypes
+    ? optimizeOperations(schema, rawDocuments, {
+        includeFragments: config.flattenGeneratedTypesIncludeFragments,
+      })
+    : rawDocuments;
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
@@ -28,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
 
-  const visitorResult = visit(allAst, {
+  const visitorResult = oldVisit(allAst, {
     leave: visitor,
   });
 
@@ -48,8 +52,8 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   if (config.globalNamespace) {
     content = `
-    declare global { 
-      ${content} 
+    declare global {
+      ${content}
     }`;
   }
 

@@ -17,7 +17,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   withHooks?: boolean;
   /**
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
-   * This is useful for further abstraction of some common tasks (eg. error handling).
+   * This is useful for further abstraction of some common tasks (e.g. error handling).
    * Filepath relative to generated file can be also specified.
    * @default urql
    */

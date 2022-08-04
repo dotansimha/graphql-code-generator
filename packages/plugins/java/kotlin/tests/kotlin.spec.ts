@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 const OUTPUT_FILE = 'com/kotlin/generated/resolvers.kt';
 
@@ -130,6 +130,24 @@ describe('Kotlin', () => {
 
       expect(result).toContain(`Admin("AdminRoleValue"),`);
       expect(result).toContain(`User("USER"),`);
+    });
+
+    it('Should omit JvmStatic annotation if the option is set', async () => {
+      const result = await plugin(schema, [], { omitJvmStatic: true }, { outputFile: OUTPUT_FILE });
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`    enum class UserRole(val label: String) {
+        Admin("ADMIN"),
+        User("USER"),
+        Editor("EDITOR");
+        
+        companion object {
+          
+          fun valueOfLabel(label: String): UserRole? {
+            return values().find { it.label == label }
+          }
+        }
+      }`);
     });
   });
 

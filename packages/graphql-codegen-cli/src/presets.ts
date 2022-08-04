@@ -1,10 +1,16 @@
 import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import { resolve } from 'path';
 
 export async function getPresetByName(
   name: string,
   loader: Types.PackageLoaderFn<{ preset?: Types.OutputPreset; default?: Types.OutputPreset }>
 ): Promise<Types.OutputPreset> {
-  const possibleNames = [`@graphql-codegen/${name}`, `@graphql-codegen/${name}-preset`, name];
+  const possibleNames = [
+    `@graphql-codegen/${name}`,
+    `@graphql-codegen/${name}-preset`,
+    name,
+    resolve(process.cwd(), name),
+  ];
 
   for (const moduleName of possibleNames) {
     try {
@@ -12,13 +18,19 @@ export async function getPresetByName(
 
       if (loaded && loaded.preset) {
         return loaded.preset;
-      } else if (loaded && loaded.default) {
+      }
+      if (loaded && loaded.default) {
         return loaded.default;
       }
 
       return loaded as Types.OutputPreset;
     } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
+      if (
+        /** CJS Error code */
+        err.code !== 'MODULE_NOT_FOUND' &&
+        /** ESM Error code */
+        err.code !== 'ERR_MODULE_NOT_FOUND'
+      ) {
         throw new DetailedError(
           `Unable to load preset matching ${name}`,
           `

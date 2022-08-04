@@ -1,8 +1,14 @@
+import {
+  generateInfiniteQueryKey,
+  generateMutationKey,
+  generateQueryKey,
+  generateQueryVariablesSignature,
+} from './variables-generator.js';
+
+import { FetcherRenderer } from './fetcher.js';
+import { HardcodedFetch } from './config.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
-import { FetcherRenderer } from './fetcher';
-import { HardcodedFetch } from './config';
-import { generateQueryKey, generateQueryVariablesSignature } from './variables-generator';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class HardcodedFetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor, private config: HardcodedFetch) {}
@@ -21,7 +27,10 @@ export class HardcodedFetchFetcher implements FetcherRenderer {
     let fetchParamsPartial = '';
 
     if (this.config.fetchParams) {
-      fetchParamsPartial = `\n    ...(${this.config.fetchParams}),`;
+      const fetchParamsString =
+        typeof this.config.fetchParams === 'string' ? this.config.fetchParams : JSON.stringify(this.config.fetchParams);
+
+      fetchParamsPartial = `\n    ...(${fetchParamsString}),`;
     }
 
     return `    method: "POST",${fetchParamsPartial}`;
@@ -49,6 +58,36 @@ ${this.getFetchParams()}
 }`;
   }
 
+  generateInfiniteQueryHook(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationName: string,
+    operationResultType: string,
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
+  ): string {
+    const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
+    const hookConfig = this.visitor.queryMethodMap;
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.infiniteQuery.options);
+
+    const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
+
+    return `export const useInfinite${operationName} = <
+      TData = ${operationResultType},
+      TError = ${this.visitor.config.errorType}
+    >(
+      _pageParamKey: keyof ${operationVariablesTypes},
+      ${variables},
+      ${options}
+    ) =>
+    ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
+      ${generateInfiniteQueryKey(node, hasRequiredVariables)},
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );`;
+  }
+
   generateQueryHook(
     node: OperationDefinitionNode,
     documentVariableName: string,
@@ -59,8 +98,8 @@ ${this.getFetchParams()}
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.query.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.query.options);
 
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
@@ -83,12 +122,13 @@ ${this.getFetchParams()}
     documentVariableName: string,
     operationName: string,
     operationResultType: string,
-    operationVariablesTypes: string
+    operationVariablesTypes: string,
+    hasRequiredVariables: boolean
   ): string {
     const variables = `variables?: ${operationVariablesTypes}`;
     const hookConfig = this.visitor.queryMethodMap;
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.hook);
-    this.visitor.reactQueryIdentifiersInUse.add(hookConfig.mutation.options);
+    this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.mutation.hook);
+    this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.mutation.options);
 
     const options = `options?: ${hookConfig.mutation.options}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>`;
 
@@ -97,6 +137,7 @@ ${this.getFetchParams()}
       TContext = unknown
     >(${options}) =>
     ${hookConfig.mutation.hook}<${operationResultType}, TError, ${operationVariablesTypes}, TContext>(
+      ${generateMutationKey(node)},
       (${variables}) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, variables)(),
       options
     );`;

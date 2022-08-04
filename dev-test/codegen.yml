@@ -1,6 +1,7 @@
 hooks:
   afterAllFileWrite:
     - prettier --write
+emitLegacyCommonJSImports: false
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
@@ -24,6 +25,12 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-stitching.ts:
+    schema: ./dev-test/test-schema/schema-text.js
+    plugins:
+      - typescript
+      - typescript-resolvers:
+          noSchemaStitching: false
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
@@ -92,6 +99,13 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/githunt/types.onlyEnums.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      onlyEnums: true
+    plugins:
+      - typescript
   ./dev-test/githunt/types.preResolveTypes.onlyOperationTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -190,6 +204,8 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-query
+    config:
+      addInfiniteQuery: true
   ./dev-test/githunt/types.rtk-query.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -266,6 +282,13 @@ generates:
       - typescript
       - typescript-operations
       - typescript-vue-apollo-smart-ops
+  ./dev-test/githunt/jit-sdk.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-jit-sdk
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -280,6 +303,13 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/star-wars/types.OnlyEnums.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      onlyEnums: true
+    plugins:
+      - typescript
   ./dev-test/star-wars/types.preResolveTypes.onlyOperationTypes.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -392,3 +422,21 @@ generates:
     schema: ./dev-test/gql-tag-operations/schema.graphql
     documents: './dev-test/gql-tag-operations/src/**/*.ts'
     preset: gql-tag-operations-preset
+  ./dev-test/gql-tag-operations-urql/gql:
+    schema: ./dev-test/gql-tag-operations-urql/schema.graphql
+    documents: './dev-test/gql-tag-operations-urql/src/**/*.ts'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      augmentedModuleName: '@urql/core'
+  ./dev-test/gql-tag-operations-masking/gql:
+    schema: ./dev-test/gql-tag-operations-masking/schema.graphql
+    documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true
+  ./dev-test/gql-tag-operations-masking-star-wars/gql:
+    schema: ./dev-test/gql-tag-operations-masking-star-wars/schema.json
+    documents: './dev-test/gql-tag-operations-masking-star-wars/src/**/*.tsx'
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true

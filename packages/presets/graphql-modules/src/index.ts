@@ -1,15 +1,17 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { concatAST, isScalarType } from 'graphql';
 import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
-import { buildModule } from './builder';
-import { ModulesConfig } from './config';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils.js';
+import { buildModule } from './builder.js';
+import { ModulesConfig } from './config.js';
+import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
     const { baseOutputDir } = options;
-    const { baseTypesPath, encapsulateModuleTypes, requireRootResolvers = false } = options.presetConfig;
+    const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
+    const requireRootResolvers = getConfigValue(options?.presetConfig.requireRootResolvers, false);
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -24,7 +26,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       throw new Error(`Preset "graphql-modules" requires to use GraphQL SDL`);
     }
 
-    const sourcesByModuleMap = groupSourcesByModule(options.schemaAst!.extensions.extendedSources, baseOutputDir);
+    const extensions: any = options.schemaAst!.extensions;
+    const sourcesByModuleMap = groupSourcesByModule(extensions.extendedSources, baseOutputDir);
     const modules = Object.keys(sourcesByModuleMap);
 
     const baseVisitor = new BaseVisitor(options.config, {});
@@ -61,7 +64,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
       },
       config: {
-        ...(options.config || {}),
+        ...options.config,
         enumsAsTypes: true,
       },
       schemaAst: options.schemaAst!,
@@ -104,6 +107,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 shouldDeclare,
                 schema,
                 baseVisitor,
+                useGraphQLModules,
                 rootTypes: [
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,

@@ -1,4 +1,10 @@
-import { isBrowser, isNode } from './is-browser';
+import { DetailedError } from '@graphql-codegen/plugin-helpers';
+
+type CompositeError = Error | DetailedError;
+type ListrError = Error & { errors: CompositeError[] };
+export function isListrError(err: Error & { name?: unknown; errors?: unknown }): err is ListrError {
+  return err.name === 'ListrError' && Array.isArray(err.errors) && err.errors.length > 0;
+}
 
 export function cliError(err: any, exitOnError = true) {
   let msg: string;
@@ -14,9 +20,7 @@ export function cliError(err: any, exitOnError = true) {
   // eslint-disable-next-line no-console
   console.error(msg);
 
-  if (exitOnError && isNode) {
+  if (exitOnError) {
     process.exit(1);
-  } else if (exitOnError && isBrowser) {
-    throw err;
   }
 }

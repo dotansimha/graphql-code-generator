@@ -1,24 +1,31 @@
-import { generate } from './generate-and-save';
-import { init } from './init';
-import { createContext } from './config';
-import { lifecycleHooks } from './hooks';
+import { generate } from './generate-and-save.js';
+import { init } from './init/index.js';
+import { createContext } from './config.js';
+import { lifecycleHooks } from './hooks.js';
 import { DetailedError } from '@graphql-codegen/plugin-helpers';
 
-export async function runCli(cmd: string): Promise<any> {
+export async function runCli(cmd: string): Promise<number> {
   await ensureGraphQlPackage();
 
-  switch (cmd) {
-    case 'init':
-      return init();
-    default: {
-      return createContext().then(context => {
-        return generate(context).catch(async error => {
-          await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+  if (cmd === 'init') {
+    await init();
+    return 0;
+  }
 
-          throw error;
-        });
-      });
+  const context = await createContext();
+  try {
+    await generate(context);
+    if (context.checkMode && context.checkModeStaleFiles.length > 0) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `The following stale files were detected:\n${context.checkModeStaleFiles.map(file => `  - ${file}\n`)}`
+      );
+      return 1;
     }
+    return 0;
+  } catch (error) {
+    await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+    return 1;
   }
 }
 

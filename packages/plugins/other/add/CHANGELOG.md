@@ -1,5 +1,29 @@
 # @graphql-codegen/add
 
+## 3.2.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 3.1.1
+
+### Patch Changes
+
+- 8643b3bf3: Add GraphQL 16 as a peerDependency
+- 6002feb3d: Fix exports in package.json files for react-native projects
+- Updated dependencies [6002feb3d]
+  - @graphql-codegen/plugin-helpers@2.3.2
+
 ## 3.1.0
 
 ### Minor Changes

@@ -4,12 +4,12 @@ export interface TimePluginConfig {
    * @default YYYY-MM-DDTHH:mm:ssZ
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {4-5}
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - time:
-   *        format: DD.MM.YY
+   *   path/to/file.ts:
+   *     plugins:
+   *       - time:
+   *           format: DD.MM.YY
    * ```
    */
   format?: string;
@@ -18,12 +18,12 @@ export interface TimePluginConfig {
    * @default 'Generated on'
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {4-5}
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - time:
-   *        message: "The file generated on: "
+   *   path/to/file.ts:
+   *     plugins:
+   *       - time:
+   *           message: 'The file generated on: '
    * ```
    */
   message?: string;

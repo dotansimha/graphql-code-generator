@@ -21,8 +21,8 @@ import {
   DeclarationKind,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { FlowPluginConfig } from './config';
-import { FlowOperationVariablesToObject } from './flow-variables-to-object';
+import { FlowPluginConfig } from './config.js';
+import { FlowOperationVariablesToObject } from './flow-variables-to-object.js';
 
 export interface FlowPluginParsedConfig extends ParsedTypesConfig {
   useFlowExactObjects: boolean;
@@ -55,7 +55,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
-    const comment = transformComment((node.description as any) as string, 1);
+    const comment = transformComment(node.description as any as string, 1);
 
     return comment + indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
@@ -64,8 +64,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return `?${super.NamedType(node, key, parent, path, ancestors)}`;
   }
 
-  ListType(node: ListTypeNode): string {
-    return `?${super.ListType(node)}`;
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+    return `?${super.ListType(node, key, parent, path, ancestors)}`;
   }
 
   NonNullType(node: NonNullTypeNode): string {
@@ -79,9 +79,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
-    const typeString = (node.type as any) as string;
+    const typeString = node.type as any as string;
     const namePostfix = typeString.startsWith('?') ? '?' : '';
-    const comment = transformComment((node.description as any) as string, 1);
+    const comment = transformComment(node.description as any as string, 1);
 
     return comment + indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);
   }
@@ -92,7 +92,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
         ...node,
         interfaces:
           node.interfaces && node.interfaces.length > 0
-            ? node.interfaces.map(name => ((name as any) as string).replace('?', ''))
+            ? node.interfaces.map(name => (name as any as string).replace('?', ''))
             : ([] as any),
       },
       key,
@@ -148,7 +148,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const typeName = (node.name as any) as string;
+    const typeName = node.name as any as string;
 
     if (this.config.enumValues[typeName] && this.config.enumValues[typeName].sourceFile) {
       return null;
@@ -167,7 +167,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .withBlock(
         node.values
           .map(enumOption => {
-            const comment = transformComment((enumOption.description as any) as string, 1);
+            const comment = transformComment(enumOption.description as any as string, 1);
             const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
             let enumValue: string | number = enumOption.name as any;
 
@@ -188,7 +188,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .export()
       .asKind('type')
       .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
-      .withComment((node.description as any) as string)
+      .withComment(node.description as any as string)
       .withContent(`$Values<typeof ${enumValuesName}>`).string;
 
     return [enumValues, enumType].join('\n\n');

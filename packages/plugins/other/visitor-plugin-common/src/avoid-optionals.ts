@@ -1,10 +1,11 @@
-import { AvoidOptionalsConfig } from './types';
+import { AvoidOptionalsConfig } from './types.js';
 
 export const DEFAULT_AVOID_OPTIONALS: AvoidOptionalsConfig = {
   object: false,
   inputValue: false,
   field: false,
   defaultValue: false,
+  resolvers: false,
 };
 
 export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptionalsConfig): AvoidOptionalsConfig {
@@ -14,6 +15,7 @@ export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptional
       inputValue: avoidOptionals,
       field: avoidOptionals,
       defaultValue: avoidOptionals,
+      resolvers: avoidOptionals,
     };
   }
 

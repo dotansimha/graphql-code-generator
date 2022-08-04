@@ -1,22 +1,21 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import autoBind from 'auto-bind';
 import {
   FragmentDefinitionNode,
   print,
   OperationDefinitionNode,
-  visit,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
 } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue, buildScalarsFromConfig } from './utils';
-import { LoadedFragment, ParsedImport } from './types';
+import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { getConfigValue, buildScalarsFromConfig } from './utils.js';
+import { LoadedFragment, ParsedImport } from './types.js';
 import { basename, extname } from 'path';
 import { pascalCase } from 'change-case-all';
-import { generateFragmentImportStatement } from './imports';
+import { generateFragmentImportStatement } from './imports.js';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 
 gqlTag.enableExperimentalFragmentVariables();
@@ -44,13 +43,15 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## graphql.macro
-   * ```yml
+   *
+   * ```yaml
    * config:
    *   gqlImport: graphql.macro#gql
    * ```
    *
    * ## Gatsby
-   * ```yml
+   *
+   * ```yaml
    * config:
    *   gqlImport: gatsby#graphql
    * ```
@@ -105,6 +106,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default graphQLTag
    * @description Declares how DocumentNode are created:
+   *
    * - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
@@ -129,17 +131,18 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
    * @default ""
    * @description This config should be used if `documentMode` is `external`. This has 2 usage:
+   *
    * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: path/to/document-node-file
    * ```
    *
-   * ```yml
+   * ```yaml
    * config:
    *   documentMode: external
    *   importDocumentNodeExternallyFrom: near-operation-file
@@ -236,7 +239,7 @@ export class ClientSideBaseVisitor<
 
     const names: Set<string> = new Set();
 
-    visit(document, {
+    oldVisit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
           names.add(node.name.value);
@@ -271,18 +274,21 @@ export class ClientSideBaseVisitor<
     );
   }
 
-  protected _includeFragments(fragments: string[]): string {
+  protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
         return this._fragments
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
           .join('\n');
-      } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-        return '';
-      } else {
-        return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
+      if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+        return '';
+      }
+      if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
+        return '';
+      }
+      return `${fragments.map(name => '${' + name + '}').join('\n')}`;
     }
 
     return '';
@@ -297,7 +303,7 @@ export class ClientSideBaseVisitor<
 
     const doc = this._prepareDocument(`
     ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
-    ${this._includeFragments(fragments)}`);
+    ${this._includeFragments(fragments, node.kind)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       let gqlObj = gqlTag([doc]);
@@ -307,7 +313,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
+    }
+    if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       let gqlObj = gqlTag([doc]);
 
       if (this.config.optimizeDocumentNode) {
@@ -324,7 +331,8 @@ export class ClientSideBaseVisitor<
       }
 
       return JSON.stringify(gqlObj);
-    } else if (this.config.documentMode === DocumentMode.string) {
+    }
+    if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';
     }
 
@@ -476,7 +484,7 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
+              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}.js';`
             );
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
@@ -606,13 +614,13 @@ export class ClientSideBaseVisitor<
     });
 
     let documentString = '';
-    if (this.config.documentMode !== DocumentMode.external) {
-      // only generate exports for named queries
-      if (documentVariableName !== '') {
-        documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
-          this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-        } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
-      }
+    if (
+      this.config.documentMode !== DocumentMode.external &&
+      documentVariableName !== '' // only generate exports for named queries
+    ) {
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
+        this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+      } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
     }
 
     const hasRequiredVariables = this.checkVariablesRequirements(node);

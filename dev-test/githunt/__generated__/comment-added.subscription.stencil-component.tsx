@@ -9,16 +9,13 @@ declare global {
 
   export type OnCommentAddedSubscription = {
     __typename?: 'Subscription';
-    commentAdded?:
-      | {
-          __typename?: 'Comment';
-          id: number;
-          createdAt: number;
-          content: string;
-          postedBy: { __typename?: 'User'; login: string; html_url: string };
-        }
-      | null
-      | undefined;
+    commentAdded?: {
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    } | null;
   };
 }
 

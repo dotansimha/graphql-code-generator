@@ -1,4 +1,4 @@
-import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
+import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor.js';
 import {
   GraphQLSchema,
   isEnumType,
@@ -7,7 +7,7 @@ import {
   GraphQLNamedType,
   SelectionSetNode,
 } from 'graphql';
-import { FlowDocumentsPluginConfig } from './config';
+import { FlowDocumentsPluginConfig } from './config.js';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import {
   wrapTypeWithModifiers,
@@ -65,7 +65,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     const wrapArray = (type: string) => `${this.config.useFlowReadOnlyTypes ? '$ReadOnlyArray' : 'Array'}<${type}>`;
     const wrapOptional = (type: string) => `?${type}`;
 
-    const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
+    const { useFlowReadOnlyTypes } = this.config;
     const formatNamedField = (
       name: string,
       type: GraphQLOutputType | GraphQLNamedType | null,

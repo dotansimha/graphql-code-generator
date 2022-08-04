@@ -1,4 +1,4 @@
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { Types, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import {
   parse,
   visit,
@@ -12,15 +12,15 @@ import {
   printIntrospectionSchema,
   isObjectType,
 } from 'graphql';
-import { TsVisitor } from './visitor';
-import { TsIntrospectionVisitor } from './introspection-visitor';
-import { TypeScriptPluginConfig } from './config';
+import { TsVisitor } from './visitor.js';
+import { TsIntrospectionVisitor } from './introspection-visitor.js';
+import { TypeScriptPluginConfig } from './config.js';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 
-export * from './typescript-variables-to-object';
-export * from './visitor';
-export * from './config';
-export * from './introspection-visitor';
+export * from './typescript-variables-to-object.js';
+export * from './visitor.js';
+export * from './config.js';
+export * from './introspection-visitor.js';
 
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -31,8 +31,8 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 
   const visitor = new TsVisitor(_schema, config);
 
-  const visitorResult = visit(ast, { leave: visitor });
-  const introspectionDefinitions = includeIntrospectionDefinitions(_schema, documents, config);
+  const visitorResult = oldVisit(ast, { leave: visitor });
+  const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
   const directiveArgumentAndInputFieldMappings = visitor.directiveArgumentAndInputFieldMappingsDefinition;
 
@@ -54,7 +54,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   };
 };
 
-export function includeIntrospectionDefinitions(
+export function includeIntrospectionTypesDefinitions(
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
@@ -80,7 +80,7 @@ export function includeIntrospectionDefinitions(
   });
 
   const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
-  const result: DocumentNode = visit(parse(printIntrospectionSchema(schema)), { leave: visitor });
+  const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), { leave: visitor });
 
   // recursively go through each `usedTypes` and their children and collect all used types
   // we don't care about Interfaces, Unions and others, but Objects and Enums

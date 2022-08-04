@@ -1,30 +1,42 @@
 import {
-  ClientSideBaseVisitor,
   ClientSideBasePluginConfig,
-  LoadedFragment,
+  ClientSideBaseVisitor,
   DocumentMode,
+  LoadedFragment,
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
-import { ReactQueryRawPluginConfig } from './config';
-import autoBind from 'auto-bind';
-import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
+import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import {
+  generateMutationKeyMaker,
+  generateQueryKeyMaker,
+  generateInfiniteQueryKeyMaker,
+} from './variables-generator.js';
+
+import { CustomMapperFetcher } from './fetcher-custom-mapper.js';
+import { FetchFetcher } from './fetcher-fetch.js';
+import { FetcherRenderer } from './fetcher.js';
+import { GraphQLRequestClientFetcher } from './fetcher-graphql-request.js';
+import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded.js';
+import { ReactQueryRawPluginConfig } from './config.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { FetcherRenderer } from './fetcher';
-import { FetchFetcher } from './fetcher-fetch';
-import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
-import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
-import { CustomMapperFetcher } from './fetcher-custom-mapper';
+import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
-import { generateQueryKeyMaker } from './variables-generator';
 
 export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   errorType: string;
   exposeDocument: boolean;
   exposeQueryKeys: boolean;
+  exposeMutationKeys: boolean;
   exposeFetcher: boolean;
+  addInfiniteQuery: boolean;
+  legacyMode: boolean;
 }
 
 export interface ReactQueryMethodMap {
+  infiniteQuery: {
+    hook: string;
+    options: string;
+  };
   query: {
     hook: string;
     options: string;
@@ -38,9 +50,14 @@ export interface ReactQueryMethodMap {
 export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPluginConfig, ReactQueryPluginConfig> {
   private _externalImportPrefix: string;
   public fetcher: FetcherRenderer;
-  public reactQueryIdentifiersInUse = new Set<string>();
+  public reactQueryHookIdentifiersInUse = new Set<string>();
+  public reactQueryOptionsIdentifiersInUse = new Set<string>();
 
   public queryMethodMap: ReactQueryMethodMap = {
+    infiniteQuery: {
+      hook: 'useInfiniteQuery',
+      options: 'UseInfiniteQueryOptions',
+    },
     query: {
       hook: 'useQuery',
       options: 'UseQueryOptions',
@@ -62,7 +79,10 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       errorType: getConfigValue(rawConfig.errorType, 'unknown'),
       exposeDocument: getConfigValue(rawConfig.exposeDocument, false),
       exposeQueryKeys: getConfigValue(rawConfig.exposeQueryKeys, false),
+      exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
+      addInfiniteQuery: getConfigValue(rawConfig.addInfiniteQuery, false),
+      legacyMode: getConfigValue(rawConfig.legacyMode, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -78,9 +98,11 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
   private createFetcher(raw: ReactQueryRawPluginConfig['fetcher']): FetcherRenderer {
     if (raw === 'fetch') {
       return new FetchFetcher(this);
-    } else if (typeof raw === 'object' && 'endpoint' in raw) {
+    }
+    if (typeof raw === 'object' && 'endpoint' in raw) {
       return new HardcodedFetchFetcher(this, raw);
-    } else if (raw === 'graphql-request') {
+    }
+    if (raw === 'graphql-request') {
       return new GraphQLRequestClientFetcher(this);
     }
 
@@ -98,7 +120,16 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       return baseImports;
     }
 
-    return [...baseImports, `import { ${Array.from(this.reactQueryIdentifiersInUse).join(', ')} } from 'react-query';`];
+    const hookAndTypeImports = [
+      ...Array.from(this.reactQueryHookIdentifiersInUse),
+      ...Array.from(this.reactQueryOptionsIdentifiersInUse).map(
+        identifier => `${this.config.useTypeImports ? 'type ' : ''}${identifier}`
+      ),
+    ];
+
+    const moduleName = this.config.legacyMode ? 'react-query' : '@tanstack/react-query';
+
+    return [...baseImports, `import { ${hookAndTypeImports.join(', ')} } from '${moduleName}';`];
   }
 
   public getFetcherImplementation(): string {
@@ -150,7 +181,25 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         query += `\nuse${operationName}.document = ${documentVariableName};\n`;
       }
       if (this.config.exposeQueryKeys) {
-        query += generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables);
+        query += `\n${generateQueryKeyMaker(node, operationName, operationVariablesTypes, hasRequiredVariables)};\n`;
+      }
+      if (this.config.addInfiniteQuery) {
+        query += `\n${this.fetcher.generateInfiniteQueryHook(
+          node,
+          documentVariableName,
+          operationName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        )}\n`;
+        if (this.config.exposeQueryKeys) {
+          query += `\n${generateInfiniteQueryKeyMaker(
+            node,
+            operationName,
+            operationVariablesTypes,
+            hasRequiredVariables
+          )};\n`;
+        }
       }
 
       // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook
@@ -167,15 +216,32 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         );
       }
       return query;
-    } else if (operationType === 'Mutation') {
-      return this.fetcher.generateMutationHook(
+    }
+    if (operationType === 'Mutation') {
+      let query = this.fetcher.generateMutationHook(
         node,
         documentVariableName,
         operationName,
         operationResultType,
-        operationVariablesTypes
+        operationVariablesTypes,
+        hasRequiredVariables
       );
-    } else if (operationType === 'Subscription') {
+      if (this.config.exposeMutationKeys) {
+        query += generateMutationKeyMaker(node, operationName);
+      }
+      if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
+        query += this.fetcher.generateFetcherFetch(
+          node,
+          documentVariableName,
+          operationName,
+          operationResultType,
+          operationVariablesTypes,
+          hasRequiredVariables
+        );
+      }
+      return query;
+    }
+    if (operationType === 'Subscription') {
       // eslint-disable-next-line no-console
       console.warn(
         `Plugin "typescript-react-query" does not support GraphQL Subscriptions at the moment! Ignoring "${node.name.value}"...`

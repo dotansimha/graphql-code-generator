@@ -2,12 +2,13 @@
 
 exports[`React Apollo Issues Issue #2742 - Incorrect import prefix 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -29,8 +30,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -73,8 +74,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -172,7 +173,7 @@ export type SubscriptionCommentAddedArgs = {
 export type Get_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Get_SomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
+export type Get_SomethingQuery = { feed?: Array<{ id: number } | null> | null };
 
 export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
@@ -196,12 +197,13 @@ export type Get_SomethingQueryResult = Apollo.QueryResult<Types.Get_SomethingQue
 
 exports[`React Apollo Issues Issue #2826 - Incorrect prefix 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -223,8 +225,8 @@ export type GQLQuery = {
 
 export type GQLQueryFeedArgs = {
   type: GQLFeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -267,8 +269,8 @@ export type GQLEntry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type GQLEntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -366,7 +368,7 @@ export type GQLSubscriptionCommentAddedArgs = {
 export type GQLGet_SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQLGet_SomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
+export type GQLGet_SomethingQuery = { feed?: Array<{ id: number } | null> | null };
 
 export const Get_SomethingDocument = gql\`
     query GET_SOMETHING {
@@ -390,12 +392,13 @@ export type Get_SomethingQueryResult = Apollo.QueryResult<GQLGet_SomethingQuery,
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 1`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -417,8 +420,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -461,8 +464,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -560,7 +563,7 @@ export type SubscriptionCommentAddedArgs = {
 export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
+export type GetSomethingQuery = { feed?: Array<{ id: number } | null> | null };
 
 export const GetSomethingDocument = gql\`
     query GET_SOMETHING {
@@ -584,12 +587,13 @@ export type GetSomethingQueryResult = Apollo.QueryResult<GetSomethingQuery, GetS
 
 exports[`React Apollo Issues PR #2725 - transformUnderscore: true causes invalid output 2`] = `
 "export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -611,8 +615,8 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -655,8 +659,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /**
@@ -754,7 +758,7 @@ export type SubscriptionCommentAddedArgs = {
 export type GetSomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSomethingQuery = { feed?: Array<{ id: number } | null | undefined> | null | undefined };
+export type GetSomethingQuery = { feed?: Array<{ id: number } | null> | null };
 
 export const GetSomethingDocument = gql\`
     query GET_SOMETHING {

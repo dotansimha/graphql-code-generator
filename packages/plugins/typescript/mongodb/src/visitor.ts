@@ -1,4 +1,4 @@
-import { FieldsTree } from './fields-tree';
+import { FieldsTree } from './fields-tree.js';
 import {
   getBaseTypeNode,
   DeclarationBlock,
@@ -6,9 +6,10 @@ import {
   ParsedConfig,
   BaseVisitor,
   buildScalarsFromConfig,
+  wrapTypeNodeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { Directives, TypeScriptMongoPluginConfig } from './config';
+import { Directives, TypeScriptMongoPluginConfig } from './config.js';
 import {
   DirectiveNode,
   GraphQLSchema,
@@ -21,9 +22,9 @@ import {
   InterfaceTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { wrapTypeNodeWithModifiers } from '@graphql-codegen/visitor-plugin-common';
 
 type AdditionalField = { path: string; type: string };
+
 export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
   dbTypeSuffix: string;
   dbInterfaceSuffix: string;
@@ -38,7 +39,7 @@ type Directivable = { directives?: ReadonlyArray<DirectiveNode> };
 
 function resolveObjectId(pointer: string | null | undefined): { identifier: string; module: string } {
   if (!pointer) {
-    return { identifier: 'ObjectID', module: 'mongodb' };
+    return { identifier: 'ObjectId', module: 'mongodb' };
   }
 
   if (pointer.includes('#')) {
@@ -55,7 +56,7 @@ function resolveObjectId(pointer: string | null | undefined): { identifier: stri
 
 export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, TypeScriptMongoPluginParsedConfig> {
   constructor(private _schema: GraphQLSchema, pluginConfig: TypeScriptMongoPluginConfig) {
-    super(pluginConfig, ({
+    super(pluginConfig, {
       dbTypeSuffix: pluginConfig.dbTypeSuffix || 'DbObject',
       dbInterfaceSuffix: pluginConfig.dbInterfaceSuffix || 'DbInterface',
       objectIdType: resolveObjectId(pluginConfig.objectIdType).identifier,
@@ -64,7 +65,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false),
       scalars: buildScalarsFromConfig(_schema, pluginConfig),
-    } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
+    } as Partial<TypeScriptMongoPluginParsedConfig> as any);
     autoBind(this);
   }
 
@@ -83,9 +84,9 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.FLOAT:
       case Kind.BOOLEAN:
       case Kind.ENUM:
-        return (valueNode.value as any) as T;
+        return valueNode.value as any as T;
       case Kind.LIST:
-        return (valueNode.values.map(v => this._resolveDirectiveValue<T>(v)) as any) as T;
+        return valueNode.values.map(v => this._resolveDirectiveValue<T>(v)) as any as T;
       case Kind.NULL:
         return null;
       case Kind.OBJECT:
@@ -240,7 +241,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
   }
 
   private _addAdditionalFields(tree: FieldsTree, additioalFields: AdditionalField[] | null): void {
-    const avoidOptionals = this.config.avoidOptionals;
+    const { avoidOptionals } = this.config;
     if (!additioalFields || additioalFields.length === 0) {
       return;
     }
@@ -287,7 +288,8 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
 
         if (entityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbTypeSuffix });
-        } else if (abstractEntityDirective) {
+        }
+        if (abstractEntityDirective) {
           return this.convertName(namedType, { suffix: this.config.dbInterfaceSuffix });
         }
 

@@ -1,9 +1,9 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src';
-import { schema } from '../../../typescript/resolvers/tests/common';
+import { plugin } from '../src/index.js';
+import { schema } from '../../../typescript/resolvers/tests/common.js';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor';
+import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor.js';
 
 describe('Flow Resolvers Plugin', () => {
   describe('Enums', () => {
@@ -77,6 +77,7 @@ describe('Flow Resolvers Plugin', () => {
       expect(result.content).toContain(
         `export type MyEnumResolvers = EnumResolverSignature<{| A?: *, B?: *, C?: * |}, $ElementType<ResolversTypes, 'MyEnum'>>;`
       );
+      expect(result.content).toContain(`MyEnum?: MyEnumResolvers,`);
     });
 
     it('Should generate enum internal values resolvers when enum has mappers pointing to external enum', async () => {
@@ -181,7 +182,9 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { type GraphQLResolveInfo } from 'graphql';`);
+    expect(result.prepend).toContain(
+      `import { type GraphQLResolveInfo, type GraphQLScalarType, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
@@ -192,9 +195,7 @@ describe('Flow Resolvers Plugin', () => {
       { outputFile: '' }
     ) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).not.toContain(
-      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(result.prepend).toContain(`import { type GraphQLResolveInfo } from 'graphql';`);
   });
 
   it('Should generate valid output with args', async () => {

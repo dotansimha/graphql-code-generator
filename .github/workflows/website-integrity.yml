@@ -1,0 +1,58 @@
+name: Website Integrity
+on:
+  pull_request:
+    paths:
+      - 'website/**'
+jobs:
+  website-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Fetch
+        run: git fetch origin master
+      - name: Use Node 18
+        uses: actions/setup-node@master
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        id: node-modules-cache-website-integrity
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
+          restore-keys: |
+            ${{runner.os}}-18-node-modules-
+      - name: Install Dependencies using Yarn
+        run: yarn install --ignore-engines --frozen-lockfile --immutable
+        if: steps.node-modules-cache-website-integrity.outputs.cache-hit != 'true'
+
+      - name: Build Packages
+        run: yarn build
+
+      - name: Build Website
+        run: yarn workspace website run build
+
+      - name: Compare
+        run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt
+
+      - name: Diff to file
+        if: always()
+        id: diff_result
+        run: |
+          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-output name=result::$OUTPUT"
+
+      - name: Publish a message
+        if: always() && contains(steps.diff_result.outputs.result, 'diff')
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ```diff
+            ${{ steps.diff_result.outputs.result }}
+            ```

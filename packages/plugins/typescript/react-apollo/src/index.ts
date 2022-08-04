@@ -1,9 +1,9 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { ReactApolloVisitor } from './visitor';
+import { ReactApolloVisitor } from './visitor.js';
 import { extname } from 'path';
-import { ReactApolloRawPluginConfig } from './config';
+import { ReactApolloRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -25,7 +25,7 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig, Types.ComplexPlu
   ];
 
   const visitor = new ReactApolloVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),
@@ -45,10 +45,8 @@ export const validate: PluginValidateFn<any> = async (
         `Plugin "typescript-react-apollo" requires extension to be ".tsx" when withComponent: true is set!`
       );
     }
-  } else {
-    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "typescript-react-apollo" requires extension to be ".ts" or ".tsx"!`);
-    }
+  } else if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+    throw new Error(`Plugin "typescript-react-apollo" requires extension to be ".ts" or ".tsx"!`);
   }
 };
 

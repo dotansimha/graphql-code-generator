@@ -1,17 +1,16 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroAppearsInQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = {
   __typename?: 'Query';
   hero?:
-    | { __typename?: 'Droid'; name: string; appearsIn: Array<Types.Episode | null | undefined> }
-    | { __typename?: 'Human'; name: string; appearsIn: Array<Types.Episode | null | undefined> }
-    | null
-    | undefined;
+    | { __typename?: 'Droid'; name: string; appearsIn: Array<Types.Episode | null> }
+    | { __typename?: 'Human'; name: string; appearsIn: Array<Types.Episode | null> }
+    | null;
 };
 
 export const HeroAppearsInDocument = gql`

@@ -26,8 +26,8 @@ import {
   createObject,
   collectUsedTypes,
   indent,
-} from './utils';
-import { ModulesConfig } from './config';
+} from './utils.js';
+import { ModulesConfig } from './config.js';
 import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
@@ -47,6 +47,7 @@ export function buildModule(
     rootTypes,
     schema,
     baseVisitor,
+    useGraphQLModules,
   }: {
     importNamespace: string;
     importPath: string;
@@ -56,6 +57,7 @@ export function buildModule(
     rootTypes: string[];
     baseVisitor: BaseVisitor;
     schema?: GraphQLSchema;
+    useGraphQLModules: boolean;
   }
 ): string {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
@@ -116,7 +118,11 @@ export function buildModule(
   //
 
   // An actual output
-  const imports = [`import * as ${importNamespace} from "${importPath}";`, `import * as gm from "graphql-modules";`];
+  const imports = [`import * as ${importNamespace} from "${importPath}";`];
+
+  if (useGraphQLModules) {
+    imports.push(`import * as gm from "graphql-modules";`);
+  }
 
   let content = [
     printDefinedFields(),
@@ -126,7 +132,7 @@ export function buildModule(
     printScalars(visited),
     printResolveSignaturesPerType(visited),
     printResolversType(visited),
-    printResolveMiddlewareMap(),
+    useGraphQLModules ? printResolveMiddlewareMap() : undefined,
   ]
     .filter(Boolean)
     .join('\n\n');
@@ -247,7 +253,8 @@ export function buildModule(
         types.forEach(typeName => {
           if (k === 'enums') {
             return;
-          } else if (k === 'scalars') {
+          }
+          if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
           } else {
             // In case of enabled `requireRootResolvers` flag, the preset has to produce a non-optional property.

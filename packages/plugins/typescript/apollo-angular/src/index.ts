@@ -1,10 +1,9 @@
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode, parse } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { ApolloAngularVisitor } from './visitor';
+import { ApolloAngularVisitor } from './visitor.js';
 import { extname } from 'path';
-import gql from 'graphql-tag';
-import { ApolloAngularRawPluginConfig } from './config';
+import { ApolloAngularRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,
@@ -26,7 +25,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   ];
 
   const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),
@@ -40,10 +39,10 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   };
 };
 
-export const addToSchema = gql`
+export const addToSchema = parse(`
   directive @NgModule(module: String!) on OBJECT | FIELD
   directive @namedClient(name: String!) on OBJECT | FIELD
-`;
+`);
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,

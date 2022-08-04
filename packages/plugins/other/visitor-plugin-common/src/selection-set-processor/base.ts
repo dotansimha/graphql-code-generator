@@ -1,4 +1,4 @@
-import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types';
+import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types.js';
 import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
@@ -12,7 +12,7 @@ export type SelectionSetProcessorConfig = {
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
-  formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null): string;
+  formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null, isConditional?: boolean): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
   avoidOptionals?: AvoidOptionalsConfig;
 };
@@ -27,11 +27,11 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   buildSelectionSetFromStrings(pieces: string[]): string {
     if (pieces.length === 0) {
       return null;
-    } else if (pieces.length === 1) {
-      return pieces[0];
-    } else {
-      return `(\n  ${pieces.join(`\n  & `)}\n)`;
     }
+    if (pieces.length === 1) {
+      return pieces[0];
+    }
+    return `(\n  ${pieces.join(`\n  & `)}\n)`;
   }
 
   transformPrimitiveFields(

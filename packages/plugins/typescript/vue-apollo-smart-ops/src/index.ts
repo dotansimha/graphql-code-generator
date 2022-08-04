@@ -1,9 +1,9 @@
 import { extname } from 'path';
-import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { VueApolloVisitor } from './visitor';
-import { VueApolloSmartOpsRawPluginConfig } from './config';
+import { VueApolloVisitor } from './visitor.js';
+import { VueApolloSmartOpsRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<VueApolloSmartOpsRawPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -25,7 +25,7 @@ export const plugin: PluginFunction<VueApolloSmartOpsRawPluginConfig, Types.Comp
   ];
 
   const visitor = new VueApolloVisitor(schema, allFragments, config, documents);
-  const visitorResult = visit(allAst, { leave: visitor });
+  const visitorResult = oldVisit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),

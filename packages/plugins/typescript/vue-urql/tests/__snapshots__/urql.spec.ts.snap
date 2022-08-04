@@ -17,3 +17,14 @@ export function useListenToCommentsSubscription<R = ListenToCommentsSubscription
   return Urql.useSubscription<ListenToCommentsSubscription, R, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
 };"
 `;
+
+exports[`urql Composition should allow importing operations and documents from another file 1`] = `
+"import * as Operations from '@myproject/generated';
+import * as Urql from '@urql/vue';
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+
+export function useTestQuery(options: Omit<Urql.UseQueryArgs<never, Operations.TestQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<Operations.TestQuery>({ query: Operations.TestDocument, ...options });
+};"
+`;

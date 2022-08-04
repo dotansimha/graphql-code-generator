@@ -1,5 +1,5 @@
-import { validate, plugin } from '../src/index';
-import { buildSchema, parse } from 'graphql';
+import { validate, plugin } from '../src/index.js';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -103,24 +103,26 @@ describe('Schema AST', () => {
       `);
     });
 
-    it('Should print schema with as # when commentDescriptions=true', async () => {
-      const testSchema = buildSchema(/* GraphQL */ `
-        type Query {
-          """
-          test
-          """
-          fieldTest: String
-        }
-      `);
-      const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
+    if (versionInfo.major < 16) {
+      it('Should print schema with as # when commentDescriptions=true', async () => {
+        const testSchema = buildSchema(/* GraphQL */ `
+          type Query {
+            """
+            test
+            """
+            fieldTest: String
+          }
+        `);
+        const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
 
-      expect(content).toBeSimilarStringTo(`
+        expect(content).toBeSimilarStringTo(`
         type Query {
           #  test
           fieldTest: String
         }
       `);
-    });
+      });
+    }
 
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });
@@ -131,6 +133,36 @@ describe('Schema AST', () => {
       expect(content).toBeSimilarStringTo(`
         type Query {
           fieldTest: String @modify(limit: 1)
+        }
+      `);
+    });
+
+    it('Should print schema with introspection when "includeIntrospectionTypes" is set', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: true });
+
+      expect(content).toBeSimilarStringTo(`
+        type __Schema
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
+          __schema: __Schema!
+          __type(name: String!): __Type
+        }
+      `);
+    });
+
+    it('Should print schema without introspection when "includeIntrospectionTypes" is unset', async () => {
+      const content = await plugin(schema, [], { includeIntrospectionTypes: false });
+
+      expect(content).not.toBeSimilarStringTo(`
+        type __Schema
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
         }
       `);
     });

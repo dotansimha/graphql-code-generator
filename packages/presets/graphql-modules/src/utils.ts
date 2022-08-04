@@ -79,11 +79,12 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
       if (node.arguments) {
         node.arguments.forEach(findRelated);
       }
-    } else if (node.kind === Kind.NAMED_TYPE) {
+    } else if (
+      node.kind === Kind.NAMED_TYPE &&
       // Named type
-      if (!isGraphQLPrimitive(node.name.value)) {
-        markAsUsed(node.name.value);
-      }
+      !isGraphQLPrimitive(node.name.value)
+    ) {
+      markAsUsed(node.name.value);
     }
   }
 
@@ -191,7 +192,7 @@ function ensureStartsWithSeparator(path: string) {
 /**
  * Pushes an item to a list only if the list doesn't include the item
  */
-export function pushUnique<T extends any>(list: T[], item: T): void {
+export function pushUnique<T>(list: T[], item: T): void {
   if (!list.includes(item)) {
     list.push(item);
   }

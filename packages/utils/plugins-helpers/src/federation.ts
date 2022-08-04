@@ -8,13 +8,13 @@ import {
   GraphQLObjectType,
   isObjectType,
   GraphQLNamedType,
-  visit,
   DefinitionNode,
   OperationDefinitionNode,
 } from 'graphql';
 import merge from 'lodash/merge.js';
-import { getBaseType } from './utils';
+import { getBaseType } from './utils.js';
 import { MapperKind, mapSchema, astFromObjectType, getRootTypeNames } from '@graphql-tools/utils';
+import { oldVisit } from './index.js';
 
 /**
  * Federation Spec
@@ -216,14 +216,14 @@ export class ApolloFederation {
 
   private extractKeyOrRequiresFieldSet(directive: DirectiveNode): any {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-    const value = (arg.value as StringValueNode).value;
+    const { value } = arg.value as StringValueNode;
 
     type SelectionSetField = {
       name: string;
       selection: boolean | SelectionSetField[];
     };
 
-    return visit(parse(`{${value}}`), {
+    return oldVisit(parse(`{${value}}`), {
       leave: {
         SelectionSet(node) {
           return (node.selections as any as SelectionSetField[]).reduce((accum, field) => {
@@ -249,7 +249,7 @@ export class ApolloFederation {
 
   private extractProvidesFieldSet(directive: DirectiveNode): string[] {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-    const value = (arg.value as StringValueNode).value;
+    const { value } = arg.value as StringValueNode;
 
     if (/[{}]/gi.test(value)) {
       throw new Error('Nested fields in _FieldSet is not supported in the @provides directive');

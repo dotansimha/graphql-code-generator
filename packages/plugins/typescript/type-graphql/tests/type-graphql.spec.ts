@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('type-graphql', () => {
   it('should expose Maybe', async () => {
@@ -91,31 +91,31 @@ describe('type-graphql', () => {
       export class A {
         __typename?: 'A';
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
         @TypeGraphQL.Field(type => TypeGraphQL.ID)
         mandatoryId!: Scalars['ID'];
         @TypeGraphQL.Field(type => String, { nullable: true })
-        str!: Maybe<Scalars['String']>;
+        str?: Maybe<Scalars['String']>;
         @TypeGraphQL.Field(type => String)
         mandatoryStr!: Scalars['String'];
         @TypeGraphQL.Field(type => Boolean, { nullable: true })
-        bool!: Maybe<Scalars['Boolean']>;
+        bool?: Maybe<Scalars['Boolean']>;
         @TypeGraphQL.Field(type => Boolean)
         mandatoryBool!: Scalars['Boolean'];
         @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
-        int!: Maybe<Scalars['Int']>;
+        int?: Maybe<Scalars['Int']>;
         @TypeGraphQL.Field(type => TypeGraphQL.Int)
         mandatoryInt!: Scalars['Int'];
         @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
-        float!: Maybe<Scalars['Float']>;
+        float?: Maybe<Scalars['Float']>;
         @TypeGraphQL.Field(type => TypeGraphQL.Float)
         mandatoryFloat!: Scalars['Float'];
         @TypeGraphQL.Field(type => B, { nullable: true })
-        b!: Maybe<B>;
+        b?: Maybe<B>;
         @TypeGraphQL.Field(type => B)
         mandatoryB!: FixDecorator<B>;
         @TypeGraphQL.Field(type => [String], { nullable: true })
-        arr!: Maybe<Array<Scalars['String']>>;
+        arr?: Maybe<Array<Scalars['String']>>;
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
       }
@@ -140,7 +140,7 @@ describe('type-graphql', () => {
       export class Test extends ITest {
         __typename?: 'Test';
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
         @TypeGraphQL.Field(type => String)
         mandatoryStr!: Scalars['String'];
       }
@@ -149,9 +149,9 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InterfaceType()
       export abstract class ITest {
-        
+
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }
     `);
   });
@@ -186,44 +186,44 @@ describe('type-graphql', () => {
       export class A {
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID)
         mandatoryId!: Scalars['ID'];
 
         @TypeGraphQL.Field(type => String, { nullable: true })
-        str!: Maybe<Scalars['String']>;
+        str?: Maybe<Scalars['String']>;
 
         @TypeGraphQL.Field(type => String)
         mandatoryStr!: Scalars['String'];
 
         @TypeGraphQL.Field(type => Boolean, { nullable: true })
-        bool!: Maybe<Scalars['Boolean']>;
+        bool?: Maybe<Scalars['Boolean']>;
 
         @TypeGraphQL.Field(type => Boolean)
         mandatoryBool!: Scalars['Boolean'];
 
         @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
-        int!: Maybe<Scalars['Int']>;
+        int?: Maybe<Scalars['Int']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.Int)
         mandatoryInt!: Scalars['Int'];
 
         @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
-        float!: Maybe<Scalars['Float']>;
+        float?: Maybe<Scalars['Float']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.Float)
         mandatoryFloat!: Scalars['Float'];
 
         @TypeGraphQL.Field(type => B, { nullable: true })
-        b!: Maybe<B>;
+        b?: Maybe<B>;
 
         @TypeGraphQL.Field(type => B)
         mandatoryB!: FixDecorator<B>;
 
         @TypeGraphQL.Field(type => [String], { nullable: true })
-        arr!: Maybe<Array<Scalars['String']>>;
-        
+        arr?: Maybe<Array<Scalars['String']>>;
+
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
       }
@@ -263,44 +263,44 @@ describe('type-graphql', () => {
       export class MutationTestArgs {
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID)
         mandatoryId!: Scalars['ID'];
 
         @TypeGraphQL.Field(type => String, { nullable: true })
-        str!: Maybe<Scalars['String']>;
+        str?: Maybe<Scalars['String']>;
 
         @TypeGraphQL.Field(type => String)
         mandatoryStr!: Scalars['String'];
 
         @TypeGraphQL.Field(type => Boolean, { nullable: true })
-        bool!: Maybe<Scalars['Boolean']>;
+        bool?: Maybe<Scalars['Boolean']>;
 
         @TypeGraphQL.Field(type => Boolean)
         mandatoryBool!: Scalars['Boolean'];
 
         @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
-        int!: Maybe<Scalars['Int']>;
+        int?: Maybe<Scalars['Int']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.Int)
         mandatoryInt!: Scalars['Int'];
 
         @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
-        float!: Maybe<Scalars['Float']>;
+        float?: Maybe<Scalars['Float']>;
 
         @TypeGraphQL.Field(type => TypeGraphQL.Float)
         mandatoryFloat!: Scalars['Float'];
 
         @TypeGraphQL.Field(type => B, { nullable: true })
-        b!: Maybe<B>;
+        b?: Maybe<B>;
 
         @TypeGraphQL.Field(type => B)
         mandatoryB!: FixDecorator<B>;
 
         @TypeGraphQL.Field(type => [String], { nullable: true })
-        arr!: Maybe<Array<Scalars['String']>>;
-        
+        arr?: Maybe<Array<Scalars['String']>>;
+
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
       }
@@ -330,7 +330,7 @@ describe('type-graphql', () => {
         export class Test {
           __typename?: 'Test';
           @TypeGraphQL.Bar(type => TypeGraphQL.ID, { nullable: true })
-          id!: Maybe<Scalars['ID']>;
+          id?: Maybe<Scalars['ID']>;
           @TypeGraphQL.Bar(type => String)
           mandatoryStr!: Scalars['String'];
         }
@@ -338,9 +338,9 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
         @TypeGraphQL.FooBar()
         export abstract class ITest {
-          
+
           @TypeGraphQL.Bar(type => TypeGraphQL.ID, { nullable: true })
-          id!: Maybe<Scalars['ID']>;
+          id?: Maybe<Scalars['ID']>;
         }
       `);
   });
@@ -367,7 +367,7 @@ describe('type-graphql', () => {
       export class A {
         __typename?: 'A';
         @TypeGraphQL.Field(type => Date, { nullable: true })
-        date!: Maybe<Scalars['DateTime']>;
+        date?: Maybe<Scalars['DateTime']>;
         @TypeGraphQL.Field(type => Date)
         mandatoryDate!: Scalars['DateTime'];
       }
@@ -431,7 +431,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => String, { nullable: true })
-      str1!: Maybe<Scalars['String']>;
+      str1?: Maybe<Scalars['String']>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -441,7 +441,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [String], { nullable: 'itemsAndList' })
-      strArr1!: Maybe<Array<Maybe<Scalars['String']>>>;
+      strArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -451,7 +451,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [String], { nullable: true })
-      strArr3!: Maybe<Array<Scalars['String']>>;
+      strArr3?: Maybe<Array<Scalars['String']>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -461,7 +461,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
-      int1!: Maybe<Scalars['Int']>;
+      int1?: Maybe<Scalars['Int']>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -471,7 +471,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [TypeGraphQL.Int], { nullable: 'itemsAndList' })
-      intArr1!: Maybe<Array<Maybe<Scalars['Int']>>>;
+      intArr1?: Maybe<Array<Maybe<Scalars['Int']>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -481,7 +481,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [TypeGraphQL.Int], { nullable: true })
-      intArr3!: Maybe<Array<Scalars['Int']>>;
+      intArr3?: Maybe<Array<Scalars['Int']>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -491,7 +491,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => MyType2, { nullable: true })
-      custom1!: Maybe<MyType2>;
+      custom1?: Maybe<MyType2>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -501,7 +501,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [MyType2], { nullable: 'itemsAndList' })
-      customArr1!: Maybe<Array<Maybe<MyType2>>>;
+      customArr1?: Maybe<Array<Maybe<MyType2>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -511,7 +511,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [MyType2], { nullable: true })
-      customArr3!: Maybe<Array<MyType2>>;
+      customArr3?: Maybe<Array<MyType2>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -521,7 +521,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => String, { nullable: true })
-      inputStr1!: Maybe<Scalars['String']>;
+      inputStr1?: Maybe<Scalars['String']>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -531,7 +531,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [String], { nullable: 'itemsAndList' })
-      inputStrArr1!: Maybe<Array<Maybe<Scalars['String']>>>;
+      inputStrArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -541,7 +541,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [String], { nullable: true })
-      inputStrArr3!: Maybe<Array<Scalars['String']>>;
+      inputStrArr3?: Maybe<Array<Scalars['String']>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -551,7 +551,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
-      inputInt1!: Maybe<Scalars['Int']>;
+      inputInt1?: Maybe<Scalars['Int']>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -561,7 +561,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [TypeGraphQL.Int], { nullable: 'itemsAndList' })
-      inputIntArr1!: Maybe<Array<Maybe<Scalars['Int']>>>;
+      inputIntArr1?: Maybe<Array<Maybe<Scalars['Int']>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -571,7 +571,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [TypeGraphQL.Int], { nullable: true })
-      inputIntArr3!: Maybe<Array<Scalars['Int']>>;
+      inputIntArr3?: Maybe<Array<Scalars['Int']>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -581,7 +581,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => MyType2, { nullable: true })
-      inputCustom1!: Maybe<MyType2>;
+      inputCustom1?: Maybe<MyType2>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -591,7 +591,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [MyType2], { nullable: 'itemsAndList' })
-      inputCustomArr1!: Maybe<Array<Maybe<MyType2>>>;
+      inputCustomArr1?: Maybe<Array<Maybe<MyType2>>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -601,7 +601,7 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.Field(type => [MyType2], { nullable: true })
-      inputCustomArr3!: Maybe<Array<MyType2>>;
+      inputCustomArr3?: Maybe<Array<MyType2>>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -654,7 +654,7 @@ describe('type-graphql', () => {
       export class Test extends ITest {
         __typename?: 'Test';
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { description: 'id field description\\ninside Test class', nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
         @TypeGraphQL.Field(type => String, { description: 'mandatoryStr field description' })
         mandatoryStr!: Scalars['String'];
       }
@@ -663,9 +663,9 @@ describe('type-graphql', () => {
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.InterfaceType({ description: 'ITest interface description' })
       export abstract class ITest {
-        
+
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { description: 'id field description\\ninside ITest interface', nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }
     `);
 
@@ -674,7 +674,7 @@ describe('type-graphql', () => {
       export class TestInput {
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }
     `);
   });
@@ -755,7 +755,7 @@ describe('type-graphql', () => {
       @TypeGraphQL.InterfaceType()
       export abstract class ITypeGraphQlInterfaceType {
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }`
     );
 
@@ -771,7 +771,7 @@ describe('type-graphql', () => {
       export class TypeGraphQlType {
         __typename?: 'TypeGraphQLType';
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }`
     );
 
@@ -785,7 +785,7 @@ describe('type-graphql', () => {
       `@TypeGraphQL.InputType()
       export class TypeGraphQlInputType {
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-        id!: Maybe<Scalars['ID']>;
+        id?: Maybe<Scalars['ID']>;
       }`
     );
 
@@ -798,17 +798,17 @@ describe('type-graphql', () => {
 
     expect(result.content).toBeSimilarStringTo(`export type QueryRegularFunctionArgs = {
         mandatoryId: Scalars['ID'];
-        optionalId?: Maybe<Scalars['ID']>;
+        optionalId?: InputMaybe<Scalars['ID']>;
       };`);
 
     expect(result.content).toBeSimilarStringTo(` @TypeGraphQL.ArgsType()
        export class QueryTypeGraphQlFunctionArgs {
-      
+
          @TypeGraphQL.Field(type => TypeGraphQL.ID)
          mandatoryId!: Scalars['ID'];
-      
+
          @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
-         optionalId!: Maybe<Scalars['ID']>;
+         optionalId?: Maybe<Scalars['ID']>;
        };`);
   });
 });

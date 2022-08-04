@@ -1,5 +1,13 @@
-import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  UseQueryOptions,
+  UseInfiniteQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -72,8 +80,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A list of options for the sort order of the feed */
@@ -125,8 +133,8 @@ export type QueryEntryArgs = {
 };
 
 export type QueryFeedArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   type: FeedType;
 };
 
@@ -192,56 +200,46 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  commentAdded?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
-  entry?:
-    | {
-        __typename?: 'Entry';
-        id: number;
-        createdAt: number;
-        commentCount: number;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-        comments: Array<
-          | {
-              __typename?: 'Comment';
-              id: number;
-              createdAt: number;
-              content: string;
-              postedBy: { __typename?: 'User'; login: string; html_url: string };
-            }
-          | null
-          | undefined
-        >;
-        repository: {
-          __typename?: 'Repository';
-          description?: string | null | undefined;
-          open_issues_count?: number | null | undefined;
-          stargazers_count: number;
-          full_name: string;
-          html_url: string;
-        };
-      }
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null;
+  entry?: {
+    __typename?: 'Entry';
+    id: number;
+    createdAt: number;
+    commentCount: number;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+    comments: Array<{
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    } | null>;
+    repository: {
+      __typename?: 'Repository';
+      description?: string | null;
+      open_issues_count?: number | null;
+      stargazers_count: number;
+      full_name: string;
+      html_url: string;
+    };
+  } | null;
 };
 
 export type CommentsPageCommentFragment = {
@@ -256,7 +254,7 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
+  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null;
 };
 
 export type FeedEntryFragment = {
@@ -269,10 +267,10 @@ export type FeedEntryFragment = {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    description?: string | null | undefined;
+    description?: string | null;
     stargazers_count: number;
-    open_issues_count?: number | null | undefined;
-    owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+    open_issues_count?: number | null;
+    owner?: { __typename?: 'User'; avatar_url: string } | null;
   };
   vote: { __typename?: 'Vote'; vote_value: number };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
@@ -280,38 +278,31 @@ export type FeedEntryFragment = {
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string } | null | undefined;
-  feed?:
-    | Array<
-        | {
-            __typename?: 'Entry';
-            id: number;
-            commentCount: number;
-            score: number;
-            createdAt: number;
-            repository: {
-              __typename?: 'Repository';
-              full_name: string;
-              html_url: string;
-              description?: string | null | undefined;
-              stargazers_count: number;
-              open_issues_count?: number | null | undefined;
-              owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
-            };
-            vote: { __typename?: 'Vote'; vote_value: number };
-            postedBy: { __typename?: 'User'; html_url: string; login: string };
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string } | null;
+  feed?: Array<{
+    __typename?: 'Entry';
+    id: number;
+    commentCount: number;
+    score: number;
+    createdAt: number;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description?: string | null;
+      stargazers_count: number;
+      open_issues_count?: number | null;
+      owner?: { __typename?: 'User'; avatar_url: string } | null;
+    };
+    vote: { __typename?: 'Vote'; vote_value: number };
+    postedBy: { __typename?: 'User'; html_url: string; login: string };
+  } | null> | null;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -320,7 +311,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null | undefined;
+  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null;
 };
 
 export type RepoInfoFragment = {
@@ -328,9 +319,9 @@ export type RepoInfoFragment = {
   createdAt: number;
   repository: {
     __typename?: 'Repository';
-    description?: string | null | undefined;
+    description?: string | null;
     stargazers_count: number;
-    open_issues_count?: number | null | undefined;
+    open_issues_count?: number | null;
   };
   postedBy: { __typename?: 'User'; html_url: string; login: string };
 };
@@ -342,16 +333,13 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  submitComment?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type VoteButtonsFragment = {
@@ -367,10 +355,7 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote?:
-    | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
-    | null
-    | undefined;
+  vote?: { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } } | null;
 };
 
 export const CommentsPageCommentFragmentDoc = `
@@ -479,6 +464,22 @@ export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
     ),
     options
   );
+export const useInfiniteCommentQuery = <TData = CommentQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof CommentQueryVariables,
+  variables: CommentQueryVariables,
+  options?: UseInfiniteQueryOptions<CommentQuery, TError, TData>
+) =>
+  useInfiniteQuery<CommentQuery, TError, TData>(
+    ['Comment.infinite', variables],
+    metaData =>
+      fetcher<CommentQuery, CommentQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CommentDocument, {
+        ...variables,
+        ...(metaData.pageParam ?? {}),
+      })(),
+    options
+  );
+
 export const CurrentUserForProfileDocument = `
     query CurrentUserForProfile {
   currentUser {
@@ -502,6 +503,24 @@ export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery
     ),
     options
   );
+export const useInfiniteCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof CurrentUserForProfileQueryVariables,
+  variables?: CurrentUserForProfileQueryVariables,
+  options?: UseInfiniteQueryOptions<CurrentUserForProfileQuery, TError, TData>
+) =>
+  useInfiniteQuery<CurrentUserForProfileQuery, TError, TData>(
+    variables === undefined ? ['CurrentUserForProfile.infinite'] : ['CurrentUserForProfile.infinite', variables],
+    metaData =>
+      fetcher<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        CurrentUserForProfileDocument,
+        { ...variables, ...(metaData.pageParam ?? {}) }
+      )(),
+    options
+  );
+
 export const FeedDocument = `
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -522,6 +541,22 @@ export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
     fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, variables),
     options
   );
+export const useInfiniteFeedQuery = <TData = FeedQuery, TError = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  _pageParamKey: keyof FeedQueryVariables,
+  variables: FeedQueryVariables,
+  options?: UseInfiniteQueryOptions<FeedQuery, TError, TData>
+) =>
+  useInfiniteQuery<FeedQuery, TError, TData>(
+    ['Feed.infinite', variables],
+    metaData =>
+      fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, {
+        ...variables,
+        ...(metaData.pageParam ?? {}),
+      })(),
+    options
+  );
+
 export const SubmitRepositoryDocument = `
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -534,6 +569,7 @@ export const useSubmitRepositoryMutation = <TError = unknown, TContext = unknown
   options?: UseMutationOptions<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>
 ) =>
   useMutation<SubmitRepositoryMutation, TError, SubmitRepositoryMutationVariables, TContext>(
+    ['submitRepository'],
     (variables?: SubmitRepositoryMutationVariables) =>
       fetcher<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(
         dataSource.endpoint,
@@ -555,6 +591,7 @@ export const useSubmitCommentMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>
 ) =>
   useMutation<SubmitCommentMutation, TError, SubmitCommentMutationVariables, TContext>(
+    ['submitComment'],
     (variables?: SubmitCommentMutationVariables) =>
       fetcher<SubmitCommentMutation, SubmitCommentMutationVariables>(
         dataSource.endpoint,
@@ -580,6 +617,7 @@ export const useVoteMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<VoteMutation, TError, VoteMutationVariables, TContext>
 ) =>
   useMutation<VoteMutation, TError, VoteMutationVariables, TContext>(
+    ['vote'],
     (variables?: VoteMutationVariables) =>
       fetcher<VoteMutation, VoteMutationVariables>(
         dataSource.endpoint,

@@ -1,7 +1,7 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
   it('should expose Maybe', async () => {
@@ -516,6 +516,39 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#6815 - Generate different type for Maybe wrapper based on input variables', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test(id: ID): String
+          testWithInput(filter: Filter): String
+        }
+
+        input Filter {
+          a: String
+          b: Int
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          maybeValue: 'T | null',
+          inputMaybeValue: 'T | null | undefined',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      const output = mergeOutputs([result]);
+      expect(output).toContain(`export type InputMaybe<T> = T | null | undefined;`);
+      expect(output).toContain(`export type Maybe<T> = T | null;`);
+      expect(output).toContain(`test?: Maybe<Scalars['String']>;`);
+      expect(output).toContain(`id?: InputMaybe<Scalars['ID']>;`);
+      expect(output).toContain(`filter?: InputMaybe<Filter>;`);
+      expect(output).toContain(`a?: InputMaybe<Scalars['String']>;`);
+      expect(output).toContain(`b?: InputMaybe<Scalars['Int']>;`);
+    });
+
     it('#5643 - Incorrect combinations of declartionKinds leads to syntax error', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Base {
@@ -602,6 +635,38 @@ describe('TypeScript', () => {
       const output = mergeOutputs([result]);
       expect(output).toContain(`Available = '01'`);
       expect(output).toContain(`SomethingElse = '99'`);
+    });
+
+    it('#7898 - falsy enum value set on schema with enumsAsTypes set', async () => {
+      const testSchema = new GraphQLSchema({
+        types: [
+          new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLEnumType({
+                  name: 'MyEnum',
+                  values: {
+                    EnumValueName: {
+                      value: 0,
+                    },
+                  },
+                }),
+              },
+            },
+          }),
+        ],
+      });
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        { enumsAsTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).not.toContain('EnumValueName');
+      expect(output).toContain('0');
     });
 
     it('#6532 - numeric enum values with namingConvention', async () => {
@@ -743,8 +808,8 @@ describe('TypeScript', () => {
       };`);
       expect(output).toBeSimilarStringTo(`
       export type IQueryExampleQueryArgs = {
-        i?: Maybe<IUpdateFilterOptionInput>;
-        t?: Maybe<FilterOption>;
+        i?: InputMaybe<IUpdateFilterOptionInput>;
+        t?: InputMaybe<FilterOption>;
       };`);
     });
 
@@ -828,7 +893,7 @@ describe('TypeScript', () => {
      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
-      a?: Maybe<MyEnum>;
+      a?: InputMaybe<MyEnum>;
     };`);
     });
 
@@ -900,6 +965,40 @@ describe('TypeScript', () => {
         fullName: Scalars['String'];
         /** @deprecated Field \`fullName\` has been superseded by \`firstName\`. */
         firstName: Scalars['String'];
+      };`);
+      validateTs(result);
+    });
+
+    it('#7627 - enum value @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B @deprecated(reason: "Enum value \`B\` has been deprecated.")
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        A = 'A',
+        /** @deprecated Enum value \`B\` has been deprecated. */
+        B = 'B'
+      }`);
+      validateTs(result);
+    });
+
+    it('#7766 - input value @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      input MyInput {
+        A: Int
+        B: Int @deprecated(reason: "input value \`B\` has been deprecated.")
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyInput = {
+        A?: InputMaybe<Scalars['Int']>;
+        /** @deprecated input value \`B\` has been deprecated. */
+        B?: InputMaybe<Scalars['Int']>;
       };`);
       validateTs(result);
     });
@@ -1050,7 +1149,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          foo: Maybe<Scalars['String']>;
+          foo: InputMaybe<Scalars['String']>;
           bar: Scalars['String'];
         }
       `);
@@ -1275,8 +1374,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -1350,8 +1449,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypefooArgs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
       `);
@@ -1446,7 +1545,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export class MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1487,7 +1586,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1527,7 +1626,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export interface MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -1601,7 +1700,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export interface MyInput {
           id: Scalars['ID'];
-          displayName?: Maybe<Scalars['String']>;
+          displayName?: InputMaybe<Scalars['String']>;
         }
       `);
 
@@ -2486,6 +2585,130 @@ describe('TypeScript', () => {
       `);
       validateTs(result);
     });
+
+    describe('@oneOf on input types', () => {
+      const oneOfDirectiveDefinition = /* GraphQL */ `
+        directive @oneOf on INPUT_OBJECT
+      `;
+
+      it('correct output for type with single field', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; };
+        `);
+      });
+
+      it('correct output for type with multiple fields', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
+        `);
+      });
+
+      it('raises exception for type with non-optional fields', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int!
+            boolean: Boolean!
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        try {
+          await plugin(schema, [], {}, { outputFile: '' });
+          throw new Error('Plugin should have raised an exception.');
+        } catch (err) {
+          expect(err.message).toEqual(
+            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+          );
+        }
+      });
+
+      it('handles extensions properly', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          extend input Input {
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
+        `);
+      });
+
+      it('handles .isOneOf property on input object types properly', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const inputType: Record<'isOneOf', boolean> = schema.getType('Input') as any;
+        inputType.isOneOf = true;
+
+        const result = await plugin(schema, [], {}, { outputFile: '' });
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
+        `);
+      });
+    });
   });
 
   describe('Naming Convention & Types Prefix', () => {
@@ -2501,8 +2724,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -2528,8 +2751,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type Imytypefooargs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
       `);
@@ -2809,8 +3032,8 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
           a: Scalars['String'];
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Array<Maybe<Scalars['String']>>>;
+          b?: InputMaybe<Scalars['String']>;
+          c?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
           d: Array<Scalars['Int']>;
         };
     `);
@@ -2826,9 +3049,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2849,9 +3072,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c: Maybe<Scalars['String']>;
+          c: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
       };
     `);
@@ -2867,10 +3090,10 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<MyInput>;
+          a?: InputMaybe<MyInput>;
           b: MyInput;
-          c?: Maybe<Array<Maybe<MyInput>>>;
-          d: Array<Maybe<MyInput>>;
+          c?: InputMaybe<Array<InputMaybe<MyInput>>>;
+          d: Array<InputMaybe<MyInput>>;
           e: Array<MyInput>;
         };
     `);
@@ -2884,7 +3107,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type TInput = {
-          name?: Maybe<Scalars['String']>;
+          name?: InputMaybe<Scalars['String']>;
         };
       `);
 
@@ -2895,8 +3118,8 @@ describe('TypeScript', () => {
         };
 
         export type TMutationFooArgs = {
-          id?: Maybe<Scalars['ID']>;
-          input?: Maybe<TInput>;
+          id?: InputMaybe<Scalars['ID']>;
+          input?: InputMaybe<TInput>;
         };
       `);
 
@@ -2923,7 +3146,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
         export type NodeTextArgs = {
           arg1: Scalars['String'];
-          arg2?: Maybe<Scalars['String']>;
+          arg2?: InputMaybe<Scalars['String']>;
         };
       `);
       await validateTs(result);
@@ -2937,9 +3160,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b?: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2955,9 +3178,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -2978,9 +3201,9 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
-          a?: Maybe<Scalars['String']>;
+          a?: InputMaybe<Scalars['String']>;
           b: Scalars['String'];
-          c?: Maybe<Scalars['String']>;
+          c?: InputMaybe<Scalars['String']>;
           d: Scalars['String'];
         };
     `);
@@ -3318,14 +3541,14 @@ describe('TypeScript', () => {
     // Filter.contain should be optional
     expect(output.content).toBeSimilarStringTo(`
       export type Filter = {
-        contain?: Maybe<Scalars['String']>;
+        contain?: InputMaybe<Scalars['String']>;
       };
     `);
     // filter should be non-optional
     expect(output.content).toBeSimilarStringTo(`
       export type QueryListArgs = {
-        after?: Maybe<Scalars['String']>;
-        orderBy?: Maybe<OrderBy>;
+        after?: InputMaybe<Scalars['String']>;
+        orderBy?: InputMaybe<OrderBy>;
         filter: Filter;
       };
     `);

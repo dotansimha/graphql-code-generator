@@ -1,10 +1,12 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+import type { Profiler } from './profiler.js';
 
 export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
+    // TODO: Remove schemaAst and change schema to GraphQLSchema in the next major version
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
@@ -12,8 +14,10 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    skipDocumentsValidation?: boolean;
+    skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
     pluginContext?: { [key: string]: any };
+    profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   }
 
   export type FileOutput = {
@@ -25,7 +29,9 @@ export namespace Types {
     };
   };
 
-  export type DocumentFile = Source;
+  export interface DocumentFile extends Source {
+    hash?: string;
+  }
 
   /* Utils */
   export type Promisable<T> = T | Promise<T>;
@@ -246,7 +252,7 @@ export namespace Types {
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     overwrite?: boolean;
     /**
@@ -261,7 +267,7 @@ export namespace Types {
      *
      * You can specify either a single file, or multiple.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
@@ -277,7 +283,7 @@ export namespace Types {
      *
      * You can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/schema-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/schema-field
      */
     schema?: InstanceOrArray<Schema>;
     /**
@@ -286,14 +292,14 @@ export namespace Types {
      *
      * The options may vary depends on what plugins you are using.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/config-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/config-field
      */
     config?: PluginConfig;
     /**
      * @description Specifies scripts to run when events are happening in the codegen core.
      * Hooks defined on that level will effect only the current output files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
+     * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
   }
@@ -318,6 +324,8 @@ export namespace Types {
     pluginContext?: {
       [name: string]: any;
     };
+    profiler?: Profiler;
+    cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -348,14 +356,14 @@ export namespace Types {
      *
      * You can specify either a single schema, or multiple, and GraphQL Code Generator will merge the schemas into a single schema.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/schema-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/schema-field
      */
     schema?: InstanceOrArray<Schema>;
     /**
      * @description A path to a file which defines custom Node.JS require() handlers for custom file extensions.
      * This is essential if the code generator has to go through files which require other files in an unsupported format (by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/require-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/require-field
      * See more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.
      *
      * Note: values that specified in your .yml file will get loaded after loading the config .yml file.
@@ -378,7 +386,7 @@ export namespace Types {
      *
      * You can specify either a single file, or multiple.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
@@ -389,21 +397,21 @@ export namespace Types {
      *
      * The options may vary depends on what plugins you are using.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/config-field
+     * For more details: https://graphql-code-generator.com/docs/config-reference/config-field
      */
     config?: PluginConfig;
     /**
      * @description A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     generates: {
-      [outputPath: string]: ConfiguredOutput;
+      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
     };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/codegen-config
+     * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     overwrite?: boolean;
     /**
@@ -426,9 +434,25 @@ export namespace Types {
       interval?: number;
     };
     /**
+     * @description A flag to suppress non-zero exit code when there are no documents to generate.
+     */
+    ignoreNoDocuments?: boolean;
+    /**
+     * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
+     */
+    emitLegacyCommonJSImports?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;
+    /**
+     * @description A flag to output more detailed information about tasks
+     */
+    verbose?: boolean;
+    /**
+     * @description A flag to output debug logs
+     */
+    debug?: boolean;
     /**
      * @description A flag to print only errors.
      */
@@ -444,7 +468,7 @@ export namespace Types {
     /**
      * @description Allows you to override the configuration for `@graphql-tools/graphql-tag-pluck`, the tool that extracts your GraphQL operations from your code files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/documents-field#graphql-tag-pluck
+     * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field#graphql-tag-pluck
      */
     pluckConfig?: {
       /**
@@ -473,7 +497,7 @@ export namespace Types {
      * @description Specifies scripts to run when events are happening in the codegen core.
      * Hooks defined on that level will effect all output files.
      *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/lifecycle-hooks
+     * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
   }
@@ -535,6 +559,24 @@ export namespace Types {
      */
     beforeAllFileWrite: T;
   };
+
+  export type SkipDocumentsValidationOptions =
+    | {
+        /**
+         * @description Allows you to skip specific rules while validating the documents.
+         * See all the rules; https://github.com/graphql/graphql-js/tree/main/src/validation/rules
+         */
+        ignoreRules?: string[];
+        /**
+         * @description Ignore duplicate documents validation
+         */
+        skipDuplicateValidation?: boolean;
+        /**
+         * @description Skip document validation entirely against the schema
+         */
+        skipValidationAgainstSchema?: boolean;
+      }
+    | boolean;
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {

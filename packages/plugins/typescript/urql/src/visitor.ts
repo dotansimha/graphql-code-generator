@@ -6,10 +6,9 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlRawPluginConfig } from './config';
+import { UrqlRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
-import { pascalCase } from 'change-case-all';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -106,7 +105,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
     operationVariablesTypes: string
   ): string {
     const operationName: string = this.convertName(node.name?.value ?? '', {
-      suffix: this.config.omitOperationSuffix ? '' : pascalCase(operationType),
+      suffix: this.getOperationSuffix(node, operationType),
       useTypesPrefix: false,
     });
 
@@ -124,9 +123,15 @@ export function use${operationName}<TData = ${operationResultType}>(options: Omi
 };`;
     }
 
+    const isVariablesRequired = node.variableDefinitions.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && variableDef.defaultValue == null
+    );
+
     return `
-export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
-  return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
+export function use${operationName}(options${
+      isVariablesRequired ? '' : '?'
+    }: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'>) {
+  return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>({ query: ${documentVariableName}, ...options });
 };`;
   }
 
@@ -138,7 +143,6 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     operationVariablesTypes: string
   ): string {
     const documentVariablePrefixed = this._externalImportPrefix + documentVariableName;
-    const operationTypePrefixed = this._externalImportPrefix + operationType;
     const operationResultTypePrefixed = this._externalImportPrefix + operationResultType;
     const operationVariablesTypesPrefixed = this._externalImportPrefix + operationVariablesTypes;
 
@@ -146,7 +150,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
       ? this._buildComponent(
           node,
           documentVariablePrefixed,
-          operationTypePrefixed,
+          operationType,
           operationResultTypePrefixed,
           operationVariablesTypesPrefixed
         )
@@ -154,7 +158,7 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     const hooks = this.config.withHooks
       ? this._buildHooks(
           node,
-          operationTypePrefixed,
+          operationType,
           documentVariablePrefixed,
           operationResultTypePrefixed,
           operationVariablesTypesPrefixed

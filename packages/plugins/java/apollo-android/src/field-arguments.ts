@@ -1,6 +1,5 @@
 import {
   FieldNode,
-  visit,
   ArgumentNode,
   ObjectValueNode,
   ObjectFieldNode,
@@ -9,8 +8,9 @@ import {
   IntValueNode,
   FloatValueNode,
 } from 'graphql';
-import { ImportsSet } from './types';
-import { Imports } from './imports';
+import { ImportsSet } from './types.js';
+import { Imports } from './imports.js';
+import { oldVisit } from '@graphql-codegen/plugin-helpers';
 
 export function visitFieldArguments(selection: FieldNode, imports: ImportsSet): string {
   if (!selection.arguments || selection.arguments.length === 0) {
@@ -21,7 +21,7 @@ export function visitFieldArguments(selection: FieldNode, imports: ImportsSet): 
   imports.add(Imports.String);
   imports.add(Imports.Object);
 
-  return visit(selection, {
+  return oldVisit(selection, {
     leave: {
       Field: (node: FieldNode) => {
         return (

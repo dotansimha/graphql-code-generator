@@ -1,12 +1,12 @@
-import { lifecycleHooks } from './hooks';
+import { lifecycleHooks } from './hooks.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { executeCodegen } from './codegen';
-import { createWatcher } from './utils/watcher';
-import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
+import { executeCodegen } from './codegen.js';
+import { createWatcher } from './utils/watcher.js';
+import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system.js';
 import mkdirp from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
-import { debugLog } from './utils/debugging';
-import { CodegenContext, ensureContext } from './config';
+import { debugLog } from './utils/debugging.js';
+import { CodegenContext, ensureContext } from './config.js';
 import { createHash } from 'crypto';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
@@ -17,7 +17,7 @@ export async function generate(
 ): Promise<Types.FileOutput[] | any> {
   const context = ensureContext(input);
   const config = context.getConfig();
-  await lifecycleHooks(config.hooks).afterStart();
+  await context.profiler.run(() => lifecycleHooks(config.hooks).afterStart(), 'Lifecycle: afterStart');
 
   let previouslyGeneratedFilenames: string[] = [];
   function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
@@ -26,7 +26,7 @@ export async function generate(
     const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
     staleFilenames.forEach(filename => {
       if (shouldOverwrite(config, filename)) {
-        unlinkFile(filename, err => {
+        return unlinkFile(filename, err => {
           const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
             debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
@@ -49,49 +49,60 @@ export async function generate(
       removeStaleFiles(config, generationResult);
     }
 
-    await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
+    await context.profiler.run(async () => {
+      await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
+    }, 'Lifecycle: beforeAllFileWrite');
 
-    await Promise.all(
-      generationResult.map(async (result: Types.FileOutput) => {
-        const exists = fileExists(result.filename);
+    await context.profiler.run(
+      () =>
+        Promise.all(
+          generationResult.map(async (result: Types.FileOutput) => {
+            const exists = await fileExists(result.filename);
 
-        if (!shouldOverwrite(config, result.filename) && exists) {
-          return;
-        }
+            if (!shouldOverwrite(config, result.filename) && exists) {
+              return;
+            }
 
-        const content = result.content || '';
-        const currentHash = hash(content);
-        let previousHash = recentOutputHash.get(result.filename);
+            const content = result.content || '';
+            const currentHash = hash(content);
+            let previousHash = recentOutputHash.get(result.filename);
 
-        if (!previousHash && exists) {
-          previousHash = hash(readSync(result.filename));
-        }
+            if (!previousHash && exists) {
+              previousHash = hash(await readFile(result.filename));
+            }
 
-        if (previousHash && currentHash === previousHash) {
-          debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
+            if (previousHash && currentHash === previousHash) {
+              debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
+              return;
+            } else if (context.checkMode) {
+              context.checkModeStaleFiles.push(result.filename);
+              return; // skip updating file in dry mode
+            }
 
-          return;
-        }
+            if (content.length === 0) {
+              return;
+            }
 
-        if (content.length === 0) {
-          return;
-        }
-
-        recentOutputHash.set(result.filename, currentHash);
-        const basedir = dirname(result.filename);
-        await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
-        await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-        mkdirp.sync(basedir);
-        const absolutePath = isAbsolute(result.filename)
-          ? result.filename
-          : join(input.cwd || process.cwd(), result.filename);
-        writeSync(absolutePath, result.content);
-        await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
-        await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
-      })
+            recentOutputHash.set(result.filename, currentHash);
+            const basedir = dirname(result.filename);
+            await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
+            await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
+            await mkdirp(basedir);
+            const absolutePath = isAbsolute(result.filename)
+              ? result.filename
+              : join(input.cwd || process.cwd(), result.filename);
+            await writeFile(absolutePath, result.content);
+            await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
+            await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
+          })
+        ),
+      'Write files'
     );
 
-    await lifecycleHooks(config.hooks).afterAllFileWrite(generationResult.map(r => r.filename));
+    await context.profiler.run(
+      () => lifecycleHooks(config.hooks).afterAllFileWrite(generationResult.map(r => r.filename)),
+      'Lifecycle: afterAllFileWrite'
+    );
 
     return generationResult;
   }
@@ -101,11 +112,14 @@ export async function generate(
     return createWatcher(context, writeOutput);
   }
 
-  const outputFiles = await executeCodegen(context);
+  const outputFiles = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
 
-  await writeOutput(outputFiles);
+  await context.profiler.run(() => writeOutput(outputFiles), 'writeOutput');
+  await context.profiler.run(() => lifecycleHooks(config.hooks).beforeDone(), 'Lifecycle: beforeDone');
 
-  lifecycleHooks(config.hooks).beforeDone();
+  if (context.profilerOutput) {
+    await writeFile(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
+  }
 
   return outputFiles;
 }

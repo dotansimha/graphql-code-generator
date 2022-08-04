@@ -23,7 +23,11 @@ const newtonsoftConfiguration = new JsonAttributesSourceConfiguration(
 );
 
 // System.Text.Json does not have support of `JsonRequired` alternative (as for .NET 5)
-const systemTextJsonConfiguration = new JsonAttributesSourceConfiguration('System.Text.Json', 'JsonPropertyName', null);
+const systemTextJsonConfiguration = new JsonAttributesSourceConfiguration(
+  'System.Text.Json.Serialization',
+  'JsonPropertyName',
+  null
+);
 
 export function getJsonAttributeSourceConfiguration(attributesSource: JsonAttributesSource) {
   switch (attributesSource) {

@@ -8,14 +8,14 @@ export type ImportTypesConfig = {
    * The key of the output is used a the base path for this file.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {5}
    * generates:
-   * path/to/file.ts:
-   *  preset: import-types
-   *  presetConfig:
-   *    typesPath: types.ts
-   *  plugins:
-   *    - typescript-operations
+   *   path/to/file.ts:
+   *     preset: import-types
+   *     presetConfig:
+   *       typesPath: types.ts
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   typesPath: string;
@@ -24,15 +24,15 @@ export type ImportTypesConfig = {
    * @default Types
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml {6}
    * generates:
-   * src/:
-   *  preset: import-types
-   *  presetConfig:
-   *    typesPath: types.ts
-   *    importTypesNamespace: SchemaTypes
-   *  plugins:
-   *    - typescript-operations
+   *   src/:
+   *     preset: import-types
+   *     presetConfig:
+   *       typesPath: types.ts
+   *       importTypesNamespace: SchemaTypes
+   *     plugins:
+   *       - typescript-operations
    * ```
    */
   importTypesNamespace?: string;

@@ -1,9 +1,3 @@
 {
-  "extends": ["config:base"],
-  "postUpdateOptions": ["yarnDedupeFewer"],
-  "automerge": true,
-  "major": {
-    "automerge": false
-  },
-  "labels": ["dependencies"]
+  "extends": ["github>the-guild-org/shared-config:renovate"]
 }

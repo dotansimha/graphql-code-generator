@@ -1,34 +1,26 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type HeroNameConditionalInclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   includeName: Types.Scalars['Boolean'];
 }>;
 
 export type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Types.Exact<{
-  episode?: Types.Maybe<Types.Episode>;
+  episode?: Types.InputMaybe<Types.Episode>;
   skipName: Types.Scalars['Boolean'];
 }>;
 
 export type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
-  hero?:
-    | { __typename?: 'Droid'; name?: string | null | undefined }
-    | { __typename?: 'Human'; name?: string | null | undefined }
-    | null
-    | undefined;
+  hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
 export const HeroNameConditionalInclusionDocument = gql`

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.stencil-component';
-import { RepoInfoFragmentDoc } from './repo-info.fragment.stencil-component';
+import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.stencil-component.js';
+import { RepoInfoFragmentDoc } from './repo-info.fragment.stencil-component.js';
 
 declare global {
   export type FeedEntryFragment = {
@@ -13,10 +13,10 @@ declare global {
       __typename?: 'Repository';
       full_name: string;
       html_url: string;
-      description?: string | null | undefined;
+      description?: string | null;
       stargazers_count: number;
-      open_issues_count?: number | null | undefined;
-      owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
+      open_issues_count?: number | null;
+      owner?: { __typename?: 'User'; avatar_url: string } | null;
     };
     vote: { __typename?: 'Vote'; vote_value: number };
     postedBy: { __typename?: 'User'; html_url: string; login: string };

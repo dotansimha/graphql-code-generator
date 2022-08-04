@@ -9,7 +9,7 @@ import {
   FragmentDefinitionNode,
 } from 'graphql';
 import { join } from 'path';
-import { FileType } from './file-type';
+import { FileType } from './file-type.js';
 import { pascalCase } from 'change-case-all';
 
 const packageNameToDirectory = (packageName: string): string => {
@@ -22,8 +22,8 @@ export const preset: Types.OutputPreset = {
     const inputTypesAst = [];
 
     visit(options.schema, {
-      enter: {
-        InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode) {
+      InputObjectTypeDefinition: {
+        enter(node: InputObjectTypeDefinitionNode) {
           inputTypesAst.push(node);
         },
       },
@@ -56,6 +56,7 @@ export const preset: Types.OutputPreset = {
         documents: [],
       },
       ...inputTypesDocumentNode.definitions.map((ast: InputObjectTypeDefinitionNode) => {
+        const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [ast] };
         return {
           filename: join(outDir, packageNameToDirectory(options.config.typePackage), ast.name.value + '.java'),
           plugins: options.plugins,
@@ -66,7 +67,7 @@ export const preset: Types.OutputPreset = {
             skipDocumentsValidation: true,
           },
           schema: options.schema,
-          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
+          documents: [{ document, location: '' }],
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {
@@ -74,6 +75,7 @@ export const preset: Types.OutputPreset = {
           ? ast.name.value
           : `${ast.name.value}${pascalCase(ast.operation)}`;
 
+        const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [ast] };
         return {
           filename: join(outDir, packageNameToDirectory(options.config.package), fileName + '.java'),
           plugins: options.plugins,
@@ -84,10 +86,11 @@ export const preset: Types.OutputPreset = {
             externalFragments,
           },
           schema: options.schema,
-          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
+          documents: [{ document, location: '' }],
         };
       }),
       ...fragments.map((ast: FragmentDefinitionNode) => {
+        const document: DocumentNode = { kind: Kind.DOCUMENT, definitions: [ast] };
         return {
           filename: join(outDir, packageNameToDirectory(options.config.fragmentPackage), ast.name.value + '.java'),
           plugins: options.plugins,
@@ -98,7 +101,7 @@ export const preset: Types.OutputPreset = {
             externalFragments,
           },
           schema: options.schema,
-          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
+          documents: [{ document, location: '' }],
         };
       }),
     ];

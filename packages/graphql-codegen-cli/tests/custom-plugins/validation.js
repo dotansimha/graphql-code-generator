@@ -4,5 +4,5 @@ module.exports = {
   },
   validate: () => {
     throw new Error('Invalid!');
-  }
+  },
 };

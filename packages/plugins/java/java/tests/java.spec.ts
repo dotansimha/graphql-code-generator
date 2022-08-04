@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { validateJava } from '../../common/tests/validate-java';
+import { plugin } from '../src/index.js';
+import { validateJava } from '../../common/tests/validate-java.js';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 const OUTPUT_FILE = 'com/java/generated/resolvers.java';
@@ -15,6 +15,7 @@ describe('Java', () => {
       user(id: ID!): User!
       searchUser(searchFields: SearchUser!): [User!]!
       updateUser(input: UpdateUserMetadataInput!): [User!]!
+      authorize(roles: [UserRole]): Boolean
     }
 
     input InputWithArray {
@@ -239,6 +240,16 @@ describe('Java', () => {
       } else {
         this.sort = ResultSort.valueOf((String) args.get("sort"));
       }`);
+    });
+
+    it('Should generate check type for enum when arg with enum list', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      expect(result).toBeSimilarStringTo(`if (args.get("roles") != null) {
+        this.roles = ((List<Object>) args.get("roles")).stream()
+                .map(item -> item instanceof UserRole ? item : UserRole.valueOf((String) item))
+                .map(UserRole.class::cast)
+                .collect(Collectors.toList());
+       }`);
     });
 
     it('Should generate input class per each input, also with nested input types', async () => {

@@ -1,7 +1,8 @@
 import { join } from 'path';
-import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
-import { FragmentRegistry } from './fragment-resolver';
+import { DocumentNode, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
+import { FragmentRegistry } from './fragment-resolver.js';
 import parsePath from 'parse-filepath';
+import { oldVisit } from '@graphql-codegen/plugin-helpers';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parsePath(baseFilePath);
@@ -23,7 +24,7 @@ export function extractExternalFragmentsInUse(
   const ignoreList: Set<string> = new Set();
 
   // First, take all fragments definition from the current file, and mark them as ignored
-  visit(documentNode, {
+  oldVisit(documentNode, {
     enter: {
       FragmentDefinition: (node: FragmentDefinitionNode) => {
         ignoreList.add(node.name.value);
@@ -32,24 +33,22 @@ export function extractExternalFragmentsInUse(
   });
 
   // Then, look for all used fragments in this document
-  visit(documentNode, {
+  oldVisit(documentNode, {
     enter: {
       FragmentSpread: (node: FragmentSpreadNode) => {
-        if (!ignoreList.has(node.name.value)) {
-          if (
-            result[node.name.value] === undefined ||
-            (result[node.name.value] !== undefined && level < result[node.name.value])
-          ) {
-            result[node.name.value] = level;
+        if (
+          !ignoreList.has(node.name.value) &&
+          (result[node.name.value] === undefined || level < result[node.name.value])
+        ) {
+          result[node.name.value] = level;
 
-            if (fragmentNameToFile[node.name.value]) {
-              extractExternalFragmentsInUse(
-                fragmentNameToFile[node.name.value].node,
-                fragmentNameToFile,
-                result,
-                level + 1
-              );
-            }
+          if (fragmentNameToFile[node.name.value]) {
+            extractExternalFragmentsInUse(
+              fragmentNameToFile[node.name.value].node,
+              fragmentNameToFile,
+              result,
+              level + 1
+            );
           }
         }
       },

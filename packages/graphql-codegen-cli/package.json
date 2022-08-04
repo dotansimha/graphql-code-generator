@@ -1,11 +1,12 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.2.0",
+  "version": "2.11.3",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/bin.js",
-    "graphql-codegen": "dist/bin.js",
-    "graphql-code-generator": "dist/bin.js"
+    "gql-gen": "dist/cjs/bin.js",
+    "graphql-codegen": "dist/cjs/bin.js",
+    "graphql-code-generator": "dist/cjs/bin.js",
+    "graphql-codegen-esm": "dist/esm/bin.js"
   },
   "repository": {
     "type": "git",
@@ -14,8 +15,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman",
-    "prepack": "bob prepack"
+    "test": "jest --no-watchman"
   },
   "keywords": [
     "gql",
@@ -40,91 +40,80 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@graphql-codegen/core": "2.1.0",
-    "@graphql-codegen/plugin-helpers": "^2.1.0",
-    "@graphql-tools/apollo-engine-loader": "^7.0.5",
-    "@graphql-tools/code-file-loader": "^7.0.6",
-    "@graphql-tools/git-loader": "^7.0.5",
-    "@graphql-tools/github-loader": "^7.0.5",
-    "@graphql-tools/graphql-file-loader": "^7.0.5",
-    "@graphql-tools/json-file-loader": "^7.1.2",
-    "@graphql-tools/load": "^7.3.0",
-    "@graphql-tools/prisma-loader": "^7.0.6",
-    "@graphql-tools/url-loader": "^7.0.11",
-    "@graphql-tools/utils": "^8.1.1",
+    "@graphql-codegen/core": "2.6.0",
+    "@graphql-codegen/plugin-helpers": "^2.6.1",
+    "@graphql-tools/apollo-engine-loader": "^7.3.6",
+    "@graphql-tools/code-file-loader": "^7.3.1",
+    "@graphql-tools/git-loader": "^7.2.1",
+    "@graphql-tools/github-loader": "^7.3.6",
+    "@graphql-tools/graphql-file-loader": "^7.5.0",
+    "@graphql-tools/json-file-loader": "^7.4.1",
+    "@graphql-tools/load": "^7.7.1",
+    "@graphql-tools/prisma-loader": "^7.2.7",
+    "@graphql-tools/url-loader": "^7.13.2",
+    "@graphql-tools/utils": "^8.9.0",
+    "@whatwg-node/fetch": "^0.2.3",
     "ansi-escapes": "^4.3.1",
     "chalk": "^4.1.0",
-    "change-case-all": "1.0.14",
     "chokidar": "^3.5.2",
-    "common-tags": "^1.8.0",
     "cosmiconfig": "^7.0.0",
     "debounce": "^1.2.0",
-    "dependency-graph": "^0.11.0",
     "detect-indent": "^6.0.0",
-    "glob": "^7.1.6",
-    "globby": "^11.0.4",
-    "graphql-config": "^4.0.1",
-    "inquirer": "^7.3.3",
+    "graphql-config": "^4.3.1",
+    "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
-    "latest-version": "5.1.0",
-    "listr": "^0.14.3",
-    "listr-update-renderer": "^0.5.0",
+    "listr2": "^4.0.5",
     "log-symbols": "^4.0.0",
-    "minimatch": "^3.0.4",
     "mkdirp": "^1.0.4",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
-    "tslib": "~2.3.0",
-    "valid-url": "^1.0.9",
-    "wrap-ansi": "^7.0.0",
+    "tslib": "^2.4.0",
     "yaml": "^1.10.0",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
+    "@graphql-tools/merge": "8.3.0",
     "@types/debounce": "1.2.1",
-    "@types/glob": "7.1.4",
-    "@types/inquirer": "7.3.3",
+    "@types/inquirer": "8.2.1",
     "@types/is-glob": "4.0.2",
-    "@types/js-yaml": "4.0.3",
-    "@types/listr": "0.14.4",
-    "@types/minimatch": "3.0.5",
+    "@types/js-yaml": "4.0.5",
     "@types/mkdirp": "1.0.2",
-    "@types/valid-url": "1.0.3",
     "bdd-stdin": "0.2.0",
-    "dotenv": "10.0.0",
+    "change-case-all": "1.0.14",
     "js-yaml": "4.1.0",
     "make-dir": "3.1.0",
-    "prettier": "2.3.2"
+    "prettier": "2.7.1"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
-  },
-  "typings": "dist/index.d.ts",
-  "typescript": {
-    "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "bin": {
-      "graphql-codegen": {
-        "input": "src/bin.ts"
+      "require": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       }
-    }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
-  }
+  },
+  "type": "module"
 }

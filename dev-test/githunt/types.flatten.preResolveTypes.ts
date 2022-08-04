@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -51,8 +52,8 @@ export type Entry = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A list of options for the sort order of the feed */
@@ -104,8 +105,8 @@ export type QueryEntryArgs = {
 };
 
 export type QueryFeedArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   type: FeedType;
 };
 
@@ -171,99 +172,82 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
-  commentAdded?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  commentAdded?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type CommentQueryVariables = Exact<{
   repoFullName: Scalars['String'];
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CommentQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null | undefined;
-  entry?:
-    | {
-        __typename?: 'Entry';
-        id: number;
-        createdAt: number;
-        commentCount: number;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-        comments: Array<
-          | {
-              __typename?: 'Comment';
-              id: number;
-              createdAt: number;
-              content: string;
-              postedBy: { __typename?: 'User'; login: string; html_url: string };
-            }
-          | null
-          | undefined
-        >;
-        repository: {
-          __typename?: 'Repository';
-          full_name: string;
-          html_url: string;
-          description?: string | null | undefined;
-          open_issues_count?: number | null | undefined;
-          stargazers_count: number;
-        };
-      }
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string; html_url: string } | null;
+  entry?: {
+    __typename?: 'Entry';
+    id: number;
+    createdAt: number;
+    commentCount: number;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+    comments: Array<{
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    } | null>;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description?: string | null;
+      open_issues_count?: number | null;
+      stargazers_count: number;
+    };
+  } | null;
 };
 
 export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null | undefined;
+  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null;
 };
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FeedQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string } | null | undefined;
-  feed?:
-    | Array<
-        | {
-            __typename?: 'Entry';
-            id: number;
-            commentCount: number;
-            score: number;
-            createdAt: number;
-            repository: {
-              __typename?: 'Repository';
-              full_name: string;
-              html_url: string;
-              description?: string | null | undefined;
-              stargazers_count: number;
-              open_issues_count?: number | null | undefined;
-              owner?: { __typename?: 'User'; avatar_url: string } | null | undefined;
-            };
-            vote: { __typename?: 'Vote'; vote_value: number };
-            postedBy: { __typename?: 'User'; html_url: string; login: string };
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  currentUser?: { __typename?: 'User'; login: string } | null;
+  feed?: Array<{
+    __typename?: 'Entry';
+    id: number;
+    commentCount: number;
+    score: number;
+    createdAt: number;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description?: string | null;
+      stargazers_count: number;
+      open_issues_count?: number | null;
+      owner?: { __typename?: 'User'; avatar_url: string } | null;
+    };
+    vote: { __typename?: 'Vote'; vote_value: number };
+    postedBy: { __typename?: 'User'; html_url: string; login: string };
+  } | null> | null;
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
@@ -272,7 +256,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
-  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null | undefined;
+  submitRepository?: { __typename?: 'Entry'; createdAt: number } | null;
 };
 
 export type SubmitCommentMutationVariables = Exact<{
@@ -282,16 +266,13 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
-  submitComment?:
-    | {
-        __typename?: 'Comment';
-        id: number;
-        createdAt: number;
-        content: string;
-        postedBy: { __typename?: 'User'; login: string; html_url: string };
-      }
-    | null
-    | undefined;
+  submitComment?: {
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  } | null;
 };
 
 export type VoteMutationVariables = Exact<{
@@ -301,8 +282,5 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote?:
-    | { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }
-    | null
-    | undefined;
+  vote?: { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } } | null;
 };

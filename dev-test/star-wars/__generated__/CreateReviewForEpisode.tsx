@@ -1,8 +1,8 @@
-import * as Types from '../types.d';
+import * as Types from '../types.d.js';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
   episode: Types.Episode;
   review: Types.ReviewInput;
@@ -10,7 +10,7 @@ export type CreateReviewForEpisodeMutationVariables = Types.Exact<{
 
 export type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
-  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null | undefined } | null | undefined;
+  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
 export const CreateReviewForEpisodeDocument = gql`

@@ -20,9 +20,9 @@ import {
   Kind,
   GraphQLEnumType,
 } from 'graphql';
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { DEFAULT_SCALARS } from './scalars';
-import { normalizeDeclarationKind } from './declaration-kinds';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { normalizeDeclarationKind } from './declaration-kinds.js';
 import {
   EnumValuesMap,
   NormalizedScalarsMap,
@@ -31,7 +31,7 @@ import {
   ParsedEnumValuesMap,
   DirectiveArgumentAndInputFieldMappings,
   ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types';
+} from './types.js';
 import {
   transformComment,
   DeclarationBlock,
@@ -40,15 +40,17 @@ import {
   wrapWithSingleQuotes,
   getConfigValue,
   buildScalarsFromConfig,
-} from './utils';
-import { OperationVariablesToObject } from './variables-to-object';
-import { parseEnumValues } from './enum-values';
-import { transformDirectiveArgumentAndInputFieldMappings } from './mappers';
+  isOneOfInputObjectType,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { parseEnumValues } from './enum-values.js';
+import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  onlyEnums: boolean;
   onlyOperationTypes: boolean;
   enumPrefix: boolean;
   fieldWrapperValue: string;
@@ -65,7 +67,8 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## With Custom Values
-   * ```yml
+   *
+   * ```yaml
    *   config:
    *     addUnderscoreToArgsType: true
    * ```
@@ -77,7 +80,7 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## With Custom Values
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum:
@@ -85,14 +88,14 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    *
    * ## With External Enum
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues:
    *       MyEnum: ./my-file#MyCustomEnum
    * ```
    *
    * ## Import All Enums from a file
-   * ```yml
+   * ```yaml
    *   config:
    *     enumValues: ./my-file
    * ```
@@ -103,13 +106,15 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Override all declarations
-   * ```yml
+   *
+   * ```yaml
    *   config:
    *     declarationKind: 'interface'
    * ```
    *
    * ## Override only specific declarations
-   * ```yml
+   *
+   * ```yaml
    *   config:
    *     declarationKind:
    *       type: 'interface'
@@ -123,7 +128,8 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Disable enum prefixes
-   * ```yml
+   *
+   * ```yaml
    *   config:
    *     typesPrefix: I
    *     enumPrefix: false
@@ -136,47 +142,67 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Allow Promise
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: true
-   *    fieldWrapperValue: T | Promise<T>
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       wrapFieldDefinitions: true
+   *       fieldWrapperValue: T | Promise<T>
    * ```
    */
   fieldWrapperValue?: string;
   /**
-   * @description Set the to `true` in order to wrap field definitions with `FieldWrapper`.
+   * @description Set to `true` in order to wrap field definitions with `FieldWrapper`.
    * This is useful to allow return types such as Promises and functions.
    * @default false
    *
    * @exampleMarkdown
    * ## Enable wrapping fields
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    wrapFieldDefinitions: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       wrapFieldDefinitions: true
    * ```
    */
   wrapFieldDefinitions?: boolean;
+  /**
+   * @description This will cause the generator to emit types for enums only
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
+   * ```yaml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyEnums: true
+   * ```
+   */
+  onlyEnums?: boolean;
   /**
    * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
    * @default false
    *
    * @exampleMarkdown
    * ## Override all definition types
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    onlyOperationTypes: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       onlyOperationTypes: true
    * ```
    */
   onlyOperationTypes?: boolean;
@@ -186,27 +212,28 @@ export interface RawTypesConfig extends RawConfig {
    *
    * @exampleMarkdown
    * ## Ignore enum values from schema
-   * ```yml
+   *
+   * ```yaml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    ignoreEnumValuesFromSchema: true
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *     config:
+   *       ignoreEnumValuesFromSchema: true
    * ```
    */
   ignoreEnumValuesFromSchema?: boolean;
   /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
-   * @description Set the to `true` in order to wrap field definitions with `EntireFieldWrapper`.
+   * @description Set to `true` in order to wrap field definitions with `EntireFieldWrapper`.
    * This is useful to allow return types such as Promises and functions for fields.
-   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if ie. the field is an Array, while
+   * Differs from `wrapFieldDefinitions` in that this wraps the entire field definition if i.e. the field is an Array, while
    * `wrapFieldDefinitions` will wrap every single value inside the array.
    * @default true
    *
    * @example Enable wrapping entire fields
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:
@@ -224,7 +251,7 @@ export interface RawTypesConfig extends RawConfig {
    * @default T | Promise<T> | (() => T | Promise<T>)
    *
    * @example Only allow values
-   * ```yml
+   * ```yaml
    * generates:
    * path/to/file.ts:
    *  plugins:
@@ -243,14 +270,14 @@ export interface RawTypesConfig extends RawConfig {
    *
    * **WARNING:** Using this option does only change the type definitions.
    *
-   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules!
+   * For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!
    * Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
    *
    * Please use this configuration option with care!
    *
    * @exampleMarkdown
    * ## Custom Context Type
-   * ```yml
+   * ```yaml
    * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappings:
@@ -263,7 +290,7 @@ export interface RawTypesConfig extends RawConfig {
    * @description Adds a suffix to the imported names to prevent name clashes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * plugins:
    *   config:
    *     directiveArgumentAndInputFieldMappingTypeSuffix: Model
@@ -286,6 +313,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       enumValues: parseEnumValues({
@@ -360,6 +388,7 @@ export class BaseTypesVisitor<
   }
 
   public get scalarsDefinition(): string {
+    if (this.config.onlyEnums) return '';
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
@@ -425,11 +454,29 @@ export class BaseTypesVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment(node.description as any as string)
+      .withContent(`\n` + node.fields.join('\n  |'));
+  }
+
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
+    // Why the heck is node.name a string and not { value: string } at runtime ?!
+    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
+
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
     const comment = transformComment(node.description as any as string, 1);
     const { input } = this._parsedConfig.declarationKind;
 
@@ -446,15 +493,17 @@ export class BaseTypesVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
+    if (this.config.onlyEnums) return '';
+
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getFieldComment(node);
+    const comment = this.getNodeComment(node);
 
     return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
@@ -518,23 +567,12 @@ export class BaseTypesVisitor<
     return declarationBlock;
   }
 
-  getFieldComment(node: FieldDefinitionNode): string {
-    let commentText: string = node.description as any;
-    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
-    return comment;
-  }
-
   protected mergeAllFields(allFields: string[], _hasInterfaces: boolean): string {
     return allFields.join('\n');
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -556,7 +594,7 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyOperationTypes) return '';
+    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
@@ -654,9 +692,12 @@ export class BaseTypesVisitor<
     return values
       .map(enumOption => {
         const optionName = this.makeValidEnumIdentifier(
-          this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true })
+          this.convertName(enumOption, {
+            useTypesPrefix: false,
+            transformUnderscore: true,
+          })
         );
-        const comment = transformComment(enumOption.description as any as string, 1);
+        const comment = this.getNodeComment(enumOption);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name as any).value
@@ -707,6 +748,7 @@ export class BaseTypesVisitor<
     name: string,
     field: FieldDefinitionNode
   ): string {
+    if (this.config.onlyEnums) return '';
     return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 
@@ -756,7 +798,8 @@ export class BaseTypesVisitor<
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
-    } else if (this.config.enumValues[typeAsString]) {
+    }
+    if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
     }
 
@@ -781,7 +824,7 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode): string {
+  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);
@@ -789,6 +832,17 @@ export class BaseTypesVisitor<
 
   SchemaDefinition() {
     return null;
+  }
+
+  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
+    let commentText: string = node.description as any;
+    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+    }
+    const comment = transformComment(commentText, 1);
+    return comment;
   }
 
   protected getDeprecationReason(directive: DirectiveNode): string | void {

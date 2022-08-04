@@ -14,15 +14,16 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
-import { TypeScriptDocumentsPluginConfig } from './config';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
+import { TypeScriptDocumentsPluginConfig } from './config.js';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
+import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
   avoidOptionals: AvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
+  maybeValue: string;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -39,6 +40,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
+        mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -46,10 +48,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     autoBind(this);
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
+    const defaultMaybeValue = 'T | null';
+    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
 
     const wrapOptional = (type: string) => {
       if (preResolveTypes === true) {
-        return `${type} | null | undefined`;
+        return maybeValue.replace('T', type);
       }
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       return `${prefix}Maybe<${type}>`;
@@ -104,7 +108,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         enumsNames,
         this.config.enumPrefix,
         this.config.enumValues,
-        this.config.arrayInputCoercion
+        this.config.arrayInputCoercion,
+        undefined,
+        'InputMaybe'
       )
     );
     this._declarationBlockConfig = {
@@ -113,7 +119,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace && this.config.inlineFragmentTypes === 'combine'
+    return !this.config.globalNamespace &&
+      (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
       ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
       : [];
   }

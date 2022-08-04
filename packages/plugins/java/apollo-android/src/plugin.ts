@@ -1,11 +1,11 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, concatAST, visit, Kind, FragmentDefinitionNode } from 'graphql';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { InputTypeVisitor } from './input-type-visitor';
-import { BaseJavaVisitor } from './base-java-visitor';
-import { OperationVisitor } from './operation-visitor';
-import { FileType } from './file-type';
-import { CustomTypeClassVisitor } from './custom-type-class';
+import { InputTypeVisitor } from './input-type-visitor.js';
+import { BaseJavaVisitor } from './base-java-visitor.js';
+import { OperationVisitor } from './operation-visitor.js';
+import { FileType } from './file-type.js';
+import { CustomTypeClassVisitor } from './custom-type-class.js';
 
 /**
  * @description This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.
@@ -15,14 +15,14 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     package: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       package: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   package?: string;
@@ -30,14 +30,14 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the types generated based on input types.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     typePackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       typePackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   typePackage?: string;
@@ -45,14 +45,14 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
    * @description Customize the Java package name for the fragments generated classes.
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
-   * ./app/src/main/java/:
-   *   preset: java-apollo-android
-   *   config:
-   *     fragmentPackage: "com.my.package.generated.graphql"
-   *   plugins:
-   *     - java-apollo-android
+   *   ./app/src/main/java/:
+   *     preset: java-apollo-android
+   *     config:
+   *       fragmentPackage: 'com.my.package.generated.graphql'
+   *     plugins:
+   *       - java-apollo-android
    * ```
    */
   fragmentPackage?: string;
@@ -100,7 +100,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig, Types.Complex
     return { content: '' };
   }
 
-  const visitResult = visit(allAst, visitor as any);
+  const visitResult = oldVisit(allAst, visitor as any);
   const additionalContent = visitor.additionalContent();
   const imports = visitor.getImports();
 

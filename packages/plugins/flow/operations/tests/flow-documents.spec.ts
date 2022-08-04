@@ -1,8 +1,8 @@
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { validateFlow } from '../../flow/tests/validate-flow';
+import { plugin } from '../src/index.js';
+import { validateFlow } from '../../flow/tests/validate-flow.js';
 
 describe('Flow Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -1282,7 +1282,7 @@ export type MeQuery = {| me?: ?({
       };
       export type UserQuery = { user: ({
             ...$MakeOptional<$Pick<User, { id: *, name: * }>, { name: * }>,
-          ...{ address?: ?$Pick<Address, { city: * }>, friends?: ?Array<$Pick<User, { id: * }>> }
+          ...{ address?: $Pick<Address, { city: * }>, friends?: Array<$Pick<User, { id: * }>> }
         }) };
       `);
 
@@ -1339,7 +1339,7 @@ export type MeQuery = {| me?: ?({
         showAddress: $ElementType<Scalars, 'Boolean'>,
         showName: $ElementType<Scalars, 'Boolean'>,
       };
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: ?string, address?: ?{ __typename?: 'Address', city: string }, friends?: ?Array<{ __typename?: 'User', id: string }> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };
       `);
 
       validateFlow(result);

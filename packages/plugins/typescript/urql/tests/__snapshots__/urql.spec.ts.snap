@@ -17,3 +17,14 @@ export function useListenToCommentsSubscription<TData = ListenToCommentsSubscrip
   return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
 };"
 `;
+
+exports[`urql Hooks should allow importing operations and documents from another file 1`] = `
+"import * as Operations from '@myproject/generated';
+import * as Urql from 'urql';
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+
+export function useTestQuery(options?: Omit<Urql.UseQueryArgs<Operations.TestQueryVariables>, 'query'>) {
+  return Urql.useQuery<Operations.TestQuery, Operations.TestQueryVariables>({ query: Operations.TestDocument, ...options });
+};"
+`;

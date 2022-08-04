@@ -1,7 +1,7 @@
 import { useMonorepo } from '@graphql-codegen/testing';
-import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { executeCodegen } from '../src';
+import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print } from 'graphql';
+import { createContext, executeCodegen } from '../src/index.js';
 import { join } from 'path';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -261,7 +261,7 @@ describe('Codegen Executor', () => {
         throw SHOULD_NOT_THROW_STRING;
       } catch (e) {
         expect(e).not.toEqual(SHOULD_NOT_THROW_STRING);
-        expect(e.errors[0].message).toContain('Not all operations have an unique name: q');
+        expect(e.message).toContain('Not all operations have an unique name: q');
       }
     });
 
@@ -385,7 +385,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const content = result[0].content;
+      const { content } = result[0];
 
       expect(content).toContain('Used graphql-tag'); // import gql from 'graphql-tag'
       expect(content).toContain('Used gatsby'); // import { graphql } from 'gatsby'
@@ -409,7 +409,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const content = result[0].content;
+      const { content } = result[0];
 
       expect(content).toContain('Used custom parser'); // import { parser } from 'custom-graphql-parser';
       expect(content).not.toContain('Used graphql-tag');
@@ -547,8 +547,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.errors[0].message).toContain('Invalid Custom Plugin');
-        expect(e.errors[0].details).toContain('does not export a valid JS object with');
+        expect(e.message).toContain('Invalid Custom Plugin');
       }
     });
 
@@ -565,8 +564,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.errors[0].message).toContain('validation failed');
-        expect(e.errors[0].details).toContain('Invalid!');
+        expect(e.message).toContain('validation failed');
       }
     });
 
@@ -757,9 +755,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.message).toContain('Failed to load schema');
+      } catch (error) {
+        expect(error.message).toContain('Failed to load schema');
       }
     });
 
@@ -781,9 +778,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.details).toContain('Failed to load custom loader');
+      } catch (error) {
+        expect(error.message).toContain('Failed to load custom loader');
       }
     });
 
@@ -805,10 +801,9 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.message).toContain('Failed to load schema');
-        expect(e.details).toContain('Failed to load custom loader');
+      } catch (error) {
+        expect(error.message).toContain('Failed to load schema');
+        expect(error.message).toContain('Failed to load custom loader');
       }
     });
   });
@@ -873,9 +868,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
+      } catch (error) {
+        expect(error.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
       }
     });
 
@@ -898,9 +892,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.message).toContain('Failed to load custom loader');
+      } catch (error) {
+        expect(error.message).toContain('Failed to load custom loader');
       }
     });
 
@@ -923,9 +916,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (listrError) {
-        const e = listrError.errors[0];
-        expect(e.message).toContain('Failed to load custom loader');
+      } catch (error) {
+        expect(error.message).toContain('Failed to load custom loader');
       }
     });
   });
@@ -943,13 +935,7 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (error) {
-      const isExpectedError = error.errors && error.errors.some(e => e.message.includes('Failed to load schema'));
-
-      if (!isExpectedError) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-        throw error;
-      }
+      expect(error.message).toContain('Failed to load schema from http://www.dummyschema.com/graphql');
     }
     expect((global as any).CUSTOM_FETCH_FN_CALLED).toBeTruthy();
   });
@@ -975,6 +961,7 @@ describe('Codegen Executor', () => {
       throw new Error('This should not throw as the invalid file is excluded via glob.');
     }
   });
+
   it('Should allow plugins to extend schema with custom root', async () => {
     try {
       const output = await executeCodegen({
@@ -988,7 +975,7 @@ describe('Codegen Executor', () => {
       });
       expect(output.length).toBe(1);
     } catch (e) {
-      expect(e.errors[0].message).not.toBe('Query root type must be provided.');
+      expect(e.message).not.toBe('Query root type must be provided.');
     }
   });
 
@@ -1060,5 +1047,41 @@ describe('Codegen Executor', () => {
         aa: String
       }
     `);
+  });
+
+  it('Handles weird errors due to invalid schema', async () => {
+    const schema = /* GraphQL */ `
+      type Query {
+        brrrt:1
+      }
+    `;
+    try {
+      await executeCodegen({
+        schema: [schema],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+      });
+    } catch (error) {
+      expect(error.message).toContain('Failed to load schema for "out1.graphql"');
+    }
+  });
+
+  it('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
+    const prj1 = await createContext({
+      config: './tests/test-files/graphql.config.js',
+      project: 'prj1',
+      errorsOnly: true,
+      overwrite: true,
+      profile: true,
+      require: [],
+      silent: false,
+      watch: false,
+    });
+    const config = prj1.getConfig();
+    const output = await executeCodegen(config);
+    expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
 });

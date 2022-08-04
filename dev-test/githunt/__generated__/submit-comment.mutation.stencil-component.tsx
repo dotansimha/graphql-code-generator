@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
+import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component.js';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 
@@ -11,16 +11,13 @@ declare global {
 
   export type SubmitCommentMutation = {
     __typename?: 'Mutation';
-    submitComment?:
-      | {
-          __typename?: 'Comment';
-          id: number;
-          createdAt: number;
-          content: string;
-          postedBy: { __typename?: 'User'; login: string; html_url: string };
-        }
-      | null
-      | undefined;
+    submitComment?: {
+      __typename?: 'Comment';
+      id: number;
+      createdAt: number;
+      content: string;
+      postedBy: { __typename?: 'User'; login: string; html_url: string };
+    } | null;
   };
 }
 

@@ -1,3 +1,3 @@
-export * from './java-declaration-block';
-export * from './scalars';
-export * from './utils';
+export * from './java-declaration-block.js';
+export * from './scalars.js';
+export * from './utils.js';
