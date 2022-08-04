@@ -158,6 +158,16 @@ When enabled, codegen will return the following exit code:
 - `0`: no changes were detected
 - `1`: some changes are missing in existing files
 
+<Callout type="warning" emoji="⚠️">
+
+**Using `--check` dry-run mode with prettyfied generated files**
+
+Because the `--check` dry-run mode is comparing local files with
+in-memory generated content, projects that runs Prettier on files generated with codegen will always end-up returning
+all files as stale.
+
+</Callout>
+
 ## Debug Mode
 
 To enable debug mode, either set the `debug: true` configuration option or use the CLI `--debug` flag.
