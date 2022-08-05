@@ -1,100 +1,47 @@
-name: Canary Release
+name: snapshot
 
 on:
   pull_request:
     branches:
       - master
-
-  workflow_dispatch:
-    inputs:
-      onDemand:
-        description: Are you sure?
-        required: true
-        default: yes
-      npmTag:
-        description: NPM Tag
-        required: true
-        default: alpha
-      npmVersionSuffix:
-        description: Custom NPM Version Suffix
-        required: false
+    paths:
+      - '.changeset/**/*.md'
 
 jobs:
-  changes:
-    name: Check Changeset
+  release:
     runs-on: ubuntu-latest
-    outputs:
-      # Set job outputs to value from filter step
-      wasChangesetChanged: ${{steps.filter.outputs.changeset}}
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - name: Check if changeset has been modified
-        uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            changeset:
-              - added|modified: .changeset/*.md
-  publish-canary:
-    name: Publish Canary
-    runs-on: ubuntu-latest
-    needs: changes
-    if: (github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.wasChangesetChanged == 'true') || github.event.inputs.onDemand == 'yes'
-    steps:
-      - name: Checkout Master
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Use Node
         uses: actions/setup-node@v3
         with:
-          node-version: 17
-      - name: Configure Git Credentials
-        run: |
-          git config --global user.email "theguild-bot@users.noreply.github.com"
-          git config --global user.name "theguild-bot"
-          echo "machine github.com login theguild-bot password ${{secrets.GH_API_TOKEN}}" > ~/.netrc
-      - name: Setup NPM credentials
-        run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
-      - name: Cache Yarn
+          node-version: 18
+          cache: yarn
+
+      - name: Cache Node Modules
         uses: actions/cache@v3
+        id: node-modules-cache-canary
         with:
           path: '**/node_modules'
-          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{runner.os}}-17-16-yarn-
+            ${{runner.os}}-18-node-modules-
+
       - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines && git checkout yarn.lock
+        run: yarn install --ignore-engines --frozen-lockfile --immutable
+        if: steps.node-modules-cache-canary.outputs.cache-hit != 'true'
+
       - name: Release Canary
         id: canary
-        uses: kamilkisiela/release-canary@master
+        uses: 'the-guild-org/changesets-snapshot-action@main'
         with:
-          npm-token: ${{secrets.NODE_AUTH_TOKEN}}
-          npm-script: 'yarn release:canary'
-          changesets: true
+          tag: alpha
+          prepareScript: 'yarn build'
         env:
-          ON_DEMAND: ${{github.event.inputs.onDemand}}
-          NPM_TAG: ${{github.event.inputs.npmTag || 'alpha'}}
-          NPM_VERSION_SUFFIX: ${{github.event.inputs.npmVersionSuffix}}
-      - name: Publish a message
-        if: steps.canary.outputs.released
-        uses: kamilkisiela/pr-comment@master
-        with:
-          message: |
-            The latest changes of this PR are available as alpha in npm (based on the declared `changesets`):
-
-            ```
-            ${{steps.canary.outputs.changesetsPublishedPackages}}
-            ```
-          bot-token: ${{secrets.GH_API_TOKEN}}
-          bot: theguild-bot
-          github-token: ${{secrets.GITHUB_TOKEN}}
-      - name: Publish an empty message
-        if: steps.canary.outputs.released == 'false'
-        uses: kamilkisiela/pr-comment@master
-        with:
-          message: The latest changes of this PR are not available as alpha, since there are no linked `changesets` for this PR.
-          bot-token: ${{secrets.GH_API_TOKEN}}
-          bot: theguild-bot
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

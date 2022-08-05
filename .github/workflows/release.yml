@@ -11,42 +11,38 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Configure Git Credentials
-        run: |
-          git config --global user.email "theguild-bot@users.noreply.github.com"
-          git config --global user.name "theguild-bot"
-          echo "machine github.com login theguild-bot password ${{secrets.GH_API_TOKEN}}" > ~/.netrc
-      - name: Add origin remote and refetch master
-        run: |
-          git remote rm origin
-          git remote add origin "https://github.com/${{github.repository}}"
-          git fetch
-          git checkout master
-          git reset --hard
+
       - name: Use Node
         uses: actions/setup-node@v3
         with:
-          node-version: 17
-      - name: Setup NPM credentials
-        run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          node-version: 18
+
       - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-17-16-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-18-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-17-16-yarn-
+            ${{ runner.os }}-18-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install && git checkout yarn.lock
+
+      - name: set version variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: dotansimha/changesets-action@6a46d2c28377497e64763ba5f1faeabbd3d88c33
         with:
-          publish: yarn release
+          publish: 'yarn release'
           commit: 'chore(release): update monorepo packages versions'
           title: 'Upcoming Release Changes'
+          createGithubReleases: aggregate
+          githubReleaseName: 'Release ${{ steps.vars.outputs.sha_short }} (from ${{ steps.vars.outputs.branch }})'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

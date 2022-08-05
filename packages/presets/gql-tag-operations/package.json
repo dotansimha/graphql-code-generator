@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/gql-tag-operations-preset",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "GraphQL Code Generator preset for gql magic.",
   "repository": {
     "type": "git",

@@ -139,4 +139,44 @@ describe('Integration', () => {
     expect(output.length).toBe(5);
     expect(output[3].content).toMatchSnapshot();
   });
+
+  test('should NOT produce required root-level resolvers in Resolvers interface by default', async () => {
+    const output = await executeCodegen(options);
+
+    const usersModuleOutput = output.find(o => o.filename.includes('users'))!;
+
+    expect(usersModuleOutput).toBeDefined();
+    expect(usersModuleOutput.content).toContain(
+      `export type QueryResolvers = Pick<Types.QueryResolvers, DefinedFields['Query']>;`
+    );
+    expect(usersModuleOutput.content).toContain('Query?: QueryResolvers;');
+  });
+
+  test('should produce required root-level resolvers in Resolvers interface when requireRootResolvers flag is enabled', async () => {
+    const optionsCopy = Object.assign({} as any, options);
+
+    optionsCopy.generates['./tests/test-files/modules'].presetConfig = {
+      ...optionsCopy.generates['./tests/test-files/modules'].presetConfig,
+      requireRootResolvers: true,
+      useGraphQLModules: false,
+    };
+
+    const output = await executeCodegen(optionsCopy);
+
+    const usersModuleOutput = output.find(o => o.filename.includes('users'))!;
+
+    expect(usersModuleOutput).toBeDefined();
+
+    // Only Query related properties should be required
+    expect(usersModuleOutput.content).toBeSimilarStringTo(`
+      export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;
+      export type QueryResolvers = Required<Pick<Types.QueryResolvers, DefinedFields['Query']>>;
+    `);
+    expect(usersModuleOutput.content).toBeSimilarStringTo(`
+      export interface Resolvers {
+        User?: UserResolvers;
+        Query: QueryResolvers;
+      };
+    `);
+  });
 });

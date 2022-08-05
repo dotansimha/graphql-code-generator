@@ -186,8 +186,8 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'flow',
   },
   {
-    file: '../packages/plugins/flow/resolvers/src/index.ts',
-    identifier: 'RawFlowResolversConfig',
+    file: '../packages/plugins/flow/resolvers/src/config.ts',
+    identifier: 'FlowResolversPluginConfig',
     name: 'flow-resolvers',
   },
   {

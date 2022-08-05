@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.3
+
+### Patch Changes
+
+- 95db434b0: Add missing file extension for re-exports in ESM mode
+
 ## 1.5.2
 
 ### Patch Changes
