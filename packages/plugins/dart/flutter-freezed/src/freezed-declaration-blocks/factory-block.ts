@@ -2,14 +2,8 @@ import { indent } from '@graphql-codegen/visitor-plugin-common';
 import { FieldDefinitionNode, InputValueDefinitionNode, Kind } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
 import { FreezedParameterBlock } from './parameter-block';
-import { FreezedPluginConfig } from '../config';
-import {
-  ApplyDecoratorOn,
-  FreezedConfigValue,
-  getCustomDecorators,
-  NodeType,
-  transformCustomDecorators,
-} from '../utils';
+import { ApplyDecoratorOn, FlutterFreezedPluginConfig } from '../config';
+import { FreezedConfigValue, getCustomDecorators, NodeType, transformCustomDecorators } from '../utils';
 
 export class FreezedFactoryBlock {
   /** document the constructor */
@@ -46,7 +40,7 @@ export class FreezedFactoryBlock {
 
   private _freezedConfigValue: FreezedConfigValue;
 
-  constructor(private _config: FreezedPluginConfig, private _node: NodeType) {
+  constructor(private _config: FlutterFreezedPluginConfig, private _node: NodeType) {
     this._config = _config;
     this._node = _node;
     this._freezedConfigValue = new FreezedConfigValue(_config, _node.name.value);
@@ -102,7 +96,7 @@ export class FreezedFactoryBlock {
       ? ['union_factory_parameter']
       : ['class_factory_parameter'];
 
-    if (this._node.kind !== Kind.UNION_TYPE_DEFINITION) {
+    if (this._node.kind !== Kind.UNION_TYPE_DEFINITION && this._node.kind !== Kind.ENUM_TYPE_DEFINITION) {
       this._parameters =
         this._node?.fields?.map((field: FieldDefinitionNode | InputValueDefinitionNode) =>
           new FreezedParameterBlock(this._config, appliesOn, this._node, field).init()

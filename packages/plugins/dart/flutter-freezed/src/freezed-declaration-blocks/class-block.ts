@@ -1,24 +1,15 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import {
-  FieldDefinitionNode,
-  InputObjectTypeDefinitionNode,
-  InputValueDefinitionNode,
-  Kind,
-  NamedTypeNode,
-  ObjectTypeDefinitionNode,
-  UnionTypeDefinitionNode,
-} from 'graphql';
+import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
-import { FreezedPluginConfig } from '../config';
+import { FlutterFreezedPluginConfig } from '../config';
 import {
   getCustomDecorators,
   transformCustomDecorators,
   FreezedConfigValue,
   FreezedFactoryBlockRepository,
+  NodeType,
 } from '../utils';
 import { FreezedFactoryBlock } from './factory-block';
-
-export type NodeType = ObjectTypeDefinitionNode | InputObjectTypeDefinitionNode | UnionTypeDefinitionNode;
 
 export class FreezedDeclarationBlock {
   /** document the class  */
@@ -42,7 +33,7 @@ export class FreezedDeclarationBlock {
   private _freezedConfigValue: FreezedConfigValue;
 
   constructor(
-    private _config: FreezedPluginConfig,
+    private _config: FlutterFreezedPluginConfig,
     private _freezedFactoryBlockRepository: FreezedFactoryBlockRepository,
     private _node: NodeType
   ) {
@@ -53,6 +44,10 @@ export class FreezedDeclarationBlock {
   }
 
   public init(): FreezedDeclarationBlock {
+    if (this._node.kind === Kind.ENUM_TYPE_DEFINITION) {
+      this.setDecorators().setName().setShape().setBlock();
+      return this;
+    }
     this.setComment().setDecorators().setName().setFactoryBlocks().setShape().setBlock();
     return this;
   }
@@ -67,44 +62,80 @@ export class FreezedDeclarationBlock {
     return this;
   }
 
+  private getEnumComment(value: EnumValueDefinitionNode): string {
+    const comment = value.description?.value;
+
+    if (comment && comment !== null && comment !== '') {
+      return `/// ${comment} \n`;
+    }
+
+    return '';
+  }
+
   private setDecorators(): FreezedDeclarationBlock {
-    this._decorators = [
-      this.getFreezedDecorator(),
-      ...transformCustomDecorators(getCustomDecorators(this._config, ['class'], this._node.name.value), this._node),
-    ];
+    const name = this._node.name.value;
+    // determine if should mark as deprecated
+    const isDeprecated = this._config.typeSpecificFreezedConfig?.[name]?.deprecated;
+
+    this._decorators =
+      this._node.kind === Kind.ENUM_TYPE_DEFINITION
+        ? [...transformCustomDecorators(getCustomDecorators(this._config, ['enum'], name), this._node)]
+        : [
+            this.getFreezedDecorator(),
+            ...transformCustomDecorators(getCustomDecorators(this._config, ['class'], name), this._node),
+          ];
+
+    // @deprecated
+    // if this._decorators doesn't include an @deprecated decorator but the field is marked as @deprecated...
+    if (!this._decorators.includes('@deprecated') && isDeprecated) {
+      this._decorators = [...this._decorators, '@deprecated'];
+    }
+
     return this;
   }
 
   private getFreezedDecorator() {
     const use_unfreezed = () => {
-      if (this._node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && this._freezedConfigValue.get('mutableInputs')) {
+      if (
+        !this._freezedConfigValue.get('immutable') ||
+        (this._node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && this._freezedConfigValue.get('mutableInputs'))
+      ) {
         return '@unfreezed';
       }
       return use_Freezed_or_freezed();
     };
 
     const use_Freezed_or_freezed = () => {
-      if (this._freezedConfigValue.get('immutable')) {
-        // if any of these options is not null, use the @Freezed() decorator passing in that option
-        const copyWith = this._freezedConfigValue.get('copyWith');
-        const equal = this._freezedConfigValue.get('equal');
-        const makeCollectionsUnmodifiable = this._freezedConfigValue.get('makeCollectionsUnmodifiable');
-        const unionKey = this._freezedConfigValue.get('unionKey');
-        const unionValueCase = this._freezedConfigValue.get('unionValueCase');
-        if (copyWith || equal || makeCollectionsUnmodifiable || unionKey || unionValueCase) {
-          return `@Freezed(\n
+      // if any of these options is not null, use the @Freezed() decorator passing in that option
+      const [isCustomized, copyWith, equal, makeCollectionsUnmodifiable, unionKey, unionValueCase] =
+        isCustomizedFreezed();
+
+      if (isCustomized) {
+        return `@Freezed(\n
           ${copyWith ? indent(`copyWith: ${copyWith},\n`) : ''}
           ${equal ? indent(`equal: ${equal},\n`) : ''}
           ${makeCollectionsUnmodifiable ? indent(`makeCollectionsUnmodifiable: ${makeCollectionsUnmodifiable},\n`) : ''}
           ${unionKey ? indent(`unionKey: ${unionKey},\n`) : ''}
           ${unionValueCase ? indent(`unionValueCase: ${unionValueCase},\n`) : ''}
         )`;
-        }
-        // else fallback to the normal @freezed decorator
-        return '@freezed';
       }
-      // if not immutable, fallback to @unfreezed
-      return '@unfreezed';
+      // else fallback to the normal @freezed decorator
+      return '@freezed';
+    };
+
+    const isCustomizedFreezed = () => {
+      const copyWith = this._freezedConfigValue.get('copyWith') as boolean | undefined;
+      const equal = this._freezedConfigValue.get('equal') as boolean | undefined;
+      const makeCollectionsUnmodifiable = this._freezedConfigValue.get('makeCollectionsUnmodifiable') as
+        | boolean
+        | undefined;
+      const unionKey = this._freezedConfigValue.get('unionKey') as string | undefined;
+      const unionValueCase = this._freezedConfigValue.get('unionValueCase') as
+        | 'FreezedUnionCase.camel'
+        | 'FreezedUnionCase.pascal'
+        | undefined;
+      const isCustomized = copyWith || equal || makeCollectionsUnmodifiable || unionKey || unionValueCase;
+      return [isCustomized, copyWith, equal, makeCollectionsUnmodifiable, unionKey, unionValueCase];
     };
 
     // this is the start of the pipeline of decisions to determine which Freezed decorator to use
@@ -120,7 +151,7 @@ export class FreezedDeclarationBlock {
     if (this._node.kind === Kind.UNION_TYPE_DEFINITION) {
       this._factoryBlocks =
         this._node.types?.map((_type: NamedTypeNode) => new FreezedFactoryBlock(this._config, this._node).init()) ?? [];
-    } else {
+    } else if (this._node.kind !== Kind.ENUM_TYPE_DEFINITION) {
       /*
         for `ObjectTypeDefinitionNode` and `InputObjectTypeDefinitionNode` nodes,
         we use the `ShapeRepository`
@@ -145,6 +176,23 @@ export class FreezedDeclarationBlock {
     const name = this._node.name.value;
     let namedConstructor: string | undefined;
     let factoryBlockKey: string | undefined;
+
+    // handle enums differently
+    if (this._node.kind === Kind.ENUM_TYPE_DEFINITION) {
+      this._shape = this._node.values
+        ?.map((value: EnumValueDefinitionNode) => {
+          shape = indent(this.getEnumComment(value));
+
+          if (this._config.lowercaseEnums ?? true) {
+            shape += `@JsonKey(name: ${value.name.value}) ${value.name.value.toLowerCase()}`;
+          } else {
+            shape += value.name.value;
+          }
+          return `${shape}\n`;
+        })
+        .join('');
+      return this;
+    }
 
     // append private empty constructor
     if (this._freezedConfigValue.get('privateEmptyConstructor')) {
@@ -200,6 +248,15 @@ export class FreezedDeclarationBlock {
 
     if (this._decorators !== []) {
       block += '\n';
+    }
+
+    // handle enums differently
+    if (this._node.kind === Kind.ENUM_TYPE_DEFINITION) {
+      block += `enum ${this._name}{\n${this._shape}}\n\n`;
+
+      this._block = block;
+
+      return this;
     }
 
     // append start of class definition

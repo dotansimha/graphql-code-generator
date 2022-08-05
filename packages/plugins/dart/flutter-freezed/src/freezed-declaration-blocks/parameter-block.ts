@@ -1,16 +1,20 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { Kind, ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from 'graphql';
+import { ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from 'graphql';
 import { camelCase } from 'change-case-all';
-import { FreezedPluginConfig } from '../config';
-import {
-  getCustomDecorators,
-  transformCustomDecorators,
-  FieldType,
-  FreezedConfigValue,
-  NodeType,
-  ApplyDecoratorOn,
-} from '../utils';
-import { DART_SCALARS } from '../scalars';
+import { ApplyDecoratorOn, FlutterFreezedPluginConfig } from '../config';
+import { getCustomDecorators, transformCustomDecorators, FieldType, FreezedConfigValue, NodeType } from '../utils';
+
+/**
+ * maps GraphQL scalar types to Dart's scalar types
+ */
+export const DART_SCALARS: Record<string, string> = {
+  ID: 'String',
+  String: 'String',
+  Boolean: 'bool',
+  Int: 'int',
+  Float: 'double',
+  DateTime: 'DateTime',
+};
 
 export class FreezedParameterBlock {
   /** document the property */
@@ -38,7 +42,7 @@ export class FreezedParameterBlock {
   private _freezedConfigValue: FreezedConfigValue;
 
   constructor(
-    private _config: FreezedPluginConfig,
+    private _config: FlutterFreezedPluginConfig,
     private _appliesOn: ApplyDecoratorOn[],
     private _node: NodeType,
     private _field: FieldType
@@ -66,20 +70,38 @@ export class FreezedParameterBlock {
   }
 
   private setDecorators(): FreezedParameterBlock {
-    const name = this._field.name.value;
+    const nodeName = this._node.name.value;
+    const fieldName = this._field.name.value;
 
-    if (this._freezedConfigValue.get('alwaysUseJsonKeyName') || name !== camelCase(name)) {
-      this._decorators = [...this._decorators, `@JsonKey(name: '${name}')`];
+    // determine if should mark as deprecated
+    const isDeprecated = this._config.typeSpecificFreezedConfig?.[nodeName]?.fields?.[fieldName]?.deprecated;
+    const defaultValue = this._config.typeSpecificFreezedConfig?.[nodeName]?.fields?.[fieldName]?.defaultValue;
+
+    if (this._freezedConfigValue.get('alwaysUseJsonKeyName') || fieldName !== camelCase(fieldName)) {
+      this._decorators = [...this._decorators, `@JsonKey(name: '${fieldName}')`];
     }
 
     this._decorators = [
       ...this._decorators,
       ...transformCustomDecorators(
-        getCustomDecorators(this._config, this._appliesOn, this._node.name.value, name),
+        getCustomDecorators(this._config, this._appliesOn, this._node.name.value, fieldName),
         this._node,
         this._field
       ),
     ];
+
+    // @deprecated
+    // if this._decorators doesn't include an @deprecated decorator but the field is marked as @deprecated...
+    if (!this._decorators.includes('@deprecated') && isDeprecated) {
+      this._decorators = [...this._decorators, '@deprecated'];
+    }
+
+    // @Default
+    if (defaultValue) {
+      //overwrite the customDecorator's defaultValue
+      this._decorators = this._decorators.filter(d => !d.startsWith('@Default'));
+      this._decorators = [...this._decorators, `@Default(value: ${defaultValue})`];
+    }
     return this;
   }
 
@@ -101,15 +123,28 @@ export class FreezedParameterBlock {
   /** compose the freezed constructor property */
   private setShape(): FreezedParameterBlock {
     let shape = '';
+    const nodeName = this._node.name.value;
+    const fieldName = this._field.name.value;
+
+    // determine if should mark as final
+    const isFinal =
+      this._decorators.includes('final') ||
+      this._config.typeSpecificFreezedConfig?.[nodeName]?.fields?.[fieldName]?.final;
 
     //append comment
     shape += this._comment;
 
     // append the decorators
-    shape += this._decorators.map(d => indent(`${d}\n`, 2)).join('');
+    shape += this._decorators
+      .filter(d => d !== 'final')
+      .map(d => indent(`${d}\n`, 2))
+      .join('');
 
     // append required for non-nullable types
     shape += indent(this._required ? 'required ' : '', 2);
+
+    // append isFinal
+    shape += isFinal ? 'final ' : '';
 
     // append the Dart Type, name and trailing comma
     shape += `${this._type} ${this._name},\n`;

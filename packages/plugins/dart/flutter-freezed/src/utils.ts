@@ -1,21 +1,33 @@
 import {
   ConstArgumentNode,
   ConstDirectiveNode,
+  EnumTypeDefinitionNode,
   FieldDefinitionNode,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { FreezedConfig, FreezedPluginConfig, TypeSpecificFreezedConfig } from './config';
+import {
+  ApplyDecoratorOn,
+  CustomDecorator,
+  FreezedConfig,
+  FlutterFreezedPluginConfig,
+  TypeSpecificFreezedConfig,
+} from './config';
 import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks';
 
 export type FieldType = FieldDefinitionNode | InputValueDefinitionNode;
-export type NodeType = ObjectTypeDefinitionNode | InputObjectTypeDefinitionNode | UnionTypeDefinitionNode;
+
+export type NodeType =
+  | ObjectTypeDefinitionNode
+  | InputObjectTypeDefinitionNode
+  | UnionTypeDefinitionNode
+  | EnumTypeDefinitionNode;
+
 export type OptionName =
   // FreezedClassConfig
   | 'alwaysUseJsonKeyName'
-  | 'assertNonNullableFields'
   | 'copyWith'
   | 'customDecorators'
   | 'defaultUnionConstructor'
@@ -29,38 +41,8 @@ export type OptionName =
   | 'unionKey'
   | 'unionValueCase';
 
-export type ApplyDecoratorOn =
-  | 'class'
-  | 'class_factory'
-  | 'union_factory'
-  | 'class_factory_parameter'
-  | 'union_factory_parameter';
-
-export type DirectiveToFreezed = {
-  /**
-   * @name arguments
-   * @description arrange the arguments of the directive in order of how the should be outputted
-   * @default null
-   * @exampleMarkdown
-   * ```yml
-   * arguments: [$0] # $0 is the first argument, $1 is the 2nd ...
-   * ```
-   */
-  arguments?: string[]; //['$0']
-
-  /**
-   * @description Specify where the decorator should be applied
-   */
-  applyOn: ApplyDecoratorOn[];
-
-  /** maps to a Freezed decorator or use `custom` to use a custom decorator */
-  mapsToFreezedAs: '@Default' | '@deprecated' | 'final' | 'directive' | 'custom';
-};
-
-export type CustomDecorator = Record<string, DirectiveToFreezed>; // TODO: directives can have a name, and one or many values/arguments
-
 export function transformDefinition(
-  config: FreezedPluginConfig,
+  config: FlutterFreezedPluginConfig,
   freezedFactoryBlockRepository: FreezedFactoryBlockRepository,
   node: NodeType
 ) {
@@ -79,7 +61,7 @@ export function transformDefinition(
  */
 export function getFreezedConfigValue(
   option: OptionName,
-  config: FreezedPluginConfig,
+  config: FlutterFreezedPluginConfig,
   typeName?: string | undefined
 ): any {
   if (typeName) {
@@ -92,7 +74,7 @@ export function getFreezedConfigValue(
  * @description filters the customDirectives to return those that are applied on a list of blocks
  */
 export function getCustomDecorators(
-  config: FreezedPluginConfig,
+  config: FlutterFreezedPluginConfig,
   appliesOn: ApplyDecoratorOn[],
   nodeName?: string | undefined,
   fieldName?: string | undefined
@@ -215,7 +197,7 @@ function argToInt(arg: string) {
  * or else fallback to the global FreezedConfig value
  */
 export class FreezedConfigValue {
-  constructor(private _config: FreezedPluginConfig, private _typeName: string | undefined) {
+  constructor(private _config: FlutterFreezedPluginConfig, private _typeName: string | undefined) {
     this._config = _config;
     this._typeName = _typeName;
   }
@@ -236,9 +218,7 @@ export class FreezedImportBlock {
   _jsonSerializable?: boolean;
 
   // TODO: the constructor should accept a node, and extract it shape and store it but return itself
-  constructor(private _config: FreezedPluginConfig, private _fileName?: string) {
-    // this._fileName = _fileName;
-  }
+  constructor(private _config: FlutterFreezedPluginConfig, private _fileName?: string) {}
 
   string(): string {
     return [
@@ -281,7 +261,7 @@ export class FreezedFactoryBlockRepository {
 }
 
 /** initializes a FreezedPluginConfig with the defaults values */
-export class DefaultFreezedPluginConfig implements FreezedPluginConfig {
+export class DefaultFreezedPluginConfig implements FlutterFreezedPluginConfig {
   customScalars?: { [name: string]: string };
   fileName?: string;
   globalFreezedConfig?: FreezedConfig;
@@ -292,12 +272,12 @@ export class DefaultFreezedPluginConfig implements FreezedPluginConfig {
   lowercaseEnums?: boolean;
   modular?: boolean;
 
-  constructor(config: FreezedPluginConfig = {}) {
+  constructor(config: FlutterFreezedPluginConfig = {}) {
     Object.assign(this, {
       customScalars: config.customScalars ?? {},
       fileName: config.fileName ?? 'app_models',
       globalFreezedConfig: { ...new DefaultFreezedConfig(), ...(config.globalFreezedConfig ?? {}) },
-      typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {}, //TODO: Same thing like the global above
+      typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {},
       ignoreTypes: config.ignoreTypes ?? [],
       interfaceNamePrefix: config.interfaceNamePrefix ?? '',
       interfaceNameSuffix: config.interfaceNameSuffix ?? 'Interface',
@@ -310,7 +290,6 @@ export class DefaultFreezedPluginConfig implements FreezedPluginConfig {
 /** initializes a FreezedConfig with the defaults values */
 export class DefaultFreezedConfig implements FreezedConfig {
   alwaysUseJsonKeyName?: boolean;
-  assertNonNullableFields?: boolean;
   copyWith?: boolean;
   customDecorators?: CustomDecorator;
   defaultUnionConstructor?: boolean;
@@ -327,7 +306,6 @@ export class DefaultFreezedConfig implements FreezedConfig {
   constructor() {
     Object.assign(this, {
       alwaysUseJsonKeyName: false,
-      assertNonNullableFields: false,
       copyWith: null,
       customDecorators: {},
       defaultUnionConstructor: true,

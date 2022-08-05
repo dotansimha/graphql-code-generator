@@ -1,15 +1,15 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { GraphQLSchema } from 'graphql';
-import { FreezedPluginConfig } from './config';
+import { FlutterFreezedPluginConfig } from './config';
 import { FreezedDeclarationBlock } from './freezed-declaration-blocks';
 import { schemaVisitor } from './schema-visitor';
 import { DefaultFreezedPluginConfig } from './utils';
 
-export const plugin: PluginFunction<FreezedPluginConfig> = (
+export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   schema: GraphQLSchema,
   _documents: Types.DocumentFile[],
-  config: FreezedPluginConfig
+  config: FlutterFreezedPluginConfig
 ): string => {
   // sets the defaults for the config
   config = { ...new DefaultFreezedPluginConfig(config) };

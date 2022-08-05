@@ -1,12 +1,7 @@
-import { plugin } from '@graphql-codegen/flutter-freezed';
-import {
-  CustomDecorator,
-  transformCustomDecorators,
-  DefaultFreezedPluginConfig,
-  getCustomDecorators,
-  getFreezedConfigValue,
-} from '../src/utils';
-import { nonNullableListWithCustomScalars, starWarsSchema } from './schema';
+import { plugin } from '../src';
+import { CustomDecorator } from '../src/config';
+import { DefaultFreezedPluginConfig, getCustomDecorators, getFreezedConfigValue } from '../src/utils';
+import { starWarsSchema } from './schema';
 
 /** utils test */
 describe('flutter-freezed: utils & helpers', () => {
@@ -20,7 +15,6 @@ describe('flutter-freezed: utils & helpers', () => {
         Starship: {
           config: {
             alwaysUseJsonKeyName: true,
-            assertNonNullableFields: true,
             copyWith: false,
             unionValueCase: 'FreezedUnionCase.pascal',
           },
@@ -30,9 +24,6 @@ describe('flutter-freezed: utils & helpers', () => {
 
     expect(getFreezedConfigValue('alwaysUseJsonKeyName', config)).toBe(false);
     expect(getFreezedConfigValue('alwaysUseJsonKeyName', typeConfig, Starship)).toBe(true);
-
-    expect(getFreezedConfigValue('assertNonNullableFields', config)).toBe(false);
-    expect(getFreezedConfigValue('assertNonNullableFields', typeConfig, Starship)).toBe(true);
 
     expect(getFreezedConfigValue('copyWith', config)).toBe(null);
     expect(getFreezedConfigValue('copyWith', typeConfig, Starship)).toBe(false);
@@ -120,7 +111,13 @@ describe('flutter-freezed: utils & helpers', () => {
 
     const result = plugin(starWarsSchema, [], config);
 
-    expect(result).toBe(`@freezed
+    expect(result).toBe(`enum Episode{
+  @JsonKey(name: NEWHOPE) newhope
+  @JsonKey(name: EMPIRE) empire
+  @JsonKey(name: JEDI) jedi
+}
+
+@freezed
 @JsonSerializable(explicitToJson: true)
 class Starship with _$Starship {
   const Starship._();
