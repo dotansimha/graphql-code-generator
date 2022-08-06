@@ -1,5 +1,5 @@
-const { resolve } = require('path');
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { resolve, join } = require('path');
+const { pathsToModuleNameMapper } = require('ts-jest');
 
 const ROOT_DIR = __dirname;
 const TSCONFIG = resolve(ROOT_DIR, 'tsconfig.json');
@@ -11,7 +11,6 @@ module.exports = ({ dirname, projectMode = true }) => {
 
   return {
     ...(CI || !projectMode ? {} : { displayName: pkg.name.replace('@graphql-codegen/', '') }),
-    transform: { '^.+\\.tsx?$': 'babel-jest' },
     testEnvironment: 'node',
     rootDir: dirname,
     restoreMocks: true,
@@ -22,6 +21,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
     testTimeout: 20000,
+    transformIgnorePatterns: ['/node_modules/(?!(graphql)/)', '/packages/plugins/flow/flow/tests/fixtures/'],
     resolver: 'bob-the-bundler/jest-resolver.js',
   };
 };

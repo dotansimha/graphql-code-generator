@@ -125,7 +125,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
         node_version: [12, 14, 16, 18]
-        graphql_version: [15, 16]
+        graphql_version: [15, 16, '17.0.0-alpha.1']
         include:
           - node-version: 12
             os: windows-latest
