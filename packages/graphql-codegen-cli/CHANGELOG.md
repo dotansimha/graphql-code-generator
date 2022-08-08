@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.11.5
+
+### Patch Changes
+
+- [#8198](https://github.com/dotansimha/graphql-code-generator/pull/8198) [`1c7a8c0ad`](https://github.com/dotansimha/graphql-code-generator/commit/1c7a8c0ade2cd1f505b303c742aa31b4489cc12d) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(ci): regression on error output
+
 ## 2.11.4
 
 ### Patch Changes
