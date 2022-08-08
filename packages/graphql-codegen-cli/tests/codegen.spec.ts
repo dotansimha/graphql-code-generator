@@ -1065,7 +1065,7 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (error) {
-      expect(error.message).toContain('Failed to load schema for "out1.graphql"');
+      expect(error.message).toContain('Failed to load schema from');
     }
   });
 
