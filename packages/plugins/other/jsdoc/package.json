@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/jsdoc",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "GraphQL Code Generator plugin for generating JSDoc based types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.6.0",
-    "@graphql-codegen/visitor-plugin-common": "2.12.0",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
+    "@graphql-codegen/visitor-plugin-common": "2.12.1",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {

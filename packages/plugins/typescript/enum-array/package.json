@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-enum-array",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "GraphQL Code Generator plugin for adding const array",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.5.0",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
