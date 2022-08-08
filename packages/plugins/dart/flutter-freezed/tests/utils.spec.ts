@@ -25,21 +25,21 @@ describe('flutter-freezed: utils & helpers', () => {
     expect(getFreezedConfigValue('alwaysUseJsonKeyName', config)).toBe(false);
     expect(getFreezedConfigValue('alwaysUseJsonKeyName', typeConfig, Starship)).toBe(true);
 
-    expect(getFreezedConfigValue('copyWith', config)).toBe(null);
+    expect(getFreezedConfigValue('copyWith', config)).toBe(undefined);
     expect(getFreezedConfigValue('copyWith', typeConfig, Starship)).toBe(false);
 
     expect(getFreezedConfigValue('customDecorators', config)).toMatchObject({});
     expect(getFreezedConfigValue('defaultUnionConstructor', config)).toBe(true);
-    expect(getFreezedConfigValue('equal', config)).toBe(null);
+    expect(getFreezedConfigValue('equal', config)).toBe(undefined);
     expect(getFreezedConfigValue('fromJsonToJson', config)).toBe(true);
     expect(getFreezedConfigValue('immutable', config)).toBe(true);
-    expect(getFreezedConfigValue('makeCollectionsUnmodifiable', config)).toBe(null);
+    expect(getFreezedConfigValue('makeCollectionsUnmodifiable', config)).toBe(undefined);
     expect(getFreezedConfigValue('mergeInputs', config)).toMatchObject([]);
     expect(getFreezedConfigValue('mutableInputs', config)).toBe(true);
     expect(getFreezedConfigValue('privateEmptyConstructor', config)).toBe(true);
-    expect(getFreezedConfigValue('unionKey', config)).toBe(null);
+    expect(getFreezedConfigValue('unionKey', config)).toBe(undefined);
 
-    expect(getFreezedConfigValue('unionValueCase', config)).toBe(null);
+    expect(getFreezedConfigValue('unionValueCase', config)).toBe(undefined);
     expect(getFreezedConfigValue('unionValueCase', typeConfig, Starship)).toBe('FreezedUnionCase.pascal');
   });
 

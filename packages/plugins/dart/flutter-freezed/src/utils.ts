@@ -234,7 +234,7 @@ export class FreezedImportBlock {
    * if modular is set to, returns the value of fileName from the config
    */
   getFileName(fileName?: string) {
-    return this._config.modular ? this._config.fileName : fileName?.replace('.dart', '');
+    return fileName?.replace('.dart', '');
   }
 }
 
@@ -279,10 +279,7 @@ export class DefaultFreezedPluginConfig implements FlutterFreezedPluginConfig {
       globalFreezedConfig: { ...new DefaultFreezedConfig(), ...(config.globalFreezedConfig ?? {}) },
       typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {},
       ignoreTypes: config.ignoreTypes ?? [],
-      interfaceNamePrefix: config.interfaceNamePrefix ?? '',
-      interfaceNameSuffix: config.interfaceNameSuffix ?? 'Interface',
       lowercaseEnums: config.lowercaseEnums ?? true,
-      modular: config.modular ?? true,
     });
   }
 }
@@ -306,18 +303,18 @@ export class DefaultFreezedConfig implements FreezedConfig {
   constructor() {
     Object.assign(this, {
       alwaysUseJsonKeyName: false,
-      copyWith: null,
+      copyWith: undefined,
       customDecorators: {},
       defaultUnionConstructor: true,
-      equal: null,
+      equal: undefined,
       fromJsonToJson: true,
       immutable: true,
-      makeCollectionsUnmodifiable: null,
+      makeCollectionsUnmodifiable: undefined,
       mergeInputs: [],
       mutableInputs: true,
       privateEmptyConstructor: true,
-      unionKey: null,
-      unionValueCase: null,
+      unionKey: undefined,
+      unionValueCase: undefined,
     });
   }
 }
