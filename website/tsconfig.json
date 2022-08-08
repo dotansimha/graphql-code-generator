@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2019",
     "baseUrl": "./src",
-    "module": "commonjs",
+    "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

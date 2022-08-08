@@ -2,15 +2,16 @@
   "name": "website",
   "version": "1.17.7",
   "private": true,
+  "type": "module",
   "scripts": {
     "algolia-sync": "node scripts/algolia-ci.mjs",
-    "postbuild": "npx next-sitemap && node scripts/sitemap-ci.mjs",
+    "postbuild": "npx next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "start": "yarn generate-json-config && next start",
     "build": "yarn generate-json-config && next build",
     "dev": "next dev",
     "lint": "eslint --ignore-path .gitignore --ext js,jsx,cjs,mjs,ts,tsx,cts,mts .",
     "next": "next",
-    "generate-json-config": "ts-node generate-config-json-schema.ts"
+    "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
     "@guild-docs/algolia": "0.2.0",
