@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript-type-graphql
 
+## 2.3.3
+
+### Patch Changes
+
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+
+- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f), [`47d0a57e2`](https://github.com/dotansimha/graphql-code-generator/commit/47d0a57e27dd0d2334670bfc6c81c45e00ff4e74)]:
+  - @graphql-codegen/visitor-plugin-common@2.12.1
+  - @graphql-codegen/typescript@2.7.3
+  - @graphql-codegen/plugin-helpers@2.6.2
+
 ## 2.3.2
 
 ### Patch Changes

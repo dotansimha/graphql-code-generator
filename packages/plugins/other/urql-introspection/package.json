@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/urql-introspection",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.5.0",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
     "@urql/introspection": "^0.3.2",
     "tslib": "~2.4.0"
   },

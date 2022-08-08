@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/import-types-preset",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "GraphQL Code Generator preset for importing types to operation file",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
     "test": "jest --no-watchman --config ../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/add": "^3.2.0",
-    "@graphql-codegen/plugin-helpers": "^2.6.0",
-    "@graphql-codegen/visitor-plugin-common": "2.12.0",
+    "@graphql-codegen/add": "^3.2.1",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
+    "@graphql-codegen/visitor-plugin-common": "2.12.1",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
