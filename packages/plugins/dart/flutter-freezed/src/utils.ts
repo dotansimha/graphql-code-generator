@@ -218,6 +218,7 @@ export class FreezedImportBlock {
   _jsonSerializable?: boolean;
 
   // TODO: the constructor should accept a node, and extract it shape and store it but return itself
+  constructor(private _config: FlutterFreezedPluginConfig, private _fileName?: string) {}
 
   string(): string {
     return [
