@@ -17,7 +17,6 @@ export default withGuildDocs({
     ignoreBuildErrors: true,
   },
   swcMinify: true,
-  reactStrictMode: true,
   webpack(config) {
     config.resolve.fallback = {
       ...config.resolve.fallback,

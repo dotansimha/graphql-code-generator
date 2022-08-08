@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
 import { PackageCmd } from '@theguild/components';
-import { components } from 'nextra-theme-docs';
+import { getComponents } from 'nextra-theme-docs';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
 import ClientNote from './client-note.mdx';
@@ -68,5 +68,5 @@ export const PluginHeader = ({
 export const PluginApiDocs = (): ReactElement => {
   // Get the data from SSG, and render it as a component.
   const { compiledSource } = useSSG();
-  return <MDXRemote compiledSource={compiledSource} components={components} />;
+  return <MDXRemote compiledSource={compiledSource} components={getComponents()} />;
 };

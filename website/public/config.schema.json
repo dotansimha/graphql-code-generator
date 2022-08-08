@@ -207,6 +207,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -344,6 +348,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -540,6 +548,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -704,6 +716,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -776,6 +792,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -909,6 +929,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1088,6 +1112,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1244,6 +1272,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1311,6 +1343,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1473,6 +1509,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1629,6 +1669,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1753,6 +1797,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -1924,6 +1972,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2046,6 +2098,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2194,6 +2250,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2314,6 +2374,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2430,6 +2494,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2552,6 +2620,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2620,6 +2692,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2684,6 +2760,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2747,6 +2827,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2854,6 +2938,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -2980,6 +3068,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -3127,6 +3219,10 @@
         "inlineFragmentTypes": {
           "$ref": "#/definitions/InlineFragmentTypeOptions",
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
         }
       }
     },
@@ -3246,6 +3342,10 @@
         "encapsulateModuleTypes": {
           "type": "string",
           "description": "Configure how to encapsulate the module types, to avoid confusion.\n\n`namespace` (default): will wrap all types in a TypeScript namespace, using the module name.\n`prefix`: will prefix all types from a specific module with the module name.\n`none`: will skip encapsulation, and generate type as-is.\nDefault value: \"namespace\""
+        },
+        "requireRootResolvers": {
+          "type": "boolean",
+          "description": "Generate resolvers of root types (Query, Mutation and Subscription) as non-optional.\nDefault value: \"false\""
         },
         "useGraphQLModules": {
           "type": "boolean",

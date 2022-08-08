@@ -23,6 +23,7 @@
 /docs/getting-started/config-reference/codegen-config -> /docs/config-reference/codegen-config
 /docs/getting-started/development-workflow
 /docs/getting-started/documents-field -> /docs/config-reference/documents-field
+/docs/getting-started/esm-typescript-usage
 /docs/getting-started/how-does-it-work -> /docs/advanced/how-does-it-work
 /docs/getting-started/installation
 /docs/getting-started/lifecycle-hooks -> /docs/config-reference/lifecycle-hooks
