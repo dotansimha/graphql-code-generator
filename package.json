@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "postinstall": "patch-package && husky install",
-    "clean": "rimraf \"{,!(node_modules)/**/}node_modules/\"",
-    "prebuild": "rimraf \"{,!(node_modules)/**/}dist/\" .bob/ tsconfig.tsbuildinfo",
+    "clean": "rimraf node_modules/",
+    "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "test": "jest --forceExit --no-watchman",
