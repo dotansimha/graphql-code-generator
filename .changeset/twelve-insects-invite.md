@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/typescript-generic-sdk': minor
+'@graphql-codegen/typescript-generic-sdk': major
 ---
 
 - Respect GraphQL Live Queries like Subscriptions and use the stream return types (`AsyncIterable` or `Observable`).
