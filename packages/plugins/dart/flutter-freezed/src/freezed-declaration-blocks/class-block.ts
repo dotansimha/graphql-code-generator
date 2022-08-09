@@ -1,15 +1,15 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
 import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
-import { FlutterFreezedPluginConfig } from '../config';
+import { FlutterFreezedPluginConfig } from '../config.js';
 import {
   getCustomDecorators,
   transformCustomDecorators,
   FreezedConfigValue,
   FreezedFactoryBlockRepository,
   NodeType,
-} from '../utils';
-import { FreezedFactoryBlock } from './factory-block';
+} from '../utils.js';
+import { FreezedFactoryBlock } from './factory-block.js';
 
 export class FreezedDeclarationBlock {
   /** document the class  */

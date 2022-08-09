@@ -1,10 +1,10 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { GraphQLSchema } from 'graphql';
-import { FlutterFreezedPluginConfig } from './config';
-import { FreezedDeclarationBlock } from './freezed-declaration-blocks';
-import { schemaVisitor } from './schema-visitor';
-import { addFreezedImportStatements, DefaultFreezedPluginConfig } from './utils';
+import { FlutterFreezedPluginConfig } from './config.js';
+import { FreezedDeclarationBlock } from './freezed-declaration-blocks/index.js';
+import { schemaVisitor } from './schema-visitor.js';
+import { addFreezedImportStatements, DefaultFreezedPluginConfig } from './utils.js';
 
 export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   schema: GraphQLSchema,

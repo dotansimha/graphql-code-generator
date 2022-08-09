@@ -1,9 +1,9 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
 import { FieldDefinitionNode, InputValueDefinitionNode, Kind } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
-import { FreezedParameterBlock } from './parameter-block';
-import { ApplyDecoratorOn, FlutterFreezedPluginConfig } from '../config';
-import { FreezedConfigValue, getCustomDecorators, NodeType, transformCustomDecorators } from '../utils';
+import { FreezedParameterBlock } from './parameter-block.js';
+import { ApplyDecoratorOn, FlutterFreezedPluginConfig } from '../config.js';
+import { FreezedConfigValue, getCustomDecorators, NodeType, transformCustomDecorators } from '../utils.js';
 
 export class FreezedFactoryBlock {
   /** document the constructor */

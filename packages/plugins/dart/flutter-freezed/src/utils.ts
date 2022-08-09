@@ -14,8 +14,8 @@ import {
   FreezedConfig,
   FlutterFreezedPluginConfig,
   TypeSpecificFreezedConfig,
-} from './config';
-import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks';
+} from './config.js';
+import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks/index.js';
 
 export type FieldType = FieldDefinitionNode | InputValueDefinitionNode;
 

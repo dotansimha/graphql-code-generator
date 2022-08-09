@@ -1,3 +1,3 @@
-export * from './parameter-block';
-export * from './factory-block';
-export * from './class-block';
+export * from './parameter-block.js';
+export * from './factory-block.js';
+export * from './class-block.js';
