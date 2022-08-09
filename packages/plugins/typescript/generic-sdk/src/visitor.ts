@@ -15,6 +15,19 @@ export interface GenericSdkPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
 }
 
+function isStreamOperation(operationAST: OperationDefinitionNode) {
+  if (operationAST.operation === 'subscription') {
+    return true;
+  }
+  if (
+    operationAST.operation === 'query' &&
+    operationAST.directives?.some(directiveNode => directiveNode.name.value === 'live')
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPluginConfig, GenericSdkPluginConfig> {
   private _operationsToInclude: {
     node: OperationDefinitionNode;
@@ -75,7 +88,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
           o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        const returnType = usingObservable && o.operationType === 'Subscription' ? 'Observable' : 'Promise';
+        const returnType = isStreamOperation(o.node) ? (usingObservable ? 'Observable' : 'AsyncIterable') : 'Promise';
         const resultData = this.config.rawRequest
           ? `ExecutionResult<${o.operationResultType}, E>`
           : o.operationResultType;
@@ -91,9 +104,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
 
     const documentNodeType = this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode';
     const resultData = this.config.rawRequest ? 'ExecutionResult<R, E>' : 'R';
-    const returnType = usingObservable
-      ? `Promise<${resultData}> & Observable<${resultData}>`
-      : `Promise<${resultData}>`;
+    const returnType = `Promise<${resultData}> | ${usingObservable ? 'Observable' : 'AsyncIterable'}<${resultData}>`;
 
     return `export type Requester<C = {}, E = unknown> = <R, V>(doc: ${documentNodeType}, vars?: V, options?: C) => ${returnType}
 export function getSdk<C, E>(requester: Requester<C, E>) {
