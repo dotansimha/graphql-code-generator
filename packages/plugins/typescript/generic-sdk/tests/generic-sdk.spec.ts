@@ -2,12 +2,17 @@ import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { validateTs } from '@graphql-codegen/testing';
 import { RawGenericSdkPluginConfig } from '../src/config.js';
 import { plugin } from '../src/index.js';
-import { parse, buildClientSchema, GraphQLSchema } from 'graphql';
+import { parse, buildClientSchema, GraphQLSchema, extendSchema } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin, TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
-const schema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+const schema = extendSchema(
+  buildClientSchema(require('../../../../../dev-test/githunt/schema.json')),
+  parse(/* GraphQL */ `
+    directive @live on QUERY
+  `)
+);
 const basicDoc = parse(/* GraphQL */ `
   query feed {
     feed {
@@ -49,6 +54,12 @@ const docWithSubscription = parse(/* GraphQL */ `
 
   subscription commentAdded {
     commentAdded {
+      id
+    }
+  }
+
+  query feedLive @live {
+    feed {
       id
     }
   }
@@ -170,6 +181,26 @@ async function test() {
       `;
       const output = await validate(result, config, docs, schema, usage);
 
+      expect(output).toMatchSnapshot();
+    });
+
+    it('Should generate a correct wrap method when usingObservableFrom is not set', async () => {
+      const config = {};
+      const docs = [{ filePath: '', document: docWithSubscription }];
+      const result = (await plugin(schema, docs, config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+      const usage = /* TypeScript */ `
+        async function test() {
+          const sdk = getSdk((() => {}) as any);
+          const test = sdk.commentAdded();
+          for await (const item of test) {
+            console.log(item.data);
+            console.log(item.errors);
+          }
+        }
+      `;
+
+      const output = await validate(result, config, docs, schema, usage);
       expect(output).toMatchSnapshot();
     });
 
