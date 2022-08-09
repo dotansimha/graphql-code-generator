@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-generic-sdk",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use client-agnostic SDK based on GraphQL operations",
   "repository": {
     "type": "git",
