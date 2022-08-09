@@ -190,6 +190,16 @@ function argToInt(arg: string) {
   return parsedIndex ? parsedIndex : 0;
 }
 
+/** returns freezed import statements */
+export function addFreezedImportStatements(fileName: string) {
+  return [
+    "import 'package:freezed_annotation/freezed_annotation.dart';\n",
+    "import 'package:flutter/foundation.dart';\n\n",
+    `part ${fileName}.dart;\n`,
+    `part '${fileName}.g.dart';\n\n`,
+  ].join('');
+}
+
 /** a class variant of the getFreezedConfigValue helper function
  *
  * returns the value of the FreezedConfig option
@@ -210,15 +220,6 @@ export class FreezedConfigValue {
   get(option: OptionName) {
     return getFreezedConfigValue(option, this._config, this._typeName);
   }
-}
-
-export function addFreezedImportStatements(fileName: string) {
-  return [
-    "import 'package:freezed_annotation/freezed_annotation.dart';\n",
-    "import 'package:flutter/foundation.dart';\n",
-    `part ${fileName}.dart;\n`,
-    `part '${fileName}.g.dart';\n\n`,
-  ].join('');
 }
 
 /**

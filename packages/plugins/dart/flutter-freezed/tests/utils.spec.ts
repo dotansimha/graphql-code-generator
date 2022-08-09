@@ -111,7 +111,13 @@ describe('flutter-freezed: utils & helpers', () => {
 
     const result = plugin(starWarsSchema, [], config);
 
-    expect(result).toBe(`enum Episode{
+    expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+
+part app_models.dart;
+part 'app_models.g.dart';
+
+enum Episode{
   @JsonKey(name: NEWHOPE) newhope
   @JsonKey(name: EMPIRE) empire
   @JsonKey(name: JEDI) jedi
