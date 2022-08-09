@@ -27,7 +27,7 @@ export const presetsConfigurations: PresetConfig[] = [
 export const pluginsConfigurations: PluginConfig[] = [
   {
     file: '../packages/plugins/dart/flutter-freezed/src/config.ts',
-    identifier: 'FreezedPluginConfig',
+    identifier: 'FlutterFreezedPluginConfig',
     name: 'flutter-freezed',
   },
   {
