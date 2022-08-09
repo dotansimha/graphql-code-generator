@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 3.0.0
+
+### Major Changes
+
+- [#8204](https://github.com/dotansimha/graphql-code-generator/pull/8204) [`25a5b0f93`](https://github.com/dotansimha/graphql-code-generator/commit/25a5b0f93e295757ce809fa3fa0a0aa1c8eb940c) Thanks [@ardatan](https://github.com/ardatan)! - - Respect GraphQL Live Queries like Subscriptions and use the stream return types (`AsyncIterable` or `Observable`).
+  - Previously if there was no `usingObservableFrom` set in the configuration, the plugin was using `Promise` as subscriptions' return type, and this is wrong. Now it uses `AsyncIterable` in this case.
+
 ## 2.5.1
 
 ### Patch Changes
