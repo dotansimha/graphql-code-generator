@@ -212,30 +212,13 @@ export class FreezedConfigValue {
   }
 }
 
-export class FreezedImportBlock {
-  _importFreezedAnnotation?: boolean = true;
-  _importFoundation?: boolean = true;
-  _jsonSerializable?: boolean;
-
-  // TODO: the constructor should accept a node, and extract it shape and store it but return itself
-  constructor(private _fileName?: string) {}
-
-  string(): string {
-    return [
-      this._importFreezedAnnotation && "import 'package:freezed_annotation/freezed_annotation.dart';",
-      this._importFoundation && "import 'package:flutter/foundation.dart';",
-      `part ${this.getFileName(this._fileName)}.dart;`,
-      this._jsonSerializable && `part '${this.getFileName(this._fileName)}.g.dart';`,
-    ].join('\n');
-  }
-
-  /** TODO: Work on the modularization
-   *  returns the fileName without the extension.
-   * if modular is set to, returns the value of fileName from the config
-   */
-  getFileName(fileName?: string) {
-    return fileName?.replace('.dart', '');
-  }
+export function addFreezedImportStatements(fileName: string) {
+  return [
+    "import 'package:freezed_annotation/freezed_annotation.dart';\n",
+    "import 'package:flutter/foundation.dart';\n",
+    `part ${fileName}.dart;\n`,
+    `part '${fileName}.g.dart';\n\n`,
+  ].join('');
 }
 
 /**

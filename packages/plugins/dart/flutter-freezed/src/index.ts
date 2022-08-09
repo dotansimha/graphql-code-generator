@@ -4,7 +4,7 @@ import { GraphQLSchema } from 'graphql';
 import { FlutterFreezedPluginConfig } from './config';
 import { FreezedDeclarationBlock } from './freezed-declaration-blocks';
 import { schemaVisitor } from './schema-visitor';
-import { DefaultFreezedPluginConfig } from './utils';
+import { addFreezedImportStatements, DefaultFreezedPluginConfig } from './utils';
 
 export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   schema: GraphQLSchema,
@@ -24,6 +24,7 @@ export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   );
 
   return (
+    addFreezedImportStatements(config.fileName) +
     generated
       .map(freezedDeclarationBlock =>
         freezedDeclarationBlock.toString().replaceAll(/==>factory==>.+/gm, s => {
@@ -33,6 +34,7 @@ export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
         })
       )
       .join('')
-      .trim() + '\n'
+      .trim() +
+    '\n'
   );
 };
