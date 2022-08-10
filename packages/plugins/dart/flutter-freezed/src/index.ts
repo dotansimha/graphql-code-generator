@@ -27,7 +27,7 @@ export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
     addFreezedImportStatements(config.fileName) +
     generated
       .map(freezedDeclarationBlock =>
-        freezedDeclarationBlock.toString().replaceAll(/==>factory==>.+/gm, s => {
+        freezedDeclarationBlock.toString().replace(/==>factory==>.+/gm, s => {
           const pattern = s.replace('==>factory==>', '').trim();
           const [key, appliesOn, name, typeName] = pattern.split('==>');
           return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName ?? null).toString();
