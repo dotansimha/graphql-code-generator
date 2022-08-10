@@ -196,7 +196,7 @@ export function buildOptions() {
     w: {
       alias: 'watch',
       describe:
-        'Watch for changes and execute generation automatically. You can also specify a glob expreession for custom watch list.',
+        'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
       coerce: (watch: any) => {
         if (watch === 'false') {
           return false;
