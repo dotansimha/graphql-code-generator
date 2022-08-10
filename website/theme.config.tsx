@@ -35,4 +35,7 @@ export default {
     </>
   ),
   gitTimestamp: 'Last updated on',
+  defaultMenuCollapsed: true,
+  feedbackLink: 'Question? Give us feedback →',
+  feedbackLabels: 'kind/docs',
 };

@@ -3,12 +3,11 @@ title: urql-introspection
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('urql-introspection')
-
-<PackageHeader />
+<PluginHeader />
 
 ## How to use?
 
@@ -22,4 +21,4 @@ const cache = cacheExchange({ schema })
   [Read more about Schema Awareness](https://formidable.com/open-source/urql/docs/graphcache/schema-awareness)
 </Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />

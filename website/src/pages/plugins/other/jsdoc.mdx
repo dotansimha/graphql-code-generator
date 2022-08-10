@@ -2,12 +2,11 @@
 title: jsdoc
 ---
 
-import { PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('jsdoc')
-
-<PackageHeader />
+<PluginHeader />
 
 _developed by [`CarloPalinckx`](https://github.com/CarloPalinckx)_
 

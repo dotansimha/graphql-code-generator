@@ -36,7 +36,7 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: dotansimha/changesets-action@1bd10e16a393db098c8f537c719621962c0d5571
+        uses: dotansimha/changesets-action@v1.3.1
         with:
           publish: 'yarn release'
           commit: 'chore(release): update monorepo packages versions'

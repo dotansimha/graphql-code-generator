@@ -3,13 +3,12 @@ title: typescript-react-query
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('typescript-react-query')
-
-<PackageHeader hasOperationsNote />
-<PackageApiDocs />
+<PluginHeader hasOperationsNote />
+<PluginApiDocs />
 
 ## Usage Examples
 

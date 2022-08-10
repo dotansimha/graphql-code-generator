@@ -3,16 +3,15 @@ title: typescript-msw
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('typescript-msw')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 <Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ### Usage
 

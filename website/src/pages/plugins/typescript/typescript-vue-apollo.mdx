@@ -2,16 +2,15 @@
 title: typescript-vue-apollo
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('typescript-vue-apollo')
-
-<PackageHeader hasOperationsNote />
+<PluginHeader hasOperationsNote />
 
 Instead of using this plugin, it is recommended that you use the [TypedDocumentNode plugin](./typed-document-node) together with the [Vue Apollo library](https://apollo.vuejs.org).
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## Examples
 

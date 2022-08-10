@@ -1,11 +1,5 @@
-import nextra from 'nextra';
+import { withGuildDocs } from 'guild-docs/next.config';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
-
-const withNextra = nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-  unstable_staticImage: true,
-});
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
   packageNames.map(packageName => ({
@@ -14,7 +8,7 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
   }))
 );
 
-export default withNextra({
+export default withGuildDocs({
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -23,7 +17,6 @@ export default withNextra({
     ignoreBuildErrors: true,
   },
   swcMinify: true,
-  reactStrictMode: true,
   webpack(config) {
     config.resolve.fallback = {
       ...config.resolve.fallback,
