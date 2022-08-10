@@ -1,3 +1,4 @@
+# Schema of https://swapi-graphql.netlify.app/.netlify/functions/index, used for all front-end examples
 schema {
   query: Root
 }
