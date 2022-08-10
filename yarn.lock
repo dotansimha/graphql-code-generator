@@ -2553,10 +2553,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/algolia@0.2.1-alpha-20220810090154-ac18bef":
-  version "0.2.1-alpha-20220810090154-ac18bef"
-  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.2.1-alpha-20220810090154-ac18bef.tgz#3aab88d38f986fd1c5434023226f66f7bc5e261e"
-  integrity sha512-uz8EMxNJUMfZW6Kv1sG/nuco8i65U2yggUEdJ4NzfjSPK878kzIjQ8LQy1JYh9gRBuqwRVr0LQdMrmcGGGWw1g==
+"@guild-docs/algolia@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.2.1.tgz#910f7b2b185c8af1e46a7bc39e56fb27dbbf4cdb"
+  integrity sha512-GOvNOnCyC0nZ5LBOgGPniG/NkZ2YZKP+P45sV524vv9TYMYEwKmDBel7SURjiHX/LkhrM06sdGyXF8/aNiS+zg==
   dependencies:
     algoliasearch "^4.13.1"
     github-slugger "^1.4.0"
