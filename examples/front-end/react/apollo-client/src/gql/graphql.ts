@@ -1273,103 +1273,55 @@ export type VehiclesEdge = {
   node?: Maybe<Vehicle>;
 };
 
-export type AllPeopleQueryQueryVariables = Exact<{ [key: string]: never }>;
-
-export type AllPeopleQueryQuery = {
-  __typename?: 'Root';
-  allPeople?: {
-    __typename?: 'PeopleConnection';
-    edges?: Array<{
-      __typename?: 'PeopleEdge';
-      node?: {
-        __typename?: 'Person';
-        name?: string | null;
-        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
-      } | null;
-    } | null> | null;
-  } | null;
-};
-
-export type AllPeopleWithVariablesQueryQueryVariables = Exact<{
+export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
   first: Scalars['Int'];
 }>;
 
-export type AllPeopleWithVariablesQueryQuery = {
+export type AllFilmsWithVariablesQueryQuery = {
   __typename?: 'Root';
-  allPeople?: {
-    __typename?: 'PeopleConnection';
+  allFilms?: {
+    __typename?: 'FilmsConnection';
     edges?: Array<{
-      __typename?: 'PeopleEdge';
-      node?: {
-        __typename?: 'Person';
-        name?: string | null;
-        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
-      } | null;
+      __typename?: 'FilmsEdge';
+      node?: ({ __typename?: 'Film' } & { ' $fragmentRefs': { FilmItemFragment: FilmItemFragment } }) | null;
     } | null> | null;
   } | null;
 };
 
-export const AllPeopleQueryDocument = {
+export type FilmItemFragment = {
+  __typename?: 'Film';
+  id: string;
+  title?: string | null;
+  releaseDate?: string | null;
+  producers?: Array<string | null> | null;
+} & { ' $fragmentName': 'FilmItemFragment' };
+
+export const FilmItemFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'AllPeopleQuery' },
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FilmItem' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Film' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allPeople' },
-            arguments: [
-              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '5' } },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'edges' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'node' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'homeworld' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'releaseDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'producers' } },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
-export const AllPeopleWithVariablesQueryDocument = {
+} as unknown as DocumentNode<FilmItemFragment, unknown>;
+export const AllFilmsWithVariablesQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'AllPeopleWithVariablesQuery' },
+      name: { kind: 'Name', value: 'allFilmsWithVariablesQuery' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -1382,7 +1334,7 @@ export const AllPeopleWithVariablesQueryDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'allPeople' },
+            name: { kind: 'Name', value: 'allFilms' },
             arguments: [
               {
                 kind: 'Argument',
@@ -1404,17 +1356,7 @@ export const AllPeopleWithVariablesQueryDocument = {
                         name: { kind: 'Name', value: 'node' },
                         selectionSet: {
                           kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'homeworld' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
-                              },
-                            },
-                          ],
+                          selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FilmItem' } }],
                         },
                       },
                     ],
@@ -1426,5 +1368,6 @@ export const AllPeopleWithVariablesQueryDocument = {
         ],
       },
     },
+    ...FilmItemFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;
+} as unknown as DocumentNode<AllFilmsWithVariablesQueryQuery, AllFilmsWithVariablesQueryQueryVariables>;

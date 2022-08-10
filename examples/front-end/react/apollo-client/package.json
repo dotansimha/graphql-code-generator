@@ -20,8 +20,9 @@
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.11.3",
-    "@graphql-codegen/gql-tag-operations-preset": "1.5.3"
+    "@graphql-codegen/cli": "^2.11.5",
+    "@graphql-codegen/gql-tag-operations-preset": "^1.5.4",
+    "@graphql-codegen/schema-ast": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
